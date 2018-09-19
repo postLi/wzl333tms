@@ -1,12 +1,12 @@
 <template>
   <div class="loadIntelligent_content" v-loading="loading">
     <div class="loadIntelligent_main">
-      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList"></loadInfo>
+      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen"></transferTable>
+        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
@@ -56,6 +56,7 @@ export default {
     return {
       truckIndex: '',
       truckPrecent: {},
+      isAddOrgRightTable: '',
       sendRoute: {
         orgId: '',
         standCar: [{}]
@@ -170,9 +171,6 @@ export default {
         this.loading = false
       })
     },
-    // submitLoad() { // 计算配载
-      
-    // },
     getTruckIndex(obj) {
       this.truckIndex = obj
     },
@@ -181,6 +179,9 @@ export default {
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
+    },
+    addOrgRightTable () { // 添加了一辆车型
+      this.isAddOrgRightTable = new Date().getTime()
     },
     resizeChart() {
       this.$refs.loadchart.resizeChart()
@@ -210,7 +211,10 @@ export default {
       this.initInfo() // 添加完司机或车辆之后，刷新下拉数据
     },
     resetTrucDelList () { // 参数设置之后需要返回到左边列表的运单
-      this.resetTrucDelListLen = this.paramTuck ? this.paramTuck.length : 0
+      this.resetTrucDelListLen = ''
+      this.$nextTick(() => {
+        this.resetTrucDelListLen = this.paramTuck ? this.paramTuck.length : 0
+      })
     },
     addTruck() { // 添加车辆信息
       this.addTruckVisible = true
@@ -228,6 +232,7 @@ export default {
     getSavaParamTruck(arr) { // 参数设置时返回的数据
       console.log('jsfsjdiofj')
       this.paramTuck = Object.assign([], arr)
+      // this.resetTrucDelList()
     },
     getLoadTable(arr) {
       this.loadTableInfo = arr
@@ -272,6 +277,7 @@ export default {
       height: 100%;
       width: 20%;
       transition: 0.9s;
+      padding-left: 10px;
     }
   }
 }

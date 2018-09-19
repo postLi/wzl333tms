@@ -78,10 +78,6 @@
                       <el-form-item label="到达日期">
                         <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                         </el-date-picker>
-                        <!--<el-date-picker size="mini" v-model="intelligentData.planArrivedTime"-->
-                        <!--value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="到达日期">-->
-                        <!--</el-date-picker>-->
-                        <!--<el-input :size="btnsize" v-model="intelligentData.dirverMobile"></el-input>-->
                       </el-form-item>
                     </div>
                   </div>
@@ -338,8 +334,8 @@ export default {
         this.intFreightIndex = 0
         this.currentIndex = 0
         this.showCurrenFormStyle = []
-      this.showCurrenFormStyle[this.currentIndex] = true
-      this.$emit('truckIndex', this.currentIndex)
+        this.showCurrenFormStyle[this.currentIndex] = true
+        this.$emit('truckIndex', this.currentIndex)
         this.intelligentData.dataList = Object.assign([], selArr)
         console.log('newDataList', this.intelligentData.dataList)
         selArr = []
@@ -413,9 +409,6 @@ export default {
         case 'addDriver': // 添加司机信息
           this.addDriver()
           break
-          // case 'addFreight':
-          //   this.openlntelligent()
-          //   break
       }
     },
     cancelButtonText() {
@@ -446,13 +439,9 @@ export default {
     },
     init() {
       this.intelligentData = this.$options.data().intelligentData
-      // this.$refs['ruleForm'].resetFields()
-      // this.setLoadTypeId()
-      // this.initIsEdit()
       this.intelligentData.orgid = this.orgid
       this.DriverList = this.Drivers
       this.TruckList = this.Trucks
-      // this.getSelectAddLoadRepertoryList()
       if (!this.inited) {
         this.inited = true
         this.initInfo()
@@ -460,8 +449,6 @@ export default {
     },
     initInfo() { // 车牌号和司机信息 init
       this.loading = false
-      // this.truckKey = new Date().getTime()
-      // this.driverKey = new Date().getTime()
       this.changeDriverKey = Math.random()
       this.changeTruckKey = Math.random()
       this.Drivers = this.$options.data().Drivers
@@ -516,7 +503,6 @@ export default {
       }
     },
     blurTruck() { // 车牌输入框失去响应时
-      const data = ''
     },
     handleSelectName(item, index) {
       this.changeDriverKey = Math.random()
@@ -614,22 +600,15 @@ export default {
         this.$set(e, 'tmsOrderLoad', curinfo)
         this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
         this.$set(data, 'tmsOrderLoadFee', e.tmsOrderLoadFee)
-        // if (e.carLoadDetail.length) {
         e.carLoadDetail.forEach(em => {
           em.loadAmount = em.repertoryAmount
           em.loadWeight = em.repertoryWeight
           em.loadVolume = em.repertoryVolume
         })
-        // }
         this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
         this.$set(this.loadDataArray, index, data)
         data = {}
         curinfo = {}
-        // if (!this.loadDataArray) {
-        //   this.$message({type: 'warning', message:'车型列表不能为空'})
-        //   return false
-        // }
-
         this.loadDataArray = this.loadDataArray.filter((e, index) => {
           return (e.tmsOrderLoadDetailsList && e.tmsOrderLoadDetailsList.length > 0)
         })
@@ -691,26 +670,19 @@ export default {
         this.showCurrenFormStyle[this.currentIndex] = true
       }
       this.$emit('truckIndex', this.currentIndex)
-
-      console.log('truckIndex', this.currentIndex, this.intelligentData.dataList)
       this.$message.info('已删除')
       setTimeout(() => {
         this.intelligentData.dataList.forEach((el, index) => {
           this.$set(this.intelligentData.dataList, index, Object.assign(el, { '_index': index }))
         })
       }, 500)
-      console.log(this.intelligentData.dataList, this.currentIndex)
-      console.log('111111111')
       this.setCurPageView(this.currentIndex) // 设置显示
-      console.log(this.intelligentData.dataList, this.currentIndex)
-
     },
     addtuck() {
       var index = this.intelligentData.dataList.length
       if (index > this.maxDataLength) {
         return false
       }
-
       this.intelligentData.dataList.push({
         contractNo: '',
         batchNo: '',
@@ -726,16 +698,18 @@ export default {
         requireArrivedTime: '',
         truckUserId: '',
         remark: '',
+        carLoadDetail: [],
         _index: index
       })
-
+      this.$emit('addOrgRightTable')
       this.showCurrenFormStyle = []
       this.showCurrenFormStyle[index] = true
       this.currentIndex = index
-      console.log('2222222222222')
+      console.log('2222222222222', this.intelligentData.dataList)
       this.setCurPageView(index - 2) // 设置显示
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
+
     },
     pretruck() { // 展示上一个车型
       if (this.intelligentData.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换

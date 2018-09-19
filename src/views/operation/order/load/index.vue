@@ -522,7 +522,8 @@ export default {
         data.requireArrivedTime = this.orgData.requireArrivedTime
         data.planArrivedTime = this.orgData.planArrivedTime
         data.remark = this.orgData.remark
-        data.deliveryDetailFee = this.orgData.deliveryFee // 送货费 40-送货管理修改的时候用
+        data.deliveryDetailFee = this.orgData.deliveryDetailFee // 送货费 40-送货管理修改的时候用
+        data.deliveryHandlingFee = this.orgData.deliveryHandlingFee
         data.sealNumber = this.orgData.sealNumber
         data.oilCardNumber = this.orgData.oilCardNumber
         this.formModel = objectMerge2({}, data)
@@ -777,6 +778,8 @@ export default {
       if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
         let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryDetailFee', this.formModel.deliveryDetailFee)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }
@@ -804,6 +807,8 @@ export default {
       if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
         let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryDetailFee', this.formModel.deliveryDetailFee)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
       }

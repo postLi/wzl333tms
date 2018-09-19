@@ -104,6 +104,12 @@ export default {
         fixed: false
       },
       {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
         label: '车牌号',
         prop: 'truckIdNumber',
         width: '100',
@@ -152,7 +158,7 @@ export default {
         }
       },
       {
-        label: '短驳费',
+        label: '短驳费(元)',
         prop: 'shortFee',
         width: '100',
         fixed: false
@@ -164,13 +170,13 @@ export default {
         fixed: false
       },
       {
-        label: '实到重量',
+        label: '实到重量(kg)',
         prop: 'actualWeight',
         width: '100',
         fixed: false
       },
       {
-        label: '实到体积',
+        label: '实到体积(m³)',
         prop: 'actualVolume',
         width: '100',
         fixed: false
@@ -182,13 +188,13 @@ export default {
         fixed: false
       },
       {
-        label: '配载总重量',
+        label: '配载总重量(kg)',
         prop: 'weightall',
         width: '100',
         fixed: false
       },
       {
-        label: '配载总体积',
+        label: '配载总体积(m³)',
         prop: 'volumeall',
         width: '100',
         fixed: false

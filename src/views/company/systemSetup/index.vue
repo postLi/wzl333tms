@@ -167,7 +167,7 @@
               </el-form-item>
               <el-form-item>
                 运单名称
-                <el-input v-model="form.shipPageFunc.orderName" />
+                <el-input :maxlength="20" v-model="form.shipPageFunc.orderName" />
               </el-form-item>
             </div>
           </div>
@@ -186,10 +186,10 @@
                   <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.onlyDeleteOwnShip">只能删除自己开的运单</el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.selectOrderSetting">是否可查询全公司运单</el-checkbox>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.selectOrderSetting">可查询全公司运单</el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.controlgoodsVisibleRule">其他网点是否可看控货信息</el-checkbox>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.controlgoodsVisibleRule">其他网点可看控货信息</el-checkbox>
                 </el-form-item>
             </div>
           </div>
@@ -328,7 +328,7 @@ export default {
           value: '0',
           name: '收货地址'
         },
-/*         {
+        {
           key: 'cargoWeight',
           value: '0',
           name: '重量'
@@ -337,7 +337,7 @@ export default {
           key: 'cargoVolume',
           value: '0',
           name: '体积'
-        }, */
+        },
         {
           key: 'cargoPack',
           value: '0',
@@ -471,7 +471,7 @@ export default {
             'volumeFee': '0',
             'weightFee': '0',
             'shipFromCityName': '0',
-            // 'cargoVolume': '0',
+            'cargoVolume': '0',
             'shipCustomerNumber': '0',
             'shipSenderId': '0',
             'shipSenderAddress': '0',
@@ -479,7 +479,7 @@ export default {
             'deliveryFee': '0',
             'insuranceFee': '0',
             'shipReceiverId': '0',
-            // 'cargoWeight': '0',
+            'cargoWeight': '0',
             'pickupFee': '0',
             'shipReceiverAddress': '0',
             // 'productPrice': '0',

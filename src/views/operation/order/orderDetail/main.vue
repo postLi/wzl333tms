@@ -716,7 +716,7 @@ export default {
           'shipTotalFee': '',
           'shipTruckIdNumber': '',
           'shipUserid': '',
-          giveoutStatus: '', // 112 已发放
+          backStatus: '', // 112 已发放
           fundsGoodsStatus: '' // 269 已发放
         },
         'tmsOrderTransfer': {
@@ -804,33 +804,39 @@ export default {
           break
       }
     },
-    'form.tmsOrderShipInfo.giveoutStatus'(newVal) {
-      // 111
-      if (newVal === 112) {
+    'form.tmsOrderShipInfo.backStatus'(newVal) {
+      // 241 已接收未发放
+      if (newVal === 242) {
         // shipReceiptNum
         this.shipHuidanStatus = 'ship-huidanyifafang'
         // ship-huidanweifafang
+        // ship-huidanweihuishou
       } else {
-        if (this.form.tmsOrderShipInfo.shipReceiptNum || newVal === 111) {
+        if (newVal === 241) {
           this.shipHuidanStatus = 'ship-huidanweifafang'
+        } else if (this.form.tmsOrderShipInfo.shipReceiptNum) {
+          this.shipHuidanStatus = 'ship-huidanweihuishou'
         } else {
           this.shipHuidanStatus = ''
         }
       }
     },
     'form.tmsOrderShipInfo.fundsGoodsStatus'(newVal) {
-      // 268
+      // 268 已到账未发放
       if (newVal === 269) {
         this.shipHuokuanStatus = 'ship-huokuanyifafang'
         // ship-huokuanweifafang
+        // ship-huokuanweihuishou
       } else {
         // agencyFund
         // commissionFee
         const find = this.form.tmsOrderCargoList.filter(el => {
           return el.agencyFund > 0
         })
-        if (find.length || this.form.tmsOrderShipInfo.fundsGoodsStatus === 268) {
+        if (newVal === 268) {
           this.shipHuokuanStatus = 'ship-huokuanweifafang'
+        } else if (find.length) {
+          this.shipHuokuanStatus = 'ship-huokuanweihuishou'
         } else {
           this.shipHuokuanStatus = ''
         }

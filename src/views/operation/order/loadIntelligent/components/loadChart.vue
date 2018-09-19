@@ -247,6 +247,7 @@ export default {
   display: flex;
   flex-direction: column;
   border: 1px solid #cdf;
+  border-top: 2px solid #b8cbd5;
   .loadChart_head {
     height: 38px;
     width: 100%;

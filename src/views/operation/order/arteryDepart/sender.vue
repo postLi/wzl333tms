@@ -150,6 +150,11 @@
             prop: 'batchNo',
             width: '120',
             fixed: true
+          },{
+            label: '到付(元)',
+            prop: 'shipArrivepayFee',
+            width: '90',
+            fixed: false
           }, {
             label: '车牌号',
             prop: 'truckIdNumber',
@@ -191,12 +196,12 @@
             width: '120',
             fixed: false
           }, {
-            label: '配载总重量',
+            label: '配载总重量(kg)',
             prop: 'loadWeightall',
             width: '120',
             fixed: false
           }, {
-            label: '配载总体积',
+            label: '配载总体积(m³)',
             prop: 'loadVolumeall',
             width: '120',
             fixed: false
@@ -211,52 +216,52 @@
             width: '120',
             fixed: false
           }, {
-            label: '现付运费',
+            label: '现付运费(元)',
             prop: 'nowpayCarriage',
             width: '110',
             fixed: false
           }, {
-            label: '现付油卡',
+            label: '现付油卡(元)',
             prop: 'nowpayOilCard',
             width: '110',
             fixed: false
           }, {
-            label: '到付运费',
+            label: '到付运费(元)',
             prop: 'arrivepayCarriage',
             width: '110',
             fixed: false
           }, {
-            label: '到付油卡',
+            label: '到付油卡(元)',
             prop: 'arrivepayOilCard',
             width: '110',
             fixed: false
           }, {
-            label: '回付运费',
+            label: '回付运费(元)',
             prop: 'backpayCarriage',
             width: '110',
             fixed: false
           }, {
-            label: '回付油卡',
+            label: '回付油卡(元)',
             prop: 'backpayOilCard',
             width: '110',
             fixed: false
           }, {
-            label: '运费合计',
+            label: '运费合计(元)',
             prop: 'shipFeeAmount',
             width: '110',
             fixed: false
           }, {
-            label: '整车保险费',
+            label: '整车保险费(元)',
             prop: 'carloadInsuranceFee',
             width: '120',
             fixed: false
           }, {
-            label: '发站装卸费',
+            label: '发站装卸费(元)',
             prop: 'leaveHandlingFee',
             width: '120',
             fixed: false
           }, {
-            label: '发站其他费',
+            label: '发站其他费(元)',
             prop: 'leaveOtherFee',
             width: '120',
             fixed: false
