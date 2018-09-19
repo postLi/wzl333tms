@@ -32,7 +32,7 @@
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="top" v-if="!isShowLeftTable">
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
-          <el-button type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
+          <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
         </div>
         <el-table row-key="repertoryId" ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
@@ -78,6 +78,10 @@ export default {
     },
     resetTuckLoad: {
       type: [Number, String],
+      default: () => {}
+    },
+    addOrgRightTable: { // 判断是否给orgRightTable添加一辆车
+      type: [String, Number],
       default: () => {}
     }
   },
@@ -237,15 +241,15 @@ export default {
     }
   },
   watch: {
-    getinfoed(){
-      if(this.getinfoed){
+    getinfoed() {
+      if (this.getinfoed) {
         this.getinfoed2 = true
       }
     },
     loadTable: { // 深度监听数组变换
       handler(cval, oval) { // 拿到智能配载返回的数据
-        if(this.getinfoed2){
-          return 
+        if (this.getinfoed2) {
+          return
         }
         if (cval) {
           this.isDelOtherTruck = false
@@ -287,28 +291,51 @@ export default {
       },
       deep: true
     },
-    resetTuckLoad: {
+    resetTuckLoad: { // 参数设置新的车型列表长度
       handler(cval, oval) {
+        if (cval === '') {
+          return
+        }
+        console.log('######')
         let arr = []
         this.selectedRight = []
-        this.orgRightTable.forEach((e, index) => {
-          if (index >= Number(cval)) {
-            e.forEach(el => {
-              this.selectedRight.push(el)
-            })
-            this.orgRightTable[index] = []
+        let difflen = Number(cval ? cval : 0) - Number(this.orgRightTable.length ? this.orgRightTable.length : 0)
+        console.log('*****', difflen, cval)
+        if (difflen > 0) {
+          for(let i = 0; i< difflen; i++) {
+            this.orgRightTable.push([])
           }
-        })
-        this.isDelOtherTruck = true
-        this.goLeft()
-      }
+        } else {
+          this.orgRightTable.forEach((e, index) => {
+            if (index >= Number(cval)) {
+              e.forEach(el => {
+                this.selectedRight.push(el)
+              })
+              this.orgRightTable[index] = []
+            }
+          })
+          this.isDelOtherTruck = true
+           console.log('this.orgRightTable1:',this.orgRightTable[0].length,this.orgRightTable)
+          this.goLeft()
+           console.log('this.orgRightTable2:',this.orgRightTable[0].length,this.orgRightTable)
+        }
+      },
+      deep: true
     },
-    rightTable(){
+    rightTable() {
       console.log('rightTable:', this.rightTable.length)
-    }
-    ,
-    leftTable(){
+    },
+    leftTable() {
       console.log('leftTable:', this.leftTable.length)
+    },
+    addOrgRightTable: {
+      handler(cval, oval) {
+        if (cval !== oval) {
+          console.log('this.orgRightTable:',this.orgRightTable[0].length,this.orgRightTable)
+          this.orgRightTable.push([])
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -336,6 +363,7 @@ export default {
   },
   methods: {
     initTable() {
+      console.log( '#$%#$%#$',this.orgRightTable, this.truckIndex)
       this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
       this.rightTable.forEach(e => {
         e.loadAmount = e.repertoryAmount
@@ -352,7 +380,7 @@ export default {
           arr.push(em)
         })
       })
-      
+
       if (arr.length) {
         console.log('7778888')
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
@@ -369,7 +397,7 @@ export default {
       })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
-      
+
     },
     fetchList() {
       // this.loading = false
@@ -391,7 +419,7 @@ export default {
       //     this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
       //   })
     },
-    setSort () { // 右边列表行拖拽
+    setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
       console.log(el)
       this.sortable = Sortable.create(el, {
@@ -404,7 +432,7 @@ export default {
         onEnd: evt => {
           const targetRow = this.rightTable.splice(evt.oldIndex, 1)[0]
           this.rightTable.splice(evt.newIndex, 0, targetRow)
-          this.orgRightTable[this.truckIndex].splice(evt.newIndex, 0 , targetRow)
+          this.orgRightTable[this.truckIndex].splice(evt.newIndex, 0, targetRow)
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
@@ -448,12 +476,6 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
-          // this.leftTable = objectMerge2([], this.leftTable).filter(em => {
-          //   return em.repertoryId !== e.repertoryId
-          // })
-          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
-          //   return em.repertoryId !== e.repertoryId
-          // })
           this.leftTable.push(e)
           this.orgLeftTable.push(e)
 
@@ -461,7 +483,7 @@ export default {
             return el.repertoryId !== e.repertoryId
           })
           if (this.isDelOtherTruck) { // 如果是做参数设置时，需要删除掉多余对应车型的运单
-            this.orgRightTable = this.orgRightTable.splice(1,Number(this.resetTuckLoad))
+            this.orgRightTable = this.orgRightTable.splice(0, Number(this.resetTuckLoad))
           }
           this.orgRightTable[this.truckIndex] = objectMerge2([], this.orgRightTable[this.truckIndex]).filter(el => {
             return el.repertoryId !== e.repertoryId
@@ -487,13 +509,7 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
-          /*this.rightTable = this.rightTable.filter(em => {
-            return em.repertoryId !== e.repertoryId
-          })*/
-          console.log(this.truckIndex)
-          /*this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex].filter(em => {
-            return em.repertoryId !== e.repertoryId
-          })*/
+          console.log('goRight', this.truckIndex, this.rightTable, this.orgRightTable, this.orgRightTable[this.truckIndex])
           this.rightTable.push(e)
           this.orgRightTable[this.truckIndex].push(e)
           this.leftTable = this.leftTable.filter(el => {
@@ -502,7 +518,7 @@ export default {
           this.orgLeftTable = this.orgLeftTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
-          console.log('2222222222222222222222',this.rightTable.length)
+          console.log('2222222222222222222222', this.rightTable.length)
         }
 
       })
@@ -585,7 +601,8 @@ export default {
   display: flex;
   flex-direction: column;
   border: 1px solid #cdf;
-  .sortable-ghost{
+
+  .sortable-ghost {
     opacity: .8;
     color: #fff!important;
     background: #42b983!important;
@@ -607,9 +624,11 @@ export default {
     }
     .transferTable_main_left_head {
       border-right: 1px solid #cdf;
+      border-top: 2px solid #b8cbd5;
     }
     .transferTable_main_right_head {
       border-left: 1px solid #cdf;
+      border-top: 2px solid #b8cbd5;
     }
     .transferTable_main_left_head,
     .transferTable_main_right_head {

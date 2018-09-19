@@ -85,7 +85,6 @@ export default {
       if (this.httpend && this.stopani) {
          this.$message.error(this.errorMessage)
         setTimeout(() =>{
-
         this.$router.push({path: '/operation/order/arteryDepart'})
         this.eventBus.$emit('closeCurrentView')
         }, 2000)

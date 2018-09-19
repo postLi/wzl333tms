@@ -42,7 +42,7 @@ export function putCancelLoadTruck(loadIds, loadTypeId) {
  * @returns {AxiosPromise<any>}
  */
 export function putCancelLoadDepart(loadIds, loadTypeId) {
-  return fetch.put('/api-order/aitransport/tmsstandardcar/v1/?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
+  return fetch.put('/api-order/order/load/v1/cancelLoadDepart/?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
 }
 
 //合同

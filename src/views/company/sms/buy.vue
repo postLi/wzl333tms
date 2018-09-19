@@ -67,7 +67,7 @@ export default {
   	padding: 8px 16px;
   	background-color: #ecf8ff;
   	border-radius: 4px;
-  	border-left: 5px solid #50bfff;
+  	border-left: 5px solid #3e9ff1;
   }
   .sms_content {
     margin: 10px;

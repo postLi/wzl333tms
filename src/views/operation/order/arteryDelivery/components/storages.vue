@@ -594,9 +594,9 @@
             return scope.row.actualAmount
           }
         }, {
-          label: '实到重量',
+          label: '实到重量(kg)',
           prop: 'actualWeight',
-          width: '100',
+          width: '120',
           expand: true,
           checkfn: (row) => {
             return row.warehouStatus === 1
@@ -607,9 +607,9 @@
             return scope.row.actualWeight
           }
         }, {
-          label: '实到体积',
+          label: '实到体积(m³)',
           prop: 'actualVolume',
-          width: '100',
+          width: '120',
           expand: true,
           checkfn: (row) => {
             return row.warehouStatus === 1
@@ -653,14 +653,14 @@
           width: '100',
           fixed: false
         }, {
-          label: '配载重量',
+          label: '配载重量(kg)',
           prop: 'loadWeight',
-          width: '100',
+          width: '120',
           fixed: false
         }, {
-          label: '配载体积',
+          label: '配载体积(m³)',
           prop: 'loadVolume',
-          width: '100',
+          width: '120',
           fixed: false
         }, {
           label: '出发城市',

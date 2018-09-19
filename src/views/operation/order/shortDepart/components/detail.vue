@@ -219,6 +219,12 @@ export default {
         width: '120',
         fixed: false
       },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
         // {
         //   label: "应到件数",
         //   prop: "loadAmount",
@@ -251,7 +257,7 @@ export default {
         }
       },
       {
-        label: '实到重量',
+        label: '实到重量(kg)',
         prop: 'actualWeight',
         width: '120',
         fixed: false,
@@ -261,7 +267,7 @@ export default {
         }
       },
       {
-        label: '实到体积',
+        label: '实到体积(m³)',
         prop: 'actualVolume',
         width: '120',
         fixed: false,
@@ -277,13 +283,13 @@ export default {
         fixed: false
       },
       {
-        label: '配载重量',
+        label: '配载重量(kg)',
         prop: 'loadWeight',
         width: '120',
         fixed: false
       },
       {
-        label: '配载体积',
+        label: '配载体积(m³)',
         prop: 'loadVolume',
         width: '120',
         fixed: false
@@ -295,13 +301,13 @@ export default {
         fixed: false
       },
       {
-        label: '运单重量',
+        label: '运单重量(kg)',
         prop: 'cargoWeight',
         width: '120',
         fixed: false
       },
       {
-        label: '运单体积',
+        label: '运单体积(m³)',
         prop: 'cargoVolume',
         width: '120',
         fixed: false
