@@ -479,7 +479,7 @@ export default {
               type: 'warning'
             })
           }
-          const netdata = this.selected[0]
+          var netdata = this.selected[0]
           this.selectInfo = {}
           this.$router.push({
             path: '/operation/order/modifyOrder',
@@ -512,8 +512,8 @@ export default {
               type: 'warning'
             })
           }
-          const deleteItem = this.selected[0].shipSn
-          const id = this.selected[0].id
+          var deleteItem = this.selected[0].shipSn
+          var id = this.selected[0].id
 
           this.$confirm('确定要删除 ' + deleteItem + ' 运单吗？', '提示', {
             confirmButtonText: '删除',
@@ -547,8 +547,8 @@ export default {
               type: 'warning'
             })
           }
-          const cancelItem = this.selected[0].shipSn
-          const theid = this.selected[0].id
+          var cancelItem = this.selected[0].shipSn
+          var theid = this.selected[0].id
           this.$confirm('确定要作废 ' + cancelItem + ' 运单吗？', '提示', {
             confirmButtonText: '作废',
             cancelButtonText: '取消',
