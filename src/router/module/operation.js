@@ -40,13 +40,15 @@ export default {
         component: _import('operation/order/manage/networks'),
         meta: {role: ['admin'], ptitle: '订单管理', title: '网络订单', noCache: true, istab: true}
       }]
-  }, {
+  },
+    {
     path: '/operation/order/pickUp',
     icon: 'yygl4_tihuo',
     name: 'orderpickUp',
     component: _import('operation/order/pickUp/index'),
     meta: {role: ['admin'], title: '提货管理', noCache: false, 'code': 'ORDER_PICK'}
-  }, {
+  },
+    {
     path: '/operation/index',
     icon: 'QQ',
     hidden: true,
