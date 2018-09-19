@@ -88,8 +88,7 @@ export default {
       }
     },
     openInteligent() {
-      this.eventBus.$emit('closeCurrentView')
-      this.$router.push({
+      this.eventBus.$emit('replaceCurrentView', {
         path: '/operation/order/loadIntelligent/index',
         query: {
           tab: '智能配载',
