@@ -429,7 +429,7 @@ h1{
       len: parseInt(getParams('len'),10) || 1
     }
     if(getParams('url')){
-      apiurl = getParams('url')
+      apiurl = '/' + getParams('url')
     }
     if(getParams('page') && getParams('page')==='success'){
       showSuccessPage();
