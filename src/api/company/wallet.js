@@ -41,7 +41,8 @@ export function getTradeRecord(data) {
  * companyId 公司id
  */
 export function getWeixinPayTwocode(data) {
-  return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&id=' + data.id + '&companyId=' + data.companyId + '&access_token=' + getToken()
+  return fetch.get('/tmspluginservice/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId)
+  // return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
 }
 /**
  * 获取支付宝二维码链接
@@ -51,7 +52,8 @@ export function getWeixinPayTwocode(data) {
  * companyId 公司id
  */
 export function getAliPayTwocode(data) {
-  return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&id=' + data.id + '&companyId=' + data.companyId + '&access_token=' + getToken()
+  return fetch.get('/tmspluginservice/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId)
+  // return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
 }
 
 /**

@@ -33,35 +33,32 @@
               </el-table-column>
               <el-table-column
                 fixed
-                prop="name"
-                width="150"
+                prop="tradeTime"
+                width="180"
                 label="交易时间">
               </el-table-column>
               <el-table-column
-                prop="orgName"
+                prop="flowNo"
                 width="230"
                 label="交易流水">
               </el-table-column>
               <el-table-column
-                prop="departmentName"
+                prop="tradeTypeName"
                 width="150"
                 label="交易类型">
               </el-table-column>
               <el-table-column
-                prop="position"
+                prop="tradeFee"
                 width="150"
                 label="交易金额">
               </el-table-column>
               <el-table-column
-                prop="username"
+                prop="incomeChannelName"
                 label="收入渠道">
               </el-table-column>
               <el-table-column
+                prop="expenditureChannelName"
                 label="支出渠道">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
-                  <span class="unauth" v-else>未授权</span>
-                </template>
               </el-table-column>
             </el-table>
             </div>
@@ -89,7 +86,8 @@ import * as walletApi from '@/api/company/wallet'
 export default {
   components: {
     Pager,
-    SearchForm
+    SearchForm,
+    ReCharge
   },
   data() {
     return {
@@ -101,7 +99,7 @@ export default {
         'currentPage': 1,
         'pageSize': 100,
         'vo': {
-          // 'companyId': 0,
+          'companyId': '',
           'endTime': 'string',
           // 'expenditureChannel': 0,
           // 'flowNo': 'string',
@@ -138,6 +136,7 @@ export default {
     },
     // 获取列表
     fetchData() {
+      this.searchQuery.vo.companyId = this.otherinfo.companyId
       this.loading = true
       const data = objectMerge2(this.searchQuery)
       return walletApi.getTradeRecord(data).then(data => {
