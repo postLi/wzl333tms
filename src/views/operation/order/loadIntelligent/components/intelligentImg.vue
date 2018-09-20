@@ -1,7 +1,7 @@
 <template>
   <div class="order_img">
     <!--<input type="text" @click="openInteligent" placeholder="点击跳转">-->
-    <div class="showImg" :class="{'stopAni': httpani&&stopani}" @animationend="stopani = true">
+    <div class="showImg" @click="openInteligent" :class="{'stopAni': httpani&&stopani}" @animationend="stopani = true">
       <div class="car">
         <img src="../../../../../../src/assets/load/ani/che.png" alt=""  />
         <span class="kuai1" ></span>
@@ -78,12 +78,17 @@ export default {
         this.errorMessage = err.errorInfo || err.text || '发生未知错误！'
       })
     },
-    stopLoad() { // 请求失败时跳转到干线列表
+    stopLoad() { // 请求失败时跳转到普通配载
       if (this.httpend && this.stopani) {
         this.$message.error(this.errorMessage)
         setTimeout(() => {
           this.eventBus.$emit('closeCurrentView')
-          this.$router.push({ path: '/operation/order/arteryDepart' })
+          if(this.errorMessage === '无可智能配载的库存信息') {
+            this.$router.push({ path: '/operation/order/load', query: {loadTypeId: 39, tab: '新增配载'} })
+          }else {
+            this.$router.push({ path: '/operation/order/arteryDepart' })
+          }
+          
         }, 2000)
       }
     },

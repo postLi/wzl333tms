@@ -12,6 +12,12 @@ $dialogHeader_bgcolor: #e6e6e6;
     .el-transfer {}
   }
 }
+.tms_dialog_alignleft{
+  .el-dialog__body {
+    text-align: left;
+    .el-transfer {}
+  }
+}
 
 .tms_dialog_print_drag {
   height: 100%;

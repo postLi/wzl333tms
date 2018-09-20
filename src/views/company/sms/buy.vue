@@ -1,40 +1,52 @@
 <template>
-	<!-- 短信购买 -->
+  <!-- 短信购买 -->
   <div class="sms">
     <div class="sms_top">
-    	<p>尊敬的用户您好：当前剩余可发的短信0条，请购买，才能正常使用。当前账户余额0元。 <el-button size="mini" type="success" icon="el-icon-sort">充值</el-button></p>
-
+      <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
+        <el-button size="mini" type="primary" icon="el-icon-sort">充值</el-button>
+      </p>
     </div>
     <div class="sms_content">
       <el-row :gutter="10">
         <el-col :span="4" v-for="(item, index) in dataList" :key="item.id">
           <el-card shadow="hover" class="smsCard">
             <div slot="header" class="clearfix">
-              <span>套餐{{changeNumCN[item.id]}}</span>
+              <span>套餐{{changeNumCN[index]}}</span>
             </div>
-            <div>
+            <div class="smsCard_content">
               <p>{{item.amount}}条短信</p>
-              <h4>{{item.fee}}元</h4>
-              <el-button type="danger">立即购买</el-button>
+              <h4>{{item.price}}元/条</h4>
+              <el-button type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
             </div>
           </el-card>
         </el-col>
       </el-row>
     </div>
+    <buyTips :info="handleBuyArr" :popVisible="popVisibleTips" @close="closeTips" @success="getSearchSmsSurplus"></buyTips>
   </div>
 </template>
 <script>
-import { getSmspackages } from '@/api/company/sms'
+import buyTips from './components/buyTips'
+import { getSmspackages, getSearchSmsSurplus, postBuy } from '@/api/company/sms'
+import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
     return {
       dataList: [],
       changeNumCN: [],
+      packageInfo: {},
+      handleBuyItem: {},
+      popVisibleTips: false,
+      handleBuyArr: []
     }
+  },
+  components: {
+    buyTips
   },
   mounted() {
     this.converToCn()
     this.getSmspackages()
+    this.getSearchSmsSurplus()
   },
   methods: {
     converToCn() {
@@ -50,11 +62,42 @@ export default {
         this.changeNumCN.push(str)
       }
     },
+    getSearchSmsSurplus() {
+      getSearchSmsSurplus().then(data => {
+        this.packageInfo = data
+      })
+      .catch(error => {
+        this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+      })
+    },
     getSmspackages() {
       return getSmspackages().then(data => {
         this.dataList = data
-        console.log(data)
+        this.dataList.forEach(e => {
+          let count = 0
+          count = (Number(e.fee) / Number(e.amount)).toFixed(2)
+          this.$set(e, 'price', count)
+        })
       })
+    },
+    goBuy(obj) {
+      this.handleBuyItem = Object.assign({}, obj)
+      if (Number(obj.fee) <= Number(this.packageInfo.balance)) {
+        this.handleBuyArr[0] = this.handleBuyItem
+        this.popVisibleTips = true
+      } else {
+        const h = this.$createElement
+        this.$msgbox({
+          title: '购买失败',
+          message: h('div', { style: 'text-align: center' }, [
+            h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
+          ]),
+          confirmButtonText: '充值'
+        })
+      }
+    },
+    closeTips() {
+      this.popVisibleTips = false
     }
   }
 }
@@ -62,20 +105,46 @@ export default {
 </script>
 <style lang="scss">
 .sms {
-  .sms_top{
-  	margin: 10px;
-  	padding: 8px 16px;
-  	background-color: #ecf8ff;
-  	border-radius: 4px;
-  	border-left: 5px solid #3e9ff1;
+  .sms_top {
+    margin: 10px;
+    padding: 8px 16px;
+    background-color: #ecf8ff;
+    border-radius: 4px;
+    border-left: 5px solid #50bfff;
+    b {
+      color: red;
+      padding: 0 5px;
+    }
   }
   .sms_content {
     margin: 10px;
-    .smsCard{
-    	padding: 10px;
+
+    .smsCard {
+      border: 1px solid #d0d7e5;
+      .smsCard_content {
+        text-align: center;
+        p {
+          font-size: 18px;
+          font-weight: 700;
+          padding: 20px 0;
+        }
+        h4 {
+          color: #666666;
+        }
+        .smsCard_footbtn {
+          margin: 20px 0;
+        }
+      }
     }
-    .el-card{
-    	// border: 1px solid #ecf8ff;
+    .el-card {
+      .el-card__header {
+        text-align: center;
+        padding: 10px 10px;
+        border-bottom: 1px solid #d0d7e5;
+      }
+      .el-card__body {
+        padding: 0px;
+      }
     }
   }
 }
