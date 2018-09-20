@@ -213,6 +213,7 @@
         for (const i in this.dotInfo) {
           data[i] = this.dotInfo[i]
         }
+        console.log('////////////', data)
         // data.tmsFinanceBillCheckDto.createTime = (data.tmsFinanceBillCheckDto.createTime)
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
         if (this.sendId) {

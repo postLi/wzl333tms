@@ -17,7 +17,10 @@ const TMS_DICT_OBJECT = {
  */
 for (const i in $const) {
   if (typeof $const[i] === 'object') {
-    TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).map(el => {
+    TMS_DICT_OBJECT[(i + '').toLocaleLowerCase()] = Object.entries($const[i]).sort((a, b) => {
+      // 空值一般是"全部"，需要排到最前面
+      return b[0] === '' ? 1 : 0
+    }).map(el => {
       let obj = {}
       obj = {
         id: /\d+/.test(el[0]) ? (parseInt(el[0], 10) || el[0]) : el[0],

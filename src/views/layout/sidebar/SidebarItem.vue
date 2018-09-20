@@ -94,11 +94,10 @@ export default {
     toggle(event) {
       const el = closest(event.target, 'li')
       const ul = closest(el, 'ul')
-      console.log()
       const lis = Array.from(ul.querySelectorAll('.isOpen') || []).filter(l => {
         return l !== el
       }).forEach(el2 => {
-        el2.classList.toggle('isOpen')
+        el2.classList.remove('isOpen')
       })
       el.classList.toggle('isOpen')
     },

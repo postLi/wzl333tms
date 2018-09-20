@@ -9,7 +9,7 @@
     <div class="shipstatus" :class="[shipHuidanStatus]"></div>
     <div class="shipstatus" :class="[shipHuokuanStatus]"></div>
 
-    <div class="createOrder-title"><span>收发货凭证</span></div>
+    <div class="createOrder-title"><span>{{ otherinfo.systemSetup.shipPageFunc.orderName || '收发货凭证'}}</span></div>
     <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" status-icon inline label-position="right" size="mini">
     <div class="createOrder-info clearfix">
       <div class="order-num">运单号： <span class="order-num-info">

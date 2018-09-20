@@ -129,8 +129,7 @@
             label=""
             width="80">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
-                                                                                      fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -217,10 +216,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+            v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -228,6 +244,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -235,6 +252,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -384,6 +402,7 @@
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -391,6 +410,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -398,6 +418,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -544,10 +565,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -555,6 +593,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -562,6 +601,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -711,6 +751,7 @@
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -718,6 +759,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -725,6 +767,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -821,6 +864,8 @@
     },
     data() {
       return {
+        currentFeeTypeIds: [],
+        orgFeeTypeIds: [],
         tooltip: false,
         disabledName: true,
         pickerOptions2: {
@@ -929,6 +974,8 @@
       this.onSubmit()
     },
     mounted() {
+      this.currentFeeTypeIds = []
+      this.orgFeeTypeIds = []
       this.getSelectType()
       this.onSubmit()
     },
@@ -940,6 +987,9 @@
       const type = 'custoer_fee_type'
       getSelectType(type, this.otherinfo.orgid).then(data => {
         this.feeIdsArr = data
+        data.forEach((e, index) => {
+          this.orgFeeTypeIds[index] = e.dictValue
+        })
       })
     },
       export1() {
@@ -956,6 +1006,9 @@
         this.searchTitle.feeTypeId =  this.typeIds.join(',')
         return postCFinanceinitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
@@ -1001,6 +1054,9 @@
         return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
+          this.typeIds =  data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           data.customerDetailDtoList.forEach((el, val) => {
@@ -1053,6 +1109,7 @@
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
                 this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+                this.form.tmsFinanceBillCheckDto.feeTypeId = this.searchTitle.feeTypeId
                 for (const i in this.messageInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                 }
