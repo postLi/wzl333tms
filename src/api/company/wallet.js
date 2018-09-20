@@ -29,7 +29,7 @@ import { getToken } from '@/utils/auth'
 }
  */
 export function getTradeRecord(data) {
-  return fetch.get('/tmspluginservice/system/traderecord/v1.1/', data).then(res => {
+  return fetch.post('/tmspluginservice/system/traderecord/v1.1/', data).then(res => {
     return res.data || []
   })
 }
@@ -78,5 +78,7 @@ export function getTradeResult(type, id) {
  * 获取账户余额
  */
 export function getMyWallet() {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/findMywallet')
+  return fetch.get('/tmspluginservice/common/Pay/v1.1/findMywallet').then(res => {
+    return res.data || 0
+  })
 }
