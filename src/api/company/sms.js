@@ -87,10 +87,49 @@ export function postSmsSendLogList(params) {
 }
 /**
  * 查询模板相关默认字段
- *  { "orgId":1}
+ *  { "orgId":1,"tmpLogId": "21", "defaultTmpId": "22"}
  */
-export function postSmsSetColumnsList(orgId) {
-  return fetch.post('/api-plugin/system/tmssystemsmssetcolumns/v1.1/getSmsSetColumnsList/', {orgId: orgId}).then(res => {
+export function postSmsSetColumnsList(params) {
+  return fetch.post('/api-plugin/system/tmssystemsmssetcolumns/v1.1/getSmsSetColumnsList/', params).then(res => {
+    return res.data
+  })
+}
+/**
+ * 短信默认模板
+ *  { "defaultTmpId": 12,"orgId":1}
+ */
+export function postDefaultSmsTemplate(params) {
+  return fetch.post('/api-plugin/system/tmssystemsmstemplate/v1.1/getDefaultSmsTemplate/', params).then(res => {
+    return res.data
+  })
+}
+/**
+ * 查询短信模板
+ *  { "id": 22,"orgId":1}
+ */
+export function postSmsTemplateLog(params) {
+  return fetch.post('/api-plugin/system/tmssystemsmstemplatelog/v1.1/getSmsTemplateLog/', params).then(res => {
+    return res.data
+  })
+}
+/**
+ * 更新模板内容
+ * {
+        "id": "14",
+        "defaultTmpId": "14",
+        "companyId": 1,
+        "remindTarget": "发货人",
+        "remindTargetCode":"shipper",
+        "sendNode": "创建托运单",
+        "sendNodeCode": "create_ship",
+        "templateContent": "【安发物流】您在(开单网点)托运的(总件数)件(货品名)已成功受理，运单号(运单号)网点客户电话(网点电话)。",
+        "templateContentCoded": "",
+        "applyStatus": 0,
+        "sendStatus": 1
+    }
+ */
+export function udpateSmsTemplateLog(params) {
+  return fetch.post('/api-plugin/system/tmssystemsmstemplatelog/v1.1/udpateSmsTemplateLog/', params).then(res => {
     return res.data
   })
 }

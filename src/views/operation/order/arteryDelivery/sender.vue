@@ -112,12 +112,12 @@ export default {
           width: '120',
           fixed: true
         },
-        // {
-        //   label: '到付(元)',
-        //   prop: 'shipArrivepayFee',
-        //   width: '90',
-        //   fixed: false
-        // }, 
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        }, 
         {
           label: '车牌号',
           prop: 'truckIdNumber',

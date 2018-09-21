@@ -3,7 +3,7 @@
   <div class="sms">
     <div class="sms_top">
       <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
-        <el-button size="mini" type="primary" icon="el-icon-sort">充值</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge">充值</el-button>
       </p>
     </div>
     <div class="sms_content">
@@ -23,9 +23,11 @@
       </el-row>
     </div>
     <buyTips :info="handleBuyArr" :popVisible="popVisibleTips" @close="closeTips" @success="getSearchSmsSurplus"></buyTips>
+    <Recharge :popVisible.sync="popVisibleRecharge" @success="getSearchSmsSurplus"></Recharge>
   </div>
 </template>
 <script>
+import Recharge from '../wallet/components/recharge'
 import buyTips from './components/buyTips'
 import { getSmspackages, getSearchSmsSurplus, postBuy } from '@/api/company/sms'
 import { objectMerge2 } from '@/utils/index'
@@ -37,11 +39,13 @@ export default {
       packageInfo: {},
       handleBuyItem: {},
       popVisibleTips: false,
+      popVisibleRecharge: false,
       handleBuyArr: []
     }
   },
   components: {
-    buyTips
+    buyTips,
+    Recharge
   },
   mounted() {
     this.converToCn()
@@ -49,6 +53,9 @@ export default {
     this.getSearchSmsSurplus()
   },
   methods: {
+    recharge () {
+      this.popVisibleRecharge = true
+    },
     converToCn() {
       let i = 0
       let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']

@@ -561,6 +561,12 @@
           width: '120',
           fixed: false
         },
+        {
+            label: '到付(元)',
+            prop: 'shipArrivepayFee',
+            width: '90',
+            fixed: false
+          }, 
           //   {
           //   label: '应到件数',
           //   prop: 'loadAmount',
