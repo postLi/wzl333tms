@@ -65,11 +65,9 @@
 
       <el-row class="main_left" :gutter="15">
         <el-col :span="18">
-          <h4>收支走势</h4>
           <ul class="ul_left" id="main"></ul>
         </el-col>
         <el-col :span="6">
-          <h4>实际发生</h4>
           <div class="databox datablue">
             <span class="dataico"><icon-svg icon-class="caiwugl2_yingfu" /></span>
             <span class="databox-value">{{thedata.amountReceivableFee}}元</span>
@@ -342,7 +340,7 @@ export default {
       const data = Object.assign({}, this.searchQuery.vo)
       data.orgAllId = this.orgId.join(',')
       // 临时测试数据
-      data.orgAllId = this.orgId.then((res, index) => {
+      data.orgAllId = this.orgId.map((res, index) => {
         return (index + 1)
       }).join(',')
       data.buttonKey = this.currentkey
@@ -366,7 +364,7 @@ export default {
     initYearChart(echart, shipArr, volumeArr) {
       const option3 = {
         title: {
-          text: '',
+          text: '收支走势',
           subtext: ''
         },
         tooltip: {
