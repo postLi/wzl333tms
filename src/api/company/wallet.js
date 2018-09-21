@@ -64,16 +64,18 @@ export function getTradeId() {
 }
 
 /**
- * 获取交易结果
- * @param {*} type wx 或者 ali
+ * 获取阿里支付的交易结果
  * @param {*} id 交易id
  */
-export function getTradeResult(type, id) {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/' + id, {
-    params: {
-      type
-    }
-  })
+export function getAliTradeResult(id) {
+  return fetch.get('/tmspluginservice/common/Pay/v1.1/' + id)
+}
+/**
+ * 获取微信支付的交易结果
+ * @param {*} id 交易id
+ */
+export function getWXTradeResult(id) {
+  return fetch.get('/tmspluginservice/pay/weixin/v1.1/' + id)
 }
 
 /**
