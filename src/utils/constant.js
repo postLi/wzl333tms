@@ -133,7 +133,6 @@ export const cursorPosition = {
 
     return rangeData;
   },
-
   set: function(textarea, rangeData) { // 设置回原先的 Textarea 元素的光标位置
     var oR, start, end;
     if (!rangeData) {

@@ -63,6 +63,7 @@ export default {
         this.$nextTick(() => {
           this.postSmsSetColumnsList()
           this.postSmsTemplateLog()
+          // this.initTextarea()
         })
       }
     },
@@ -87,7 +88,15 @@ export default {
       smsColumnLen: 0
     }
   },
+  mounted () {
+    
+  },
   methods: {
+    initTextarea () {
+      let range = document.selection.createRange()
+      let editor = document.getElementById('templateContent')
+      range.moveToElementText(editor)
+    },
     drag(event) {
       dom = event.currentTarget
       console.log('drap', dom)
