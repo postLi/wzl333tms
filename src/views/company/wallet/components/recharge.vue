@@ -61,10 +61,11 @@ export default {
       errmsg: '',
       paysuccess: false,
       payfail: false,
-      payway: '',
-      tcurl: 'http://192.168.1.188:125/tms20180912/%E9%92%B1%E5%8C%85%EF%BC%8C%E7%9F%AD%E4%BF%A1/images/%E5%85%85%E5%80%BC/u5601.png',
+      payway: 'wx',
+      tcurl: '',
       showcharge: true,
-      currentIndex: 0
+      currentIndex: 0,
+      payfee: ''
     }
   },
   mounted() {
@@ -91,6 +92,8 @@ export default {
     }
   },
   watch: {
+    popVisible(newVal) {
+    },
     currentIndex(newVal) {
       if (newVal === 555) {
         this.$refs.otherinp.focus()
@@ -104,6 +107,13 @@ export default {
         const val = parseFloat(newVal, 10)
         this.payerror = val < 1
       }
+    },
+    showcharge(newVal) {
+      if (newVal) {
+        // 返回充值详情页时，重置所有状态？
+      } else {
+        this.popTitle = '支付¥' + this.payfee + '元'
+      }
     }
   },
   methods: {
@@ -114,16 +124,22 @@ export default {
       this.errmsg = ''
       this.paysuccess = false
       this.payfail = false
-      this.payway = ''
+      this.payway = 'wx'
       this.tcurl = ''
       this.showcharge = true
-      this.currentIndex = ''
+      this.currentIndex = 0
+      this.payfee = ''
     },
     closeMe(done) {
-      if (!this.showcharge) {
+      if (!this.showcharge && !this.paysuccess) {
         this.showcharge = true
+        this.payfail = false
+        this.popTitle = '充值详情'
         clearTimeout(this.timer)
         return
+      }
+      if (this.paysuccess) {
+        this.$emit('success')
       }
       this.$emit('close')
       this.$emit('update:popVisible', false)
@@ -155,6 +171,7 @@ export default {
       }
       // 获取支付方式
       data.type = this.payway
+      this.payfee = data.fee
 
       data.companyId = this.otherinfo.companyId
 
@@ -184,7 +201,6 @@ export default {
           })
         }
       }).catch(err => {
-        console.log('err', err)
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
@@ -192,23 +208,30 @@ export default {
     startPay() {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
+        let pro
         if (this.payway === 'wx') {
-          walletApi.getWXTradeResult(this.id).then(res => {
-            if (res.text === '未支付') {
-              this.startPay()
-            }
-          }).catch(err => {
-            this.startPay()
-          })
+          pro = walletApi.getWXTradeResult(this.id)
         } else {
-          walletApi.getAliTradeResult(this.id).then(res => {
-            if (res.text === '未支付') {
-              this.startPay()
-            }
-          }).catch(err => {
-            this.startPay()
-          })
+          pro = walletApi.getAliTradeResult(this.id)
         }
+        pro.then(res => {
+          const statsTxt = res.text
+          if (statsTxt === '等待充值' || statsTxt === '未支付' || statsTxt === '支付中') {
+            this.startPay()
+          } else if (statsTxt === '支付成功' || statsTxt === '充值成功') {
+            this.paysuccess = true
+            setTimeout(() => {
+              this.closeMe()
+            }, 2000)
+          } else {
+            this.$emit('fail')
+            this.payfail = true
+          }
+        }).catch(err => {
+          this.$emit('fail')
+          this.payfail = true
+          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        })
       }, 3000)
     }
   }
@@ -313,7 +336,7 @@ export default {
     border: 1px solid #ccc;
     cursor: pointer;
     &.active{
-      border-color:#F3978F;
+      border-color:#0099FF;
       cursor: default;
     }
   }

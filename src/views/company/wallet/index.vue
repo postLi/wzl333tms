@@ -114,7 +114,7 @@ export default {
           // 'userId': 0
         }
       },
-      popVisible: true
+      popVisible: false
     }
   },
   mounted() {
@@ -158,7 +158,7 @@ export default {
       this.fetchData()
     },
     payoff() {
-
+      this.popVisible = true
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

@@ -70,13 +70,13 @@
           <div class="databox datablue">
             <span class="dataico"><icon-svg icon-class="caiwugl2_yingfu" /></span>
             <span class="databox-value">{{thedata.amountReceivableFee}}元</span>
-            <span class="databox-label">实际已收</span>
+            <span class="databox-label">现金流入</span>
           </div>
           <div class="databox-line"></div>
           <div class="databox datared">
             <span class="dataico"><icon-svg icon-class="caiwugl1_yingshou" /></span>
             <span class="databox-value">{{thedata.amountPayableFee}}元</span>
-            <span class="databox-label">已付</span>
+            <span class="databox-label">现金流出</span>
           </div>
           <div class="databox-line"></div>
           <div class="databox datagreen">
@@ -539,6 +539,12 @@ export default {
       }
       .el-input__icon{
         line-height: 30px;
+      }
+      .el-select__tags-text{
+        color: #3E9FF1;
+      }
+      .el-select .el-tag{
+        background: none;
       }
     }
     ul{
