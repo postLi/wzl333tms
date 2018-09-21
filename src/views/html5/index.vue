@@ -3,7 +3,6 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <div class="getorglist">
-          选择网点：
           <SelectTree multiple :multiple-limit="10"  v-model="orgId" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
         </div>
         <ul>
@@ -73,11 +72,13 @@
             <span class="databox-value">{{thedata.amountReceivableFee}}元</span>
             <span class="databox-label">实际已收</span>
           </div>
+          <div class="databox-line"></div>
           <div class="databox datared">
             <span class="dataico"><icon-svg icon-class="caiwugl1_yingshou" /></span>
             <span class="databox-value">{{thedata.amountPayableFee}}元</span>
             <span class="databox-label">已付</span>
           </div>
+          <div class="databox-line"></div>
           <div class="databox datagreen">
             <span class="dataico"><icon-svg icon-class="caiwu" /></span>
             <span class="databox-value">{{ thedata.amountReceivableFee - thedata.amountPayableFee }}元</span>
@@ -392,6 +393,7 @@ export default {
         xAxis: [
           {
             type: 'category',
+            boundaryGap: false,
             // '2018年\n\r1月'
             data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
           }
@@ -406,6 +408,7 @@ export default {
             name: '收入',
             type: 'line',
             smooth: true,
+            itemStyle: { normal: { color: '#B6A2DE', areaStyle: { type: 'macarons', color: '#B6A2DE' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
             data: shipArr,
             markPoint: {
@@ -419,6 +422,7 @@ export default {
             name: '支出',
             type: 'line',
             smooth: true,
+            itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: volumeArr,
             markPoint: {
@@ -506,11 +510,11 @@ export default {
   flex-direction: column;
 
   .head_title{
-    height: 41px ;
-    line-height: 41px ;
+    height: 31px ;
+    line-height: 31px ;
     overflow: hidden;
     border-radius: 2px;
-    background: #ffff;
+    background: #fff;
     box-sizing: border-box;
     position: relative;
     // margin-bottom: 0.6%;
@@ -520,17 +524,29 @@ export default {
       display: inline-block;
     }
     .getorglist{
+      border-left: 1px solid #eee;
       position: absolute;
-      left: 10px;
+      right: 10px;
       top: 0;
       z-index: 2;
       font-size: 14px;
+      line-height: 31px;
+      .el-input--suffix .el-input__inner{
+        border: none;
+        line-height: 30px;
+        height: 30px;
+        width: 170px;
+      }
+      .el-input__icon{
+        line-height: 30px;
+      }
     }
     ul{
       // margin-right: -50% !important;
       
       position: relative;
       width: 100%;
+      padding-right: 180px;
       // width: 45%;
       height: 100%;
       text-align: right;
@@ -589,7 +605,7 @@ export default {
 
   .databox{
     position: relative;
-    height: 30%;
+    height: 31%;
     color: #fff;
     padding-right: 20px;
     text-align: right;
@@ -623,14 +639,15 @@ export default {
   }
   .datablue{
     background: #409EFF;
-    margin-bottom: 5%;
   }
   .datared{
     background: #F56C6C;
-    margin-bottom: 5%;
   }
   .datagreen{
     background: #67C23A;
+  }
+  .databox-line{
+    height: 3.5%;
   }
   .main_forthUl{
     overflow: hidden;
