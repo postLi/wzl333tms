@@ -668,7 +668,7 @@ export default {
     line-height: 31px ;
     overflow: hidden;
     border-radius: 2px;
-    background: #ffff;
+    background: #fff;
     box-sizing: border-box;
     // margin-bottom: 0.6%;
     // box-shadow: 2px 2px 2px 2px ,-2px -2px -2px -2px rgba(0, 0, 0, 0.10);
