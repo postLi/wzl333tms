@@ -113,7 +113,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML }
          if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML }
          if (is64IE) document.write(strHtm64_Install)
@@ -292,10 +292,12 @@
      // info.replace(/^\"|\"$/g,"")
      info.replace(/[\\]/g, '')
      // info = info.replace('PRINT_INITA', 'PRINT_INIT')
-     LODOP.ADD_PRINT_SETUP_BKIMG('D:\\company\\program\\TMS\\print\\运单背景图')
+
      eval(info)
+    //  LODOP.ADD_PRINT_SETUP_BKIMG('E:/工作资料/打印机驱动/20180921095700758_0003.jpg')
      // LODOP.PRINT_SETUP()
      LODOP.PREVIEW()
+    //  LODOP.PRINT_DESIGN()
    } catch (err) {
      getLodop()
    }
@@ -310,7 +312,7 @@
      let arr = new Array()
      arr = Object.assign([], info)
      let str = ''
-     for (let item in arr) { // 没有传值的项设置位空字符串
+     for (const item in arr) { // 没有传值的项设置位空字符串
        if (arr[item].value === undefined || arr[item].value === null) {
          arr[item].value = ''
        }
@@ -320,11 +322,12 @@
          str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
        } else {
          if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+           str += 'LODOP.ADD_PRINT_TEXTA(0,' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
            str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
          } else {
-           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+           str += 'LODOP.ADD_PRINT_TEXTA(0,' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
            str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
          }
        }
      })

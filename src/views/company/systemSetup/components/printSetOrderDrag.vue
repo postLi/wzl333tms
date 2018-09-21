@@ -94,7 +94,7 @@
           width:item.width/prxvalue +'px', 
           height:item.height/prxvalue+'px',
           lineHeight:(item.height/prxvalue - 3)+'px', 
-          fontSize: item.fontsize+'px',
+          fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
           fontWeight: item.bold ? 800 : 400,
           textAlign: item.alignment==='文字居中'?'center': (item.alignment==='文字靠右'?'right':'left')}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
@@ -114,6 +114,7 @@
 </template>
 <script>
 // lodop 打印单位换算 1in(英寸)=2.54cm(厘米)=25.4mm(毫米)=72pt(磅)=96px 1px约等于0.3mm
+// px不是像素，是绝对长度单位，1px等于1/96英寸，与正常DPI显示设置的像素值相等
 let dom = ''
 import draggable from 'vuedraggable'
 import hotkeys from '@/utils/hotkeys'
@@ -140,7 +141,7 @@ export default {
           height: 0
         }
       },
-      prxvalue: 0.3,
+      prxvalue: 0.264,
       classItem: [],
       orgLabelList: [],
       labelListView: [],
@@ -214,7 +215,8 @@ export default {
         height: viewHeight / this.prxvalue + 'px',
         backgroundImage: 'url(' + bgurl + ')',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'contain',
+        backgroundSize: '100% auto',
+        // backgroundSize: 'contain',
         backgroundPosition: '0 0'
       }
     },
@@ -468,7 +470,7 @@ export default {
             if (e.isshow) { // 显示项要在预览处初始化
               this.labelListView.push(e)
             }
-            e.fontsize = e.fontsize ? e.fontsize : 14
+            e.fontsize = e.fontsize ? e.fontsize : 10
             e.isshow = e.isshow === 1 // 1-true 显示
             e.bold = e.bold === 2 // 2-true 加粗
             e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
@@ -532,7 +534,7 @@ export default {
               e.leftx = 0
               e.width = Math.round(150 * this.prxvalue)
               e.height = Math.round(24 * this.prxvalue)
-              e.fontsize = 14
+              e.fontsize = 10
               e.bold = 0
               e.alignment = 1
             })
