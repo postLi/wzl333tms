@@ -334,7 +334,7 @@ h1{
         if(url){
           loginfo('======上传完成===')
           loginfo('链接：' + url)
-          $("#preview")[0].src = url;
+          $("#preview").attr('src', url);
           PAGE.data.upurl = url;
           $('.upload-btns').show();
           $('.imgbox').show().css('display', 'flex');

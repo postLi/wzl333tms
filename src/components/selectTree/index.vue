@@ -1,5 +1,5 @@
 <template>
-  <el-select @visible-change="getData" popper-class="selectTreePop"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select @visible-change="getData" collapse-tags popper-class="selectTreePop" :multiple="multiple"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-if="!listdata.length"
         v-for="item in openGroups"
@@ -71,7 +71,7 @@ export default {
       default: () => {}
     },
     value: {
-      type: [Number, String]
+      type: [Number, String, Array]
     },
     disabled: {
       type: Boolean,
@@ -91,17 +91,18 @@ export default {
     remote: {
       type: Boolean,
       default: false
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     value(newVal) {
-      this.aid = parseInt(newVal, 10) || ''
-
       this.init()
     }
   },
   mounted() {
-    this.aid = parseInt(this.value, 10) || ''
     this.init()
     var agnt = navigator.userAgent.toLowerCase()
     // <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
@@ -139,6 +140,11 @@ export default {
   },
   methods: {
     init() {
+      this.aid = parseInt(this.value, 10) || ''
+      if (this.multiple) {
+        this.aid = this.value
+      }
+
       if (!this.inited) {
         this.inited = true
         this.fetchData()

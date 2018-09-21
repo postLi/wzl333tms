@@ -39,6 +39,7 @@
 import PopFrame from '@/components/PopFrame/index'
 import * as walletApi from '@/api/company/wallet'
 import { getSelectType } from '@/api/common'
+import QRCode from 'qrcode'
 
 export default {
   props: {
@@ -121,6 +122,7 @@ export default {
     closeMe(done) {
       if (!this.showcharge) {
         this.showcharge = true
+        clearTimeout(this.timer)
         return
       }
       this.$emit('close')
@@ -170,8 +172,16 @@ export default {
         if (res.data) {
           this.id = res.text
           this.showcharge = false
-          this.tcurl = res.data
-          this.startPay()
+          // this.tcurl = res.data
+          // 根据支付链接生成二维码
+          QRCode.toDataURL(res.data, {
+            rendererOpts: {
+              margin: 0
+            }
+          }).then(url => {
+            this.tcurl = url
+            this.startPay()
+          })
         }
       }).catch(err => {
         console.log('err', err)
@@ -185,7 +195,7 @@ export default {
         walletApi.getTradeResult(this.payway, this.id).then(res => {
 
         }).catch(err => {
-
+          this.startPay()
         })
       }, 3000)
     }
@@ -313,7 +323,6 @@ export default {
       width: 220px;
       height: 220px;
       border: 1px solid #56AC65;
-      padding: 20px;
       margin: 10px auto;
     }
     img{
