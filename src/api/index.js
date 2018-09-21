@@ -20,3 +20,13 @@ export function getHomeYearDetail() {
     return res.data
   })
 }
+/**
+ * ====== 控制台 =======
+ */
+export function getConsoleData(data) {
+  return fetch.post('/ling/system/tmshomefinance/v1/get/', data)
+}
+
+export function getConsoleChartData() {
+  return fetch.get('/ling/system/tmshomefinance/v1/findCapacityorgid')
+}

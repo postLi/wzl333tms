@@ -105,7 +105,7 @@ export default {
   height: 100%;
   overflow: auto;
 }
-popRight-content .popRight-footer{
+.popRight-content .popRight-footer{
   position: absolute;
   bottom: 3px;
   left: 0;
