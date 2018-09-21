@@ -194,13 +194,17 @@ export default {
       this.timer = setTimeout(() => {
         if (this.payway === 'wx') {
           walletApi.getWXTradeResult(this.id).then(res => {
-
+            if (res.text === '未支付') {
+              this.startPay()
+            }
           }).catch(err => {
             this.startPay()
           })
         } else {
           walletApi.getAliTradeResult(this.id).then(res => {
-
+            if (res.text === '未支付') {
+              this.startPay()
+            }
           }).catch(err => {
             this.startPay()
           })

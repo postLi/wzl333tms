@@ -408,7 +408,7 @@ export default {
             name: '收入',
             type: 'line',
             smooth: true,
-            itemStyle: { normal: { color: '#B6A2DE', areaStyle: { type: 'macarons', color: '#B6A2DE' }}},
+            itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
             data: shipArr,
             markPoint: {
