@@ -7,7 +7,7 @@
       <p><b>系统默认前缀为公司名称：</b><br><br><el-tag size="mini">例如</el-tag> 【公司名称】您在某某网点托运的5件电脑，已成功受理，运单号：123445554.</p>
     </el-form>
     <div slot="footer">
-      <el-button type="primary" @click="submitForm('formModel')">确 定</el-button>
+      <el-button type="primary" @click="submitForm('formModel')" v-if="!isEdit">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>

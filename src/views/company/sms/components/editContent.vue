@@ -2,23 +2,31 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" v-loading="loading">
     <template slot="content">
       <div class="smsedit_wrapper">
-        <div class="smsedit_head">
+        <div class="smsedit_tite">
           <span>{{info.sendNode}}</span>
         </div>
         <div class="smsedit_search">
-          <el-input placeholder="搜索可配置字段" v-model="currentSearch">
+          <el-autocomplete v-model="currentSearch" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" popper-class="popperHide">
             <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            <template slot="prepend"> 可配置字段 </template>
-          </el-input>
+            <template slot="prepend"> 可配置字段 <span>{{smsColumnLen}}</span></template>
+          </el-autocomplete>
         </div>
-        <div class="smsedit_list">
+        <div class="smsedit_list clearfix">
           <ul>
-            <li v-for="(item, index) in smsColumn" :key="item.id">
-              <el-tag>{{item.colName}}</el-tag>
+            <li v-for="(item, index) in smsColumn" :key="item.id" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)">
+              <el-tag :type="item.colName.indexOf(currentSearch)!==-1?(currentSearch ? 'danger':'info'):'info'" size="mini">{{item.colName}}</el-tag>
             </li>
           </ul>
         </div>
+        <div class="smsedit_tite">
+          <span>短信内容</span>
+        </div>
         <div class="smsedit_content">
+          <!-- <div @drop='drop($event)' @dragover='allowDrop($event)' v-for="item in smsColumn2">
+            ({{item}})
+          </div> -->
+          <el-input @drop='drop($event)' @dragover='allowDrop($event)' id="templateContent" style="height: 100%;" type="textarea" :rows="2" placeholder="请输入内容" v-model="smsTemplate" focus>
+          </el-input>
         </div>
       </div>
     </template>
@@ -30,11 +38,14 @@
   </pop-right>
 </template>
 <script>
+let dom = ''
 import popRight from '@/components/PopRight/index'
-import { postSmsSetColumnsList } from '@/api/company/sms'
+import draggable from 'vuedraggable'
+import { postSmsSetColumnsList, postDefaultSmsTemplate, postSmsTemplateLog, udpateSmsTemplateLog } from '@/api/company/sms'
 export default {
   components: {
-    popRight
+    popRight,
+    draggable
   },
   props: {
     popVisible: {
@@ -47,37 +58,167 @@ export default {
     }
   },
   watch: {
-    info(newVal) {},
-    popVisible(newVal) {
+    info(newVal) {
       if (newVal) {
         this.$nextTick(() => {
           this.postSmsSetColumnsList()
+          this.postSmsTemplateLog()
         })
       }
     },
+    popVisible(newVal) {},
+    smsColumn(newVal) {
+      console.log(newVal.length)
+      if (newVal) {
+        this.smsColumnLen = newVal.length
+      }
+    }
   },
   data() {
     return {
       popTitle: '编辑短信',
       loading: false,
       currentSearch: '',
-      smsColumn: []
+      smsColumn: [],
+      smsColumn2: [],
+      orgSmsColumn: [],
+      smsTemplate: '',
+      smsTemplateObj: {},
+      smsColumnLen: 0
     }
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
+    drag(event) {
+      dom = event.currentTarget
+      console.log('drap', dom)
+    },
 
+    drop(event) {
+      event.preventDefault()
+      let strName = dom.getAttribute('data-fileName')
+      this.addTemplate(strName)
+    },
+    allowDrop(event) {
+      event.preventDefault() //preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
+    },
+    addTemplate(strName, object, index) { // 添加到短信模板内容区, 并且可配置区域减少该字段
+      let newStrName = '(' + strName + ')'
+      let tx = document.getElementById("templateContent")
+      let pos = this.$const.cursorPosition.get(tx)
+      this.$const.cursorPosition.add(tx, pos, newStrName)
+      this.$nextTick(() => {
+        this.smsColumn2.push(strName)
+        // this.smsColumn.splice(index, 1)
+        console.log(this.smsTemplate)
+      })
+    },
+    submitForm(formName) {
+
+      let obj = {
+        id: this.info.id,
+        defaultTmpId: this.info.defaultTmpId,
+        companyId: this.info.companyId,
+        remindTarget: this.info.remindTarget,
+        remindTargetCode: this.info.remindTargetCode,
+        sendNode: this.info.remindTargetCode,
+        sendNodeCode: this.info.sendNodeCode,
+        templateContent: this.smsTemplate,
+        templateContentCoded: this.info.templateContentCoded,
+        applyStatus: this.info.applyStatus,
+        sendStatus: this.info.sendStatus ? 0 : 1
+      }
+      console.log(obj)
+      if (obj.templateContent === '') {
+        return
+      }
+      udpateSmsTemplateLog(obj).then(data => {
+          this.$message.success('更新短信模板成功！')
+          this.closeMe()
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        })
+    },
+    postSmsSetColumnsList() { // 获取可配置字段,查询模板相关默认字段
+      let obj = {
+        orgId: this.otherinfo.orgid,
+        tmpLogId: this.info.id,
+        defaultTmpId: ''
+      }
+      postSmsSetColumnsList(obj).then(data => {
+        this.smsColumn = data
+        this.orgSmsColumn = data
+        this.smsColumnLen = this.smsColumn.length
+      })
+    },
+    postDefaultSmsTemplate() { // 获取短信默认模板
+      let obj = {
+        defaultTmpId: this.info.defaultTmpId,
+        orgId: this.otherinfo.orgid
+      }
+      postDefaultSmsTemplate(obj).then(data => {
+        this.smsTemplate = data.templateContent
+        this.smsTemplateObj = data
+      })
+    },
+    postSmsTemplateLog() { // 获取当前短信模板
+      let obj = {
+        id: this.info.id,
+        orgId: this.otherinfo.orgid
+      }
+      postSmsTemplateLog(obj).then(data => {
+        if (data) {
+          this.smsTemplate = data.templateContent
+          this.smsTemplateObj = data
+          this.smsColumn2 = []
+          if (data.columnsLogList && data.columnsLogList.length > 0) {
+            data.columnsLogList.forEach((e, index) => {
+              this.smsColumn2.push(e.colName)
+            })
+          }
         }
       })
     },
-    postSmsSetColumnsList() {
-      postSmsSetColumnsList(this.otherinfo.orgid).then(data => {
-        this.smsColumn = data
-      })
+    resetForm() { // 恢复默认短信模板
+      this.loading = true
+      this.postDefaultSmsTemplate()
+      let obj = {
+        orgId: this.otherinfo.orgid,
+        tmpLogId: '',
+        defaultTmpId: this.info.defaultTmpId
+      }
+      postSmsSetColumnsList(obj).then(data => {
+          this.loading = false
+          this.smsColumn = data
+          this.orgSmsColumn = data
+          this.smsColumnLen = this.smsColumn.length
+        })
+        .catch(erro => {
+          this.loading = false
+        })
     },
-    resetForm() {},
+    querySearch(queryString, cb) {
+      // this.currentSearch = queryString
+      // if (queryString === undefined) {
+      //   if (!this.currentSearch) { // 如果搜索框为空则恢复左边列表
+      //     this.smsColumn = Object.assign([], this.orgSmsColumn)
+      //   }
+      // }
+      let smsColumn = this.orgSmsColumn
+      let result = queryString ? smsColumn.filter(this.createFilter(new RegExp(queryString, 'gi'), 'colName')) : smsColumn
+      // this.smsColumn = result
+      cb(result)
+    },
+    createFilter(queryString, prop) {
+      return (data) => {
+        if (data[prop]) {
+          return (queryString.test(data[prop]))
+        }
+      }
+    },
+    handleSelect(item) {
+      this.currentSearch = item.colName
+    },
     closeMe(done) {
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
@@ -91,22 +232,63 @@ export default {
 <style lang="scss">
 .smsedit_wrapper {
   padding: 10px;
-  /* background-color: #eee; */
-  .smsedit_head {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  .smsedit_tite {
     line-height: 28px;
-    padding: 0;
+    padding: 0 0 10px 0;
   }
   .smsedit_search {
+    .el-autocomplete {
+      width: 100%;
+    }
     .el-input-group__prepend {
       padding: 0 10px;
     }
   }
-  .smsedit_list{
-  	margin: 10px 0;
-  	ul li{
-  		float: left;
-  		padding: 5px 5px;
-  	}
+  .smsedit_list {
+    margin: 10px 0;
+    overflow: auto;
+    height: calc(100% - 350px);
+    padding: 10px;
+    border: 1px solid #dcdfe6;
+
+    ul {
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      li {
+        width: 20%;
+        padding: 5px 0;
+        cursor: pointer;
+        span {
+          transition: 0.5s;
+        }
+        span:hover {
+          transition: 0.1s;
+          transform: scale(1.1);
+        }
+        .el-tag--info,
+        .el-tag--info .el-tag__close {
+          color: #333;
+        }
+      }
+    }
+  }
+  .smsedit_content {
+    border: 1px solid #dcdfe6;
+    height: calc(100% - 600px);
+    overflow: auto;
+    .el-textarea__inner {
+      height: 100%;
+    }
+  }
+  .sortable-ghost {
+    border: 1px dashed #f00;
+    background: #ffe;
   }
 }
 
