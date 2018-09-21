@@ -116,6 +116,7 @@
 // lodop 打印单位换算 1in(英寸)=2.54cm(厘米)=25.4mm(毫米)=72pt(磅)=96px 1px约等于0.3mm
 let dom = ''
 import draggable from 'vuedraggable'
+import hotkeys from '@/utils/hotkeys'
 // import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 export default {
@@ -156,26 +157,26 @@ export default {
       dragDetailInfo: {},
       dragCursor: 'move',
       alignmentOptions: [{
-          value: 0,
-          label: '文字靠右'
-        },
-        {
-          value: 1,
-          label: '文字靠左'
-        },
-        {
-          value: 2,
-          label: '文字居中'
-        }
+        value: 0,
+        label: '文字靠右'
+      },
+      {
+        value: 1,
+        label: '文字靠左'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      }
       ],
       fontWeightOptions: [{
-          value: 0,
-          label: '默认粗细'
-        },
-        {
-          value: 2,
-          label: '加粗'
-        }
+        value: 0,
+        label: '默认粗细'
+      },
+      {
+        value: 2,
+        label: '加粗'
+      }
       ]
     }
   },
@@ -199,7 +200,7 @@ export default {
     printPreviewContent() {
       let viewWidth = 300
       let viewHeight = 150
-      let bgurl = this.imageUrl
+      const bgurl = this.imageUrl
       if (this.formModel) {
         this.formModel.labelList.forEach(e => {
           if (e.filedValue === 'setting') {
@@ -224,8 +225,15 @@ export default {
   },
   mounted() {
     this.getSettingCompanyOrder()
-    document.addEventListener("mousemove", this.conrightMove, true)
-    document.addEventListener("mouseup", this.conrightEnd, true)
+    document.addEventListener('mousemove', this.conrightMove, true)
+    document.addEventListener('mouseup', this.conrightEnd, true)
+    document.addEventListener('keyup', this.deleteEditIndex, true)
+  },
+  // 销毁对象时，需清除绑定的事件
+  destroyed() {
+    document.removeEventListener('mousemove', this.conrightMove)
+    document.removeEventListener('mouseup', this.conrightEnd)
+    document.removeEventListener('keyup', this.deleteEditIndex)
   },
   methods: {
     handleChange(file, list) {
@@ -237,8 +245,8 @@ export default {
       this.isHiddenDragDetail = false
       row.x = event.pageX
       row.y = event.pageY
-      row.orgwidth = Math.round(row.width/this.prxvalue)
-      row.orgheight = Math.round(row.height/this.prxvalue)
+      row.orgwidth = Math.round(row.width / this.prxvalue)
+      row.orgheight = Math.round(row.height / this.prxvalue)
       row.mousetype = type
       this.isDrag = row // false-拉伸
     },
@@ -246,29 +254,29 @@ export default {
       if (this.isDrag) {
         var row = this.isDrag
         var type = row.mousetype
-        let w = event.pageX - row.x
-        let h = event.pageY - row.y
+        const w = event.pageX - row.x
+        const h = event.pageY - row.y
         this.calcWH(row, w, h, type)
       }
     },
     calcWH(row, w, h, type) {
       let w2 = row.orgwidth
       let h2 = row.orgheight
-      if (type === 'right' || type === "bottomright") {
+      if (type === 'right' || type === 'bottomright') {
         w2 += w
       }
-      if (type === 'bottom' || type === "bottomright") {
+      if (type === 'bottom' || type === 'bottomright') {
         h2 += h
       }
 
       w2 = w2 < 15 ? 15 : w2 > 1000 ? 1000 : w2
       h2 = h2 < 20 ? 20 : h2 > 1000 ? 1000 : h2
-      row.width = Math.round(w2* this.prxvalue)
-      row.height = Math.round(h2* this.prxvalue)
+      row.width = Math.round(w2 * this.prxvalue)
+      row.height = Math.round(h2 * this.prxvalue)
     },
     conrightEnd(event) { // 向右拉伸-end
       if (this.isDrag) { // false-拉伸
-        let row = this.isDrag
+        const row = this.isDrag
         row.x = event.pageX
         row.y = event.pageY
         this.isDrag = null
@@ -276,11 +284,10 @@ export default {
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       if (!row.isshow) {
-        let item = Object.assign({}, row)
+        const item = Object.assign({}, row)
         item.isshow = true
         row.isshow = true
         this.labelListView.push(item)
-
       } else {
         this.$notify.info({
           title: '消息',
@@ -298,13 +305,11 @@ export default {
         this.showDragDetail = false
         this.isHiddenDragDetail = false
       } else {
-
         this.isHiddenDragDetail = true
         this.classItem[index] = true
         this.showDragDetail = true
       }
       this.showDragTips[index] = true
-
     },
     changeDragDetailInfo(newVal) { // 修改编辑显示项的数据
       if (newVal) {
@@ -340,7 +345,7 @@ export default {
       }
       this.isDragView = true
       dom = event.currentTarget
-      let strName = dom.getAttribute('data-fileName')
+      const strName = dom.getAttribute('data-fileName')
       this.isMove = true
       this.labelListView.forEach((e, index) => {
         if (e.filedValue === strName) {
@@ -358,7 +363,7 @@ export default {
       console.log(this.showDragTips[index])
       this.isDragView = true
       dom = event.currentTarget
-      let strName = dom.getAttribute('data-fileName')
+      const strName = dom.getAttribute('data-fileName')
       this.isMove = true
       this.labelListView.forEach(e => {
         if (e.filedValue === strName) {
@@ -368,18 +373,55 @@ export default {
       })
       // 判断是否出纸张边界  如果是 则取消显示
       console.log(row.leftx, row.width)
-      if (Math.round(row.leftx*this.prxvalue) + row.width < 0 || Math.round(row.topy* this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+      if (Math.round(row.leftx * this.prxvalue) + row.width < 0 || Math.round(row.topy * this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
         this.dragCursor = 'not-allowed'
-        row.isshow = false
-        this.dragDetailInfo = {}
-        this.showDragDetail = false
-        this.labelListView = this.labelListView.filter((le, lindex) => {
-          return lindex !== index
-        })
+        this.deleteItemByIndex(row, index)
+      } else {
+        // 如果被删除了，则不在左边显示其编辑栏
+        this.editDragItem(row, index)
       }
-      this.editDragItem(row, index)
+
       this.dragCursor = 'move'
       this.showDragTips = []
+    },
+    // 删除指定位置的元素
+    deleteItemByIndex(row, index) {
+      row.isshow = false
+      this.dragDetailInfo = {}
+      this.classItem = []
+      this.showDragTips = []
+      this.showDragDetail = false
+      this.labelListView = this.labelListView.filter((le, lindex) => {
+        return lindex !== index
+      })
+    },
+    // 按删除键删除选中的项
+    deleteEditIndex(e) {
+      const key = hotkeys.getPressedKey(e)
+      const tagName = event.target.tagName || event.srcElement.tagName
+      // 判断是否为指定按键
+      if (key === 'delete' || key === 'backspace') {
+        // 不处理表单控件上的按键事件
+        if (!(tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA')) {
+          // 判断是否有选中项
+          if (this.dragDetailInfo.filedValue) {
+            const find = {}
+            this.labelListView.filter((el, lindex) => {
+              if (this.dragDetailInfo.filedValue === el.filedValue) {
+                find.el = el
+                find.index = lindex
+                return true
+              } else {
+                return false
+              }
+            })
+            if (find.el) {
+              this.deleteItemByIndex(find.el, find.index)
+            }
+          }
+        }
+      }
+      console.log('1111:', e, hotkeys.getPressedKey(e))
     },
     drag(event) {
       this.isDragView = false
@@ -388,7 +430,7 @@ export default {
     },
     drop(event) {
       event.preventDefault()
-      let strName = dom.getAttribute('data-fileName')
+      const strName = dom.getAttribute('data-fileName')
       let isAddItem = false
       if (!this.isMove) {
         if (this.labelListView.filter(e => e.filedValue === strName).length) {
@@ -409,7 +451,7 @@ export default {
       }
     },
     allowDrop(event) {
-      event.preventDefault() //preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
+      event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
     getSettingCompanyOrder() {
       this.labelListView = []
@@ -427,8 +469,8 @@ export default {
               this.labelListView.push(e)
             }
             e.fontsize = e.fontsize ? e.fontsize : 14
-            e.isshow = e.isshow === 1 ? true : false // 1-true 显示
-            e.bold = e.bold === 2 ? true : false // 2-true 加粗
+            e.isshow = e.isshow === 1 // 1-true 显示
+            e.bold = e.bold === 2 // 2-true 加粗
             e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
           }
         })
@@ -481,20 +523,20 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.formModel.labelList.forEach(e => {
-                e.topy = 0
-                e.leftx = 0
-                e.width = Math.round(150 * this.prxvalue)
-                e.height = Math.round(24 * this.prxvalue)
-                e.fontsize = 14
-                e.bold = 0
-                e.alignment = 1
-              })
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.formModel.labelList.forEach(e => {
+              e.topy = 0
+              e.leftx = 0
+              e.width = Math.round(150 * this.prxvalue)
+              e.height = Math.round(24 * this.prxvalue)
+              e.fontsize = 14
+              e.bold = 0
+              e.alignment = 1
             })
+          })
             .catch(error => {
               this.$message({ type: 'info', type: '已取消' })
             })
@@ -516,7 +558,6 @@ export default {
     },
     changeValue(obj, item, index) {
       this.viewKey = new Date().getTime()
-
     }
   }
 }

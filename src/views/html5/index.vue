@@ -36,19 +36,19 @@
                 收入分布
               </li>
               <li>收入小计:<span>{{ totalIncome }}</span>元</li>
-              <li>已收:<span>{{ thedata.amountReceivableFee }}</span>元</li>
-              <li>未收:<span>{{ thedata.amountUnreceivableFee }}</span>元</li>
+              <li>已<i class="marginem"></i>收:<span>{{ thedata.amountReceivableFee }}</span>元</li>
+              <li>未<i class="marginem"></i>收:<span>{{ thedata.amountUnreceivableFee }}</span>元</li>
             </ul>
           </el-col>
           <el-col :span="6">
-            <ul>
+            <ul class="zhichulie">
               <li>
                 支出分布
               </li>
-              <li>支出小计:<span>{{ totalpay }}</span>元</li>
-              <li>车费:已付<span>{{ thedata.hadPayCarFee }}</span>元，未付<span>{{thedata.unPayCarFee}}</span>元</li>
-              <li>中转费:已付<span>{{ thedata.hadPayTransferFee }}</span>元，未付<span>{{thedata.unPayTransferFee}}</span>元</li>
-              <li>其它费用:已付<span>{{ thedata.hadPayOtherFee }}</span>元，未付<span>{{thedata.unPayOtherFee}}</span>元</li>
+              <li>支出小计: <span class="marginleft">{{ totalpay }}</span>元</li>
+              <li>车<i class="marginem"></i>费: 已付<span>{{ thedata.hadPayCarFee }}</span>元，未付<span>{{thedata.unPayCarFee}}</span>元</li>
+              <li>中<i class="marginem"></i>转: 已付<span>{{ thedata.hadPayTransferFee }}</span>元，未付<span>{{thedata.unPayTransferFee}}</span>元</li>
+              <li>其<i class="marginem"></i>它: 已付<span>{{ thedata.hadPayOtherFee }}</span>元，未付<span>{{thedata.unPayOtherFee}}</span>元</li>
             </ul>
           </el-col>
           <el-col :span="6">
@@ -688,6 +688,13 @@ export default {
             height:100%;
           }
         }
+      &.zhichulie{
+        li span{
+          min-width: 4em;
+          text-align: center;
+          display: inline-block;
+        }
+      }
       li{
         height: 30px;
         line-height: 30px;
@@ -696,10 +703,17 @@ export default {
         box-sizing: border-box;
         border-radius: 5px 5px 0 0;
         
+        .marginem{
+          display: inline-block;
+          width: 2em;
+        }
+        .marginleft{
+          margin-left: 2em;
+        }
         span{
           color:red;
-          padding:0 10px;
-          border-bottom: 1px solid #999;
+          padding:0 5px;
+          // border-bottom: 1px solid #999;
         }
         em{
           float:right;
@@ -715,14 +729,16 @@ export default {
       li.profit-num{
         text-align: center;
         line-height: 1.5;
-        padding-top: 30px;
+        
+
         .xdata{
           span{
             font-size: 36px;
             max-width: 7em;
             white-space: nowrap;
             display: inline-block;
-            line-height: 1.2;
+            line-height: 146px;
+            
           }
         }
         .xline{
