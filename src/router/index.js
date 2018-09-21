@@ -68,7 +68,7 @@ export const constantRouterMap = [
       name: 'dashboard',
       icon: 'shouye',
       meta: {
-        title: '首页',
+        title: '运营控制台',
         noCache: false,
         'code': 'HOME_PAGE_1',
         'proute': 'dashboard'
@@ -79,7 +79,7 @@ export const constantRouterMap = [
       name: 'console',
       icon: 'baobiao',
       meta: {
-        title: '控制台',
+        title: '财务控制台',
         noCache: false,
         'code': 'HOME_PAGE_1',
         'proute': 'dashboard'
