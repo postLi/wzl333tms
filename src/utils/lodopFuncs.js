@@ -311,28 +311,39 @@
      LODOP = getLodop()
      let arr = new Array()
      arr = Object.assign([], info)
-     let str = ''
+     const str = ''
      for (const item in arr) { // 没有传值的项设置位空字符串
        if (arr[item].value === undefined || arr[item].value === null) {
          arr[item].value = ''
        }
      }
+     let pageWidth = 0
+     let pageHeight = 0
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
-         str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
+        //  str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
+         LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
+         pageWidth = e.width
+         pageHeight = e.height
        } else {
          if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-           str += 'LODOP.ADD_PRINT_TEXTA(0,' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
+           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
          } else {
-           str += 'LODOP.ADD_PRINT_TEXTA(0,' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+          //  str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+           LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
          }
        }
      })
-     eval(str)
+    //  eval(str)
      // LODOP.PRINT_SETUP()
+    //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
      LODOP.PREVIEW()
    } catch (err) {
      getLodop()

@@ -6,6 +6,7 @@
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
+  select-when-unmatched
   @focus="()=>{$emit('focus'),initData()}"
   @change="(val)=>{$emit('change' ,handleSelect(val))}"
   @blur="()=>{$emit('blur')}"
@@ -160,7 +161,7 @@ export default {
       default: 'user'
     },
     // 搜索匹配的字段
-    // 可以一次匹配多个字段取做搜索
+    // 可以一次匹配多个字段去做搜索
     search: {
       type: [String, Array]
     },

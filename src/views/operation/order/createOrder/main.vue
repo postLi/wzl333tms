@@ -2778,8 +2778,8 @@ export default {
           // this.$message.info('正在开发中，敬请期待。')
           break
         case 'saveShipKey':
-          this.submitForm()
           this.isSavePrint = false // false-不保存并打印，只保存
+          this.submitForm()
           break
         case 'savePrintKey':
           this.isSavePrint = true // true-保存并打印
