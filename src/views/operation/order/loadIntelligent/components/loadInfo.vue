@@ -47,10 +47,14 @@
                       </el-form-item>
                       <!--</el-form-item>-->
                       <el-form-item label="可载方" prop="">
-                        <el-input v-model="item.volume" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'volume')"></el-input>
+                        <el-input v-model="item.volume" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'volume')">
+                          <template slot="append">方</template>
+                        </el-input>
                       </el-form-item>
-                      <el-form-item label="可载吨" prop="">
-                        <el-input v-model="item.weight" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'weight')"></el-input>
+                      <el-form-item label="可载重" prop="">
+                        <el-input v-model="item.weight" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'weight')">
+                          <template slot="append">千克</template>
+                        </el-input>
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
@@ -951,6 +955,9 @@ export default {
                 .el-form-item--mini.el-form-item,
                 .el-form-item--small.el-form-item {
                   margin-bottom: 0px;
+                }
+                .el-input-group__append, .el-input-group__prepend{
+                  padding: 0 5px;
                 }
               }
             }

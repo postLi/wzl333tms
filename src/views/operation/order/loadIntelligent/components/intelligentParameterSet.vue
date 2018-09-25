@@ -19,8 +19,8 @@
                 </el-table-column>
                 <el-table-column prop="vol" width="90" label="承载方">
                 </el-table-column>
-                <el-table-column prop="price" width="90" label="车费">
-                </el-table-column>
+                <!-- <el-table-column prop="price" width="90" label="车费">
+                </el-table-column> -->
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="自定义车型" name="second">
@@ -43,11 +43,11 @@
                       <el-input placeholder="承载方" v-model.number="scope.row.vol" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="price" width="90" label="车费">
+                 <!--  <el-table-column prop="price" width="90" label="车费">
                     <template slot-scope="scope">
                       <el-input placeholder="车费" v-model.number="scope.row.price" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
-                  </el-table-column>
+                  </el-table-column> -->
                 </el-table>
               </div>
             </el-tab-pane>
@@ -327,13 +327,13 @@ export default {
         this.definedList[index].price = newPrice
         this.$notify({
           title: '提示',
-          message: '车费不能为0',
+          message: '承载方和承载重不能为0',
           type: 'warning'
         })
       } else if (newName < 0) {
         this.$notify({
           title: '提示',
-          message: '车费不能小于0,默认为初始值',
+          message: '承载方和承载重不能为0,默认为初始值',
           type: 'warning'
         })
       } else {
