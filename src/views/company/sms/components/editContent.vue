@@ -25,7 +25,7 @@
           <!-- <div @drop='drop($event)' @dragover='allowDrop($event)' v-for="item in smsColumn2">
             ({{item}})
           </div> -->
-          <el-input @drop='drop($event)' @dragover='allowDrop($event)' id="templateContent" style="height: 100%;" type="textarea" :rows="2" placeholder="请输入内容" v-model="smsTemplate" focus>
+          <el-input @drop='drop($event)' @dragover='allowDrop($event)' id="templateContent" @keydown.delete.native="deleteItem" style="height: 100%;" type="textarea" :rows="2" placeholder="请输入内容" v-model="smsTemplate" focus>
           </el-input>
         </div>
       </div>
@@ -88,13 +88,13 @@ export default {
       smsColumnLen: 0
     }
   },
-  mounted () {
-    
+  mounted() {
+
   },
   methods: {
-    initTextarea () {
-      let range = document.selection.createRange()
-      let editor = document.getElementById('templateContent')
+    initTextarea() {
+      const range = document.selection.createRange()
+      const editor = document.getElementById('templateContent')
       range.moveToElementText(editor)
     },
     drag(event) {
@@ -104,16 +104,16 @@ export default {
 
     drop(event) {
       event.preventDefault()
-      let strName = dom.getAttribute('data-fileName')
+      const strName = dom.getAttribute('data-fileName')
       this.addTemplate(strName)
     },
     allowDrop(event) {
-      event.preventDefault() //preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
+      event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
     addTemplate(strName, object, index) { // 添加到短信模板内容区, 并且可配置区域减少该字段
-      let newStrName = '(' + strName + ')'
-      let tx = document.getElementById("templateContent")
-      let pos = this.$const.cursorPosition.get(tx)
+      const newStrName = '(' + strName + ')'
+      const tx = document.getElementById('templateContent')
+      const pos = this.$const.cursorPosition.get(tx)
       this.$const.cursorPosition.add(tx, pos, newStrName)
       this.$nextTick(() => {
         this.smsColumn2.push(strName)
@@ -121,9 +121,82 @@ export default {
         console.log(this.smsTemplate)
       })
     },
-    submitForm(formName) {
+    deleteItem(e) {
+      const tx = document.getElementById('templateContent')
+      const pos = this.$const.cursorPosition.get(tx)
+      // {text: "", start: 0, end: 0}
+      // 光标位置
+      const curPos = pos.start
 
-      let obj = {
+      if (pos.start !== pos.end) {
+        e.preventDefault()
+        const sindex = this.findCursorIndex(pos.start + 1)
+        const endindex = this.findCursorIndex(pos.end)
+        this.deleteStr(sindex[0] - (sindex[0] === sindex[1] ? 1 : 0), endindex[1])
+      } else {
+        const indexArr = this.findCursorIndex(curPos)
+        if (indexArr[0] !== indexArr[1]) {
+          e.preventDefault()
+          this.deleteStr(indexArr[0], indexArr[1])
+        }
+        // // 1.先检查右边括弧
+        // if (valArr[curPos - 1] === ')') {
+        //   e.preventDefault()
+        //   // 找到左边的括弧
+        //   this.deleteStr(findStr.lastIndexOf('('), curPos)
+        // } else if (findStr.indexOf('(') === -1 && findStr.indexOf(')') === -1) {
+        //   // 不作处理
+        // } else if (findStr.lastIndexOf('(') !== -1 && (findStr.lastIndexOf(')') < findStr.lastIndexOf('('))) {
+        //   e.preventDefault()
+        //   const leftIndex2 = findStr.lastIndexOf('(')
+        //   const findStr2 = val.substring(leftIndex2)
+        //   const rightIndex2 = findStr2.indexOf(')')
+        //   this.deleteStr(leftIndex2, leftIndex2 + rightIndex2 + 1)
+        // }
+      }
+    },
+    // 找到光标删除位置
+    findCursorIndex(sindex) {
+      const tx = document.getElementById('templateContent')
+      const val = tx.value
+      const curPos = sindex
+      const findStr = val.substring(0, curPos)
+      const valArr = val.split('')
+      // 1.先检查右边括弧
+      if (valArr[curPos - 1] === ')') {
+          // 找到左边的括弧
+        return [findStr.lastIndexOf('('), curPos]
+      } else if (findStr.indexOf('(') === -1 && findStr.indexOf(')') === -1) {
+          // 不作处理
+        return [sindex, sindex]
+      } else if (findStr.lastIndexOf('(') !== -1 && (findStr.lastIndexOf(')') < findStr.lastIndexOf('('))) {
+        const leftIndex2 = findStr.lastIndexOf('(')
+        const findStr2 = val.substring(leftIndex2)
+
+        const rightIndex2 = findStr2.indexOf(')')
+        return [leftIndex2, leftIndex2 + rightIndex2 + 1]
+      } else {
+        return [sindex, sindex]
+      }
+    },
+    deleteStr(start, end) {
+      const tx = document.getElementById('templateContent')
+      const val = tx.value
+      const matchStr = val.substring(start, end)
+      console.log('matchStr:', start, end, matchStr)
+        // 做回显到上面
+      const matchArr = matchStr.match(/(\([^)]*\))/gm)
+      console.log('matchArr:', matchArr)
+        // 删除文本框值
+      tx.value = val.replace(matchStr, '')
+        // 调用￥set方法
+      this.$const.cursorPosition.set(tx, {
+        text: '',
+        start: start,
+        end: start })
+    },
+    submitForm(formName) {
+      const obj = {
         id: this.info.id,
         defaultTmpId: this.info.defaultTmpId,
         companyId: this.info.companyId,
@@ -141,15 +214,15 @@ export default {
         return
       }
       udpateSmsTemplateLog(obj).then(data => {
-          this.$message.success('更新短信模板成功！')
-          this.closeMe()
-        })
+        this.$message.success('更新短信模板成功！')
+        this.closeMe()
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误！')
         })
     },
     postSmsSetColumnsList() { // 获取可配置字段,查询模板相关默认字段
-      let obj = {
+      const obj = {
         orgId: this.otherinfo.orgid,
         tmpLogId: this.info.id,
         defaultTmpId: ''
@@ -161,7 +234,7 @@ export default {
       })
     },
     postDefaultSmsTemplate() { // 获取短信默认模板
-      let obj = {
+      const obj = {
         defaultTmpId: this.info.defaultTmpId,
         orgId: this.otherinfo.orgid
       }
@@ -171,7 +244,7 @@ export default {
       })
     },
     postSmsTemplateLog() { // 获取当前短信模板
-      let obj = {
+      const obj = {
         id: this.info.id,
         orgId: this.otherinfo.orgid
       }
@@ -191,17 +264,17 @@ export default {
     resetForm() { // 恢复默认短信模板
       this.loading = true
       this.postDefaultSmsTemplate()
-      let obj = {
+      const obj = {
         orgId: this.otherinfo.orgid,
         tmpLogId: '',
         defaultTmpId: this.info.defaultTmpId
       }
       postSmsSetColumnsList(obj).then(data => {
-          this.loading = false
-          this.smsColumn = data
-          this.orgSmsColumn = data
-          this.smsColumnLen = this.smsColumn.length
-        })
+        this.loading = false
+        this.smsColumn = data
+        this.orgSmsColumn = data
+        this.smsColumnLen = this.smsColumn.length
+      })
         .catch(erro => {
           this.loading = false
         })
@@ -213,8 +286,8 @@ export default {
       //     this.smsColumn = Object.assign([], this.orgSmsColumn)
       //   }
       // }
-      let smsColumn = this.orgSmsColumn
-      let result = queryString ? smsColumn.filter(this.createFilter(new RegExp(queryString, 'gi'), 'colName')) : smsColumn
+      const smsColumn = this.orgSmsColumn
+      const result = queryString ? smsColumn.filter(this.createFilter(new RegExp(queryString, 'gi'), 'colName')) : smsColumn
       // this.smsColumn = result
       cb(result)
     },
