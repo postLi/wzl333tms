@@ -34,6 +34,18 @@
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
+          <el-form-item>
+            <el-input placeholder="请输入内容" v-model="formModel.paper.leftx" size="mini" @change="changeDragDetailInfo">
+              <template slot="prepend">左偏移</template>
+              <template slot="append">mm</template>
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input placeholder="请输入内容" v-model="formModel.paper.topy" size="mini" @change="changeDragDetailInfo">
+              <template slot="prepend">上偏移</template>
+              <template slot="append">mm</template>
+            </el-input>
+          </el-form-item>
         </div>
         <el-collapse-transition>
           <div v-if="showDragDetail">
@@ -128,6 +140,7 @@
 let dom = ''
 import draggable from 'vuedraggable'
 import hotkeys from '@/utils/hotkeys'
+import { objectMerge2 } from '@/utils/index'
 // import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 export default {
@@ -154,7 +167,9 @@ export default {
         labelList: [],
         paper: {
           width: 0,
-          height: 0
+          height: 0,
+          leftx: 0,
+          topy: 0
         }
       },
       prxvalue: 0.264,
@@ -608,7 +623,10 @@ export default {
           e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
           e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
           if (e.filedValue === 'setting') {
-            this.formModel.paper = Object.assign({}, e)
+            const obj = Object.assign({}, e)
+            obj.leftx = Math.round(obj.leftx * this.prxvalue)
+            obj.topy = Math.round(obj.topy * this.prxvalue)
+            this.formModel.paper = obj
           } else {
             if (e.isshow) { // 显示项要在预览处初始化
               this.labelListView.push(e)
@@ -642,7 +660,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.formModel.labelList.forEach(e => {
+          const obj = objectMerge2([], this.formModel.labelList)
+          obj.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
@@ -650,13 +669,17 @@ export default {
               console.log(e.width)
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
+              if (e.filedValue === 'setting') {
+                e.leftx = Math.round(e.leftx / this.prxvalue)
+                e.topy = Math.round(e.topy / this.prxvalue)
+              }
               console.log(e.width)
               e.isshow = e.isshow ? 1 : 0
               e.bold = e.bold ? 1 : 0
             }
           })
 
-          putSettingCompanyOrder(this.formModel.labelList).then(data => {
+          putSettingCompanyOrder(obj).then(data => {
             this.$message({ type: 'success', message: '运单打印设置成功！' })
             this.getSettingCompanyOrder()
             this.viewKey = new Date().getTime()
