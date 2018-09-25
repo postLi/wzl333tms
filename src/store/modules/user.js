@@ -83,8 +83,8 @@ const user = {
           data.roleTree = JSON.parse(data.jsonTree) || null
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
-          if (Vue.prototype.$_has_permission('SETTING')) {
-            getAllSetting({
+          // if (Vue.prototype.$_has_permission('SETTING')) {
+          getAllSetting({
               orgid: data.orgid,
               type: '',
               module: 'order'
@@ -100,12 +100,12 @@ const user = {
               resolve({ data })
               // reject(error)
             })
-          } else {
-            data.systemSetup = {}
-            commit('SET_OTHERINFO', data)
-            setUserInfo(data)
-            resolve({ data })
-          }
+          // } else {
+          //   data.systemSetup = {}
+          //   commit('SET_OTHERINFO', data)
+          //   setUserInfo(data)
+          //   resolve({ data })
+          // }
         }).catch(error => {
           reject(error)
         })

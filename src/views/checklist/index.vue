@@ -241,6 +241,12 @@ export default {
       }
     }
   },
+  computed: {
+    // 判断是否为公司网点
+    iscompany() {
+      return this.otherinfo.orgid === this.otherinfo.companyId
+    }
+  },
   mounted() {
     // this.loading = true
     this.isParentOrg()
@@ -249,7 +255,7 @@ export default {
       this.dataset = data
       var totals = 0
       for (const total in data) {
-        if (data[total] === 0) {
+        if (total !== 'roleCount' && data[total] === 0) {
           totals++
         }
         console.log(data[total], total, '数量')
@@ -416,7 +422,7 @@ export default {
         }
         let resuct = 0
         for (const total in data) {
-          if (data[total] === 0) {
+          if (total !== 'roleCount' && data[total] === 0) {
             resuct++
           }
         }

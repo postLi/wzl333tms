@@ -154,7 +154,7 @@
       return {
         rules: {
           roleName: [
-            { required: true, message: '请输入角色名称', validator: roleName , trigger: 'blur'},
+            { required: true, message: '请输入角色名称', validator: roleName, trigger: 'blur' },
             { max: 12, message: '最多可输入12个字符' }
           ],
           remarks: [
@@ -240,5 +240,7 @@
 
 <style type="text/css" lang="scss">
   @import "./addRole.css";
-
+.add-role-top .el-form--inline .el-form-item{
+  margin-bottom: 10px;
+}
 </style>

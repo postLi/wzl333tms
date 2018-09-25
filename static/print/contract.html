@@ -167,7 +167,7 @@
   var goodsInfoStr = ''
   var contractTimeStr = ''
 
-  contract_checkBillName.innerHTML = data.checkBillName
+  contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
   contract_title_number.innerHTML = 'NO.' + data.batchNo
   partA.innerHTML = data.orgName
   partB.innerHTML = data.dirverName

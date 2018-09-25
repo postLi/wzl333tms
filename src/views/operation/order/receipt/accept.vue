@@ -338,10 +338,10 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
     // this.loading = false
-    }).catch((err)=>{
-        this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
-      })
+    }).catch((err) => {
+      this.loading = false
+      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+    })
   },
   data() {
     return {
@@ -474,7 +474,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {
@@ -570,7 +570,7 @@ export default {
         this.total = data.total
         this.loading = false
         console.log(data)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })

@@ -141,7 +141,7 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '归属组织',
+        label: '归属网点',
         prop: 'orgName',
         width: '120',
         fixed: false

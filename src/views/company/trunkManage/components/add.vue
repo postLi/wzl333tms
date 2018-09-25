@@ -381,7 +381,13 @@ export default {
       })
     },
     reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
+      this.form.orgid = orgid
+      this.form.drivingLicense = ''
+      this.form.operatingLicense = ''
+      this.form.vehiclePic = ''
     },
     closeMe(done) {
       this.reset()

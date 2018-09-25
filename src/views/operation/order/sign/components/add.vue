@@ -51,16 +51,20 @@
           <el-input :maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
-          <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
+          <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick"/>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input v-model="form.documentNum" auto-complete="off" :maxlength="18" :disabled="isDbclick"></el-input>
+          <el-input v-model="form.documentNum" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :maxlength="18" :disabled="isDbclick"></el-input>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId" >
-          <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
+          <SelectType v-if="!(repertoryId.signStatus !== 227 && isDbclick)" v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks ms" label="备注" prop="remark" >
           <input class="bz" :maxlength="250" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入250个字符"/>
@@ -470,7 +474,7 @@ export default {
               //   }
               // })
           }).catch(err => {
-            this.loadding = false
+            this.loading = false
             this.$message({
               type: 'error',
               message: err.errorInfo || err.text || '未知错误，请重试~'

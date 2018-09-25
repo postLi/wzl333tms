@@ -233,7 +233,7 @@
           <div slot="content">
             功能：月结
           </div>
-          <router-link to="/finance/accountsReceivable/arrive">
+          <router-link to="/finance/accountsReceivable/month">
             <i class="flowicon1 yj"></i><br>
             <span>月结</span>
           </router-link>
@@ -364,7 +364,7 @@
           <div slot="content">
             功能：到站装卸费
           </div>
-          <router-link to="./accountsPayable/batch/stationOther">
+          <router-link to="./accountsPayable/batch/arriveLoad">
             <i class="flowicon1 dzzxf"></i><br>
             <span>到站装卸费</span>
           </router-link>

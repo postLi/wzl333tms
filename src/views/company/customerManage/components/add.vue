@@ -16,7 +16,7 @@
         <!-- 公司信息 -->
         <template v-if="form.companyType === 2">
           <div class="info">公司名称</div>
-          <el-form-item >
+          <el-form-item prop="companyName">
             <el-input v-model.trim="form.companyName" :maxlength="25" placeholder="公司全称"></el-input>
           </el-form-item>
           <el-form-item >
@@ -45,7 +45,11 @@
           <el-input v-model="form.customerName" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input>
+          <!-- <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input> -->
+          <input type="text" v-numberOnly v-model.trim="form.customerMobile" :class="{'is-error': customphoneisok}" auto-complete="off" maxlength="11" class="nativeinput">
+          <div v-if="customphoneisok" class="el-form-item__error">
+            请输入手机号码
+          </div>
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
           <el-input v-numberOnly v-model="phoneshort" class="phoneshort" :maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" :maxlength="8" auto-complete="off"></el-input>
@@ -134,6 +138,9 @@ export default {
           this.phonelong = ''
         }
       }
+    },
+    customphoneisok() {
+      return REGEX.MOBILE.test(this.form.customerMobile)
     }
   },
   data() {
@@ -244,6 +251,9 @@ export default {
     console.log(this.popTitle)
   },
   watch: {
+    'form.customerMobile'(newVal) {
+
+    },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true
@@ -343,10 +353,15 @@ export default {
       })
     },
     reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.licensePicture = ''
       this.form.idcardPositive = ''
       this.form.idcardVerso = ''
+      this.fixPhone = ''
+      this.form.fixPhone = ''
+      this.form.orgid = orgid
     },
     closeMe(done) {
       this.reset()
@@ -366,6 +381,14 @@ export default {
   bottom: auto;
   min-width: 546px;
   max-width:  546px;
+
+  .nativeinput{
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+  }
+  .nativeinput.is-error{
+    border-color: #f56c6c;
+  }
 
   .el-form--inline .el-form-item{
     margin-right: 0;
