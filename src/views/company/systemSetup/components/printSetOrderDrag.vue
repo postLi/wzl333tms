@@ -397,11 +397,12 @@ export default {
           }
         })
         this.formModel.labelList.forEach((e, index) => {
-          if (e.filedValue === 'setting') {
-            this.$set(this.formModel.labelList, index, this.formModel.paper)
-          }
           if (e.filedValue === this.dragDetailInfo.filedValue) {
             this.$set(this.formModel.labelList, index, this.dragDetailInfo)
+          }
+          if (e.filedValue === 'setting') {
+            this.$set(this.formModel.labelList, index, this.formModel.paper)
+            console.log('this.formModel.paper:', this.formModel.paper)
           }
         })
       }
@@ -624,6 +625,7 @@ export default {
           e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
           if (e.filedValue === 'setting') {
             const obj = Object.assign({}, e)
+            console.log('getSettingCompanyOrder', e, obj)
             obj.leftx = Math.round(obj.leftx * this.prxvalue)
             obj.topy = Math.round(obj.topy * this.prxvalue)
             this.formModel.paper = obj
@@ -666,14 +668,14 @@ export default {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
             } else {
-              console.log(e.width)
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               if (e.filedValue === 'setting') {
-                e.leftx = Math.round(e.leftx / this.prxvalue)
-                e.topy = Math.round(e.topy / this.prxvalue)
+                console.log('this.formModel.paper::', this.formModel.paper, e)
+                e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
+                e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
               }
-              console.log(e.width)
+
               e.isshow = e.isshow ? 1 : 0
               e.bold = e.bold ? 1 : 0
             }
