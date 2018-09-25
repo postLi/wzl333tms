@@ -14,7 +14,8 @@
         <el-form :inline="true" class="order_bottom" label-width="80px" :rules="rules" :model="formInline"
                  ref="formName">
           <el-form-item label="到达网点" prop="orgId">
-            <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable class="orgClass"></SelectTree>
+            <!-- <SelectTree v-model="formInline.orgId" :orgid="otherinfo.orgid" clearable class="orgClass"></SelectTree> -->
+            <SelectTree v-model="formInline.orgId" clearable class="orgClass" :disabledOption="[otherinfo.orgid]"></SelectTree>
           </el-form-item>
 
         </el-form>

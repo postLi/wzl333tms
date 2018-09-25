@@ -410,7 +410,6 @@ export default {
     },
     orgData: {
       get() {
-        console.log(this.$route)
         return this.$route.query.info
       },
       set() {}
@@ -524,8 +523,6 @@ export default {
         data.remark = this.orgData.remark
         data.deliveryDetailFee = this.orgData.deliveryDetailFee // 送货费 40-送货管理修改的时候用
         data.deliveryHandlingFee = this.orgData.deliveryHandlingFee
-        data.sealNumber = this.orgData.sealNumber
-        data.oilCardNumber = this.orgData.oilCardNumber
         this.formModel = objectMerge2({}, data)
         // formFee 数据
         const dataFee = {}
@@ -540,6 +537,8 @@ export default {
         dataFee.leaveOtherFee = this.orgData.leaveOtherFee
         dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
         dataFee.arriveOtherFee = this.orgData.arriveOtherFee
+        dataFee.sealNumber = this.orgData.sealNumber
+        dataFee.oilCardNumber = this.orgData.oilCardNumber
         this.formFee = objectMerge2({}, dataFee)
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)

@@ -46,21 +46,19 @@
                         </el-autocomplete>
                       </el-form-item>
                       <!--</el-form-item>-->
-                      <el-form-item label="可载方" prop="">
+                      <el-form-item label="可载方(方)" prop="">
                         <el-input v-model="item.volume" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'volume')">
-                          <template slot="append">方</template>
                         </el-input>
                       </el-form-item>
-                      <el-form-item label="可载重" prop="">
+                      <el-form-item label="可载重(千克)" prop="">
                         <el-input v-model="item.weight" :maxlength="3" @change="(val) =>changeLoadNum(val, item._index, 'weight')">
-                          <template slot="append">千克</template>
                         </el-input>
                       </el-form-item>
                     </div>
                     <div class="loadInfo_item_form_row">
                       <el-form-item label="车费">
                         <el-input :size="btnsize" v-model="item.price">
-                          <i class="intEditF" slot="suffix" @click="addFreight(item.price, item._index)"><icon-svg icon-class="intlDel_lll"></icon-svg></i>
+                          <i class="intEditF" slot="suffix" @click="addFreight(item.price, item._index, item)"><icon-svg icon-class="intlDel_lll"></icon-svg></i>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="司机" class="formItemTextDanger" :key="changeDriverKey" :prop="'dataList.'+index+'.dirverName'" :rules="{required: true, message: '请选择司机~', trigger: 'blur'}">
@@ -87,7 +85,7 @@
                   </div>
                 </div>
                 <el-button class="verticalBtn verticalBtnAdd clearfix" :disabled="addDisabled" @click="addtuck">增加+</el-button>
-                <div class="verticalBtnTransfer">
+                <div class="verticalBtnTransfer" v-if="viewControl">
                   <el-button class="verticalBtnSort" @click="pretruck" icon="el-icon-d-arrow-left" :disabled="pretruckDisable2"></el-button>
                   <el-button class="verticalBtnSort" @click="nexttruck" icon="el-icon-d-arrow-right" :disabled="nexttruckDisable2"></el-button>
                 </div>
@@ -157,6 +155,13 @@ export default {
         return true
       }
       return false
+    },
+    viewControl () {
+      if (this.intelligentData.dataList && this.intelligentData.dataList.length > this.maxShowLen) {
+        return true
+      }else {
+        return false
+      }
     }
   },
   data() {
@@ -275,7 +280,7 @@ export default {
           this.intelligentData.dataList.forEach((e, index) => {
             this.inited2 = true
             e.loadTime = parseTime(new Date())
-            e.planArrivedTime = parseTime(new Date())
+            // e.planArrivedTime = parseTime(new Date())
             e.weight = e.weight ? e.weight : 0
             e.volume = e.volume ? e.volume : 0
             e._index = index
@@ -433,7 +438,7 @@ export default {
         });
       });
     },
-    addFreight(val, index) {
+    addFreight(val, index, item) {
       this.intFreightItem = val
       this.intFreightIndex = index
       this.openlntelligent()
@@ -523,8 +528,8 @@ export default {
       this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
       this.intelligentData.dataList[index].dirverMobile = item.driverMobile
       this.intelligentData.dataList[index].dirverName = item.driverName
-      this.intelligentData.dataList[index].weight = item.truckLoad
-      this.intelligentData.dataList[index].volume = item.truckVolume
+      // this.intelligentData.dataList[index].weight = item.truckLoad
+      // this.intelligentData.dataList[index].volume = item.truckVolume
       this.$set(this.intelligentData.dataList[index], 'truckLoad', Number(item.truckLoad))
       this.$set(this.intelligentData.dataList[index], 'truckVolume', Number(item.truckVolume))
       console.log(this.intelligentData.dataList)
@@ -702,6 +707,7 @@ export default {
         requireArrivedTime: '',
         truckUserId: '',
         remark: '',
+        price: 0,
         carLoadDetail: [],
         _index: index
       })

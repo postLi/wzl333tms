@@ -1,10 +1,12 @@
 <template>
   <div class="order_img">
     <!--<input type="text" @click="openInteligent" placeholder="点击跳转">-->
-    <div class="showImg" @click="openInteligent" :class="{'stopAni': httpani&&stopani}" @animationend="stopani = true">
+    <el-button class="skipBtn" type="primary" @click="openInteligent" v-if="httpani">跳过动画</el-button>
+
+    <div class="showImg" :class="{'stopAni': httpani&&stopani}" @animationend="stopani = true">
       <div class="car">
-        <img src="../../../../../../src/assets/load/ani/che.png" alt=""  />
-        <span class="kuai1" ></span>
+        <img src="../../../../../../src/assets/load/ani/che.png" alt="" />
+        <span class="kuai1"></span>
         <span class="kuai2"></span>
         <span class="kuai3"></span>
         <span class="kuai4"></span>
@@ -19,7 +21,7 @@
       <span class="lunzi lunzi1"></span>
       <span class="lunzi lunzi2"></span>
       <span class="lunzi lunzi3"></span>
-      <ol class="message"  @animationstart="stopLoad">
+      <ol class="message" @animationstart="stopLoad">
         <li>1.正在启动AI大脑...</li>
         <li>2.系统正在从库存中挑单...</li>
         <li>3.系统正在计算单车毛利最大化...</li>
@@ -83,12 +85,12 @@ export default {
         this.$message.error(this.errorMessage)
         setTimeout(() => {
           this.eventBus.$emit('closeCurrentView')
-          if(this.errorMessage === '无可智能配载的库存信息') {
-            this.$router.push({ path: '/operation/order/load', query: {loadTypeId: 39, tab: '新增配载'} })
-          }else {
+          if (this.errorMessage === '无可智能配载的库存信息') {
+            this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' } })
+          } else {
             this.$router.push({ path: '/operation/order/arteryDepart' })
           }
-          
+
         }, 2000)
       }
     },
@@ -116,6 +118,13 @@ export default {
   input {
     display: block;
   }
+  .skipBtn {
+    position:absolute;
+    right: 20px;
+    top: 20px;
+    border: 1px solid #fff;
+  }
+  
   .showImg {
     width: 917px;
     height: 366px;
@@ -139,7 +148,7 @@ export default {
     .car {
       animation: shakeit 1s ease;
     }
-    .message li{
+    .message li {
       animation-play-state: running !important;
     }
 
@@ -285,7 +294,7 @@ export default {
       color: #fff;
       font-size: 18px;
     }
-    
+
     li:nth-child(1) {
       animation: messageMove 1s 0.5s ease backwards paused;
     }

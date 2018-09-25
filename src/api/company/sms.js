@@ -133,3 +133,12 @@ export function udpateSmsTemplateLog(params) {
     return res.data
   })
 }
+/**
+ * 免费短信条数文案提示
+ * {orgId: 1}
+ */
+export function getSmsDocText(orgId) {
+  return fetch.post('/api-plugin/system/tmssystemsmssign/v1.1/getSmsDocText/', {orgId: orgId}).then(res => {
+    return res.data
+  })
+}

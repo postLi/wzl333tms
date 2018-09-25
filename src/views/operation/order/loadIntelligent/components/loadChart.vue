@@ -146,7 +146,7 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         series: [{
-          name: '总载重',
+          name: '总载重(千克)',
           type: 'pie',
           radius: '45%',
           label: {
@@ -161,15 +161,15 @@ export default {
             }
           },
           data: [{
-              value: this.baseInfo.totalWeight,
+              value: this.baseInfo.weight,
               name: '已配载',
               itemStyle: {
                 color: '#FFCC66'
               }
             },
             {
-              value: this.baseInfo.weight,
-              name: '可载吨',
+              value: this.baseInfo.totalWeight-this.baseInfo.weight,
+              name: '可载千克',
               itemStyle: {
                 color: '#79F7C1'
               }
@@ -199,7 +199,7 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         series: [{
-          name: '总载立方',
+          name: '总载方(方)',
           type: 'pie',
           radius: '45%',
           label: {
@@ -214,14 +214,14 @@ export default {
             }
           },
           data: [{
-              value: this.baseInfo.totalVolume,
+              value: this.baseInfo.volume,
               name: '已配载',
               itemStyle: {
                 color: '#FFCC66'
               }
             },
             {
-              value: this.baseInfo.volume,
+              value: this.baseInfo.totalVolume-this.baseInfo.volume,
               name: '可载方',
               itemStyle: {
                 color: '#79F7C1'

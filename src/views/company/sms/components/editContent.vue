@@ -13,20 +13,19 @@
         </div>
         <div class="smsedit_list clearfix">
           <ul>
-            <li v-for="(item, index) in smsColumn" :key="item.id" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)">
+            <li v-for="(item, index) in smsColumn" :key="item.id" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)" v-if="item.isShow === 0">
               <el-tag :type="item.colName.indexOf(currentSearch)!==-1?(currentSearch ? 'danger':'info'):'info'" size="mini">{{item.colName}}</el-tag>
             </li>
           </ul>
         </div>
         <div class="smsedit_tite">
-          <span>短信内容</span>
+          <span>短信内容 <b>{{contentLen}}/250</b></span>
         </div>
-        <div class="smsedit_content">
-          <!-- <div @drop='drop($event)' @dragover='allowDrop($event)' v-for="item in smsColumn2">
-            ({{item}})
-          </div> -->
-          <el-input @drop='drop($event)' @dragover='allowDrop($event)' id="templateContent" @keydown.delete.native="deleteItem" style="height: 100%;" type="textarea" :rows="2" placeholder="请输入内容" v-model="smsTemplate" focus>
+        <div class="smsedit_content" @drop='drop($event)' @dragover='allowDrop($event)'>
+          <div class="smsedit_content_title">【{{info.sign}}】</div>
+          <el-input id="templateContent" @keydown.delete.native="deleteItem" style="height: 100%;" type="textarea" :rows="2" placeholder="请输入内容" v-model="smsTemplate" :autofocus="true" :maxlength="250">
           </el-input>
+          <!-- <div contenteditable id="templateContent2">1111</div> -->
         </div>
       </div>
     </template>
@@ -42,6 +41,7 @@ let dom = ''
 import popRight from '@/components/PopRight/index'
 import draggable from 'vuedraggable'
 import { postSmsSetColumnsList, postDefaultSmsTemplate, postSmsTemplateLog, udpateSmsTemplateLog } from '@/api/company/sms'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
     popRight,
@@ -73,6 +73,13 @@ export default {
       if (newVal) {
         this.smsColumnLen = newVal.length
       }
+    },
+
+  },
+  computed: {
+    contentLen() {
+      let signName = this.info.sign ? this.info.sign.length : 0
+      return this.smsTemplate.length + signName + 2
     }
   },
   data() {
@@ -81,7 +88,7 @@ export default {
       loading: false,
       currentSearch: '',
       smsColumn: [],
-      smsColumn2: [],
+      // smsColumn2: [],
       orgSmsColumn: [],
       smsTemplate: '',
       smsTemplateObj: {},
@@ -101,11 +108,15 @@ export default {
       dom = event.currentTarget
       console.log('drap', dom)
     },
-
     drop(event) {
       event.preventDefault()
       const strName = dom.getAttribute('data-fileName')
-      this.addTemplate(strName)
+      this.smsColumn.forEach((e, index) => {
+        if (e.colName === strName) {
+          this.addTemplate(strName, e, index)
+        }
+      })
+      console.log('sjdifsjidfj')
     },
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
@@ -114,12 +125,16 @@ export default {
       const newStrName = '(' + strName + ')'
       const tx = document.getElementById('templateContent')
       const pos = this.$const.cursorPosition.get(tx)
-      this.$const.cursorPosition.add(tx, pos, newStrName)
-      this.$nextTick(() => {
-        this.smsColumn2.push(strName)
-        // this.smsColumn.splice(index, 1)
-        console.log(this.smsTemplate)
-      })
+      if (this.contentLen < 250) {
+        this.$const.cursorPosition.add(tx, pos, newStrName)
+        // 文字区域添加相关字段， 字段区域减去相关字段
+      this.smsColumn[index].isShow = 1
+      this.orgSmsColumn[index].isShow = 1
+      this.smsColumn.splice(index, 1)
+      this.smsTemplate = tx.value
+      }
+
+      
     },
     deleteItem(e) {
       const tx = document.getElementById('templateContent')
@@ -164,10 +179,10 @@ export default {
       const valArr = val.split('')
       // 1.先检查右边括弧
       if (valArr[curPos - 1] === ')') {
-          // 找到左边的括弧
+        // 找到左边的括弧
         return [findStr.lastIndexOf('('), curPos]
       } else if (findStr.indexOf('(') === -1 && findStr.indexOf(')') === -1) {
-          // 不作处理
+        // 不作处理
         return [sindex, sindex]
       } else if (findStr.lastIndexOf('(') !== -1 && (findStr.lastIndexOf(')') < findStr.lastIndexOf('('))) {
         const leftIndex2 = findStr.lastIndexOf('(')
@@ -183,17 +198,34 @@ export default {
       const tx = document.getElementById('templateContent')
       const val = tx.value
       const matchStr = val.substring(start, end)
-      console.log('matchStr:', start, end, matchStr)
-        // 做回显到上面
+      // 做回显到上面
       const matchArr = matchStr.match(/(\([^)]*\))/gm)
-      console.log('matchArr:', matchArr)
-        // 删除文本框值
+      let matchNoBracketArr = objectMerge2([], matchArr)
+
+      // 删除文本框值
       tx.value = val.replace(matchStr, '')
-        // 调用￥set方法
+      // 调用set方法
       this.$const.cursorPosition.set(tx, {
         text: '',
         start: start,
-        end: start })
+        end: start
+      })
+
+      this.smsTemplate = tx.value
+      matchNoBracketArr.forEach((e, index) => {
+        this.$set(matchNoBracketArr, index, e.substring(1, e.length - 1))
+      })
+      this.orgSmsColumn.forEach((e, index) => {
+        matchNoBracketArr.forEach(el => {
+          if (e.colName === el) {
+            e.isShow = 0
+            this.smsColumn.push(e)
+          }
+        })
+      })
+
+      console.log('matchArr:', matchArr)
+
     },
     submitForm(formName) {
       const obj = {
@@ -202,21 +234,23 @@ export default {
         companyId: this.info.companyId,
         remindTarget: this.info.remindTarget,
         remindTargetCode: this.info.remindTargetCode,
-        sendNode: this.info.remindTargetCode,
+        sendNode: this.info.sendNode,
         sendNodeCode: this.info.sendNodeCode,
         templateContent: this.smsTemplate,
         templateContentCoded: this.info.templateContentCoded,
         applyStatus: this.info.applyStatus,
-        sendStatus: this.info.sendStatus ? 0 : 1
+        sendStatus: this.info.sendStatus ? 0 : 1,
+        sign: this.info.sign
       }
       console.log(obj)
       if (obj.templateContent === '') {
+        this.$message.warning('短信不能为空！')
         return
       }
       udpateSmsTemplateLog(obj).then(data => {
-        this.$message.success('更新短信模板成功！')
-        this.closeMe()
-      })
+          this.$message.success('更新短信模板成功！')
+          this.closeMe()
+        })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误！')
         })
@@ -228,7 +262,9 @@ export default {
         defaultTmpId: ''
       }
       postSmsSetColumnsList(obj).then(data => {
-        this.smsColumn = data
+        this.smsColumn = data.filter(e => {
+          return e.isShow === 0
+        })
         this.orgSmsColumn = data
         this.smsColumnLen = this.smsColumn.length
       })
@@ -252,12 +288,12 @@ export default {
         if (data) {
           this.smsTemplate = data.templateContent
           this.smsTemplateObj = data
-          this.smsColumn2 = []
-          if (data.columnsLogList && data.columnsLogList.length > 0) {
-            data.columnsLogList.forEach((e, index) => {
-              this.smsColumn2.push(e.colName)
-            })
-          }
+          // this.smsColumn2 = []
+          // if (data.columnsLogList && data.columnsLogList.length > 0) {
+          //   data.columnsLogList.forEach((e, index) => {
+          //     this.smsColumn2.push(e.colName)
+          //   })
+          // }
         }
       })
     },
@@ -270,33 +306,35 @@ export default {
         defaultTmpId: this.info.defaultTmpId
       }
       postSmsSetColumnsList(obj).then(data => {
-        this.loading = false
-        this.smsColumn = data
-        this.orgSmsColumn = data
-        this.smsColumnLen = this.smsColumn.length
-      })
+          this.loading = false
+          this.smsColumn = data.filter(e => {
+            return e.isShow === 0
+          })
+
+          this.orgSmsColumn = data
+          this.smsColumnLen = this.smsColumn.length
+        })
         .catch(erro => {
           this.loading = false
         })
     },
     querySearch(queryString, cb) {
-      // this.currentSearch = queryString
-      // if (queryString === undefined) {
-      //   if (!this.currentSearch) { // 如果搜索框为空则恢复左边列表
-      //     this.smsColumn = Object.assign([], this.orgSmsColumn)
-      //   }
-      // }
-      const smsColumn = this.orgSmsColumn
-      const result = queryString ? smsColumn.filter(this.createFilter(new RegExp(queryString, 'gi'), 'colName')) : smsColumn
-      // this.smsColumn = result
-      cb(result)
-    },
-    createFilter(queryString, prop) {
-      return (data) => {
-        if (data[prop]) {
-          return (queryString.test(data[prop]))
+      this.currentSearch = queryString
+      if (queryString === undefined) {
+        if (!this.currentSearch) { // 如果搜索框为空则恢复左边列表
+          this.smsColumn = Object.assign([], this.orgSmsColumn).filter(e => {
+            return e.isShow === 0
+          })
         }
       }
+      const smsColumn = this.orgSmsColumn
+      const result = queryString ? smsColumn.filter(el => el.colName.indexOf(queryString) !== -1) : smsColumn
+      console.log(result)
+      this.smsColumn = objectMerge2([], result).filter(e => {
+        return e.isShow === 0
+      })
+      console.log(result, this.smsColumn)
+      cb(result)
     },
     handleSelect(item) {
       this.currentSearch = item.colName
@@ -321,6 +359,12 @@ export default {
   .smsedit_tite {
     line-height: 28px;
     padding: 0 0 10px 0;
+    b {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      color: #909399;
+    }
   }
   .smsedit_search {
     .el-autocomplete {
@@ -333,7 +377,7 @@ export default {
   .smsedit_list {
     margin: 10px 0;
     overflow: auto;
-    height: calc(100% - 350px);
+    height: calc(100% - 250px);
     padding: 10px;
     border: 1px solid #dcdfe6;
 
@@ -362,10 +406,19 @@ export default {
   }
   .smsedit_content {
     border: 1px solid #dcdfe6;
-    height: calc(100% - 600px);
+    height: 250px;
     overflow: auto;
+    position: relative;
+    .smsedit_content_title {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 14px;
+      color: #333;
+    }
     .el-textarea__inner {
       height: 100%;
+      padding-top: 32px;
     }
   }
   .sortable-ghost {

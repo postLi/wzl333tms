@@ -6,7 +6,14 @@
       <div class="info_tab">
         <el-table ref="multipleTable" :data="infoList" border height="100%" tooltip-effect="dark" style="width:100%;" stripe>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot &&!column.expand" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot &&column.expand" :width="column.width">
+              <template slot-scope="scope">
+                <el-popover placement="bottom" width="400" trigger="hover" :content="scope.row.smsContent">
+                  <span slot="reference">{{scope.row.smsContent}}</span>
+                </el-popover>
+              </template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
@@ -53,7 +60,7 @@ export default {
           label: '网点',
           prop: 'orgName',
           width: '120'
-        }, {  
+        }, {
           label: '发送节点',
           prop: 'sendNode',
           width: '150'
@@ -67,7 +74,8 @@ export default {
           width: '160'
         }, {
           label: '短信内容',
-          prop: 'smsContent'
+          prop: 'smsContent',
+          expand: true
         }, {
           label: '状态',
           prop: 'statusStr',

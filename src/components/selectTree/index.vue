@@ -6,7 +6,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
-
+        :disabled="disabledOption.indexOf(item.id) !== -1"
         >
         <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span></div>
         </el-option>
@@ -16,6 +16,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
+         :disabled="disabledOption.indexOf(item.id) !== -1"
         >
         <span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span>
         </el-option>
@@ -76,6 +77,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    disabledOption: {
+      type: Array,
+      default: () => []
     },
     filterable: {
       type: Boolean,
