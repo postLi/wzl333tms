@@ -23,11 +23,20 @@ Vue.mixin({
     }
   },
   methods: {
-    keepNumber(event) {
+    _keepNumber(event) {
       return keepNumber.call(event.target, event)
     },
-    keepNumberAndPoint(event) {
+    _keepNumberAndPoint(event) {
       return keepNumberAndPoint.call(event.target, event)
+    },
+    // a 总数； b 已结；c 未结；r 具体项
+    _setTextColor(a, b, c, d) {
+      if (b && (b !== a)) {
+        // 总数不等于已结
+        return '<span class="imp">' + d + '</span>'
+      } else {
+        return d
+      }
     }
   }/* ,
 

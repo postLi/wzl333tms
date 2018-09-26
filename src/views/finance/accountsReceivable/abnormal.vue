@@ -84,12 +84,12 @@ export default {
   },
   data() {
     return {
-       isCheck: false,
+      isCheck: false,
       isModifyDetail: false,
-       isDbClick: false,
-       selectInfoDetail: {},
-       id: '',
-       AddAbnormalVisible: false,
+      isDbClick: false,
+      selectInfoDetail: {},
+      id: '',
+      AddAbnormalVisible: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -144,15 +144,15 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      },{
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        }, {
-        'label': '出发城市',
-        'prop': 'shipFromCityName'
       }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
+          'label': '出发城市',
+          'prop': 'shipFromCityName'
+        }, {
         'label': '到达城市',
         'prop': 'shipToCityName'
       }, {
@@ -163,10 +163,18 @@ export default {
         'prop': 'changeFee'
       }, {
         'label': '未结异动',
-        'prop': 'notChangeFee'
+        'prop': 'notChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+        }
       }, {
         'label': '已结异动',
-        'prop': 'finishChangeFee'
+        'prop': 'finishChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
@@ -255,7 +263,6 @@ export default {
       this.AddAbnormalVisible = false
       this.isModify = false
       this.selectInfo = {}
-     
     },
     fetchAllOrder() {
       this.loading = true
