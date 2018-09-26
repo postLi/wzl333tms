@@ -53,7 +53,7 @@ export default {
     this.getSearchSmsSurplus()
   },
   methods: {
-    recharge () {
+    recharge() {
       this.popVisibleRecharge = true
     },
     converToCn() {
@@ -71,11 +71,11 @@ export default {
     },
     getSearchSmsSurplus() {
       getSearchSmsSurplus().then(data => {
-        this.packageInfo = data
-      })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text || '发生未知错误！')
-      })
+          this.packageInfo = data
+        })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        })
     },
     getSmspackages() {
       return getSmspackages().then(data => {
@@ -94,13 +94,32 @@ export default {
         this.popVisibleTips = true
       } else {
         const h = this.$createElement
-        this.$msgbox({
-          title: '购买失败',
-          message: h('div', { style: 'text-align: center' }, [
-            h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
-          ]),
-          confirmButtonText: '充值'
+        this.$confirm('钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。', '购买失败', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '充值',
+          cancelButtonText: '取消'
         })
+          .then(() => {
+            this.popVisibleRecharge = true
+            this.popVisibleTips = false
+          })
+          .catch(() => {
+            this.popVisibleTips = false
+          })
+        // this.$confirm({
+        //     title: '购买失败',
+        //     message: h('div', { style: 'text-align: center' }, [
+        //       h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
+        //     ]),
+        //     confirmButtonText: '充值',
+        //     cancelButtonText: '取消'
+        //   })
+        //   .then(() => {
+        //     this.popVisibleTips = true
+        //   })
+        //   .catch(() => {
+        //     this.popVisibleTips = false
+        //   })
       }
     },
     closeTips() {
