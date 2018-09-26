@@ -227,9 +227,8 @@ export default {
       this.addTruckVisible = false
     },
     getSavaParamTruck(arr) { // 参数设置时返回的数据
-      console.log('jsfsjdiofj')
+      console.log('getSavaParamTruck', arr)
       this.paramTuck = Object.assign([], arr)
-      // this.resetTrucDelList()
     },
     getLoadTable(arr) {
       this.loadTableInfo = arr

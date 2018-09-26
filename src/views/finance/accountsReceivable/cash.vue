@@ -153,10 +153,18 @@ export default {
         'prop': 'nowPayFee'
       }, {
         'label': '已结现付',
-        'prop': 'finishNowPayFee'
+        'prop': 'finishNowPayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+        }
       }, {
         'label': '未结现付',
-        'prop': 'notNowPayFee'
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',

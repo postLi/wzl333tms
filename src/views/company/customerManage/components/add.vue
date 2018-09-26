@@ -46,7 +46,7 @@
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
           <!-- <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input> -->
-          <input type="text" v-numberOnly v-model.trim="form.customerMobile" :class="{'is-error': !customphoneisok}" auto-complete="off" maxlength="11" class="nativeinput">
+          <input type="text" v-numberOnly v-model.trim="form.customerMobile"  auto-complete="off" maxlength="11" class="nativeinput">
           <!-- <div v-if="!customphoneisok" class="el-form-item__error">
             请输入手机号码
           </div> -->
@@ -140,11 +140,11 @@ export default {
       }
     },
     customphoneisok() {
-      const val = this.form.customerMobile
-      if (val === '') {
-        return true
-      }
-      return REGEX.MOBILE.test(val)
+      // const val = this.form.customerMobile
+      // if (val === '') {
+      //   return true
+      // }
+      // return REGEX.MOBILE.test(val)
     }
   },
   data() {
@@ -219,8 +219,8 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'change' }
-         // { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+         { pattern: REGEX.MOBILE, trigger: 'change', message: '请输入有效的手机号码'}
         ],
         customerName: [
           { required: true, message: '请输入联系人' },
@@ -256,7 +256,8 @@ export default {
   },
   watch: {
     'form.customerMobile'(newVal) {
-
+      console.log('33333')
+      this.$refs.ruleForm.validateField('customerMobile')
     },
     popVisible(newVal, oldVal) {
       if (!this.inited) {

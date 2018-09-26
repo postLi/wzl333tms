@@ -1054,7 +1054,7 @@
       modifyList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.id
-        return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
+        getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
           this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds

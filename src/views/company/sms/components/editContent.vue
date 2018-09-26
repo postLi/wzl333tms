@@ -12,6 +12,7 @@
           </el-autocomplete>
         </div>
         <div class="smsedit_list clearfix">
+          <p v-if="isEmptySearch">暂无数据</p>
           <ul>
             <li v-for="(item, index) in smsColumn" :key="item.id" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)" v-if="item.isShow === 0">
               <el-tag :type="item.colName.indexOf(currentSearch)!==-1?(currentSearch ? 'danger':'info'):'info'" size="mini">{{item.colName}}</el-tag>
@@ -69,17 +70,23 @@ export default {
     },
     popVisible(newVal) {},
     smsColumn(newVal) {
-      console.log(newVal.length)
       if (newVal) {
         this.smsColumnLen = newVal.length
       }
-    },
-
+    }
   },
   computed: {
     contentLen() {
       let signName = this.info.sign ? this.info.sign.length : 0
       return this.smsTemplate.length + signName + 2
+    },
+    isEmptySearch () {
+      console.log(this.smsColumnLen)
+      if (this.smsColumnLen === 0) {
+       return true
+      } else {
+        return false
+      }
     }
   },
   data() {
@@ -88,11 +95,11 @@ export default {
       loading: false,
       currentSearch: '',
       smsColumn: [],
-      // smsColumn2: [],
       orgSmsColumn: [],
       smsTemplate: '',
       smsTemplateObj: {},
       smsColumnLen: 0
+      // isEmptySearch: true
     }
   },
   mounted() {
@@ -106,7 +113,6 @@ export default {
     },
     drag(event) {
       dom = event.currentTarget
-      console.log('drap', dom)
     },
     drop(event) {
       event.preventDefault()
@@ -116,7 +122,6 @@ export default {
           this.addTemplate(strName, e, index)
         }
       })
-      console.log('sjdifsjidfj')
     },
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
@@ -128,13 +133,11 @@ export default {
       if (this.contentLen < 250) {
         this.$const.cursorPosition.add(tx, pos, newStrName)
         // 文字区域添加相关字段， 字段区域减去相关字段
-      this.smsColumn[index].isShow = 1
-      this.orgSmsColumn[index].isShow = 1
-      this.smsColumn.splice(index, 1)
-      this.smsTemplate = tx.value
+        this.smsColumn[index].isShow = 1
+        this.orgSmsColumn[index].isShow = 1
+        this.smsColumn.splice(index, 1)
+        this.smsTemplate = tx.value
       }
-
-      
     },
     deleteItem(e) {
       const tx = document.getElementById('templateContent')
@@ -223,9 +226,6 @@ export default {
           }
         })
       })
-
-      console.log('matchArr:', matchArr)
-
     },
     submitForm(formName) {
       const obj = {
@@ -242,7 +242,7 @@ export default {
         sendStatus: this.info.sendStatus ? 0 : 1,
         sign: this.info.sign
       }
-      console.log(obj)
+      console.log('submitForm', obj)
       if (obj.templateContent === '') {
         this.$message.warning('短信不能为空！')
         return
@@ -329,11 +329,9 @@ export default {
       }
       const smsColumn = this.orgSmsColumn
       const result = queryString ? smsColumn.filter(el => el.colName.indexOf(queryString) !== -1) : smsColumn
-      console.log(result)
       this.smsColumn = objectMerge2([], result).filter(e => {
         return e.isShow === 0
       })
-      console.log(result, this.smsColumn)
       cb(result)
     },
     handleSelect(item) {
@@ -380,7 +378,12 @@ export default {
     height: calc(100% - 250px);
     padding: 10px;
     border: 1px solid #dcdfe6;
-
+    p{
+      text-align: center;
+      margin-top: 10px;
+      color: #999;
+      font-size: 14px;
+    }
     ul {
       margin: 0;
       display: flex;

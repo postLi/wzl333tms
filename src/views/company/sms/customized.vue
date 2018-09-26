@@ -51,7 +51,7 @@
       </div>
     </div>
     <!-- 定制专属签名 -->
-    <addCustomized :popVisible="addPopVisible" @close="closeAdd"></addCustomized>
+    <addCustomized :popVisible="addPopVisible" @close="closeAdd" @success="fetchList"></addCustomized>
     <!-- 编辑短信 -->
     <popRight :info="selectInfo" :popVisible.sync="editInfoVisible" @close="closeEdit" @success="getFecthList"></popRight>
   </div>
@@ -102,12 +102,11 @@ export default {
     },
     postSmsSign() {
       postSmsSign(this.otherinfo.orgid).then(data => {
+        this.signName = data.data.modifySign
         if (data.data.modifyCount === 1) {
           this.isShowSignBtn = true
-          this.signName = data.data.modifySign
         } else {
           this.isShowSignBtn = false
-          this.signName = defaultSign
         }
       })
     },
@@ -123,7 +122,8 @@ export default {
           this.loading = false
         })
         .catch(err => {
-
+          this.$message.error(error.errorInfo || error.text || '发生未知错误~')
+          this.loading = false
         })
     },
     handlePageChange(obj) { // 翻页
@@ -154,7 +154,7 @@ export default {
       this.editInfoVisible = false
     },
     getFecthList () {
-      this.editInfoVisible = false
+      // this.editInfoVisible = false
       this.fetchList()
     },
     handleEnable(newVal, row) { // true-0 可发送  false-1 不发送

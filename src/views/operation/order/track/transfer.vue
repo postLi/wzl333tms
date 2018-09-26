@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfoTransfer :orgid="orgid" :id='transferId' :shipId="shipId" :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
+      <editInfoTransfer :orgid="orgid" :id='transferId' :shipId="shipId"  :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
