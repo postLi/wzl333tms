@@ -46,10 +46,10 @@
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
           <!-- <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input> -->
-          <input type="text" v-numberOnly v-model.trim="form.customerMobile" :class="{'is-error': customphoneisok}" auto-complete="off" maxlength="11" class="nativeinput">
-          <div v-if="customphoneisok" class="el-form-item__error">
+          <input type="text" v-numberOnly v-model.trim="form.customerMobile" :class="{'is-error': !customphoneisok}" auto-complete="off" maxlength="11" class="nativeinput">
+          <!-- <div v-if="!customphoneisok" class="el-form-item__error">
             请输入手机号码
-          </div>
+          </div> -->
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
           <el-input v-numberOnly v-model="phoneshort" class="phoneshort" :maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" :maxlength="8" auto-complete="off"></el-input>
@@ -140,7 +140,11 @@ export default {
       }
     },
     customphoneisok() {
-      return REGEX.MOBILE.test(this.form.customerMobile)
+      const val = this.form.customerMobile
+      if (val === '') {
+        return true
+      }
+      return REGEX.MOBILE.test(val)
     }
   },
   data() {
@@ -215,7 +219,7 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码' }
+          { required: true, message: '请输入手机号码', trigger: 'change' }
          // { validator: validateFormNumber, trigger: 'change'}
         ],
         customerName: [
