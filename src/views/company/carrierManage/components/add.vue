@@ -9,7 +9,7 @@
           <el-input v-model.trim="form.carrierSn" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商" prop="carrierName">
-          <el-input v-model.trim="form.carrierName" :maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model.trim="form.carrierName" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
           <el-input v-numberOnly v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
@@ -201,6 +201,9 @@ export default {
         this.inited = true
         this.initInfo()
       }
+      if (newVal && !this.isModify) {
+        this.getCarrierSn()
+      }
     },
     orgid(newVal) {
       this.form.orgid = newVal
@@ -261,7 +264,7 @@ export default {
             this.reset()
             if (!bool) {
               this.closeMe()
-            }else {
+            } else {
               this.form.orgid = this.orgid
               this.getCarrierSn()
             }
@@ -276,7 +279,10 @@ export default {
       })
     },
     reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
+      this.form.orgid = orgid
     },
     closeMe(done) {
       this.reset()

@@ -275,9 +275,14 @@ export default {
       })
     },
     reset() {
+       // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.driverMobile = ''
       this.form.idcardPicture = ''
+      this.form.drivingPicture = ''
+      this.form.certification = ''
+      this.form.orgid = orgid
     },
     closeMe(done) {
       // this.reset()

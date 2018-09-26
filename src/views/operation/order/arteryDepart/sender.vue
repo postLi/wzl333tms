@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
+  import { getExportExcel } from '@/api/company/customerManage'
   import {
     postSelectLoadMainInfoList,
     putLoadDepart,
@@ -69,10 +69,10 @@
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import AddCustomer from './components/storages'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile, PrintContract} from '@/utils/lodopFuncs'
+  import { objectMerge2 } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
   import AddLntelligent from './components/addLntelligent '
   // import AddLntelligent from './components/intelligentParameterSet'
   // import AddLntelligent from './components/intelligentFreight'
@@ -105,7 +105,7 @@
     },
     data() {
       return {
-        checkBillName_child:'',
+        checkBillName_child: '',
         watchKey: 'lll',
         tablekey: 0,
         loading: true,
@@ -150,7 +150,7 @@
             prop: 'batchNo',
             width: '120',
             fixed: true
-          },{
+          }, {
             label: '到付(元)',
             prop: 'shipArrivepayFee',
             width: '90',
@@ -349,8 +349,8 @@
             // })
             this.selectInfo = this.selected[0]
             this.openlntelligent()
-            break;
-          // 导出
+            break
+        // 导出
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
@@ -370,6 +370,7 @@
             for (const item in this.selected[0]) {
               str += item + '=' + (this.selected[0][item] === null ? '' : this.selected[0][item]) + '&'
             }
+            str += '&checkBillName=货物运输合同'
             // JSON.stringify(this.formModel)
             const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
             PrintContract(encodeURI(path))
@@ -380,7 +381,7 @@
             break
           // 新增配载
           case 'add':
-            this.$router.push({path: '././load', query: {loadTypeId: 39, tab: '新增配载'}}) // 38-短驳 39-干线 40-送货
+            this.$router.push({ path: '././load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
             break
           // 添加客户
           case 'storage':
@@ -414,7 +415,7 @@
                 return false
               } else {
                 this.selectInfo = this.selected[0]
-                this.$router.push({path: '././load', query: {loadTypeId: 39, info: this.selectInfo, tab: '修改配载'}})
+                this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
               }
             }
             break
@@ -476,7 +477,6 @@
               })
               return false
             } else {
-
               ids = ids.join(',')
               this.$confirm('确定要取消发车？', '提示', {
                 confirmButtonText: '确定',
@@ -548,10 +548,10 @@
         // 清除选中状态，避免影响下个操作
         this.$refs.multipleTable.clearSelection()
       },
-      openlntelligent(){
+      openlntelligent() {
         this.lntelligentVisible = true
       },
-      closelntelligent(){
+      closelntelligent() {
         this.lntelligentVisible = false
       },
       setTable() {

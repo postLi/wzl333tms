@@ -201,3 +201,13 @@ $bodercolor: #d0d7e5;
 .el-tabs--border-card>.el-tabs__content{
   padding: 10px;
 }
+
+/**
+滚动条调整
+**/
+.el-table__fixed{
+  pointer-events: none;
+}
+.el-table__fixed-body-wrapper,.el-table__fixed-header-wrapper,.el-table__fixed-footer-wrapper{
+  pointer-events: all;
+}

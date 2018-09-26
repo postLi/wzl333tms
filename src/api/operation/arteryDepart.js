@@ -102,5 +102,5 @@ export function putPzcarinfotms(params) {
 
 //_删除自定义车型
 export function deletePzcarinfotms(id) {
-  return fetch.delete('api-order/aitransport/pzcarinfotms/v1/' + id)
+  return fetch.delete('/api-order/aitransport/pzcarinfotms/v1/' + id)
 }

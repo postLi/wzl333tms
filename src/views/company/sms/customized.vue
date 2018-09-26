@@ -4,7 +4,7 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openAddSign">定制专属签名</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openShowSign" v-if="isShowSignBtn">查看专属签名</el-button>
-        <span class="btns_box_smstips">您好：您公司尊享100条免费短信服务并可以定制专属签名，超出后请购买短信包，费用极低，又可以降低公司运作成本，扩大公司影响力。</span>
+        <span class="btns_box_smstips">{{smsDocText}}</span>
       </div>
       <div class="info_tab info_tab_sms">
         <el-table ref="multipleTable" height="100%" @row-dblclick="editContent" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border>
@@ -18,6 +18,18 @@
           <el-table-column sortable label="提醒对象" width="110" prop="remindTarget">
           </el-table-column>
           <el-table-column sortable label="短信内容（双击编辑短信内容）" prop="templateContent" align="left">
+            <template slot-scope="scope">
+              <!-- <el-tooltip popper-class="popcontent" effect="light" :content="scope.row.templateContent" placement="bottom">
+                 <span>{{scope.row.templateContent}}</span>
+              </el-tooltip> -->
+              <el-popover
+                placement="bottom"
+                width="400"
+                trigger="hover"
+                :content="scope.row.templateContent">
+                <span slot="reference">{{scope.row.templateContent}}</span>
+              </el-popover>
+            </template>
           </el-table-column>
           <el-table-column sortable label="审核状态" width="120" prop="applyStatus">
             <template slot-scope="scope">
@@ -46,7 +58,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postSmsTemplateLogList, sendSmsByTemplateLog, postSmsSign, udpateSmsTemplateLogStatus } from '@/api/company/sms'
+import { postSmsTemplateLogList, sendSmsByTemplateLog, postSmsSign, udpateSmsTemplateLogStatus, getSmsDocText } from '@/api/company/sms'
 import Pager from '@/components/Pagination/index'
 import addCustomized from './components/addCustomized'
 import popRight from './components/editContent'
@@ -65,6 +77,7 @@ export default {
       loading: true,
       addPopVisible: false,
       total: 0,
+      smsDocText: '',
       editInfoVisible: false,
       selectInfo: {},
       searchQuery: {
@@ -77,10 +90,16 @@ export default {
     }
   },
   mounted() {
+    this.getSmsDocText()
     this.postSmsSign()
     this.fetchList()
   },
   methods: {
+    getSmsDocText () { // 免费短信文案提示
+      getSmsDocText(this.otherinfo.orgid).then(data => {
+        this.smsDocText = data.smsDocText
+      })
+    },
     postSmsSign() {
       postSmsSign(this.otherinfo.orgid).then(data => {
         if (data.data.modifyCount === 1) {
