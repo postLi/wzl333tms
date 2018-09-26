@@ -11,11 +11,13 @@
         <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
             <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
-            <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input>
+            <!-- <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input> -->
+            <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="15" v-onlyNumberAndLetter class="nativeinput">
           </el-tooltip>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="!isModify">
-          <el-input v-model.trim="form.password" auto-complete="off"></el-input>
+          <!-- <el-input v-model.trim="form.password" auto-complete="off"></el-input> -->
+          <input type="text" maxlength="20" v-model.trim="form.password" auto-complete="off" v-onlyNumberAndLetter class="nativeinput">
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
@@ -47,7 +49,7 @@
       <div class="info" v-if="!isModify">注：密码默认为：123456</div>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -309,6 +311,13 @@ export default {
   .popRight-content{
     padding: 20px 20px 0;
     box-sizing: border-box;
+  }
+
+  .nativeinput{
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    width: 100%;
+    font-size: 12px;
   }
 
   .el-select .el-input__inner{

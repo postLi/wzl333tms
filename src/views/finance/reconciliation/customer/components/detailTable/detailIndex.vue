@@ -122,7 +122,7 @@ export default {
           prop: 'memberPerson',
           width: '130',
           fixed: true
-        },{
+        }, {
           label: '对账状态',
           prop: 'checkStatusName',
           width: '120',
@@ -252,7 +252,6 @@ export default {
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         this.loading = false
       })
-
     },
     fetchData() {
       this.fetchAllCustomer()
@@ -342,7 +341,6 @@ export default {
               _data.id = this.selected[0].id
               this.loading = true
               postUpdateBillCheckSelective(_data).then(res => {
-
                 this.$message({
                   type: 'success',
                   message: '已取消对账~'
@@ -393,6 +391,7 @@ export default {
                 type: 'info',
                 message: '该对账单已完成对账不可以删除~'
               })
+              this.loading = false
               this.$refs.multipleTable.clearSelection()
               return false
             }

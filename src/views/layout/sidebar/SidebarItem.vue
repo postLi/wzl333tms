@@ -3,7 +3,7 @@
       <li
         class="menu-item"
         v-for="(route, index) in routes"
-        :key="index"
+        :key="route.path"
         
         v-if="!route.hidden"
         :class="{'is-active': route.path === $route.path}" 

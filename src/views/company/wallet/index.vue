@@ -51,6 +51,8 @@
                 prop="tradeFee"
                 width="150"
                 label="交易金额">
+                <template slot-scope="scope">
+                  {{scope.row.expenditureChannelName ? '-' : '+' }}{{scope.row.tradeFee}}</template>
               </el-table-column>
               <el-table-column
                 prop="incomeChannelName"

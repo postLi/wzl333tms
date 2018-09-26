@@ -830,8 +830,10 @@ export default {
       } else {
         // agencyFund
         // commissionFee
-        const find = this.form.tmsOrderCargoList.filter(el => {
-          return el.agencyFund > 0
+        const find = this.form.cargoList.filter(el => {
+          const val = parseFloat(el.agencyFund, 10) || 0
+          console.log('form.tmsOrderC', el, val)
+          return val > 0
         })
         if (newVal === 268) {
           this.shipHuokuanStatus = 'ship-huokuanweifafang'

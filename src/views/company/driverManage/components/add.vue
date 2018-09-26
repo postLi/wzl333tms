@@ -59,7 +59,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm',true)">保存并新增</el-button>
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm',true)">保存并新增</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>

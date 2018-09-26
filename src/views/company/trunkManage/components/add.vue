@@ -45,7 +45,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree :disabled="isModify" v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
+          <SelectTree v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
 
         <el-form-item label="车辆品牌" prop="truckBrand">
@@ -108,7 +108,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
