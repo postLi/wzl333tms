@@ -15,6 +15,7 @@
             </div>
             <div class="smsCard_content">
               <p>{{item.amount}}条短信</p>
+              <h3>{{item.fee}}元</h3>
               <h4>{{item.price}}元/条</h4>
               <el-button type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
             </div>
@@ -153,6 +154,11 @@ export default {
           font-size: 18px;
           font-weight: 700;
           padding: 20px 0;
+        }
+        h3{
+          font-size: 18px;
+          font-weight: 700;
+          margin-bottom: 10px;
         }
         h4 {
           color: #666666;

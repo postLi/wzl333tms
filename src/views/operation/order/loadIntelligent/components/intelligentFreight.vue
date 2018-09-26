@@ -36,6 +36,7 @@
             </template>
           </el-table-column>
         </el-table>
+
         <el-table ref="multipleTable" :data="usersArr" stripe border height="67" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="leaveHandlingFee" width="109" label="发站装卸费">
             <template slot-scope="scope">
@@ -228,17 +229,17 @@ export default {
         })
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
-        this.usersArr[index].nowpayCarriage
-        this.usersArr[index].nowpayOilCard
-        this.usersArr[index].backpayCarriage
-        this.usersArr[index].backpayOilCard
-        this.usersArr[index].arrivepayCarriage
-        this.usersArr[index].arrivepayOilCard
-        this.usersArr[index].leaveHandlingFee
-        this.usersArr[index].leaveOtherFee
-        this.usersArr[index].arriveHandlingFee
-        this.usersArr[index].arriveOtherFee
-        this.usersArr[index].carloadInsuranceFee
+        // this.usersArr[index].nowpayCarriage
+        // this.usersArr[index].nowpayOilCard
+        // this.usersArr[index].backpayCarriage
+        // this.usersArr[index].backpayOilCard
+        // this.usersArr[index].arrivepayCarriage
+        // this.usersArr[index].arrivepayOilCard
+        // this.usersArr[index].leaveHandlingFee
+        // this.usersArr[index].leaveOtherFee
+        // this.usersArr[index].arriveHandlingFee
+        // this.usersArr[index].arriveOtherFee
+        // this.usersArr[index].carloadInsuranceFee
       }
     },
 
@@ -272,7 +273,8 @@ export default {
     },
     submitForm() {
 
-      this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
+      // this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
+      
       this.$emit('getIntFreight', {
         obj: this.usersArr[0],
         val: this.total

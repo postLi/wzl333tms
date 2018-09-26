@@ -135,9 +135,6 @@ export default {
     this.init()
     this.infoData()
   },
-  // activated() {
-  //   this.init()
-  // },
   methods: {
     infoData() {
       let obj = JSON.parse(this.$route.query.sendDate)
