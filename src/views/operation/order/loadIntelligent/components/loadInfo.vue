@@ -156,10 +156,10 @@ export default {
       }
       return false
     },
-    viewControl () {
+    viewControl() {
       if (this.intelligentData.dataList && this.intelligentData.dataList.length > this.maxShowLen) {
         return true
-      }else {
+      } else {
         return false
       }
     }
@@ -167,7 +167,7 @@ export default {
   data() {
 
     return {
-      intFreightItem: '',
+      intFreightItem: {},
       intFreightIndex: '',
       intFreight: '',
       intFreightObj: {},
@@ -284,7 +284,19 @@ export default {
             e.weight = e.weight ? e.weight : 0
             e.volume = e.volume ? e.volume : 0
             e._index = index
-            let data = {}
+            let data = {
+              nowpayCarriage: '',
+              nowpayOilCard: '',
+              backpayCarriage: '',
+              backpayOilCard: '',
+              arrivepayCarriage: '',
+              arrivepayOilCard: '',
+              carloadInsuranceFee: '',
+              leaveHandlingFee: '',
+              leaveOtherFee: '',
+              arriveHandlingFee: '',
+              arriveOtherFee: ''
+            }
             this.$set(data, 'nowpayCarriage', e.price)
             this.$set(e, 'tmsOrderLoadFee', data)
             data = {}
@@ -409,6 +421,8 @@ export default {
       this.intFreight = data.val
       this.intFreightObj = data.obj
       this.$set(this.intelligentData.dataList[this.intFreightIndex], 'price', this.intFreight)
+      this.$set(this.intelligentData.dataList[this.intFreightIndex], 'tmsOrderLoadFee', this.intFreightObj)
+      console.log('getIntFreight', data)
     },
     doAction(type) {
       switch (type) {
@@ -439,7 +453,8 @@ export default {
       });
     },
     addFreight(val, index, item) {
-      this.intFreightItem = val
+      console.log('///345345///item.tmsOrderLoadFee', item.tmsOrderLoadFee)
+      this.intFreightItem = Object.assign({}, item.tmsOrderLoadFee)
       this.intFreightIndex = index
       this.openlntelligent()
     },
@@ -833,7 +848,7 @@ export default {
         .el-form-item--mini.el-form-item,
         .el-form-item--small.el-form-item {
           margin-bottom: 10px;
-          display:flex;
+          display: flex;
           flex-direction: row;
         }
         .el-button {
@@ -925,8 +940,7 @@ export default {
             display: flex;
             flex-direction: row;
             .loadInfo_item_form {
-              padding-top: 15px;
-              // width: 1200px;
+              padding-top: 15px; // width: 1200px;
               display: inline-block;
 
               .loadInfo_item_form_row {
@@ -943,10 +957,9 @@ export default {
                   width: 100%;
                   margin-bottom: 0px;
                   .el-input {
-                    width: 100%;
-                    // min-width: 120px;
+                    width: 100%; // min-width: 120px;
                     // max-width: 153px;
-                    .el-input__inner{
+                    .el-input__inner {
                       padding: 0 5px;
                     }
                   }
@@ -962,7 +975,8 @@ export default {
                 .el-form-item--small.el-form-item {
                   margin-bottom: 0px;
                 }
-                .el-input-group__append, .el-input-group__prepend{
+                .el-input-group__append,
+                .el-input-group__prepend {
                   padding: 0 5px;
                 }
               }

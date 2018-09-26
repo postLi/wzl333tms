@@ -36,7 +36,6 @@
             </template>
           </el-table-column>
         </el-table>
-
         <el-table ref="multipleTable" :data="usersArr" stripe border height="67" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="leaveHandlingFee" width="109" label="发站装卸费">
             <template slot-scope="scope">
@@ -103,8 +102,8 @@ export default {
     },
     createrId: [Number, String],
     intFreightItem: {
-      type: [String, Number],
-      default: false
+      type: Object,
+      default: () => {}
     },
     intFreightIndex: {
       type: [String, Number],
@@ -135,7 +134,7 @@ export default {
         leaveHandlingFee: '',
         leaveOtherFee: '',
         arriveHandlingFee: '',
-        arriveOtherFee: '',
+        arriveOtherFee: ''
       }, ],
       checked1: true,
       popTitle: '运费',
@@ -159,35 +158,25 @@ export default {
     }
   },
   watch: {
-    intFreightItem(newVal, oldVal) {
-      // if(newVal){
-      this.usersArr[0].nowpayCarriage = newVal
-      // }
+    intFreightItem(newVal) {
+      this.usersArr[0] = newVal
     },
-    intFreightIndex(newVal) {
-
-    },
+    intFreightIndex(newVal) {},
     sendDataList(newVal) {},
-    dotInfo(newVal) {
-      // this.infoData(this.dotInfo)
-    },
+    dotInfo(newVal) {},
     popVisible(newVal) {
-      this.$nextTick(() => {
-        this.usersArr[0].nowpayCarriage = this.intFreightItem
-      })
+      if (newVal) {
+        this.$nextTick(() => {
+          this.usersArr[0] = this.sendDataList[this.intFreightIndex].tmsOrderLoadFee
+        })
+      }
     }
   },
   mounted() {
-    // this.formInline.orgId = this.otherinfo.orgid
-    if (this.popVisible) {
-      // this.usersArr[0].nowpayCarriage =
-      // alert(this.formInline.orgId)
-    }
+
     this.$nextTick(() => {
-      this.sendDataList.forEach((e, index) => {
-        this.usersArr[0].nowpayCarriage = e.price
-        this.submitForm()
-      })
+       this.usersArr[0] = this.sendDataList[this.intFreightIndex].tmsOrderLoadFee
+       this.submitForm()
     })
   },
   methods: {
@@ -252,17 +241,17 @@ export default {
     },
     reset() {
       this.usersArr = [{
-        nowpayCarriage: '',
-        nowpayOilCard: '',
-        backpayCarriage: '',
-        backpayOilCard: '',
-        arrivepayCarriage: '',
-        arrivepayOilCard: '',
-        carloadInsuranceFee: '',
-        leaveHandlingFee: '',
-        leaveOtherFee: '',
-        arriveHandlingFee: '',
-        arriveOtherFee: '',
+        nowpayCarriage: '', // 现付运费
+        nowpayOilCard: '', // 现付油卡
+        backpayCarriage: '', // 回付运费
+        backpayOilCard: '', // 回付油卡
+        arrivepayCarriage: '', // 到付运费
+        arrivepayOilCard: '', // 到付油卡
+        carloadInsuranceFee: '', // 整车保险费
+        leaveHandlingFee: '', // 发站装卸费
+        leaveOtherFee: '', // 发站其他费
+        arriveHandlingFee: '', // 到站装卸费
+        arriveOtherFee: '', // 到站其他费
       }, ]
     },
     setObject(obj1, obj2) {
@@ -272,9 +261,14 @@ export default {
       return obj1
     },
     submitForm() {
-
-      // this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
-      
+      // 车费=现付运费+现付油卡+回付运费+回付油卡+到付运费+到付油卡
+      this.total = tmsMath.add(
+        this.usersArr[0].nowpayCarriage,
+        this.usersArr[0].nowpayOilCard,
+        this.usersArr[0].backpayCarriage,
+        this.usersArr[0].backpayOilCard,
+        this.usersArr[0].arrivepayCarriage,
+        this.usersArr[0].arrivepayOilCard).result()
       this.$emit('getIntFreight', {
         obj: this.usersArr[0],
         val: this.total
