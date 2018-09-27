@@ -126,15 +126,27 @@ export default {
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
-    addTemplate(strName, object, index) { // 添加到短信模板内容区, 并且可配置区域减少该字段
+    addTemplate(strName, object) { // 添加到短信模板内容区, 并且可配置区域减少该字段
       const newStrName = '(' + strName + ')'
       const tx = document.getElementById('templateContent')
       const pos = this.$const.cursorPosition.get(tx)
       if (this.contentLen < 250) {
         this.$const.cursorPosition.add(tx, pos, newStrName)
-        // 文字区域添加相关字段， 字段区域减去相关字段
+        // 文字区域添加相关字段， 字段区域减去相关字段]
+        let index = ''
+        let orgIndex = ''
+        this.smsColumn.forEach((e, elindex) => {
+          if (e.colName === strName) {
+            index = elindex
+          }
+        })
+        this.orgSmsColumn.forEach((e, elindex) => {
+          if (e.colName === strName) {
+            orgIndex = elindex
+          }
+        })
         this.smsColumn[index].isShow = 1
-        this.orgSmsColumn[index].isShow = 1
+        this.orgSmsColumn[orgIndex].isShow = 1
         this.smsColumn.splice(index, 1)
         this.smsTemplate = tx.value
       }

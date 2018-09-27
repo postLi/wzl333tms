@@ -167,17 +167,18 @@ export default {
     popVisible(newVal) {
       if (newVal) {
         this.$set(this.usersArr, 0, this.intFreightItem)
+        console.log(this.intFreightItem)
       }
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.sendDataList.forEach(e => {
-        this.usersArr[0] = e.tmsOrderLoadFee
-        this.submitForm()
-      })
-    })
-  },
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     this.sendDataList.forEach(e => {
+  //       this.usersArr[0] = e.tmsOrderLoadFee
+  //       this.submitForm()
+  //     })
+  //   })
+  // },
   methods: {
     changeFright(index, prop, newVal) {
       // newVal = newVal.replace(REGEX.FLOAT2ING, '')
@@ -198,12 +199,11 @@ export default {
       const newArriveOtherFee = this.usersArr[index].arriveOtherFee
       const newCarloadInsuranceFee = this.usersArr[index].carloadInsuranceFee
       if (newNowpayCarriage === 0 || newNowpayOilCard === 0 || newBackpayCarriage === 0 || newBackpayOilCard === 0 || newArrivepayCarriage === 0 || newArrivepayOilCard === 0 || newLeaveHandlingFee === 0 || newLeaveOtherFee === 0 || newArriveHandlingFee === 0 || newArriveOtherFee === 0 || newCarloadInsuranceFee === 0) {
-
-        this.$notify({
-          title: '提示',
-          message: '不能为0',
-          type: 'warning'
-        })
+        // this.$notify({
+        //   title: '提示',
+        //   message: '不能为0',
+        //   type: 'warning'
+        // })
       } else if (newNowpayCarriage < 0 || newNowpayOilCard < 0 || newBackpayCarriage < 0 || newBackpayOilCard < 0 || newArrivepayCarriage < 0 || newArrivepayOilCard < 0 || newLeaveHandlingFee < 0 || newLeaveOtherFee < 0 || newArriveHandlingFee < 0 || newArriveOtherFee < 0 || newCarloadInsuranceFee < 0) {
         this.$notify({
           title: '提示',
