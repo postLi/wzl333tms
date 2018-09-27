@@ -62,8 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
- v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -131,211 +130,227 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '达到网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车时间',
-        prop: 'departureTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '达到网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '到达时间',
-        prop: 'receivingTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+        },
+        {
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '到站装卸费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结到站装卸费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结到站装卸费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '到站装卸费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结到站装卸费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结到站装卸费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ],
       tableColumnRight: [{
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '达到网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车时间',
-        prop: 'departureTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '达到网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '到站装卸费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结到站装卸费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结到站装卸费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '实结到站装卸费',
-        prop: 'amount',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        },
+        {
+          label: '到站装卸费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结到站装卸费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结到站装卸费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '实结到站装卸费',
+          prop: 'amount',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.amount
           }
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ]
     }
   },
@@ -394,31 +409,31 @@ export default {
       this.initLeftParams() // 设置searchQuery
       // if (!this.isFresh) {
       postPayListByOne(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListBatchNos.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            const item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+        this.leftTable = Object.assign([], data.list)
+        selectListBatchNos.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.batchNo) {
+              this.rightTable.push(item)
             }
-            e.amount = e.unpaidFee
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
-        }).catch((err) => {
-          this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+          e.amount = e.unpaidFee
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
 
       // }
     },

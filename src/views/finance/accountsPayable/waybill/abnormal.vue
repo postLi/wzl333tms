@@ -29,7 +29,6 @@
         </el-table>
       </div>
     </div>
-    
     <!-- 分页 -->
     <div class="info_tab_footer">
       共计:{{ total }}
@@ -86,10 +85,9 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '140',
@@ -150,13 +148,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '110',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '110',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '开单日期',
@@ -308,10 +314,12 @@ export default {
     },
     fetchList() {
       this.selectListShipSns = []
+      this.loading = true
       return postFindAbnormalList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
-      }).catch((err)=>{
+        this.loading = false
+      }).catch((err) => {
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })

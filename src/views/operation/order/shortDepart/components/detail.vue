@@ -482,7 +482,7 @@ export default {
           this.textChangeDanger[index] = false
         }
       }
-      console.log(curVal, loadVal, this.textChangeDanger[index])
+      console.log(curVal, loadVal, this.textChangeDanger[index], prop)
       return curVal
     },
     changeData(newVal) { // 判断当行-废

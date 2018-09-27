@@ -67,7 +67,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -131,13 +131,21 @@ export default {
           label: '已结其他费用支出',
           prop: 'closeFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结其他费用支出',
           prop: 'unpaidFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '开单日期',
@@ -273,9 +281,11 @@ export default {
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       console.log('fetchListsearchQuery', this.searchQuery)
+      this.loading = true
       return postFindListByFeeType(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
         console.log(this.dataList)
       }).catch((err)=>{
         this.loading = false

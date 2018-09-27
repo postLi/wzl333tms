@@ -177,13 +177,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '发货方',
@@ -301,13 +309,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '实结异常理赔',
