@@ -172,7 +172,7 @@ export default {
       this.total = resArr[0].total
     }).catch((err) => {
       this.loading = false
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this._handlerCatchMsg(err)
     })
   },
   methods: {
@@ -296,7 +296,7 @@ export default {
         this.total = data.total
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 获取组件返回的搜索参数

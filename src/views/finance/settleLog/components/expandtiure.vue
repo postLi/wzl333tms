@@ -248,7 +248,7 @@ export default {
         this.initDetailDtoList()
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     initDetailDtoList() {
@@ -285,7 +285,7 @@ export default {
         this.formModel.settlementTime = new Date(data.trim())
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -313,8 +313,8 @@ export default {
               this.closeMe()
               this.$router.push({ path: './accountsPayable/batch' })
             })
-            .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })

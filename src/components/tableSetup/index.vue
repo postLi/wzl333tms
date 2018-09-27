@@ -359,7 +359,7 @@ export default {
           this.$message.info('保存成功')
           // this.callback()
         }).catch(err => {
-          this.$message.error('保存失败：' + (err.errorInfo || err.text || '未知错误，请重试~'))
+          this._handlerCatchMsg(err)
         })
       }
     },

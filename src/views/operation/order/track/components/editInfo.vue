@@ -173,8 +173,8 @@ export default {
         getSystemTime().then(data => {
             this.formModel.operatorTime = parseTime(data.trim())
           })
-          .catch(error => {
-            this.$message({ type: 'error', message: '获取系统时间失败' })
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -207,7 +207,7 @@ export default {
         this.trackDetail = objectMerge2([], data)
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) { // 关闭右边弹出框
@@ -227,8 +227,8 @@ export default {
             this.getDetail()
             this.resetForm()
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '删除失败')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       })
     },
@@ -245,8 +245,8 @@ export default {
           this.getDetail()
           this.resetForm()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     addTrack() { // 添加跟踪信息
@@ -257,8 +257,8 @@ export default {
           this.getDetail()
           this.resetForm()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     handleClick() { // 底部按钮区显示

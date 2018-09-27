@@ -162,7 +162,7 @@ export default {
         this.formModel.settlementTime = parseTime(data)
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     getFeeInfo() {
@@ -180,8 +180,8 @@ export default {
           this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
           this.formModel.remark = data.remark
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     doAction(type) {
@@ -260,9 +260,9 @@ export default {
           this.tableKey = new Date().getTime()
           this.$router.push({ path: './settleLog' , query:{ pageKey: new Date().getTime()  }})
         })
-        .catch(error => {
+        .catch(err => {
           this.loading = false
-          this.$message({ type: 'error', message: '保存失败！' })
+          this._handlerCatchMsg(err)
         })
     },
     setSettlementId(val) {
@@ -333,7 +333,7 @@ export default {
         }
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     }
   }

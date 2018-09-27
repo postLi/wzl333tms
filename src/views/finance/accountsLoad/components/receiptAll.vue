@@ -178,7 +178,7 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     },
     settlementTypeId() {
-      let currentPage = this.$route.query.currentPage
+      const currentPage = this.$route.query.currentPage
       switch (currentPage) {
         case 'batchArrivalAll':
           return 179
@@ -187,7 +187,7 @@ export default {
       }
     },
     currentPage() {
-      let currentPage = this.$route.query.currentPage
+      const currentPage = this.$route.query.currentPage
       return currentPage.substr(5, currentPage.length)
     }
   },
@@ -223,8 +223,8 @@ export default {
     })
   },
   methods: {
-    print () {
-      let data = Object.assign(this.formModel)
+    print() {
+      const data = Object.assign(this.formModel)
       this.$set(data, 'amountMessage', this.amountMessage) // 把大写数字传进去
       PrintSettlement(data)
       this.submitForm('formModel')
@@ -233,7 +233,7 @@ export default {
       this.loading = false
     },
     getFeeInfo() {
-      let orgId = this.otherinfo.orgid
+      const orgId = this.otherinfo.orgid
       return GetFeeInfo(orgId, this.paymentsType).then(data => {
         this.formModel = data.data
         this.formModel.detailDtoList2 = []
@@ -247,13 +247,13 @@ export default {
         if (this.formModel.szDtoList.length < 1) { // 默认显示一条收支方式
           this.plusItem()
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     postTmsFfinancialwayList() {
-      let query = {
+      const query = {
         currentPage: 1,
         pageSize: 100,
         vo: {
@@ -271,14 +271,14 @@ export default {
             this.financialWalList.push(e)
           }
         })
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     querySearch(queryString, cb) {
-      let dataList = this.financialWalList
-      let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
+      const dataList = this.financialWalList
+      const results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -306,8 +306,8 @@ export default {
 
       this.formModel.detailDtoList2.forEach((e, index) => {
         this.formModel.amount += e.amount
-        let data = e.amount.toFixed(2).toString().split('').reverse()
-        let item = data.indexOf('.')
+        const data = e.amount.toFixed(2).toString().split('').reverse()
+        const item = data.indexOf('.')
         if (item !== -1) {
           data.splice(item, 1)
         }
@@ -324,7 +324,7 @@ export default {
       })
       this.amountMessage = smalltoBIG(this.formModel.amount) // 设置总计中文大写数字
       this.amount = this.formModel.amount.toFixed(2).toString().split('').reverse() // 设置总计数字位置
-      let apoint = this.amount.indexOf('.')
+      const apoint = this.amount.indexOf('.')
       if (apoint !== -1) {
         this.amount.splice(apoint, 1)
       }
@@ -335,9 +335,9 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -349,7 +349,7 @@ export default {
     setData() {
       if (this.$route.query.currentPage === 'batchTruckAll') { // 发车汇总 不是到付的进入结算页面,结算网点ascriptionOrgid默认为外面发车网点
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid)
-      }else {
+      } else {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       }
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
@@ -366,26 +366,26 @@ export default {
         if (valid) {
           this.setData()
           postLoadSettlement(this.submitData).then(data => {
-              this.$message({ type: 'success', message: '保存成功' })
-              this.closeMe()
-              let currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-              this.$router.push({ path: './accountsPayable/batch/'+currentPage })
+            this.$message({ type: 'success', message: '保存成功' })
+            this.closeMe()
+            const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
+            this.$router.push({ path: './accountsPayable/batch/' + currentPage })
               // this.$router.push({ path: './accountsPayable/batch', query: { name: this.currentPage } })
-            })
-            .catch(error => {
-              this.$message({ type: 'error', message: error.errorInfo || error.text })
+          })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })
     },
     minusItem(row, index) {
-      let item = this.formModel.szDtoList.indexOf(row)
+      const item = this.formModel.szDtoList.indexOf(row)
       if (item !== -1) {
         this.formModel.szDtoList.splice(item, 1)
       }
     },
     plusItem() {
-      let data = {
+      const data = {
         agent: this.otherinfo.name,
         alipayAccount: '',
         bankAccount: '',

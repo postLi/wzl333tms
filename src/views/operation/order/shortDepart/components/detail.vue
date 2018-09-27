@@ -612,8 +612,8 @@ export default {
           }
           this.$emit('isSuccess', this.message)
         })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
+          .catch(err => {
+            this._handlerCatchMsg(err)
             this.message = false
             this.$emit('isSuccess', this.message)
           })
@@ -638,8 +638,8 @@ export default {
           })
         }
       })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     clickDetails(row) {

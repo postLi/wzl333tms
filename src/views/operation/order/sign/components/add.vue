@@ -401,7 +401,7 @@ export default {
           // console.log(res, "this.form.abnormalNo: ", this.form);
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // handleSelectSender(res) {
@@ -475,10 +475,7 @@ export default {
               // })
           }).catch(err => {
             this.loading = false
-            this.$message({
-              type: 'error',
-              message: err.errorInfo || err.text || '未知错误，请重试~'
-            })
+            this._handlerCatchMsg(err)
             this.closeMe()
           })
         } else {

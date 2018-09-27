@@ -333,7 +333,7 @@ export default {
       // this.loading = false
     }).catch((err) => {
       this.loading = false
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this._handlerCatchMsg(err)
     })
   },
   data() {
@@ -557,7 +557,7 @@ export default {
         this.loading = false
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -651,10 +651,7 @@ export default {
               this.fetchAllreceipt()
               return false
             }).catch(err => {
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this._handlerCatchMsg(err)
             })
           } else {
             this.$message.warning('请选择未发放项~')

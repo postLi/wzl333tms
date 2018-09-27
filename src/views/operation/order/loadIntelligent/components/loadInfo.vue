@@ -516,8 +516,8 @@ export default {
         getTrucK().then(data => {
           this.Trucks = data.data
           this.cacheTruckList[orgid] = data.data
-        }).catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        }).catch(err => {
+          this._handlerCatchMsg(err)
         })
       }
     },

@@ -259,8 +259,8 @@ export default {
             this.fetchData()
             this.$message.success('添加车型成功！')
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -377,8 +377,8 @@ export default {
               })
               this.$emit('savaParamTruck', arr)
             })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         } else {
           this.$message.warning('请选择要操作的项~')

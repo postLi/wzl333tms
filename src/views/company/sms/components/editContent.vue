@@ -251,8 +251,8 @@ export default {
           this.$message.success('更新短信模板成功！')
           this.closeMe()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     postSmsSetColumnsList() { // 获取可配置字段,查询模板相关默认字段

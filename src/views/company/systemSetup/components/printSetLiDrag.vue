@@ -494,8 +494,8 @@ export default {
                 e.alignment = 1
               })
             })
-            .catch(error => {
-              this.$message({ type: 'info', type: '已取消' })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })

@@ -1184,7 +1184,7 @@ export default {
         return res.data || {}
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 获取个人设置
@@ -1219,7 +1219,7 @@ export default {
         console.log('get INIT Infomation::', dataArr)
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 设置出发城市
@@ -1273,7 +1273,7 @@ export default {
             this.form.tmsOrderShip.shipSn = res.data
           }).catch((err) => {
             this.loading = false
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       } else {
@@ -1315,7 +1315,7 @@ export default {
             this.form.tmsOrderShip.shipGoodsSn = res.data
           }).catch((err) => {
             this.loading = false
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       }
@@ -1426,7 +1426,7 @@ export default {
           }
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -1568,7 +1568,7 @@ export default {
           }
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -2555,7 +2555,7 @@ export default {
                     this.form.tmsOrderShip.shipSn = res.data
                   }).catch((err) => {
                     this.loading = false
-                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                    this._handlerCatchMsg(err)
                   })
                   this.$message.error('重复的订单号，已为你重新生成新的运单号~')
                 } else {
@@ -2804,7 +2804,7 @@ export default {
         CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
       })
       .catch(err => {
-        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
+        this._handlerCatchMsg(err)
       })
     },
     print() { // 打印运单
@@ -2822,7 +2822,7 @@ export default {
         CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
-        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
+        this._handlerCatchMsg(err)
       })
     },
     printSave() { // 打印保存的运单
@@ -2830,7 +2830,7 @@ export default {
         CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
       })
       .catch(err => {
-        this.$message.error(err.errorInfo || err.text || '发生未知错误~')
+        this._handlerCatchMsg(err)
       })
     },
     getSelectType() { // 获取提货方式中文
@@ -2840,7 +2840,7 @@ export default {
         })
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     getShipPayWay() { // 获取付款方式中文
@@ -2851,7 +2851,7 @@ export default {
         })
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     setPrintData(type) { // 设置打印的字段
@@ -2949,7 +2949,7 @@ export default {
         }
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     }
   }, // 路由更新时触发，用来切换渲染数据

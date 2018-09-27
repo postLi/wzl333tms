@@ -620,7 +620,7 @@
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
         }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
         this.moodifyDealPay()
         this.moodifyReadyPay()
@@ -651,7 +651,7 @@
           this.memberNameType = data.data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchList() {
@@ -662,7 +662,7 @@
           this.loading = false
         }).catch(err => {
           this.newMessageData()
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchDealPay() {
@@ -674,7 +674,7 @@
           this.dealPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchReadyPay() {
@@ -686,7 +686,7 @@
           this.alreadyPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       // 修改
@@ -698,7 +698,7 @@
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       moodifyDealPay() {
@@ -710,7 +710,7 @@
           this.dealPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       moodifyReadyPay() {
@@ -722,7 +722,7 @@
           this.alreadyPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       changeOrgid(item, checkId) {

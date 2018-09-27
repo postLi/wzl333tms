@@ -322,7 +322,7 @@ export default {
         this.detailList = data.data
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     setColumn(obj) { // 重绘表格列表

@@ -241,7 +241,7 @@ export default {
             this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
             resolve(true)
           }).catch(err => {
-            this.$message.error('未知错误：' + JSON.stringify(err))
+            this._handlerCatchMsg(err)
             resolve(false)
           })
         }

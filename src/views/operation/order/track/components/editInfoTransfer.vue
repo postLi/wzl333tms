@@ -179,7 +179,7 @@ export default {
         this.trackDetail = data
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -198,8 +198,8 @@ export default {
           this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '删除失败')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
       })
     },
@@ -215,8 +215,8 @@ export default {
         this.getDetail()
         this.resetForm()
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     addTrack() {
@@ -230,8 +230,8 @@ export default {
         this.getDetail()
         this.resetForm()
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     getSystemTime() { // 获取系统时间
@@ -241,8 +241,8 @@ export default {
           this.formModel.createTime = new Date(data.trim())
           console.log('系统：', this.formModel.createTime)
         })
-          .catch(error => {
-            this.$message({ type: 'error', message: '获取系统时间失败' })
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },

@@ -136,8 +136,8 @@ export default {
       getSystemTime().then(data => {
           this.formModel.settlementTime = parseTime(data)
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '获取系统时间发生失败~')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     getFeeInfo() {
@@ -156,8 +156,8 @@ export default {
           this.formModel.remark = data.remark
           
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
 
     },
@@ -217,9 +217,9 @@ export default {
           this.tableKey = new Date().getTime()
           this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
         })
-        .catch(error => {
+        .catch(err => {
           this.loading =false
-          this.$message({ type: 'error', message: error.errorInfo || error.text })
+          this._handlerCatchMsg(err)
         })
     },
     cancel() {
@@ -269,7 +269,7 @@ export default {
         }
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     }
   }

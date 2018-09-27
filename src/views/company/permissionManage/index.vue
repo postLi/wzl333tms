@@ -126,9 +126,9 @@
         this.loading = false
         this.theMentInfo = resArr[0]
         this.thePerAllUser = resArr[1].list
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
 
       this.getSeachInfo()
@@ -145,14 +145,14 @@
             this.loading = false
             this.usersArr = res.list
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         } else {
           this.loading = false
           getAuthInfo(this.otherinfo.orgid).then(res => {
             this.usersArr = res.list
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },
@@ -162,14 +162,14 @@
             this.loading = false
             this.getTreeArr = res
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         } else {
           getauthTreeInfo(0).then(res => {
             this.loading = false
             this.getTreeArr = res
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },

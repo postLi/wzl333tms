@@ -135,11 +135,11 @@ export default {
           this.$emit('success')
           this.$message({ type: 'success', message: '操作成功' })
         })
-        .catch(error => {
+        .catch(err => {
           this.resMessage = error
           this.isInitDialog = false
           this.percentageAnimated()
-          this.$message({ type: 'error', message: error.text })
+          this._handlerCatchMsg(err)
         })
     },
     percentageAnimated() {

@@ -913,7 +913,7 @@
           this.loading = false
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchAllCustomer() {
@@ -943,7 +943,7 @@
             })
           })
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       getDetail() {
@@ -951,7 +951,7 @@
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       toggleAllRows() {
@@ -1009,7 +1009,7 @@
           this.getDetail()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       editItem(item) {
@@ -1026,7 +1026,7 @@
           this.resetForm()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       addTrack() {
@@ -1038,7 +1038,7 @@
           this.resetForm()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       resetForm() {
@@ -1142,7 +1142,7 @@
                     })
                     this.$emit('success')
                   }).catch(err => {
-                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                    this._handlerCatchMsg(err)
                   })
                   this.closeMe()
                 }

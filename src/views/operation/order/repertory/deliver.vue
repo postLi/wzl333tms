@@ -495,8 +495,8 @@ export default {
         this.total = data.total
         this.loading = false
       })
-       .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '获取列表失败')
+       .catch(err => {
+          this._handlerCatchMsg(err)
           this.loading = false
         })
     },

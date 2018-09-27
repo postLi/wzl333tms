@@ -551,8 +551,8 @@ export default {
           this.truckMessage = data.text // 批次号
           this.contractNo = data.text // 合同编号？？？？？
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     getSystemTime() { // 获取系统时间
@@ -565,7 +565,7 @@ export default {
           this.formModel.loadTime = data.trim()
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -578,8 +578,8 @@ export default {
             this.leftTable = data.data
             console.log('不修改 ')
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -673,9 +673,9 @@ export default {
                   this.gotoPage() // 操作成功后跳转到配载列表页面
                 })
               })
-              .catch(error => {
+              .catch(err => {
                 this.loading = false
-                this.$message.error(error.errorInfo || error.text)
+                this._handlerCatchMsg(err)
               })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
@@ -688,9 +688,9 @@ export default {
                   this.gotoPage()
                 })
               })
-              .catch(error => {
+              .catch(err => {
                 this.loading = false
-                this.$message.error(error.errorInfo || error.text)
+                this._handlerCatchMsg(err)
               })
           }
         })
@@ -713,9 +713,9 @@ export default {
                 this.gotoPage() // 操作成功后跳转到配载列表页面
               })
             })
-            .catch(error => {
+            .catch(err => {
               this.loading = false
-              this.$message.error(error.errorInfo || error.text)
+              this._handlerCatchMsg(err)
             })
         })
       }
@@ -827,8 +827,8 @@ export default {
             // this.setLoadTableList.left = objectMerge2([], data.data)
             console.log('修改ing左边列表', this.setLoadTableList.left)
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
       return this.setLoadTableList
@@ -841,8 +841,8 @@ export default {
             // this.setLoadTableList.right = objectMerge2([], data.data)
             console.log('修改ing右边列表', this.setLoadTableList.right)
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
       return this.setLoadTableList
@@ -896,8 +896,8 @@ export default {
             this.cacheTruckList[orgid] = data.data
             console.log('Trucks', this.Trucks)
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text)
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },

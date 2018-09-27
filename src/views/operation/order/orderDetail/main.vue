@@ -868,7 +868,7 @@ export default {
         this.feeConfig = dataArr[0]
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 初始化各个表单的情况
@@ -995,7 +995,7 @@ export default {
             CreatePrintPage(data)
           }).catch((err) => {
             this.loading = false
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
           break
         case 'printShipKey':
@@ -1003,7 +1003,7 @@ export default {
             CreatePrintPage(data)
           }).catch((err) => {
             this.loading = false
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
           break
       }

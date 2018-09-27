@@ -333,8 +333,8 @@ export default {
             this.loading = false
           }
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     clearData() {
@@ -397,8 +397,8 @@ export default {
                 this.clearData()
               }
             })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })
@@ -423,8 +423,8 @@ export default {
                 this.clearData()
               }
             })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })
@@ -449,8 +449,8 @@ export default {
                 this.clearData()
               }
             })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })

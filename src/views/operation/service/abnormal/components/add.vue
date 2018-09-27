@@ -427,10 +427,7 @@
             this.form.disposeName = this.otherinfo.name
             this.form.disposeResult = 228
           }).catch(err => {
-            this.$message({
-              type: 'error',
-              message: err.errorInfo || err.text || '未知错误，请重试~'
-            })
+            this._handlerCatchMsg(err)
           })
         } else {
           this.dengji()
@@ -620,10 +617,7 @@
               this.$emit('success')
               this.loading = false
             }).catch(err => {
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this._handlerCatchMsg(err)
               this.loading = false
             })
           } else {
