@@ -174,17 +174,25 @@ export default {
           width: '120',
           fixed: false
         },
+       {
+          label: '已结其他费用',
+          prop: 'closeFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
+        },
         {
           label: '未结其他费用',
           prop: 'unpaidFee',
           width: '120',
-          fixed: false
-        },
-        {
-          label: '已结其他费用',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '发货方',
@@ -299,16 +307,24 @@ export default {
           fixed: false
         },
         {
-          label: '未结其他费用',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false
-        },
-        {
           label: '已结其他费用',
           prop: 'closeFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
+        },
+        {
+          label: '未结其他费用',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '实结其他费用',

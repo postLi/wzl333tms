@@ -26,7 +26,7 @@
           </el-table-column>
           <template v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>  
+            </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -130,196 +130,212 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '送货批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货时间',
-        prop: 'loadTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '送货批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货时间',
+          prop: 'loadTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '送货费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结送货费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结送货费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '目的网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '送货费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结送货费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结送货费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '目的网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ],
       tableColumnRight: [{
-        label: '送货批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货时间',
-        prop: 'loadTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '送货批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货时间',
+          prop: 'loadTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '送货费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结送货费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结送货费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '实结送货费',
-        prop: 'amount',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        },
+        {
+          label: '送货费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结送货费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结送货费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '实结送货费',
+          prop: 'amount',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.amount
           }
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '送货体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '送货体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ]
     }
   },
@@ -377,31 +393,31 @@ export default {
       this.initLeftParams() // 设置searchQuery
       // if (!this.isFresh) {
       postPayListByOne(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListBatchNos.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            e.amount = e.unpaidFee
-            const item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+        this.leftTable = Object.assign([], data.list)
+        selectListBatchNos.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.batchNo) {
+              this.rightTable.push(item)
             }
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
-        }).catch((err) => {
-          this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          e.amount = e.unpaidFee
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err) => {
+        this.loading = false
+        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      })
 
       // }
     },
@@ -412,7 +428,7 @@ export default {
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
-      }else {
+      } else {
         this.$set(this.textChangeDanger, index, false)
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
@@ -527,8 +543,8 @@ export default {
       }
     },
     selectCurrent(obj, index) {
-       this.addItem(obj, index)
-     },
+      this.addItem(obj, index)
+    },
     dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)

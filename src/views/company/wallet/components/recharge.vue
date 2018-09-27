@@ -8,7 +8,7 @@
             <span class="charefee-opt" :class="{'select-opt': currentIndex===index}" @click="currentIndex = index"  v-for="(item,index) in feelist" :key="index">{{ item }} <i class="el-icon-circle-check"></i></span>
           </div>
           <div class="otherrecharge-fee clearfix">
-            <span class="charefee-opt" @click="currentIndex = 555" :class="{'select-opt': currentIndex===555}">其它金额<i class="el-icon-circle-check"></i></span><input type="text" @focus="currentIndex=555" class="nativeinput" v-numberOnly:point v-model="otherfee" ref="otherinp" :maxlength="10" placeholder="注:每次充值至少1块钱" />
+            <span class="charefee-opt" @click="currentIndex = 555" :class="{'select-opt': currentIndex===555}">其它金额<i class="el-icon-circle-check"></i></span><input type="text" @focus="currentIndex=555" class="nativeinput" v-numberOnly:point :value="otherfee" @change="(e)=>{otherfee = e.target.value}" ref="otherinp" :maxlength="10" placeholder="注:每次充值至少1块钱" />
             <span class="otherfee-error" v-if="payerror">至少充值金额1块钱</span>
           </div>
         </div>

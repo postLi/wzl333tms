@@ -130,220 +130,236 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '短驳批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '开单网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳时间',
-        prop: 'departureTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '短驳批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '开单网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳时间',
+          prop: 'departureTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结短驳费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结短驳费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '目的网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '接收时间',
-        prop: 'receivingTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结短驳费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结短驳费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '目的网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '接收时间',
+          prop: 'receivingTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '短驳件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '短驳件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ],
       tableColumnRight: [{
-        label: '短驳批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳时间',
-        prop: 'departureTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+          label: '短驳批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳时间',
+          prop: 'departureTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '短驳费',
-        prop: 'fee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '未结短驳费',
-        prop: 'unpaidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '已结短驳费',
-        prop: 'paidFee',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '实结短驳费',
-        prop: 'amount',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        },
+        {
+          label: '短驳费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '已结短驳费',
+          prop: 'paidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结短驳费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '实结短驳费',
+          prop: 'amount',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.amount
           }
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '司机姓名',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '目的网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '接收时间',
-        prop: 'receivingTime',
-        width: '180',
-        fixed: false,
-        slot: (scope) => {
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '司机姓名',
+          prop: 'dirverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '目的网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '接收时间',
+          prop: 'receivingTime',
+          width: '180',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '短驳件数',
-        prop: 'loadAmountall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳重量',
-        prop: 'loadWeightall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳体积',
-        prop: 'loadVolumeall',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '短驳件数',
+          prop: 'loadAmountall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳重量',
+          prop: 'loadWeightall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳体积',
+          prop: 'loadVolumeall',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120',
+          fixed: false
+        }
       ]
     }
   },
@@ -435,7 +451,7 @@ export default {
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
-      }else {
+      } else {
         this.$set(this.textChangeDanger, index, false)
       }
       if (paidVal < 0 || paidVal > unpaidVal) {

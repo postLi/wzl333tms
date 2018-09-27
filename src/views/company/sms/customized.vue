@@ -2,8 +2,8 @@
   <div class="tab-content tab-content_sms" v-loading="loading">
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openAddSign">定制专属签名</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openShowSign" v-if="isShowSignBtn">查看专属签名</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openAddSign" v-has:SMS_CUSTOMIZATION_1>定制专属签名</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openShowSign" v-if="isShowSignBtn" v-has:SMS_CUSTOMIZATION_2>查看专属签名</el-button>
         <span class="btns_box_smstips">{{smsDocText}}</span>
       </div>
       <div class="info_tab info_tab_sms">
@@ -95,7 +95,7 @@ export default {
     this.fetchList()
   },
   methods: {
-    getSmsDocText () { // 免费短信文案提示
+    getSmsDocText() { // 免费短信文案提示
       getSmsDocText(this.otherinfo.orgid).then(data => {
         this.smsDocText = data.smsDocText
       })
@@ -114,13 +114,13 @@ export default {
       this.loading = true
       this.searchQuery.vo.orgId = this.otherinfo.orgid
       postSmsTemplateLogList(this.searchQuery).then(data => {
-          this.infoList = data.list
-          this.infoList.forEach(e => {
-            e.sendStatus = e.sendStatus === 0 ? true : false   // true-0 可发送  false-1 不发送
+        this.infoList = data.list
+        this.infoList.forEach(e => {
+            e.sendStatus = e.sendStatus === 0   // true-0 可发送  false-1 不发送
           })
-          this.total = data.total
-          this.loading = false
-        })
+        this.total = data.total
+        this.loading = false
+      })
         .catch(err => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误~')
           this.loading = false
@@ -145,20 +145,20 @@ export default {
     closeAdd() {
       this.addPopVisible = false
     },
-    editContent (row, event) {
+    editContent(row, event) {
       console.log(row)
       this.selectInfo = Object.assign({}, row)
       this.editInfoVisible = true
     },
-    closeEdit () {
+    closeEdit() {
       this.editInfoVisible = false
     },
-    getFecthList () {
+    getFecthList() {
       // this.editInfoVisible = false
       this.fetchList()
     },
     handleEnable(newVal, row) { // true-0 可发送  false-1 不发送
-      	let obj={
+      	const obj = {
       		id: row.id,
       		sendStatus: newVal ? 0 : 1
       	}

@@ -84,7 +84,7 @@ export default {
       total: 0,
       dataList: [],
       selectListBatchNos: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -148,13 +148,21 @@ export default {
           label: '已结到站装卸费',
           prop: 'paidFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
         },
         {
           label: '未结到站装卸费',
           prop: 'unpaidFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '车牌号',
@@ -213,9 +221,11 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      this.loading = true
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
       }).catch((err)=>{
         this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')

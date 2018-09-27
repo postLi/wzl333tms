@@ -178,7 +178,6 @@ export default {
       }, {
         label: '备注',
         prop: 'driverRemarks',
-        width: '180',
         fixed: false
       }]
     }

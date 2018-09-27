@@ -75,7 +75,7 @@ export default {
     name: 'accountsPayable',
     component: _import('finance/accountsPayable/index'),
     redirect: '/finance/handAccount/waybill',
-    meta: { role: ['admin'], title: '应付账款', 'code': 'FINANCE_PAY',stitle: '应付', istab: true, noCache: false },
+    meta: { role: ['admin'], title: '应付账款', 'code': 'FINANCE_PAY', stitle: '应付', istab: true, noCache: false },
     children: [{
       path: '/finance/accountsPayable/waybill',
       redirect: '/finance/accountsPayable/waybill/kickback',
@@ -216,7 +216,7 @@ export default {
     icon: 'caiwugl5_zijinls',
     name: 'settleLog',
     component: _import('finance/settleLog/index'),
-    meta: { role: ['admin'], title: '资金流水', 'code': 'FINANCE_FLOW',stitle: '流水', noCache: false, code: 'FINANCE_FLOW' }
+    meta: { role: ['admin'], title: '资金流水', 'code': 'FINANCE_FLOW', stitle: '流水', noCache: false }
   },
   {
     path: '/finance/settleLogDetail',
@@ -288,14 +288,14 @@ export default {
     icon: 'cwgl_ydfy',
     name: 'financeunusual',
     component: _import('finance/unusual/index'),
-    meta: { role: ['admin'], title: '异动费用', 'code': 'FINANCE_ABNORAML',stitle: '异动', noCache: false, code: 'FINANCE_ABNORAML' }
+    meta: { role: ['admin'], title: '异动费用', 'code': 'FINANCE_ABNORAML', stitle: '异动', noCache: false }
   },
   {
     path: '/finance/payment',
     icon: 'cwgl_hkgl',
     name: 'financepayment',
     component: _import('finance/payment/index'),
-    meta: { role: ['admin'], title: '货款管理', noCache: false,stitle: '货款', code: 'FINANCE_GOODSFUNDS' },
+    meta: { role: ['admin'], title: '货款管理', noCache: false, stitle: '货款', code: 'FINANCE_GOODSFUNDS' },
     children: [{
       path: '/finance/payment/recycle',
       icon: 'QQ',
@@ -331,7 +331,7 @@ export default {
     icon: 'caiwugl4_yuangongjz',
     name: 'handAccount',
     component: _import('finance/handAccount/index'),
-    meta: { role: ['admin'], title: '员工交账', 'code': 'FINANCE_ACCOUNT',stitle: '交账', noCache: false, code: 'FINANCE_ACCOUNT' }
+    meta: { role: ['admin'], title: '员工交账', 'code': 'FINANCE_ACCOUNT', stitle: '交账', noCache: false }
   },
   {
     path: '/finance/handAccount/detail',
@@ -370,7 +370,7 @@ export default {
     icon: 'caiwugl3_shouzhifs',
     name: 'IOManage',
     component: _import('finance/IOManage/index'),
-    meta: { role: ['admin'], title: '收支方式管理',stitle: '收支', 'code': 'FINANCE_IOMANAGE', noCache: false, code: 'FINANCE_IOMANAGE' }
+    meta: { role: ['admin'], title: '收支方式管理', stitle: '收支', 'code': 'FINANCE_IOMANAGE', noCache: false }
   },
   {
     path: '/finance/reconciliation/carrier/detailTable',
