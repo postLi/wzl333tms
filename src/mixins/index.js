@@ -38,9 +38,9 @@ Vue.mixin({
         return d
       }
     },
-    _handlerCatchMsg(err) {
+    _handlerCatchMsg(err, premsg = '') {
       console.error('catch error:', err)
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this.$message.error(premsg + (err.errorInfo || err.text || '未知错误，请重试~'))
     }
   }/* ,
 

@@ -25,6 +25,14 @@ service.interceptors.request.use(config => {
     config.params['access_token'] = getToken()
     // console.log(config.url, config.params)
   }
+  // config.params.orgid = ''
+  // config.params.orgId = ''
+  // if(!config.data){
+  //   config.data = { vo:{}}
+  // }
+  // config.data.vo.orgid = ''
+  // config.data.vo.orgId = ''
+
   if (config.url.indexOf('http://') === -1) {
     // 如果是生产环境，强制访问157
     if (process.env.NODE_ENV === 'production') {
