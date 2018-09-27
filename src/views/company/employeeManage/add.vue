@@ -15,9 +15,9 @@
             <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="15" v-onlyNumberAndLetter class="nativeinput">
           </el-tooltip>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="!isModify">
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
           <!-- <el-input v-model.trim="form.password" auto-complete="off"></el-input> -->
-          <input type="text" maxlength="20" v-model.trim="form.password" auto-complete="off" v-onlyNumberAndLetter class="nativeinput">
+          <input type="text" maxlength="15" v-model.trim="form.password" auto-complete="off" v-onlyNumberAndLetter class="nativeinput">
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth" prop="position">
           <el-input v-model="form.position" auto-complete="off"></el-input>
@@ -194,7 +194,8 @@ export default {
         for (const i in this.form) {
           this.form[i] = this.userInfo[i]
         }
-        this.form.rolesId = this.userInfo.rolesIdList === 0 ? '' : this.userInfo.rolesIdList
+        this.form.rolesId = this.userInfo.rolesId === '0' ? [] : this.userInfo.rolesIdList
+        this.form.password = ''
       } else {
         this.popTitle = '新增员工'
         for (const i in this.form) {
