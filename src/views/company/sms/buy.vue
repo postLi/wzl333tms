@@ -3,7 +3,7 @@
   <div class="sms">
     <div class="sms_top">
       <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
-        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge">充值</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:WALLET_PAY>充值</el-button>
       </p>
     </div>
     <div class="sms_content">
@@ -59,10 +59,10 @@ export default {
     },
     converToCn() {
       let i = 0
-      let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
+      const arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
       this.changeNumCN = []
       while (i++ < 99) {
-        let nums = (i + '').split('')
+        const nums = (i + '').split('')
         let str = nums[1] ? (nums[0] === '1' ? '' : arr[nums[0]]) + '十' + (nums[1] === '0' ? '' : arr[nums[1]]) : arr[nums[0]]
         if (i === 10) {
           str = '十'
@@ -72,8 +72,8 @@ export default {
     },
     getSearchSmsSurplus() {
       getSearchSmsSurplus().then(data => {
-          this.packageInfo = data
-        })
+        this.packageInfo = data
+      })
         .catch(error => {
           this.$message.error(error.errorInfo || error.text || '发生未知错误！')
         })

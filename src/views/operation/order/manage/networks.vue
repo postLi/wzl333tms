@@ -3,12 +3,12 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :networkFlog="true" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-success" @click="doAction('acceptance')" plain>受理</el-button>
-          <el-button type="warning" :size="btnsize" icon="el-icon-error" @click="doAction('refuse')" plain>拒绝</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain>修改</el-button>
-          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain>作废</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-success" v-has:ORDERMANAGER_REVER2 @click="doAction('acceptance')" plain>受理</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-error" v-has:ORDERMANAGER_CANCEL2 @click="doAction('refuse')" plain>拒绝</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" v-has:ORDERMANAGER_EDIT2 @click="doAction('modify')" plain>修改</el-button>
+          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" v-has:ORDERMANAGER_NO2 plain>作废</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" v-has:ORDERMANAGER_DEL2 @click="doAction('delete')" plain>删除</el-button>
+          <el-button type="primary" v-has:ORDERMANAGER_EXP2 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">

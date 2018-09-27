@@ -7,7 +7,7 @@
             <div class="hyq-title">账户信息</div>
             <div class="hyq-wallet-money clearfix">
               账户余额：<span>{{ money }}</span>元
-              <el-button type="primary" size="mini"  @click="payoff" ><icon-svg icon-class="caiwu" ></icon-svg> 充值</el-button>
+              <el-button v-has:WALLET_PAY type="primary" size="mini"  @click="payoff" ><icon-svg icon-class="caiwu" ></icon-svg> 充值</el-button>
             </div>
           </div>
         </div>

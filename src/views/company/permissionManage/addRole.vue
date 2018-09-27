@@ -37,11 +37,12 @@
                     <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
                       {{ node.label }}
-                      {{ node.label }}
+                      <!-- <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()"> -->
                       </span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
                       {{ node.label }}
+                      <!-- <input type="text" :value="data.code" onmouseover="this.select()"> -->
                       </span>
                   </span>
                 </el-tree>
