@@ -3,7 +3,7 @@
   <div class="sms">
     <div class="sms_top">
       <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
-        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:WALLET_PAY>充值</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:SMS_BUY_1>充值</el-button>
       </p>
     </div>
     <div class="sms_content">
@@ -17,7 +17,7 @@
               <p>{{item.amount}}条短信</p>
               <h3>{{item.fee}}元</h3>
               <h4>{{item.price}}元/条</h4>
-              <el-button type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
+              <el-button v-has:SMS_BUY_2 type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
             </div>
           </el-card>
         </el-col>
@@ -150,6 +150,7 @@ export default {
       border: 1px solid #d0d7e5;
       .smsCard_content {
         text-align: center;
+        padding-bottom: 20px;
         p {
           font-size: 18px;
           font-weight: 700;
@@ -164,7 +165,7 @@ export default {
           color: #666666;
         }
         .smsCard_footbtn {
-          margin: 20px 0;
+          margin: 20px 0 0;
         }
       }
     }
