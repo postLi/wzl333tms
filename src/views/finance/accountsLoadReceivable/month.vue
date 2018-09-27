@@ -175,11 +175,19 @@ export default {
         'label': '月结结算状态',
         'prop': 'monthpayStateCn'
       }, {
-        'label': '未结月结',
-        'prop': 'notMonthpayFee'
-      }, {
         'label': '已结月结',
-        'prop': 'finishMonthpayFee'
+        'prop': 'finishMonthpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
+        }
+      }, {
+        'label': '未结月结',
+        'prop': 'notMonthpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
+        }
       },
       {
         label: '实结月付',

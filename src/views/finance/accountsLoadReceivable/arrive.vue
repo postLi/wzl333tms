@@ -175,11 +175,19 @@ export default {
         'label': '到付结算状态',
         'prop': 'arrivepayStateCn'
       }, {
-        'label': '未结到付',
-        'prop': 'notArrivepayFee'
-      }, {
         'label': '已结到付',
-        'prop': 'finishArrivepayFee'
+        'prop': 'finishArrivepayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
+      }, {
+        'label': '未结到付',
+        'prop': 'notArrivepayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
       }, {
         label: '实结到付',
         prop: 'inputArrivepayFee',
