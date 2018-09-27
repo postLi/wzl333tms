@@ -266,10 +266,7 @@ export default {
             this.closeMe()
             this.$emit('success')
           }).catch(err => {
-            this.$message({
-              type: 'error',
-              message: err.errorInfo || err.text || '未知错误，请重试~'
-            })
+            this._handlerCatchMsg(err)
             this.closeMe()
           })
         } else {

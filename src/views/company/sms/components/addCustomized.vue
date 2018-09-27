@@ -57,8 +57,8 @@ export default {
           this.isEdit = data.data.modifyCount === 1 && data.data.applyStatusZh !== '审核不通过'
         }
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text || '发生未知错误~')
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {

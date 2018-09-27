@@ -135,7 +135,7 @@ export default {
         this.form.signTime = data
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     reset() {
@@ -165,8 +165,8 @@ export default {
               this.closeMe()
               this.$emit('message', this.message)
             })
-              .catch(error => {
-                this.$message({ type: 'error', message: error.text || error.errorInfo || '操作失败' })
+              .catch(err => {
+                this._handlerCatchMsg(err)
                 this.message = false
                 this.closeMe()
                 this.$emit('message', this.message)

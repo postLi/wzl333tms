@@ -415,8 +415,8 @@ export default {
       //     this.orgLeftTable = data.data
       //     this.initTable()
       //   })
-      //   .catch(error => {
-      //     this.$message({ type: 'danger', message: error.errorInfo || error.text || '发生未知错误~' })
+      //   .catch(err => {
+      //     this._handlerCatchMsg(err)
       //   })
     },
     setSort() { // 右边列表行拖拽

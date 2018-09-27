@@ -124,8 +124,8 @@ export default {
             })
           }
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: '获取颜色列表失败' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     submitForm(formName) {
@@ -143,8 +143,8 @@ export default {
                 this.$refs[formName].resetFields()
               })
             })
-            .catch(error => {
-              this.$message({ type: 'error', message: '修改失败' })
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.loading = false
             })
         }

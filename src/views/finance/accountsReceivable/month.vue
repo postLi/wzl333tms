@@ -135,12 +135,12 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      }, {
-        label: '签收状态',
-        prop: 'signStatus',
-        width: '100',
-        fixed: false
-      }, {
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {
@@ -155,14 +155,14 @@ export default {
       }, {
         'label': '已结月结',
         'prop': 'finishMonthpayFee',
-        slot: (scope) => {
+          slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
         }
       }, {
         'label': '未结月结',
         'prop': 'notMonthpayFee',
-        slot: (scope) => {
+          slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
         }
@@ -251,7 +251,7 @@ export default {
         this.loading = false
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

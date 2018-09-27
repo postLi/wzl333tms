@@ -130,7 +130,7 @@ export default {
           this.formModel.transferTime = parseTime(new Date(time))
         }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
       }
       this.getSelectAddLoadRepertoryList()
@@ -145,7 +145,7 @@ export default {
           this.formModel.transferBatchNo = res.data
         }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
       }
     },
@@ -156,14 +156,14 @@ export default {
           this.leftData = data.data
         }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
       } else {
         return transferManageApi.getLeftRepetoryList(this.otherinfo.orgid).then(data => {
           this.leftData = data.data
         }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
       }
     },
@@ -275,7 +275,7 @@ export default {
               this.goTransferList()
             }).catch(err => {
               this.loading = false
-              this.$message.error(err.text || '未知错误')
+              this._handlerCatchMsg(err)
             })
           }
         } else {

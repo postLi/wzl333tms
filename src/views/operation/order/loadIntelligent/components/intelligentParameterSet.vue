@@ -189,8 +189,8 @@ export default {
             this.fetchData()
             this.$message.success('添加车型成功！')
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -306,9 +306,9 @@ export default {
 
           // this.$message.success('操作成功,只能修改打勾选择的第一项！')
         })
-        .catch(error => {
+        .catch(err => {
           this.isEditSuccess++
-            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+            this._handlerCatchMsg(err)
         })
     },
     clickDetail(row, event, column) {

@@ -182,13 +182,14 @@
                         <!--状态-->
                         <template slot-scope="scope">
                           <div v-if="column.checkfn">
-                            <span v-if="column.checkfn(scope.row)">
+                            <!-- <span v-if="column.checkfn(scope.row)">
                                {{scope.row[column.prop]}}
-                            </span>
+                            </span> -->
+                            <span v-if="column.checkfn(scope.row)" v-html="column.slot(scope)"></span>
                             <span v-else>
                                <el-input
-                               @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
-                                 v-model.number="column.slot(scope)"
+                               @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                                 v-model.number="scope.row[column.prop]"
                                  :size="btnsize"
                                  v-number-only
                                  @change="(val) => changeData(scope.$index, column.prop, val)"
@@ -199,8 +200,8 @@
                           </div>
                           <div v-else-if="column.expand">
                             <el-input
-                              @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"
-                              v-model.number="column.slot(scope)"
+                              @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                              v-model.number="scope.row[column.prop]"
                               :size="btnsize"
                               v-number-only
                               @change="(val) => changeData(scope.$index, column.prop, val)"
@@ -597,7 +598,8 @@
           },
 
           slot: (scope) => {
-            return scope.row.actualAmount
+            const row = scope.row
+            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
           }
         }, {
           label: '实到重量(kg)',
@@ -608,9 +610,9 @@
             return row.warehouStatus === 1
           },
           fixed: false,
-
           slot: (scope) => {
-            return scope.row.actualWeight
+            const row = scope.row
+            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
           }
         }, {
           label: '实到体积(m³)',
@@ -623,7 +625,8 @@
           fixed: false,
 
           slot: (scope) => {
-            return scope.row.actualVolume
+            const row = scope.row
+            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
           }
         },
           // v-if="!isAlFun"  入库后的
@@ -895,10 +898,12 @@
         }
 
         if (curAmount !== curloadAmount || curWeight !== curloadWeight || curVolume !== curloadVolume) {
-          this.textChangeDanger[index] = true
+          // this.textChangeDanger[index] = true
+          this.$set(this.detailList[index], prop+'lyy', true)
         }else {
           if (curAmount === curloadAmount && curWeight === curloadWeight && curVolume === curloadVolume) {
-            this.textChangeDanger[index] = false
+            // this.textChangeDanger[index] = false
+            this.$set(this.detailList[index], prop+'lyy', false)
           }
         }
         return this.detailList[index].actualAmount && this.detailList[index].actualWeight && this.detailList[index].actualVolume
@@ -913,7 +918,7 @@
           this.loading = false
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchAllCustomer() {
@@ -943,7 +948,7 @@
             })
           })
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       getDetail() {
@@ -951,7 +956,7 @@
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       toggleAllRows() {
@@ -1009,7 +1014,7 @@
           this.getDetail()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       editItem(item) {
@@ -1026,7 +1031,7 @@
           this.resetForm()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       addTrack() {
@@ -1038,7 +1043,7 @@
           this.resetForm()
         }).catch((err)=>{
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       resetForm() {
@@ -1142,7 +1147,7 @@
                     })
                     this.$emit('success')
                   }).catch(err => {
-                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                    this._handlerCatchMsg(err)
                   })
                   this.closeMe()
                 }

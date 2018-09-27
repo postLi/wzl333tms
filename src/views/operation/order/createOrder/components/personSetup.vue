@@ -140,7 +140,7 @@ export default {
         this.form = res
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 重置
@@ -151,7 +151,7 @@ export default {
         //this.close()
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 提交修改
@@ -164,7 +164,7 @@ export default {
         this.close()
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 显示按键对应键名

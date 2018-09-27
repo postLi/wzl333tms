@@ -340,7 +340,7 @@ export default {
     // this.loading = false
     }).catch((err) => {
       this.loading = false
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this._handlerCatchMsg(err)
     })
   },
   data() {
@@ -572,7 +572,7 @@ export default {
         console.log(data)
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -683,10 +683,7 @@ export default {
               return false
             }).catch(err => {
               this.closeAddDot()
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this._handlerCatchMsg(err)
             })
           } else {
             this.$message.warning('回单已发放不能取消~~')

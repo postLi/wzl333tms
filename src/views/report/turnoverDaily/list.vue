@@ -180,6 +180,9 @@ export default {
         let countColVal = []
 
         let table = document.getElementById('report_turnoverDaily_table')
+        if (!table) {
+          return
+        }
         let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
         let tfootLen = table.getElementsByTagName('tfoot')
@@ -294,7 +297,7 @@ export default {
 
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     doAction(type) {

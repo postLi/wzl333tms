@@ -84,11 +84,8 @@ export default {
       this.$store.dispatch('Login', loginForm).then(() => {
         location.href = '/'
       })
-        .catch(error => {
-          this.$message({
-            message: error.errorInfo || error.text || '您的账号或者密码有误~',
-            type: 'warning'
-          })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     changeView() {

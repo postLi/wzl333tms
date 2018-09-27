@@ -175,11 +175,22 @@ export default {
         'label': '回单付结算状态',
         'prop': 'receiptpayStateCn'
       }, {
-        'label': '未结回单付',
-        'prop': 'notReceiptpayFee'
-      }, {
         'label': '已结回单付',
-        'prop': 'finishReceiptpayFee'
+        width: '100',
+        'prop': 'finishReceiptpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+        }
+
+      }, {
+        'label': '未结回单付',
+         width: '100',
+        'prop': 'notReceiptpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+        }
       },
       {
         label: '实结回单付',
@@ -343,7 +354,7 @@ export default {
           this.orgLeftTable = objectMerge2([], this.leftTable)
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },

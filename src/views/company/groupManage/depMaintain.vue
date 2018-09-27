@@ -200,7 +200,7 @@
           this.loading = false
           this.theulkey = (Math.random() + '').substr(2)
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       getAddDate() {
@@ -209,7 +209,7 @@
           this.dictName = ''
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       closeMe(done) {
@@ -273,7 +273,7 @@
             this.closeMe()
             this.loading = false
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },
@@ -300,7 +300,7 @@
             this.theulkey = (Math.random() + '').substr(2)
             this.loading = false
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },
@@ -315,7 +315,7 @@
           })
           return false
         } else {
-        this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
+          this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
@@ -323,23 +323,20 @@
             this.loading = true
             deletePerManage(_id, this.otherinfo.orgid).then(res => {
               this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              type: 'success',
+              message: '删除成功!'
+            })
               this.getSelectDict()
               this.theulkey = (Math.random() + '').substr(2)
               this.loading = false
             }).catch(err => {
-              this.$message({
-                type: 'info',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
-            })
+              this._handlerCatchMsg(err)
+          })
           }).catch(() => {
             this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
+            type: 'info',
+            message: '已取消删除'
+          })
           })
         }
       }

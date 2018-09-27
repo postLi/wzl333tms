@@ -211,7 +211,7 @@ export default {
         this.initDetailDtoList()
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     initDetailDtoList() {
@@ -248,7 +248,7 @@ export default {
         this.formModel.settlementTime = new Date(data.trim())
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {

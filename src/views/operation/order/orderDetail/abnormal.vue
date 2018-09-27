@@ -110,7 +110,7 @@ export default {
         this.usersArr = res
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     }
   }

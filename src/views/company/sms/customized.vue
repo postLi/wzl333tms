@@ -122,7 +122,7 @@ export default {
         this.loading = false
       })
         .catch(err => {
-          this.$message.error(error.errorInfo || error.text || '发生未知错误~')
+          this._handlerCatchMsg(err)
           this.loading = false
         })
     },
@@ -166,9 +166,9 @@ export default {
       		this.fetchList()
       		this.$message.success('修改发送状态成功！')
       	})
-      	.catch(error => {
+      	.catch(err => {
       		row.sendStatus = !newVal
-      		this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+      		this._handlerCatchMsg(err)
       	})
         // let obj = {
         //   companyId: this.otherinfo.companyId,
@@ -181,9 +181,9 @@ export default {
         // sendSmsByTemplateLog(obj).then(data => {
         //     this.fetchList()
         //   })
-        //   .catch(error => {
+        //   .catch(err => {
         //     row.sendStatus = !row.sendStatus
-        //     this.$message.error(error.errorInfo || error.text || '发生未知错误~')
+        //     this._handlerCatchMsg(err)
         //   })
     }
   }

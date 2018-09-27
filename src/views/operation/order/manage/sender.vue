@@ -270,10 +270,7 @@ export default {
         })
         this.fetchData()
       }).catch(err => {
-        this.$message({
-          type: 'info',
-          message: err.errorInfo || err.text || '未知错误，请重试~'
-        })
+        this._handlerCatchMsg(err)
       })
     })
   },
@@ -285,7 +282,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -423,10 +420,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -479,10 +473,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -528,10 +519,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({

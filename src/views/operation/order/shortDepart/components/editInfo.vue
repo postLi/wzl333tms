@@ -175,7 +175,7 @@ export default {
         }
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     submitForm(formName) { // 底部表单提交
@@ -213,7 +213,7 @@ export default {
         this.trackDetail = Object.assign([], data)
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -232,8 +232,8 @@ export default {
           this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
       })
         .catch(() => {
@@ -252,8 +252,8 @@ export default {
         this.getDetail()
         this.resetForm()
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     addTrack() { // 添加
@@ -264,8 +264,8 @@ export default {
         this.resetForm()
         this.getSystemTime()
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     handleClick() {

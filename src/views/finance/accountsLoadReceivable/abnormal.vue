@@ -176,10 +176,18 @@ export default {
         'prop': 'changeStateCn'
       }, {
         'label': '未结异动',
-        'prop': 'notChangeFee'
+        'prop': 'notChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+        }
       }, {
         'label': '已结异动',
-        'prop': 'finishChangeFee'
+        'prop': 'finishChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
       }, {
         label: '实结异动付',
         prop: 'inputChangeFee',
@@ -342,7 +350,7 @@ export default {
           this.orgLeftTable = objectMerge2([], this.leftTable)
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },

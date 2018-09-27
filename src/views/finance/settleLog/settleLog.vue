@@ -213,7 +213,7 @@ export default {
         this.total = data.total
       }).catch((err)=>{
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},
@@ -293,8 +293,8 @@ export default {
         this.$message({ type: 'success', message: '取消结算操作成功' })
         this.fetchList()
       })
-        .catch(error => {
-          this.$message({ type: 'error', message: '取消结算操作失败' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
           this.fetchList()
         })
     },

@@ -343,8 +343,8 @@ export default {
             this.getAllList()
             this.clearInfo()
           })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearInfo()
             })
         })
@@ -376,8 +376,8 @@ export default {
             this.getAllList()
             this.clearInfo()
           })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearInfo()
             })
         })
@@ -401,8 +401,8 @@ export default {
             this.getAllList()
             this.clearInfo()
           })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text)
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearInfo()
             })
         })
@@ -425,8 +425,8 @@ export default {
           this.loading = false
         }
       })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     closeMe() { // 关闭弹出框

@@ -75,7 +75,7 @@ export default {
       this.feelist = data.map(el => el.dictName).reverse()
     }).catch((err) => {
       this.loading = false
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this._handlerCatchMsg(err)
     })
   },
   destroyed() {
@@ -204,7 +204,7 @@ export default {
         }
       }).catch(err => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 开始轮询获取支付结果
@@ -233,7 +233,7 @@ export default {
         }).catch(err => {
           this.$emit('fail')
           this.payfail = true
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }, 3000)
     }

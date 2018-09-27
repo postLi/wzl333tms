@@ -74,8 +74,8 @@ export default {
       getSearchSmsSurplus().then(data => {
         this.packageInfo = data
       })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     getSmspackages() {

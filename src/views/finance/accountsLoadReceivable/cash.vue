@@ -175,12 +175,20 @@ export default {
         'label': '现付结算状态',
         'prop': 'nowPayStateCn'
       }, {
-        'label': '未结现付',
-        'prop': 'notNowPayFee'
-      }, {
         'label': '已结现付',
-        'prop': 'finishNowPayFee'
+        'prop': 'finishNowPayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+        }
       }, {
+        'label': '未结现付',
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
+      },  {
         label: '实结现付',
         prop: 'inputNowPayFee',
         fixed: false,
@@ -342,7 +350,7 @@ export default {
           this.orgLeftTable = objectMerge2([], this.leftTable)
         }).catch((err) => {
           this.loading = false
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       }
     },

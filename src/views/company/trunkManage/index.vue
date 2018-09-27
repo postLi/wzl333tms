@@ -90,7 +90,7 @@ export default {
       this.truckSources = resArr[2]
     }).catch((err) => {
       this.loading = false
-      this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+      this._handlerCatchMsg(err)
     })
   },
   data() {
@@ -242,7 +242,7 @@ export default {
         this.loading = false
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

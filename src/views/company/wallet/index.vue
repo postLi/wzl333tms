@@ -133,7 +133,7 @@ export default {
         this.money = data
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     // 获取列表
@@ -147,7 +147,7 @@ export default {
         this.loading = false
       }).catch((err) => {
         this.loading = false
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     handlePageChange(obj) {
