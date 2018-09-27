@@ -129,12 +129,12 @@ export default {
         'label': '货号',
         'prop': 'shipGoodsSn',
         'width': '150'
-      },{
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },{
+      }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
         'label': '运单标识',
         'prop': 'shipIdentifying',
         slot: function(scope) {
@@ -154,10 +154,18 @@ export default {
         'prop': 'receiptpayFee'
       }, {
         'label': '已结回单付',
-        'prop': 'finishReceiptpayFee'
+        'prop': 'finishReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+        }
       }, {
         'label': '未结回单付',
-        'prop': 'notReceiptpayFee'
+        'prop': 'notReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',

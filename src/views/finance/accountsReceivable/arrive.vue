@@ -135,12 +135,12 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      },{
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        }, {
+      }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {
@@ -154,10 +154,18 @@ export default {
         'prop': 'arrivepayFee'
       }, {
         'label': '已结到付',
-        'prop': 'finishArrivepayFee'
+        'prop': 'finishArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
       }, {
         'label': '未结到付',
-        'prop': 'notArrivepayFee'
+        'prop': 'notArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
