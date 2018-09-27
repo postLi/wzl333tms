@@ -28,7 +28,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </select-type>
       </el-form-item>
-      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+      <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -80,7 +80,8 @@ export default {
       },
       pickerOptions2: {
         shortcuts: pickerOptions2
-      }
+      },
+      searchAll: '1'
     }
   },
   watch: {
@@ -96,13 +97,13 @@ export default {
       // 传到子组件
     searchForm: {
       handler(cval, oval) {
+        console.log('searchForm:', this.searchObjs, cval, oval)
         this.searchObjs = Object.assign({}, cval)
         this.searchObjs.shipFromOrgid = this.searchForm.orgid
         this.searchObjs.shipStatus = this.searchForm.shipStatus
         this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
         this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
         this.searchObjs[this.searchForm.type] = this.searchForm.value
-        console.log(this.searchObjs, cval, oval)
       },
       deep: true
     }
@@ -112,6 +113,7 @@ export default {
     this.setSearch()
     this.searchCreatTime = this.defaultTime
     this.onSubmit()
+    console.log('searchForm:', this.searchObjs)
   },
   methods: {
     setSearch() {
@@ -144,6 +146,11 @@ export default {
       this.searchForm.shipFromOrgid = this.orgid
       this.searchForm.value = ''
       this.searchForm.type = 'shipSn'
+      this.searchAll = '1'
+      setTimeout(() => {
+        this.searchAll = ''
+      }, 66)
+      
     }
   }
 }

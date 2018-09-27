@@ -556,7 +556,7 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
-          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.batchNo !== e.batchNo
           })
           this.rightTable.push(e)

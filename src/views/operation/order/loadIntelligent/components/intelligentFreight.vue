@@ -7,59 +7,60 @@
         <el-table ref="multipleTable" :data="usersArr" stripe border height="66" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="nowpayCarriage" label="现付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.nowpayCarriage" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
-            </template>
+              <input v-model="scope.row.nowpayCarriage" class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayCarriage', val)" v-number-only:point></input>
+              <!-- <el-input v-model.trim="scope.row.nowpayCarriage" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="10"></el-input> -->
+            </template>.
           </el-table-column>
           <el-table-column prop="nowpayOilCard" label="现付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.nowpayOilCard" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.nowpayOilCard" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayOilCard', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="backpayCarriage" label="回付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.backpayCarriage" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.backpayCarriage" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'backpayCarriage', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="backpayOilCard" label="回付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.backpayOilCard" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.backpayOilCard" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'backpayOilCard', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="arrivepayCarriage" label="到付运费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.arrivepayCarriage" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.arrivepayCarriage" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'arrivepayCarriage', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="arrivepayOilCard" label="到付油卡">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.arrivepayOilCard" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.arrivepayOilCard" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'arrivepayOilCard', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
         </el-table>
         <el-table ref="multipleTable" :data="usersArr" stripe border height="67" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="leaveHandlingFee" width="109" label="发站装卸费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.leaveHandlingFee" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.leaveHandlingFee" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'leaveHandlingFee', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="leaveOtherFee" width="109" label="发站其他费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.leaveOtherFee" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.leaveOtherFee" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'leaveOtherFee', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="arriveHandlingFee" width="109" label="到站装卸费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.arriveHandlingFee" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.arriveHandlingFee" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'arriveHandlingFee', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="arriveOtherFee" width="107" label="到站其他费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.arriveOtherFee" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.arriveOtherFee" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index,'arriveOtherFee', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
           <el-table-column prop="carloadInsuranceFee" width="107" label="整车保险费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.carloadInsuranceFee" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="5"></el-input>
+              <input v-model.trim="scope.row.carloadInsuranceFee" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'carloadInsuranceFee', val)" :maxlength="10"></input>
             </template>
           </el-table-column>
         </el-table>
@@ -80,6 +81,7 @@ import querySelect from '@/components/querySelect/index'
 import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
+
 
 export default {
   components: {
@@ -102,8 +104,8 @@ export default {
     },
     createrId: [Number, String],
     intFreightItem: {
-      type: [String, Number],
-      default: false
+      type: Object,
+      default: () => {}
     },
     intFreightIndex: {
       type: [String, Number],
@@ -124,18 +126,18 @@ export default {
       rules: {},
       formLabelWidth: '100',
       usersArr: [{
-        nowpayCarriage: '',
-        nowpayOilCard: '',
-        backpayCarriage: '',
-        backpayOilCard: '',
-        arrivepayCarriage: '',
-        arrivepayOilCard: '',
-        carloadInsuranceFee: '',
-        leaveHandlingFee: '',
-        leaveOtherFee: '',
-        arriveHandlingFee: '',
-        arriveOtherFee: '',
-      }, ],
+        nowpayCarriage: '', // 现付运费
+        nowpayOilCard: '', // 现付油卡
+        backpayCarriage: '', // 回付运费
+        backpayOilCard: '', // 回付油卡
+        arrivepayCarriage: '', // 到付运费
+        arrivepayOilCard: '', // 到付油卡
+        carloadInsuranceFee: '', // 整车保险费
+        leaveHandlingFee: '', // 发站装卸费
+        leaveOtherFee: '', // 发站其他费
+        arriveHandlingFee: '', // 到站装卸费
+        arriveOtherFee: '', // 到站其他费
+      }],
       checked1: true,
       popTitle: '运费',
       loading: false,
@@ -158,40 +160,32 @@ export default {
     }
   },
   watch: {
-    intFreightItem(newVal, oldVal) {
-      // if(newVal){
-      this.usersArr[0].nowpayCarriage = newVal
-      // }
-    },
-    intFreightIndex(newVal) {
-
-    },
+    intFreightItem(newVal) {},
+    intFreightIndex(newVal) {},
     sendDataList(newVal) {},
-    dotInfo(newVal) {
-      // this.infoData(this.dotInfo)
-    },
+    dotInfo(newVal) {},
     popVisible(newVal) {
-      this.$nextTick(() => {
-        this.usersArr[0].nowpayCarriage = this.intFreightItem
-      })
+      if (newVal) {
+        this.$set(this.usersArr, 0, this.intFreightItem)
+      }
     }
   },
   mounted() {
-    // this.formInline.orgId = this.otherinfo.orgid
-    if (this.popVisible) {
-      // this.usersArr[0].nowpayCarriage =
-      // alert(this.formInline.orgId)
-    }
     this.$nextTick(() => {
-      this.sendDataList.forEach((e, index) => {
-        this.usersArr[0].nowpayCarriage = e.price
+      this.sendDataList.forEach(e => {
+        this.usersArr[0] = e.tmsOrderLoadFee
         this.submitForm()
       })
     })
   },
   methods: {
     changeFright(index, prop, newVal) {
+      // newVal = newVal.replace(REGEX.FLOAT2ING, '')
+      console.log(index, prop, newVal)
+      newVal = newVal.target.value
+
       this.usersArr[index][prop] = Number(newVal)
+
       const newNowpayCarriage = this.usersArr[index].nowpayCarriage
       const newNowpayOilCard = this.usersArr[index].nowpayOilCard
       const newBackpayCarriage = this.usersArr[index].backpayCarriage
@@ -204,20 +198,10 @@ export default {
       const newArriveOtherFee = this.usersArr[index].arriveOtherFee
       const newCarloadInsuranceFee = this.usersArr[index].carloadInsuranceFee
       if (newNowpayCarriage === 0 || newNowpayOilCard === 0 || newBackpayCarriage === 0 || newBackpayOilCard === 0 || newArrivepayCarriage === 0 || newArrivepayOilCard === 0 || newLeaveHandlingFee === 0 || newLeaveOtherFee === 0 || newArriveHandlingFee === 0 || newArriveOtherFee === 0 || newCarloadInsuranceFee === 0) {
-        this.usersArr[index].nowpayCarriage = newNowpayCarriage
-        this.usersArr[index].nowpayOilCard = newNowpayOilCard
-        this.usersArr[index].backpayCarriage = newBackpayCarriage
-        this.usersArr[index].backpayOilCard = newBackpayOilCard
-        this.usersArr[index].arrivepayCarriage = newArrivepayCarriage
-        this.usersArr[index].arrivepayOilCard = newArrivepayOilCard
-        this.usersArr[index].leaveHandlingFee = newLeaveHandlingFee
-        this.usersArr[index].leaveOtherFee = newLeaveOtherFee
-        this.usersArr[index].arriveHandlingFee = newArriveHandlingFee
-        this.usersArr[index].arriveOtherFee = newArriveOtherFee
-        this.usersArr[index].carloadInsuranceFee = newCarloadInsuranceFee
+
         this.$notify({
           title: '提示',
-          message: '车费不能为0',
+          message: '不能为0',
           type: 'warning'
         })
       } else if (newNowpayCarriage < 0 || newNowpayOilCard < 0 || newBackpayCarriage < 0 || newBackpayOilCard < 0 || newArrivepayCarriage < 0 || newArrivepayOilCard < 0 || newLeaveHandlingFee < 0 || newLeaveOtherFee < 0 || newArriveHandlingFee < 0 || newArriveOtherFee < 0 || newCarloadInsuranceFee < 0) {
@@ -228,18 +212,8 @@ export default {
         })
       } else {
         this.$refs.multipleTable.toggleRowSelection(this.usersArr[index], true)
-        this.usersArr[index].nowpayCarriage
-        this.usersArr[index].nowpayOilCard
-        this.usersArr[index].backpayCarriage
-        this.usersArr[index].backpayOilCard
-        this.usersArr[index].arrivepayCarriage
-        this.usersArr[index].arrivepayOilCard
-        this.usersArr[index].leaveHandlingFee
-        this.usersArr[index].leaveOtherFee
-        this.usersArr[index].arriveHandlingFee
-        this.usersArr[index].arriveOtherFee
-        this.usersArr[index].carloadInsuranceFee
       }
+
     },
 
     closeMe(done) {
@@ -250,29 +224,18 @@ export default {
       }
     },
     reset() {
-      this.usersArr = [{
-        nowpayCarriage: '',
-        nowpayOilCard: '',
-        backpayCarriage: '',
-        backpayOilCard: '',
-        arrivepayCarriage: '',
-        arrivepayOilCard: '',
-        carloadInsuranceFee: '',
-        leaveHandlingFee: '',
-        leaveOtherFee: '',
-        arriveHandlingFee: '',
-        arriveOtherFee: '',
-      }, ]
-    },
-    setObject(obj1, obj2) {
-      for (var i in obj1) {
-        obj1[i] = obj2 ? obj2[i] : ''
-      }
-      return obj1
+      this.usersArr = this.$options.data().usersArr
     },
     submitForm() {
-
-      this.total = tmsMath.add(this.usersArr[0].nowpayCarriage, this.usersArr[0].nowpayOilCard, this.usersArr[0].backpayCarriage, this.usersArr[0].backpayOilCard, this.usersArr[0].arrivepayCarriage, this.usersArr[0].arrivepayOilCard, this.usersArr[0].carloadInsuranceFee, this.usersArr[0].leaveHandlingFee, this.usersArr[0].leaveOtherFee, this.usersArr[0].arriveHandlingFee, this.usersArr[0].arriveOtherFee).result()
+      // 车费=现付运费+现付油卡+回付运费+回付油卡+到付运费+到付油卡
+      this.total = tmsMath.add(
+        this.usersArr[0].nowpayCarriage,
+        this.usersArr[0].nowpayOilCard,
+        this.usersArr[0].backpayCarriage,
+        this.usersArr[0].backpayOilCard,
+        this.usersArr[0].arrivepayCarriage,
+        this.usersArr[0].arrivepayOilCard).result()
+      console.log(this.usersArr[0], '234234')
       this.$emit('getIntFreight', {
         obj: this.usersArr[0],
         val: this.total

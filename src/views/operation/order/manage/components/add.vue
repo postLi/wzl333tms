@@ -210,15 +210,15 @@
   </pop-right>
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
-  import {postAddOrder, postModifyOrder, postAddNetworkOrder} from '@/api/operation/manage'
+  import { REGEX } from '@/utils/validate'
+  import { postAddOrder, postModifyOrder, postAddNetworkOrder } from '@/api/operation/manage'
   import popRight from '@/components/PopRight/index'
   import Upload from '@/components/Upload/singleImage'
   import SelectTree from '@/components/selectTree/index'
   import SelectType from '@/components/selectType/index'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
 
   export default {
     components: {
@@ -282,7 +282,7 @@
           callback(new Error('请输入正确的联系号码~'))
         }
       }
-      const validatePickupNum = function (rule, value, callback) {
+      const validatePickupNum = function(rule, value, callback) {
         if (REGEX.ONLY_NUMBER.test(value)) {
           callback()
         } else {
@@ -312,54 +312,54 @@
         ke1yVal: '',
         rules: {
           'tmsOrderPre.orderToCityName': [
-            {required: true, validator: this.validateIsEmpty('到达城市不能为空')}
+            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
           ],
           'customSend.customerName': [
             // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
-            {required: true, validator: validcustomerName}
+            { required: true, validator: validcustomerName }
           ],
           'customSend.customerMobile': [
-            {required: true, validator: this.validateIsEmpty('发货人联系电话不能为空')},
-            {validator: validateMobile}
+            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
+            { validator: validateMobile }
           ],
           'customRece.customerName': [
-            {required: true, validator: this.validateIsEmpty('收货人不能为空')}
+            { required: true, validator: this.validateIsEmpty('收货人不能为空') }
           ],
           'customRece.customerMobile': [
-            {required: true, validator: this.validateIsEmpty('收货人联系电话不能为空')},
-            {validator: validateMobile}
+            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
+            { validator: validateMobile }
           ],
           'tmsOrderCargoList.cargoName': [
-            {validator: this.validateIsEmpty('货品名不能为空')}
+            { validator: this.validateIsEmpty('货品名不能为空') }
           ],
           'tmsOrderCargoList.cargoAmount': [
-            {validator: this.validateIsEmpty('件数不能为空')},
-            {validator: validatePickupNum}
+            { validator: this.validateIsEmpty('件数不能为空') },
+            { validator: validatePickupNum }
           ],
           'tmsOrderCargoList.cargoVolume': [{
             validator: validateVolumnWeight
           },
-            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}],
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }],
           'tmsOrderCargoList.cargoWeight':
-            [{
-              validator: validateVolumnWeight
-            },
-              {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
-            ],
+          [{
+            validator: validateVolumnWeight
+          },
+              { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
+          ],
           'tmsOrderCargoList.description': [
-            {validator: validateOnlyNumberAndLetter}
+            { validator: validateOnlyNumberAndLetter }
           ],
           'tmsOrderCargoList.agencyFund': [
-            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ],
           'tmsOrderCargoList.commissionFee': [
-            {message: '只能输入数字',  pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.Number_big }
           ],
           'tmsOrderCargoList.shipFee': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ],
           'tmsOrderCargoList.productPrice': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ]
         },
         btnsize: 'mini',
@@ -469,12 +469,12 @@
       orgid(newVal) {
       },
       info() {
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
+        if (this.isModify) {
+          this.popTitle = '修改订单'
+          this.orderSn = this.info.orderSn
 
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
             this.popTitle = '查看订单'
             this.orderSn = this.info.orderSn
             this.infoData(this.info)
@@ -484,12 +484,12 @@
           }
       },
       isModify() {
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
+        if (this.isModify) {
+          this.popTitle = '修改订单'
+          this.orderSn = this.info.orderSn
 
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
+          this.infoData(this.info)
+        } else if (this.isDbclick) {
             this.popTitle = '查看订单'
             this.orderSn = this.info.orderSn
             this.infoData(this.info)
@@ -651,9 +651,9 @@
 
             let promiseObj
             if (this.networkFlog) { // 如果是网络订单
-          this.$set(this.form.tmsOrderPre, 'type', 1)
-          this.$set(this.form.tmsOrderPre, 'orderFromOrgid',  this.otherinfo.companyId)
-        }
+              this.$set(this.form.tmsOrderPre, 'type', 1)
+              this.$set(this.form.tmsOrderPre, 'orderFromOrgid', this.otherinfo.companyId)
+            }
             const data = objectMerge2({}, this.form)
             delete data.customSend
             delete data.customRece
@@ -666,12 +666,11 @@
             if (this.isModify) {
               promiseObj = postModifyOrder(data)
             } else {
-
               if (this.networkFlog) {
-                promiseObj = postAddNetworkOrder(data)
-              }else {
-                promiseObj = postAddOrder(data)
-              }
+              promiseObj = postAddNetworkOrder(data)
+            } else {
+              promiseObj = postAddOrder(data)
+            }
             }
 
             promiseObj.then(res => {
@@ -686,13 +685,12 @@
                 message: err.errorInfo || err.text || '未知错误，请重试~'
               })
             })
-            
           } else {
             return false
           }
         })
       },
-      newinfoData(){
+      newinfoData() {
         this.form = {
           customSend: {
             // 发货人
@@ -750,7 +748,7 @@
         }
       },
       reset() {
-       this.watchData()
+        this.watchData()
       },
       closeMe(done) {
         this.reset()

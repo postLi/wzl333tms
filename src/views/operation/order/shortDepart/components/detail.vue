@@ -138,7 +138,7 @@
         </el-table>
       </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns="tableColumn" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>

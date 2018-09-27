@@ -7,25 +7,18 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      <el-button type="primary" :disabled="form.queryKey.length === 0" @click="submitForm('ruleForm')">确 定</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
-import PopFrame from '@/components/PopFrame/index'
-import SelectTree from '@/components/selectTree/index'
-import SelectType from '@/components/selectType/index'
 // import { REGEX } from '@/utils/validate'
-import { mapGetters } from 'vuex'
 // import { exportWithIframe } from '@/utils'
 import { postcreaterQueryCriteriaLog } from '@/api/common'
 import { objectMerge2 } from '@/utils/index'
 export default {
   computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
     isShow: {
       get() {
         return this.popVisible
@@ -36,9 +29,6 @@ export default {
     }
   },
   components: {
-    PopFrame,
-    SelectTree,
-    SelectType
   },
   props: {
     popVisible: {
@@ -94,16 +84,6 @@ export default {
   mounted() {
   },
   watch: {
-    dotInfo(newVal) {
-      if (this.isModify) {
-        // this.popTitle = '回单回收'
-        // this.form.userId = this.otherinfo.userId
-        this.form.userId = this.otherinfo.userId
-        this.form.orgId = this.otherinfo.orgid
-        this.form.menuCode = this.$route.meta.code
-        console.log(this.otherinfo.userId)
-      }
-    },
     // searchQuery(newVal) {
     //   this.form.pageType = this.searchQuery.vo.pageType
     //   console.log(this.form.pageType);
@@ -111,20 +91,12 @@ export default {
     orgid(newVal) {
       this.form.orgid = newVal
     },
-
-    createrId(newVal) {
-    },
-    searchObj: {
-      handler (cval, oval) {
-        if (cval) {
-          this.form.queryContent = JSON.stringify(cval)
-          this.form.orgId = this.otherinfo.orgid
-          this.form.userId = this.otherinfo.userId
-          this.form.menuCode = this.$route.meta.code
-        }
-        console.log('addSave_cval', cval, this.form)
-      },
-      deep: true
+    popVisible(n) {
+      if (n) {
+        this.form.userId = this.otherinfo.userId
+        this.form.orgId = this.otherinfo.orgid
+        this.form.menuCode = this.$route.meta.code
+      }
     }
   },
   methods: {
@@ -139,13 +111,18 @@ export default {
       }
     },
     submitForm(ruleForm) {
+      if (this.loading) {
+        return
+      }
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
+          this.form.queryContent = JSON.stringify(this.searchObj)
           const data = objectMerge2({}, this.form)
-          console.log('addSave_data',data)
+          console.log('addSave_data', data)
           const promiseObj = postcreaterQueryCriteriaLog(data)
           promiseObj.then(res => {
+            this.loading = false
             this.$message({
               message: '保存成功~',
               type: 'success'
@@ -153,8 +130,9 @@ export default {
             this.closeMe()
             this.$emit('success')
           }).catch(res => {
+            this.loading = false
             this.$message.warning(res.text)
-            this.closeMe()
+            // this.closeMe()
           })
         } else {
           return false

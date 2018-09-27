@@ -3,7 +3,7 @@
     <div class='rechargePop-content' >
       <div class="recharge-panel" v-if="showcharge">
         <div class="recharge-fee clearfix">
-          <div class="recharge-label">充值金额</div>
+          <div class="recharge-label">充值金额<span>（元）</span></div>
           <div class="chargefee-list">
             <span class="charefee-opt" :class="{'select-opt': currentIndex===index}" @click="currentIndex = index"  v-for="(item,index) in feelist" :key="index">{{ item }} <i class="el-icon-circle-check"></i></span>
           </div>
@@ -185,7 +185,9 @@ export default {
       } else {
         pro = walletApi.getWeixinPayTwocode(data)
       }
+      this.loading = true
       pro.then(res => {
+        this.loading = false
         if (res.data) {
           this.id = res.text
           this.showcharge = false
@@ -201,6 +203,7 @@ export default {
           })
         }
       }).catch(err => {
+        this.loading = false
         this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
       })
     },
@@ -256,6 +259,13 @@ export default {
       width: 4em;
       margin-left: -4em;
       line-height: 26px;
+      span{
+        text-align: center;
+        font-size: 12px;
+        color: #999;
+        line-height: 20px;
+        display: block;
+      }
     }
     .chargefee-list{
       text-align: justify;

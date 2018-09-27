@@ -32,7 +32,7 @@
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="top" v-if="!isShowLeftTable">
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
-          <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
+          <!-- <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button> -->
         </div>
         <el-table row-key="repertoryId" ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">

@@ -3,7 +3,7 @@
   <div class="sms">
     <div class="sms_top">
       <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
-        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge">充值</el-button>
+        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:WALLET_PAY>充值</el-button>
       </p>
     </div>
     <div class="sms_content">
@@ -15,6 +15,7 @@
             </div>
             <div class="smsCard_content">
               <p>{{item.amount}}条短信</p>
+              <h3>{{item.fee}}元</h3>
               <h4>{{item.price}}元/条</h4>
               <el-button type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
             </div>
@@ -53,15 +54,15 @@ export default {
     this.getSearchSmsSurplus()
   },
   methods: {
-    recharge () {
+    recharge() {
       this.popVisibleRecharge = true
     },
     converToCn() {
       let i = 0
-      let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
+      const arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
       this.changeNumCN = []
       while (i++ < 99) {
-        let nums = (i + '').split('')
+        const nums = (i + '').split('')
         let str = nums[1] ? (nums[0] === '1' ? '' : arr[nums[0]]) + '十' + (nums[1] === '0' ? '' : arr[nums[1]]) : arr[nums[0]]
         if (i === 10) {
           str = '十'
@@ -73,9 +74,9 @@ export default {
       getSearchSmsSurplus().then(data => {
         this.packageInfo = data
       })
-      .catch(error => {
-        this.$message.error(error.errorInfo || error.text || '发生未知错误！')
-      })
+        .catch(error => {
+          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        })
     },
     getSmspackages() {
       return getSmspackages().then(data => {
@@ -94,13 +95,32 @@ export default {
         this.popVisibleTips = true
       } else {
         const h = this.$createElement
-        this.$msgbox({
-          title: '购买失败',
-          message: h('div', { style: 'text-align: center' }, [
-            h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
-          ]),
-          confirmButtonText: '充值'
+        this.$confirm('钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。', '购买失败', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '充值',
+          cancelButtonText: '取消'
         })
+          .then(() => {
+            this.popVisibleRecharge = true
+            this.popVisibleTips = false
+          })
+          .catch(() => {
+            this.popVisibleTips = false
+          })
+        // this.$confirm({
+        //     title: '购买失败',
+        //     message: h('div', { style: 'text-align: center' }, [
+        //       h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
+        //     ]),
+        //     confirmButtonText: '充值',
+        //     cancelButtonText: '取消'
+        //   })
+        //   .then(() => {
+        //     this.popVisibleTips = true
+        //   })
+        //   .catch(() => {
+        //     this.popVisibleTips = false
+        //   })
       }
     },
     closeTips() {
@@ -134,6 +154,11 @@ export default {
           font-size: 18px;
           font-weight: 700;
           padding: 20px 0;
+        }
+        h3{
+          font-size: 18px;
+          font-weight: 700;
+          margin-bottom: 10px;
         }
         h4 {
           color: #666666;

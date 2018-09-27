@@ -40,7 +40,7 @@
       </div>
     </div>
     <!-- 表格设置 -->
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 在途跟踪 -->
     <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'deliver'"></editInfo>
   </div>
@@ -225,7 +225,7 @@ export default {
   },
   activated() {
     // this.searchQuery.orgId = this.otherinfo.orgid
-    this.fetchAllShortDepartList()
+    // this.fetchAllShortDepartList()
   },
   methods: {
     closeMe() { // 关闭弹出框

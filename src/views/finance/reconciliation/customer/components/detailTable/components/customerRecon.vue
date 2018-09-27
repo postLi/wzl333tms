@@ -23,9 +23,12 @@
         </div>
         <div class="sPayType">
           <el-form-item label="费用项" prop="">
-            <el-select v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
+            <el-select popper-class="selectFeeTypePop" v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
               <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.dictValue">
             </el-option>
+            <!-- <el-option class="selectFeeTypePop-btns">
+              <el-button type="primary">确定</el-button>
+            </el-option> -->
         </el-select>
           </el-form-item>
         </div>
@@ -398,7 +401,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="unusualFee"
+            prop="unusualSubFee"
             label="异动减款"
             width="130"
             sortable
@@ -747,7 +750,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="unusualFee"
+            prop="unusualSubFee"
             label="异动减款"
             width="130"
             sortable
@@ -848,13 +851,13 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime,objectMerge2,tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCFinanceinitialize, getCustomerdetail} from '@/api/finance/fin_customer'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCFinanceinitialize, getCustomerdetail } from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCustomer } from '@/utils/recLodopFuncs'
   import { getSelectType } from '@/api/common'
 
   export default {
@@ -947,19 +950,19 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
 
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -984,14 +987,14 @@
         console.log('changeFeeType', obj, this.typeIds)
       },
       getSelectType() {
-      const type = 'custoer_fee_type'
-      getSelectType(type, this.otherinfo.orgid).then(data => {
-        this.feeIdsArr = data
-        data.forEach((e, index) => {
-          this.orgFeeTypeIds[index] = e.dictValue
+        const type = 'custoer_fee_type'
+        getSelectType(type, this.otherinfo.orgid).then(data => {
+          this.feeIdsArr = data
+          data.forEach((e, index) => {
+            this.orgFeeTypeIds[index] = e.dictValue
+          })
         })
-      })
-    },
+      },
       export1() {
         this.sendData()
         // console.log(JSON.stringify(this.form))
@@ -1003,12 +1006,12 @@
       fetchList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
-        this.searchTitle.feeTypeId =  this.typeIds.join(',')
+        this.searchTitle.feeTypeId = this.typeIds.join(',')
         return postCFinanceinitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
-          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
-          console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
-          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId, this.currentFeeTypeIds)
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
@@ -1051,12 +1054,12 @@
       modifyList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.id
-        return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
+        getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
-          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
-          console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId,this.currentFeeTypeIds)
-          this.typeIds =  data.tmsFinanceBillCheckDto.feeTypeId!=='' ?data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId, this.currentFeeTypeIds)
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           data.customerDetailDtoList.forEach((el, val) => {
@@ -1064,7 +1067,6 @@
               this.dealInfo.push(el)
               this.dealInfoData.push(el)
             //
-
             } else if (el.type === 2) {
               this.dealPayInfo.push(el)
               this.dealPayInfoData.push(el)
@@ -1092,7 +1094,6 @@
         this.fetchList()
         this.infoPayFor()
         this.closeVisibleDialog()
-
       },
       onSubmit() {
         if (this.$route.query.tab === '客户对账-创建对账') {
@@ -1222,14 +1223,14 @@
         }
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 ) {
+          if (index === 3 || index === 4 || index === 5) {
             sums[index] = ''
             return
           }
@@ -1238,7 +1239,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev , curr)
+                return tmsMath._add(prev, curr)
               } else {
                 return prev
               }
@@ -1588,6 +1589,18 @@
         margin: 20px 0 15px 0;
       }
 
+    }
+  }
+  .selectFeeTypePop{
+    // .el-scrollbar{
+    //   padding-bottom: 40px;
+    //   position: relative;
+    // }
+    .selectFeeTypePop-btns{
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
     }
   }
 </style>

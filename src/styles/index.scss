@@ -173,6 +173,7 @@ table{
   vertical-align: middle;
   z-index: 999;
   pointer-events: none;
+  opacity: 0.8;
 }
 .ship-bufenjiesuan{
   display: block;
@@ -283,4 +284,8 @@ table{
 
 .popperHide{
   display: none !important;
+}
+/** 颜色 **/
+.imp{
+  color: #f00;
 }

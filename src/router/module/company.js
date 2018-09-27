@@ -104,7 +104,7 @@ export default {
     hidden: false,
     name: 'walletManage',
     component: _import('company/wallet/index'),
-    meta: { title: '钱包', stitle: '钱包', noCache: false }
+    meta: { title: '钱包', stitle: '钱包', noCache: false, code: 'WALLET' }
   },
   {
     path: '/company/smsManage',
@@ -113,27 +113,27 @@ export default {
     name: 'smsManage',
     component: _import('company/sms/index'),
     redirect: '/company/smsManage/sender',
-    meta: { title: '短信服务', stitle: '短信', noCache: false, 'code': 'CUSTOMELIST' },
+    meta: { title: '短信服务', stitle: '短信', noCache: false, code: 'SMS' },
     children: [{
       path: '/company/smsManage/customized',
       icon: 'QQ',
       name: '定制短信',
       component: _import('company/sms/customized'),
-      meta: { role: ['admin'], ptitle: '短信服务', title: '定制短信', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '短信服务', title: '定制短信', noCache: true, istab: true, code: 'SMS_CUSTOMIZATION' }
     },
     {
       path: '/company/smsManage/buy',
       icon: 'QQ',
       name: '短信购买',
       component: _import('company/sms/buy'),
-      meta: { role: ['admin'], ptitle: '短信服务', title: '短信购买', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '短信服务', title: '短信购买', noCache: true, istab: true, code: 'SMS_BUY' }
     },
     {
       path: '/company/smsManage/log',
       icon: 'QQ',
       name: '短信记录',
       component: _import('company/sms/log'),
-      meta: { role: ['admin'], ptitle: '短信服务', title: '短信记录', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '短信服务', title: '短信记录', noCache: true, istab: true, code: 'SMS_RECORD' }
     }
     ]
       /* children: [{ path: '/company/smsManage/sender', hidden: false, name: '发货人', component: _import('company/smsManage/sender/index'), meta: { title: '发货人', noCache: true }},

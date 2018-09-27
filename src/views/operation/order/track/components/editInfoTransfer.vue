@@ -121,12 +121,20 @@ export default {
   },
   watch: {
     id() {},
-    info(newVal) {
+    shipId (newVal) {
       if (newVal) {
-        this.getDetail()
+        console.log('shipId', newVal)
+         this.getDetail()
         this.getSystemTime()
       }
     },
+    // info(newVal) {
+    //   if (newVal) {
+    //     console.log('info', newVal)
+    //     this.getDetail()
+    //     this.getSystemTime()
+    //   }
+    // },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
         this.getDetail()

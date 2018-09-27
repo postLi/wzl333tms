@@ -18,7 +18,7 @@
 </template>
 <script>
 import {  postBuy } from '@/api/company/sms'
-import { createSmsSign, postSmsSign } from '@/api/company/sms'
+import { postSmsSign } from '@/api/company/sms'
 export default {
   props: {
     popVisible: {

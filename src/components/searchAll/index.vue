@@ -1,7 +1,21 @@
 <template>
 <div>
   <el-form-item label="自定义查询" class="zdycx">
-    <el-autocomplete
+    <el-select
+      v-model="datalist"
+      filterable
+      placeholder="请选择"
+      :filter-method="querySearchAsync"
+      @change="handleSelect"
+      :loading="loading">
+      <el-option
+        v-for="(item,index) in options4"
+        :key="index"
+        :label="item.queryKey"
+        :value="item.queryContent">
+      </el-option>
+    </el-select>
+    <!-- <el-autocomplete
       v-model="datalist"
       :fetch-suggestions="querySearchAsync"
       placeholder="请输入内容"
@@ -11,15 +25,15 @@
       <template slot-scope="{ item }">
         <div class="name">{{ item.queryKey }}</div>
       </template>
-    </el-autocomplete>
+    </el-autocomplete> -->
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
-  <addSave :searchObj="searchObj" :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchForm="querySearch"  @close="closeAddDot" @success="fetchAllloadAll" :isModify="isModify"/>
+  <addSave :searchObj="searchObj" :popVisible="popVisible"    @close="closeAddDot" @success="fetchAllloadAll" />
 </div>
 </template>
 <script>
 import { postQueryLogList } from '@/api/common'
-import addSave from '../addSave/index'
+import addSave from './addSave'
 export default {
   components: {
     addSave
@@ -27,17 +41,19 @@ export default {
   props: {
     searchObj: {
       type: [Object, Array]
-    }
+    },
+    value: [String, Number]
   },
   data() {
     return {
-      dotInfo: [],
       isModify: false,
       popVisible: false,
       setupTableVisible: false,
       dataset: [],
       datalist: '',
       timeout: null,
+      loading: false,
+      options4: [],
       querySearch: {
         'currentPage': 1,
         'pageSize': 10,
@@ -50,6 +66,13 @@ export default {
     }
   },
   watch: {
+    value(n) {
+      console.log('nnn:', n)
+      // 清除选定项
+      if (n === '') {
+        this.datalist = ''
+      }
+    },
     searchObj: {
       handler(cval, oval) {
         this.$nextTick(() => {
@@ -76,11 +99,13 @@ export default {
       this.querySearch.vo.menuCode = this.$route.meta.code
       return postQueryLogList(this.querySearch).then(data => {
         this.dataset = data.list
+        this.options4 = data.list
       })
     },
     querySearchAsync(queryString, cb) {
       var dataset = this.dataset
       var results = queryString ? dataset.filter(this.createStateFilter(queryString)) : dataset
+      this.options4 = results
       cb(results)
     },
     createStateFilter(queryString) {
@@ -89,9 +114,9 @@ export default {
       }
     },
     handleSelect(item) {
-      this.datalist = item.queryKey
-      const obj = JSON.parse(item.queryContent)
-      this.$emit('change', JSON.parse((item.queryContent).replace(/'/g, '"')))
+      // this.datalist = item.queryKey
+      const obj = JSON.parse(item)
+      this.$emit('change', JSON.parse((item).replace(/'/g, '"')))
       // 用$emit提交给父组件
       this.$emit('dataObj', obj)
     }

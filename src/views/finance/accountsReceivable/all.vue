@@ -134,11 +134,11 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },{
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {
@@ -151,47 +151,87 @@ export default {
         'label': '现付',
         'prop': 'nowPayFee'
       }, {
-        'label': '已结现付',
-        'prop': 'finishNowPayFee'
-      }, {
+          'label': '已结现付',
+          'prop': 'finishNowPayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+        }
+        }, {
         'label': '未结现付',
-        'prop': 'notNowPayFee'
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
       }, {
         'label': '到付',
         'prop': 'arrivepayFee'
       }, {
         'label': '已结到付',
-        'prop': 'finishArrivepayFee'
+        'prop': 'finishArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
       }, {
         'label': '未结到付',
-        'prop': 'notArrivepayFee'
+        'prop': 'notArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
       }, {
         'label': '回单付',
         'prop': 'receiptpayFee'
       }, {
         'label': '已结回单付',
-        'prop': 'finishReceiptpayFee'
+        'prop': 'finishReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+        }
       }, {
         'label': '未结回单付',
-        'prop': 'notReceiptpayFee'
+        'prop': 'notReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+        }
       }, {
         'label': '月结',
         'prop': 'monthpayFee'
       }, {
         'label': '已结月结',
-        'prop': 'finishMonthpayFee'
+        'prop': 'finishMonthpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
+        }
       }, {
         'label': '未结月结',
-        'prop': 'notMonthpayFee'
+        'prop': 'notMonthpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
+        }
       }, {
         'label': '异动',
         'prop': 'changeFee'
       }, {
-        'label': '未结异动',
-        'prop': 'notChangeFee'
-      }, {
         'label': '已结异动',
-        'prop': 'finishChangeFee'
+        'prop': 'finishChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
+      }, {
+        'label': '未结异动',
+        'prop': 'notChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',

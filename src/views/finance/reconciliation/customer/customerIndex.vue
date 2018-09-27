@@ -100,16 +100,16 @@ export default {
         }, {
           label: '网点',
           prop: 'orgName',
+          width: '150',
           fixed: true
         }, {
           label: '发货方',
           prop: 'customerUnit',
-          width: '150',
+          width: '200',
           fixed: true
         }, {
           label: '发货人',
           prop: 'customerName',
-          width: '150',
           fixed: false
         }, {
           label: '客户电话',

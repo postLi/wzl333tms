@@ -41,11 +41,11 @@ export function postSmsTemplateLogList(params) {
   })
 }
 /**
- * 短信签名新增
- *  {  "companyId": 2,  "defaultSign": "天天物流"}
+ * 短信签名更新
+ *   {  "companyId": 1,  "modifySign": "【安发物流2】","id":"2"}
  */
 export function createSmsSign(params) {
-  return fetch.post('/api-plugin/system/tmssystemsmssign/v1.1/createSmsSign/', params).then(res => {
+  return fetch.post('/api-plugin/system/tmssystemsmssign/v1.1/updateSmsSign/', params).then(res => {
     return res.data || {}
   })
 }

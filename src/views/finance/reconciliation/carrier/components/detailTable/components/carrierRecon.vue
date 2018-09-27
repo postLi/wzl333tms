@@ -225,12 +225,20 @@
             label="交接方式">
           </el-table-column>
           <el-table-column
+            prop="paymentMethod"
+            label="中转付款方式"
+            width="110"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
             prop="shipArrivepayFee"
             label="到付款"
             width="150"
             sortable
           >
           </el-table-column>
+
           <el-table-column
             prop="agencyFund"
             label="代收货款"
@@ -508,6 +516,13 @@
             width="100"
             label="交接方式">
           </el-table-column>
+          <el-table-column
+            prop="paymentMethod"
+            label="中转付款方式"
+            width="110"
+            sortable
+          >
+          </el-table-column>
           <!--<el-table-column-->
             <!--prop="abnormalType"-->
             <!--label="异常类型"-->
@@ -783,11 +798,10 @@
     },
     data() {
       const validateMobile = (rule, value, callback) => {
-        if (REGEX.MOBILE.test(value)) {
-          callback()
+        if (!REGEX.MOBILE.test(value) && value !== '') {
+          callback(new Error('请输入正确的联系号码~'))
         } else {
-          this.$message.error('请输入正确的联系号码~')
-          callback(new Error())
+          callback()
         }
       }
       return {

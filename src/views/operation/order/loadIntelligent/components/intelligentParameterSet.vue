@@ -15,12 +15,10 @@
                 </el-table-column>
                 <el-table-column prop="name" label="车型">
                 </el-table-column>
-                <el-table-column prop="weight" width="90" label="承载重">
+                <el-table-column prop="weight" width="120" label="承载重(千克)">
                 </el-table-column>
-                <el-table-column prop="vol" width="90" label="承载方">
+                <el-table-column prop="vol" width="100" label="承载方(方)">
                 </el-table-column>
-                <!-- <el-table-column prop="price" width="90" label="车费">
-                </el-table-column> -->
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="自定义车型" name="second">
@@ -30,24 +28,19 @@
                   </el-table-column>
                   <el-table-column prop="name" label="车型">
                     <template slot-scope="scope">
-                      <el-input placeholder="车型" v-model.number="scope.row.name" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
+                      <el-input placeholder="车型" v-model.number="scope.row.name" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'name', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="weight" width="90" label="承载重">
+                  <el-table-column prop="weight" width="120" label="承载重(千克)">
                     <template slot-scope="scope">
-                      <el-input placeholder="承载重" v-model.number="scope.row.weight" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
+                      <el-input placeholder="承载重" v-model.number="scope.row.weight" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'weight', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="vol" width="90" label="承载方">
+                  <el-table-column prop="vol" width="100" label="承载方(方)">
                     <template slot-scope="scope">
-                      <el-input placeholder="承载方" v-model.number="scope.row.vol" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
+                      <el-input placeholder="承载方" v-model.number="scope.row.vol" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'vol', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
-                 <!--  <el-table-column prop="price" width="90" label="车费">
-                    <template slot-scope="scope">
-                      <el-input placeholder="车费" v-model.number="scope.row.price" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
-                    </template>
-                  </el-table-column> -->
                 </el-table>
               </div>
             </el-tab-pane>
@@ -55,17 +48,10 @@
         </div>
         <p>注：请填写车费，保证单车毛利的准确性。</p>
       </div>
-      <!--</template>-->
-      <!--<div slot="footer" class="dialog-footer-frame">-->
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm('formName')">确 定</el-button>
         <el-button @click="closeMe">取 消</el-button>
       </div>
-      <!--<div>-->
-      <!--<el-button @click="closeMe">取消</el-button>-->
-      <!--<el-button type="primary" @click="submitForm('formName')">确定</el-button>-->
-      <!--</div>-->
-      <!--</div>-->
     </el-dialog>
   </div>
 </template>
@@ -132,6 +118,7 @@ export default {
       checked1: true,
       popTitle: '参数设置',
       loading: false,
+      isEditSuccess: 0,
       formInline: {},
       infoGetSystemList: {
         sign: 1,
@@ -173,82 +160,17 @@ export default {
     }
   },
   mounted() {
-    if (this.popVisible) {
-    }
+    if (this.popVisible) {}
   },
   methods: {
     doAction(type) {
-      // if (this.selected.length !== 1 && type !== 'addCar') {
-      //   this.$message({
-      //     message: '请选择一项来进行操作',
-      //     type: 'warning'
-      //   })
-      //   return false
-      // } else {
       switch (type) {
         case 'addCar':
           this.addTruck()
-
-          // this.definedList = this.selected
-          // let data = {}
-          // let sendData1 = {}
-          // data = this.definedList.filter(el => {
-          //   return el.selectdCheck === false
-          // }).map(el => {
-          //   sendData1 = {
-          //     name: el.name,
-          //     vol: el.vol,
-          //     weight: el.weight
-          //   }
-          // })
-          // const promiseObj = postPzcarinfotms(sendData1)
-          // promiseObj.then(res => {
-          //   this.loading = false
-          //   this.$message({
-          //     message: '添加成功~',
-          //     type: 'success'
-          //   })
-          //   this.fetchData()
-          // })
-          // } else {
-          //   this.$message({
-          //     message: '自定义车型不能超过5种~',
-          //     type: 'warning'
-          //   })
-          //   return false
-          // }
           break;
         case 'subCar':
           this.subTruck()
-          // let cidArr = []
-          // let loadId = ''
-          // this.selected.forEach(e => {
-          //   cidArr.push(e.cid)
-          // })
-          // console.log(cidArr)
-          // // this.definedList = this.selected
-          // // let loadId = ''
-          // // loadId = this.definedList.filter(el => {
-          // //   return el.selectdCheck === true
-          // // }).map(el => {
-          // //   return el.cid
-          // // })
-          // loadId = cidArr.join(',')
-          // deletePzcarinfotms(loadId).then(res => {
-          //   this.loading = false
-          //   this.$message({
-          //     message: '删除成功~',
-          //     type: 'success'
-          //   })
-          //   this.fetchData()
-          // })
-          // this.selected.forEach(e => {
-          //  this.definedList = this.definedList.filter(em => {
-          //     return em.cid !== e.cid
-          //   })
-          // })
           break
-          // }
       }
     },
     addTruck() { // 添加车辆信息
@@ -315,32 +237,24 @@ export default {
       })
     },
     changeFright(index, prop, newVal) {
+      // newVal = newVal.target.value
       this.definedList[index][prop] = Number(newVal)
-      const newName = this.definedList[index].name
-      const newWeight = this.definedList[index].weight
-      const newVol = this.definedList[index].vol
-      const newPrice = this.definedList[index].price
-      if (newName === 0 || newWeight === 0 || newVol === 0 || newPrice === 0) {
-        this.definedList[index].num = newName
-        this.definedList[index].weight = newWeight
-        this.definedList[index].vol = newVol
-        this.definedList[index].price = newPrice
-        this.$notify({
-          title: '提示',
-          message: '承载方和承载重不能为0',
-          type: 'warning'
-        })
-      } else if (newName < 0) {
-        this.$notify({
-          title: '提示',
-          message: '承载方和承载重不能为0,默认为初始值',
-          type: 'warning'
-        })
+      if (prop === 'name') {
+        if (this.definedList[index][prop] === '' || this.definedList[index][prop] === undefined) {
+          this.$notify({
+            title: '提示',
+            message: '车型名不能为空',
+            type: 'warning'
+          })
+        }
       } else {
-        this.definedList[index].name
-        this.definedList[index].weight
-        this.definedList[index].vol
-        this.definedList[index].price
+        if (this.definedList[index][prop] === 0) {
+          this.$notify({
+            title: '提示',
+            message: '承载方和承载重不能为0',
+            type: 'warning'
+          })
+        }
       }
     },
     fetchData() {
@@ -361,47 +275,66 @@ export default {
       this.formInline.pickupFee = ''
     },
     submitForm() {
-      // if (!this.isSecond) {
-      //   if (!this.selectedSys.length) {
-      //     this.$message({
-      //       message: '请选择要操作的项~',
-      //       type: 'warning'
-      //     })
-      //     return false
-      //   } else {
-      //     console.log('111')
-      //   }
-      // } else {
       if (this.selectedSys && this.selectedSys.length > 0) {
-        if ( this.selected.length === 0) {
+        if (this.selected.length === 0) {
           this.$emit('savaParamTruck', this.selectedSys)
           this.$message.success('参数设置成功！')
           this.closeMe()
         }
       }
+      this.isEditSuccess = 0
       if (this.selected && this.selected.length > 0) {
-        putPzcarinfotms(this.selected[0]).then(data => { // 保存修改
-            this.closeMe()
-            this.$message.success('操作成功,只能修改打勾选择的第一项！')
-            let arr = []
-            this.selectedSys.forEach(e => {
-              arr.push(e)
-            })
-            this.selected.forEach(e => {
-              arr.push(e)
-            })
-            this.$emit('savaParamTruck', arr)
-          })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
-          })
+        this.selected.forEach(e => {
+          this.putPzcarinfotms(e)
+        })
       }
+      if (this.isEditSuccess === 0) { // 循环提交自定义的车型 如果isEditSuccess ===0表示提交成功
+        this.closeMe()
+        this.$message.success('保存修改成功')
+        let arr = []
+        this.selectedSys.forEach(e => {
+          arr.push(e)
+        })
+        this.selected.forEach(e => {
+          arr.push(e)
+        })
+        this.$emit('savaParamTruck', arr)
+      }
+    },
+    putPzcarinfotms(row) {
+      putPzcarinfotms(row).then(data => { // 保存修改
+
+          // this.$message.success('操作成功,只能修改打勾选择的第一项！')
+        })
+        .catch(error => {
+          this.isEditSuccess++
+            this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+        })
     },
     clickDetail(row, event, column) {
       this.$refs.multipleTable1.toggleRowSelection(row)
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
+      // if (this.selected.length < 1) {  
+      //   this.$refs.multipleTable.toggleRowSelection(row)
+      // } else {
+      //   this.$confirm('还未保存修改的车型,是否保存?', '提示', {
+      //     confirmButtonText: '保存',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     // this.$refs.multipleTable.clearSelection()
+      //     this.$refs.multipleTable.toggleRowSelection(row)
+
+
+      //   }).catch(() => {
+      //     this.$message({
+      //       type: 'info',
+      //       message: '已取消保存编辑的车型信息'
+      //     })
+      //   })
+      // }
     },
     getSelectionSys(selection) {
       this.selectedSys = selection
