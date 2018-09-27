@@ -89,6 +89,9 @@ export default {
         let countColVal = []
 
        let table = document.getElementById('report_operation_table')
+       if (!table) {
+          return
+        }
         let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
         if (theadLen.length > 0) {

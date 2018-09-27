@@ -84,8 +84,8 @@
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
-                  <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model.number="detailList[scope.$index][column.prop]" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
-                  <!-- <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" type="number" v-model.number="column.slot(scope)" :size="btnsize" :disabled="isWareStatus(scope.$index, scope.row)" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input> -->
+                  <span v-if="isWareStatus(scope.$index, scope.row)" v-html="column.slot(scope)"></span>
+                  <el-input v-else @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" type="number" v-model.number="detailList[scope.$index][column.prop]" :size="btnsize" @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
                 </div>
                 <!-- 有返回值的列 -->
                 <div v-else>
@@ -213,7 +213,8 @@ export default {
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.actualAmount
+            const row = scope.row
+            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
           }
         },
         {
@@ -223,7 +224,8 @@ export default {
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.actualWeight
+            const row = scope.row
+            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
           }
         },
         {
@@ -233,7 +235,8 @@ export default {
           fixed: false,
           expand: true,
           slot: (scope) => {
-            return scope.row.actualVolume
+            const row = scope.row
+            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
           }
         },
         {
@@ -436,13 +439,13 @@ export default {
         })
       }
       if (curVal !== loadVal) { // 实到数量如果不等于配载数量 则字体样式变红
-        this.textChangeDanger[index] = true
+        this.$set(this.detailList[index], prop+'lyy', true)
       } else {
         if (this.detailList[index].actualAmount === this.detailList[index].loadAmount && this.detailList[index].actualWeight === this.detailList[index].loadWeight && this.detailList[index].actualVolume === this.detailList[index].loadVolume) {
-          this.textChangeDanger[index] = false
+          this.$set(this.detailList[index], prop+'lyy', false)
         }
       }
-      console.log(curVal, loadVal, this.textChangeDanger[index], prop)
+      console.log(curVal, loadVal, this.textChangeDanger[index], prop, index)
       return curVal
     },
     changeData(newVal) { // 判断当行-废

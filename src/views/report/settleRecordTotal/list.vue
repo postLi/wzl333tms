@@ -206,6 +206,9 @@ export default {
         let countColVal = []
 
         let table = document.getElementById('report_settleRecordTotal_table')
+        if (!table) {
+          return
+        }
         let tbodyLen = table.getElementsByTagName('tbody')
         let tfootLen = table.getElementsByTagName('tfoot')
         if (tbodyLen.length > 0) {

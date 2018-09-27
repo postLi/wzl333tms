@@ -101,6 +101,7 @@ export default {
     clearForm(formName) {
       this.$refs[formName].resetFields()
       this.formModel = Object.assign({}, this.$options.data().formModel)
+      this.formModel.orgId = this.otherinfo.orgid
       this.searchTime = this.$options.data().searchTime
     }
   }
