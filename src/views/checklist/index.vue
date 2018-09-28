@@ -35,10 +35,10 @@
         <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
-              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message}}，{{item.message2}}
+              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message ? item.message + '，' : ''}}{{item.message2}}
               <el-button type="primary"  plain @click="doAction(item.label)" class="btn_qx1">{{item.button1}}</el-button>
             </p>
-            <p v-else-if="item.value < 1 && item.label==='orgCount' && !isParentOrg">
+            <p v-else-if="item.value < 1 && item.label==='orgCount' && iscompany">
               <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
               <el-button type="error"   plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
@@ -228,6 +228,15 @@ export default {
         message1: '打印机连接还没连接，请点击右边设置按钮',
         button1: '设置',
         button2: '设置'
+      }, {
+        value: 0,
+        label: 'smsTemplateCount',
+        title: '短信设置',
+        message: '已经有' + this.valueCount + '个短信模板',
+        message1: '你还没有添加承运商，请点击右边添加按钮',
+        message2: '需要设置点击右边设置按钮',
+        button1: '设置',
+        button2: '设置'
       }],
       contTitleNull: false
     }
@@ -255,8 +264,15 @@ export default {
       this.dataset = data
       var totals = 0
       for (const total in data) {
-        if (total !== 'roleCount' && data[total] === 0) {
-          totals++
+        if (total !== 'roleCount' && data[total] === 0 && total !== 'smsTemplateCount') {
+          if (this.iscompany) { // 如果是总公司那么就计算网点管理
+            totals++
+          }else {
+            if (total !== 'orgCount') {
+              totals++
+            }
+          }
+          console.log('---total',totals, total, data[total])
         }
         console.log(data[total], total, '数量')
       }
@@ -273,7 +289,7 @@ export default {
   },
   methods: {
     isParentOrg() {
-      console.log('asdasd', this.otherinfo.orgid === this.otherinfo.companyId)
+      console.log('isParentOrg是否是总公司：', this.otherinfo.orgid === this.otherinfo.companyId)
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     fetchData(type) {
@@ -400,6 +416,10 @@ export default {
           // this.addDoTotVisible8 = true
           this.$router.push({ path: '../../company/systemSetup' })
           break
+        case 'smsTemplateCount':
+          // this.addDoTotVisible8 = true
+          this.$router.push({ path: '../../company/smsManage/customized' })
+          break  
       }
     },
     changeTitle(item) {
