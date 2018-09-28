@@ -206,7 +206,7 @@ export default {
     },
     getFeeInfo() {
       this.$set(this.formModel, 'szDtoList', [])
-      getSettlementInfo(this.info[0].flowId).then(data => {
+      getSettlementInfo(this.info[0].flowId, this.info[0].settlementId).then(data => {
         this.settlementInfo = data.data
         this.initDetailDtoList()
       }).catch((err)=>{

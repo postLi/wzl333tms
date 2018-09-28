@@ -250,10 +250,10 @@
         if (this.sendId) {
           data.tmsFinanceBillCheckDto.id = this.sendId
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId )
         } else {
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId )
         }
         if (this.totaMoney === 0) {
 
