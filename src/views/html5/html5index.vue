@@ -135,7 +135,7 @@
 // echarts的各模块
 // https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
-import { pickerOptions4 } from '@/utils/index'
+import { pickerOptions4, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail } from '@/api/index'
 import Arrow from './arrow'
 export default {
@@ -281,7 +281,7 @@ export default {
     getDateChange(val) {
       this.searchQuery.vo.buttonKey = 5
       this.searchQuery.vo.nowStartTime = val[0].getTime()
-      this.searchQuery.vo.nowEndTime = val[0].getTime()
+      this.searchQuery.vo.nowEndTime = val[1].getTime()
       this.currentkey = 5
     },
     doAction(type) {
@@ -338,11 +338,14 @@ export default {
       *选择的日期周期(0:今天；1：昨天；2：本周；3：本月； 4：本年；5：自定义；
       private Integer buttonKey;
         */
-      postHomedetail(this.otherinfo.orgid, this.searchQuery.vo).then(data => {
+      const data = Object.assign({}, this.searchQuery.vo)
+      data.nowStartTime = parseTime(data.nowStartTime, '{y}-{m}-{d}')
+      data.nowEndTime = parseTime(data.nowEndTime, '{y}-{m}-{d}')
+      postHomedetail(this.otherinfo.orgid, data).then(data => {
         if (data) {
           this.thedata = data
-          for(var i in data){
-            if(data[i]===null){
+          for (var i in data) {
+            if (data[i] === null) {
               data[i] = ' - '
             }
           }
@@ -622,7 +625,7 @@ export default {
     }
    // 获取年度运力数据
     myChart3.showLoading()
-    
+
     getHomeYearDetail().then(data => {
       data = data || []
       const monthArr = []
@@ -634,7 +637,7 @@ export default {
         weightArr.push(el.weight)
         volumeArr.push(el.volume)
       })
-      
+
       this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
     }).catch(err => {
       console.log('fetch err info:', err)

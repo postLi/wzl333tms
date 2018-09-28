@@ -34,16 +34,19 @@
                       :maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="">
-            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupVolume" @change="(e)=>{setInputVal(e.target.value, 'pickupVolume')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
-            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupWeight" @change="(e)=>{setInputVal(e.target.value, 'pickupWeight')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="运费" prop="tmsOrderPickup.carriage">
-            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.carriage" @change="(e)=>{setInputVal(e.target.value, 'carriage')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="付款方式">
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" class="pickup-way"
@@ -61,11 +64,12 @@
         <div class="info_date">其他信息</div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
-            <el-input v-model="form.tmsOrderPickup.truckFee" auto-complete="off" :disabled="isDbclick"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.truckFee" @change="(e)=>{setInputVal(e.target.value, 'truckFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
           </el-form-item>
           <el-form-item label="代收费用" prop="">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8" v-number-only:point></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.collectionFee" @change="(e)=>{setInputVal(e.target.value, 'collectionFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsTruck.truckIdNumber">
             <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"
@@ -390,6 +394,9 @@
       }
     },
     methods: {
+      setInputVal(val, name) {
+        this.$set(this.form.tmsOrderPickup, name, val)
+      },
       watchInfo() {
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -650,6 +657,11 @@
     .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
       border-color: #dcdfe6;
     }
+    .nativeinput{
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      font-size: 12px;
+    }
   }
 
   .senderName_lrl {
@@ -659,8 +671,14 @@
   }
 
   .senderAddr_lrl {
+    
     .el-autocomplete {
       width: 745px;
+    }
+  }
+  .order_toCityCode{
+    .el-input--suffix .el-input__inner{
+      padding-right: 15px;
     }
   }
 
@@ -728,7 +746,7 @@
 
   .pickUp-bottom {
     .el-form-item--mini:nth-of-type(5) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 91%;
       }
     }
@@ -738,12 +756,12 @@
       }
     }
     .el-form-item--mini:nth-of-type(8) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 91%;
       }
     }
     .el-form-item--mini:nth-of-type(9) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 75%;
       }
       .el-date-editor.el-input {

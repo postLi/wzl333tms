@@ -148,7 +148,7 @@ $bodercolor: #d0d7e5;
   padding-right: 5px;
 }
 /**原生input **/
-.el-form-item__content>input, .nativeinput{
+.el-form-item__content>input, .nativeinput,.nativeinput-border{
   -webkit-appearance: none;
   background-color: #fff;
   background-image: none;
@@ -171,7 +171,11 @@ $bodercolor: #d0d7e5;
   height: 28px;
   line-height: 28px;
 }
-.el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error{
+.nativeinput-border{
+  border-radius: 4px;
+  border: 1px solid #dcdfe6;
+}
+.el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error,.nativeinput-border.is-error{
   border-color: #f56c6c;
 }
 
