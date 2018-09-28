@@ -349,8 +349,8 @@ export default {
         const data = res.data
         if (data) {
           for (const i in data) {
-            if (data[i] === null || data[i] === '') {
-              data[i] = 0
+            if (data[i] === null) {
+              data[i] = ' - '
             }
           }
           this.thedata = data

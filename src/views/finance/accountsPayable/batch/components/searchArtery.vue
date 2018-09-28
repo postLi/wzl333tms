@@ -27,13 +27,14 @@
         <el-input placeholder="请输入发车批次" v-model="searchForm.batchNo"></el-input>
       </el-form-item>
       <el-form-item label="车牌号" prop="truckIdNumber">
-        <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" />
+         <el-input v-model="searchForm.truckIdNumber" placeholder="请输入车牌号"></el-input>
+        <!-- <querySelect v-model="searchForm.truckIdNumber" valuekey="truckIdNumber" search="truckIdNumber" type="trunk" /> -->
       </el-form-item>
       <el-form-item label="司机">
         <el-input v-model="searchForm.dirverName" clearable :maxlength="10" placeholder="司机名称"></el-input>
         <!-- <querySelect v-model="searchForm.dirverName" valuekey="driverName" search="driverName" type="driver" label="driverName" :remote="true" /> -->
       </el-form-item>
-      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+      <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -80,6 +81,7 @@ export default {
       }
     }
     return {
+      searchAll: '1',
       searchObjs: {},
       searchForm: {
         // sign: 2,
@@ -152,10 +154,16 @@ export default {
     },
     clearForm(formName) {
       this.$nextTick(() => {
-        Object.assign(this.$data, this.$options.data())
+        this.searchForm = this.$options.data().searchForm
+        this.searchTime = this.$options.data().searchTime
+        // Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
         this.searchForm.orgid = this.otherinfo.orgid
         this.searchForm.ascriptionOrgid = this.otherinfo.orgid
+        this.searchAll = '1'
+      setTimeout(() => {
+        this.searchAll = ''
+      }, 50)
       })
     }
   }

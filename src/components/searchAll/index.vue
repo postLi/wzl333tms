@@ -7,12 +7,15 @@
       placeholder="请选择"
       :filter-method="querySearchAsync"
       @change="handleSelect"
+      @focus="initdata"
+      popper-class="zdycx-pop"
       :loading="loading">
       <el-option
         v-for="(item,index) in options4"
         :key="index"
         :label="item.queryKey"
-        :value="item.queryContent">
+        :value="item.id">
+        {{item.queryKey}} <i class="el-icon-circle-close-outline" @click.stop.prevent="deleteItem(item.id)"></i>
       </el-option>
     </el-select>
     <!-- <el-autocomplete
@@ -32,7 +35,7 @@
 </div>
 </template>
 <script>
-import { postQueryLogList } from '@/api/common'
+import { postQueryLogList, deleteQueryLogListById } from '@/api/common'
 import addSave from './addSave'
 export default {
   components: {
@@ -83,9 +86,25 @@ export default {
     }
   },
   mounted() {
-    this.fetchAllloadAll()
+    // this.fetchAllloadAll()
   },
   methods: {
+    initdata() {
+      if (!this.inited) {
+        this.inited = true
+        this.loading = true
+        this.fetchAllloadAll().then(res => {
+          this.loading = false
+        })
+      }
+    },
+    deleteItem(id) {
+      deleteQueryLogListById(id).then(res => {
+        this.fetchAllloadAll()
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
     Custom() {
       this.isModify = true
       this.popVisible = true
@@ -113,12 +132,16 @@ export default {
         return (state.queryKey.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
       }
     },
-    handleSelect(item) {
-      // this.datalist = item.queryKey
-      const obj = JSON.parse(item)
-      this.$emit('change', JSON.parse((item).replace(/'/g, '"')))
-      // 用$emit提交给父组件
-      this.$emit('dataObj', obj)
+    handleSelect(id) {
+      var find = this.options4.filter(el => el.id === id)
+      if (find.length) {
+        // this.datalist = item.queryKey
+        const item = find[0].queryContent
+        const obj = JSON.parse(item)
+        this.$emit('change', JSON.parse((item).replace(/'/g, '"')))
+        // 用$emit提交给父组件
+        this.$emit('dataObj', obj)
+      }
     }
   }
 }
@@ -127,6 +150,20 @@ export default {
 .zdycx{
     .el-form-item__label{
     width:85px !important;
+  }
+  
+}
+.zdycx-pop{
+  li{
+    clear: both;
+  }
+  .el-icon-circle-close-outline{
+    float: right;
+    line-height: 34px;
+
+    &:hover{
+      color: #ef0000;
+    }
   }
 }
 </style>

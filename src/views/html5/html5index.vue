@@ -341,6 +341,11 @@ export default {
       postHomedetail(this.otherinfo.orgid, this.searchQuery.vo).then(data => {
         if (data) {
           this.thedata = data
+          for(var i in data){
+            if(data[i]===null){
+              data[i] = ' - '
+            }
+          }
           this.setInChart()
           this.setCompareChart()
         }
@@ -530,11 +535,11 @@ export default {
             radius: '55%',
             center: ['50%', '60%'],
             data: [
-          { value: 335, name: '现付' },
-          { value: 310, name: '到付' },
-          { value: 234, name: '回单付' },
-          { value: 135, name: '月结' },
-          { value: 100, name: '异动增款' }
+          { value: 0, name: '现付' },
+          { value: 0, name: '到付' },
+          { value: 0, name: '回单付' },
+          { value: 0, name: '月结' },
+          { value: 0, name: '异动增款' }
             ]
           }
         ]
@@ -609,14 +614,15 @@ export default {
             }
           },
           data: [
-          { value: 500, name: '收入' },
-          { value: 310, name: '支出' }
+          { value: 0, name: '收入' },
+          { value: 0, name: '支出' }
           ]
         }
       ]
     }
    // 获取年度运力数据
     myChart3.showLoading()
+    
     getHomeYearDetail().then(data => {
       data = data || []
       const monthArr = []
@@ -628,6 +634,7 @@ export default {
         weightArr.push(el.weight)
         volumeArr.push(el.volume)
       })
+      
       this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
     }).catch(err => {
       console.log('fetch err info:', err)

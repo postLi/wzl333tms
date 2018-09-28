@@ -1101,7 +1101,7 @@
                 this.loading = false
                 // this.isHiddenBtn = false
               }).catch(err => {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
               // this.closeMe()

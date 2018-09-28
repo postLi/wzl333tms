@@ -162,7 +162,7 @@ export default {
         },1000)
         this.loading = false
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
         this.$router.push({ path: '../arteryDepart' })
         this.eventBus.$emit('closeCurrentView')
         this.loading = false
@@ -176,6 +176,7 @@ export default {
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
+       console.log('delCurTruck2', obj, this.delCurTruckData)
     },
     addOrgRightTable () { // 添加了一辆车型
       this.isAddOrgRightTable = new Date().getTime()

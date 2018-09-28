@@ -60,7 +60,7 @@
         <el-option slot="head" label="全部" value="" ></el-option>
       </selectType>
     </el-form-item>
-    <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+    <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button><el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -99,6 +99,7 @@ export default {
   },
   data() {
     return {
+      searchAll: '1',
       searchCreatTime: [],
       searchObjs: {},
       defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
@@ -167,16 +168,23 @@ export default {
       this.$emit('change', searchObj)
     },
     clearForm() {
-      this.searchForm.senderName = ''
-      this.searchForm.senderCompanyName = ''
-      this.searchForm.shipFromCityCode = ''
-      this.searchForm.shipToCityCode = ''
-      this.searchForm.shipSn = ''
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
+      this.searchForm = this.$options.data().searchForm
       this.searchCreatTime = this.defaultTime
-      this.searchForm.shipFromOrgid = ''
       this.searchForm.ascriptionOrgId = this.otherinfo.orgid
+      this.searchAll = '1'
+      setTimeout(() => {
+        this.searchAll = ''
+      }, 50)
+      // this.searchForm.senderName = ''
+      // this.searchForm.senderCompanyName = ''
+      // this.searchForm.shipFromCityCode = ''
+      // this.searchForm.shipToCityCode = ''
+      // this.searchForm.shipSn = ''
+      // this.searchForm.startTime = ''
+      // this.searchForm.endTime = ''
+      // this.searchCreatTime = this.defaultTime
+      // this.searchForm.shipFromOrgid = ''
+      // this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     }
   }
 }

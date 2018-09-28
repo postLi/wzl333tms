@@ -323,11 +323,14 @@ export default {
       }
       console.log('orgLeftTable', this.orgLeftTable.length)
       this.leftTable = Object.assign([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
-        if (this.rightTable[index]) {
-          return el.shipSn !== this.rightTable[index].shipSn
-        } else {
-          return true
-        }
+        return -1 === this.rightTable.findIndex(e => {
+          return e.shipSn === el.shipSn
+        })
+        // if (this.rightTable[index]) {
+        //   return el.shipSn !== this.rightTable[index].shipSn
+        // } else {
+        //   return true
+        // }
       })
       if (this.leftTable.length !== 0) {
         this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
@@ -350,7 +353,7 @@ export default {
         const feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
 
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
-          this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
+          // this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
@@ -365,6 +368,7 @@ export default {
       }
 
       if (isCopyLastData) { // true-给左边添加一条数据，并修改相关未结费用
+        this.$notify.info({ title: '提示', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
         this.leftTable.push(objectMerge2([], this.rightTable[this.rightTable.length - 1]))
         this.arrLastPartFeeName.forEach(e => { // 左边最后一条 未结=未结-实际
           const noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名
@@ -531,13 +535,13 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.rightTable.push(e)
+          // this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+          //   return em.shipSn !== e.shipSn
+          // })
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
+          this.rightTable.push(e)
           // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
           //   return el.shipSn !== e.shipSn
           // })
@@ -558,12 +562,12 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
-          this.leftTable = this.leftTable.filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          this.countOrgLeftTable = this.countOrgLeftTable.filter(el => {
-            return el.shipSn !== e.shipSn
-          })
+          // this.leftTable = this.leftTable.filter(el => {
+          //   return el.shipSn !== e.shipSn
+          // })
+          // this.countOrgLeftTable = this.countOrgLeftTable.filter(el => {
+          //   return el.shipSn !== e.shipSn
+          // })
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)
@@ -581,14 +585,20 @@ export default {
       }
     },
     addItem(row, index) { // 添加单行
-      this.selectedRight = []
-      this.selectedRight[index] = row
-      this.doAction('goLeft')
+      clearTimeout(this.addTimer)
+      this.addTimer = setTimeout(() => {
+        this.selectedRight = []
+        this.selectedRight[index] = row
+        this.doAction('goLeft')
+      })
     },
     minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
+      clearTimeout(this.minusTimer)
+      this.minusTimer = setTimeout(() => {
+        this.selectedLeft = []
+        this.selectedLeft[index] = row
+        this.doAction('goRight')
+      })
     },
     addALLList() { // 添加全部
       this.selectedRight = Object.assign([], this.leftTable)

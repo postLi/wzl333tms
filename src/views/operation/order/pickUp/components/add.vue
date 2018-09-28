@@ -471,7 +471,7 @@
           this.pickupBatchNumber = data.data
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
         })
       },
       setSender(item, type) {
@@ -568,7 +568,7 @@
               if (err.text === '提货批次已存在') {
                 this.fetchGetPickUp()
               } else {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
               }
               this.loading = false
             })

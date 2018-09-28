@@ -124,67 +124,67 @@
                 <li>
                   <p>现付运费(元)</p>
                   <el-form-item prop="nowpayCarriage">
-                    <el-input v-model="formFee.nowpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.nowpayCarriage" ref="nowpayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'nowpayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>现付油卡(元)</p>
                   <el-form-item prop="nowpayOilCard">
-                    <el-input v-model="formFee.nowpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.nowpayOilCard" ref="nowpayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'nowpayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付运费(元)</p>
                   <el-form-item prop="backpayCarriage">
-                    <el-input v-model="formFee.backpayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                   <input type="text" class="nativeinput"  v-number-only:point :value="formFee.backpayCarriage" ref="backpayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'backpayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付油卡(元)</p>
                   <el-form-item prop="backpayOilCard">
-                    <el-input v-model="formFee.backpayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.backpayOilCard" ref="backpayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'backpayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付运费(元)</p>
                   <el-form-item prop="arrivepayCarriage">
-                    <el-input v-model="formFee.arrivepayCarriage" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arrivepayCarriage" ref="arrivepayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arrivepayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付油卡(元)</p>
                   <el-form-item prop="arrivepayOilCard">
-                    <el-input v-model="formFee.arrivepayOilCard" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                   <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arrivepayOilCard" ref="arrivepayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arrivepayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>整车保险费(元)</p>
                   <el-form-item prop="carloadInsuranceFee">
-                    <el-input v-model="formFee.carloadInsuranceFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.carloadInsuranceFee" ref="carloadInsuranceFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'carloadInsuranceFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站装卸费(元)</p>
                   <el-form-item prop="leaveHandlingFee">
-                    <el-input v-model="formFee.leaveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.leaveHandlingFee" ref="leaveHandlingFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'leaveHandlingFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站其他费(元)</p>
                   <el-form-item prop="leaveOtherFee">
-                    <el-input v-model="formFee.leaveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.leaveOtherFee" ref="leaveOtherFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'leaveOtherFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站装卸费(元)</p>
                   <el-form-item prop="arriveHandlingFee">
-                    <el-input v-model="formFee.arriveHandlingFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arriveHandlingFee" ref="arriveHandlingFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arriveHandlingFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站其他费(元)</p>
                   <el-form-item prop="arriveOtherFee">
-                    <el-input v-model="formFee.arriveOtherFee" :maxlength="10" :size="mini" v-number-only:point></el-input>
+                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arriveOtherFee" ref="arriveOtherFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arriveOtherFee')" />
                   </el-form-item>
                 </li>
                 <li>
@@ -196,7 +196,7 @@
                 <li>
                   <p>油卡号</p>
                   <el-form-item prop="oilCardNumber">
-                    <el-input v-model.trim="formFee.oilCardNumber" :maxlength="25" :size="mini" v-numberOnly></el-input>
+                    <input type="text" class="nativeinput"  v-numberOnly :value="formFee.oilCardNumber" ref="oilCardNumber" :maxlength="25"  @change="(e)=>changeLoadNum(e.target.value, 'oilCardNumber')" />
                   </el-form-item>
                 </li>
               </ul>
@@ -267,11 +267,9 @@ export default {
       //   callback(new Error('不能为空'))
       // } else
       const reg = /^\d+(\.([1-9]|\d[1-9]))?$/
-      if (!reg.test(value) && value !== undefined) {
+      if (!reg.test(value) && value !== undefined && value !== '') {
         callback(new Error('请输入最多两位小数'))
-      } else if (value === '' || value === undefined) {
-        callback()
-      } else {
+      } else{
         callback()
       }
     }
@@ -373,17 +371,17 @@ export default {
         // truckVolume: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
       formFeeRules: {
-        nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        backpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        backpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        arrivepayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
-        arrivepayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
-        carloadInsuranceFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        leaveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
-        arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
+        // nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // backpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // backpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arrivepayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arrivepayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // carloadInsuranceFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // leaveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
+        // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       }
     }
   },
@@ -965,6 +963,9 @@ export default {
     },
     changeTruckNum(val, type) {
       this.$set(this.formModel, type, Number(val))
+    },
+    changeLoadNum (val, type) {
+      this.$set(this.formFee, type, val)
     }
   }
 }

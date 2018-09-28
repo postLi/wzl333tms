@@ -77,12 +77,13 @@ export default {
         }
       }).catch(err => {
         this.httpend = true
+        this.errorObj = err
         this.errorMessage = err.errorInfo || err.text || '发生未知错误！'
       })
     },
     stopLoad() { // 请求失败时跳转到普通配载
       if (this.httpend && this.stopani) {
-        this.$message.error(this.errorMessage)
+        this._handlerCatchMsg(this.errorObj)
         setTimeout(() => {
           this.eventBus.$emit('closeCurrentView')
           if (this.errorMessage === '无可智能配载的库存信息') {

@@ -1,8 +1,8 @@
 <template>
   <div class="loadInfo_wrapper">
     <div class="loadInfo_btns clraefix">
-      <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
-      </el-button>
+      <!-- <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
+      </el-button> -->
       <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">保存配载
       </el-button>
       <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">取消
@@ -78,7 +78,7 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '请选择司机电话~', trigger: 'change'}" class="formItemTextDanger">
+                        <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '司机电话不能为空~', trigger: 'change'}" class="formItemTextDanger">
                           <el-input v-model="item.dirverMobile" :maxlength="11"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
@@ -171,10 +171,10 @@ export default {
         return false
       }
     },
-    isEmptyTruck () {
+    isEmptyTruck() {
       if (this.intelligentData.dataList && this.intelligentData.dataList.length === 0) {
         return true
-      }else {
+      } else {
         return false
       }
     }
@@ -427,7 +427,6 @@ export default {
       this.intFreightObj = data.obj
       this.$set(this.intelligentData.dataList[this.intFreightIndex], 'price', this.intFreight)
       this.$set(this.intelligentData.dataList[this.intFreightIndex], 'tmsOrderLoadFee', this.intFreightObj)
-      console.log('getIntFreight', data)
     },
     doAction(type) {
       switch (type) {
@@ -458,7 +457,6 @@ export default {
       });
     },
     addFreight(val, index, item) {
-      console.log(item, 'tmsOrderLoadFee')
       this.intFreightItem = Object.assign({}, item.tmsOrderLoadFee)
       this.intFreightIndex = index
       this.openlntelligent()
@@ -495,9 +493,7 @@ export default {
         pageSize: 100
       }
       getIntnteSMainInfoList(obj).then(data => {
-
         this.truckOptions = data.list
-        console.log('truckOptions', this.truckOptions, data)
       })
     },
     getDrivers(orgid) {
@@ -507,7 +503,6 @@ export default {
         getDrivers().then(data => {
           this.Drivers = data.data
           this.cacheDriverList[orgid] = data.data
-
         })
       }
     },
@@ -542,16 +537,17 @@ export default {
         }
       }
     },
-    handleSelectName(item, index) {
+    handleSelectName(item, index) { // 选择司机
       this.changeDriverKey = Math.random()
       if (this.intelligentData.dataList[index].truckIdNumber === '' || this.intelligentData.dataList[index].truckIdNumber === undefined) {
-        this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
+        // this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
+        this.$set(this.intelligentData.dataList[index], 'truckIdNumber', item.truckIdNumber)
       }
-      this.$set(this.intelligentData.dataList[index], 'dirverMobile', item.dirverMobile)
+      this.$set(this.intelligentData.dataList[index], 'dirverMobile', item.driverMobile)
       this.$set(this.intelligentData.dataList[index], 'dirverName', item.driverName)
       this.isDriverSelect = true
     },
-    handleSelectTruckNum(item, index) {
+    handleSelectTruckNum(item, index) { // 选择车牌
       this.changeTruckKey = Math.random()
       this.$set(this.intelligentData.dataList[index], 'truckIdNumber', item.truckIdNumber)
       this.$set(this.intelligentData.dataList[index], 'dirverMobile', item.driverMobile)
@@ -616,14 +612,15 @@ export default {
       let arr = []
       let data = {} // 数组中的单个对象
       arr = Object.assign([], this.intelligentData.dataList)
+      console.log('arr.length',arr.length)
       arr.forEach((e, index) => {
+        console.log('eeeee111', e)
         this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
-        // if (index === this.intFreightIndex) {
-        //   this.$set(arr[index], 'tmsOrderLoadFee', this.intFreightObj)
-        // } else {}
       })
-
+      this.noLoadListCount = 0
+      this.loadDataArray = []
       arr.forEach((e, index) => {
+        console.log('eeeee222')
         let curinfo = {
           apportionTypeId: this.intelligentLeftData.apportionTypeId,
           arriveOrgid: this.intelligentLeftData.arriveOrgid,
@@ -659,14 +656,14 @@ export default {
         // this.loadDataArray = this.loadDataArray.filter((e, index) => {
         //   return (e.tmsOrderLoadDetailsList && e.tmsOrderLoadDetailsList.length > 0)
         // })
-        this.loadDataArray.forEach(e => { // 计算几个车型 是否有配载清单为空的 如果为空就加一不可以提交
-          if (e.tmsOrderLoadDetailsList.length === 0) {
-            this.noLoadListCount++
-          }
-        })
-
       })
-
+      this.loadDataArray.forEach(e => { // 计算几个车型 是否有配载清单为空的 如果为空就加一不可以提交
+        console.log('e', e)
+        if (e.tmsOrderLoadDetailsList.length === 0) {
+          this.noLoadListCount++
+        }
+      })
+      console.log('this.noLoadListCount0', this.noLoadListCount)
     },
     submitForm() {
       this.saveLoading = true
@@ -678,8 +675,10 @@ export default {
               this.setData()
               if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
                 this.$message.warning('配载清单不可以为空')
+                console.log('noLoadListCount1', this.noLoadListCount)
                 this.noLoadListCount = 0
                 this.saveLoading = false
+                console.log('noLoadListCount2', this.noLoadListCount)
                 return false
               } else {
                 postIntnteSmartLoad(this.loadDataArray).then(res => {
@@ -689,7 +688,7 @@ export default {
                   this.loading = false
                 }).catch(err => {
                   this.saveLoading = false
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               }
@@ -722,11 +721,13 @@ export default {
     delCurTruck(index, item) {
       this.showCurrenFormStyle = []
       this.currentIndex = index - 1
+      console.log('delCurTruck1', index, this.intelligentData.dataList, this.intelligentData.dataList[index])
       this.$emit('delCurTruck', {
         number: index,
         list: this.intelligentData.dataList[index]
       })
       this.intelligentData.dataList.splice(index, 1)
+      console.log('delCurTruck2.1', index, this.intelligentData.dataList, this.intelligentData.dataList.length)
       var len = this.intelligentData.dataList.length
       var flag
       while (len--) {
@@ -899,13 +900,13 @@ export default {
           white-space: normal;
           border-radius: 0px;
         }
-        .loadInfo_tips{
-          position:absolute;
+        .loadInfo_tips {
+          position: absolute;
           top: 50%;
           left: 50%;
           margin-left: -100px;
           margin-top: -10px;
-          color:#999;
+          color: #999;
         }
         .verticalBtn {
           width: 40px;
@@ -970,7 +971,7 @@ export default {
           .loadInfo_collapse_list_content {
             display: flex;
             flex-direction: row;
-             width: 100%;
+            width: 100%;
           }
           .verticalBtn_college {
             display: flex;
@@ -978,7 +979,7 @@ export default {
             justify-content: flex-end;
             .verticalBtnTransfer {
               display: flex;
-              flex-direction: column; 
+              flex-direction: column;
               .el-button+.el-button {
                 margin-left: 0px;
               }
@@ -1038,7 +1039,8 @@ export default {
                   margin-bottom: 0px;
                   word-wrap: nowrap;
                 }
-                .el-form-item--mini .el-form-item__content, .el-form-item--mini .el-form-item__label{
+                .el-form-item--mini .el-form-item__content,
+                .el-form-item--mini .el-form-item__label {
                   min-width: 90px;
                 }
                 .el-input-group__append,

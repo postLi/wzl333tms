@@ -235,7 +235,7 @@ export default {
         console.log(data.data)
         this.loading = false
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
       })
     },
     initInfo() {
@@ -270,7 +270,7 @@ export default {
             }
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
         } else {
