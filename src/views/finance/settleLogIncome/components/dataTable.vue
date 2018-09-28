@@ -353,7 +353,7 @@ export default {
         const feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
 
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
-          this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
+          // this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
@@ -368,6 +368,7 @@ export default {
       }
 
       if (isCopyLastData) { // true-给左边添加一条数据，并修改相关未结费用
+        this.$notify.info({ title: '提示', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
         this.leftTable.push(objectMerge2([], this.rightTable[this.rightTable.length - 1]))
         this.arrLastPartFeeName.forEach(e => { // 左边最后一条 未结=未结-实际
           const noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名

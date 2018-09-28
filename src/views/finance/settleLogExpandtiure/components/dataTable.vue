@@ -421,7 +421,6 @@ export default {
         let feeActual = this.rightTable[this.rightTable.length - 1][el] // 实际费用
         let feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
-          this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
@@ -429,6 +428,7 @@ export default {
         }
       })
       if (this.rightTable[this.rightTable.length - 1].loadFeeTotal !== this.rightTable[this.rightTable.length - 1].loadFeeTotalActual) {
+        this.$notify.info({ title: '提示', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
         isCopyLastData = true
         this.arrLastPartFeeName.push('loadFeeTotal')
         this.arrLastPartActualFeeName.push('loadFeeTotalActual')
@@ -452,7 +452,7 @@ export default {
       //   })
       // })
       // this.$emit('loadTable', actualRightTable)
-      
+
       this.$emit('loadTable', this.rightTable)
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
       console.log(this.countOrgLeftTable.length)
@@ -465,7 +465,7 @@ export default {
         let item = array[i]
         let repeat = false
         for (let j = 0; j < result.length; j++) {
-          console.log(key, '//////111',item[key] , result[j][key])
+          console.log(key, '//////111', item[key], result[j][key])
           if (item[key] === result[j][key]) {
             console.log(key, '//////222')
             if (fee) {
@@ -508,7 +508,7 @@ export default {
           this.orgLeftTable = data
           this.countOrgLeftTable = data
           this.$emit('loadTable', this.rightTable)
-        }).catch((err)=>{
+        }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
         })
@@ -582,7 +582,7 @@ export default {
         this.getPayName()
         this.$emit('loadTable', this.rightTable)
         console.log('-', this.countOrgLeftTable.length)
-        
+
       }
     },
     goRight() { // 数据从右边穿梭到左边
@@ -614,20 +614,20 @@ export default {
     },
     addItem(row, index) { // 添加单行
       clearTimeout(this.addTimer)
-      this.addTimer = setTimeout(()=>{
-          this.selectedRight = []
-          this.selectedRight[index] = row
-          this.doAction('goLeft')
-      },50)
+      this.addTimer = setTimeout(() => {
+        this.selectedRight = []
+        this.selectedRight[index] = row
+        this.doAction('goLeft')
+      }, 50)
     },
     minusItem(row, index) { // 减去单行
       clearTimeout(this.minusTimer)
-      this.minusTimer = setTimeout(()=>{
-         this.selectedLeft = []
-          this.selectedLeft[index] = row
-          this.doAction('goRight')
-      },50)
-     
+      this.minusTimer = setTimeout(() => {
+        this.selectedLeft = []
+        this.selectedLeft[index] = row
+        this.doAction('goRight')
+      }, 50)
+
     },
     addALLList() { // 添加全部
       this.selectedRight = Object.assign([], this.leftTable)

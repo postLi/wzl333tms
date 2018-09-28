@@ -267,11 +267,9 @@ export default {
       //   callback(new Error('不能为空'))
       // } else
       const reg = /^\d+(\.([1-9]|\d[1-9]))?$/
-      if (!reg.test(value) && value !== undefined) {
+      if (!reg.test(value) && value !== undefined && value !== '') {
         callback(new Error('请输入最多两位小数'))
-      } else if (value === '' || value === undefined) {
-        callback()
-      } else {
+      } else{
         callback()
       }
     }

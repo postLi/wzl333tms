@@ -280,14 +280,20 @@ export default {
     },
     delData: {
       handler(cval, oval) { // 删除车型时
+        console.log('delCurTruck3', cval, oval)
         this.isDel = true
         if (cval.list.carLoadDetail && cval.list.carLoadDetail.length > 0) {
           this.selectedRight = []
           cval.list.carLoadDetail.forEach(e => {
             this.selectedRight.push(e)
           })
+          console.log('delCurTruck4', cval, this.selectedRight)
           this.goLeft()
+        } else {
+          console.log('delCurTruck5', cval.list.carLoadDetail, cval, this.orgRightTable.length)
+          this.orgRightTable.splice(this.delData.number, 1)
         }
+        console.log('delCurTruck6', cval.list.carLoadDetail, this.orgRightTable)
       },
       deep: true
     },
@@ -302,7 +308,7 @@ export default {
         let difflen = Number(cval ? cval : 0) - Number(this.orgRightTable.length ? this.orgRightTable.length : 0)
         console.log('*****', difflen, cval)
         if (difflen > 0) {
-          for(let i = 0; i< difflen; i++) {
+          for (let i = 0; i < difflen; i++) {
             this.orgRightTable.push([])
           }
         } else {
@@ -315,9 +321,9 @@ export default {
             }
           })
           this.isDelOtherTruck = true
-           console.log('this.orgRightTable1:',this.orgRightTable[0].length,this.orgRightTable)
+          console.log('this.orgRightTable1:', this.orgRightTable[0].length, this.orgRightTable)
           this.goLeft()
-           console.log('this.orgRightTable2:',this.orgRightTable[0].length,this.orgRightTable)
+          console.log('this.orgRightTable2:', this.orgRightTable[0].length, this.orgRightTable)
         }
       },
       deep: true
@@ -331,7 +337,7 @@ export default {
     addOrgRightTable: {
       handler(cval, oval) {
         if (cval !== oval) {
-          console.log('this.orgRightTable:',this.orgRightTable[0].length,this.orgRightTable)
+          console.log('this.orgRightTable:', this.orgRightTable[0].length, this.orgRightTable)
           this.orgRightTable.push([])
         }
       },
@@ -363,7 +369,7 @@ export default {
   },
   methods: {
     initTable() {
-      console.log( '#$%#$%#$',this.orgRightTable, this.truckIndex)
+      console.log('#$%#$%#$', this.orgRightTable, this.truckIndex)
       this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
       this.rightTable.forEach(e => {
         e.loadAmount = e.repertoryAmount

@@ -176,6 +176,7 @@ export default {
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
+       console.log('delCurTruck2', obj, this.delCurTruckData)
     },
     addOrgRightTable () { // 添加了一辆车型
       this.isAddOrgRightTable = new Date().getTime()

@@ -42,7 +42,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </selectType>
       </el-form-item>
-      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+      <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -93,6 +93,7 @@ export default {
       }
     }
     return {
+      searchAll: '1',
       maxlength: 25,
       searchObjs: {},
       searchForm: {
@@ -132,11 +133,11 @@ export default {
     orgid(newVal) {
       this.searchForm.orgid = newVal
     },
-    searchTime (newVal) {
+    searchTime(newVal) {
       if (newVal) {
-          this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-          this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-        }
+        this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+      }
     },
     // 传到子组件
     searchForm: {
@@ -162,7 +163,7 @@ export default {
     this.onSubmit()
   },
   methods: {
-    getDataObj (obj) {
+    getDataObj(obj) {
       this.searchTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
@@ -180,6 +181,10 @@ export default {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
         this.searchForm.shipFromOrgid = this.orgid
+        this.searchAll = '1'
+        setTimeout(() => {
+          this.searchAll = ''
+        }, 50)
       })
     }
   }

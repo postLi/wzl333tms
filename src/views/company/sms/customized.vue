@@ -22,11 +22,7 @@
               <!-- <el-tooltip popper-class="popcontent" effect="light" :content="scope.row.templateContent" placement="bottom">
                  <span>{{scope.row.templateContent}}</span>
               </el-tooltip> -->
-              <el-popover
-                placement="bottom"
-                width="400"
-                trigger="hover"
-                :content="scope.row.templateContent">
+              <el-popover placement="bottom" width="400" trigger="hover" :content="scope.row.templateContent">
                 <span slot="reference">{{scope.row.templateContent}}</span>
               </el-popover>
             </template>
@@ -97,30 +93,36 @@ export default {
   methods: {
     getSmsDocText() { // 免费短信文案提示
       getSmsDocText(this.otherinfo.orgid).then(data => {
-        this.smsDocText = data.smsDocText
-      })
+          this.smsDocText = data.smsDocText
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
-    postSmsSign() {
+    postSmsSign() { // 签名
       postSmsSign(this.otherinfo.orgid).then(data => {
-        this.signName = data.data.modifySign
-        if (data.data.modifyCount === 1) {
-          this.isShowSignBtn = true
-        } else {
-          this.isShowSignBtn = false
-        }
-      })
+          this.signName = data.data.modifySign
+          if (data.data.modifyCount === 1) {
+            this.isShowSignBtn = true
+          } else {
+            this.isShowSignBtn = false
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     fetchList() {
       this.loading = true
       this.searchQuery.vo.orgId = this.otherinfo.orgid
       postSmsTemplateLogList(this.searchQuery).then(data => {
-        this.infoList = data.list
-        this.infoList.forEach(e => {
-            e.sendStatus = e.sendStatus === 0   // true-0 可发送  false-1 不发送
+          this.infoList = data.list
+          this.infoList.forEach(e => {
+            e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
           })
-        this.total = data.total
-        this.loading = false
-      })
+          this.total = data.total
+          this.loading = false
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
@@ -158,33 +160,18 @@ export default {
       this.fetchList()
     },
     handleEnable(newVal, row) { // true-0 可发送  false-1 不发送
-      	const obj = {
-      		id: row.id,
-      		sendStatus: newVal ? 0 : 1
-      	}
-      	udpateSmsTemplateLogStatus(obj).then(data => {
-      		this.fetchList()
-      		this.$message.success('修改发送状态成功！')
-      	})
-      	.catch(err => {
-      		row.sendStatus = !newVal
-      		this._handlerCatchMsg(err)
-      	})
-        // let obj = {
-        //   companyId: this.otherinfo.companyId,
-        //   orgId: this.otherinfo.orgid,
-        //   remindTargetCode: row.remindTargetCode,
-        //   sendNodeCode: row.sendNodeCode,
-        //   shipId: '1042347411831259136',
-        //   phone: '18318186217'
-        // }
-        // sendSmsByTemplateLog(obj).then(data => {
-        //     this.fetchList()
-        //   })
-        //   .catch(err => {
-        //     row.sendStatus = !row.sendStatus
-        //     this._handlerCatchMsg(err)
-        //   })
+      const obj = {
+        id: row.id,
+        sendStatus: newVal ? 0 : 1
+      }
+      udpateSmsTemplateLogStatus(obj).then(data => {
+          this.fetchList()
+          this.$message.success('修改发送状态成功！')
+        })
+        .catch(err => {
+          row.sendStatus = !newVal
+          this._handlerCatchMsg(err)
+        })
     }
   }
 }
