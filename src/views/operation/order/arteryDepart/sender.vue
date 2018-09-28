@@ -302,7 +302,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
         this.loading = false
       })
     },
@@ -477,7 +477,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error('错误：' + (err.errorInfo || err.text || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
             }).catch(() => {
@@ -518,7 +518,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error('错误：' + (err.errorInfo || err.text || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
             }).catch(() => {

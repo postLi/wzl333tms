@@ -162,7 +162,7 @@ export default {
         },1000)
         this.loading = false
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
         this.$router.push({ path: '../arteryDepart' })
         this.eventBus.$emit('closeCurrentView')
         this.loading = false

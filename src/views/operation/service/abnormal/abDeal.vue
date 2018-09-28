@@ -66,7 +66,7 @@ export default {
       this.licenseTypes = resArr[1]
       this.loading = false
     }).catch(err => {
-      this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+      this._handlerCatchMsg(err)
       this.loading = false
     })
   },
@@ -227,7 +227,7 @@ export default {
         this.loading = false
         // console.log(data)
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

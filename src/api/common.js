@@ -144,6 +144,11 @@ export function postcreaterQueryCriteriaLog(data) {
       this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
     })
 }
+
+export function deleteQueryLogListById(id) {
+  return fetch.get('/api-system/system/tmsuserquerycriterialog/v1.1/deleteQueryCriteriaLogById?id=' + id)
+}
+
 /**
  * 根据网点和模块查询表头设置信息
  * @param {*} orgId 当前网点id

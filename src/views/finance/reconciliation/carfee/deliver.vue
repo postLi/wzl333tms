@@ -195,7 +195,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           this.total = data.total
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -298,7 +298,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {
@@ -332,7 +332,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {

@@ -402,7 +402,7 @@
             this.form = res
             this.form.disposeTime = new Date()
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
           })
         } else if (this.isCheck) {
           this.popTitle = '查看明细'
@@ -417,7 +417,7 @@
             //   this.form.disposeResult = ''
             // }
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
           })
         } else if (this.isDeal) {
           this.popTitle = '异常处理'
@@ -488,7 +488,7 @@
           this.loading = false
           // console.log(res, 'this.form.abnormalNo: ', this.form)
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -514,7 +514,7 @@
           this.resInfo = res.list
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },

@@ -415,7 +415,7 @@
           this.netWorkType = resArr[0]
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -513,7 +513,7 @@
               }
               this.loading = false
             }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              this._handlerCatchMsg(err)
               this.loading = false
             })
           } else {
