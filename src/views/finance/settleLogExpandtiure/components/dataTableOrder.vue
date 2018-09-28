@@ -22,6 +22,8 @@
         </el-table-column>
         <el-table-column prop="shipGoodsSn" sortable label="货号" width="150">
         </el-table-column>
+        <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="150">
+        </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
@@ -118,7 +120,7 @@
         </el-table-column>
         <el-table-column prop="hadKickBackPay" sortable label="已结回扣" width="120">
         </el-table-column>
-         <el-table-column prop="kickBackPayActual" sortable label="实结回扣" width="120">
+        <el-table-column prop="kickBackPayActual" sortable label="实结回扣" width="120">
         </el-table-column>
         <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
@@ -352,11 +354,9 @@ export default {
       }
 
       this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
-        if (this.rightTable[index]) {
-          return el.shipSn !== this.rightTable[index].shipSn
-        } else {
-          return true
-        }
+        return -1 === this.rightTable.findIndex(e => {
+          return el.shipSn === e.shipSn
+        })
       })
       if (this.leftTable.length !== 0) {
         this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
@@ -556,13 +556,13 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
-          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.rightTable.push(e)
+          // this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+          //   return em.shipSn !== e.shipSn
+          // })
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
+          this.rightTable.push(e)
           // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
           //   return el.shipSn !== e.shipSn
           // })
@@ -581,18 +581,18 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格 选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
-          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
+          // this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+          //   return el.shipSn !== e.shipSn
+          // })
+          // this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => {
+          //   return el.shipSn !== e.shipSn
+          // })
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)
           this.rightTable = objectMerge2([], this.rightTable).filter(el => { // 源数据减去被穿梭的数据
-             return el.shipSn !== e.shipSn
-           })
+            return el.shipSn !== e.shipSn
+          })
         })
         this.leftTable = this.uniqueArray(objectMerge2(this.leftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
         this.countOrgLeftTable = this.uniqueArray(objectMerge2(this.countOrgLeftTable), 'shipSn', this.arrLastPartActualFeeName) // 去重
@@ -602,14 +602,20 @@ export default {
       }
     },
     addItem(row, index) { // 添加单行
-      this.selectedRight = []
-      this.selectedRight[index] = row
-      this.doAction('goLeft')
+      clearTimeout(this.addTimer)
+      this.addTimer = setTimeout(() => {
+        this.selectedRight = []
+        this.selectedRight[index] = row
+        this.doAction('goLeft')
+      }, 50)
     },
     minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
+      clearTimeout(this.minusTimer)
+      this.minusTimer = setTimeout(() => {
+        this.selectedLeft = []
+        this.selectedLeft[index] = row
+        this.doAction('goRight')
+      }, 50)
     },
     addALLList() { // 添加全部
       this.selectedRight = Object.assign([], this.leftTable)
