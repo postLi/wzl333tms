@@ -1,5 +1,5 @@
 <template>
-  <!-- 数据透视二 -->
+  <!-- 网点业务类型 -->
   <div class="tab-wrapper tab-wrapper-100">
     <keep-alive v-bind:is="component"></keep-alive>
   </div>

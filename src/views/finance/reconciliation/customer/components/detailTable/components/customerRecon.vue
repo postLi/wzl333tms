@@ -1055,30 +1055,32 @@
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.id
         getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
-          const data = res.data
-          this.messageArr = data.tmsFinanceBillCheckDto
-          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
-          console.log('this.currentFeeTypeIds_res/////edit', data.tmsFinanceBillCheckDto.feeTypeId, this.currentFeeTypeIds)
-          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
-          this.infoMessage(this.messageArr)
-          this.infoList()
-          data.customerDetailDtoList.forEach((el, val) => {
-            if (el.type === 1) {
-              this.dealInfo.push(el)
-              this.dealInfoData.push(el)
-            //
-            } else if (el.type === 2) {
-              this.dealPayInfo.push(el)
-              this.dealPayInfoData.push(el)
-            } else if (el.type === 3) {
-              this.alreadyInfo.push(el)
-              this.alreadyInfoData.push(el)
-            } else {
-              this.alreadyPayInfo.push(el)
-              this.alreadyPayInfoData.push(el)
-            }
-          })
-          this.loading = false
+          if (res) {
+            const data = res
+            this.messageArr = data.tmsFinanceBillCheckDto
+            this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+            this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
+            this.infoMessage(this.messageArr)
+            this.infoList()
+            data.customerDetailDtoList.forEach((el, val) => {
+              if (el.type === 1) {
+                this.dealInfo.push(el)
+                this.dealInfoData.push(el)
+              //
+              } else if (el.type === 2) {
+                this.dealPayInfo.push(el)
+                this.dealPayInfoData.push(el)
+              } else if (el.type === 3) {
+                this.alreadyInfo.push(el)
+                this.alreadyInfoData.push(el)
+              } else {
+                this.alreadyPayInfo.push(el)
+                this.alreadyPayInfoData.push(el)
+              }
+            })
+            this.loading = false
+          }
+          
         }).catch(err => {
           this._handlerCatchMsg(err)
         })
