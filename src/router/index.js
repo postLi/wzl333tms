@@ -70,7 +70,7 @@ export const constantRouterMap = [
       meta: {
         title: '运营控制台',
         noCache: false,
-        'code': 'HOME_PAGE_1',
+        'code': 'HOME_PAGE_4',
         'proute': 'dashboard'
       }
     }, {
@@ -92,6 +92,7 @@ export const constantRouterMap = [
       meta: {
         title: '系统体检',
         noCache: false,
+        'code': 'HOME_PAGE_2',
         'proute': 'dashboard'
       }
     }, {
@@ -128,6 +129,5 @@ export const asyncRouterMap = [
   Finance,
   Report,
   Company,
-  Service,
   { path: '*', redirect: '/404', hidden: true }
 ]
