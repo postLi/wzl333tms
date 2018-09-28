@@ -341,6 +341,11 @@ export default {
       postHomedetail(this.otherinfo.orgid, this.searchQuery.vo).then(data => {
         if (data) {
           this.thedata = data
+          for(var i in data){
+            if(data[i]===null){
+              data[i] = ' - '
+            }
+          }
           this.setInChart()
           this.setCompareChart()
         }

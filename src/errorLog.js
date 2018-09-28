@@ -7,6 +7,7 @@ import { cacheDEVInfo } from '@/utils/'
 
 if (process.env.NODE_ENV !== 'production') {
   window.addEventListener('error', function() {
+    // (msg, url, line, col, error)
     console.error('window error:', arguments)
   }, true)
   window.addEventListener('unhandledrejection', event => {
@@ -19,8 +20,11 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 Vue.config.errorHandler = function(err, vm, info, a) {
-  console.error('errorHandler:', err, info, vm, a)
-  cacheDEVInfo('js2', err)
+  // err 包含 stack 跟 message 属性
+  console.error('errorHandler:', err, '|', info, '|', vm)
+  // console.log(Object.getOwnPropertyNames(err))
+
+  cacheDEVInfo('j2s', err.stack || err.message || err)
   // Don't ask me why I use Vue.nextTick, it just a hack.
   // detail see https://forum.vuejs.org/t/dispatch-in-vue-config-errorhandler-has-some-problem/23500
   Vue.nextTick(() => {

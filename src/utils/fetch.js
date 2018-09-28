@@ -84,7 +84,7 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
-      let data = {
+      const data = {
         url: response.config.url,
         method: response.config.method,
         params: response.config.params,
@@ -99,7 +99,7 @@ service.interceptors.response.use(
       console.warn('请求结果：', res)
       console.groupEnd('=============状态不对出错==============：')
       // 如果是非正式环境，缓存最近30条信息
-      cacheDEVInfo('http',data)
+      cacheDEVInfo('http', data)
       /* Message({
         message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.text || '') + ' : ' + (res.status || '')),
         type: 'error',

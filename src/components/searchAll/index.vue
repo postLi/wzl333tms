@@ -7,6 +7,7 @@
       placeholder="请选择"
       :filter-method="querySearchAsync"
       @change="handleSelect"
+      @focus="initdata"
       :loading="loading">
       <el-option
         v-for="(item,index) in options4"
@@ -83,9 +84,18 @@ export default {
     }
   },
   mounted() {
-    this.fetchAllloadAll()
+    // this.fetchAllloadAll()
   },
   methods: {
+    initdata() {
+      if (!this.inited) {
+        this.inited = true
+        this.loading = true
+        this.fetchAllloadAll().then(res=>{
+          this.loading = false
+        })
+      }
+    },
     Custom() {
       this.isModify = true
       this.popVisible = true

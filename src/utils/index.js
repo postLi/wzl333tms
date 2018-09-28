@@ -941,8 +941,9 @@ export function cacheDEVInfo(pfix, data) {
       var find = false
       // 第一遍查找空位，有就插进去
       for (var i = 0; i < maxlen; i++) {
+        var date1 = new Date()
         if (!localStorage[pfix + i]) {
-          localStorage[pfix + i] = (+new Date()) + '||' + data
+          localStorage[pfix + i] = (+date1) + '||' + date1.toLocaleString() + ' || '+ data
           find = true
           break
         }
@@ -954,12 +955,14 @@ export function cacheDEVInfo(pfix, data) {
           if (j < (maxlen - 1)) {
             var fd2 = localStorage[pfix + (j + 1)].split('||')
             if ((+fd2[0]) > (+fd[0])) {
-              localStorage[pfix + j] = (+new Date()) + '||' + data
+              var date2 = new Date()
+              localStorage[pfix + j] = (+date2) + '||' + date2.toLocaleString() + ' || ' + data
               break
             }
           } else {
             // 如果是最后一条，则直接替换更新
-            localStorage[pfix + j] = (+new Date()) + '||' + data
+            var date3 = new Date()
+            localStorage[pfix + j] = (+date3) + ' || '+ date3.toLocaleString() + '||' + data
             break
           }
         }

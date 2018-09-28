@@ -187,7 +187,10 @@ export default {
     // this.$emit('success', [])
 
     const code = this.code
-    const rcode = this.$route.meta.code
+    let rcode = this.$route.meta.code
+
+    // 先不从链接上拿数据
+    rcode = ''
 
    // 1 如果显示声明不用请求服务器则不作处理
     if (code === 'NOSET') {
