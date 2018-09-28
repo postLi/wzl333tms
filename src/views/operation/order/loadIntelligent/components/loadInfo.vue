@@ -612,11 +612,15 @@ export default {
       let arr = []
       let data = {} // 数组中的单个对象
       arr = Object.assign([], this.intelligentData.dataList)
+      console.log('arr.length',arr.length)
       arr.forEach((e, index) => {
+        console.log('eeeee111', e)
         this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
       })
       this.noLoadListCount = 0
+      this.loadDataArray = []
       arr.forEach((e, index) => {
+        console.log('eeeee222')
         let curinfo = {
           apportionTypeId: this.intelligentLeftData.apportionTypeId,
           arriveOrgid: this.intelligentLeftData.arriveOrgid,
