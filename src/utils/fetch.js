@@ -4,6 +4,7 @@ import store from '@/store'
 import { getToken, removeToken } from '@/utils/auth'
 // 引入事件对象
 import { eventBus } from '@/eventBus'
+import { cacheDEVInfo } from '@/utils/'
 
 // 创建axios实例
 const service = axios.create({
@@ -83,13 +84,22 @@ service.interceptors.response.use(
     const res = response.data
 
     if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
+      let data = {
+        url: response.config.url,
+        method: response.config.method,
+        params: response.config.params,
+        data: response.config.data,
+        res: res
+      }
       console.group('=============状态不对出错==============：')
-      console.warn('请求链接：', response.config.url)
-      console.warn('请求方法：', response.config.method)
-      console.warn('请求链接参数：', response.config.params)
-      console.warn('请求body参数：', response.config.data)
+      console.warn('请求链接：', data.url)
+      console.warn('请求方法：', data.method)
+      console.warn('请求链接参数：', data.params)
+      console.warn('请求body参数：', data.data)
       console.warn('请求结果：', res)
       console.groupEnd('=============状态不对出错==============：')
+      // 如果是非正式环境，缓存最近30条信息
+      cacheDEVInfo('http',data)
       /* Message({
         message: ((res.errorInfo || '') + ' : ' + (res.msg || '') + ' : ' + (res.code || '') + ' : ' + (res.text || '') + ' : ' + (res.status || '')),
         type: 'error',

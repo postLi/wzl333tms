@@ -927,3 +927,45 @@ export const uniqueArray = (array, key) => {
   }
   return result
 }
+/**
+ * 缓存开发环境的一些操作数据
+ * @param {*} pfix 缓存前缀
+ * @param {*} data 缓存数据
+ */
+export function cacheDEVInfo(pfix, data) {
+  // 如果是非正式环境，缓存最近50条js报错信息
+  if (window.location.host.indexOf('28tms.cn') === -1) {
+    try {
+      data = JSON.stringify(data)
+      var maxlen = 50
+      var find = false
+      // 第一遍查找空位，有就插进去
+      for (var i = 0; i < maxlen; i++) {
+        if (!localStorage[pfix + i]) {
+          localStorage[pfix + i] = (+new Date()) + '||' + data
+          find = true
+          break
+        }
+      }
+      // 第二遍找旧值，有就插进去
+      if (!find) {
+        for (var j = 0; j < maxlen; j++) {
+          var fd = localStorage[pfix + j].split('||')
+          if (j < (maxlen - 1)) {
+            var fd2 = localStorage[pfix + (j + 1)].split('||')
+            if ((+fd2[0]) > (+fd[0])) {
+              localStorage[pfix + j] = (+new Date()) + '||' + data
+              break
+            }
+          } else {
+            // 如果是最后一条，则直接替换更新
+            localStorage[pfix + j] = (+new Date()) + '||' + data
+            break
+          }
+        }
+      }
+    } catch (err) {
+      console.log('转换数据出错了：', err, data)
+    }
+  }
+}

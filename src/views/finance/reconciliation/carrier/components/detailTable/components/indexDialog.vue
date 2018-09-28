@@ -163,7 +163,6 @@
       },
 
       submitForm(formName) {
-        alert('')
         let data = {
           id:'',
           checkStatus:1
