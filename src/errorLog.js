@@ -26,7 +26,8 @@ Vue.config.errorHandler = function(err, vm, info, a) {
  // err.stack || err.message || err
   cacheDEVInfo('j2s', {
     stack: err.stack,
-    message: err.message
+    message: err.message,
+    url: window.location.href
   })
   // Don't ask me why I use Vue.nextTick, it just a hack.
   // detail see https://forum.vuejs.org/t/dispatch-in-vue-config-errorhandler-has-some-problem/23500

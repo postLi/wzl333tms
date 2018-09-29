@@ -56,6 +56,11 @@ export default {
     trunk
   },
   watch: {
+    ispop(newVal) {
+      if (newVal) {
+        // this.init()
+      }
+    },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
@@ -74,7 +79,9 @@ export default {
     this.init()
   },
   mounted() {
-    // this.init()
+    // if (this.ispop) {
+    this.init()
+    // }
   },
   data() {
     return {
@@ -126,7 +133,7 @@ export default {
         this.showError()
         return false
       }
-
+      console.log('initOrderDetail err:', route)
       this.initOrder()
     },
     showError() {

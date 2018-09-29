@@ -643,16 +643,16 @@ export default {
             // this.isModify = false
             this.isGrant = true
             this.searchQuery.vo.receiptIds = ids
-            putUpdateReceipt(this.searchQuery.vo).then(res => {
-              this.$message({
-                message: '回单发放成功~',
-                type: 'success'
-              })
-              this.fetchAllreceipt()
-              return false
-            }).catch(err => {
-              this._handlerCatchMsg(err)
-            })
+            // putUpdateReceipt(this.searchQuery.vo).then(res => {
+            //   this.$message({
+            //     message: '回单发放成功~',
+            //     type: 'success'
+            //   })
+            //   this.fetchAllreceipt()
+            //   return false
+            // }).catch(err => {
+            //   this._handlerCatchMsg(err)
+            // })
           } else {
             this.$message.warning('请选择未发放项~')
           }

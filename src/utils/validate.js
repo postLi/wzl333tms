@@ -62,6 +62,7 @@ export function validateMobile(mobile) {
 }
 
 // 正则匹配
+// /^\+?([1-9]\d*|0)(\.\d|\.\d\d)?$/ 整数带俩位小数
 export const REGEX = {
   // 用户名
   USERNAME: /^([0-9a-zA-Z]|[\u0391-\uFFE5]){2,}$/,
