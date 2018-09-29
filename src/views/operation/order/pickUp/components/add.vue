@@ -225,10 +225,10 @@
             { required: true, validator: this.validateIsEmpty('件数不能为空') }
           ],
           'tmsOrderPickup.pickupVolume': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.pickupWeight': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.carriage': [
             { validator: validatetruckFee, mtrigger: 'blur' }
@@ -242,7 +242,7 @@
             // { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.collectionFee': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
             // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
           ],
           'tmsTruck.truckIdNumber': [
@@ -430,7 +430,7 @@
         this.form.tmsOrderPickup.toCityName = item.toCityName
         this.form.tmsOrderPickup.id = item.id
         this.form.tmsOrderPickup.truckFee = item.truckFee
-      console.log('infoData', item)
+        console.log('infoData', item)
         this.form.tmsTruck.truckIdNumber = item.truckIdNumber
         this.form.tmsTruck.truckType = item.truckType
         this.form.tmsTruck.truckUnit = item.truckUnit

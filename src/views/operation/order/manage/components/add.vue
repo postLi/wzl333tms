@@ -84,13 +84,15 @@
             <li>
               <p>重量(kg)</p>
               <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoWeight" v-numberOnly :disabled="isDbclick"></el-input>
+                <input class="nativeinput order_com" :value="form.tmsOrderCargoList.cargoWeight" @change="(e)=>{setInputVal(e.target.value, 'cargoWeight')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
               </el-form-item>
             </li>
             <li>
               <p>体积(方)</p>
               <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoVolume" v-numberOnly :disabled="isDbclick"></el-input>
+                <input class="nativeinput order_com" :value="form.tmsOrderCargoList.cargoVolume" @change="(e)=>{setInputVal(e.target.value, 'cargoVolume')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
               </el-form-item>
             </li>
             <li>
@@ -992,7 +994,7 @@
             border-color: transparent;
           }
         }
-        .el-input__inner {
+        .el-input__inner, .nativeinput {
           width: 245%;
         }
         .el-form-item__error {
@@ -1000,7 +1002,7 @@
         }
       }
 
-      .el-input__inner {
+      .el-input__inner, .nativeinput {
         border-color: transparent;
         border-radius: 0;
         text-align: center;

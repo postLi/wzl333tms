@@ -92,7 +92,7 @@ export default {
     this.eventBus.$on('showCreateOrder', (orderobj) => {
           // 避免重复触发的事件
       if (!this.showCreateVisible) {
-        const data = objectMerge2(this._orderobj, orderobj)
+        const data = objectMerge2({}, this._orderobj, orderobj)
         console.log('showCreateOrder:', orderobj, data)
         this.orderobj = data
         this.showCreate = true
