@@ -74,7 +74,7 @@ export default {
     this.init()
   },
   mounted() {
-    // this.init()
+    this.init()
   },
   data() {
     return {

@@ -472,17 +472,17 @@
       orgid(newVal) {
       },
       info() {
-        this._init()
+        this.s_init()
       },
       isModify() {
-        this._init()
+        this.s_init()
       },
       isDbclick() {
-        this._init()
+        this.s_init()
       }
     },
     methods: {
-      _init() {
+      s_init() {
         if (this.isModify) {
           this.popTitle = '修改订单'
           this.orderSn = this.info.orderSn
