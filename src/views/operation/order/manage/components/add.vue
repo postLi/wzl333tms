@@ -342,27 +342,27 @@
           'tmsOrderCargoList.cargoVolume': [{
             validator: validateVolumnWeight
           },
-            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }],
+            { message: '只能输入数字', pattern: REGEX.Number_point }],
           'tmsOrderCargoList.cargoWeight':
           [{
             validator: validateVolumnWeight
           },
-              { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
+              { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.description': [
             { validator: validateOnlyNumberAndLetter }
           ],
           'tmsOrderCargoList.agencyFund': [
-            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.commissionFee': [
-            { message: '只能输入数字', pattern: REGEX.Number_big }
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.shipFee': [
-            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.productPrice': [
-            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ]
         },
         btnsize: 'mini',
