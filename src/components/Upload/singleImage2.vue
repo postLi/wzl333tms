@@ -141,7 +141,7 @@ export default {
   methods: {
     init() {
         // 从后台获取policy
-      getUploadPolicy().then(data => {
+      return getUploadPolicy().then(data => {
         this.upload.OSSAccessKeyId = data.accessid
         this.upload.policy = data.policy
         this.upload.signature = data.signature
@@ -213,9 +213,20 @@ export default {
           this.$message.error('上传头像图片大小不能超过 5MB!')
           reject(false)
         } else {
+          console.log('11111111')
+          // 上传前统一取一下凭证
+          this.init().then(res => {
+          console.log('22222222')
             // 设置文件名
-          this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
-          resolve(true)
+            this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
+            resolve(true)
+          })
+          .catch(err => {
+            console.log('333333')
+            this._handlerCatchMsg(err)
+            resolve(false)
+          })
+           
         }
       })
     },

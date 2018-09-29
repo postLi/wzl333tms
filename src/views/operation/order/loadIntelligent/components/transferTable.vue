@@ -294,6 +294,7 @@ export default {
           this.orgRightTable.splice(this.delData.number, 1)
         }
         console.log('delCurTruck6', cval.list.carLoadDetail, this.orgRightTable)
+
       },
       deep: true
     },
@@ -337,7 +338,6 @@ export default {
     addOrgRightTable: {
       handler(cval, oval) {
         if (cval !== oval) {
-          console.log('this.orgRightTable:', this.orgRightTable[0].length, this.orgRightTable)
           this.orgRightTable.push([])
         }
       },
@@ -517,6 +517,7 @@ export default {
           e.loadVolume = e.repertoryVolume
           console.log('goRight', this.truckIndex, this.rightTable, this.orgRightTable, this.orgRightTable[this.truckIndex])
           this.rightTable.push(e)
+          this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
           this.orgRightTable[this.truckIndex].push(e)
           this.leftTable = this.leftTable.filter(el => {
             return el.repertoryId !== e.repertoryId

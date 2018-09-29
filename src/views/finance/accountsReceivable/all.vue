@@ -149,6 +149,7 @@ export default {
         'prop': 'totalStatusCn'
       }, {
         'label': '现付',
+        width: '120',
         'prop': 'nowPayFee'
       }, {
           'label': '已结现付',
@@ -391,6 +392,7 @@ export default {
     },
     // 计算总数
     getSummaries(param) {
+      // const propsArr = ['_index|2|单', 'nowPayFee','finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee|', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'finishChangeFee', 'notChangeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param)
     }
   }
