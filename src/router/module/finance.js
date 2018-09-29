@@ -263,21 +263,21 @@ export default {
           icon: 'QQ',
           name: '短驳对账',
           component: _import('finance/reconciliation/carfee/shortDepart'),
-          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '短驳对账', noCache: false, code: 'FINANCE_CARFEE_SHORT' }
+          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '短驳对账', noCache: true, code: 'FINANCE_CARFEE_SHORT' }
         },
         {
           path: '/finance/reconciliation/carfee/artery',
           icon: 'QQ',
           name: '干线对账',
           component: _import('finance/reconciliation/carfee/artery'),
-          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '干线对账', noCache: false, code: 'FINANCE_CARFEE_LINE' }
+          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '干线对账', noCache: true, code: 'FINANCE_CARFEE_LINE' }
         },
         {
           path: '/finance/reconciliation/carfee/deliver',
           icon: 'QQ',
           name: '送货对账',
           component: _import('finance/reconciliation/carfee/deliver'),
-          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '送货对账', noCache: false, code: 'FINANCE_CARFEE_SEND' }
+          meta: { role: ['admin'], ptitle: '车费对账', istab: true, title: '送货对账', noCache: true, code: 'FINANCE_CARFEE_SEND' }
         }
       ]
     }
@@ -378,7 +378,7 @@ export default {
     hidden: true,
     name: '承运商对账明细',
     component: _import('finance/reconciliation/carrier/components/detailTable/index'),
-    meta: { role: ['admin'], title: '承运商对账', noCache: false, code: 'FINANCE_CARRIERDETAIL' }
+    meta: { role: ['admin'], title: '承运商对账', noCache: true, code: 'FINANCE_CARRIERDETAIL' }
   },
   {
     path: '/finance/reconciliation/customer/detailTable',
@@ -386,7 +386,7 @@ export default {
     hidden: true,
     name: '客户对账明细',
     component: _import('finance/reconciliation/customer/components/detailTable/index'),
-    meta: { role: ['admin'], title: '客户对账', noCache: false, code: 'FINANCE_CUSTOMERDETAIL' }
+    meta: { role: ['admin'], title: '客户对账', noCache: true, code: 'FINANCE_CUSTOMERDETAIL' }
   },
     // 承运商对账-创建对账
   {

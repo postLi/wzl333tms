@@ -97,8 +97,8 @@ export function postDetailList(data) {
 /**
  * 查看结算单
  */
-export function getSettlementInfo(flowId) {
-  return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId)
+export function getSettlementInfo(flowId, settlementId) {
+  return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId + '&settlementId=' + settlementId)
 }
 /**
  * 查看费用类型

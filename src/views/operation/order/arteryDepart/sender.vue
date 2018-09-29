@@ -55,7 +55,8 @@ import {
   postSelectLoadMainInfoList,
   putLoadDepart,
   putCancelLoadDepart,
-  putCancelLoadTruck
+  putCancelLoadTruck,
+  getLookContract
 } from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
@@ -299,6 +300,7 @@ export default {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
+
         this.total = data.total
         this.loading = false
       }).catch(err => {
@@ -356,18 +358,20 @@ export default {
           break
           // 合同
         case 'import':
-          let str = '?'
-          for (const item in this.selected[0]) {
-            str += item + '=' + (this.selected[0][item] === null ? '' : this.selected[0][item]) + '&'
-          }
-          str += '&checkBillName=货物运输合同'
-          // JSON.stringify(this.formModel)
-          const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
-          PrintContract(encodeURI(path))
-          // PrintInFullPage({
-          //   data: this.selected.length ? this.selected : this.usersArr,
-          //   columns: this.tableColumn
-          // })
+          let contractObj = {}
+          let selectObj = objectMerge2({}, this.selected[0])
+          getLookContract(selectObj.id).then(data => {
+            contractObj = Object.assign({}, data.data)
+            this.$set(selectObj, 'checkBillName', contractObj.contractName)
+            let str = '?'
+            for (const item in selectObj) {
+              str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
+            }
+            const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
+            PrintContract(encodeURI(path))
+          }).catch(err => {
+            this._handlerCatchMsg(err)
+          })
           break
           // 新增配载
         case 'add':

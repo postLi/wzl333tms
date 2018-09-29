@@ -233,7 +233,7 @@ export default {
         label: 'smsTemplateCount',
         title: '短信设置',
         message: '已经有' + this.valueCount + '个短信模板',
-        message1: '你还没有添加承运商，请点击右边添加按钮',
+        message1: '你还没有维护短信模板，请点击右边设置按钮',
         message2: '需要设置点击右边设置按钮',
         button1: '设置',
         button2: '设置'

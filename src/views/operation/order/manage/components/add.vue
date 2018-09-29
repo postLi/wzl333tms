@@ -155,14 +155,15 @@
 
               <td>
                 <el-form-item label="代收款" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.agencyFund" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only:point></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.agencyFund" @change="(e)=>{setInputVal(e.target.value, 'agencyFund')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="代收款手续费" prop="tmsOrderCargoList.commissionFee">
-                  <el-input v-model="form.tmsOrderCargoList.commissionFee" :maxlength="8" auto-complete="off" clearable
-                            class="order_com" :disabled="isDbclick"></el-input>
+                  <input class="nativeinput order_com" :value="form.tmsOrderCargoList.commissionFee" @change="(e)=>{setInputVal(e.target.value, 'commissionFee')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+                 
                 </el-form-item>
               </td>
             </tr>
@@ -175,14 +176,14 @@
 
               <td>
                 <el-form-item label="运费" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.shipFee" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only:point></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.shipFee" @change="(e)=>{setInputVal(e.target.value, 'shipFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="声明价值" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.productPrice" @change="(e)=>{setInputVal(e.target.value, 'productPrice')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
             </tr>
@@ -469,36 +470,17 @@
       orgid(newVal) {
       },
       info() {
-        if (this.isModify) {
-          this.popTitle = '修改订单'
-          this.orderSn = this.info.orderSn
-
-          this.infoData(this.info)
-        } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-          }
+        this._init()
       },
       isModify() {
-        if (this.isModify) {
-          this.popTitle = '修改订单'
-          this.orderSn = this.info.orderSn
-
-          this.infoData(this.info)
-        } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-          }
+        this._init()
       },
       isDbclick() {
+        this._init()
+      }
+    },
+    methods: {
+      _init() {
         if (this.isModify) {
           this.popTitle = '修改订单'
           this.orderSn = this.info.orderSn
@@ -512,9 +494,10 @@
           this.popTitle = '新增订单'
           this.reset()
         }
-      }
-    },
-    methods: {
+      },
+      setInputVal(val, name) {
+        this.$set(this.form.tmsOrderCargoList, name, val)
+      },
       changeOrderTo(item) {
       },
       watchData() {
@@ -537,6 +520,12 @@
         // this.ke1yVal = Math.random()
       },
       infoData(item) {
+        if (this.networkFlog) { // 如果是网络订单
+          this.orderSn = ''
+          this.$set(this.form.tmsOrderPre, 'orderFromOrgid', this.otherinfo.companyId)
+        }
+        console.log('item::', item)
+
         this.form.tmsOrderCargoList.cargoName = item.cargoName
         this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
         this.form.tmsOrderCargoList.cargoWeight = item.cargoWeight
@@ -569,6 +558,7 @@
         // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
         this.form.tmsOrderPre.orderEffective = item.orderEffective
         this.form.tmsOrderPre.id = item.id
+        this.form.tmsOrderPre.orderFromOrgid = item.orderFromOrgid
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
         this.ke1yVal = Math.random()
       },
@@ -667,10 +657,10 @@
               promiseObj = postModifyOrder(data)
             } else {
               if (this.networkFlog) {
-              promiseObj = postAddNetworkOrder(data)
-            } else {
-              promiseObj = postAddOrder(data)
-            }
+                promiseObj = postAddNetworkOrder(data)
+              } else {
+                promiseObj = postAddOrder(data)
+              }
             }
 
             promiseObj.then(res => {
@@ -688,6 +678,7 @@
         })
       },
       newinfoData() {
+        this.orderSn = ''
         this.form = {
           customSend: {
             // 发货人
@@ -779,6 +770,11 @@
     bottom: auto;
     min-width: 870px;
     max-width: 870px;
+
+    .nativeinput{
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+    }
     .el-input__inner {
       color: #3e9ff1;
     }

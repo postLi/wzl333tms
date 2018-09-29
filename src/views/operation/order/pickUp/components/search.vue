@@ -32,7 +32,7 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
-import { parseTime, pickerOptions } from '@/utils/'
+import { parseTime, pickerOptions2 } from '@/utils/'
 export default {
   components: {
     SelectType
@@ -90,9 +90,10 @@ export default {
         }]
       },
       pickerOptions: {
-        disabledDate(time) {
+        shortcuts: pickerOptions2
+        /* disabledDate(time) {
           return time.getTime() < Date.now() - 3600 * 1000 * 24
-        }
+        } */
       }
     }
   },
