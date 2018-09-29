@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { eventBus } from '@/eventBus'
-import { keepNumber, keepNumberAndPoint, cacheDEVInfo } from '@/utils/'
+import { keepNumber, keepNumberAndPoint, cacheDEVInfo, handleErrorMsg } from '@/utils/'
 import { getToken } from '@/utils/auth'
 
 Vue.mixin({
@@ -39,13 +39,7 @@ Vue.mixin({
       }
     },
     _handlerCatchMsg(err, premsg = '') {
-      console.error('catch error:', err)
-      let vmsg = '未知错误，请重试~'
-      let msg = (err.errorInfo || err.text || vmsg)
-      this.$message.error(premsg + msg)
-      if(msg === vmsg){
-        cacheDEVInfo('js',err)
-      }
+      handleErrorMsg(err, premsg)
     }
   }/* ,
 

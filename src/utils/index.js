@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+import { Message, MessageBox } from 'element-ui'
 
 const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
 /**
@@ -943,7 +944,7 @@ export function cacheDEVInfo(pfix, data) {
       for (var i = 0; i < maxlen; i++) {
         var date1 = new Date()
         if (!localStorage[pfix + i]) {
-          localStorage[pfix + i] = (+date1) + '||' + date1.toLocaleString() + ' || '+ data
+          localStorage[pfix + i] = (+date1) + '||' + date1.toLocaleString() + ' || ' + data
           find = true
           break
         }
@@ -962,7 +963,7 @@ export function cacheDEVInfo(pfix, data) {
           } else {
             // 如果是最后一条，则直接替换更新
             var date3 = new Date()
-            localStorage[pfix + j] = (+date3) + ' || '+ date3.toLocaleString() + '||' + data
+            localStorage[pfix + j] = (+date3) + ' || ' + date3.toLocaleString() + '||' + data
             break
           }
         }
@@ -970,5 +971,19 @@ export function cacheDEVInfo(pfix, data) {
     } catch (err) {
       console.log('转换数据出错了：', err, data)
     }
+  }
+}
+
+export function handleErrorMsg(err, premsg = '') {
+  console.error('catch error:', err)
+  const vmsg = '未知错误，请重试~'
+  const msg = (err.errorInfo || err.text || vmsg)
+  Message.error(premsg + msg)
+
+  if (msg === vmsg) {
+    cacheDEVInfo('js', err.stack ? {
+      stack: err.stack,
+      message: err.message
+    } : err)
   }
 }

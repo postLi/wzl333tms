@@ -1,4 +1,5 @@
 import fetch from '../../utils/fetch'
+import { handleErrorMsg } from '@/utils/'
 
 /** ************************************
  *             资金流水汇总
@@ -10,8 +11,8 @@ export function postFindLowList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/list/', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -42,8 +43,8 @@ export function getOrderShipList(data) {
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -68,8 +69,8 @@ export function postAddIncome(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /** ************************************
@@ -84,8 +85,8 @@ export function postDetailList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -110,8 +111,8 @@ export function getFeeTypeDict(settlementId) {
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -125,8 +126,8 @@ export function getOrgFirstFinancialWay(data) {
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 

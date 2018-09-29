@@ -1,6 +1,7 @@
 import fetch from '@/utils/fetch'
 import { getToken } from '@/utils/auth'
 import CACHE from '@/utils/cache'
+import { handleErrorMsg } from '@/utils/'
 
 /**
  * 获取城市数据
@@ -129,8 +130,8 @@ export function postQueryLogList(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/getQueryLogList', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -140,8 +141,8 @@ export function postcreaterQueryCriteriaLog(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/createrQueryCriteriaLog', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 
