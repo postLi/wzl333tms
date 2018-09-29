@@ -430,7 +430,7 @@
         this.form.tmsOrderPickup.toCityName = item.toCityName
         this.form.tmsOrderPickup.id = item.id
         this.form.tmsOrderPickup.truckFee = item.truckFee
-
+      console.log('infoData', item)
         this.form.tmsTruck.truckIdNumber = item.truckIdNumber
         this.form.tmsTruck.truckType = item.truckType
         this.form.tmsTruck.truckUnit = item.truckUnit

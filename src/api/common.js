@@ -52,7 +52,7 @@ export function getUploadPolicy() {
       resolve(window.UPLOADPOLICYDATA)
     })
   } else {
-    return fetch.get('/anfacommonservice/common/oss/v1/policy').then(res => {
+    return fetch.get('/api-common/common/oss/v1/policy').then(res => {
       window.UPLOADPOLICYDATA = res.data || ''
       // 定时清除旧数据
       window.UPLOADPOLICYDATA_timer = setTimeout(() => {
