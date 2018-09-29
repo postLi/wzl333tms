@@ -261,6 +261,7 @@ export default {
       }
       udpateSmsTemplateLog(obj).then(data => {
           this.$message.success('更新短信模板成功！')
+          this.$emit('success')
           this.closeMe()
         })
         .catch(err => {

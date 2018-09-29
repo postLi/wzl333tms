@@ -182,6 +182,11 @@ export default {
         width: '120',
         fixed: false
       }, {
+        label: '差额体积',
+        prop: 'differVolume',
+        width: '120',
+        fixed: false
+      }, {
         label: '关联运单号',
         prop: 'shipSns',
         width: '180',
@@ -267,7 +272,7 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

@@ -531,7 +531,7 @@ export default {
 
     return {
       // 用来更新收发货人信息
-      customkey: '',
+      customkey: '123',
       // 控制显示提示消息
       isChecked: false,
       isCheckedShow: false,
@@ -1627,7 +1627,7 @@ export default {
         data = this.output.batchinfo
         // 城市信息
         this.form.tmsOrderShip.shipToCityCode = data.toCityCode
-        this.toCityName = data.toCityName
+        this.form.tmsOrderShip.shipToCityName = data.toCityName
         // 收发货人信息
         this.form.sender.customerType = 1
         this.form.sender.customerName = data.customerName
@@ -1764,7 +1764,7 @@ export default {
       this.form.tmsOrderShip.createTime = parseTime(this.form.tmsOrderShip.createTime)
       // 设置城市名称
       this.fromCityName = data.tmsOrderShip.shipFromCityName
-      this.toCityName = data.tmsOrderShip.shipToCityName
+      this.form.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName
       this.form.tmsOrderShip.shipFromCityName = data.tmsOrderShip.shipFromCityName
       this.form.tmsOrderShip.shipToCityName = data.tmsOrderShip.shipToCityName
       console.log('data.tmsOrderShip:::', data.tmsOrderShip, this.form.tmsOrderShip)
@@ -2055,7 +2055,7 @@ export default {
       this.shipOther = []
       this.form.tmsOrderShip.shipRemarks = ''
 
-      this.customkey = new Date()
+      this.customkey = +new Date()
       // 回填默认的数据
       if (shouldReinputDefault) {
         this.form.tmsOrderShip.shipSn = copy.tmsOrderShip.shipSn

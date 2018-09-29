@@ -219,7 +219,7 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'change' },
          { pattern: REGEX.MOBILE, trigger: 'change', message: '请输入有效的手机号码'}
         ],
         customerName: [
@@ -241,8 +241,8 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
-
+      inited: false,
+      isSaveAndAdd: true
     }
   },
   mounted() {
@@ -343,11 +343,12 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.reset()
+            
             if (!bool) {
               this.closeMe()
             }
             this.$emit('success')
+            this.reset()
           }).catch(err => {
             this._handlerCatchMsg(err)
             this.loading = false
@@ -366,7 +367,9 @@ export default {
       this.form.idcardVerso = ''
       this.fixPhone = ''
       this.form.fixPhone = ''
+      this.form.customerMobile = ''
       this.form.orgid = orgid
+      console.log(this.form, '///////////////')
     },
     closeMe(done) {
       this.reset()

@@ -61,11 +61,9 @@
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
                          :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
                          :remote="true" clearable/>
-
-
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth">
-            <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"></el-input>
+            <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" :maxlength="50"></el-input>
           </el-form-item>
 
           <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">

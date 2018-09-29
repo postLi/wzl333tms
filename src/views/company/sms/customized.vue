@@ -101,11 +101,13 @@ export default {
     },
     postSmsSign() { // 签名
       postSmsSign(this.otherinfo.orgid).then(data => {
-          this.signName = data.data.modifySign
-          if (data.data.modifyCount === 1) {
-            this.isShowSignBtn = true
-          } else {
-            this.isShowSignBtn = false
+          if (data.data) {
+            this.signName = data.data.modifySign
+            if (data.data.modifyCount === 1) {
+              this.isShowSignBtn = true
+            } else {
+              this.isShowSignBtn = false
+            }
           }
         })
         .catch(err => {
@@ -116,12 +118,15 @@ export default {
       this.loading = true
       this.searchQuery.vo.orgId = this.otherinfo.orgid
       postSmsTemplateLogList(this.searchQuery).then(data => {
-          this.infoList = data.list
-          this.infoList.forEach(e => {
-            e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
-          })
-          this.total = data.total
-          this.loading = false
+          if (data) {
+            this.infoList = data.list
+            this.infoList.forEach(e => {
+              e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
+            })
+            this.total = data.total
+            this.loading = false
+          }
+
         })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -156,6 +161,7 @@ export default {
       this.editInfoVisible = false
     },
     getFecthList() {
+      console.log('sdfsdfsdfsdf')
       // this.editInfoVisible = false
       this.fetchList()
     },
