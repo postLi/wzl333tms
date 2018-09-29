@@ -184,6 +184,7 @@ export default {
     },
     dotInfo(newVal) {
       this.getMentInfo = this.dotInfo
+      console.log(this.dotInfo)
     },
     searchQuery(newVal) {
       this.form.pageType = this.searchQuery.vo.pageType
