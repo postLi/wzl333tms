@@ -6,7 +6,6 @@
   v-model="handlevalue"
   :fetch-suggestions="querySearch"
   :value-key="showkey"
-  select-when-unmatched
   @focus="()=>{$emit('focus'),initData()}"
   @change="(val)=>{$emit('change' ,handleSelect(val))}"
   @blur="()=>{$emit('blur')}"
@@ -241,7 +240,7 @@ export default {
     name: {
       handler(newVal) {
         if (!this.inited) {
-          this.findName(newVal)
+          // this.findName(newVal)
         }
       },
       immediate: false
@@ -256,15 +255,18 @@ export default {
           this.handlevalue = newVal
           console.log('handkler: ', newVal)
         }
-        console.log('handkler2: ', newVal) */
-        if (!this.inited) {
+         */
+
+        if (this.show !== 'input') {
           this.findValue(newVal)
+        } else {
+          this.handlevalue = newVal
         }
       },
       immediate: false
     },
     handlevalue(newVal) {
-      if (this.search === this.valuekey) {
+      if (this.show === 'input') {
         console.log('handlevalue:', this.handlevalue)
         this.$emit('input', this.handlevalue)
       }
@@ -456,9 +458,11 @@ export default {
     // 初始化请求、请求参数等
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
+    console.log('handkler2: ', this.value)
+    this.handlevalue = this.value
 
-    if (this.value || this.name) {
-      this.initFindItem()
+    if (this.value && this.show !== 'input') {
+      // this.initFindItem()
     }
 
     this.initEvent()
@@ -479,7 +483,7 @@ export default {
           this.findValue(this.value)
         }
         if (this.name) {
-          this.findName(this.name)
+        //  this.findName(this.name)
         }
       })
     },
@@ -503,6 +507,7 @@ export default {
       this.findItem(value, this.showkey)
     },
     findValue(value) {
+      console.log('findValue', value)
       this.findItem(value, this.valuekey)
     },
     initData() {

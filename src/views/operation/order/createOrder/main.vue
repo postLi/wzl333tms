@@ -1865,7 +1865,9 @@ export default {
         }
       }
       this.$set(this.form.cargoList, 0, cargoData)
+      this.$set(this.form.cargoList[0], 'cargoName', cargoData.cargoName)
 
+      console.log('cargoData::', cargoData, this.form.cargoList[0].cargoName)
       // 其它设置
       this.form.tmsOrderShip.shipEffective = data.orderEffective
       this.form.tmsOrderShip.shipPayWay = data.orderPayWay
