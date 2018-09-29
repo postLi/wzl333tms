@@ -256,8 +256,11 @@ export default {
   },
   watch: {
     'form.customerMobile'(newVal) {
-      console.log('33333')
+     
+      if (this.isSaveAndAdd) {
+         console.log('33333')
       this.$refs.ruleForm.validateField('customerMobile')
+      }
     },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
@@ -360,6 +363,7 @@ export default {
     },
     reset() {
       // 缓存上一次选择的网点
+      this.isSaveAndAdd = false
       const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.licensePicture = ''
@@ -370,6 +374,9 @@ export default {
       this.form.customerMobile = ''
       this.form.orgid = orgid
       console.log(this.form, '///////////////')
+      this.$nextTick(() => {
+        this.isSaveAndAdd = true
+      })
     },
     closeMe(done) {
       this.reset()
