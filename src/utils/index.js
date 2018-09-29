@@ -983,7 +983,8 @@ export function handleErrorMsg(err, premsg = '') {
   if (msg === vmsg) {
     cacheDEVInfo('js', err.stack ? {
       stack: err.stack,
-      message: err.message
+      message: err.message,
+      url: window.location.href
     } : err)
   }
 }
