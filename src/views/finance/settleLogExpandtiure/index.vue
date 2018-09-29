@@ -52,7 +52,7 @@
           <el-tab-pane label="批次支出" name="first">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-printer">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-date">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -63,7 +63,7 @@
           <el-tab-pane label="运单支出" name="second">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-printer">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-date">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>

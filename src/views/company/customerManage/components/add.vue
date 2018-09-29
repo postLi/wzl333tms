@@ -219,7 +219,7 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          { required: true, message: '请输入手机号码', trigger: 'change' },
          { pattern: REGEX.MOBILE, trigger: 'change', message: '请输入有效的手机号码'}
         ],
         customerName: [
@@ -360,13 +360,15 @@ export default {
     reset() {
       // 缓存上一次选择的网点
       const orgid = this.form.orgid
+      this.form = this.$options.data().form
       this.$refs['ruleForm'].resetFields()
-      this.form.licensePicture = ''
-      this.form.idcardPositive = ''
-      this.form.idcardVerso = ''
-      this.fixPhone = ''
-      this.form.fixPhone = ''
+      // this.form.licensePicture = ''
+      // this.form.idcardPositive = ''
+      // this.form.idcardVerso = ''
+      // this.fixPhone = ''
+      // this.form.fixPhone = ''
       this.form.orgid = orgid
+      console.log(this.form, '///////////////')
     },
     closeMe(done) {
       this.reset()
