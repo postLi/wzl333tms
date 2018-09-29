@@ -330,8 +330,8 @@ export default {
           this.loading = false
         }
       })
-      .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+         this._handlerCatchMsg(err)
       })
     },
     setColumn(obj) { // 重绘表格列表

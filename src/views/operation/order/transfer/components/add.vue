@@ -534,6 +534,9 @@ export default {
           }
           this.form.transferTime = parseTime(new Date(this.form.transferTime))
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     initInfo() {

@@ -13,7 +13,7 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;">
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -38,6 +38,8 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <!-- 异动费用详情弹出框 -->
+     <Addunusual :issender="true" :isModify="isModify" :isDbClick="isDbClick" :isCheck="isCheck" :payType="'PAYABLE'" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchList"  />
   </div>
 </template>
 <script>
@@ -48,14 +50,22 @@ import TableSetup from '@/components/tableSetup'
 import { postFindChangeList } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import Addunusual from '../../unusual/components/add'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    Addunusual
   },
   data() {
     return {
+      isCheck: false,
+      isModify: false,
+       isDbClick: false,
+       selectInfo: {},
+       id: '',
+       AddAbnormalVisible: false,
       btnsize: 'mini',
       searchQuery: {
         currentPage: 1,
@@ -85,7 +95,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -109,6 +119,12 @@ export default {
         {
           label: '结算状态',
           prop: 'statusName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatusName',
           width: '100',
           fixed: false
         },
@@ -142,14 +158,22 @@ export default {
         {
           label: '已结异动费用',
           prop: 'closeFee',
-          width: '100',
-          fixed: false
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异动费用',
           prop: 'unpaidFee',
-          width: '100',
-          fixed: false
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '开单日期',
@@ -289,9 +313,11 @@ export default {
       ]
     }
   },
-  // mounted () {
-  //   this.fetchList()
-  // },
+  computed: {
+    orgid() {
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
+  },
   methods: {
     getSearchParam(obj) {
       this.searchQuery.vo = Object.assign({}, obj)
@@ -302,10 +328,20 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     fetchList() {
+      this.loading = true
       return postFindChangeList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+      this.isModify = false
+      this.selectInfo = {}
     },
     setTable() {},
     doAction(type) {
@@ -349,8 +385,11 @@ export default {
         this.selectListShipSns.push(e.shipSn)
       })
     },
-    showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+    showDetail(row) { // 查看详情
+      this.selectInfo = row
+      this.isDbClick = true
+      this.isModify = false
+      this.AddAbnormalVisible = true
     },
     setTable() {
       this.setupTableVisible = true

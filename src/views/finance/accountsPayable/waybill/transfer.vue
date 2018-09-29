@@ -86,7 +86,7 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -116,6 +116,12 @@ export default {
         {
           label: '结算状态',
           prop: 'statusName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatusName',
           width: '100',
           fixed: false
         },
@@ -150,13 +156,21 @@ export default {
           label: '已结中转费',
           prop: 'closeFee',
           width: '100',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结中转费',
           prop: 'unpaidFee',
           width: '100',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '开单日期',
@@ -307,9 +321,14 @@ export default {
       this.fetchList()
     },
     fetchList() {
+      this.loading = true
       return postFindTransferList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},

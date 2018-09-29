@@ -272,7 +272,7 @@
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
       
-      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
+      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       
 </div>
@@ -349,7 +349,7 @@ export default {
         label: '货号',
         prop: 'shipGoodsSn',
         width: '120',
-        fixed: true
+        fixed: false
       }, {
         label: '开单网点',
         prop: 'fromOrgName',
@@ -390,10 +390,10 @@ export default {
         fixed: false
       }, {
         label: '到账日期',
-        prop: 'acceptTime',
+        prop: 'accountTime',
         width: '165',
         slot: (scope) => {
-          return `${parseTime(scope.row.acceptTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.accountTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
         fixed: false
       }, {
@@ -511,6 +511,9 @@ export default {
         this.total = data.total
         this.loading = false
                 // console.log(data);
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

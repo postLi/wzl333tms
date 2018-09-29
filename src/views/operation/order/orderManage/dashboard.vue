@@ -3,8 +3,9 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('create')" plain v-has:ORDER_CREATE>创建运单</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_E3>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_P1>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_P2>打印</el-button>
           <span class="viewtip">
             双击查看详情
           </span>
@@ -437,6 +438,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -467,10 +471,26 @@ export default {
 
       switch (type) {
           // 添加运单
-        case 'add':
+        case 'create':
           this.isModify = false
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+          }
+          var netdata = this.selected[0]
           this.selectInfo = {}
-          this.openAddOrder()
+          this.$router.push({
+            path: '/operation/order/modifyOrder',
+            query: {
+              orderid: netdata.id,
+              type: 'modify',
+              isdash: '1',
+                  // tab: '修改' + this.selectInfo.shipSn
+              tab: '从' + netdata.shipSn + '建单'
+            }
+          })
           break
           // 修改运单信息
         case 'modify':
@@ -492,8 +512,8 @@ export default {
               type: 'warning'
             })
           }
-          const deleteItem = this.selected[0].shipSn
-          const id = this.selected[0].id
+          var deleteItem = this.selected[0].shipSn
+          var id = this.selected[0].id
 
           this.$confirm('确定要删除 ' + deleteItem + ' 运单吗？', '提示', {
             confirmButtonText: '删除',
@@ -527,8 +547,8 @@ export default {
               type: 'warning'
             })
           }
-          const cancelItem = this.selected[0].shipSn
-          const theid = this.selected[0].id
+          var cancelItem = this.selected[0].shipSn
+          var theid = this.selected[0].id
           this.$confirm('确定要作废 ' + cancelItem + ' 运单吗？', '提示', {
             confirmButtonText: '作废',
             cancelButtonText: '取消',

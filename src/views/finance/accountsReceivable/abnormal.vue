@@ -59,6 +59,8 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>     
     </div>
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+     <!-- 异动费用详情弹出框 -->
+     <Addunusual :issender="true" :isModify="isModifyDetail" :isDbClick="isDbClick" :isCheck="isCheck" :payType="'RECEIVABLE'" :info="selectInfoDetail" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchAllOrder"  />
   </div>
 </template>
 <script>
@@ -69,18 +71,25 @@ import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-
+import Addunusual from '../unusual/components/add'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    Addunusual
   },
   mounted() {
     // this.loading = false
   },
   data() {
     return {
+      isCheck: false,
+      isModifyDetail: false,
+      isDbClick: false,
+      selectInfoDetail: {},
+      id: '',
+      AddAbnormalVisible: false,
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -136,9 +145,14 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
-        'label': '出发城市',
-        'prop': 'shipFromCityName'
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
       }, {
+          'label': '出发城市',
+          'prop': 'shipFromCityName'
+        }, {
         'label': '到达城市',
         'prop': 'shipToCityName'
       }, {
@@ -149,10 +163,18 @@ export default {
         'prop': 'changeFee'
       }, {
         'label': '未结异动',
-        'prop': 'notChangeFee'
+        'prop': 'notChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+        }
       }, {
         'label': '已结异动',
-        'prop': 'finishChangeFee'
+        'prop': 'finishChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
@@ -204,11 +226,16 @@ export default {
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': 'shipEffective'
+        'prop': 'shipEffectiveName'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'
       }]
+    }
+  },
+  computed: {
+    orgid() {
+      return this.isModifyDetail ? this.selectInfoDetail.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   methods: {
@@ -225,8 +252,17 @@ export default {
         }
       })
     },
-    showDetail(order) {
-      this.viewDetails([order])
+    showDetail(row) {
+      this.selectInfoDetail = row
+      this.isDbClick = true
+      this.isModifyDetail = false
+      this.AddAbnormalVisible = true
+       // this.viewDetails([order])
+    },
+    closeAddAbnormal() {
+      this.AddAbnormalVisible = false
+      this.isModify = false
+      this.selectInfo = {}
     },
     fetchAllOrder() {
       this.loading = true
@@ -236,6 +272,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

@@ -43,6 +43,7 @@
               <el-input v-model="searchForm.receiverName"
               clearable :maxlength="15" auto-complete="off" @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
+          <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
       </div>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -57,11 +58,13 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import SelectCity from '@/components/selectCity/index'
 import { parseTime, pickerOptions2 } from '@/utils/index'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
     SelectCity,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -119,7 +122,8 @@ export default {
       },
       pickerOptions2: {
         shortcuts: pickerOptions2
-      }
+      },
+      searchObjs: {}
     }
   },
   watch: {
@@ -143,6 +147,23 @@ export default {
         }
       },
       immediate: true
+    },
+    searchCreatTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        this.searchObjs[this.status] = this.thestatus
+        if (this.searchCreatTime) {
+           this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -152,6 +173,14 @@ export default {
     // this.searchForm.shipFromOrgid = this.otherinfo.orgid
   },
   methods: {
+     getDataObj(obj) {
+      this.type= this.status
+      this.thestatus = obj[this.status]
+      this.searchForm[this.status] = obj[this.status]
+      this.searchCreatTime = [obj.startTime, obj.endTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     getOrgid(id) {
       this.searchForm.orgid = id
     },

@@ -61,6 +61,9 @@ export default {
     fetchData(){
       return orderManage.getShipLog(this.orderid).then(res => {
         this.usersArr = res.list
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     }
   }

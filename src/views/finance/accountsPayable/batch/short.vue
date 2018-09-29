@@ -6,9 +6,9 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADPRI1 @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:PAY_LOADPRI1 @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" v-has:PAY_LOADEXP1 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -85,119 +85,127 @@ export default {
       dataList: [],
       selectedList: [],
       selectListBatchNos: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '50',
-        fixed: true,
-        slot: (scope) => {
+          label: '序号',
+          prop: 'id',
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
-      },
-      {
-        label: '短驳批次',
-        prop: 'batchNo',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '结算状态',
-        prop: 'statusName',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到达网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳时间',
-        prop: 'departureTime',
-        width: '160',
-        fixed: false,
-        slot: (scope) => {
+        },
+        {
+          label: '短驳批次',
+          prop: 'batchNo',
+          width: '130',
+          fixed: true
+        },
+        {
+          label: '结算状态',
+          prop: 'statusName',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到达网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '短驳时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '接收时间',
-        prop: 'receivingTime',
-        width: '160',
-        fixed: false,
-        slot: (scope) => {
+        },
+        {
+          label: '接收时间',
+          prop: 'receivingTime',
+          width: '160',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-      },
-      {
-        label: '短驳费',
-        prop: 'fee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '已结短驳费',
-        prop: 'paidFee',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '未结短驳费',
-        prop: 'unpaidFee',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '司机名称',
-        prop: 'dirverName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '短驳件数',
-        prop: 'loadAmountall',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '短驳重量',
-        prop: 'loadWeightall',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '短驳体积',
-        prop: 'loadVolumeall',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '150',
-        fixed: false
-      }
+        },
+        {
+          label: '短驳费',
+          prop: 'fee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '已结短驳费',
+          prop: 'paidFee',
+          width: '100',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
+        },
+        {
+          label: '未结短驳费',
+          prop: 'unpaidFee',
+          width: '100',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '短驳件数',
+          prop: 'loadAmountall',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '短驳重量',
+          prop: 'loadWeightall',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '短驳体积',
+          prop: 'loadVolumeall',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '150',
+          fixed: false
+        }
       ]
     }
   },
@@ -213,9 +221,14 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      this.loading = true
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},

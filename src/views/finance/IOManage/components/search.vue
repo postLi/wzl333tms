@@ -13,6 +13,7 @@
           <el-option label="停用" :value="1"></el-option>
         </el-select>
       </el-form-item>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
       </div>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -24,10 +25,12 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -49,6 +52,7 @@ export default {
   },
   data() {
     return {
+      searchObjs: {},
       searchForm: {
         orgId: '',
         financialWayTypeId: '',
@@ -62,6 +66,13 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgid = newVal
+    },
+     // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+      },
+      deep: true
     }
   },
   mounted() {
@@ -69,6 +80,11 @@ export default {
     // this.searchForm.batchTypeId = this.orgid
   },
   methods: {
+    // 接收子组件传回来的东西
+    getDataObj(obj) {
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     finitem(item) {
       console.log(typeof item)
     },

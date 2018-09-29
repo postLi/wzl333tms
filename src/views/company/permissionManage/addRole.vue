@@ -3,9 +3,9 @@
       <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="add-role-pop-content" v-loading="loading">
         <template class="addEmployeerPop-content" slot="content">
           <div class="add-role" >
-            <el-form >
+            <!--<el-form >-->
               <div class="add-role-top">
-                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName">
+                <el-form :inline="true" :rules="rules" :model="formInline" class="demo-form-inline" ref="formName" >
                   <el-form-item label="角色名称：" prop="roleName">
                     <el-input v-model="formInline.roleName"  clearable></el-input>
                   </el-form-item>
@@ -24,6 +24,7 @@
               </div>
               <div class="add-role-tree">
                 <el-tree
+                  :key="roleKey"
                   :data="treeData"
                   show-checkbox
                   default-expand-all
@@ -35,20 +36,22 @@
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span v-if="data.status===0">
                       <img src="../../../assets/icom/link.png" alt="">
-                      {{ node.label }} <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()">
                       {{ node.label }}
+                      <!-- <input type="text" :value="',code:\'' + data.code+'\''" onmouseover="this.select()"> -->
                       </span>
                      <span v-else>
                       <img src="../../../assets/icom/btn.png" alt="">
-                      {{ node.label }} <input type="text" :value="data.code" v-clipboard:copy='data.code' onmouseover="this.select()">
+                      {{ node.label }}
+                      <!-- <input type="text" :value="data.code" onmouseover="this.select()"> -->
                       </span>
                   </span>
                 </el-tree>
               </div>
-            </el-form>
+            <!--</el-form>-->
           </div>
         </template>
         <div slot="footer" class="dialog-footer">
+          <!-- <el-button type="primary" @click="submitForm('formName', true)" >保存并添加</el-button> -->
           <el-button type="primary" @click="getCheckedNodes('formName')">保存</el-button>
           <el-button @click="closeMe">取 消</el-button>
         </div>
@@ -112,13 +115,9 @@
           this.$refs.tree.setCheckedKeys(this.formInline.menusId)
         } else {
           this.popTitle = '新增角色'
-          this.formInline = {
-            roleName: '',
-            remark: '',
-            menusId: '',
-            createrId: this.createrId
-          }
+          this.result()
         }
+        this.roleKey = Math.random()
       },
       reference() {
         if (this.reference) {
@@ -156,7 +155,7 @@
       return {
         rules: {
           roleName: [
-            { required: true, message: '请输入角色名称', validator: roleName },
+            { required: true, message: '请输入角色名称', validator: roleName, trigger: 'blur' },
             { max: 12, message: '最多可输入12个字符' }
           ],
           remarks: [
@@ -164,6 +163,7 @@
             { max: 250, message: '最多可输入250个字符', trigger: 'blur' }
           ]
         },
+        roleKey: '',
         treeData: [],
         defaultProps: {
           children: 'children',
@@ -180,17 +180,30 @@
       }
     },
     mounted() {
-      this.treeData = this.dotInfo
     },
     methods: {
+      newInfoData() {
+        this.formInline = {
+          roleName: '',
+          remark: '',
+          menusId: '',
+          createrId: this.createrId
+        }
+        // this.roleKey = Math.random()
+      },
+      result() {
+        this.newInfoData()
+        this.roleKey = Math.random()
+      },
       closeMe(done) {
+        this.result()
         this.$emit('close')
         this.$refs['formName'].resetFields()
         if (typeof done === 'function') {
           done()
         }
       },
-      getCheckedNodes(formName) {
+      getCheckedNodes(formName, bool) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.loading = true
@@ -208,12 +221,12 @@
               promiseObj = postRoleInfo(data)
             }
             promiseObj.then(res => {
-              this.loading = false
-              this.$message.success('保存成功')
-              this.closeMe()
               this.$emit('success')
+              this.loading = false
+              this.closeMe()
+              this.$message.success('保存成功')
             }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              this._handlerCatchMsg(err)
               this.loading = false
             })
           } else {
@@ -228,5 +241,7 @@
 
 <style type="text/css" lang="scss">
   @import "./addRole.css";
-
+.add-role-top .el-form--inline .el-form-item{
+  margin-bottom: 10px;
+}
 </style>

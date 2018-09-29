@@ -38,8 +38,23 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://192.168.1.157:7010',
+        target: 'http://192.168.1.79:7010',
         pathRewrite: { '^/api': '' },
+        changeOrigin: true
+      },
+      '/157service': {
+        target: 'http://192.168.1.157:7010',
+        pathRewrite: { '^/157service': '' },
+        changeOrigin: true
+      },
+      '/180service': {
+        target: 'http://192.168.1.180:7010',
+        pathRewrite: { '^/180service': '' },
+        changeOrigin: true
+      },
+      '/ceshi': {
+        target: 'http://192.168.1.78:7010',
+        pathRewrite: { '^/ceshi': '' },
         changeOrigin: true
       },
       '/localapi': {
@@ -58,18 +73,13 @@ module.exports = {
         changeOrigin: true
       },
       '/huangyuwen': {
-        target: 'http://192.168.1.23:7010',
+        target: 'http://192.168.1.123:7010',
         pathRewrite: { '^/huangyuwen': '' },
         changeOrigin: true
       },
       '/dingfei': {
         target: 'http://192.168.1.34:7010',
         pathRewrite: { '^/dingfei': '' },
-        changeOrigin: true
-      },
-      '/ceshi': {
-        target: 'http://192.168.1.78:7010',
-        pathRewrite: { '^/ceshi': '' },
         changeOrigin: true
       },
       '/chenrongtao': {
@@ -90,11 +100,6 @@ module.exports = {
       '/aliyun': {
         target: 'http://119.23.201.233:9528/api',
         pathRewrite: { '^/aliyun': '' },
-        changeOrigin: true
-      },
-      '/79service': {
-        target: 'http://192.168.1.79:7010',
-        pathRewrite: { '^/79service': '' },
         changeOrigin: true
       }
     },

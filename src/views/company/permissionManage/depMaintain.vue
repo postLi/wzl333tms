@@ -156,7 +156,7 @@
             this.loading = false
             // console.log(resArr);
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
           // console.log(this.dictName);
@@ -177,7 +177,7 @@
             // console.log(res);
             this.loading = false
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
 

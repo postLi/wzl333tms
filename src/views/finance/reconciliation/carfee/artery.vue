@@ -99,7 +99,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           {
             label: '序号',
             prop: 'id',
-            width: '100',
+            width: '70',
             fixed: true,
             slot: (scope) => {
               return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -125,7 +125,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
             width: '160',
             fixed: false
           }, {
-            label: '应付账款',
+            label: '未付账款',
             prop: 'payAmount',
             width: '120',
             fixed: false
@@ -196,7 +196,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           this.total = data.total
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -295,7 +295,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {
@@ -329,7 +329,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {

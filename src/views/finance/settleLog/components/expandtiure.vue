@@ -246,6 +246,9 @@ export default {
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     initDetailDtoList() {
@@ -280,6 +283,9 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -307,8 +313,8 @@ export default {
               this.closeMe()
               this.$router.push({ path: './accountsPayable/batch' })
             })
-            .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })

@@ -16,11 +16,11 @@
         <!-- 公司信息 -->
         <template v-if="form.companyType === 2">
           <div class="info">公司名称</div>
-          <el-form-item >
+          <el-form-item prop="companyName">
             <el-input v-model.trim="form.companyName" :maxlength="25" placeholder="公司全称"></el-input>
           </el-form-item>
           <el-form-item >
-            <upload class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
+            <upload twocode class="licensePicture" tip="（有年检章，jpg/png。小于5M）" v-model="form.licensePicture" />
           </el-form-item>
           <div class="info" >公司法人信息</div>
           <el-form-item prop="legalPersonname" >
@@ -30,10 +30,10 @@
         <!-- 个人信息 -->
         <el-form-item class="clearfix">
           <div class="idcard-pos">
-            <upload :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idcardPositive" />
+            <upload twocode :title="form.companyType === 1 ? '自然人身份证正面' : '法人身份证正面'" v-model="form.idcardPositive" />
           </div>
           <div class="idcard-ver">
-            <upload :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idcardVerso" />
+            <upload twocode :title="form.companyType === 1 ? '自然人身份证反面' : '法人身份证反面'" v-model="form.idcardVerso" />
           </div>
         </el-form-item>
 
@@ -45,7 +45,11 @@
           <el-input v-model="form.customerName" :maxlength="25" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
-          <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input>
+          <!-- <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input> -->
+          <input type="text" v-numberOnly v-model.trim="form.customerMobile"  auto-complete="off" maxlength="11" class="nativeinput">
+          <!-- <div v-if="!customphoneisok" class="el-form-item__error">
+            请输入手机号码
+          </div> -->
         </el-form-item>
         <el-form-item label="电话" class="customerPhone" prop="customerPhone">
           <el-input v-numberOnly v-model="phoneshort" class="phoneshort" :maxlength="4" auto-complete="off"></el-input> - <el-input class="phonelong" v-numberOnly v-model="phonelong" :maxlength="8" auto-complete="off"></el-input>
@@ -74,6 +78,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm',true)">保存并新增</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -133,6 +138,13 @@ export default {
           this.phonelong = ''
         }
       }
+    },
+    customphoneisok() {
+      // const val = this.form.customerMobile
+      // if (val === '') {
+      //   return true
+      // }
+      // return REGEX.MOBILE.test(val)
     }
   },
   data() {
@@ -207,8 +219,8 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码' }
-         // { validator: validateFormNumber, trigger: 'change'}
+          { required: true, message: '请输入手机号码', trigger: 'change' },
+         { pattern: REGEX.MOBILE, trigger: 'change', message: '请输入有效的手机号码'}
         ],
         customerName: [
           { required: true, message: '请输入联系人' },
@@ -229,8 +241,8 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
-
+      inited: false,
+      isSaveAndAdd: true
     }
   },
   mounted() {
@@ -243,6 +255,13 @@ export default {
     console.log(this.popTitle)
   },
   watch: {
+    'form.customerMobile'(newVal) {
+     
+      if (this.isSaveAndAdd) {
+         console.log('33333')
+      this.$refs.ruleForm.validateField('customerMobile')
+      }
+    },
     popVisible(newVal, oldVal) {
       if (!this.inited) {
         this.inited = true
@@ -310,7 +329,7 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
+    submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -327,10 +346,14 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.closeMe()
+            
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
+            this.reset()
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
         } else {
@@ -339,10 +362,21 @@ export default {
       })
     },
     reset() {
+      // 缓存上一次选择的网点
+      this.isSaveAndAdd = false
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.licensePicture = ''
       this.form.idcardPositive = ''
       this.form.idcardVerso = ''
+      this.fixPhone = ''
+      this.form.fixPhone = ''
+      this.form.customerMobile = ''
+      this.form.orgid = orgid
+      console.log(this.form, '///////////////')
+      this.$nextTick(() => {
+        this.isSaveAndAdd = true
+      })
     },
     closeMe(done) {
       this.reset()
@@ -362,6 +396,14 @@ export default {
   bottom: auto;
   min-width: 546px;
   max-width:  546px;
+
+  .nativeinput{
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+  }
+  .nativeinput.is-error{
+    border-color: #f56c6c;
+  }
 
   .el-form--inline .el-form-item{
     margin-right: 0;
@@ -388,7 +430,7 @@ export default {
   }
 
   .licensePicture{
-    height: 116px;
+    height: 200px;
     line-height: 1.2;
   }
 
@@ -473,7 +515,7 @@ export default {
 
   .idcard-pos,.idcard-ver{
     width: 234px;
-    height: 136px;
+    height: 200px;
     float: left;
     line-height: 1.2;
 

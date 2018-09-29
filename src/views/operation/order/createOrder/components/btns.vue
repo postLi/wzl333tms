@@ -78,6 +78,9 @@ export default {
         
         // 重新绑定新的快捷键
         this.bindKey()
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     // 绑定快捷键

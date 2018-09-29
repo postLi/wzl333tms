@@ -182,6 +182,11 @@ export default {
         width: '120',
         fixed: false
       }, {
+        label: '差额体积',
+        prop: 'differVolume',
+        width: '120',
+        fixed: false
+      }, {
         label: '关联运单号',
         prop: 'shipSns',
         width: '180',
@@ -267,6 +272,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -405,10 +413,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             })
           }

@@ -134,7 +134,12 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      }, {
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        }, {
         'label': '出发城市',
         'prop': 'shipFromCityName'
       }, {
@@ -145,13 +150,22 @@ export default {
         'prop': 'nowPayStateCn'
       }, {
         'label': '现付',
+        width: '100',
         'prop': 'nowPayFee'
       }, {
         'label': '已结现付',
-        'prop': 'finishNowPayFee'
+        'prop': 'finishNowPayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+        }
       }, {
         'label': '未结现付',
-        'prop': 'notNowPayFee'
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
@@ -203,7 +217,7 @@ export default {
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': 'shipEffective'
+        'prop': 'shipEffectiveName'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'
@@ -235,6 +249,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -305,6 +322,7 @@ export default {
       this.selected = selection
     },
     getSummaries(param) {
+      // let propsArr = ['nowPayFee','finishNowPayFee','notNowPayFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param)
     }
   }

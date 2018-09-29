@@ -19,34 +19,30 @@
       </el-form-item>
       <el-form-item label="结算状态" prop="status">
         <el-select v-model="searchForm.status" placeholder="结算状态">
-         <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
+          <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="运单号" prop="shipSn">
         <el-input v-model="searchForm.shipSn" :maxlength="maxlength"></el-input>
-        <!-- <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn" clearable></querySelect> -->
       </el-form-item>
       <el-form-item label="发货方" prop="senderUnit">
-        <el-input  v-model="searchForm.senderUnit" clearable  :maxlength="maxlength"></el-input>
-        <!-- <querySelect v-model="searchForm.senderUnit" search="customerUnit" valuekey="customerUnit" type="sender" label="customerUnit" :remote="true" /> -->
+        <el-input v-model="searchForm.senderUnit" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="发货人" prop="senderName" >
-        <el-input  v-model="searchForm.senderName" clearable  :maxlength="maxlength"></el-input>
-        <!-- <querySelect v-model="searchForm.senderName" search="customerName" type="sender" label="customerName" valuekey="customerName" clearable> -->
-          <!-- <template slot-scope="{item}">
-            {{ item.senderName }} : {{ item.senderMobile }}
-          </template> -->
-        <!-- </querySelect> -->
+      <el-form-item label="发货人" prop="senderName">
+        <el-input v-model="searchForm.senderName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
       <el-form-item label="出发城市">
-        <el-input v-model="searchForm.shipFromCityName" clearable  :maxlength="maxlength"></el-input>
-        <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
+        <el-input v-model="searchForm.shipFromCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
       <el-form-item label="到达城市">
-        <el-input v-model="searchForm.shipToCityName" clearable  :maxlength="maxlength"></el-input>
-        <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" ></querySelect> -->
+        <el-input v-model="searchForm.shipToCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      
+      <el-form-item label="签收状态" prop="signStatus">
+        <selectType v-model="searchForm.signStatus" type="sign_status">
+          <el-option slot="head" label="全部" value=""></el-option>
+        </selectType>
+      </el-form-item>
+      <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -59,10 +55,14 @@ import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import searchAll from '@/components/searchAll/index'
+import SelectType from '@/components/selectType/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    searchAll,
+    SelectType
   },
   props: {
     btnsize: {
@@ -93,10 +93,13 @@ export default {
       }
     }
     return {
+      searchAll: '1',
       maxlength: 25,
+      searchObjs: {},
       searchForm: {
         shipFromOrgid: '',
         orgid: '',
+        signStatus: '',
         // feeType: 8, // 8-应付回扣 10-实际提货费 13-其他费用支出
         // endTime: '',
         // id: 0,
@@ -126,6 +129,29 @@ export default {
       }
     }
   },
+  watch: {
+    orgid(newVal) {
+      this.searchForm.orgid = newVal
+    },
+    searchTime(newVal) {
+      if (newVal) {
+        this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+      }
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchTime) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+        console.log(this.searchObjs, cval, oval)
+      },
+      deep: true
+    }
+  },
   mounted() {
     if (this.isTransferSel) {
       this.searchForm.transferOrgid = this.orgid
@@ -137,6 +163,11 @@ export default {
     this.onSubmit()
   },
   methods: {
+    getDataObj(obj) {
+      this.searchTime = [obj.startTime, obj.endTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
@@ -150,6 +181,10 @@ export default {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
         this.searchForm.shipFromOrgid = this.orgid
+        this.searchAll = '1'
+        setTimeout(() => {
+          this.searchAll = ''
+        }, 50)
       })
     }
   }

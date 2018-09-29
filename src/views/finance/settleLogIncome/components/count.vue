@@ -102,12 +102,18 @@ export default {
       }
       getAllCustomer(searchQuery).then(data => {
         this.senderOptions = data.list
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     getFeeTypeDict() {
       this.settlementId = 178
       getFeeTypeDict(this.settlementId).then(data => {
         this.feeIds = data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     querySearchSender(queryString, cb) {
@@ -141,8 +147,8 @@ export default {
               this.closeMe()
               this.$message({ type: 'success', message: '智能结算搜索运单操作成功' })
             })
-            .catch(error => {
-              this.$message({ type: 'error', message: error.errorInfo || error.text })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })

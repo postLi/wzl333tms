@@ -6,9 +6,9 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADSET4 @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" v-has:PAY_LOADPRI4 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" v-has:PAY_LOADEXP4 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -84,7 +84,7 @@ export default {
       total: 0,
       dataList: [],
       selectListBatchNos: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -148,13 +148,21 @@ export default {
           label: '已结到付运费',
           prop: 'paidArrivepayCarriage',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+          }
         },
         {
           label: '未结到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+          }
         },
         {
           label: '到付油卡',
@@ -166,13 +174,21 @@ export default {
           label: '已结到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+          }
         },
         {
           label: '未结到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+          }
         },
         {
           label: '到站装卸费',
@@ -184,13 +200,21 @@ export default {
           label: '已结到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+          }
         },
         {
           label: '未结到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+          }
         },
         {
           label: '到站其他费',
@@ -202,13 +226,21 @@ export default {
           label: '已结到站其他费',
           prop: 'paidArriveOtherFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+          }
         },
         {
           label: '未结到站其他费',
           prop: 'unpaidArriveOtherFee',
           width: '120',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+          }
         },
         {
           label: '车牌号',
@@ -269,9 +301,14 @@ export default {
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       // this.$set(this.searchQuery.vo, 'orgid', this.otherinfo.orgid)
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.otherinfo.orgid)
+      this.loading = true
       return postPayListBySummary(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},

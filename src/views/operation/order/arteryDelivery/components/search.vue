@@ -99,26 +99,6 @@
     },
     data() {
       const _this = this
-      const validateFormMobile = function (rule, value, callback) {
-        if (validateMobile(value)) {
-          callback()
-        } else {
-          callback(new Error('请输入有效的手机号码'))
-        }
-      }
-
-      const validateFormEmployeer = function (rule, value, callback) {
-        callback()
-      }
-      // dirverName
-      const validateBatchNo = function (rule, value, callback) {
-        if (!REGEX.ONLY_NUMBER_AND_LETTER(value)) {
-          callback(new Error('只能输入字母和数字'))
-        }
-        else {
-          callback()
-        }
-      }
 
       return {
         searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
@@ -126,36 +106,30 @@
         pickOption: {
           firstDayOfWeek: 1,
           disabledDate(time) {
-            // 小于终止日
             return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
           }
         },
         pickOption2: {
           firstDayOfWeek: 1,
           disabledDate(time) {
-            // 大于起始日
             return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
           }
         },
         searchForm: {
           orgid: '',
           dirverName: '',
-          truckIdNumber: '', // 车牌号
-          batchTypeId: '', // 批次状态
-          batchNo: '', // 发车批次
-          loadTypeId: 39, // 配载类型
-          endTime: '', // 结束时间
+          truckIdNumber: '',
+          batchTypeId: '', //
+          batchNo: '', //
+          loadTypeId: 39, //
+          endTime: '', //
           beginTime: '', //
-          arrivedbeginDate: '', // 到达时间(起始时间)
-          arrivedEndDate: '', // 到达时间(结束时间)
+          arrivedbeginDate: '', //
+          arrivedEndDate: '', //
           arriveOrgid: '' //
         },
         rules: {
-          batchNo: [
-            // {message: '不可以输入空格', pattern: REGEX.ONLY_ZF},
-            {message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER,trigger:'blur'}
 
-          ]
         },
         pickerOptions2: {
           shortcuts: pickerOptions2
@@ -168,7 +142,6 @@
       }
     },
     mounted() {
-      // this.searchForm.orgid  = this.otherinfo.orgid
       this.searchForm.arriveOrgid = this.otherinfo.orgid
       this.onSubmit()
     },
@@ -177,12 +150,6 @@
 
       },
       onSubmit() {
-        // this.searchForm.beginTime = this.searchCreatTime ? +this.searchCreatTime[0] : ''
-        // this.searchForm.endTime = this.searchCreatTime ? +this.searchCreatTime[1] : ''
-        // this.searchForm.arrivedbeginDate = this.searchEndTime ? +this.searchEndTime[0] : ''
-        // this.searchForm.arrivedEndDate = this.searchEndTime ? +this.searchEndTime[1] : ''
-        // this.searchForm.batchTypeId = this.searchForm.batchTypeId === 51 ? '' : this.searchForm.batchTypeId
-
         this.searchForm.beginTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
         this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
         this.searchForm.arrivedbeginDate = this.searchEndTime ? parseTime(this.searchEndTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''

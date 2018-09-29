@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
 
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed :render-header="setHeader" width="50">
             <template slot-scope="scope">
@@ -47,7 +50,10 @@
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column :render-header="setHeader2" fixed width="50">
             <template slot-scope="scope">
@@ -60,7 +66,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input :value="scope.row.notArrivepayFee"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
+                  <el-input :value="scope.row.notArrivepayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -99,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       currentSearch: '',
       tablekey: '',
       truckMessage: '',
@@ -144,6 +151,12 @@ export default {
         width: '120'
       },
       {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
+      {
         label: '发货人',
         prop: 'shipSenderName',
         width: '120',
@@ -162,11 +175,19 @@ export default {
         'label': '到付结算状态',
         'prop': 'arrivepayStateCn'
       }, {
-        'label': '未结到付',
-        'prop': 'notArrivepayFee'
-      }, {
         'label': '已结到付',
-        'prop': 'finishArrivepayFee'
+        'prop': 'finishArrivepayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
+      }, {
+        'label': '未结到付',
+        'prop': 'notArrivepayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
       }, {
         label: '实结到付',
         prop: 'inputArrivepayFee',
@@ -327,6 +348,9 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -335,6 +359,11 @@ export default {
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: Number(newVal)
       }))
+      if (this.rightTable[index].notArrivepayFee !== newVal) {
+        this.textChangeDanger[index] = true
+      }else {
+        this.textChangeDanger[index] = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
@@ -409,13 +438,24 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          const item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 右边源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.leftTable.push(e)
+          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          // const item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 右边源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }

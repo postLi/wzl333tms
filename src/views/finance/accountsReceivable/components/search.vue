@@ -55,7 +55,12 @@
       <select-type v-model="searchForm.status" type="count_status" >
       </select-type>
     </el-form-item>
-    
+    <el-form-item label="签收状态"  prop="signStatus">
+      <selectType v-model="searchForm.signStatus"  type="sign_status">
+        <el-option slot="head" label="全部" value="" ></el-option>
+      </selectType>
+    </el-form-item>
+    <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button><el-button type="info" @click="clearForm" plain>清空</el-button>
@@ -67,12 +72,13 @@
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { parseTime, pickerOptions2 } from '@/utils/'
-
+import searchAll from '@/components/searchAll/index'
 export default {
   name: 'handaccount-manage-search',
   components: {
     SelectTree,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -93,7 +99,9 @@ export default {
   },
   data() {
     return {
+      searchAll: '1',
       searchCreatTime: [],
+      searchObjs: {},
       defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         shipFromOrgid: '',
@@ -105,7 +113,8 @@ export default {
         shipToCityCode: '',
         shipSn: '',
         ascriptionOrgId: '',
-        status: ''
+        status: '',
+        signStatus: ''
       },
       pickerOptions2: {
         shortcuts: pickerOptions2
@@ -115,6 +124,23 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.shipFromOrgid = newVal
+    },
+    searchCreatTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchCreatTime && this.searchCreatTime[0]) {
+          this.searchObjs.startTime = this.searchCreatTime[0] + ' 00:00:00'
+          this.searchObjs.endTime = this.searchCreatTime[1] + ' 23:59:59'
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -128,27 +154,37 @@ export default {
     })
   },
   methods: {
+    getDataObj(obj) {
+      this.searchCreatTime = [obj.startTime, obj.endTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchCreatTime && this.searchCreatTime[0]) {
         searchObj.startTime = this.searchCreatTime[0] + ' 00:00:00'
         searchObj.endTime = this.searchCreatTime[1] + ' 23:59:59'
       }
-
       this.$emit('change', searchObj)
     },
     clearForm() {
-      this.searchForm.senderName = ''
-      this.searchForm.senderCompanyName = ''
-      this.searchForm.shipFromCityCode = ''
-      this.searchForm.shipToCityCode = ''
-      this.searchForm.shipSn = ''
-
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
+      this.searchForm = this.$options.data().searchForm
       this.searchCreatTime = this.defaultTime
-      this.searchForm.shipFromOrgid = ''
       this.searchForm.ascriptionOrgId = this.otherinfo.orgid
+      this.searchAll = '1'
+      setTimeout(() => {
+        this.searchAll = ''
+      }, 50)
+      // this.searchForm.senderName = ''
+      // this.searchForm.senderCompanyName = ''
+      // this.searchForm.shipFromCityCode = ''
+      // this.searchForm.shipToCityCode = ''
+      // this.searchForm.shipSn = ''
+      // this.searchForm.startTime = ''
+      // this.searchForm.endTime = ''
+      // this.searchCreatTime = this.defaultTime
+      // this.searchForm.shipFromOrgid = ''
+      // this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     }
   }
 }

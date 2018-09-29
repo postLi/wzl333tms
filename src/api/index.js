@@ -10,13 +10,23 @@ import fetch from '@/utils/fetch'
  * @param {*} params
  */
 export function postHomedetail(id, data) {
-  return fetch.post('/api-system/system/tmshomedetail/v1/home/1', data).then(res => {
-    return res.data || {}
+  return fetch.post('/api-system/system/tmshomedetail/v1/home/' + id, data).then(res => {
+    return res.data
   })
 }
 
 export function getHomeYearDetail() {
   return fetch.get('/api-system/system/tmshomedetail/v1/findCapacityCompany').then(res => {
-    return res.data || {}
+    return res.data
   })
+}
+/**
+ * ====== 控制台 =======
+ */
+export function getConsoleData(data) {
+  return fetch.post('/api-system/system/tmshomefinance/v1/get/', data)
+}
+
+export function getConsoleChartData() {
+  return fetch.get('/api-system/system/tmshomefinance/v1/findCapacityorgid')
 }

@@ -869,10 +869,7 @@ export default {
         this.loading = false
                 // console.log(data);
       }).catch(err => {
-        this.$message({
-          type: 'error',
-          message: err.errorInfo || err.text || '未知错误，请重试~'
-        })
+        this._handlerCatchMsg(err)
       })
     },
         // fetchAllPutFh() {
@@ -958,6 +955,9 @@ export default {
               })
                   // fetchData()
               return false
+            }).catch((err)=>{
+              this.loading = false
+              this._handlerCatchMsg(err)
             })
           }
 

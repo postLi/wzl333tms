@@ -43,7 +43,7 @@
             <!--<el-input v-model="form.wechatAccount" auto-complete="off" :disabled="isDbclick"></el-input>-->
           <!--</el-form-item>-->
           <el-form-item label="备注" class="iom_textarea">
-            <el-input v-model="form.remark" :maxlength="300" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
+            <el-input v-model="form.remark" :maxlength="200" auto-complete="off" :disabled="isDbclick" type="textarea"></el-input>
           </el-form-item>
 
         </div>
@@ -189,7 +189,6 @@ export default {
       } else {
         this.popTitle = '新增收支方式'
         this.newInfo(this.otherinfo)
-
       }
     },
     isModify: {
@@ -297,7 +296,7 @@ export default {
             this.$emit('success')
             this.closeMe()
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
         } else {
@@ -306,7 +305,6 @@ export default {
       })
     },
     reset() {
-
       // this.$refs['ruleForm'].resetFields()
       // this.form = {}
       this.form.orgId = this.otherinfo.orgid

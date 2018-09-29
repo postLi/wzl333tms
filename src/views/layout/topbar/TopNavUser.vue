@@ -73,6 +73,8 @@ export default {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
         location.reload()  // 为了重新实例化vue-router对象 避免bug
+      }).catch((err)=>{
+        location.reload()
       })
     },
     lockScreen() {
@@ -82,11 +84,8 @@ export default {
       this.$store.dispatch('Login', loginForm).then(() => {
         location.href = '/'
       })
-        .catch(error => {
-          this.$message({
-            message: error.errorInfo || error.text || '您的账号或者密码有误~',
-            type: 'warning'
-          })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     changeView() {

@@ -16,14 +16,20 @@
                         @blur="tooltip = false;disabledName = true"
                         @mouseenter.native=" disabledName === true && (tooltip = true)"
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
-              <!--@blur="tooltip = false;disabledName = true"-->
-              <!--@mouseout.native="tooltip = false;disabledName = true"-->
-              <!--<template slot-scope="scope">-->
-              <!--<span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"  fill="red"></icon-svg></span>-->
-              <!--</template>-->
+
             </el-tooltip>
 
-            <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
+          </el-form-item>
+        </div>
+        <div class="sPayType">
+          <el-form-item label="费用项" prop="">
+            <el-select popper-class="selectFeeTypePop" v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
+              <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.dictValue">
+            </el-option>
+            <!-- <el-option class="selectFeeTypePop-btns">
+              <el-button type="primary">确定</el-button>
+            </el-option> -->
+        </el-select>
           </el-form-item>
         </div>
         <div class="sDate">
@@ -32,6 +38,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -54,7 +61,7 @@
           <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="联系方式">
-          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="12" v-numberOnly
+          <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly
                     disabled></el-input>
         </el-form-item>
         <el-form-item label="对账单编号">
@@ -95,7 +102,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应收清单</p>
+        <p>未收清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -112,27 +119,20 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
-                                                                                      fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -153,6 +153,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -213,10 +219,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+            v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -224,6 +247,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -231,6 +255,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -255,7 +280,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>应付清单</p>
+        <p>未付清单</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -276,14 +301,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteDealPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -308,6 +333,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -370,10 +401,11 @@
           >
           </el-table-column>
           <el-table-column
-            prop="unusualFee"
+            prop="unusualSubFee"
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -381,6 +413,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -388,6 +421,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -438,14 +472,14 @@
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlready(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                          fill="red"></icon-svg></span>
@@ -469,6 +503,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -528,10 +568,27 @@
           >
           </el-table-column>
           <el-table-column
+            prop="shipNowpayFee"
+            label="现付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('1')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
+            prop="shipArrivepayFee"
+            label="到付"
+            width="130"
+            sortable
+            v-if="currentFeeTypeIds.indexOf('2')!==-1"
+          >
+          </el-table-column>
+          <el-table-column
             prop="unusualFee"
             label="异动增款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -539,6 +596,7 @@
             label="回单付"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -546,6 +604,7 @@
             label="月结"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -588,24 +647,18 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'id', order: 'ascending'}"
           style="width: 100%">
-          <!--<el-table-column-->
-          <!--fixed-->
-          <!--sortable-->
-          <!--type="selection"-->
-          <!--width="50">-->
-          <!--</el-table-column>-->
           <el-table-column
             fixed
             sortable
             label="序号"
-            width="100">
+            width="70">
             <template slot-scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column
             fixed
             sortable
             label=""
-            width="100">
+            width="80">
             <template slot-scope="scope">
               <span class="deletebtn" @click="iconDeleteAlreadyPay(scope.$index)"><icon-svg icon-class="delete_lll"
                                                                                             fill="red"></icon-svg></span>
@@ -629,6 +682,12 @@
             sortable
             width="160"
             label="货号">
+          </el-table-column>
+          <el-table-column
+            prop="signStatus"
+            sortable
+            width="100"
+            label="签收状态">
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
@@ -691,10 +750,11 @@
           >
           </el-table-column>
           <el-table-column
-            prop="unusualFee"
+            prop="unusualSubFee"
             label="异动减款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -702,6 +762,7 @@
             label="异常金额"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -709,6 +770,7 @@
             label="代收货款"
             width="130"
             sortable
+             v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -789,13 +851,14 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime,objectMerge2,tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCFinanceinitialize, getCustomerdetail} from '@/api/finance/fin_customer'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCFinanceinitialize, getCustomerdetail } from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCustomer } from '@/utils/recLodopFuncs'
+  import { getSelectType } from '@/api/common'
 
   export default {
     components: {
@@ -804,6 +867,8 @@
     },
     data() {
       return {
+        currentFeeTypeIds: [],
+        orgFeeTypeIds: [],
         tooltip: false,
         disabledName: true,
         pickerOptions2: {
@@ -875,6 +940,8 @@
         visibleDialog: false,
         loading: true,
         btnsize: 'mini',
+        feeIdsArr: [],
+        typeIds: '',
         searchTitle: {
           shipSenderId: '', //
           startTime: '',
@@ -883,19 +950,19 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
 
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -910,9 +977,24 @@
       this.onSubmit()
     },
     mounted() {
+      this.currentFeeTypeIds = []
+      this.orgFeeTypeIds = []
+      this.getSelectType()
       this.onSubmit()
     },
     methods: {
+      changeFeeType(obj) {
+        console.log('changeFeeType', obj, this.typeIds)
+      },
+      getSelectType() {
+        const type = 'custoer_fee_type'
+        getSelectType(type, this.otherinfo.orgid).then(data => {
+          this.feeIdsArr = data
+          data.forEach((e, index) => {
+            this.orgFeeTypeIds[index] = e.dictValue
+          })
+        })
+      },
       export1() {
         this.sendData()
         // console.log(JSON.stringify(this.form))
@@ -924,8 +1006,12 @@
       fetchList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
+        this.searchTitle.feeTypeId = this.typeIds.join(',')
         return postCFinanceinitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          console.log('this.currentFeeTypeIds_res/////add', data.tmsFinanceBillCheckDto.feeTypeId, this.currentFeeTypeIds)
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           if (data.customerDetailDtoList.length > 0) {
@@ -962,37 +1048,41 @@
           }
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       modifyList() {
         this.loading = true
         this.searchTitle.shipSenderId = this.$route.query.id
-        return getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
-          const data = res.data
-          this.messageArr = data.tmsFinanceBillCheckDto
-          this.infoMessage(this.messageArr)
-          this.infoList()
-          data.customerDetailDtoList.forEach((el, val) => {
-            if (el.type === 1) {
-              this.dealInfo.push(el)
-              this.dealInfoData.push(el)
-            //
-
-            } else if (el.type === 2) {
-              this.dealPayInfo.push(el)
-              this.dealPayInfoData.push(el)
-            } else if (el.type === 3) {
-              this.alreadyInfo.push(el)
-              this.alreadyInfoData.push(el)
-            } else {
-              this.alreadyPayInfo.push(el)
-              this.alreadyPayInfoData.push(el)
-            }
-          })
-          this.loading = false
+        getCustomerdetail(this.searchTitle.shipSenderId).then(res => {
+          if (res) {
+            const data = res
+            this.messageArr = data.tmsFinanceBillCheckDto
+            this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+            this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
+            this.infoMessage(this.messageArr)
+            this.infoList()
+            data.customerDetailDtoList.forEach((el, val) => {
+              if (el.type === 1) {
+                this.dealInfo.push(el)
+                this.dealInfoData.push(el)
+              //
+              } else if (el.type === 2) {
+                this.dealPayInfo.push(el)
+                this.dealPayInfoData.push(el)
+              } else if (el.type === 3) {
+                this.alreadyInfo.push(el)
+                this.alreadyInfoData.push(el)
+              } else {
+                this.alreadyPayInfo.push(el)
+                this.alreadyPayInfoData.push(el)
+              }
+            })
+            this.loading = false
+          }
+          
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       onSearch() {
@@ -1006,7 +1096,6 @@
         this.fetchList()
         this.infoPayFor()
         this.closeVisibleDialog()
-
       },
       onSubmit() {
         if (this.$route.query.tab === '客户对账-创建对账') {
@@ -1023,6 +1112,7 @@
             this.$refs['formName3'].validate((valid) => {
               if (valid) {
                 this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
+                this.form.tmsFinanceBillCheckDto.feeTypeId = this.searchTitle.feeTypeId
                 for (const i in this.messageInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                 }
@@ -1135,14 +1225,14 @@
         }
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7) {
+          if (index === 3 || index === 4 || index === 5) {
             sums[index] = ''
             return
           }
@@ -1151,8 +1241,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev , curr)
-                // return prev + curr
+                return tmsMath._add(prev, curr)
               } else {
                 return prev
               }
@@ -1502,6 +1591,18 @@
         margin: 20px 0 15px 0;
       }
 
+    }
+  }
+  .selectFeeTypePop{
+    // .el-scrollbar{
+    //   padding-bottom: 40px;
+    //   position: relative;
+    // }
+    .selectFeeTypePop-btns{
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
     }
   }
 </style>

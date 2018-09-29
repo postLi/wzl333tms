@@ -44,8 +44,14 @@ export default {
      * 设置与当前页匹配的菜单高亮
      */
     setNavHightlight() {
+      // 只过滤第一层，判断二级大菜单路径去匹配
       const find = this.permission_routers.filter(route => {
-        return route.path !== '/' && this.$route.path.indexOf(route.path) === 0
+        // 针对首页子链接特殊处理
+        if (route.name === 'dashboard') {
+          return this.$route.meta.proute === route.name
+        } else {
+          return route.path !== '/' && this.$route.path.indexOf(route.path) === 0
+        }
       })
       const current = find[0] || this.$route
       this.current = current.path

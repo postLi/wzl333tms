@@ -320,6 +320,9 @@ export default {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
         this.detailList = data.data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setColumn(obj) { // 重绘表格列表

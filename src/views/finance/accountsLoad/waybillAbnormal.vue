@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" type="index" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -48,7 +51,10 @@
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" type="index" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -61,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -99,6 +105,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       orgLeftTable: [],
       tablekey: '',
       truckMessage: '',
@@ -143,6 +150,12 @@ export default {
           fixed: false
         },
         {
+          label: '签收状态',
+          prop: 'signStatusName',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '发货人',
           prop: 'senderCustomerName',
           width: '120',
@@ -164,13 +177,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '发货方',
@@ -261,6 +282,12 @@ export default {
           fixed: false
         },
         {
+          label: '签收状态',
+          prop: 'signStatusName',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '发货人',
           prop: 'senderCustomerName',
           width: '120',
@@ -282,13 +309,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '实结异常理赔',
@@ -406,8 +441,8 @@ export default {
       // }
     },
     getList() {
-      let sns = JSON.parse(this.$route.query.selectListShipSns)
-      let selectListShipSns = objectMerge2([], sns)
+      const sns = JSON.parse(this.$route.query.selectListShipSns)
+      const selectListShipSns = objectMerge2([], sns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
       } else {
@@ -421,45 +456,52 @@ export default {
       this.initLeftParams() // 设置searchQuery
       console.log('this.searchQuery', this.searchQuery)
       // if (!this.isFresh) {
-        postFindAbnormalList(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListShipSns.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.shipSn) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            e.inputAbnormalFee = e.unpaidFee
-            let item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      postFindAbnormalList(this.searchQuery).then(data => {
+        this.leftTable = Object.assign([], data.list)
+        selectListShipSns.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.shipSn) {
+              this.rightTable.push(item)
             }
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          e.inputAbnormalFee = e.unpaidFee
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
       // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      let unpaidName = 'unpaidFee' // 未结费用名
-      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
-      let paidVal = this.rightTable[index][prop]
+      const unpaidName = 'unpaidFee' // 未结费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const paidVal = this.rightTable[index][prop]
+      if (paidVal !== unpaidVal) {
+        this.$set(this.textChangeDanger, index, true)
+      } else {
+        this.$set(this.textChangeDanger, index, false)
+      }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
       } else {
-        // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
         }))
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      console.log(index, paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -493,17 +535,27 @@ export default {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实结数量
           e.inputAbnormalFee = e.unpaidFee
-          this.rightTable.push(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) {
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.rightTable.push(e)
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) {
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
           // let item = this.leftTable.indexOf(e)
           // if (item !== -1) { // 源数据减去被穿梭的数据
           //   this.leftTable.splice(item, 1)
@@ -526,13 +578,24 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+            return em.shipSn !== e.shipSn
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // this.leftTable.push(e)
+          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -542,17 +605,17 @@ export default {
         this.isGoReceipt = false
       }
     },
-    dclickAddItem (row, event) { // 双击添加单行
+    dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
       this.doAction('goLeft')
     },
-    dclickMinusItem (row, event) { // 双击减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.doAction('goRight')
     },
-    selectCurrent (obj, index) {
+    selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -606,11 +669,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let propsArr = ['_index|2|单','fee', 'unpaidFee', 'closeFee', 'inputAbnormalFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'closeFee', 'inputAbnormalFee', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     }
   }

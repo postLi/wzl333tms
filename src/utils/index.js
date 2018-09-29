@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+import { Message, MessageBox } from 'element-ui'
 
 const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
 /**
@@ -434,7 +435,6 @@ export const pickerOptions4 = {
     let _end = dateobj || new Date()
     const start = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate() - 1)
     _end = new Date(_end.getFullYear(), _end.getMonth(), _end.getDate())
-
     // const end = new Date(_end.getTime() - 3600 * 1000 * 24)
     return [start, _end]
   },
@@ -560,6 +560,7 @@ export const pickerOptions2 = [{
     const start = new Date()
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
     picker.$emit('pick', [start, end])
+    console.log(picker)
   }
 }]
 
@@ -656,7 +657,37 @@ export function deepClone(source) {
   })
   return targetObj
 }
+/** ***
+ *
+ * DOM相关操作
+ *
+ */
+// ===========事件处理===========
+/**
+ * 只能输入数字
+ * @param {*} event 事件对象
+ */
+export function keepNumber(event) {
+  keepNumberAndPoint(event, 0)
+}
+export function keepNumberAndPoint(event, pointNum = 2) {
+  var hasPoint = !!pointNum
+  // enter ctrl+c ctrl+v ctrl+a ctrl+x 应该仍然可以使用
+  // 左右、删除、tab键
+  if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9) && !(event.key === '.' && hasPoint) && !(event.keyCode === 13) &&
+    !((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 65 || event.keyCode === 88) && event.ctrlKey && !event.altKey && !event.shiftKey)
+  ) {
+    // 数字 小键盘数字
+    if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+  }
 
+  var el = event.target
+  // 如果第一位为小数点，则补0
+  el.value = hasPoint ? el.value.replace(/[^0-9.]/g, '').replace(/\./, '*').replace(/\./g, '').replace(/\*/, '.').replace(/^\./, '0.').replace(new RegExp('^(\\d+)\\.(\\d{' + Math.abs(pointNum) + '}).*$'), '$1.$2') : el.value.replace(/\D/g, '').replace(/\./g, '')
+}
 // element-closest | CC0-1.0 | github.com/jonathantneal/closest
 /**
  * 判断dom元素是否匹配某个选择器
@@ -896,4 +927,64 @@ export const uniqueArray = (array, key) => {
     }
   }
   return result
+}
+/**
+ * 缓存开发环境的一些操作数据
+ * @param {*} pfix 缓存前缀
+ * @param {*} data 缓存数据
+ */
+export function cacheDEVInfo(pfix, data) {
+  // 如果是非正式环境，缓存最近50条js报错信息
+  if (window.location.host.indexOf('28tms.cn') === -1) {
+    try {
+      data = JSON.stringify(data)
+      var maxlen = 50
+      var find = false
+      // 第一遍查找空位，有就插进去
+      for (var i = 0; i < maxlen; i++) {
+        var date1 = new Date()
+        if (!localStorage[pfix + i]) {
+          localStorage[pfix + i] = (+date1) + '||' + date1.toLocaleString() + ' || ' + data
+          find = true
+          break
+        }
+      }
+      // 第二遍找旧值，有就插进去
+      if (!find) {
+        for (var j = 0; j < maxlen; j++) {
+          var fd = localStorage[pfix + j].split('||')
+          if (j < (maxlen - 1)) {
+            var fd2 = localStorage[pfix + (j + 1)].split('||')
+            if ((+fd2[0]) > (+fd[0])) {
+              var date2 = new Date()
+              localStorage[pfix + j] = (+date2) + '||' + date2.toLocaleString() + ' || ' + data
+              break
+            }
+          } else {
+            // 如果是最后一条，则直接替换更新
+            var date3 = new Date()
+            localStorage[pfix + j] = (+date3) + ' || ' + date3.toLocaleString() + '||' + data
+            break
+          }
+        }
+      }
+    } catch (err) {
+      console.log('转换数据出错了：', err, data)
+    }
+  }
+}
+
+export function handleErrorMsg(err, premsg = '') {
+  console.error('catch error:', err)
+  const vmsg = '未知错误，请重试~'
+  const msg = (err.errorInfo || err.text || vmsg)
+  Message.error(premsg + msg)
+
+  if (msg === vmsg) {
+    cacheDEVInfo('js', err.stack ? {
+      stack: err.stack,
+      message: err.message,
+      url: window.location.href
+    } : err)
+  }
 }

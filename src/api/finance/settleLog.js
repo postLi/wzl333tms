@@ -1,6 +1,7 @@
 import fetch from '../../utils/fetch'
+import { handleErrorMsg } from '@/utils/'
 
-/**************************************
+/** ************************************
  *             资金流水汇总
  **************************************/
 /**
@@ -8,10 +9,10 @@ import fetch from '../../utils/fetch'
  */
 export function postFindLowList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/list/', data).then(res => {
-      return res.data
-    })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    return res.data
+  })
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -28,22 +29,22 @@ export function getFeeInfo(orgId, paymentsType) {
  */
 export function getOrderShipList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/getOrderShipList/', {
-      orgId: data.orgId,
-      paymentsType: data.paymentsType,
-      incomePayType: data.incomePayType,
-      settlementId: data.settlementId,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      autoTotalAmount: data.autoTotalAmount,
-      shipSenderName: data.shipSenderName,
-      feeId: data.feeId,
-      truckIdNumber: data.truckIdNumber
-    })
+    orgId: data.orgId,
+    paymentsType: data.paymentsType,
+    incomePayType: data.incomePayType,
+    settlementId: data.settlementId,
+    startTime: data.startTime,
+    endTime: data.endTime,
+    autoTotalAmount: data.autoTotalAmount,
+    shipSenderName: data.shipSenderName,
+    feeId: data.feeId,
+    truckIdNumber: data.truckIdNumber
+  })
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -66,13 +67,13 @@ export function postCancelSettlement(data) {
  */
 export function postAddIncome(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflow/v1/addIncome/', data).then(res => {
-      return res.data
-    })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    return res.data
+  })
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
-/**************************************
+/** ************************************
  *             资金流水明细
  **************************************/
 /**
@@ -82,10 +83,10 @@ export function postAddIncome(data) {
  */
 export function postDetailList(data) {
   return fetch.post('/api-finance/finance/tmsfinancecapitalflowdetail/v1/list/', data).then(res => {
-      return res.data
-    })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    return res.data
+  })
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -97,21 +98,21 @@ export function postDetailList(data) {
 /**
  * 查看结算单
  */
-export function getSettlementInfo(flowId) {
-  return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId)
+export function getSettlementInfo(flowId, settlementId) {
+  return fetch.get('/tmsfinanceservice/finance/tmsfinancecapitalflow/v1/getSettlementInfo?flowId=' + flowId + '&settlementId=' + settlementId)
 }
 /**
  * 查看费用类型
  */
 export function getFeeTypeDict(settlementId) {
   return fetch.post('/api-finance/finance/tmsfinancefeetype/v1/getFeeTypeDict/', {
-      settlementId: settlementId
-    })
+    settlementId: settlementId
+  })
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
 /**
@@ -119,13 +120,14 @@ export function getFeeTypeDict(settlementId) {
  */
 export function getOrgFirstFinancialWay(data) {
   return fetch.post('/api-finance/finance/tmsfinancefinancialway/v1/getOrgFirstFinancialWay/', {
-      financialWay: data.financialWay,
-      orgId: data.orgId
-    })
+    financialWay: data.financialWay,
+    orgId: data.orgId
+  })
     .then(res => {
       return res.data
     })
-    .catch(error => {
-      this.$message.error(error.errorInfo || error.text || '未知错误，请重试~')
+    .catch(err => {
+      handleErrorMsg(err)
     })
 }
+

@@ -16,6 +16,9 @@
     <UploadImage @success="getUrl" showFileList :limit="2" listtype="picture" v-model="url4" tip="" />
     <p>上传后的链接地址：{{ JSON.stringify(url4) }}</p>
 
+    <h4>二维码上传</h4>
+    <UploadImage class="twocodeimager" @success="getUrl" twocode v-model="url5" tip="" />
+
     <blockquote>
       引用地址：
       components/Upload/singleImage.vue
@@ -47,11 +50,12 @@ export default {
   },
   data() {
     return {
-      url: 'http://aflc.oss-cn-shenzhen.aliyuncs.com//tms/JepzficX6twzc2F76MtED8kMC53pxQmH.png',
+      url: '',
       url1: '',
       url2: '',
       url3: '',
-      url4: ['https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100']
+      url4: ['https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'],
+      url5: ''
     }
   },
   methods: {
@@ -61,3 +65,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.twocodeimager{
+  height: 200px;
+}
+</style>

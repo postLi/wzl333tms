@@ -3,12 +3,12 @@
       <el-upload
         class="image-uploader"
         drag
-        v-if="uploadUrl" 
-        :data="upload" 
+        v-if="uploadUrl"
+        :data="upload"
         :action="uploadUrl"
-        :multiple="false" 
+        :multiple="false"
         list-type="picture-card"
-        :show-file-list="showFileList" 
+        :show-file-list="showFileList"
         :file-list="filelist"
         :limit="limit"
         :disabled="disabled"
@@ -26,9 +26,10 @@
         <!-- <div class="el-upload__text" style="font-size:4px">将文本拖拽到此区域或,<em>点击上传</em></div> -->
         <!-- <i class="el-icon-plus"></i> -->
         <slot name="content">
-          <el-button :size="size" type="primary" class="button">点击上传</el-button>
+          <el-button :size="size" type="primary" class="button" :disabled="disabled">点击上传</el-button>
           <div class="el-upload__text">将文件拖拽到此区域</div>
           <div v-if="tip" class="upload__tip">{{ tip }}</div>
+
         </slot>
       </el-upload>
       <el-dialog custom-class="singleimage2" :visible.sync="dialogVisible" :append-to-body="true">
@@ -74,6 +75,15 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    // 隐藏文字
+    hidBut: {
+      type: Boolean,
+      default: false
+    },
+    showBut: {
+      type: Boolean
+      // default: false
     }
   },
   computed: {
@@ -116,15 +126,22 @@ export default {
         }
       },
       immediate: true
+    },
+    hidBut() {
+
+    },
+    disabled() {
+
     }
   },
   mounted() {
     this.init()
+    console.log(this.disabled)
   },
   methods: {
     init() {
         // 从后台获取policy
-      getUploadPolicy().then(data => {
+      return getUploadPolicy().then(data => {
         this.upload.OSSAccessKeyId = data.accessid
         this.upload.policy = data.policy
         this.upload.signature = data.signature
@@ -196,9 +213,20 @@ export default {
           this.$message.error('上传头像图片大小不能超过 5MB!')
           reject(false)
         } else {
+          console.log('11111111')
+          // 上传前统一取一下凭证
+          this.init().then(res => {
+          console.log('22222222')
             // 设置文件名
-          this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
-          resolve(true)
+            this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
+            resolve(true)
+          })
+          .catch(err => {
+            console.log('333333')
+            this._handlerCatchMsg(err)
+            resolve(false)
+          })
+           
         }
       })
     },
@@ -313,9 +341,9 @@ export default {
         .el-upload--picture-card{
           line-height:43px;
         }
-        .upload__tip{
-          line-height:43px;
-        }
+        // .upload__tip{
+        //   line-height:43px;
+        // }
     }
 
 </style>

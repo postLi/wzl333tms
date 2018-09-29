@@ -167,6 +167,10 @@ export default {
     licenseTypes: {
       type: Array,
       default: () => []
+    },
+    payType: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -239,17 +243,17 @@ export default {
       rules: {
         fee: [
           // { required: true, message: '必填只能输入数字', trigger: 'blur' }
-          { required: true, validator: validatefee }
+          { required: true, validator: validatefee, trigger: 'change' }
         ],
         remark: [
-          { required: true, message: '请输入异动备注' }
+          { required: true, message: '请输入异动备注', trigger: 'change' }
         ],
         shipSn: [
           // { required: true, validator: validateshipSn }
-          { required: true, message: '请输入运单号' }
+          { required: true, message: '请输入运单号', trigger: 'change' }
         ],
         incomePayType: [
-          { required: true, message: '请选择费用类型' }
+          { required: true, message: '请选择费用类型', trigger: 'change' }
         ]
       },
       // fileList2:[],
@@ -344,7 +348,8 @@ export default {
         this.form.createTime = new Date()
         // this.dengji()
       }
-    }
+    },
+    payType (newVal) {}
   },
   methods: {
     // handleRemove(file, fileList) {
@@ -400,6 +405,9 @@ export default {
       this.loading = false
       getAllUser(this.orgid, '', '').then(res => {
         this.resInfo = res.list
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     getOrgid(id) {
@@ -465,9 +473,9 @@ export default {
           // this.form.shipFee = data.shipFee
         this.form.nowPayFee = data.nowPayFee
 
-        this.form.fee = data.fee
-        this.form.incomePayType = data.incomePayType
-        this.form.remark = data.remark
+        this.form.fee = data.fee ? data.fee : data.changeFee // 应收账款中的异动费用名是changeFee 
+        this.form.incomePayType = data.incomePayType ? data.incomePayType : this.payType
+        this.form.remark = data.remark ? data.remark : ''
         this.form.shipPayWayName = data.shipPayWay
         this.form.shipPayWay = data.shipPayWay
       }
@@ -547,7 +555,7 @@ export default {
             this.closeMe()
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
             this.$message.warning(err.text)
             // this.closeMe()

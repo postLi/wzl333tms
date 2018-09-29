@@ -5,7 +5,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
+        <el-button type="primary" v-has:REPORT_PRINT_4 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
@@ -83,11 +83,15 @@ export default {
   },
   methods: {
     report() {
+      console.log('sdfsdf2347823748', this.query)
       reportOperation(this.query).then(res => {
         let data = res
         let countColVal = []
 
        let table = document.getElementById('report_operation_table')
+       if (!table) {
+          return
+        }
         let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
         if (theadLen.length > 0) {
@@ -125,13 +129,15 @@ export default {
 
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
+          console.log(k)
           const tbodyTr = tbody.insertRow()
           for (let j = 0; j < this.columns.length; j++) {
+            console.log('j', j, this.countCol)
             const td = tbodyTr.insertCell()
             // 处理当列没有值、宽度设置等信息时，做默认值处理
             for (let t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
+                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
               }
             }
             td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
@@ -141,6 +147,9 @@ export default {
             td.style.width = (this.columns[j].width || 120) + 'px'
           }
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     doAction(type) {

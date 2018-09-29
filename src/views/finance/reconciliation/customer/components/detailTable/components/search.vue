@@ -110,12 +110,14 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
+      this.searchForm = this.$options.data().searchForm
       this.searchForm.orgId = this.orgid
       this.searchForm.checkStatus = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime
       // this.searchForm.searchCreatTime = []
+      console.log(this.searchForm, this.orgid)
     }
   }
 }

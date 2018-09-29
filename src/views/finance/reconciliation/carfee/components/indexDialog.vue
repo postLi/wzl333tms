@@ -3,10 +3,6 @@
     <PopFrame :title="popTitle" :isShow="popVisible" @close="closeMe" class='pickpopDepMain' v-loading="loading" >
       <template class='pickRelationPop-content' slot="content">
         <div class="depmain-div" >
-          <!--<div class="dialogMoney">-->
-
-          <!--对账总金额：<span>{{totaMoney}}元</span>-->
-          <!--</div>-->
           <el-table
             ref="multipleTable"
             :data="dialogInfo"
@@ -87,7 +83,7 @@
         dialogInfo:[
           {
             toPay:20,
-            date:"应付账款"
+            date:"未付账款"
           },
           {
             toPay:20,
@@ -161,8 +157,9 @@
           })
           this.$emit('success')
           this.closeMe()
-        }).catch(err => {
+        }).catch((err)=>{
           this.loading = false
+          this._handlerCatchMsg(err)
         })
 
       },

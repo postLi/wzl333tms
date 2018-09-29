@@ -284,23 +284,26 @@
         </div>
     </div>
     <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+    <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery"  @close="closeAddDot" @success="fetchAllreceipt" :isSend="isSend"/>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt, putUpdateReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
+import { postReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import AddMark from './components/add'
 export default {
   components: {
     SearchForm,
     TableSetup,
-    Pager
+    Pager,
+    AddMark
   },
   computed: {
     ...mapGetters([
@@ -315,6 +318,9 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
       // this.loading = false
+    }).catch((err) => {
+      this.loading = false
+      this._handlerCatchMsg(err)
     })
   },
   data() {
@@ -323,9 +329,12 @@ export default {
       component: 'Send',
       selectInfo: {},
       selected: [],
+      dotInfo: [],
       dataset: [],
       loading: true,
       setupTableVisible: false,
+      popVisible: false,
+      isSend: false,
       tablekey: 0,
       total: 0,
       searchQuery: {
@@ -348,7 +357,7 @@ export default {
       }, {
         label: '运单号',
         prop: 'shipSn',
-        width: '60',
+        width: '120',
         fixed: true
       }, {
         label: '开单网点',
@@ -438,7 +447,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {
@@ -532,6 +541,9 @@ export default {
       return postReceipt(this.searchQuery).then(data => {
         this.dataset = data.list
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -613,22 +625,19 @@ export default {
             this.searchQuery.vo.receiptIds = ids
             this.dotInfo = ids
             this.popVisible = true
-            this.isAccept = true
-            this.isModify = false
-            this.searchQuery.vo.receiptIds = ids
-            putUpdateReceipt(this.searchQuery.vo).then(res => {
-              this.$message({
-                message: '回单寄出成功~',
-                type: 'success'
-              })
-              this.fetchAllreceipt()
-              return false
-            }).catch(err => {
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
-            })
+            this.isSend = true
+            // this.searchQuery.vo.receiptIds = ids
+            // putUpdateReceipt(this.searchQuery.vo).then(res => {
+            //   this.$message({
+            //     message: '回单寄出成功~',
+            //     type: 'success'
+            //   })
+            //   this.fetchAllreceipt()
+            //   return false
+            // }).catch(err => {
+            //  this._handlerCatchMsg(err)
+            //   })
+            // })
           } else {
             this.$message.warning('回单已寄出请选择未寄出项~')
           }
@@ -652,10 +661,7 @@ export default {
               this.fetchAllreceipt()
               return false
             }).catch(err => {
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this._handlerCatchMsg(err)
             })
           } else {
             this.$message.warning('回单已接收不能取消~')
@@ -672,6 +678,9 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    closeAddDot() {
+      this.popVisible = false
     },
     closeSetupTable() {
       this.setupTableVisible = false

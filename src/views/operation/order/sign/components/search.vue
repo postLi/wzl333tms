@@ -8,6 +8,7 @@
               :default-value="defaultTime"
               type="daterange"
               align="right"
+              popper-class='searchCreatTime'
               value-format="yyyy-MM-dd"
               start-placeholder="开始日期"
               :picker-options="pickerOptions2"
@@ -142,8 +143,8 @@ export default {
     onSubmit() {
       // this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0]) : ''
       // this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1]) : ''
-      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
-      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.searchForm.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d}') + '00:00:00' : ''
+      this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d}') + '23:59:59' : ''
       // this.$emit('change', this.searchForm)
       const data = Object.assign({}, this.searchForm)
       this.$emit('change', data)

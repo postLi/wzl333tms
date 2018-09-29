@@ -131,6 +131,18 @@
                                   v-number-only:point></el-input>
                       </el-form-item>
                     </li>
+                   <li style="width: 12%;">
+                      <p>封签号</p>
+                      <el-form-item prop="sealNumber">
+                        <el-input :maxlength="10" v-model="formModel.sealNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
+                    <li style="width: 12%;">
+                      <p>油卡号</p>
+                      <el-form-item prop="oilCardNumber">
+                        <el-input :maxlength="10" v-model="formModel.oilCardNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
                   </ul>
                 </el-form>
               </div>
@@ -155,7 +167,7 @@
 
 
                   <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails"
-                            @selection-change="getSelection" height="80%" tooltip-effect="dark" :key="tablekey"
+                            @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
                             style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
@@ -170,15 +182,14 @@
                         <!--状态-->
                         <template slot-scope="scope">
                           <div v-if="column.checkfn">
-                            <span v-if="column.checkfn(scope.row)">
+                            <!-- <span v-if="column.checkfn(scope.row)">
                                {{scope.row[column.prop]}}
-
-
-                            </span>
+                            </span> -->
+                            <span v-if="column.checkfn(scope.row)" v-html="column.slot(scope)"></span>
                             <span v-else>
                                <el-input
-
-                                 v-model.number="column.slot(scope)"
+                               @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                                 v-model.number="scope.row[column.prop]"
                                  :size="btnsize"
                                  v-number-only
                                  @change="(val) => changeData(scope.$index, column.prop, val)"
@@ -189,8 +200,8 @@
                           </div>
                           <div v-else-if="column.expand">
                             <el-input
-
-                              v-model.number="column.slot(scope)"
+                              @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                              v-model.number="scope.row[column.prop]"
                               :size="btnsize"
                               v-number-only
                               @change="(val) => changeData(scope.$index, column.prop, val)"
@@ -288,7 +299,7 @@
                   <!--</div>-->
                   <div class="top_no">
                     <el-form-item label="NO.">
-                      <el-input placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
+                      <el-input placeholder="1" size="mini" disabled v-model="formModel.batchNo"></el-input>
                     </el-form-item>
                   </div>
                 </div>
@@ -426,21 +437,21 @@
 
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
+  import { REGEX } from '@/utils/validate'
   import popRight from '@/components/PopRight/index'
   import selectType from '@/components/selectType/index'
-  import {getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
-  import {postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar} from '@/api/operation/arteryDelivery'
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {mapGetters} from 'vuex'
+  import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
+  import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+  // import { getExportExcel } from '@/api/company/customerManage'
+  import { mapGetters } from 'vuex'
   import SelectTree from '@/components/selectTree/index'
-  import {objectMerge2, parseTime, closest} from '@/utils/'
+  import { objectMerge2, parseTime, closest } from '@/utils/'
   import TableSetup from '@/components/tableSetup'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     data() {
-      const validateNum = function (rule, value, callback) {
+      const validateNum = function(rule, value, callback) {
         if (!REGEX.ONLY_NUMBER.test(value)) {
           callback(new Error('请输入数字~'))
         } else if (REGEX.KONGE.test(value)) {
@@ -454,10 +465,10 @@
       return {
         ruleData: {
           arriveHandlingFee: [
-            {validator: validateNum, trigger: 'blur'}
+            { validator: validateNum, trigger: 'blur' }
           ], //
           arriveOtherFee: [
-            {validator: validateNum, trigger: 'blur'}
+            { validator: validateNum, trigger: 'blur' }
           ]
         },
         tablekey: '1',
@@ -477,6 +488,8 @@
         isEditActual: false,
         propsId: '',
         formModel: {},
+        textChangeDanger: [],
+        label: '序号',
         // formModel: {
         //   addStatus: 1,
         //   id: 0,
@@ -492,7 +505,7 @@
         selectDetailList: [],
         selected: [],
         // 加载状态
-        loading: true,
+        // loading: true,
         setupTableVisible: false,
         // AddCustomerVisible: false,
         formMode1: {},
@@ -549,6 +562,12 @@
           width: '120',
           fixed: false
         },
+        {
+            label: '到付(元)',
+            prop: 'shipArrivepayFee',
+            width: '90',
+            fixed: false
+          }, 
           //   {
           //   label: '应到件数',
           //   prop: 'loadAmount',
@@ -566,48 +585,50 @@
           //   fixed: false
           // },
           // v-if="isAlFun"   入库前的
-          {
-            label: '实到件数',
-            prop: 'actualAmount',
-            width: '100',
-            isAlFun: true,
-            expand: true,
-            fixed: false,
-            checkfn: (row) => {
-              console.log('row.warehouStatus:', row.warehouStatus)
-              return row.warehouStatus === 1
-            },
-
-            slot: (scope) => {
-              return scope.row.actualAmount
-            }
-          }, {
-            label: '实到重量',
-            prop: 'actualWeight',
-            width: '100',
-            expand: true,
-            checkfn: (row) => {
-              return row.warehouStatus === 1
-            },
-            fixed: false,
-
-            slot: (scope) => {
-              return scope.row.actualWeight
-            }
-          }, {
-            label: '实到体积',
-            prop: 'actualVolume',
-            width: '100',
-            expand: true,
-            checkfn: (row) => {
-              return row.warehouStatus === 1
-            },
-            fixed: false,
-
-            slot: (scope) => {
-              return scope.row.actualVolume
-            }
+        {
+          label: '实到件数',
+          prop: 'actualAmount',
+          width: '100',
+          isAlFun: true,
+          expand: true,
+          fixed: false,
+          checkfn: (row) => {
+            console.log('row.warehouStatus:', row.warehouStatus)
+            return row.warehouStatus === 1
           },
+
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
+          }
+        }, {
+          label: '实到重量(kg)',
+          prop: 'actualWeight',
+          width: '120',
+          expand: true,
+          checkfn: (row) => {
+            return row.warehouStatus === 1
+          },
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
+          }
+        }, {
+          label: '实到体积(m³)',
+          prop: 'actualVolume',
+          width: '120',
+          expand: true,
+          checkfn: (row) => {
+            return row.warehouStatus === 1
+          },
+          fixed: false,
+
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
+          }
+        },
           // v-if="!isAlFun"  入库后的
           // {
           //   label: '实到件数',
@@ -635,67 +656,67 @@
           //   fixed: false
           // },
           //
-          {
-            label: '配载件数',
-            prop: 'loadAmount',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载重量',
-            prop: 'loadWeight',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载体积',
-            prop: 'loadVolume',
-            width: '100',
-            fixed: false
-          }, {
-            label: '出发城市',
-            prop: 'shipFromCityName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '到达城市',
-            prop: 'shipToCityName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '发货人',
-            prop: 'shipSenderName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '发货人电话',
-            prop: 'shipSenderMobile',
-            width: '120',
-            fixed: false
-          }, {
-            label: '收货人',
-            prop: 'shipReceiverName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '收货人电话',
-            prop: 'shipReceiverMobile',
-            width: '120',
-            fixed: false
-          }, {
-            label: '货品名',
-            prop: 'cargoName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '货号',
-            prop: 'shipGoodsSn',
-            width: '130',
-            fixed: false
-          }, {
-            label: '运单备注',
-            prop: 'shipRemarks',
-            width: '110',
-            fixed: false
-          }
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量(kg)',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载体积(m³)',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        }, {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '110',
+          fixed: false
+        }
         ]
       }
     },
@@ -875,6 +896,16 @@
         else {
           this.$refs.multipleTable.toggleRowSelection(this.detailList[index], true)
         }
+
+        if (curAmount !== curloadAmount || curWeight !== curloadWeight || curVolume !== curloadVolume) {
+          // this.textChangeDanger[index] = true
+          this.$set(this.detailList[index], prop+'lyy', true)
+        }else {
+          if (curAmount === curloadAmount && curWeight === curloadWeight && curVolume === curloadVolume) {
+            // this.textChangeDanger[index] = false
+            this.$set(this.detailList[index], prop+'lyy', false)
+          }
+        }
         return this.detailList[index].actualAmount && this.detailList[index].actualWeight && this.detailList[index].actualVolume
       },
       fetchSelectLoadMainInfoList() {
@@ -885,6 +916,9 @@
           this.formModel = data.list[0]
           this.batchTypeName = this.formModel.batchTypeName
           this.loading = false
+        }).catch((err)=>{
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       fetchAllCustomer() {
@@ -911,11 +945,10 @@
               // e.actualAmount = e.loadAmount - e.actualAmount
               // e.actualWeight = e.loadWeight - e.actualWeight
               // e.actualVolume = e.loadVolume - e.actualVolume
-
             })
           })
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       getDetail() {
@@ -923,14 +956,13 @@
         return getLoadDetail(id).then(data => {
           this.trackDetail = Object.assign([], data)
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       toggleAllRows() {
         this.$nextTick(() => {
           this.detailList.forEach((e, index) => {
-
-            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
+          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
             //   this.$refs.multipleTable.toggleRowSelection(e, false)
             // } else {
             //   this.$refs.multipleTable.toggleRowSelection(e, true)
@@ -978,8 +1010,11 @@
       deleteTrack(item) {
         console.log(item)
         return deleteTrack(item.id).then(data => {
-          this.$message({type: 'success', message: '删除成功'})
+          this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
+        }).catch((err)=>{
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       editItem(item) {
@@ -991,18 +1026,24 @@
         console.log('修改')
         this.formModel.transferId = 0
         return putUpdateTrack(this.formModel).then(data => {
-          this.$message({type: 'success', message: '修改成功'})
+          this.$message({ type: 'success', message: '修改成功' })
           this.getDetail()
           this.resetForm()
+        }).catch((err)=>{
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       addTrack() {
         console.log('添加')
         this.formModel.loadId = this.id
         return postAddTrack(this.formModel).then(data => {
-          this.$message({type: 'success', message: '添加成功'})
+          this.$message({ type: 'success', message: '添加成功' })
           this.getDetail()
           this.resetForm()
+        }).catch((err)=>{
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       resetForm() {
@@ -1060,7 +1101,7 @@
                 this.loading = false
                 // this.isHiddenBtn = false
               }).catch(err => {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
               // this.closeMe()
@@ -1079,8 +1120,7 @@
                     message: '不能再次到车入库'
                   })
                   return false
-                }
-                else {
+                } else {
                   if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
                     this.formModel.arriveHandlingFee = 0
                     this.formModel.arriveOtherFee = 0
@@ -1107,7 +1147,7 @@
                     })
                     this.$emit('success')
                   }).catch(err => {
-                    this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                    this._handlerCatchMsg(err)
                   })
                   this.closeMe()
                 }
@@ -1273,7 +1313,7 @@
         border-left: #d4d4d4;
         .el-form-item {
           margin-right: 35px;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
         .el-form-item:nth-of-type(3) {
           margin-right: 0;
@@ -1520,8 +1560,8 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 1000px;
-    max-width: 1000px;
+    min-width: 1100px;
+    max-width: 1100px;
     /*z-index: 1001 !important;*/
     .el-input.is-disabled {
       .el-input__inner {

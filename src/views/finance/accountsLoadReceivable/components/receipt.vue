@@ -243,7 +243,7 @@ export default {
       this.submitForm('formModel')
     },
     postTmsFfinancialwayList() {
-      let query = {
+      const query = {
         currentPage: 1,
         pageSize: 100,
         vo: {
@@ -261,11 +261,14 @@ export default {
             this.financialWalList.push(e)
           }
         })
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     querySearch(queryString, cb) {
-      let dataList = this.financialWalList
-      let results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
+      const dataList = this.financialWalList
+      const results = queryString ? dataList.filter(this.createFilter(queryString)) : dataList
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -286,14 +289,16 @@ export default {
         this.formModel.settlementBy = this.otherinfo.name
         // this.getSystemTime()
         this.initDetailDtoList()
-        if(this.formModel.szDtoList.length){
+        if (this.formModel.szDtoList.length) {
           this.formModel.szDtoList.forEach(e => {
             e.agent = this.otherinfo.name
           })
         } else {
           this.plusItem()
         }
-        
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     initDetailDtoList() {
@@ -343,6 +348,9 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = new Date(data.trim())
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -377,12 +385,12 @@ export default {
           accountApi.postCreateFee(this.$route.query.searchQuery.vo.ascriptionOrgId, this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
-            this.eventBus.$emit('replaceCurrentView','/finance/accountsReceivable/'+this.$route.query.currentPage)
+            this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
             // 当添加结算时更新列表
             this.eventBus.$emit('updateAccountsReceivableList')
           })
-            .catch(error => {
-              this.$message({ type: 'error', message: '操作失败' })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
         }
       })

@@ -1,7 +1,7 @@
 <template>
   <!--v-loading="loading"-->
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="searchQuery.vo.orgId " :issender="true" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :orgid="currentOrgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
 
@@ -70,7 +70,7 @@ export default {
     }
   },
   mounted() {
-    this.searchQuery.vo.orgId = this.$route.query.orgid
+    this.currentOrgid = this.$route.query.orgid
     this.searchQuery.vo.memberId = this.$route.query.id
   },
   data() {
@@ -102,6 +102,7 @@ export default {
           endTime: ''
         }
       },
+      currentOrgid: '',
       tableColumn: [
         {
           label: '序号',
@@ -121,6 +122,11 @@ export default {
           prop: 'memberPerson',
           width: '130',
           fixed: true
+        }, {
+          label: '对账状态',
+          prop: 'checkStatusName',
+          width: '120',
+          fixed: false
         }, {
           label: '创建时间',
           prop: 'createTime',
@@ -152,12 +158,12 @@ export default {
           width: '160',
           fixed: false
         }, {
-          label: '应收账款',
+          label: '未收账款',
           prop: 'receivableFee',
           width: '120',
           fixed: false
         }, {
-          label: '应付账款',
+          label: '未付账款',
           prop: 'payableFee',
           width: '120',
           fixed: false
@@ -169,11 +175,6 @@ export default {
         }, {
           label: '已付账款',
           prop: 'paidFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '对账状态',
-          prop: 'checkStatusName',
           width: '120',
           fixed: false
         }, {
@@ -248,10 +249,9 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
         this.loading = false
       })
-
     },
     fetchData() {
       this.fetchAllCustomer()
@@ -341,7 +341,6 @@ export default {
               _data.id = this.selected[0].id
               this.loading = true
               postUpdateBillCheckSelective(_data).then(res => {
-
                 this.$message({
                   type: 'success',
                   message: '已取消对账~'
@@ -349,7 +348,7 @@ export default {
                 this.fetchData()
                 this.loading = false
               }).catch(err => {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
             } else {
@@ -384,7 +383,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
                 this.loading = false
               })
             } else {
@@ -392,6 +391,7 @@ export default {
                 type: 'info',
                 message: '该对账单已完成对账不可以删除~'
               })
+              this.loading = false
               this.$refs.multipleTable.clearSelection()
               return false
             }

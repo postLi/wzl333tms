@@ -59,6 +59,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm',true)">保存并新增</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -242,7 +243,7 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(formName) {
+    submitForm(formName, bool) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -259,10 +260,13 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
         } else {
@@ -271,9 +275,14 @@ export default {
       })
     },
     reset() {
+       // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.driverMobile = ''
       this.form.idcardPicture = ''
+      this.form.drivingPicture = ''
+      this.form.certification = ''
+      this.form.orgid = orgid
     },
     closeMe(done) {
       // this.reset()

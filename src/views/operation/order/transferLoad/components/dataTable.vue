@@ -16,6 +16,8 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="120">
         </el-table-column>
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
+        </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
@@ -100,6 +102,8 @@
             <selectType type="payment_type" size="mini"
             @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
+        </el-table-column>
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="cargoAmount" sortable label="运单件数" width="100">
         </el-table-column>
@@ -234,14 +238,16 @@ export default {
           e.loadVolume = e.repertoryVolume
           e.oddNumbers = e.oddNumbers || e.shipSn
           e.paymentId = e.paymentId || 16
+          // this.rightTable.push(e)
+          this.rightTable = this.rightTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.rightTable.push(e)
-          const item = this.leftTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-          }
+          this.leftTable = this.leftTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
         })
-        this.changeTableKey() // 刷新表格视图
+        // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }
@@ -251,22 +257,36 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = this.leftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
           this.leftTable.push(e)
-          const item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = this.rightTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
         })
-        this.changeTableKey() // 刷新表格视图
+        // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         this.$emit('loadTable', this.rightTable)
       }
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []
-      this.selectedRight[index] = row
+      this.selectedRight.push(row)
       this.doAction('goLeft')
+    },
+     minusItem(row, index) { // 减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
+    addALLList() { // 添加全部
+      this.selectedRight = Object.assign([], this.leftTable)
+      this.doAction('goLeft')
+    },
+    minusAllList() { // 减去全部
+      this.selectedLeft = Object.assign([], this.rightTable)
+      this.doAction('goRight')
     },
     dclickAddItem (row, event) { // 双击添加单行
       this.selectedRight = []
@@ -305,19 +325,6 @@ export default {
           click: this.minusAllList
         }
       })
-    },
-    minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
-    },
-    addALLList() { // 添加全部
-      this.selectedRight = Object.assign([], this.leftTable)
-      this.doAction('goLeft')
-    },
-    minusAllList() { // 减去全部
-      this.selectedLeft = Object.assign([], this.rightTable)
-      this.doAction('goRight')
     }
   }
 }

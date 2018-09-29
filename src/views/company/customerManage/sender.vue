@@ -115,7 +115,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '80',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -141,7 +141,7 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '归属组织',
+        label: '归属网点',
         prop: 'orgName',
         width: '120',
         fixed: false
@@ -162,18 +162,22 @@ export default {
       }, {
         label: '银行名称',
         prop: 'bankName',
+        width: '120',
         fixed: false
       }, {
         label: '银行卡号',
         prop: 'bankCardNumber',
+        width: '180',
         fixed: false
       }, {
         label: '开户行',
         prop: 'openBank',
+        width: '120',
         fixed: false
       }, {
         label: '详细地址',
         prop: 'detailedAddress',
+        width: '180',
         fixed: false
       }, {
         label: '身份证图片',
@@ -191,6 +195,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

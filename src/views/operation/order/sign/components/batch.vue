@@ -32,10 +32,10 @@
           <el-input :maxlength="10" v-model.trim="form.signName" ></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
-          <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type"/>
+          <SelectType v-model="form.signCocumentTypeId" maxlenght="18" type="sign_cocument_type"/>
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input :maxlength="20" v-model="form.documentNum" auto-complete="off"></el-input>
+          <el-input v-model="form.documentNum" :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
           <el-input :maxlength="250" v-model.trim="form.remark" auto-complete="off" placeholder="最多可输入250个字符"></el-input>

@@ -338,6 +338,9 @@ export default {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
     // this.loading = false
+    }).catch((err) => {
+      this.loading = false
+      this._handlerCatchMsg(err)
     })
   },
   data() {
@@ -471,7 +474,7 @@ export default {
         fixed: false
       }, {
         label: '付款方式',
-        prop: 'shipPayWay',
+        prop: 'shipPayWayName',
         width: '120',
         fixed: false
       }, {
@@ -567,6 +570,9 @@ export default {
         this.total = data.total
         this.loading = false
         console.log(data)
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -677,10 +683,7 @@ export default {
               return false
             }).catch(err => {
               this.closeAddDot()
-              this.$message({
-                type: 'error',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this._handlerCatchMsg(err)
             })
           } else {
             this.$message.warning('回单已发放不能取消~~')

@@ -174,7 +174,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -257,8 +257,9 @@ export default {
                   message: '保存成功~'
                 })
                 this.fetchData()
-              }).catch(err => {
+              }).catch((err)=>{
                 this.loading = false
+                this._handlerCatchMsg(err)
               })
             } else {
               this.$message({

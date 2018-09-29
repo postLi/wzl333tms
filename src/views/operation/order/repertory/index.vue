@@ -2,9 +2,9 @@
   <div class="repetory-manager tab-wrapper">
     <div class="eltab clearfix">
       <!-- 库存管理 -->
-       <router-link to="/operation/order/repertory/allrepertory"  class="tab-label" >库存总表</router-link>
-      <router-link to="/operation/order/repertory/deliver"  class="tab-label" >发货库存</router-link>
-      <router-link to="/operation/order/repertory/arrival"  class="tab-label" >到货库存</router-link>
+       <router-link to="/operation/order/repertory/allrepertory"  class="tab-label" v-has:ORDER_REPER_ALL >库存总表</router-link>
+      <router-link to="/operation/order/repertory/deliver"  class="tab-label" v-has:ORDER_REPER_SEND >发货库存</router-link>
+      <router-link to="/operation/order/repertory/arrival"  class="tab-label" v-has:ORDER_REPER_ARRIVE >到货库存</router-link>
     </div>
     <keep-alive>
       <router-view></router-view>

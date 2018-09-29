@@ -8,9 +8,9 @@
         <el-button type="success" :size="btnsize" icon="el-icon-tickets" plain @click="doAction('completion')" v-has:FINANCE_CARFINISHI1 >对账完成</el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')" v-has:FINANCE_CARCANCEL1 >取消完成</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')" v-has:FINANCE_CARFIND1 >修改查看</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')" v-has:FINANCE_CARDEL2 >删除</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CAREXP2 >导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARPRI2 >打印</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')" v-has:FINANCE_CARDEL >删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CAREXP >导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARPRI >打印</el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
@@ -97,17 +97,17 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           {
             label: '序号',
             prop: 'id',
-            width: '100',
+            width: '70',
             fixed: true,
             slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+              return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+            }
           }, {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: true
-        }, {
+            label: '发车网点',
+            prop: 'orgName',
+            width: '120',
+            fixed: true
+          }, {
           label: '车牌号',
           prop: 'memberName',
           width: '130',
@@ -123,7 +123,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           width: '160',
           fixed: false
         }, {
-          label: '应付账款',
+          label: '未付账款',
           prop: 'payAmount',
           width: '120',
           fixed: false
@@ -194,7 +194,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
           this.total = data.total
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -294,7 +294,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {
@@ -327,7 +327,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
                   this.fetchData()
                   this.loading = false
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {

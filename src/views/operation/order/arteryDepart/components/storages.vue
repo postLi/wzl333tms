@@ -128,6 +128,18 @@
                         <el-input :maxlength="10" v-model="formModel.arriveOtherFee" disabled></el-input>
                       </el-form-item>
                     </li>
+                    <li style="width: 12%;">
+                      <p>封签号</p>
+                      <el-form-item prop="sealNumber">
+                        <el-input :maxlength="10" v-model="formModel.sealNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
+                    <li style="width: 12%;">
+                      <p>油卡号</p>
+                      <el-form-item prop="oilCardNumber">
+                        <el-input :maxlength="10" v-model="formModel.oilCardNumber" disabled></el-input>
+                      </el-form-item>
+                    </li>
                   </ul>
                 </el-form>
               </div>
@@ -147,7 +159,7 @@
 
 
                   <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails"
-                            @selection-change="getSelection" height="60%" tooltip-effect="dark" :key="tablekey"
+                            @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
                             style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
@@ -210,9 +222,9 @@
                       </el-row>
                     </template>
                   </el-step>
-                 <!--  <el-step>
-                    <span slot="icon" class="location"></span>
-                  </el-step> -->
+                  <!--  <el-step>
+                     <span slot="icon" class="location"></span>
+                   </el-step> -->
                 </el-steps>
               </div>
             </div>
@@ -268,32 +280,57 @@
           <el-tab-pane label="运输合同" name="third">
             <div class="pact" id="contract">
 
-              <el-form :model="formModel">
+              <el-form :model="sendContract" :rules="rules" ref="formName">
 
                 <div class="pact_top">
 
-                  <h3>货物运输合同</h3>
-                  <!--<div class="top_num">-->
-                  <!--<el-form-item label="合同模板">-->
-                  <!--<el-input  placeholder="1" size="mini"></el-input>-->
-                  <!--</el-form-item>-->
-                  <!--</div>-->
+                  <!--<h3>货物运输合同</h3>-->
+
+                  <div class="sTitle">
+                    <el-form-item label="" prop="contractName" class="contractNameClass">
+                      <el-input v-model="sendContract.contractName" auto-complete="off" :disabled="!editFn"
+                                clearable :maxlength="18"></el-input>
+                      <span></span>
+
+
+                      <!--<el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"-->
+                      <!--tabindex="-1">-->
+                      <!--<div slot="content">双击可修改合同名称</div>-->
+                      <!--<el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable-->
+                      <!--@dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"-->
+                      <!--auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"-->
+                      <!--@blur="tooltip = false;disabledName = true"-->
+                      <!--@mouseenter.native=" disabledName === true && (tooltip = true)"-->
+                      <!--@mouseleave.native="tooltip = false;disabledName = true" ></el-input>\-->
+                      <!--</el-tooltip>-->
+
+                      <!--<el-input v-model="checkBillName" auto-complete="off" :disabled="disabledName" @mouseover.native="billNameOver"></el-input><span></span>-->
+                    </el-form-item>
+                  </div>
                   <div class="top_no">
-                    <el-form-item label="NO.">
-                      <el-input placeholder="1" size="mini" disabled v-model="formModel.contractNo"></el-input>
+                    <el-form-item label="NO." prop="contractNo">
+                      <el-input size="mini" :disabled="!editFn" v-model="sendContract.contractNo"
+                                :maxlength="20"></el-input>
                     </el-form-item>
                   </div>
                 </div>
                 <div class="pact_content">
                   <div class="pact_title">
-                    <span>委托方:</span>
-                    <p style="">{{formModel.orgName}}</p>
-                    <span>(以下简称甲方)</span>
+                    <el-form-item label="委托方:" prop="nomineeCompany">
+                      <el-input v-model="sendContract.nomineeCompany" auto-complete="off" :disabled="!editFn"
+                                clearable :maxlength="20"></el-input>
+                    </el-form-item>
+                    <span class="orgSpan">(以下简称甲方)</span>
+                    <!--<span>委托方:</span>-->
+                    <!--<p style="">{{formModel.orgName}}</p>-->
+                    <!--<span>(以下简称甲方)</span>-->
                   </div>
                   <div class="pact_title">
-                    <span>承运方:</span>
-                    <p style="">{{formModel.dirverName}}</p>
-                    <span>(以下简称乙方)</span>
+                    <el-form-item label="承运方:" prop="">
+                      <el-input v-model="formModel.dirverName" auto-complete="off" disabled
+                                clearable></el-input>
+                    </el-form-item>
+                    <span class="orgSpan">(以下简称乙方)</span>
                   </div>
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
@@ -305,7 +342,7 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="五、本车货物总为">
-                      <el-input size="mini" disabled v-model="formModel.loadAmountall"></el-input>
+                      <el-input size="mini" disabled v-model="formModel.loadAmountall" class="editInput"></el-input>
                       件
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
@@ -342,7 +379,8 @@
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
                     <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="formModel.remark"></el-input>
+                      <el-input type="textarea" size="mini" v-model="sendContract.remark"
+                                :disabled="!editFn"></el-input>
                     </el-form-item>
                     <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
                     <p class="p_about">附：驾驶员、车辆登记</p>
@@ -409,11 +447,26 @@
         </el-form-item>
       </el-form>
     </div>
+    <div slot="footer" class="dialog-footer" v-else-if="isFootFirst">
+      <el-button @click="closeMe" round type="warning" icon="el-icon-close">关闭</el-button>
+    </div>
     <div slot="footer" class="dialog-footer" v-else>
-      <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'">打印合同</el-button>
-      <el-button @click="closeMe">关闭</el-button>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                  @success="setColumn"></TableSetup>
+      <template v-if="!activeECheckBillName">
+        <el-button @click="print" type="success" icon="el-icon-printer" v-if="activeName === 'third'" round>打印合同
+        </el-button>
+        <el-button @click="editCheckBillName" icon="el-icon-edit-outline" type="info" round
+                   v-if="activeName === 'third'">修改
+        </el-button>
+        <el-button @click="closeMe" round type="warning" icon="el-icon-close"
+                   v-if="activeName === 'third' || activeName === 'first'">关闭
+        </el-button>
+      </template>
+      <template v-else>
+        <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
+        <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
+      </template>
+
+
     </div>
   </pop-right>
 </template>
@@ -430,10 +483,19 @@
   import {objectMerge2, parseTime, closest} from '@/utils/'
   import {PrintContract} from '@/utils/lodopFuncs'
   import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import {getLookContract, getEditContract} from '@/api/operation/arteryDepart'
 
   export default {
     data() {
       return {
+        activeECheckBillName: false,
+        activeSCheckBillName: false,
+        activeRCheckBillName: false,
+        editFn: false,
+        tooltip: false,
+        disabledName: true,
+        changeName: false,
+        checkBillName: '货物运输合同',
         tablekey: 0,
         getBatchNo: '',
         popTitle: '查看详情',
@@ -442,7 +504,9 @@
         ruleForm: {},
         loading: false,
         isFootEdit: false,
+        isFootFirst: false,
         isFootSecond: false,
+        isFootThird: false,
         isFootOther: false,
         isCancelEdit: false,
         propsId: '',
@@ -517,111 +581,136 @@
             "loadId": 1
           }
         },
-        tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
+        tableColumn: [
+          {
+            label: '序号',
+            prop: 'id',
+            width: '100',
+            fixed: true,
+            slot: (scope) => {
+              return scope.$index + 1
+            }
+          }, {
+            label: '开单网点',
+            prop: 'shipFromOrgName',
+            width: '150',
+            fixed: true
+          }, {
+            label: '运单号',
+            prop: 'shipSn',
+            width: '120',
+            fixed: true
+          }, {
+            label: '子运单号',
+            prop: 'childShipSn',
+            width: '180',
+            fixed: false
+          }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '100',
+        fixed: false
+      },{
+            label: '配载件数',
+            prop: 'loadAmount',
+            width: '100',
+            fixed: false
+          }, {
+            label: '配载重量(kg)',
+            prop: 'loadWeight',
+            width: '120',
+            fixed: false
+          }, {
+            label: '配载体积(m³)',
+            prop: 'loadVolume',
+            width: '120',
+            fixed: false
+          }, {
+            label: '运单件数',
+            prop: 'cargoAmount',
+            width: '100',
+            fixed: false
+          }, {
+            label: '运单重量(kg)',
+            prop: 'cargoWeight',
+            width: '120',
+            fixed: false
+          }, {
+            label: '运单体积(m³)',
+            prop: 'cargoVolume',
+            width: '120',
+            fixed: false
+          }, {
+            label: '出发城市',
+            prop: 'shipFromCityName',
+            width: '120',
+            fixed: false
+          }, {
+            label: '到达城市',
+            prop: 'shipToCityName',
+            width: '120',
+            fixed: false
+          }, {
+            label: '出发城市',
+            prop: 'shipFromCityName',
+            width: '120',
+            fixed: false
+          }, {
+            label: '发货人',
+            prop: 'shipSenderName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '发货人电话',
+            prop: 'shipSenderMobile',
+            width: '110',
+            fixed: false
+          }, {
+            label: '收货人',
+            prop: 'shipReceiverName',
+            width: '120',
+            fixed: false
+          }, {
+            label: '收货人电话',
+            prop: 'shipReceiverMobile',
+            width: '120',
+            fixed: false
+          }, {
+            label: '货品名',
+            prop: 'cargoName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '货号',
+            prop: 'shipGoodsSn',
+            width: '130',
+            fixed: false
+          }, {
+            label: '运单备注',
+            prop: 'shipRemarks',
+            width: '120',
+            fixed: false
           }
-        }, {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '150',
-          fixed: true
-        }, {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        }, {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '180',
-          fixed: false
-        }, {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载重量',
-          prop: 'loadWeight',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载体积',
-          prop: 'loadVolume',
-          width: '100',
-          fixed: false
-        }, {
-          label: '运单件数',
-          prop: 'cargoAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '运单重量',
-          prop: 'cargoWeight',
-          width: '100',
-          fixed: false
-        }, {
-          label: '运单体积',
-          prop: 'cargoVolume',
-          width: '100',
-          fixed: false
-        }, {
-          label: '出发城市',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '到达城市',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '出发城市',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '110',
-          fixed: false
-        }, {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '130',
-          fixed: false
-        }, {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+        ],
+        rules: {
+          contractName: [
+            {required: true, message:'合同名称不能为空!', trigger: 'blur'}
+          ],
+          contractNo: [
+            {required: true, message:'合同编号不能为空!', trigger: 'blur'},
+            {message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER}
+          ],
+          nomineeCompany: [
+            {required: true, message:'委托方不能为空!', trigger: 'blur'}
+          ]
+        },
+        sendContract: {
+          loadId: '',
+          nomineeCompany: '',
+          contractName: '',
+          contractNo: '',
+          remark: ''
         }
-        ]
 
       }
     },
@@ -666,11 +755,15 @@
     watch: {
 
       info(newVal) {
-        this.propsId = this.info.id
+        if (newVal) {
+          this.propsId = this.info.id
         this.getDetail()
         this.fetchAllCustomer()
         this.fetchSelectLoadMainInfoList()
+        this.fetchGetLookContract()
         this.getBatchNo = this.info.batchNo
+        }
+        
       },
       isModify(newVal) {
       },
@@ -682,20 +775,78 @@
       },
     },
     mounted() {
-      this.propsId = this.info.id
+      this.propsId = this.info.id ? this.info.id : ''
       if (this.popVisible) {
         this.getDetail()
         this.fetchAllCustomer()
         this.fetchSelectLoadMainInfoList()
+        this.fetchGetLookContract()
       }
+
     },
     methods: {
+      fetchGetLookContract() {
+        this.loading = true
+        let loadId = this.propsId
+        return getLookContract(loadId).then(data => {
+          this.sendContract = data.data
+          this.loading = false
+        }).catch(err => {
+          this._handlerCatchMsg(err)
+        })
+
+      },
+      handleClick(tab, event) {
+        this.isFootFirst = false
+        this.isFootSecond = false
+        this.isFootThird = false
+        if (this.activeName === 'first') {
+          this.isFootFirst = true
+        }
+        else if (this.activeName === 'second') {
+          this.isFootSecond = true
+        } else {
+          this.isFootThird = true
+          this.editFn = false
+        }
+      },
+      editCheckBillName() {
+        this.activeECheckBillName = true
+        this.editFn = true
+      },
+      saveCheckBillName(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            getEditContract(this.sendContract).then(res => {
+              this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
+              this.$emit('success')
+              this.activeECheckBillName = false
+              this.editFn = false
+              this.loading = false
+            })
+
+
+          }
+          else {
+            return false
+          }
+        })
+      },
+      remCheckBillName() {
+        this.activeECheckBillName = false
+        this.editFn = false
+      },
       fetchSelectLoadMainInfoList() {
         this.loading = true
         let selectMainId = this.propsId
         this.searchQuery.vo.loadId = selectMainId
         return postSelectLoadMainInfoList(this.searchQuery).then(data => {
           this.formModel = data.list[0]
+          this.sendContract.loadId = this.formModel.loadId
           this.loading = false
         })
 
@@ -707,9 +858,6 @@
           this.usersArr = data
           this.loading = false
           this.toggleAllRows()
-          // this.$refs.multipleTable.toggleRowSelection(e, true)
-        }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
         })
 
       },
@@ -722,22 +870,12 @@
       toggleAllRows() {
         this.$nextTick(() => {
           this.usersArr.forEach((e, index) => {
-            // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-            //   this.$refs.multipleTable.toggleRowSelection(e, false)
-            // } else {
-            //   this.$refs.multipleTable.toggleRowSelection(e, true)
             // }
             this.$refs.multipleTable.toggleRowSelection(e, true)
           })
         })
       },
-      handleClick(tab, event) {
-        if (this.activeName === 'second') {
-          this.isFootSecond = true
-        } else {
-          this.isFootSecond = false
-        }
-      },
+
       initInfo() {
         this.loading = false
       },
@@ -767,6 +905,9 @@
         return deleteTrack(item.id).then(data => {
           this.$message({type: 'success', message: '删除成功'})
           this.getDetail()
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       editItem(item) {
@@ -781,6 +922,9 @@
           this.$message({type: 'success', message: '修改成功'})
           this.getDetail()
           this.resetForm()
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       addTrack() {
@@ -790,6 +934,9 @@
           this.$message({type: 'success', message: '添加成功'})
           this.getDetail()
           this.resetForm()
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       },
       resetForm() {
@@ -858,14 +1005,17 @@
       },
       print() { // 打印合同
         let str = '?'
+        this.formModel.checkBillName = this.sendContract.contractName
         for (let item in this.formModel) {
           str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
 
         }
+
         // JSON.stringify(this.formModel)
         let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
 
         PrintContract(encodeURI(path))
+        // console.log(path);
       },
       setColumn(obj) { // 重绘表格列表
         this.tableColumn = obj
@@ -968,7 +1118,7 @@
       .st_searchinfo {
         .el-form-item {
           margin-right: 35px;
-          margin-bottom: 15px;
+          margin-bottom: 10px;
         }
         .el-form-item:nth-of-type(3) {
           margin-right: 0;
@@ -1046,8 +1196,8 @@
     left: auto;
     top: 50px;
     bottom: auto;
-    min-width: 1000px;
-    max-width: 1000px;
+    min-width: 1200px;
+    max-width: 1200px;
     .st_searchinfo {
       .el-input.is-disabled {
         .el-input__inner {
@@ -1300,6 +1450,78 @@
           color: rgba(0, 0, 0, 0.85);
           font-weight: 500;
         }
+
+        .sTitle {
+          /*flex: 1;*/
+          text-align: center;
+          .el-form-item {
+            width: 100%;
+            .el-form-item__content {
+              width: 100%;
+              cursor: pointer;
+              /*showBg*/
+              .el-tooltip.showBg {
+                .el-input__inner {
+                  border-left-color: #c0c4cc;
+                  border-right-color: #c0c4cc;
+                  color: #fff;
+                  font-weight: 600;
+                  background: rgba(64, 158, 255, 0.6);
+                  text-align: center;
+                }
+              }
+              .el-input__suffix {
+                left: -20px;
+                top: -20px;
+              }
+              .el-input--suffix .el-input__inner {
+                padding-right: 0;
+                text-align: center;
+              }
+              .el-input.is-disabled .el-input__inner {
+                background-color: #fff;
+                text-align: center;
+              }
+              /*/*showBg*/
+              span {
+                position: relative;
+                top: -20px;
+                left: 200px;
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+              }
+              .el-input__inner {
+                /*border-color: transparent;*/
+                border-left-color: transparent;
+                border-right-color: transparent;
+                border-top-color: transparent;
+                border-bottom: 1px solid #409EFF;
+                font-size: 18px;
+                color: #333333;
+                font-weight: 600;
+                cursor: pointer;
+              }
+
+              .el-input__inner:focus {
+                border-bottom-color: #c0c4cc;
+                text-align: center;
+              }
+              .el-input {
+                width: 50%;
+                text-align: center;
+              }
+
+            }
+          }
+          .el-form-item.contractNameClass.is-error {
+            .el-form-item__error {
+              left: 50%;
+            }
+          }
+
+        }
+
         .top_num {
           position: absolute;
           right: 10px;
@@ -1311,14 +1533,30 @@
         .top_no {
           position: absolute;
           right: 10px;
-          top: -5px;
+          top: 2px;
+          cursor: pointer;
           .el-form-item {
             display: flex;
             .el-form-item__content {
               .el-input.is-disabled {
                 .el-input__inner {
                   background-color: #fff;
-                  border-color: #fff;
+                  border-left-color: transparent;
+                  border-right-color: transparent;
+                  border-top-color: transparent;
+                  border-bottom: 1px solid #409EFF;
+                  color: #666;
+                }
+              }
+              .el-input {
+                .el-input__inner {
+                  background-color: #fff;
+                  border-left-color: transparent;
+                  border-right-color: transparent;
+                  border-top-color: transparent;
+                  border-bottom: 1px solid #409EFF;
+                  color: #666;
+                  cursor: pointer;
                 }
               }
             }
@@ -1330,15 +1568,43 @@
         font-size: 14px;
       }
       .pact_content {
+        .pact_title:first-of-type {
+          cursor: pointer;
+          .el-input {
+            width: 160%;
+            .el-input__inner {
+              background-color: #fff;
+              border-color: #409EFF;
+              color: #666;
+            }
+          }
+        }
         .pact_title {
           color: #606266;
           font-size: 14px;
           margin: 10px 0 0 25px;
-          p {
+          .el-form-item:first-of-type {
+            margin-bottom: 10px;
+          }
+          .el-form-item {
             display: inline-block;
-            width: 250px;
-            border-bottom: 1px solid;
-            padding-left: 10px;
+            margin-bottom: 0;
+            .el-form-item__content {
+              float: left;
+              .el-input {
+                width: 160%;
+                .el-input__inner {
+                  background-color: #fff;
+                  /*border-color: #409EFF;*/
+                  color: #666;
+                }
+              }
+            }
+          }
+          span.orgSpan {
+            position: relative;
+            top: -15px;
+            right: -15%;
           }
         }
         .p_cont,
@@ -1353,6 +1619,17 @@
             margin-bottom: 0;
             .el-textarea {
               width: 250%;
+            }
+            .el-textarea.is-disabled .el-textarea__inner {
+              background-color: #fff;
+              border-color: #409EFF;
+              color: #666;
+            }
+            .el-textarea .el-textarea__inner {
+              background-color: #fff;
+              border-color: #409EFF;
+              color: #666;
+              cursor: pointer;
             }
           }
           p.p_about {
@@ -1385,6 +1662,8 @@
                   border-top-color: transparent;
                   border-left-color: transparent;
                   border-right-color: transparent;
+                  text-align: center;
+                  color: #666;
                 }
               }
             }
@@ -1405,7 +1684,7 @@
                 .el-input__inner {
                   width: 200px;
                   background-color: #fff;
-                  color: #000;
+                  color: #666;
                   border-top-color: transparent;
                   border-left-color: transparent;
                   border-right-color: transparent;

@@ -96,7 +96,7 @@
 
 <body>
 <div class="contract_title">
-  <h2>货物运输合同 </h2>
+  <h2 id="contract_checkBillName">货物运输合同 </h2>
   <div class="contract_title_number" id="contract_title_number">No:23478237482378</div>
 </div>
 <div class="contract_info">
@@ -155,6 +155,7 @@
   }
 
   var data = getUrlParams()
+  var contract_checkBillName = document.getElementById('contract_checkBillName')
   var contract_title_number = document.getElementById('contract_title_number')
   var partA = document.getElementById('partA')
   var partB = document.getElementById('partB')
@@ -166,6 +167,7 @@
   var goodsInfoStr = ''
   var contractTimeStr = ''
 
+  contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
   contract_title_number.innerHTML = 'NO.' + data.batchNo
   partA.innerHTML = data.orgName
   partB.innerHTML = data.dirverName

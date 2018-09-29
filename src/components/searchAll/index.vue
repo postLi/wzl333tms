@@ -1,0 +1,169 @@
+<template>
+<div>
+  <el-form-item label="自定义查询" class="zdycx">
+    <el-select
+      v-model="datalist"
+      filterable
+      placeholder="请选择"
+      :filter-method="querySearchAsync"
+      @change="handleSelect"
+      @focus="initdata"
+      popper-class="zdycx-pop"
+      :loading="loading">
+      <el-option
+        v-for="(item,index) in options4"
+        :key="index"
+        :label="item.queryKey"
+        :value="item.id">
+        {{item.queryKey}} <i class="el-icon-circle-close-outline" @click.stop.prevent="deleteItem(item.id)"></i>
+      </el-option>
+    </el-select>
+    <!-- <el-autocomplete
+      v-model="datalist"
+      :fetch-suggestions="querySearchAsync"
+      placeholder="请输入内容"
+      @select="handleSelect"
+      clearable
+      >
+      <template slot-scope="{ item }">
+        <div class="name">{{ item.queryKey }}</div>
+      </template>
+    </el-autocomplete> -->
+    <el-button plain  @click="Custom">保存自定义</el-button>
+  </el-form-item>
+  <addSave :searchObj="searchObj" :popVisible="popVisible"    @close="closeAddDot" @success="fetchAllloadAll" />
+</div>
+</template>
+<script>
+import { postQueryLogList, deleteQueryLogListById } from '@/api/common'
+import addSave from './addSave'
+export default {
+  components: {
+    addSave
+  },
+  props: {
+    searchObj: {
+      type: [Object, Array]
+    },
+    value: [String, Number]
+  },
+  data() {
+    return {
+      isModify: false,
+      popVisible: false,
+      setupTableVisible: false,
+      dataset: [],
+      datalist: '',
+      timeout: null,
+      loading: false,
+      options4: [],
+      querySearch: {
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'orgId': '',
+          'userId': '',
+          'menuCode': ''
+        }
+      }
+    }
+  },
+  watch: {
+    value(n) {
+      console.log('nnn:', n)
+      // 清除选定项
+      if (n === '') {
+        this.datalist = ''
+      }
+    },
+    searchObj: {
+      handler(cval, oval) {
+        this.$nextTick(() => {
+          console.log('searchAll_cval', cval, oval)
+        })
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    // this.fetchAllloadAll()
+  },
+  methods: {
+    initdata() {
+      if (!this.inited) {
+        this.inited = true
+        this.loading = true
+        this.fetchAllloadAll().then(res => {
+          this.loading = false
+        })
+      }
+    },
+    deleteItem(id) {
+      deleteQueryLogListById(id).then(res => {
+        this.fetchAllloadAll()
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
+    Custom() {
+      this.isModify = true
+      this.popVisible = true
+    },
+    closeAddDot() {
+      this.popVisible = false
+    },
+    fetchAllloadAll() {
+      this.querySearch.vo.orgId = this.otherinfo.orgid
+      this.querySearch.vo.userId = this.otherinfo.userId
+      this.querySearch.vo.menuCode = this.$route.meta.code
+      return postQueryLogList(this.querySearch).then(data => {
+        this.dataset = data.list
+        this.options4 = data.list
+      })
+    },
+    querySearchAsync(queryString, cb) {
+      var dataset = this.dataset
+      var results = queryString ? dataset.filter(this.createStateFilter(queryString)) : dataset
+      this.options4 = results
+      cb(results)
+    },
+    createStateFilter(queryString) {
+      return (state) => {
+        return (state.queryKey.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect(id) {
+      var find = this.options4.filter(el => el.id === id)
+      if (find.length) {
+        // this.datalist = item.queryKey
+        const item = find[0].queryContent
+        const obj = JSON.parse(item)
+        this.$emit('change', JSON.parse((item).replace(/'/g, '"')))
+        // 用$emit提交给父组件
+        this.$emit('dataObj', obj)
+      }
+    }
+  }
+}
+</script>
+<style lang="scss">
+.zdycx{
+    .el-form-item__label{
+    width:85px !important;
+  }
+  
+}
+.zdycx-pop{
+  li{
+    clear: both;
+  }
+  .el-icon-circle-close-outline{
+    float: right;
+    line-height: 34px;
+
+    &:hover{
+      color: #ef0000;
+    }
+  }
+}
+</style>

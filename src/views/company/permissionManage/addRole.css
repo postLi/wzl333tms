@@ -21,7 +21,7 @@
   left: 0;
   padding: 5px 10px;
   /*background-color:rgba(255,255,255,1);*/
-  width: 100%;
+  width: calc(100% - 10px);
   /*margin-top: 10px;*/
 
 }
@@ -47,7 +47,11 @@
 .add-role .el-form-item .el-form-item__label{
   line-height: 26px;
 }
-
+.add-role-top .demo-form-inline {
+  background-color: rgba(255,255,255,1);
+  /* box-shadow: 1px 2px 2px #ddd; */
+  padding-top: 10px;
+}
 .add-role .el-form-item .el-form-item__content .el-textarea{
   height: 26px;
 }

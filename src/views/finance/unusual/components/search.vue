@@ -43,6 +43,7 @@
           <el-form-item label="到达城市">
               <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
+          <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
       </div>
         <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -57,11 +58,13 @@ import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { parseTime, pickerOptions2 } from '@/utils/index'
 import SelectCity from '@/components/selectCity/index'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
     SelectType,
-    SelectCity
+    SelectCity,
+    searchAll
   },
   props: {
     btnsize: {
@@ -89,6 +92,7 @@ export default {
     return {
       // searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchCreatTime: [],
+      searchObjs: {},
       defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         shipFromOrgid: '', // 网点
@@ -113,8 +117,25 @@ export default {
     }
   },
   watch: {
+    searchCreatTime (newVal) {
+      if (newVal) {
+          this.$set(this.searchObjs, 'createTimeStart', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'createTimeEnd', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+    },
     orgid(newVal) {
       this.searchForm.shipFromOrgid = newVal
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchCreatTime) {
+          this.$set(this.searchObjs, 'createTimeStart', parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'createTimeEnd', parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -124,6 +145,11 @@ export default {
     this.onSubmit()
   },
   methods: {
+     getDataObj(obj) {
+      this.searchCreatTime = [obj.createTimeStart, obj.createTimeEnd]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     getOrgid(id) {
       this.searchForm.orgId = id
     },

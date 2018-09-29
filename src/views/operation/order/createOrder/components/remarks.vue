@@ -175,6 +175,9 @@ export default {
           this.modifyObj[el.id] = el.value
         })
         this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     doPost(item) {

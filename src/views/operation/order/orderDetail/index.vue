@@ -11,10 +11,10 @@
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="six" label="运单轨迹">
-        <trunk v-if="activeTab.six" :orderid="output.orderid" />
+        <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
-        <abnormal v-if="activeTab.four" :orderid="output.orderid" />
+        <abnormal v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="five" label="改单日志">
         <log v-if="activeTab.five" :orderid="output.orderid" />
@@ -56,6 +56,11 @@ export default {
     trunk
   },
   watch: {
+    ispop(newVal) {
+      if (newVal) {
+        // this.init()
+      }
+    },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
@@ -74,7 +79,9 @@ export default {
     this.init()
   },
   mounted() {
+    // if (this.ispop) {
     this.init()
+    // }
   },
   data() {
     return {
@@ -91,7 +98,8 @@ export default {
         'six': false
       },
       output: {
-        orderid: ''
+        orderid: '',
+        shipsn: ''
       }
     }
   },
@@ -125,7 +133,7 @@ export default {
         this.showError()
         return false
       }
-
+      console.log('initOrderDetail err:', route)
       this.initOrder()
     },
     showError() {
@@ -147,6 +155,7 @@ export default {
       this.activeIndex = 'one'
       this.getOrderInfo(this.output.orderid).then(res => {
         this.orderdata = res.data
+        this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
         this.loading = false
       }).catch(err => {
         console.log('initOrderDetail err:', err)

@@ -6,7 +6,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="结算网点" prop="orgId">
-        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"  @change="changeVal">
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="changeVal">
         </SelectTree>
       </el-form-item>
       <el-form-item label="费用类型" prop="feeId">
@@ -18,6 +18,7 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </selectType> -->
       </el-form-item>
+      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -32,11 +33,13 @@ import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SelectType from '@/components/selectType/index'
 import { getFeeTypeDict } from '@/api/finance/settleLog'
+import searchAll from '@/components/searchAll/index'
 export default {
   components: {
     SelectTree,
     querySelect,
-    SelectType
+    SelectType,
+    searchAll
   },
   props: {
     btnsize: {
@@ -59,6 +62,7 @@ export default {
       }
     }
     return {
+      searchObjs: {},
       searchForm: {
         orgId: '',
         settlementId: '',
@@ -79,6 +83,23 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgId = newVal
+    },
+    searchTime(newVal) {
+      if (newVal) {
+        this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+      }
+    },
+    // 传到子组件
+    searchForm: {
+      handler(cval, oval) {
+        this.searchObjs = Object.assign({}, cval)
+        if (this.searchTime && this.searchTime[0]) {
+          this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+          this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -88,6 +109,11 @@ export default {
     this.onSubmit()
   },
   methods: {
+    getDataObj(obj) {
+      this.searchTime = [obj.startTime, obj.endTime]
+      this.searchForm = Object.assign({}, obj)
+      this.$emit('change', obj)
+    },
     getFeeTypeDict() {
       this.settlementId = Number(this.$route.query.settlementId)
       getFeeTypeDict(this.settlementId).then(data => {

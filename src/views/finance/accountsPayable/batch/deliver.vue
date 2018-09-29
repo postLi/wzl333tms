@@ -6,9 +6,9 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
+        <el-button type="primary" v-has:PAY_LOADSET2 :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" v-has:PAY_LOADPRI2 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
+        <el-button type="primary" v-has:PAY_LOADEXP2 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -85,7 +85,7 @@ export default {
       dataList: [],
       selectedList: [],
       selectListBatchNos: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
         {
@@ -116,12 +116,6 @@ export default {
           fixed: false
         },
         {
-          label: '目的网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
           label: '送货时间',
           prop: 'loadTime',
           width: '160',
@@ -140,13 +134,21 @@ export default {
           label: '已结送货费',
           prop: 'paidFee',
           width: '100',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          }
         },
         {
           label: '未结送货费',
           prop: 'unpaidFee',
           width: '100',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '车牌号',
@@ -208,9 +210,14 @@ export default {
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
+      this.loading = true
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},

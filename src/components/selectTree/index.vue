@@ -1,12 +1,12 @@
 <template>
-  <el-select @visible-change="getData" popper-class="selectTreePop"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select @visible-change="getData" collapse-tags popper-class="selectTreePop" :multiple="multiple"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
         <el-option
         v-if="!listdata.length"
         v-for="item in openGroups"
         :key="item.id"
         :label="item.name"
         :value="item.id"
-
+        :disabled="disabledOption.indexOf(item.id) !== -1"
         >
         <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span></div>
         </el-option>
@@ -16,6 +16,7 @@
         :key="item.id"
         :label="item.name"
         :value="item.id"
+         :disabled="disabledOption.indexOf(item.id) !== -1"
         >
         <span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span>
         </el-option>
@@ -71,11 +72,15 @@ export default {
       default: () => {}
     },
     value: {
-      type: [Number, String]
+      type: [Number, String, Array]
     },
     disabled: {
       type: Boolean,
       default: false
+    },
+    disabledOption: {
+      type: Array,
+      default: () => []
     },
     filterable: {
       type: Boolean,
@@ -91,17 +96,18 @@ export default {
     remote: {
       type: Boolean,
       default: false
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     value(newVal) {
-      this.aid = parseInt(newVal, 10) || ''
-
       this.init()
     }
   },
   mounted() {
-    this.aid = parseInt(this.value, 10) || ''
     this.init()
     var agnt = navigator.userAgent.toLowerCase()
     // <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
@@ -139,6 +145,11 @@ export default {
   },
   methods: {
     init() {
+      this.aid = parseInt(this.value, 10) || ''
+      if (this.multiple) {
+        this.aid = this.value
+      }
+
       if (!this.inited) {
         this.inited = true
         this.fetchData()
@@ -161,7 +172,7 @@ export default {
         this.groups = data
         this.listdata = []
       }).catch(err => {
-        this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+        this._handlerCatchMsg(err)
         // this.loading = false
       })
     },

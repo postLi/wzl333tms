@@ -68,9 +68,21 @@ export const constantRouterMap = [
       name: 'dashboard',
       icon: 'shouye',
       meta: {
-        title: '首页',
+        title: '运营控制台',
         noCache: false,
-        'code': 'HOME_PAGE_1'
+        'code': 'HOME_PAGE_4',
+        'proute': 'dashboard'
+      }
+    }, {
+      path: '/console',
+      component: _import('html5/index'),
+      name: 'console',
+      icon: 'baobiao',
+      meta: {
+        title: '财务控制台',
+        noCache: false,
+        'code': 'HOME_PAGE_1',
+        'proute': 'dashboard'
       }
     }, {
       path: '/checklist/index',
@@ -80,14 +92,16 @@ export const constantRouterMap = [
       meta: {
         title: '系统体检',
         noCache: false,
-        'code': 'HOME_PAGE_2'
+        'code': 'HOME_PAGE_2',
+        'proute': 'dashboard'
       }
     }, {
       path: '/flows',
       name: 'flows',
       icon: 'canzhao',
       component: _import('dashboard/index'),
-      meta: { title: '流程图', noCache: true, 'code': 'HOME_PAGE_3' }
+      meta: { title: '流程图', noCache: true, 'code': 'HOME_PAGE_3',
+        'proute': 'dashboard' }
     }, {
       path: '/company/myinfo',
       icon: 'information',
@@ -115,6 +129,5 @@ export const asyncRouterMap = [
   Finance,
   Report,
   Company,
-  Service,
   { path: '*', redirect: '/404', hidden: true }
 ]

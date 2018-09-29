@@ -85,7 +85,7 @@
 
 <script>
   import PopFrame from '@/components/PopFrame/index'
-  import {getSelectDictInfo, postDict, deletePerManage, putDict} from '../../../api/company/groupManage'
+  import { getSelectDictInfo, postDict, deletePerManage, putDict } from '../../../api/company/groupManage'
 
   export default {
     components: {
@@ -106,7 +106,7 @@
     directives: {
       focus: {
         // 指令的定义
-        inserted: function (el) {
+        inserted: function(el) {
           el.focus()
         }
       }
@@ -120,7 +120,7 @@
         popTitle: '部门',
         loading: true,
         getMentInfo: [
-          {dictName: '', id: ''}
+          { dictName: '', id: '' }
         ],
         // 首行
         checked: true,
@@ -200,7 +200,7 @@
           this.loading = false
           this.theulkey = (Math.random() + '').substr(2)
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       getAddDate() {
@@ -209,7 +209,7 @@
           this.dictName = ''
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       closeMe(done) {
@@ -273,7 +273,7 @@
             this.closeMe()
             this.loading = false
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },
@@ -300,7 +300,7 @@
             this.theulkey = (Math.random() + '').substr(2)
             this.loading = false
           }).catch(err => {
-            this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+            this._handlerCatchMsg(err)
           })
         }
       },
@@ -315,32 +315,28 @@
           })
           return false
         } else {
-
           this.$confirm('确定要删除 ' + deleteItem + ' 部门吗？', '提示', {
             confirmButtonText: '删除',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             this.loading = true
-            deletePerManage(_id).then(res => {
+            deletePerManage(_id, this.otherinfo.orgid).then(res => {
               this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
+              type: 'success',
+              message: '删除成功!'
+            })
               this.getSelectDict()
               this.theulkey = (Math.random() + '').substr(2)
               this.loading = false
             }).catch(err => {
-              this.$message({
-                type: 'info',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
-            })
+              this._handlerCatchMsg(err)
+          })
           }).catch(() => {
             this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
+            type: 'info',
+            message: '已取消删除'
+          })
           })
         }
       }
@@ -366,7 +362,7 @@
     padding-right: 15px;
   }
 
-  .depmain-div {
+  .dep-maintain .depmain-div {
     margin: 10px 0 0 10px;
   }
 

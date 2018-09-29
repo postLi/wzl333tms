@@ -10,7 +10,7 @@
         <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" plain @click="doAction('chanelRepertory')" v-has:LOAD_DB_CANCELTRUCK>取消装车</el-button>
         <el-button :type="isDisBtn?'info':'primary'" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn" v-has:LOAD_DB_UPDATE>修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_DB_PRINT>打印</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_PRINT>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_EXPORT>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>
@@ -40,7 +40,7 @@
       </div>
     </div>
     <!-- 表格设置 -->
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 在途跟踪 -->
     <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'deliver'"></editInfo>
   </div>
@@ -119,6 +119,12 @@ export default {
           width: '90'
         },
         {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '100'
@@ -168,7 +174,7 @@ export default {
           }
         },
         {
-          label: '短驳费',
+          label: '短驳费(元)',
           prop: 'shortFee',
           width: '100'
         },
@@ -178,14 +184,14 @@ export default {
           width: '100'
         },
         {
-          label: '配载总重量',
+          label: '配载总重量(kg)',
           prop: 'loadWeightall',
-          width: '100'
+          width: '120'
         },
         {
-          label: '配载总体积',
+          label: '配载总体积(m³)',
           prop: 'loadVolumeall',
-          width: '100'
+          width: '120'
         },
         {
           label: '重量装载率',
@@ -219,7 +225,7 @@ export default {
   },
   activated() {
     // this.searchQuery.orgId = this.otherinfo.orgid
-    this.fetchAllShortDepartList()
+    // this.fetchAllShortDepartList()
   },
   methods: {
     closeMe() { // 关闭弹出框
@@ -245,7 +251,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' }})
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' } })
           break
         case 'truck': // 发车
           if (isWork) {
@@ -319,16 +325,16 @@ export default {
         this.searchQueryData.vo.batchTypeId = undefined
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
-        if (data) {
-          this.dataList = data.list
-          this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
-        }
-      })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+          if (data) {
+            this.dataList = data.list
+            this.total = data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     clearData() {
@@ -385,14 +391,14 @@ export default {
         }).then(() => {
           console.log('发车', this.commonTruck)
           putTruckDepart(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '发车成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+              if (data) {
+                this.$message({ type: 'success', message: '发车成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })
@@ -411,14 +417,14 @@ export default {
         }).then(() => {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消发车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+              if (data) {
+                this.$message({ type: 'success', message: '取消发车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })
@@ -437,14 +443,14 @@ export default {
         }).then(() => {
           console.log('取消装车', this.commonTruck)
           putTruckLoad(this.commonTruck).then(data => {
-            if (data) {
-              this.$message({ type: 'success', message: '取消装车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
-          })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '发生未知错误！')
+              if (data) {
+                this.$message({ type: 'success', message: '取消装车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
               this.clearData()
             })
         })
@@ -456,7 +462,7 @@ export default {
     edit() { // 修改
       const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' }})
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' } })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

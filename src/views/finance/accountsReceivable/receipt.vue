@@ -129,7 +129,12 @@ export default {
         'label': '货号',
         'prop': 'shipGoodsSn',
         'width': '150'
-      }, {
+      },{
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },{
         'label': '运单标识',
         'prop': 'shipIdentifying',
         slot: function(scope) {
@@ -146,17 +151,29 @@ export default {
         'prop': 'receiptpayStateCn'
       }, {
         'label': '回单付',
+
         'prop': 'receiptpayFee'
       }, {
         'label': '已结回单付',
-        'prop': 'finishReceiptpayFee'
+        width: '100',
+        'prop': 'finishReceiptpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+        }
+
       }, {
         'label': '未结回单付',
-        'prop': 'notReceiptpayFee'
+         width: '100',
+        'prop': 'notReceiptpayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+        }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
-        width: 180
+        width: 160
       }, {
         'label': '发货方',
         'prop': 'senderCustomerUnit'
@@ -186,15 +203,18 @@ export default {
         'prop': 'shipPayWay'
       }, {
         'label': '制单人',
+        width: '100',
         'prop': 'userName'
       }, {
         'label': '发货人电话',
+        width: '120',
         'prop': 'senderMobile'
       }, {
         'label': '发货人地址',
         'prop': 'senderAddr'
       }, {
         'label': '收货人电话',
+        width: '120',
         'prop': 'receiverMoblie'
       }, {
         'label': '收货地址',
@@ -204,7 +224,7 @@ export default {
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
-        'prop': 'shipEffective'
+        'prop': 'shipEffectiveName'
       }, {
         'label': '运单备注',
         'prop': 'shipRemarks'
@@ -236,6 +256,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

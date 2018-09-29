@@ -30,7 +30,7 @@
         </div>
       </div>
       <!-- 在途跟踪 -->
-      <editInfoTransfer :orgid="orgid" :id='transferId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
+      <editInfoTransfer :orgid="orgid" :id='transferId' :shipId="shipId"  :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
@@ -66,6 +66,7 @@ export default {
       total: 0,
       isDisBtn: true,
       transferId: '',
+      shipId: '',
       tablekey: 0,
       selectInfo: [],
       trackInfo: {},
@@ -159,11 +160,11 @@ export default {
           prop: "deliveryExpense",
           width: "120"
         },
-        // {
-        //   label: "中转费其他费",
-        //   prop: "batchTypeId",
-        //   width: "120"
-        // },
+        {
+          label: "中转费其他费",
+          prop: "transferOtherFee",
+          width: "120"
+        },
         {
           label: "中转费合计",
           prop: "totalCost",
@@ -171,7 +172,7 @@ export default {
         },
         {
           label: "中转付款方式",
-          prop: "paymentId",
+          prop: "paymentName",
           width: "120"
         },
         {
@@ -201,12 +202,12 @@ export default {
         },
         {
           label: "出发城市",
-          prop: "shipFromCityCode",
+          prop: "shipFromCityName",
           width: "120"
         },
         {
           label: "到达城市",
-          prop: "shipToCityCode",
+          prop: "shipToCityName",
           width: "120"
         },
         {
@@ -270,13 +271,13 @@ export default {
         },
         {
           label: "交接方式",
-          prop: "shipDeliveryMethod",
+          prop: "shipDeliveryMethodName",
           width: "120"
         },
         {
           label: "货号",
           prop: "shipGoodsSn",
-          width: "120"
+          width: "160"
         },
         {
           label: "品种规格",
@@ -286,12 +287,12 @@ export default {
         {
           label: "重量单价",
           prop: "weightFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "体积单价",
           prop: "volumeFee",
-          width: "120"
+          width: "100"
         },
         /*{
           label: "件数单价",
@@ -305,7 +306,7 @@ export default {
         // },
         {
           label: "回单要求",
-          prop: "shipReceiptRequire",
+          prop: "shipReceiptRequireName",
           width: "120"
         },
         {
@@ -320,28 +321,28 @@ export default {
         },
         {
           label: "付款方式",
-          prop: "shipPayWay",
-          width: "120"
+          prop: "shipPayWayName",
+          width: "100"
         },
         {
           label: "现付",
           prop: "shipNowpayFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "到付",
           prop: "shipArrivepayFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "回单付",
           prop: "shipReceiptpayFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "月结",
           prop: "shipMonthpayFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "运费合计",
@@ -356,7 +357,7 @@ export default {
         {
           label: "回扣",
           prop: "brokerageFee",
-          width: "120"
+          width: "100"
         },
         //  {
         //   label: "客户单号",
@@ -366,7 +367,7 @@ export default {
         {
           label: "送货费",
           prop: "deliveryFee",
-          width: "120"
+          width: "100"
         },
         {
           label: "声明价值",
@@ -441,12 +442,14 @@ export default {
     getSelection(list) {
       if (this.$route.query.transfer) {
         this.transferId = this.$route.query.transfer
+        this.shipId = this.$route.query.shipId
       } else {
         if (list.length === 1) {
           this.selectInfo = Object.assign([], list)
           this.isDisBtn = false
           // let tid = this.selectInfo[0].transferId
           this.transferId = this.selectInfo[0].transferId
+          this.shipId = this.selectInfo[0].shipId
           this.trackInfo = Object.assign({}, this.selectInfo[0])
         } else if (list.length > 1) {
           this.$message({ type: 'warning', message: '只能选择一条数据进行跟踪设置' })
@@ -491,8 +494,8 @@ export default {
           this.loading = false
         }
       })
-      .catch(error => {
-         this.$message.error(error.errorInfo || error.text)
+      .catch(err => {
+         this._handlerCatchMsg(err)
       })
       this.isTransferTrack()
     },

@@ -61,9 +61,7 @@ export default {
     }
   },
   mounted() {
-    // this.searchQuery.vo.orgid = this.otherinfo.orgid
     this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
-    // this.fetchAllCustomer()
   },
   data() {
     return {
@@ -75,7 +73,7 @@ export default {
       usersArr: [],
       total: 0,
       tablekey: 0,
-      batchTypeId: '', // 批次状态
+      batchTypeId: '', //
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
@@ -90,14 +88,14 @@ export default {
           'orgid': '',
           'arriveOrgid': '',
           dirverName: '',
-          truckIdNumber: '', // 车牌号
-          batchTypeId: '', // 批次状态
-          batchNo: '', // 发车批次
-          loadTypeId: 39, // 配载类型
-          endTime: '', // 结束时间
+          truckIdNumber: '', //
+          batchTypeId: '', //
+          batchNo: '', //
+          loadTypeId: 39, //
+          endTime: '', //
           beginTime: '', //
-          arrivedbeginDate: '', // 到达时间(起始时间)
-          arrivedEndDate: ''// 到达时间(结束时间)
+          arrivedbeginDate: '', //
+          arrivedEndDate: ''//
         }
       },
       tableColumn: [
@@ -113,7 +111,14 @@ export default {
           prop: 'batchNo',
           width: '120',
           fixed: true
-        }, {
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        }, 
+        {
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '110',
@@ -164,12 +169,12 @@ export default {
           width: '100',
           fixed: false
         }, {
-          label: '实到重量',
+          label: '实到重量(kg)',
           prop: 'actualWeight',
           width: '110',
           fixed: false
         }, {
-          label: '实到体积',
+          label: '实到体积(m³)',
           prop: 'actualVolume',
           width: '110',
           fixed: false
@@ -179,88 +184,100 @@ export default {
           width: '120',
           fixed: false
         }, {
-          label: '配载总重量',
+          label: '配载总重量(kg)',
           prop: 'weightall',
           width: '120',
           fixed: false
         }, {
-          label: '配载总体积',
+          label: '配载总体积(m³)',
           prop: 'volumeall',
           width: '120',
           fixed: false
         }, {
-          label: '重量装载率',
+          label: '重量装载率(%)',
           prop: 'weightRate',
-          width: '160',
+          width: '140',
           fixed: false
         }, {
-          label: '体积装载率',
+          label: '体积装载率(%)',
           prop: 'volumeRate',
-          width: '160',
+          width: '140',
           fixed: false
         }, {
-          label: '现付运费',
+            label: '封签号',
+            prop: 'sealNumber',
+            width: '120',
+            fixed: false
+          },
+          {
+            label: '油卡号',
+            prop: 'oilCardNumber',
+            width: '120',
+            fixed: false
+          },{
+          label: '现付运费(元)',
           prop: 'nowpayCarriage',
           width: '110',
           fixed: false
         }, {
-          label: '现付油卡',
+          label: '现付油卡(元)',
           prop: 'nowpayOilCard',
           width: '110',
           fixed: false
         }, {
-          label: '到付运费',
+          label: '到付运费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
         }, {
-          label: '到付油卡',
+          label: '到付油卡(元)',
           prop: 'arrivepayOilCard',
           width: '110',
           fixed: false
         }, {
-          label: '回付运费',
+          label: '回付运费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
         }, {
-          label: '回付油卡',
+          label: '回付油卡(元)',
           prop: 'backpayOilCard',
           width: '110',
           fixed: false
-        }, {
-          label: '运费合计',
+        }, 
+        {
+          label: '运费合计(元)',
           prop: 'totalFee',
           width: '110',
           fixed: false
         }, {
-          label: '整车保险费',
+          label: '整车保险费(元)',
           prop: 'carloadInsuranceFee',
           width: '120',
           fixed: false
         }, {
-          label: '发站装卸费',
+          label: '发站装卸费(元)',
           prop: 'leaveHandlingFee',
           width: '120',
           fixed: false
         }, {
-          label: '发站其他费',
+          label: '发站其他费(元)',
           prop: 'leaveOtherFee',
           width: '120',
           fixed: false
         }, {
-          label: '到站装卸费',
+          label: '到站装卸费(元)',
           prop: 'arriveHandlingFee',
           width: '120',
           fixed: false
         }, {
-          label: '到站其他费',
+          label: '到站其他费(元)',
           prop: 'arriveOtherFee',
           width: '120',
           fixed: false
         }, {
           label: '配载时间',
-          prop: 'requireArrivedTime',
+          prop: 'loadTime',
           width: '160',
           fixed: false
         }, {
@@ -290,7 +307,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -305,10 +322,8 @@ export default {
       this.fetchData()
     },
     showImport() {
-      // 显示导入窗口
     },
     doAction(type) {
-      // 判断是否有选中项
       if (!this.selected.length && type !== 'import') {
         this.closeAddCustomer()
         this.$message({
@@ -319,22 +334,18 @@ export default {
       }
 
       switch (type) {
-                // 导出
         case 'import':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn
           })
           break
-          // 打印
         case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn
-            // name: '回单回收'
           })
           break
-          // ruku
         case 'storage':
           if (this.selected.length > 1) {
             this.$message({
@@ -350,17 +361,12 @@ export default {
               this.openAddCustomer()
             } else {
               this.closeAddCustomer()
-                // this.$message({
-                //   message: '已到车的批次才可以做到货入库~',
-                //   type: 'warning'
-                // })
               this.$refs.multipleTable.clearSelection()
               return false
             }
           }
 
           break
-          // 到车确定
         case 'sure':
           this.closeAddCustomer()
           if (this.selected.length > 1) {
@@ -370,7 +376,6 @@ export default {
             })
             return false
           } else {
-                // 在途中
             const id = this.selected[0].id
             if (this.selected[0].bathStatusName === '在途中') {
               postConfirmToCar(id, 54).then(res => {
@@ -380,7 +385,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                this._handlerCatchMsg(err)
               })
             } else {
               this.closeAddCustomer()
@@ -393,9 +398,6 @@ export default {
             }
           }
           break
-        // sure 到车确定   deselectCar取消到车  deleteStor取消入库
-
-          // deselectCar取消到车
         case 'deselectCar':
           this.closeAddCustomer()
 
@@ -425,7 +427,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -435,7 +437,6 @@ export default {
             })
           }
           break
-          // 取消入库
         case 'deleteStor':
           this.closeAddCustomer()
           if (this.selected.length > 1) {
@@ -446,7 +447,6 @@ export default {
             return false
           } else {
             const deleteItemName = this.selected[0].batchNo
-              // =>todo 删除多个
             let _ids = this.selected.map(item => {
               return item.id
             })
@@ -465,7 +465,7 @@ export default {
                   })
                   this.fetchData()
                 }).catch(err => {
-                  this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                  this._handlerCatchMsg(err)
                 })
               }).catch(() => {
                 this.$message({
@@ -485,10 +485,8 @@ export default {
           }
 
           break
-          // 导出数据
 
       }
-      // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
     setTable() {
@@ -527,20 +525,11 @@ export default {
         this.isModify = false
         this.isAlFun = false
       }
-      // else {
-      //   let bathStatusName = row.bathStatusName
-      //   this.$message({
-      //     message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
-      //     type: 'warning'
-      //   })
-      //   this.closeAddCustomer()
-      //   return false
-      // }
       this.$refs.multipleTable.clearSelection()
     },
-    setColumn(obj) { // 重绘表格列表
+    setColumn(obj) { //
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = Math.random() //
     }
   }
 }

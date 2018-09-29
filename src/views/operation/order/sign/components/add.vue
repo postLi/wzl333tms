@@ -51,16 +51,20 @@
           <el-input :maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
-          <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" :disabled="isDbclick"/>
+          <SelectType v-model="form.signCocumentTypeId" type="sign_cocument_type" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick"/>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="证件号码:" prop="documentNum">
-          <el-input v-model="form.documentNum" auto-complete="off" :disabled="isDbclick"></el-input>
+          <el-input v-model="form.documentNum" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :maxlength="18" :disabled="isDbclick"></el-input>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId" >
-          <SelectType v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
+          <SelectType v-if="!(repertoryId.signStatus !== 227 && isDbclick)" v-model="form.signTypeId" type="sign_type" :disabled="isDbclick"/>
+          <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks ms" label="备注" prop="remark" >
           <input class="bz" :maxlength="250" v-model.trim="form.remark" v-if="isDbclick" disabled="isDbclick"  placeholder="最多可输入250个字符"/>
@@ -395,6 +399,9 @@ export default {
           // this.form.abnormalNo = res
         console.log(res)
           // console.log(res, "this.form.abnormalNo: ", this.form);
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     // handleSelectSender(res) {
@@ -466,9 +473,9 @@ export default {
               //     this.$emit('success')
               //   }
               // })
-          }).catch(res => {
+          }).catch(err => {
             this.loading = false
-            this.$message.warning(res.text)
+            this._handlerCatchMsg(err)
             this.closeMe()
           })
         } else {
@@ -629,9 +636,16 @@ export default {
     width: 234px;
     height: 136px;
   }
+  .box_container .el-upload .el-upload-dragger{
+    height:134px;
+  }
+  // .box_container .upload__tip{
+  //   line-height: none;
+  // }
   .el-upload-dragger{
-    width: 234px;
-    height: 136px;
+    width: 232px;
+    height: 134px;
+    // border:none;
   }
   .el-upload--picture-card{
     width:234px;

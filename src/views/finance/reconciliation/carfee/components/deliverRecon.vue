@@ -7,7 +7,6 @@
 
         <div class="sTitle">
           <el-form-item label="">
-            <!--<el-input v-model="checkBillName" auto-complete="off" ></el-input><span></span>-->
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
@@ -22,14 +21,13 @@
         </div>
         <div class="sDate">
           <el-form-item label="车牌号" prop="memberName" v-if="$route.query.id">
-            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled></el-input>
+            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled size="mini"></el-input>
           </el-form-item>
           <el-form-item label="车牌号" prop="memberName" placeholder="请选择车牌号" v-else>
-            <el-select v-model="searchTitle.memberName" clearable>
+            <el-select v-model="searchTitle.memberName" clearable size="mini">
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
-            <!--<querySelect search="truckIdNumber" show="select" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"  v-model="searchTitle.memberName" clearable />-->
 
           </el-form-item>
           <el-date-picker
@@ -37,6 +35,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
+             size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -87,7 +86,7 @@
     </div>
     <div class="sMessageCont">
       <div class="sMessageCont_info">
-        <p>应付账款</p>
+        <p>未付账款</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -511,7 +510,10 @@
         this.moodifyList().then(() => {
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
-        })
+        }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
         this.moodifyDealPay()
         this.moodifyReadyPay()
       } else {
@@ -543,7 +545,7 @@
           // console.log(this.memberNameType);
           this.loading = false
         }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
         })
       },
       fetchList() {
@@ -554,7 +556,7 @@
           this.loading = false
         }).catch(err => {
           this.newMessageData()
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchDealPay() {
@@ -566,7 +568,7 @@
           this.dealPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       fetchReadyPay() {
@@ -578,7 +580,7 @@
           this.alreadyPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       // 修改
@@ -590,7 +592,7 @@
           this.infoMessageData(this.messageArr)
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       moodifyDealPay() {
@@ -602,7 +604,7 @@
           this.dealPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       moodifyReadyPay() {
@@ -614,7 +616,7 @@
           this.alreadyPaytota = data
           this.loading = false
         }).catch(err => {
-          this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+          this._handlerCatchMsg(err)
         })
       },
       changeOrgid(item, checkId) {
@@ -813,6 +815,7 @@
         this.messageButtonInfo.createTime = item.createTime
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
+        this.messageButtonInfo.checkStatus = item.checkStatus
         this.checkBillName = item.checkBillName
         this.searchCreatTime = this.defaultTime
         this.searchCreatTime[0] = item.checkStartTime
@@ -983,10 +986,10 @@
       }
       .sDate {
         .el-form-item__label {
-          line-height: 40px;
+          line-height: 28px;
         }
         .el-input__inner {
-          height: 40px;
+          // height: 40px;
         }
         .el-input.is-disabled {
           .el-input__inner {

@@ -91,9 +91,10 @@ export default {
       return getAuthInfo(this.otherinfo.orgid).then(res => {
         this.roles = res.list
         this.loading = false
-      }).catch(err => {
+      }).catch((err) => {
         this.loading = false
         this.inited = false
+        this._handlerCatchMsg(err)
       })
     },
     submitForm() {
@@ -107,12 +108,12 @@ export default {
       }
       putEmployeerAuth(data).then(res => {
         this.loading = false
-        this.$message.success("保存成功")
+        this.$message.success('保存成功')
         this.closeMe()
         this.$emit('success')
-
-      }).catch(err => {
+      }).catch((err) => {
         this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe() {

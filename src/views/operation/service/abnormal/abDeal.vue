@@ -12,177 +12,7 @@
             <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
         <div class="info_tab">
-        <!-- <el-table
-          ref="multipleTable"
-          :data="dataset"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="id"
-            label="序号"
-            width="200">
-            <template slot-scope="scope">{{ ((searchForms.currentPage - 1)*searchForms.pageSize) + scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="abnormalNo"
-            width="120"
-            label="异常编号">
-          </el-table-column>
-          <el-table-column
-            prop="shipSn"
-            width="120"
-            sortable
-            label="运单号">
-          </el-table-column>
-          <el-table-column
-            sortable
-            width="200"
-            label="开单时间">
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="cargoName"
-            sortable
-            width="120"
-            label="货品名">
-          </el-table-column>
-          <el-table-column
-            prop="abnormalStatusName"
-            label="异常状态"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="abnormalTypeName"
-            width="120"
-            label="异常类型">
-          </el-table-column>
-          <el-table-column
-            label="登记网点"
-            width="120"
-            prop="orgName"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="dutyOrgName"
-            label="责任网点"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop=""
-            sortable
-            width="200"
-            label="登记时间">
-            <template slot-scope="scope">{{ scope.row.registerTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
-          </el-table-column>
-          <el-table-column
-            prop="registerName"
-            label="登记人"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="registerFee"
-            label="登记金额"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalAmount"
-            label="异常件数"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipGoodsSn"
-            label="货号"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="cargoPack"
-            label="包装"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-           <el-table-column
-            prop="cargoAmount"
-            label="件数"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="abnormalDescribe"
-            label="异常描述"
-            width="120"
-            sortables
-            >
-          </el-table-column>
-          <el-table-column
-            prop="disposeTime"
-            label="处理时间"
-            width="200"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.disposeTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
-          </el-table-column>
-          <el-table-column
-            prop="disposeResultName"
-            label="处理结果"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-           <el-table-column
-            prop="disposeOrgName"
-            label="处理网点"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="disposeName"
-            label="处理人"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="disposeOpinion"
-            label="处理意见"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-        </el-table> -->
+
           <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
@@ -229,10 +59,15 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     this.searchQuery.vo.disposeOrgId = this.otherinfo.orgid
     Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
       // this.loading = false
       this.licenseTypes = resArr[1]
+      this.loading = false
+    }).catch(err => {
+      this._handlerCatchMsg(err)
+      this.loading = false
     })
   },
   data() {
@@ -249,7 +84,7 @@ export default {
       setupTableVisible: false,
       licenseTypes: [],
       selected: [],
-      loading: true,
+      loading: false,
       total: 0,
       id: '',
       searchQuery: {
@@ -390,7 +225,9 @@ export default {
         this.dataset = data.list
         this.total = data.total
         this.loading = false
-        console.log(data)
+        // console.log(data)
+      }).catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -431,7 +268,7 @@ export default {
           break
         // 异常处理
         case 'deal':
-          console.log(this.selected[0].abnormalStatus)
+          // console.log(this.selected[0].abnormalStatus)
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能处理单条数据',

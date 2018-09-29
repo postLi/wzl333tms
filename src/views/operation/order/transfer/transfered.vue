@@ -135,6 +135,11 @@ export default {
         'prop': 'carrierMobile',
         'width': '150'
       }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      }, {
         'label': '到站电话',
         'prop': 'arrivalMobile',
         'width': '150'
@@ -173,19 +178,19 @@ export default {
           return `${parseTime(scope.row.transferTime)}`
         }
       }, {
-        'label': '中转运费',
+        'label': '中转运费(元)',
         'prop': 'transferCharge',
         'width': '150'
       }, {
-        'label': '中转送货费',
+        'label': '中转送货费(元)',
         'prop': 'deliveryExpense',
         'width': '150'
       }, {
-        'label': '中转费其他费',
+        'label': '中转费其他费(元)',
         'prop': 'transferOtherFee',
         'width': '150'
       }, {
-        'label': '中转费合计',
+        'label': '中转费合计(元)',
         'prop': 'totalCost',
         'width': '150'
       }, {
@@ -193,7 +198,7 @@ export default {
         'prop': 'paymentName',
         'width': '150'
       }, {
-        'label': '代收货款',
+        'label': '代收货款(元)',
         'prop': 'codService',
         'width': '150'
       }, {
@@ -229,11 +234,11 @@ export default {
         'prop': 'cargoAmount',
         'width': '100'
       }, {
-        'label': '重量',
+        'label': '重量(kg)',
         'prop': 'cargoWeight',
         'width': '100'
       }, {
-        'label': '体积',
+        'label': '体积(m³)',
         'prop': 'cargoVolume',
         'width': '100'
       }, {
@@ -286,11 +291,11 @@ export default {
         'prop': 'receiverDetailedAddress',
         'width': '150'
       }, {
-        'label': '运费',
+        'label': '运费(元)',
         'prop': 'shipFee',
         'width': '150'
       }, {
-        'label': '运费合计',
+        'label': '运费合计(元)',
         'prop': 'shipTotalFee',
         'width': '150'
       }, {
@@ -310,15 +315,15 @@ export default {
         'prop': 'description',
         'width': '150'
       }, {
-        'label': '件数单价',
+        'label': '件数单价(元)',
         'prop': 'amountFee',
         'width': '150'
       }, {
-        'label': '重量单价',
+        'label': '重量单价(元)',
         'prop': 'weightFee',
         'width': '150'
       }, {
-        'label': '体积单价',
+        'label': '体积单价(元)',
         'prop': 'volumeFee',
         'width': '150'
       }, {
@@ -341,19 +346,19 @@ export default {
         'prop': 'shipPayWayName',
         'width': '150'
       }, {
-        'label': '现付',
+        'label': '现付(元)',
         'prop': 'shipNowpayFee',
         'width': '150'
       }, {
-        'label': '到付',
+        'label': '到付(元)',
         'prop': 'shipArrivepayFee',
         'width': '150'
       }, {
-        'label': '回单付',
+        'label': '回单付(元)',
         'prop': 'shipReceiptpayFee',
         'width': '150'
       }, {
-        'label': '月结',
+        'label': '月结(元)',
         'prop': 'shipMonthpayFee',
         'width': '150'
       }, {
@@ -373,51 +378,51 @@ export default {
         'prop': 'shipCustomerNumber',
         'width': '150'
       }, {
-        'label': '送货费',
+        'label': '送货费(元)',
         'prop': 'deliveryFee',
         'width': '150'
       }, {
-        'label': '代收款手续费',
+        'label': '代收款手续费(元)',
         'prop': 'commissionFee',
         'width': '150'
       }, {
-        'label': '声明价值',
+        'label': '声明价值(元)',
         'prop': 'productPrice',
         'width': '150'
       }, {
-        'label': '保险费',
+        'label': '保险费(元)',
         'prop': 'insuranceFee',
         'width': '150'
       }, {
-        'label': '装卸费',
+        'label': '装卸费(元)',
         'prop': 'handlingFee',
         'width': '150'
       }, {
-        'label': '包装费',
+        'label': '包装费(元)',
         'prop': 'packageFee',
         'width': '150'
       }, {
-        'label': '提货费',
+        'label': '提货费(元)',
         'prop': 'pickupFee',
         'width': '150'
       }, {
-        'label': '上楼费',
+        'label': '上楼费(元)',
         'prop': 'goupstairsFee',
         'width': '150'
       }, {
-        'label': '实际提货费',
+        'label': '实际提货费(元)',
         'prop': 'realityhandlingFee',
         'width': '150'
       }, {
-        'label': '报关费',
+        'label': '报关费(元)',
         'prop': 'customsFee',
         'width': '150'
       }, {
-        'label': '其他费收入',
+        'label': '其他费收入(元)',
         'prop': 'otherfeeIn',
         'width': '150'
       }, {
-        'label': '其他费支出',
+        'label': '其他费支出(元)',
         'prop': 'otherfeeOut',
         'width': '150'
       }]
@@ -430,6 +435,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -489,9 +497,11 @@ export default {
             })
           }
           var id = this.selected[0].id
+          let shipId = this.selected[0].shipId
 
           this.$router.push({ path: '/operation/order/track/transfer', query: {
-            transfer: id
+            transfer: id,
+            shipId: shipId
           }})
           break
           // 取消中转

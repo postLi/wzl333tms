@@ -54,7 +54,9 @@ export function postCSaveCustomerDetail(params) {
  * @returns {*}
  */
 export function getCustomerdetail(id) {
-  return fetch.get('/api-finance/finance/customerdetail/v1/' + id )
+  return fetch.get('/api-finance/finance/customerdetail/v1/' + id ).then(res => {
+    return res.data
+  })
 }
 
 

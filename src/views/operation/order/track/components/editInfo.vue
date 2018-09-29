@@ -82,7 +82,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div slot="footer" class="dialog-footer" v-else="isFootEdit">
+    <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -91,7 +91,6 @@
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
-import { getAllOrgInfo } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import Detail from './detail'
 import DetailArtery from './detailArtery'
@@ -174,8 +173,8 @@ export default {
         getSystemTime().then(data => {
             this.formModel.operatorTime = parseTime(data.trim())
           })
-          .catch(error => {
-            this.$message({ type: 'error', message: '获取系统时间失败' })
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -206,6 +205,9 @@ export default {
       const id = this.id
       return getLoadDetail(id).then(data => {
         this.trackDetail = objectMerge2([], data)
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) { // 关闭右边弹出框
@@ -225,8 +227,8 @@ export default {
             this.getDetail()
             this.resetForm()
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '删除失败')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       })
     },
@@ -243,8 +245,8 @@ export default {
           this.getDetail()
           this.resetForm()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     addTrack() { // 添加跟踪信息
@@ -255,8 +257,8 @@ export default {
           this.getDetail()
           this.resetForm()
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     handleClick() { // 底部按钮区显示

@@ -1,4 +1,5 @@
 import fetch, { checkStatus } from '@/utils/fetch'
+import CACHE from '@/utils/cache'
 
 export default {
   /**
@@ -468,20 +469,29 @@ export default {
    * @param {*} orgId 组织id
    */
   getCargoSetting(orgId) {
-    return fetch.get('/api-order/order/tmsorderfield/v1/', {
-      params: {
-        orgId,
-        Type: 'orderCargoSetting'
-      }
-    }).then(checkStatus).then(res => {
-      return res.data || []
-    })
+    if (!(CACHE.get('cargosetting' + '_update')) && CACHE.get('cargosetting')) {
+      return new Promise((resolve) => {
+        resolve(CACHE.get('cargosetting'))
+      })
+    } else {
+      return fetch.get('/api-order/order/tmsorderfield/v1/', {
+        params: {
+          orgId,
+          Type: 'orderCargoSetting'
+        }
+      }).then(checkStatus).then(res => {
+        CACHE.set('cargosetting' + '_update', false)
+        CACHE.set('cargosetting', res.data)
+        return res.data || []
+      })
+    }
   },
   /**
    * 修改货品设置
    * @param {*} data 货品设置数据
    */
   putCargoSetting(data) {
+    CACHE.set('cargosetting' + '_update', true)
     return fetch.put('/api-order/order/tmsorderfield/v1/', data).then(checkStatus)
   },
   /**

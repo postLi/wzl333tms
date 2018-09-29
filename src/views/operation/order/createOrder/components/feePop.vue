@@ -115,6 +115,9 @@ export default {
           return el
         })
         this.loading = false
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     submitFeeSetup() {
@@ -132,6 +135,9 @@ export default {
         } else {
 
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     canDragStart(list) {

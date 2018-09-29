@@ -147,35 +147,40 @@ export default {
         'prop': 'carrierMobile',
         'width': '150'
       }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },{
         'label': '中转件数',
         'prop': 'transferAmount',
         'width': '150'
       }, {
-        'label': '中转体积',
+        'label': '中转体积(kg)',
         'prop': 'transferVolume',
         'width': '150'
       }, {
-        'label': '中转重量',
+        'label': '中转重量(m³)',
         'prop': 'transferWeight',
         'width': '150'
       }, {
-        'label': '代收货款',
+        'label': '代收货款(元)',
         'prop': 'codService',
         'width': '150'
       }, {
-        'label': '中转运费',
+        'label': '中转运费(元)',
         'prop': 'transferCharge',
         'width': '150'
       }, {
-        'label': '中转送货费',
+        'label': '中转送货费(元)',
         'prop': 'deliveryExpense',
         'width': '150'
       }, {
-        'label': '中转费其他费',
+        'label': '中转费其他费(元)',
         'prop': 'transferOtherFee',
         'width': '150'
       }, {
-        'label': '中转费合计',
+        'label': '中转费合计(元)',
         'prop': 'totalCost',
         'width': '150'
       }, {
@@ -197,6 +202,9 @@ export default {
         this.total = data.total
         this.loading = false
         console.log('this.usersArr:', this.usersArr, data)
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

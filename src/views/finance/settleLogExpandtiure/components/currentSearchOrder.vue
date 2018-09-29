@@ -22,7 +22,7 @@
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
        :maxlength="15"
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货人搜索" 
+      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>

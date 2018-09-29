@@ -345,7 +345,7 @@ export default {
         {
           label: '代收款手续费',
           prop: 'commissionFee',
-          width: '12'
+          width: '120'
         },
         // {
         //   label: "制单人",
@@ -368,7 +368,7 @@ export default {
           width: '100'
         },
         {
-          label: '是时效',
+          label: '时效',
           prop: 'shipEffectiveName',
           width: '100'
         },
@@ -460,7 +460,7 @@ export default {
       }
     },
     showDetail(order) {
-      this.eventBus.$emit('showOrderDetail', order.shipId, order.id, true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
       console.log(order.shipId)
     },
     setTable() {
@@ -496,8 +496,8 @@ export default {
           this.total = data.total
           this.loading = false
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '获取列表失败')
+        .catch(err => {
+          this._handlerCatchMsg(err)
           this.loading = false
         })
     },

@@ -88,7 +88,7 @@ export default {
       },
       loadTruck: 'loadTruckOne',
       isModify: false,
-      addCarrierVisible: false, 
+      addCarrierVisible: false,
       loading: false,
       carrierName: '',
       carrierKey: 0,
@@ -102,13 +102,13 @@ export default {
     this.init()
   },
   methods: {
-    regetList () {
+    regetList() {
      // 刷新数据
-     this.rightData = []
-     this.leftData = []
-     this.getSelectAddLoadRepertoryList()
+      this.rightData = []
+      this.leftData = []
+      this.getSelectAddLoadRepertoryList()
     },
-    fetchCarrierData () {
+    fetchCarrierData() {
       this.carrierKey = Math.random()
     },
     init() {
@@ -128,6 +128,9 @@ export default {
         // 设置为当前日期
         getSystemTime().then(time => {
           this.formModel.transferTime = parseTime(new Date(time))
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       }
       this.getSelectAddLoadRepertoryList()
@@ -140,6 +143,9 @@ export default {
         return transferManageApi.getBatchNo(this.otherinfo.orgid).then(res => {
           this.cache.transferBatchNo = res.data
           this.formModel.transferBatchNo = res.data
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -148,10 +154,16 @@ export default {
       if (this.isModify) {
         return transferManageApi.getUpdateLoadRepertoryList(this.otherinfo.orgid, this.formModel.transferBatchNo).then(data => {
           this.leftData = data.data
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       } else {
         return transferManageApi.getLeftRepetoryList(this.otherinfo.orgid).then(data => {
           this.leftData = data.data
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       }
     },
@@ -215,7 +227,7 @@ export default {
       }
     },
     finishLoadInfo() {
-      if(this.loading){
+      if (this.loading) {
         return false
       }
       this.$refs['formModel'].validate((valid) => {
@@ -259,11 +271,11 @@ export default {
               }
 
               this.$message.success('保存成功！')
-              
+
               this.goTransferList()
             }).catch(err => {
               this.loading = false
-              this.$message.error(err.text || '未知错误')
+              this._handlerCatchMsg(err)
             })
           }
         } else {

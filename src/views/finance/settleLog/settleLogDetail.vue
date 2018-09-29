@@ -480,6 +480,9 @@ export default {
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
           this.total = data.total
+        }).catch((err)=>{
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
         this.setView() // 设置视图
       }
@@ -545,8 +548,8 @@ export default {
           this.$message({ type: 'success', message: '取消结算操作成功' })
           this.fetchList()
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: '取消结算操作失败' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
           this.fetchList()
         })
       })

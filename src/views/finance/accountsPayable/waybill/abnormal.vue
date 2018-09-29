@@ -85,10 +85,9 @@ export default {
       tablekey: 0,
       total: 0,
       dataList: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '140',
@@ -110,6 +109,12 @@ export default {
           label: '结算状态',
           prop: 'statusName',
           width: '150',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatusName',
+          width: '100',
           fixed: false
         },
         {
@@ -143,13 +148,21 @@ export default {
           label: '已结异常理赔',
           prop: 'closeFee',
           width: '110',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
         },
         {
           label: '未结异常理赔',
           prop: 'unpaidFee',
           width: '110',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
         },
         {
           label: '开单日期',
@@ -301,9 +314,14 @@ export default {
     },
     fetchList() {
       this.selectListShipSns = []
+      this.loading = true
       return postFindAbnormalList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},
@@ -349,7 +367,7 @@ export default {
       })
     },
     showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.shipSn, order.id, true)
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true

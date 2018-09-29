@@ -124,3 +124,9 @@
   line-height:28px;
   padding:0 10px;
 }
+
+.textChangeDanger{
+  .el-input__inner{
+    color: red;
+  }
+}

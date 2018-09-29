@@ -4,9 +4,9 @@
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize" icon="el-icon-sort" plain @click="doAction('send')" v-has:GOODSFUNDS_BACK2>货款汇款</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:GOODSFUNDS_BACK2>取消汇款</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:GOODSFUNDS_CANCEL2>取消汇款</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:GOODSFUNDS_BACK2>导出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:GOODSFUNDS_EXP2>导出</el-button>
             <!-- <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain>打印</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </div>
@@ -266,7 +266,7 @@
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
       
-      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="货款汇款" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
+      <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="汇款" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
 </template>
@@ -504,6 +504,9 @@ export default {
         this.total = data.total
         this.loading = false
         // console.log(data);
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

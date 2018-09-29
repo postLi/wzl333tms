@@ -163,12 +163,12 @@
             width: '180',
             fixed: false
           }, {
-            label: '应收账款',
+            label: '未收账款',
             prop: 'receivableFee',
             width: '150',
             fixed: false
           }, {
-            label: '应付账款',
+            label: '未付账款',
             prop: 'payableFee',
             width: '120',
             fixed: false
@@ -259,7 +259,7 @@
           this.total = data.total
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
           this.loading = false
         })
       },
@@ -358,7 +358,7 @@
                   })
                   this.fetchData()
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {
@@ -390,7 +390,7 @@
                   })
                   this.fetchData()
                 }).catch(err => {
-                  this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                  this._handlerCatchMsg(err)
                   this.loading = false
                 })
               } else {

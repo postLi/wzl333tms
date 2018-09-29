@@ -14,7 +14,10 @@
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -43,7 +46,10 @@
       <div slot="tableRight" class="tableHeadItemBtn">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed type="index" width="50">
+          <el-table-column fixed width="50" type="index" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
           </el-table-column>
           <el-table-column fixed width="50">
             <template slot-scope="scope">
@@ -56,7 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input @dbclick.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -94,6 +100,7 @@ export default {
   },
   data() {
     return {
+      textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
@@ -181,13 +188,21 @@ export default {
           label: '已结到付运费',
           prop: 'paidArrivepayCarriage',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+          }
         },
         {
           label: '未结到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+          }
         },
         {
           label: '到付油卡',
@@ -199,13 +214,21 @@ export default {
           label: '已结到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+          }
         },
         {
           label: '未结到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+          }
         },
         {
           label: '到站装卸费',
@@ -217,13 +240,21 @@ export default {
           label: '已结到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+          }
         },
         {
           label: '未结到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+          }
         },
         {
           label: '到站其他费',
@@ -235,13 +266,21 @@ export default {
           label: '已结到站其他费',
           prop: 'paidArriveOtherFee',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+          }
         },
         {
           label: '未结到站其他运费',
           prop: 'unpaidArriveOtherFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+          }
         },
         {
           label: '司机电话',
@@ -332,20 +371,28 @@ export default {
         {
           label: '到付运费',
           prop: 'arrivepayCarriage',
-          width: '150',
+          width: '100',
           fixed: false
         },
         {
           label: '已结到付运费',
           prop: 'paidArrivepayCarriage',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+          }
         },
         {
           label: '未结到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+          }
         },
         {
           label: '实结到付运费',
@@ -367,13 +414,21 @@ export default {
           label: '已结到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+          }
         },
         {
           label: '未结到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+          }
         },
         {
           label: '实结到付油卡',
@@ -395,13 +450,21 @@ export default {
           label: '已结到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+          }
         },
         {
           label: '未结到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+          }
         },
         {
           label: '实结到站装卸费',
@@ -423,13 +486,21 @@ export default {
           label: '已结到站其他费',
           prop: 'paidArriveOtherFee',
           width: '180',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+          }
         },
         {
           label: '未结到站其他运费',
           prop: 'unpaidArriveOtherFee',
           width: '150',
-          fixed: false
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+          }
         },
         {
           label: '实结到站其他费',
@@ -502,6 +573,10 @@ export default {
     }
   },
   mounted() {
+    let i = 50
+    while (i-- < 50) {
+      this.textChangeDanger.push({})
+    }
     this.getList()
   },
   methods: {
@@ -527,8 +602,8 @@ export default {
       // }
     },
     getList() {
-      let sns = JSON.parse(this.$route.query.selectListBatchNos)
-      let selectListBatchNos = objectMerge2([], sns)
+      const sns = JSON.parse(this.$route.query.selectListBatchNos)
+      const selectListBatchNos = objectMerge2([], sns)
       if (this.$route.query.selectListBatchNos) {
         this.isModify = true
       } else {
@@ -541,33 +616,36 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       // if (!this.isFresh) {
-        postPayListBySummary(this.searchQuery).then(data => {
-          this.leftTable = Object.assign([], data.list)
-          selectListBatchNos.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            let item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      postPayListBySummary(this.searchQuery).then(data => {
+        this.leftTable = Object.assign([], data.list)
+        selectListBatchNos.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.batchNo) {
+              this.rightTable.push(item)
             }
-            // 默认设置实结数量
-            e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
-            e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
-            e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
-            e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
           })
-          this.orgLeftTable = objectMerge2([], this.leftTable)
         })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+          // 默认设置实结数量
+          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
+          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
+          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
+          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
+        })
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
 
       // }
     },
@@ -575,11 +653,21 @@ export default {
       this.rightTable[index][prop] = Number(newVal)
       let unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
       let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      // 未结费用值
       let paidVal = this.rightTable[index][prop]
+
+      if (paidVal !== unpaidVal) {
+        this.$set(this.rightTable[index], prop + 'lyy', true)
+      } else {
+        this.$set(this.rightTable[index], prop + 'lyy', false)
+      }
+
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
-        this.$set(this.rightTable, index, Object.assign(this.rightTable[index], { [prop]: unpaidVal }))
-        this.$message({ type: 'warning', message: '【'+this.FEE_TYPE[prop]+'】 实结费用不小于0，不大于未结费用。' })
+        this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
+          [prop]: unpaidVal
+        }))
+        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 实结费用不小于0，不大于未结费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -625,17 +713,26 @@ export default {
           e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
           e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
 
-          this.rightTable.push(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.batchNo === e.batchNo) {
-              item = index
-            }
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.batchNo !== e.batchNo
           })
-          if (item !== -1) {
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter((el, index) => {
+            return el.batchNo !== e.batchNo
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => {
+            return el.batchNo !== e.batchNo
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.batchNo === e.batchNo) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) {
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
           // let item = this.leftTable.indexOf(e)
           // if (item !== -1) { // 源数据减去被穿梭的数据
           //   this.leftTable.splice(item, 1)
@@ -658,13 +755,23 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
+          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
+            return em.batchNo !== e.batchNo
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
+            return em.batchNo !== e.batchNo
+          })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          let item = this.rightTable.indexOf(e)
-          if (item !== -1) {
-            // 源数据减去被穿梭的数据
-            this.rightTable.splice(item, 1)
-          }
+          this.rightTable = this.rightTable.filter(el => {
+            return el.batchNo !== e.batchNo
+          })
+
+          // let item = this.rightTable.indexOf(e)
+          // if (item !== -1) {
+          //   // 源数据减去被穿梭的数据
+          //   this.rightTable.splice(item, 1)
+          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -677,12 +784,12 @@ export default {
     selectCurrent(obj, index) {
       this.addItem(obj, index)
     },
-    dclickAddItem (row, event) { // 双击添加单行
+    dclickAddItem(row, event) { // 双击添加单行
       this.selectedRight = []
       this.selectedRight.push(row)
       this.doAction('goLeft')
     },
-    dclickMinusItem (row, event) { // 双击减去单行
+    dclickMinusItem(row, event) { // 双击减去单行
       this.selectedLeft = []
       this.selectedLeft.push(row)
       this.doAction('goRight')
@@ -748,11 +855,11 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      const propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      const propsArr = ['_index|2|单', 'arrivepayCarriage', 'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'amountArrivepayCarriage', 'arrivepayOilCard', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'amountArrivepayOilCard', 'arriveHandlingFee', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'amountArriveHandlingFee', 'arriveOtherFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'amountArriveOtherFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     }
   }

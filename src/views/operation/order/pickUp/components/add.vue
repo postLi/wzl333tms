@@ -34,16 +34,19 @@
                       :maxlength="8"></el-input>
           </el-form-item>
           <el-form-item label="体积" prop="">
-            <el-input v-model="form.tmsOrderPickup.pickupVolume" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupVolume" @change="(e)=>{setInputVal(e.target.value, 'pickupVolume')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="重量" prop="tmsOrderPickup.pickupWeight">
-            <el-input v-model="form.tmsOrderPickup.pickupWeight" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupWeight" @change="(e)=>{setInputVal(e.target.value, 'pickupWeight')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="运费" prop="tmsOrderPickup.carriage">
-            <el-input v-model="form.tmsOrderPickup.carriage" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.carriage" @change="(e)=>{setInputVal(e.target.value, 'carriage')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+
           </el-form-item>
           <el-form-item label="付款方式">
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" class="pickup-way"
@@ -61,11 +64,12 @@
         <div class="info_date">其他信息</div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
-            <el-input v-model="form.tmsOrderPickup.truckFee" auto-complete="off" :disabled="isDbclick"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.truckFee" @change="(e)=>{setInputVal(e.target.value, 'truckFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
           </el-form-item>
           <el-form-item label="代收费用" prop="">
-            <el-input v-model="form.tmsOrderPickup.collectionFee" auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8" v-number-only:point></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.collectionFee" @change="(e)=>{setInputVal(e.target.value, 'collectionFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
           </el-form-item>
           <el-form-item label="车牌号" prop="tmsTruck.truckIdNumber">
             <querySelect search="truckIdNumber" valuekey="truckIdNumber" type="trunk" @change="getTrunkName"
@@ -81,7 +85,6 @@
           </el-form-item>
           <el-form-item label="司机手机" prop="tmsDriver.driverMobile">
             <el-input v-model="form.tmsDriver.driverMobile" auto-complete="off" :disabled="isDbclick"></el-input>
-            <!--<querySelect search="driverMobile" type="driver"  @change="getdriverMobile" :remote="true" v-model="form.tmsDriver.driverMobile" />-->
           </el-form-item>
           <el-form-item label="车辆单位" prop="tmsTruck.truckUnit">
             <el-input v-model="form.tmsTruck.truckUnit" auto-complete="off" :disabled="isDbclick"
@@ -127,7 +130,6 @@
       <el-button @click="closeMe">关 闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
-      <!--<el-button @click="submit">保存并打印</el-button>-->
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -223,10 +225,10 @@
             { required: true, validator: this.validateIsEmpty('件数不能为空') }
           ],
           'tmsOrderPickup.pickupVolume': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.pickupWeight': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.carriage': [
             { validator: validatetruckFee, mtrigger: 'blur' }
@@ -240,16 +242,14 @@
             // { validator: validatetruckFee, trigger: 'blur' }
           ],
           'tmsOrderPickup.collectionFee': [
-            { validator: validatePickupNum, trigger: 'blur' }
+            { validator: validatetruckFee, trigger: 'blur' }
             // { max: 8, message: '代收费用最多可输入8个字符', trigger: 'blur' }
           ],
           'tmsTruck.truckIdNumber': [
-            // {  validator: this.validateIsEmpty('车牌号不能为空')}
             { required: true, validator: this.validateIsEmpty('车牌号不能为空') }
             // { max: 8, message: '车牌号最多可输入8个字符' }
           ],
           'tmsDriver.driverName': [
-            // { max: 8, message: '司机姓名最多可输入8个字符', trigger: 'blur' },
             { required: true, validator: this.validateIsEmpty('司机姓名不能为空') }
           ],
           'tmsDriver.driverMobile': [
@@ -394,6 +394,9 @@
       }
     },
     methods: {
+      setInputVal(val, name) {
+        this.$set(this.form.tmsOrderPickup, name, val)
+      },
       watchInfo() {
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -427,7 +430,7 @@
         this.form.tmsOrderPickup.toCityName = item.toCityName
         this.form.tmsOrderPickup.id = item.id
         this.form.tmsOrderPickup.truckFee = item.truckFee
-
+        console.log('infoData', item)
         this.form.tmsTruck.truckIdNumber = item.truckIdNumber
         this.form.tmsTruck.truckType = item.truckType
         this.form.tmsTruck.truckUnit = item.truckUnit
@@ -475,10 +478,9 @@
           this.pickupBatchNumber = data.data
           this.loading = false
         }).catch(err => {
-          this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          this._handlerCatchMsg(err)
         })
       },
-      /** 收货人/发货人  tmsCustomer*/
       setSender(item, type) {
         type = type ? 'customRece' : 'tmsCustomer'
         if (item) {
@@ -496,7 +498,6 @@
         } else {
         }
       },
-      // 司机姓名
       getdriverName(item, city) {
         if (item) {
           if (this.form.tmsDriver.driverMobile) {
@@ -508,17 +509,14 @@
           }
         }
       },
-      // 车牌号
       getTrunkName(trunk) {
         if (trunk) {
-          // console.log(trunk,'车牌号');
           if (this.form.tmsDriver.driverName === '' || this.form.tmsDriver.driverMobile === '') {
-            this.valkey = Math.random()
             this.form.tmsDriver.driverName = trunk.driverName
             this.form.tmsDriver.driverMobile = trunk.dirverMobile
             this.form.tmsDriver.driverId = trunk.driverId
           } else {
-            this.valkey = Math.random()
+            // this.valkey = Math.random()
             this.form.tmsDriver.driverName = Object.assign(this.form.tmsDriver.driverName)
             this.form.tmsDriver.driverMobile = Object.assign(this.form.tmsDriver.driverMobile)
           }
@@ -531,18 +529,15 @@
       initInfo() {
         this.loading = false
       },
-      submit() {
-        console.log('保存并打印')
-      },
       submitForm(formName) {
         this.isChecked = true
-        this.isCheckedShow = false
+        this.isCheckedShow = true
         this.checkShowMessage = true
         //
         this.$refs[formName].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
-          if (valid) {
+          if (valid && !this.loading) {
             this.loading = true
             this.form.tmsOrderPickup.pickupBatchNumber = this.pickupBatchNumber
 
@@ -550,6 +545,7 @@
             // console.log(this.form.tmsTruck.truckIdNumber)
             const data = objectMerge2({}, this.form)
             // 判断操作，调用对应的函数
+            this.loading = true
             if (this.isModify) {
               promiseObj = putUpdatePickup(data)
             } else {
@@ -569,6 +565,7 @@
             }
 
             promiseObj.then(res => {
+              this.loading = false
               this.$refs[formName].resetFields()
               this.$emit('success')
               this.closeMe()
@@ -578,7 +575,7 @@
               if (err.text === '提货批次已存在') {
                 this.fetchGetPickUp()
               } else {
-                this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+                this._handlerCatchMsg(err)
               }
               this.loading = false
             })
@@ -660,6 +657,11 @@
     .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
       border-color: #dcdfe6;
     }
+    .nativeinput{
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+      font-size: 12px;
+    }
   }
 
   .senderName_lrl {
@@ -669,8 +671,14 @@
   }
 
   .senderAddr_lrl {
+    
     .el-autocomplete {
       width: 745px;
+    }
+  }
+  .order_toCityCode{
+    .el-input--suffix .el-input__inner{
+      padding-right: 15px;
     }
   }
 
@@ -738,7 +746,7 @@
 
   .pickUp-bottom {
     .el-form-item--mini:nth-of-type(5) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 91%;
       }
     }
@@ -748,12 +756,12 @@
       }
     }
     .el-form-item--mini:nth-of-type(8) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 91%;
       }
     }
     .el-form-item--mini:nth-of-type(9) {
-      .el-input__inner {
+      .el-input__inner,.nativeinput {
         width: 75%;
       }
       .el-date-editor.el-input {

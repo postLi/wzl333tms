@@ -129,6 +129,9 @@ export default {
       return orderManage.getCreateOrderDate().then(data => {
         this.nowTime = new Date(data)
         return data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     // 获取跟踪信息
@@ -136,6 +139,9 @@ export default {
       return orderManage.getShipTrackinfo(this.orderid).then(data => {
         this.trackDetail = data
         return data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     // 删除跟踪信息

@@ -45,7 +45,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree :disabled="isModify" v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
+          <SelectTree v-model="form.orgid" @change="getTreeOrgid"  :orgid="otherinfo.orgid" />
         </el-form-item>
 
         <el-form-item label="车辆品牌" prop="truckBrand">
@@ -108,6 +108,7 @@
       </el-form>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button v-if="!isModify" type="primary" @click="submitForm('ruleForm', true)" >保存并添加</el-button>
       <el-button type="primary" @click="submitForm('ruleForm')">保 存</el-button>
       <el-button @click="closeMe">取 消</el-button>
     </div>
@@ -276,7 +277,7 @@ export default {
       this.initPanel()
     }
   },
-  
+
   watch: {
     popVisible(newVal, oldVal) {
       if (!this.inited) {
@@ -297,11 +298,11 @@ export default {
       deep: true
     }
   },
-  activated () {
+  activated() {
     this.initDriverList()
   },
   methods: {
-    initDriverList () {
+    initDriverList() {
       this.DriverList = this.$options.data().DriverList
       this.cacheDriverList = []
       this.getTreeOrgid(this.orgid)
@@ -350,7 +351,7 @@ export default {
     getOrgid(id) {
       this.form.orgid = id
     },
-    submitForm(ruleForm) {
+    submitForm(ruleForm, bool) {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
@@ -362,14 +363,16 @@ export default {
           } else {
             promiseObj = postTrunk(data)
           }
-
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.closeMe()
+            this.reset()
+            if (!bool) {
+              this.closeMe()
+            }
             this.$emit('success')
           }).catch(err => {
-            this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            this._handlerCatchMsg(err)
             this.loading = false
           })
         } else {
@@ -378,7 +381,13 @@ export default {
       })
     },
     reset() {
+      // 缓存上一次选择的网点
+      const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
+      this.form.orgid = orgid
+      this.form.drivingLicense = ''
+      this.form.operatingLicense = ''
+      this.form.vehiclePic = ''
     },
     closeMe(done) {
       this.reset()
@@ -388,7 +397,6 @@ export default {
       }
     },
     getDriverList(orgid) {
-      console.log('//////////////////////=this.DriverList', this.DriverList)
       // 缓存数据，减少切换组织列表造成的请求
       // 切换组织列表时，需要重置司机信息，避免不同组织的车辆司机混搭？
       // 还是可以绑定所有司机？
@@ -406,6 +414,9 @@ export default {
           this.DriverList = data.list
           this.cacheDriverList[orgid] = data.list
           this.loading = false
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
       }
     }

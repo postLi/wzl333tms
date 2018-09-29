@@ -143,6 +143,12 @@ export default {
           width: "120"
         },
         {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
           label: "车牌号",
           prop: "truckIdNumber",
           width: "120"
@@ -174,7 +180,7 @@ export default {
           }
         },
         {
-          label: "送货费",
+          label: "送货费(元)",
           prop: "deliveryFee",
           width: "120"
         },
@@ -184,12 +190,12 @@ export default {
           width: "120"
         },
         {
-          label: "送货重量",
+          label: "送货重量(kg)",
           prop: "loadWeightall",
           width: "120"
         },
         {
-          label: "送货体积",
+          label: "送货体积(m³)",
           prop: "loadVolumeall",
           width: "120"
         },
@@ -222,8 +228,8 @@ export default {
           this.total = data.total
           this.loading = false
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text)
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     fetchData() {
@@ -334,8 +340,8 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '操作失败')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以送货完成' })
@@ -349,8 +355,8 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.fetchData()
           })
-          .catch(error => {
-            this.$message.error(error.errorInfo || error.text || '操作失败')
+          .catch(err => {
+            this._handlerCatchMsg(err)
           })
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以取消送货' })

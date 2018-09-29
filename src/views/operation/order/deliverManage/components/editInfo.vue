@@ -80,7 +80,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div slot="footer" class="" v-else="isFootEdit">
+    <div slot="footer" class="" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
@@ -89,8 +89,6 @@
 import { REGEX } from '@/utils/validate'
 import popRight from '@/components/PopRight/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack } from '@/api/operation/track'
-import { getAllOrgInfo } from '@/api/company/employeeManage'
-import { mapGetters } from 'vuex'
 import Detail from './detail'
 import { getSystemTime } from '@/api/common'
 import { objectMerge2, parseTime, closest } from '@/utils/'
@@ -162,6 +160,9 @@ export default {
         if (data) {
           this.formModel.operatorTime = data
         }
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     submitForm(formName) {
@@ -170,24 +171,24 @@ export default {
           if (this.formModel.id) {
             console.log('edit')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                this.editTrack()
-              })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.editTrack()
+            })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
           } else {
             console.log('add')
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                this.addTrack()
-              })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.addTrack()
+            })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
@@ -209,18 +210,18 @@ export default {
     },
     deleteTrack(item) {
       this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          return deleteTrack(item.id).then(data => {
-              this.$message({ type: 'success', message: '删除成功' })
-              this.getDetail()
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return deleteTrack(item.id).then(data => {
+            this.$message({ type: 'success', message: '删除成功' })
+            this.getDetail()
+          })
+            .catch(err => {
+              this._handlerCatchMsg(err)
             })
-            .catch(error => {
-              this.$message.error(error.errorInfo || error.text || '删除失败')
-            })
-        })
+      })
         .catch(() => {
           this.$message({ type: 'warning', message: '取消操作' })
         })
@@ -233,24 +234,24 @@ export default {
     editTrack() { // 修改
       this.formModel.transferId = 0
       putUpdateTrack(this.formModel).then(data => {
-          this.$message({ type: 'success', message: '修改成功' })
-          this.getDetail()
-          this.resetForm()
-        })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '操作失败')
+        this.$message({ type: 'success', message: '修改成功' })
+        this.getDetail()
+        this.resetForm()
+      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
       postAddTrack(this.formModel).then(data => {
-          this.$message({ type: 'success', message: '添加成功' })
-          this.getDetail()
-          this.resetForm()
-          this.getSystemTime()
-        })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '操作失败')
+        this.$message({ type: 'success', message: '添加成功' })
+        this.getDetail()
+        this.resetForm()
+        this.getSystemTime()
+      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     handleClick() {

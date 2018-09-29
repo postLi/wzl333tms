@@ -211,6 +211,9 @@ export default {
       return postFindLowList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     setTable() {},
@@ -290,8 +293,8 @@ export default {
         this.$message({ type: 'success', message: '取消结算操作成功' })
         this.fetchList()
       })
-        .catch(error => {
-          this.$message({ type: 'error', message: '取消结算操作失败' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
           this.fetchList()
         })
     },

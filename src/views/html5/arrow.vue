@@ -11,6 +11,9 @@
     <template v-else-if="theval === 0">
       -
     </template>
+    <template v-else-if="theval === 'a'">
+      &nbsp;
+    </template>
     <template v-else>
       /
     </template>
@@ -34,7 +37,7 @@ export default {
     theval() {
       const val = this.val || ''
       // 如果包含负号
-      if (val.indexOf('-') !== -1) {
+      if (val.indexOf('-') !== -1 && val!==' - ') {
         return -1
       // 如果为不增不减
       } else if (val === '0.00%') {
@@ -43,6 +46,8 @@ export default {
       } else if (val.indexOf('%') !== -1) {
         return 1
       // 如果为其它表示没有值返回
+      }  else if(val===' - '){
+        return 'a'
       } else {
         return ''
       }

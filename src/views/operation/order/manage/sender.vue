@@ -34,7 +34,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :key="mykey" :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
+    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
@@ -95,9 +95,9 @@ export default {
       tableColumn: [
         {
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '70',
-          fixed: true,
+          fixed: false,
           slot: (scope) => {
             return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) + scope.$index + 1
           }
@@ -241,22 +241,23 @@ export default {
           prop: 'commissionFee',
           width: '130',
           fixed: false
-        }, {
-          label: '件数单价',
-          prop: 'cargoAmount',
-          width: '110',
-          fixed: false
-        }, {
-          label: '重量单价',
-          prop: 'weightFee',
-          width: '110',
-          fixed: false
-        }, {
-          label: '体积单价',
-          prop: 'volumeFee',
-          width: '110',
-          fixed: false
         }
+        // {
+        //   label: '件数单价',
+        //   prop: 'cargoAmount',
+        //   width: '110',
+        //   fixed: false
+        // }, {
+        //   label: '重量单价',
+        //   prop: 'weightFee',
+        //   width: '110',
+        //   fixed: false
+        // }, {
+        //   label: '体积单价',
+        //   prop: 'volumeFee',
+        //   width: '110',
+        //   fixed: false
+        // }
       ]
     }
   },
@@ -269,10 +270,7 @@ export default {
         })
         this.fetchData()
       }).catch(err => {
-        this.$message({
-          type: 'info',
-          message: err.errorInfo || err.text || '未知错误，请重试~'
-        })
+        this._handlerCatchMsg(err)
       })
     })
   },
@@ -284,7 +282,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
-        this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {
@@ -352,7 +350,6 @@ export default {
             })
             this.$refs.multipleTable.clearSelection()
             return false
-
           }
           if (this.selected[0].orderStatus === 213) {
             this.eventBus.$emit('showCreateOrder', {
@@ -423,10 +420,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -479,10 +473,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -528,10 +519,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message({
-                  type: 'info',
-                  message: err.errorInfo || err.text || '未知错误，请重试~'
-                })
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({
@@ -579,7 +567,7 @@ export default {
       this.AddCustomerVisible = true
     },
     closeAddCustomer() {
-      //this.mykey = Math.random()
+      // this.mykey = Math.random()
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {

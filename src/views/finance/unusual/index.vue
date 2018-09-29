@@ -523,6 +523,9 @@ export default {
 
         this.loading = false
         // console.log(data.list, data.list[0].statusValue)
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
 
@@ -632,7 +635,7 @@ export default {
                 })
                 this.fetchData()
               }).catch(err => {
-                this.$message.error(err.errorInfo || err.text || '未知错误，请重试~')
+                this._handlerCatchMsg(err)
               })
             }).catch(() => {
               this.$message({

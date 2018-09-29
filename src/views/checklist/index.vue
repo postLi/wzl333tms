@@ -1,6 +1,6 @@
 <template>
-<el-container :key="viewKey" class="check_box">
-  <el-header style="height:87px">
+<el-container  class="check_box">
+  <el-header :key="viewKey" style="height:87px">
     <div></div>
     <div class="top_content" v-if="type===1">
       <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
@@ -29,16 +29,16 @@
     <div class="main_checker" v-if="type===1">
       <el-button type="primary" @click="doAction('init')">初始化检查</el-button>
     </div>
-    <div class="main_checker2" v-else-if="type===2">
+    <div class="main_checker2"  v-else-if="type===2">
       <h6>公司管理</h6>
-      <div class="company_content">
+      <div class="company_content" :key="viewKey">
         <ul :class="{'showani': showani, 'cancelAni': cancelAni}" @animationend="ischecked = true">
           <li v-for="(item, index) in countList" :key="index">
             <p v-if="item.value > 0">
-              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message}}，{{item.message2}}
+              <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message ? item.message + '，' : ''}}{{item.message2}}
               <el-button type="primary"  plain @click="doAction(item.label)" class="btn_qx1">{{item.button1}}</el-button>
             </p>
-            <p v-else-if="item.value < 1 && item.label==='orgCount' && !isParentOrg">
+            <p v-else-if="item.value < 1 && item.label==='orgCount' && iscompany">
               <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
               <el-button type="error"   plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
@@ -47,8 +47,13 @@
               <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
             </p>
           </li>
-          <div class="btn_content" v-if="flog">
-            <p>所有的基础数据已经维护好了，我们去开一张单吧！<el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button></p>
+          <div class="btn_content">
+            <p v-if="flog">所有的基础数据已经维护好了，我们去开一张单吧！
+              <el-button type="primary" class="btn_kd"  @click="doAction('order')" >开单</el-button>
+            </p>
+            <p v-else>
+              <el-button type="primary" class="btn_h">开单</el-button>
+            </p> 
           </div>
         </ul>
         <!-- <template v-if="isParentOrg">
@@ -57,21 +62,21 @@
         </template> -->
       </div>
       <!-- 网点管理 -->
-      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" />
+      <NewOrg :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible="addDoTotVisible" @close="closeAddDot"  @success="fetchData('addOrg')" :checkSystem="true" />
       <!-- 权限管理 -->
-      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')"/> 
+      <Newrole :orgid="otherinfo.orgid" :createrId ="otherinfo.id" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible1" @close="closeAddDot" @success="fetchData('addRole')" :checkSystem="true"/> 
       <!-- 员工管理 -->
-      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false"  :popVisible.sync="addDoTotVisible2" />
+      <Newuser :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" @success="fetchData('addUser')" :checkSystem="true" />
       <!-- 发货客户 -->
-      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" />
+      <AddCustomer :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true"/>
       <!-- 收货客户 -->
-      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" />
+      <AddCustomer :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" :checkSystem="true"/>
       <!-- 司机管理 -->
-      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')"/>
+      <Newdriver :companyId="otherinfo.companyId"  :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5"  @success="fetchData('addDiver')" :checkSystem="true"/>
       <!-- 车辆管理 -->
-      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')"  />
+      <Newtruck :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6"  @success="fetchData('addTruck')" :checkSystem="true" />
       <!-- 承运商管理 -->
-      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')"/>
+      <Newcarrier :issender="true" :orgid="otherinfo.orgid"  :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7"  @success="fetchData('addCarrier')" :checkSystem="true" />
       <!-- 开单页面创建运单 -->
       <!-- 底部按钮操作部分 -->
       <!-- <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" /> -->
@@ -104,6 +109,7 @@ import AddCustomer from '@/views/company/customerManage/components/add'
 import Newdriver from '@/views/company/driverManage/components/add'
 import Newtruck from '@/views/company/trunkManage/components/add'
 import Newcarrier from '@/views/company/carrierManage/components/add'
+import { mapGetters } from 'vuex'
 // 创建运单页面
 // import FooterBtns from '@/views/operation/order/createOrder/components/btns'
 // import FeeDialog from '@/views/operation/order/createOrder/feePop'
@@ -150,6 +156,7 @@ export default {
       contTitle: [],
       // printSetOrderVisible: false,
       flog: false,
+      disabled: false,
       countList: [{
         value: 0,
         label: 'orgCount',
@@ -222,6 +229,15 @@ export default {
         message1: '打印机连接还没连接，请点击右边设置按钮',
         button1: '设置',
         button2: '设置'
+      }, {
+        value: 0,
+        label: 'smsTemplateCount',
+        title: '短信设置',
+        message: '已经有' + this.valueCount + '个短信模板',
+        message1: '你还没有维护短信模板，请点击右边设置按钮',
+        message2: '需要设置点击右边设置按钮',
+        button1: '设置',
+        button2: '设置'
       }],
       contTitleNull: false
     }
@@ -235,6 +251,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
+    // 判断是否为公司网点
+    iscompany() {
+      return this.otherinfo.orgid === this.otherinfo.companyId
+    }
+  },
   mounted() {
     // this.loading = true
     this.isParentOrg()
@@ -243,8 +268,15 @@ export default {
       this.dataset = data
       var totals = 0
       for (const total in data) {
-        if (data[total] === 0) {
-          totals++
+        if (total !== 'roleCount' && data[total] === 0 && total !== 'smsTemplateCount') {
+          if (this.iscompany) { // 如果是总公司那么就计算网点管理
+            totals++
+          }else {
+            if (total !== 'orgCount') {
+              totals++
+            }
+          }
+          console.log('---total',totals, total, data[total])
         }
         console.log(data[total], total, '数量')
       }
@@ -261,41 +293,45 @@ export default {
   },
   methods: {
     isParentOrg() {
-      console.log('asdasd', this.otherinfo.orgid === this.otherinfo.companyId)
+      console.log('isParentOrg是否是总公司：', this.otherinfo.orgid === this.otherinfo.companyId)
       return this.otherinfo.orgid === this.otherinfo.companyId
     },
     fetchData(type) {
+      // 写这么多分支，里面执行的代码不都是一样的的嘛。。。
+      if (type === 'addUser') {
+        this.initSystem()
+      }
       if (type === 'addOrg') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addRole') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addReciveCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSendCustomer') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addDiver') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addTruck') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addCarrier') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
       if (type === 'addSetting') {
         this.initSystem()
-        this.closeAddDot()
+        // this.closeAddDot()
       }
     },
     closeAddDot(obj) {
@@ -333,7 +369,6 @@ export default {
             self.timer = setInterval(() => {
               this.contTitleNull = true
               if (idx < len) {
-              // console.log(idx, len, arr[j].title, 666666)
                 self.contTitle = arr[j++].title
                 idx++
               } else {
@@ -385,6 +420,10 @@ export default {
           // this.addDoTotVisible8 = true
           this.$router.push({ path: '../../company/systemSetup' })
           break
+        case 'smsTemplateCount':
+          // this.addDoTotVisible8 = true
+          this.$router.push({ path: '../../company/smsManage/customized' })
+          break  
       }
     },
     changeTitle(item) {
@@ -395,21 +434,19 @@ export default {
     initSystem() {
       this.viewKey = new Date().getTime()
       this.type = 2
-      // this.loading = true
       this.dataset = {}
       // options获取原来的数据
       this.countList = this.$options.data().countList
       getInitializationCheck().then(data => {
         this.showani = true
         this.dataset = data
-        // this.loading = false
         for (const item in this.countList) {
-          this.countList[item].value = data[ this.countList[item].label]
+          this.countList[item].value = data[this.countList[item].label]
           this.countList[item].message = this.countList[item].message.replace(/undefined/, String(this.countList[item].value))
         }
         let resuct = 0
         for (const total in data) {
-          if (data[total] === 0) {
+          if (total !== 'roleCount' && data[total] === 0) {
             resuct++
           }
         }
@@ -732,7 +769,19 @@ export default {
           width:110px;
           font-size: 16px;
         }
+        .btn_h{
+          width:110px;
+          font-size: 16px;
+          background-color:#ccc;
+          border:1px solid #ccc;
+        }
       }
+      // .btn_content .btn_h:hover{
+      //   opacity: 0.8;
+      //   background:#fff;
+      //   color:#3e9ff1;
+      //   border:1px solid #3e9ff1;
+      // }
     }
   }
 }

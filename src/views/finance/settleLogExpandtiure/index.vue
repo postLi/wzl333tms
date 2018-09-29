@@ -52,7 +52,7 @@
           <el-tab-pane label="批次支出" name="first">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-printer">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-date">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -63,7 +63,7 @@
           <el-tab-pane label="运单支出" name="second">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-printer">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-date">智能结算</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -160,6 +160,9 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = parseTime(data)
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     getFeeInfo() {
@@ -177,8 +180,8 @@ export default {
           this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
           this.formModel.remark = data.remark
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     doAction(type) {
@@ -249,16 +252,17 @@ export default {
         return false
       }
       this.setData()
-      console.log('this.addIncomeInfo', this.addIncomeInfo)
-      // return false /////////////////////////////////////////////////////////////////////////测试
+      this.loading = true
       postAddIncome(this.addIncomeInfo).then(data => {
+        this.loading =false
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
           this.$router.push({ path: './settleLog' , query:{ pageKey: new Date().getTime()  }})
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: '保存失败！' })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
         })
     },
     setSettlementId(val) {
@@ -327,6 +331,9 @@ export default {
           this.formModel.wechatAccount = ''
           this.formModel.alipayAccount = ''
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     }
   }

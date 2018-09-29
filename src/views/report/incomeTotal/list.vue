@@ -5,7 +5,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
+        <el-button type="primary" v-has:REPORT_PRINT_5 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
@@ -93,6 +93,9 @@ export default {
         let countColVal = []
 
         let table = document.getElementById('report_incomeTotal_table')
+        if (!table) {
+          return
+        }
         let theadLen = table.getElementsByTagName('thead')
         let tbodyLen = table.getElementsByTagName('tbody')
         if (theadLen.length > 0) {
@@ -136,6 +139,9 @@ export default {
           td.style.padding = '2px 5px'
           td.style.fontSize = '13px'
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     doAction(type) {

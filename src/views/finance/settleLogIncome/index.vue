@@ -49,7 +49,7 @@
       <div class="fee_btn_transferTable tableItem">
         <!-- 操作按钮区 -->
         <div class="fee_btn_boxs">
-          <el-button :size="btnsize" plain type="success" @click="doAction('count')" icon="el-icon-printer">智能结算</el-button>
+          <el-button :size="btnsize" plain type="success" @click="doAction('count')" icon="el-icon-date">智能结算</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -136,8 +136,8 @@ export default {
       getSystemTime().then(data => {
           this.formModel.settlementTime = parseTime(data)
         })
-        .catch(error => {
-          this.$message.error(error.errorInfo || error.text || '获取系统时间发生失败~')
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     getFeeInfo() {
@@ -156,8 +156,8 @@ export default {
           this.formModel.remark = data.remark
           
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text || '发生未知错误！' })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
 
     },
@@ -209,14 +209,17 @@ export default {
         return false
       }
       this.setData()
+      this.loading = true
       postAddIncome(this.addIncomeInfo).then(data => { // 保存
+        this.loading =false
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
           this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
         })
-        .catch(error => {
-          this.$message({ type: 'error', message: error.errorInfo || error.text })
+        .catch(err => {
+          this.loading =false
+          this._handlerCatchMsg(err)
         })
     },
     cancel() {
@@ -264,6 +267,9 @@ export default {
           this.formModel.wechatAccount = ''
           this.formModel.alipayAccount = ''
         }
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     }
   }

@@ -62,6 +62,7 @@ export function validateMobile(mobile) {
 }
 
 // 正则匹配
+// /^\+?([1-9]\d*|0)(\.\d|\.\d\d)?$/ 整数带俩位小数
 export const REGEX = {
   // 用户名
   USERNAME: /^([0-9a-zA-Z]|[\u0391-\uFFE5]){2,}$/,
@@ -117,6 +118,8 @@ export const REGEX = {
   ONLY_ENGLISH_NUMBER: /^[A-Za-z0-9_]+$/,
   // 国内电话(区号-号码)
   TELEPHONE: /(^\d{3}-\d{8}$)|(^\d{4}-\d{7,8}$)/,
+  // 电话号码和手机号码同时验证
+  TELANDPHONE: /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
   // 邮编
   ZIPCODE: /^[1-9]\d{5}(?!\d)$/,
   // 保留两位小数点

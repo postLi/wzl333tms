@@ -133,6 +133,9 @@ export default {
     setSystemTime() {
       return getSystemTime().then(data => {
         this.form.signTime = data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     reset() {
@@ -162,8 +165,8 @@ export default {
               this.closeMe()
               this.$emit('message', this.message)
             })
-              .catch(error => {
-                this.$message({ type: 'error', message: error.text || error.errorInfo || '操作失败' })
+              .catch(err => {
+                this._handlerCatchMsg(err)
                 this.message = false
                 this.closeMe()
                 this.$emit('message', this.message)

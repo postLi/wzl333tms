@@ -78,19 +78,21 @@
             <li>
               <p><i>*</i> 件数</p>
               <el-form-item prop="tmsOrderCargoList.cargoAmount">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoAmount" :disabled="isDbclick"></el-input>
+                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoAmount" v-numberOnly :disabled="isDbclick"></el-input>
               </el-form-item>
             </li>
             <li>
               <p>重量(kg)</p>
               <el-form-item prop="tmsOrderCargoList.cargoWeight">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoWeight" :disabled="isDbclick"></el-input>
+                <input class="nativeinput order_com" :value="form.tmsOrderCargoList.cargoWeight" @change="(e)=>{setInputVal(e.target.value, 'cargoWeight')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
               </el-form-item>
             </li>
             <li>
               <p>体积(方)</p>
               <el-form-item prop="tmsOrderCargoList.cargoVolume">
-                <el-input :maxlength="8" v-model="form.tmsOrderCargoList.cargoVolume" :disabled="isDbclick"></el-input>
+                <input class="nativeinput order_com" :value="form.tmsOrderCargoList.cargoVolume" @change="(e)=>{setInputVal(e.target.value, 'cargoVolume')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
               </el-form-item>
             </li>
             <li>
@@ -155,14 +157,15 @@
 
               <td>
                 <el-form-item label="代收款" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.agencyFund" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only:point></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.agencyFund" @change="(e)=>{setInputVal(e.target.value, 'agencyFund')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="代收款手续费" prop="tmsOrderCargoList.commissionFee">
-                  <el-input v-model="form.tmsOrderCargoList.commissionFee" :maxlength="8" auto-complete="off" clearable
-                            class="order_com" :disabled="isDbclick"></el-input>
+                  <input class="nativeinput order_com" :value="form.tmsOrderCargoList.commissionFee" @change="(e)=>{setInputVal(e.target.value, 'commissionFee')}" :maxlength="8" auto-complete="off"  clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
+                 
                 </el-form-item>
               </td>
             </tr>
@@ -175,14 +178,14 @@
 
               <td>
                 <el-form-item label="运费" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.shipFee" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only:point></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.shipFee" @change="(e)=>{setInputVal(e.target.value, 'shipFee')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="声明价值" prop="">
-                  <el-input v-model="form.tmsOrderCargoList.productPrice" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only></el-input>
+                  <input class="nativeinput" :value="form.tmsOrderCargoList.productPrice" @change="(e)=>{setInputVal(e.target.value, 'productPrice')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only:point type="text">
                 </el-form-item>
               </td>
             </tr>
@@ -210,15 +213,15 @@
   </pop-right>
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
-  import {postAddOrder, postModifyOrder, postAddNetworkOrder} from '@/api/operation/manage'
+  import { REGEX } from '@/utils/validate'
+  import { postAddOrder, postModifyOrder, postAddNetworkOrder } from '@/api/operation/manage'
   import popRight from '@/components/PopRight/index'
   import Upload from '@/components/Upload/singleImage'
   import SelectTree from '@/components/selectTree/index'
   import SelectType from '@/components/selectType/index'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
-  import {objectMerge2} from '@/utils/index'
+  import { mapGetters } from 'vuex'
+  import { objectMerge2 } from '@/utils/index'
 
   export default {
     components: {
@@ -282,7 +285,7 @@
           callback(new Error('请输入正确的联系号码~'))
         }
       }
-      const validatePickupNum = function (rule, value, callback) {
+      const validatePickupNum = function(rule, value, callback) {
         if (REGEX.ONLY_NUMBER.test(value)) {
           callback()
         } else {
@@ -312,55 +315,54 @@
         ke1yVal: '',
         rules: {
           'tmsOrderPre.orderToCityName': [
-            {required: true, validator: this.validateIsEmpty('到达城市不能为空')}
+            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
           ],
           'customSend.customerName': [
             // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
-            {required: true, validator: validcustomerName}
+            { required: true, validator: validcustomerName }
           ],
           'customSend.customerMobile': [
-            {required: true, validator: this.validateIsEmpty('发货人联系电话不能为空')},
-            {validator: validateMobile}
+            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
+            { validator: validateMobile }
           ],
           'customRece.customerName': [
-            {required: true, validator: this.validateIsEmpty('收货人不能为空')}
+            { required: true, validator: this.validateIsEmpty('收货人不能为空') }
           ],
           'customRece.customerMobile': [
-            {required: true, validator: this.validateIsEmpty('收货人联系电话不能为空')},
-            {validator: validateMobile}
+            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
+            { validator: validateMobile }
           ],
           'tmsOrderCargoList.cargoName': [
-            {validator: this.validateIsEmpty('货品名不能为空')}
-            // { validator: validateCargoName, trigger: 'change' }
+            { validator: this.validateIsEmpty('货品名不能为空') }
           ],
           'tmsOrderCargoList.cargoAmount': [
-            {validator: this.validateIsEmpty('件数不能为空')},
-            {validator: validatePickupNum}
+            { validator: this.validateIsEmpty('件数不能为空') },
+            { validator: validatePickupNum }
           ],
           'tmsOrderCargoList.cargoVolume': [{
             validator: validateVolumnWeight
           },
-            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}],
+            { message: '只能输入数字', pattern: REGEX.Number_point }],
           'tmsOrderCargoList.cargoWeight':
-            [{
-              validator: validateVolumnWeight
-            },
-              {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
-            ],
+          [{
+            validator: validateVolumnWeight
+          },
+              { message: '只能输入数字', pattern: REGEX.Number_point }
+          ],
           'tmsOrderCargoList.description': [
-            {validator: validateOnlyNumberAndLetter}
+            { validator: validateOnlyNumberAndLetter }
           ],
           'tmsOrderCargoList.agencyFund': [
-            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.commissionFee': [
-            {message: '只能输入数字',  pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.shipFee': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ],
           'tmsOrderCargoList.productPrice': [
-            {message: '只能输入数字',pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.Number_point }
           ]
         },
         btnsize: 'mini',
@@ -458,7 +460,6 @@
         this.inited = true
         this.initInfo()
       }
-      // this.form.tmsOrderPre.orderFromOrgid = this.otherinfo.orgid
     },
     watch: {
       popVisible(newVal, oldVal) {
@@ -471,36 +472,17 @@
       orgid(newVal) {
       },
       info() {
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
-
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-          }
+        this.s_init()
       },
       isModify() {
-          if (this.isModify) {
-            this.popTitle = '修改订单'
-            this.orderSn = this.info.orderSn
-
-            this.infoData(this.info)
-          } else if (this.isDbclick) {
-            this.popTitle = '查看订单'
-            this.orderSn = this.info.orderSn
-            this.infoData(this.info)
-          } else {
-            this.popTitle = '新增订单'
-            this.reset()
-          }
+        this.s_init()
       },
       isDbclick() {
+        this.s_init()
+      }
+    },
+    methods: {
+      s_init() {
         if (this.isModify) {
           this.popTitle = '修改订单'
           this.orderSn = this.info.orderSn
@@ -514,11 +496,11 @@
           this.popTitle = '新增订单'
           this.reset()
         }
-      }
-    },
-    methods: {
+      },
+      setInputVal(val, name) {
+        this.$set(this.form.tmsOrderCargoList, name, val)
+      },
       changeOrderTo(item) {
-        // console.log(item)
       },
       watchData() {
         if (this.isModify) {
@@ -540,6 +522,12 @@
         // this.ke1yVal = Math.random()
       },
       infoData(item) {
+        if (this.networkFlog) { // 如果是网络订单
+          this.orderSn = ''
+          this.$set(this.form.tmsOrderPre, 'orderFromOrgid', this.otherinfo.companyId)
+        }
+        console.log('item::', item)
+
         this.form.tmsOrderCargoList.cargoName = item.cargoName
         this.form.tmsOrderCargoList.cargoAmount = item.cargoAmount
         this.form.tmsOrderCargoList.cargoWeight = item.cargoWeight
@@ -572,6 +560,7 @@
         // this.form.tmsOrderPre.orderPickupMethodName = this.info.orderPickupMethodName
         this.form.tmsOrderPre.orderEffective = item.orderEffective
         this.form.tmsOrderPre.id = item.id
+        this.form.tmsOrderPre.orderFromOrgid = item.orderFromOrgid
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
         this.ke1yVal = Math.random()
       },
@@ -642,21 +631,21 @@
       },
       submitForm(ruleForm) {
         this.isChecked = true
-        this.isCheckedShow = false
+        this.isCheckedShow = true
         this.checkShowMessage = true
         this.$refs[ruleForm].validate((valid) => {
           this.isChecked = false
           this.isCheckedShow = false
-          if (valid) {
+          if (valid && !this.loading) {
             this.loading = true
             this.form.customerList[0] = this.form.customSend
             this.form.customerList[1] = this.form.customRece
 
             let promiseObj
             if (this.networkFlog) { // 如果是网络订单
-          this.$set(this.form.tmsOrderPre, 'type', 1)
-          this.$set(this.form.tmsOrderPre, 'orderFromOrgid',  this.otherinfo.companyId)
-        }
+              this.$set(this.form.tmsOrderPre, 'type', 1)
+              this.$set(this.form.tmsOrderPre, 'orderFromOrgid', this.otherinfo.companyId)
+            }
             const data = objectMerge2({}, this.form)
             delete data.customSend
             delete data.customRece
@@ -665,15 +654,13 @@
               obj[i] = data.tmsOrderCargoList[i]
             }
             data.tmsOrderCargoList = [obj]
-            // 判断操作，调用对应的函数
+            this.loading = true
             if (this.isModify) {
-              // data.id = this.form.tmsOrderPre.id
               promiseObj = postModifyOrder(data)
             } else {
-
-              if (this.networkFlog) { // 添加网络订单
+              if (this.networkFlog) {
                 promiseObj = postAddNetworkOrder(data)
-              }else {
+              } else {
                 promiseObj = postAddOrder(data)
               }
             }
@@ -684,18 +671,16 @@
               this.$message.success('保存成功')
               this.loading = false
             }).catch(err => {
-              this.$message({
-                type: 'info',
-                message: err.errorInfo || err.text || '未知错误，请重试~'
-              })
+              this.loading = false
+              this._handlerCatchMsg(err)
             })
-            this.loading = false
           } else {
             return false
           }
         })
       },
-      newinfoData(){
+      newinfoData() {
+        this.orderSn = ''
         this.form = {
           customSend: {
             // 发货人
@@ -753,7 +738,7 @@
         }
       },
       reset() {
-       this.watchData()
+        this.watchData()
       },
       closeMe(done) {
         this.reset()
@@ -787,6 +772,11 @@
     bottom: auto;
     min-width: 870px;
     max-width: 870px;
+
+    .nativeinput{
+      border-radius: 4px;
+      border: 1px solid #dcdfe6;
+    }
     .el-input__inner {
       color: #3e9ff1;
     }
@@ -1004,7 +994,7 @@
             border-color: transparent;
           }
         }
-        .el-input__inner {
+        .el-input__inner, .nativeinput {
           width: 245%;
         }
         .el-form-item__error {
@@ -1012,7 +1002,7 @@
         }
       }
 
-      .el-input__inner {
+      .el-input__inner, .nativeinput {
         border-color: transparent;
         border-radius: 0;
         text-align: center;

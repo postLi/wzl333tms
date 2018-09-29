@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Layout'
+
 const _import = require('../_import_' + process.env.NODE_ENV)
 
 export default {
@@ -17,7 +18,7 @@ export default {
     icon: 'yygl1_dingdan',
     name: 'ordermanage',
     component: _import('operation/order/manage/index'),
-    meta: { role: ['admin'], title: '订单管理', noCache: false, 'code': 'ORDER_MANGER' },
+    meta: { role: ['admin'], title: '预订单管理', noCache: false, 'code': 'ORDER_MANGER' },
     children: [{
       path: '/operation/order/manage/service',
       icon: 'QQ',
@@ -37,15 +38,17 @@ export default {
       icon: 'QQ',
       name: '网络订单',
       component: _import('operation/order/manage/networks'),
-      meta: { role: ['admin'], ptitle: '订单管理', title: '网络订单', noCache: true, istab: true }
+      meta: { role: ['admin'], ptitle: '订单管理', title: '网络订单', noCache: true, istab: true, code: 'ORDERMANAGER_NETWORKLIST' }
     }]
-  }, {
+  },
+  {
     path: '/operation/order/pickUp',
     icon: 'yygl4_tihuo',
     name: 'orderpickUp',
     component: _import('operation/order/pickUp/index'),
     meta: { role: ['admin'], title: '提货管理', noCache: false, 'code': 'ORDER_PICK' }
-  }, {
+  },
+  {
     path: '/operation/index',
     icon: 'QQ',
     hidden: true,
@@ -242,6 +245,22 @@ export default {
     meta: { role: ['admin'], title: '新增配载', noCache: false }
   },
   {
+    path: '/operation/order/loadIntelligent/index',
+    icon: 'QQ',
+    hidden: true,
+    name: 'loadIntelligent',
+    component: _import('operation/order/loadIntelligent/index'),
+    meta: { role: ['admin'], title: '智能配载', noCache: false }
+  },
+  {
+    path: '/operation/order/loadIntelligent/components/intelligentImg',
+    icon: 'QQ',
+    hidden: true,
+    name: 'intelligentImg',
+    component: _import('operation/order/loadIntelligent/components/intelligentImg'),
+    meta: { role: ['admin'], title: '智能配载', noCache: false }
+  },
+  {
     path: '/operation/order/track',
     icon: 'yygl12_genzong',
     name: 'ordertrack',
@@ -386,7 +405,9 @@ export default {
         }
       ]
     }
+
     ]
   }
+
   ]
 }

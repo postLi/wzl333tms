@@ -117,7 +117,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '80',
+        width: '60',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -140,7 +140,7 @@ export default {
       }, {
         label: '身份证号码',
         prop: 'driverCardid',
-        width: '120',
+        width: '180',
         fixed: false
       }, {
         label: '驾驶证类型',
@@ -150,7 +150,7 @@ export default {
       }, {
         label: '驾驶证有效期',
         prop: 'validityDate',
-        width: '120',
+        width: '160',
         fixed: false,
         slot: (scope) => {
           return parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}')
@@ -158,23 +158,26 @@ export default {
       }, {
         label: '银行卡号',
         prop: 'bankCardNumber',
-        width: '180'
+        width: '180',
+        fixed: false
       }, {
         label: '银行名称',
         prop: 'bankName',
+        width: '120',
         fixed: false
       }, {
         label: '开户行',
         prop: 'openBank',
+        width: '120',
         fixed: false
       }, {
         label: '地址',
         prop: 'driverAddress',
+        width: '120',
         fixed: false
       }, {
         label: '备注',
         prop: 'driverRemarks',
-        width: '180',
         fixed: false
       }]
     }
@@ -193,6 +196,9 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     fetchData() {

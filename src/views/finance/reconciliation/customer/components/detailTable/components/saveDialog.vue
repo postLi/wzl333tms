@@ -164,14 +164,14 @@
         this.dialogData = this.tota
         this.dialogData.dealtota.map(el => {
           this.$set(this.dialogInfo, 0, {
-            date: '应收清单',
+            date: '未收清单',
             toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.dealPaytota.map(el => {
           this.$set(this.dialogInfo, 1, {
-            date: '应付清单',
+            date: '未付清单',
             // toPay: this.dialogInfo[1].toPay + (el.totalFee ? +el.totalFee : 0)
             toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
 
@@ -213,6 +213,8 @@
         for (const i in this.dotInfo) {
           data[i] = this.dotInfo[i]
         }
+        console.log('////////////', data)
+        // data.tmsFinanceBillCheckDto.createTime = (data.tmsFinanceBillCheckDto.createTime)
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
         if (this.sendId) {
           data.tmsFinanceBillCheckDto.id = this.sendId
@@ -232,7 +234,7 @@
 
               this.closeMe()
             }).catch(err => {
-              this.$message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+              this._handlerCatchMsg(err)
               this.loading = false
             })
       },

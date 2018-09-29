@@ -1,4 +1,5 @@
 import fetch from '../../utils/fetch'
+import { getSelectType } from '@/api/common'
 
 /**
  * 根据条件获取车辆列表
@@ -55,28 +56,14 @@ export function getTrunkInfo(id) {
  * @param {*} orgid 网点id
  */
 export function getTruckType(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'truck_type',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('truck_type', orgId)
 }
 /**
  * 获取车辆来源
  * @param {*} orgid 网点id
  */
 export function getTruckSource(orgId) {
-  return fetch.get('/api-system/system/dict/v1/selectDictInfo', {
-    params: {
-      dictType: 'truck_source',
-      orgId
-    }
-  }).then(res => {
-    return res.data || []
-  })
+  return getSelectType('truck_source', orgId)
 }
 
 /**
