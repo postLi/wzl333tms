@@ -160,6 +160,7 @@ export default {
     }
   },
   mounted() {
+
     if (this.popVisible) {}
   },
   methods: {

@@ -28,8 +28,8 @@
                 <div class="loadInfo_collapse_list_content">
                   <p class="loadInfo_tips" v-if="isEmptyTruck">无数据，点击右边添加车型</p>
                   <div class="loadInfo_item" v-for="(item, index) in showCurPagesData.dataList" :style="{width: showCurrenFormStyle[item._index]?'100%': '',transition:'0.5s'}">
-                    <el-button class="verticalBtn" @click="selectCurrentTuck(item._index,item)" :class="{'verticalBtnActive':showCurrenFormStyle[item._index]}">
-                      <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[item._index]}" @click="delCurTruck(item._index,item)"></i> 车型{{ changeNumCN[item._index]}}
+                    <el-button class="verticalBtn" @click="selectCurrentTuck(item._index,item)" :dataindex="item._index + ' : ' + showCurrenFormStyle[item._index]" :class="{'verticalBtnActive':showCurrenFormStyle[item._index]}">
+                      <i class="lll-ntelligent-del" :class="{'lll-ntelligent-delActive':showCurrenFormStyle[item._index]}" @click.stop.prevent="delCurTruck(item._index,item)"></i> 车型{{ changeNumCN[item._index]}}
                     </el-button>
                     <div class="loadInfo_item_form" v-show="showCurrenFormStyle[item._index]">
                       <div class="loadInfo_item_form_row">
@@ -320,7 +320,16 @@ export default {
       }
     },
     loadTable: {
-      handler(cval, oval) {}
+      handler(cval, oval) {
+        if (cval) {
+          console.log('loadtoble', cval[this.currentIndex], cval, this.intelligentData.dataList)
+          this.$nextTick(() => {
+            if (cval[this.currentIndex]) {
+              this.intelligentData.dataList[this.currentIndex].carLoadDetail = cval[this.currentIndex]
+            }
+          })
+        }
+      }
     },
     paramTuck: {
       handler(cval, oval) {
@@ -396,6 +405,7 @@ export default {
       }
     },
     setCurPageView(index) { // 设置只显示三个车型
+      console.log('setCurPageView1', index)
       let maxShowLen = this.maxShowLen // 最多显示车型数量
       let orgLen = this.intelligentData.dataList ? this.intelligentData.dataList.length : 0 // 车型列表的长度
       if (orgLen) {
@@ -404,13 +414,18 @@ export default {
             index = orgLen - maxShowLen
           }
 
+          console.log('setCurPageView2', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList.slice(index, index + 3)
+
         } else {
+          console.log('setCurPageView3', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList
         }
       } else {
+        console.log('setCurPageView4', index)
         this.showCurPagesData.dataList = []
       }
+      console.log('setCurPageView5', index)
     },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -719,27 +734,45 @@ export default {
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
     },
     delCurTruck(index, item) {
-      this.showCurrenFormStyle = []
       this.currentIndex = index - 1
-      console.log('delCurTruck1', index, this.intelligentData.dataList, this.intelligentData.dataList[index])
+      console.log('delCurTruck1', index, this.intelligentData.dataList, this.intelligentData.dataList[index], this.loadTable[index])
       this.$emit('delCurTruck', {
         number: index,
         list: this.intelligentData.dataList[index]
       })
       this.intelligentData.dataList.splice(index, 1)
       console.log('delCurTruck2.1', index, this.intelligentData.dataList, this.intelligentData.dataList.length)
+      this.showCurrenFormStyle = []
+      // this.$set(this.showCurrenFormStyle, this.currentIndex, true)
       var len = this.intelligentData.dataList.length
-      var flag
-      while (len--) {
-        if (this.showCurrenFormStyle[len]) {
-          this.currentIndex = len
-          flag = true
-          break
-        }
-      }
-      if (!flag) {
+      if (this.currentIndex < 0 && len) {
+        console.log('delCurTruck2.2',this.currentIndex)
+        this.currentIndex = 0
         this.showCurrenFormStyle[this.currentIndex] = true
+      }else if (index > 0){
+        this.$set(this.showCurrenFormStyle, this.currentIndex, true)
+
+        // this.showCurrenFormStyle[this.currentIndex] = true
+        console.log('delCurTruck2.3',this.currentIndex, this.showCurrenFormStyle[this.currentIndex])
+      }else {
+        console.log('delCurTruck2.4',this.currentIndex)
       }
+      // var flag = false
+      // while (len--) {
+      //   console.log('delCurTruck2.2',this.currentIndex, this.showCurrenFormStyle[len])
+      //   if (this.showCurrenFormStyle[len]) {
+      //     this.currentIndex = len
+      //     console.log('delCurTruck2.3',this.currentIndex)
+      //     flag = true
+
+      //     break
+      //   }
+      // }
+      // this.showCurrenFormStyle = []
+      // if (!flag) {
+      //   this.showCurrenFormStyle[this.currentIndex] = true
+      // }
+      
       this.$emit('truckIndex', this.currentIndex)
       this.$message.info('已删除')
       setTimeout(() => {

@@ -150,6 +150,7 @@ export default {
         'prop': 'nowPayStateCn'
       }, {
         'label': '现付',
+        width: '100',
         'prop': 'nowPayFee'
       }, {
         'label': '已结现付',
@@ -321,6 +322,7 @@ export default {
       this.selected = selection
     },
     getSummaries(param) {
+      // let propsArr = ['nowPayFee','finishNowPayFee','notNowPayFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param)
     }
   }

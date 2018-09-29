@@ -169,7 +169,12 @@ export default {
       })
     },
     getTruckIndex(obj) {
-      this.truckIndex = obj
+      console.log('this.truckIndex:',this.truckIndex ,obj)
+      this.truckIndex = ''
+      this.$nextTick(() => {
+        this.truckIndex = obj
+      })
+      
     },
     getTruckPrecent(obj) {
       this.truckPrecent = obj
