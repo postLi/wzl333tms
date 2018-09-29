@@ -241,8 +241,8 @@ export default {
       roles: [],
       departments: [],
       groups: [],
-      inited: false
-
+      inited: false,
+      isSaveAndAdd: true
     }
   },
   mounted() {
@@ -343,11 +343,12 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            this.reset()
+            
             if (!bool) {
               this.closeMe()
             }
             this.$emit('success')
+            this.reset()
           }).catch(err => {
             this._handlerCatchMsg(err)
             this.loading = false
@@ -360,13 +361,13 @@ export default {
     reset() {
       // 缓存上一次选择的网点
       const orgid = this.form.orgid
-      this.form = this.$options.data().form
       this.$refs['ruleForm'].resetFields()
-      // this.form.licensePicture = ''
-      // this.form.idcardPositive = ''
-      // this.form.idcardVerso = ''
-      // this.fixPhone = ''
-      // this.form.fixPhone = ''
+      this.form.licensePicture = ''
+      this.form.idcardPositive = ''
+      this.form.idcardVerso = ''
+      this.fixPhone = ''
+      this.form.fixPhone = ''
+      this.form.customerMobile = ''
       this.form.orgid = orgid
       console.log(this.form, '///////////////')
     },

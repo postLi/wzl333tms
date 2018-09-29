@@ -109,6 +109,7 @@ import AddCustomer from '@/views/company/customerManage/components/add'
 import Newdriver from '@/views/company/driverManage/components/add'
 import Newtruck from '@/views/company/trunkManage/components/add'
 import Newcarrier from '@/views/company/carrierManage/components/add'
+import { mapGetters } from 'vuex'
 // 创建运单页面
 // import FooterBtns from '@/views/operation/order/createOrder/components/btns'
 // import FeeDialog from '@/views/operation/order/createOrder/feePop'
@@ -251,6 +252,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'otherinfo'
+    ]),
     // 判断是否为公司网点
     iscompany() {
       return this.otherinfo.orgid === this.otherinfo.companyId
