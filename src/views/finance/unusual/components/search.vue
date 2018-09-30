@@ -27,7 +27,6 @@
             <el-option label="未结算" value="NOSETTLEMENT"></el-option>
             </el-select>
           </el-form-item>
-       
           <el-form-item label="运单号">
               <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>

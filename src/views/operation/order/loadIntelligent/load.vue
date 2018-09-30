@@ -1,12 +1,12 @@
 <template>
   <div class="loadIntelligent_content" v-loading="loading">
     <div class="loadIntelligent_main">
-      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable"></loadInfo>
+      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable" @truckInfo="getTruckInfo"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable"></transferTable>
+        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable" :dofo="truckInfo"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
@@ -101,7 +101,8 @@ export default {
       },
       paramTuck: [],
       resetTrucDelListLen: '',
-      getinfoed: false
+      getinfoed: false,
+      truckInfo: {}
     }
   },
   computed: {
@@ -128,6 +129,7 @@ export default {
     },
     loadInfoPercent() {
       const data = Object.assign([], this.loadInfoPercentOrg)
+      console.log('loadTable2.3', data)
       return data
     }
   },
@@ -151,15 +153,15 @@ export default {
           this.intelligentData.forEach((e, index) => {
             this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
           })
-          
+
         } else {
           this.eventBus.$emit('closeCurrentView')
           this.$message({ type: 'warning', message: '无配载信息' })
 
         }
-        setTimeout(()=>{
+        setTimeout(() => {
           this.getinfoed = true
-        },1000)
+        }, 1000)
         this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
@@ -169,21 +171,32 @@ export default {
       })
     },
     getTruckIndex(obj) {
-      console.log('this.truckIndex:',this.truckIndex ,obj)
+      console.log('this.truckIndex:', this.truckIndex, obj)
       this.truckIndex = ''
       this.$nextTick(() => {
         this.truckIndex = obj
       })
-      
+
     },
     getTruckPrecent(obj) {
-      this.truckPrecent = obj
+      console.log('loadTable2.3', obj)
+      this.truckPrecent = {}
+      this.$nextTick(() => {
+        this.truckPrecent = obj
+
+      })
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
-       console.log('delCurTruck2', obj, this.delCurTruckData)
+      console.log('delCurTruck2', obj, this.delCurTruckData)
     },
-    addOrgRightTable () { // 添加了一辆车型
+    getTruckInfo(obj) {
+      this.truckInfo = {}
+      this.$nextTick(() => {
+        this.truckInfo = obj
+      })
+    },
+    addOrgRightTable() { // 添加了一辆车型
       this.isAddOrgRightTable = new Date().getTime()
     },
     resizeChart() {
@@ -213,7 +226,7 @@ export default {
     fetchData() {
       this.initInfo() // 添加完司机或车辆之后，刷新下拉数据
     },
-    resetTrucDelList () { // 参数设置之后需要返回到左边列表的运单
+    resetTrucDelList() { // 参数设置之后需要返回到左边列表的运单
       this.resetTrucDelListLen = ''
       this.$nextTick(() => {
         this.resetTrucDelListLen = this.paramTuck ? this.paramTuck.length : 0
@@ -240,7 +253,9 @@ export default {
       this.loadTableInfo = arr
     },
     getLoadCurTable(arr) {
+      console.log('loadTable2', arr)
       this.loadInfoPercentOrg = objectMerge2([], arr)
+      console.log('loadTable2.1', arr)
     },
     showFullViewTable(val) { // 穿梭框全屏展示
       this.isShowViewTable = val

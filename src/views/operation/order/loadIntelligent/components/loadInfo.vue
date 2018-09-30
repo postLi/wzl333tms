@@ -34,12 +34,12 @@
                     <div class="loadInfo_item_form" v-show="showCurrenFormStyle[item._index]">
                       <div class="loadInfo_item_form_row">
                         <el-form-item label="车型" class="nameClass">
-                          <el-select v-model="item.name" placeholder="请选择" @change="(val) => handleTuckOptions(val, item, index)">
+                          <el-select v-model="item.name" placeholder="请选择" @change="(val) => handleTuckOptions(val, item, item._index)">
                             <el-option v-for="t in truckOptions" :key="t.cid" :label="t.name" :value="t.name">
                             </el-option>
                           </el-select>
                         </el-form-item>
-                        <el-form-item label="车牌号" :key="changeTruckKey" :prop="`dataList.${index}.truckIdNumber`" class="formItemTextDanger" :rules="{required: true, message: '请选择车牌号~', trigger: 'blur'}">
+                        <el-form-item label="车牌号" :key="changeTruckKey" :prop="`dataList.${index}.truckIdNumber`" class="formItemTextDanger" :rules="{required: true, message: '请选择车牌号~', trigger: ['blur', 'change']}">
                           <el-autocomplete popper-class="lll-autocomplete" v-model="item.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="(val) => handleSelectTruckNum(val,item._index)" auto-complete="off" :maxlength="8">
                             <i class="intAddF" slot="suffix" @click="doAction('addTruck')"><icon-svg icon-class="inadd_lll"></icon-svg></i>
                             <template slot-scope="{ item }">
@@ -50,11 +50,11 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="可载方(方)" prop="">
+                        <el-form-item label="可载方(方)" prop="volume">
                           <input type="text" class="nativeinput" v-numberOnly :value="item.volume" @change="(e)=>changeLoadNum(e.target.value, item._index, 'volume')" ref="volume" :maxlength="3" />
                           </el-input>
                         </el-form-item>
-                        <el-form-item label="可载重(千克)" prop="">
+                        <el-form-item label="可载重(千克)" prop="weight">
                           <input type="text" class="nativeinput" v-numberOnly :value="item.weight" @change="(e)=>changeLoadNum(e.target.value, item._index, 'weight')" ref="weight" :maxlength="3" />
                           </el-input>
                         </el-form-item>
@@ -65,7 +65,7 @@
                           <i class="intEditF" @click="addFreight(item.price, item._index, item)"><icon-svg icon-class="intlDel_lll"></icon-svg></i>
                           </input>
                         </el-form-item>
-                        <el-form-item label="司机" class="formItemTextDanger" :key="changeDriverKey" :prop="'dataList.'+index+'.dirverName'" :rules="{required: true, message: '请选择司机~', trigger: 'change'}">
+                        <el-form-item label="司机" class="formItemTextDanger" :key="changeDriverKey" :prop="'dataList.'+index+'.dirverName'" :rules="{required: true, message: '请选择司机~', trigger: ['blur', 'change']}">
                           <el-autocomplete popper-class="lll-autocomplete" v-model="item.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="(val) => handleSelectName(val, item._index)" auto-complete="off" :maxlength="10">
                             <i class="intAddF" slot="suffix" @click="doAction('addDriver')">
                             <icon-svg icon-class="inadd_lll"></icon-svg>
@@ -78,7 +78,7 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '司机电话不能为空~', trigger: 'change'}" class="formItemTextDanger">
+                        <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '司机电话不能为空~', trigger: ['blur', 'change']}" class="formItemTextDanger">
                           <el-input v-model="item.dirverMobile" :maxlength="11"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
@@ -576,9 +576,10 @@ export default {
       this.truckOptions.forEach(e => {
         if (e.name === val) {
           obj = Object.assign({}, e)
-          console.log('车型:', obj)
+          console.log('车型:', obj, index)
         }
       })
+
       this.$set(this.intelligentData.dataList[index], 'volume', obj.vol)
       this.$set(this.intelligentData.dataList[index], 'weight', obj.weight)
     },
@@ -774,6 +775,8 @@ export default {
       // }
       
       this.$emit('truckIndex', this.currentIndex)
+      this.$emit('truckInfo', this.intelligentData.dataList)
+      this.$emit('truckPrecent', this.intelligentData.dataList[0])
       this.$message.info('已删除')
       setTimeout(() => {
         this.intelligentData.dataList.forEach((el, index) => {
@@ -797,6 +800,8 @@ export default {
         dirverMobile: '',
         truckLoad: '',
         truckVolume: '',
+        vol: '',
+        weight: '',
         loadTime: parseTime(new Date()),
         planArrivedTime: '',
         requireArrivedTime: '',

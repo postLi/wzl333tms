@@ -78,7 +78,7 @@ module.exports = {
         changeOrigin: true
       },
       '/dingfei': {
-        target: 'http://192.168.1.34:7010',
+        target: 'http://192.168.1.57:7010',
         pathRewrite: { '^/dingfei': '' },
         changeOrigin: true
       },

@@ -112,7 +112,7 @@ export default {
         // 调整监测逻辑，改为每秒检测一个，避免全部同时请求造成浏览器的请求堵塞影响准确性~
         setTimeout(() => {
           // axios.get('/' + el.value + '/api-order/order/v1/orderCreateDate/', {
-          axios.get('/' + el.value + '/anfacommonservice/common/oss/v1/policy', {
+          axios.get('/' + el.value + '/api-common/common/oss/v1/policy', {
             timeout: 10000
           }).catch((err) => {
             const status = err.response ? err.response.status : 'unconnect'
