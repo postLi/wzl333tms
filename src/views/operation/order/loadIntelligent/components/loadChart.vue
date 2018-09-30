@@ -94,12 +94,14 @@ export default {
   watch: {
     info: {
       handler(cval, oval) {
+        console.log('loadTable3.1', cval, oval, this.baseInfo)
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
         cval.forEach(e => {
           this.baseInfo.weight += Number(e.repertoryWeight) || 0
           this.baseInfo.volume += Number(e.repertoryVolume) || 0
         })
+        console.log('loadTable3.2', cval, this.baseInfo)
         if (cval) {
           this.initChart()
         }
@@ -143,10 +145,10 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: "{a} <br/>{b} : {c}(千克) ({d}%)"
         },
         series: [{
-          name: '总载重(千克)',
+          name: '总载重: '+this.baseInfo.totalWeight+'(千克)',
           type: 'pie',
           radius: '45%',
           label: {
@@ -169,7 +171,7 @@ export default {
             },
             {
               value: this.baseInfo.totalWeight-this.baseInfo.weight,
-              name: '可载千克',
+              name: '可载重',
               itemStyle: {
                 color: '#79F7C1'
               }
@@ -196,10 +198,10 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          formatter: "{a} <br/>{b} : {c}(方) ({d}%)"
         },
         series: [{
-          name: '总载方(方)',
+          name: '总载方: '+this.baseInfo.totalVolume+'(方)',
           type: 'pie',
           radius: '45%',
           label: {

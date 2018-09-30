@@ -50,11 +50,11 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="可载方(方)" prop="">
+                        <el-form-item label="可载方(方)" prop="volume">
                           <input type="text" class="nativeinput" v-numberOnly :value="item.volume" @change="(e)=>changeLoadNum(e.target.value, item._index, 'volume')" ref="volume" :maxlength="3" />
                           </el-input>
                         </el-form-item>
-                        <el-form-item label="可载重(千克)" prop="">
+                        <el-form-item label="可载重(千克)" prop="weight">
                           <input type="text" class="nativeinput" v-numberOnly :value="item.weight" @change="(e)=>changeLoadNum(e.target.value, item._index, 'weight')" ref="weight" :maxlength="3" />
                           </el-input>
                         </el-form-item>
@@ -576,9 +576,10 @@ export default {
       this.truckOptions.forEach(e => {
         if (e.name === val) {
           obj = Object.assign({}, e)
-          console.log('车型:', obj)
+          console.log('车型:', obj, index)
         }
       })
+
       this.$set(this.intelligentData.dataList[index], 'volume', obj.vol)
       this.$set(this.intelligentData.dataList[index], 'weight', obj.weight)
     },
@@ -774,6 +775,8 @@ export default {
       // }
       
       this.$emit('truckIndex', this.currentIndex)
+      this.$emit('truckInfo', this.intelligentData.dataList)
+      this.$emit('truckPrecent', this.intelligentData.dataList[0])
       this.$message.info('已删除')
       setTimeout(() => {
         this.intelligentData.dataList.forEach((el, index) => {
@@ -797,6 +800,8 @@ export default {
         dirverMobile: '',
         truckLoad: '',
         truckVolume: '',
+        vol: '',
+        weight: '',
         loadTime: parseTime(new Date()),
         planArrivedTime: '',
         requireArrivedTime: '',
