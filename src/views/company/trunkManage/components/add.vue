@@ -19,8 +19,8 @@
         </el-form-item>
 
         <el-form-item label="可载重" prop="truckLoad">
-          <el-input v-model.number="form.truckLoad" v-numberOnly :maxlength="18" auto-complete="off">
-            <template slot="append">吨</template>
+          <el-input v-model.number="form.truckLoad" v-numberOnly :maxlength="6" auto-complete="off">
+            <template slot="append">千克</template>
           </el-input>
         </el-form-item>
 
@@ -224,7 +224,7 @@ export default {
           { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
         ],
         truckLoad: [
-          { validator: createValidate(1000, '吨数不能超过1000吨'), type: 'number' }
+          { validator: createValidate(100000, '不能超过100000千克'), type: 'number' }
         ],
         truckVolume: [
           { validator: createValidate(1000, '体积不能超过1000方'), type: 'number' }

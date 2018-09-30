@@ -55,7 +55,7 @@
                           </el-input>
                         </el-form-item>
                         <el-form-item label="可载重(千克)" prop="weight">
-                          <input type="text" class="nativeinput" v-numberOnly :value="item.weight" @change="(e)=>changeLoadNum(e.target.value, item._index, 'weight')" ref="weight" :maxlength="3" />
+                          <input type="text" class="nativeinput" v-numberOnly :value="item.weight" @change="(e)=>changeLoadNum(e.target.value, item._index, 'weight')" ref="weight" :maxlength="6" />
                           </el-input>
                         </el-form-item>
                       </div>
@@ -322,7 +322,6 @@ export default {
     loadTable: {
       handler(cval, oval) {
         if (cval) {
-          console.log('loadtoble', cval[this.currentIndex], cval, this.intelligentData.dataList)
           this.$nextTick(() => {
             if (cval[this.currentIndex]) {
               this.intelligentData.dataList[this.currentIndex].carLoadDetail = cval[this.currentIndex]
@@ -405,7 +404,6 @@ export default {
       }
     },
     setCurPageView(index) { // 设置只显示三个车型
-      console.log('setCurPageView1', index)
       let maxShowLen = this.maxShowLen // 最多显示车型数量
       let orgLen = this.intelligentData.dataList ? this.intelligentData.dataList.length : 0 // 车型列表的长度
       if (orgLen) {
@@ -413,19 +411,14 @@ export default {
           if (index + maxShowLen > orgLen) {
             index = orgLen - maxShowLen
           }
-
-          console.log('setCurPageView2', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList.slice(index, index + 3)
 
         } else {
-          console.log('setCurPageView3', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList
         }
       } else {
-        console.log('setCurPageView4', index)
         this.showCurPagesData.dataList = []
       }
-      console.log('setCurPageView5', index)
     },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
@@ -628,15 +621,12 @@ export default {
       let arr = []
       let data = {} // 数组中的单个对象
       arr = Object.assign([], this.intelligentData.dataList)
-      console.log('arr.length',arr.length)
       arr.forEach((e, index) => {
-        console.log('eeeee111', e)
         this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
       })
       this.noLoadListCount = 0
       this.loadDataArray = []
       arr.forEach((e, index) => {
-        console.log('eeeee222')
         let curinfo = {
           apportionTypeId: this.intelligentLeftData.apportionTypeId,
           arriveOrgid: this.intelligentLeftData.arriveOrgid,
@@ -674,12 +664,10 @@ export default {
         // })
       })
       this.loadDataArray.forEach(e => { // 计算几个车型 是否有配载清单为空的 如果为空就加一不可以提交
-        console.log('e', e)
         if (e.tmsOrderLoadDetailsList.length === 0) {
           this.noLoadListCount++
         }
       })
-      console.log('this.noLoadListCount0', this.noLoadListCount)
     },
     submitForm() {
       this.saveLoading = true
@@ -691,10 +679,8 @@ export default {
               this.setData()
               if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
                 this.$message.warning('配载清单不可以为空')
-                console.log('noLoadListCount1', this.noLoadListCount)
                 this.noLoadListCount = 0
                 this.saveLoading = false
-                console.log('noLoadListCount2', this.noLoadListCount)
                 return false
               } else {
                 postIntnteSmartLoad(this.loadDataArray).then(res => {
@@ -752,8 +738,6 @@ export default {
         this.showCurrenFormStyle[this.currentIndex] = true
       }else if (index > 0){
         this.$set(this.showCurrenFormStyle, this.currentIndex, true)
-
-        // this.showCurrenFormStyle[this.currentIndex] = true
         console.log('delCurTruck2.3',this.currentIndex, this.showCurrenFormStyle[this.currentIndex])
       }else {
         console.log('delCurTruck2.4',this.currentIndex)

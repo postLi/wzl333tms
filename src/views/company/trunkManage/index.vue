@@ -147,7 +147,7 @@ export default {
             return this.getLabelName(scope.row.truckSource, this.truckSources)
           } */
         }, {
-          label: '可载重（吨）',
+          label: '可载重（千克）',
           prop: 'truckLoad',
           width: '120',
           fixed: false

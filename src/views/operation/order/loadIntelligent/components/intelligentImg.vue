@@ -96,14 +96,16 @@ export default {
       }
     },
     openInteligent() {
+
       this.eventBus.$emit('replaceCurrentView', {
-        path: '/operation/order/loadIntelligent/index',
+        path: '/operation/order/loadIntelligent/load',
         query: {
           tab: '智能配载',
           orgId: this.$route.query.orgId,
           sendDate: this.$route.query.sendData
         }
       })
+      console.log('======loadImg====', this.$route)
     }
   }
 }

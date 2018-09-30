@@ -37,7 +37,7 @@ import { getIntnteInit } from '@/api/operation/arteryDepart'
 import AddLntelligent from './components/intelligentParameterSet'
 
 export default {
-  name: "load",
+  name: "Load",
   components: {
     transferTable,
     loadChart,
@@ -129,11 +129,11 @@ export default {
     },
     loadInfoPercent() {
       const data = Object.assign([], this.loadInfoPercentOrg)
-      console.log('loadTable2.3', data)
       return data
     }
   },
   mounted() {
+    console.log('load mounted~~~~~~~~~~')
     this.init()
     this.infoData()
   },
@@ -148,7 +148,6 @@ export default {
       return getIntnteInit(this.sendRoute).then(data => {
         if (data) {
           this.intelligentData = data.transp[0].standacars
-          console.log('9090909090')
           this.setLoadTableList.left = data.transp[0].storeOrderListloss
           this.intelligentData.forEach((e, index) => {
             this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
@@ -171,7 +170,6 @@ export default {
       })
     },
     getTruckIndex(obj) {
-      console.log('this.truckIndex:', this.truckIndex, obj)
       this.truckIndex = ''
       this.$nextTick(() => {
         this.truckIndex = obj
@@ -179,7 +177,6 @@ export default {
 
     },
     getTruckPrecent(obj) {
-      console.log('loadTable2.3', obj)
       this.truckPrecent = {}
       this.$nextTick(() => {
         this.truckPrecent = obj
@@ -188,7 +185,6 @@ export default {
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
-      console.log('delCurTruck2', obj, this.delCurTruckData)
     },
     getTruckInfo(obj) {
       this.truckInfo = {}
@@ -246,16 +242,13 @@ export default {
       this.addTruckVisible = false
     },
     getSavaParamTruck(arr) { // 参数设置时返回的数据
-      console.log('getSavaParamTruck', arr)
       this.paramTuck = Object.assign([], arr)
     },
     getLoadTable(arr) {
       this.loadTableInfo = arr
     },
     getLoadCurTable(arr) {
-      console.log('loadTable2', arr)
       this.loadInfoPercentOrg = objectMerge2([], arr)
-      console.log('loadTable2.1', arr)
     },
     showFullViewTable(val) { // 穿梭框全屏展示
       this.isShowViewTable = val

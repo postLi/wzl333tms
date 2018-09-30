@@ -223,9 +223,10 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  activated() {
-    // this.searchQuery.orgId = this.otherinfo.orgid
-    // this.fetchAllShortDepartList()
+  watch: {
+    '$route' (to, from) {
+      console.log('========route========', to, from )
+    }
   },
   methods: {
     closeMe() { // 关闭弹出框

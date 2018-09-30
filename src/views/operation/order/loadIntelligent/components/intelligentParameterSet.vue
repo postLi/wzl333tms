@@ -155,7 +155,6 @@ export default {
     },
     selectTruck: {
       handler(newVal) {
-        console.log('newVal', newVal)
       }
     }
   },

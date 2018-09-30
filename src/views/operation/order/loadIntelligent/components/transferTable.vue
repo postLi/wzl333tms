@@ -264,7 +264,6 @@ export default {
             })
           })
         }
-        console.log('66766666', cval)
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
         this.orgLeftTable = Object.assign([], cval.left)
@@ -305,11 +304,9 @@ export default {
         if (cval === '') {
           return
         }
-        console.log('######')
         let arr = []
         this.selectedRight = []
         let difflen = Number(cval ? cval : 0) - Number(this.orgRightTable.length ? this.orgRightTable.length : 0)
-        console.log('*****', difflen, cval)
         if (difflen > 0) {
           for (let i = 0; i < difflen; i++) {
             this.orgRightTable.push([])
@@ -324,9 +321,7 @@ export default {
             }
           })
           this.isDelOtherTruck = true
-          console.log('this.orgRightTable1:', this.orgRightTable[0].length, this.orgRightTable)
           this.goLeft()
-          console.log('this.orgRightTable2:', this.orgRightTable[0].length, this.orgRightTable)
         }
       },
       deep: true
@@ -374,7 +369,7 @@ export default {
   },
   methods: {
     initTable() {
-      console.log('#$%#$%#$', this.orgRightTable, this.truckIndex)
+      console.log('#$%#$%#$')
       this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
       this.rightTable.forEach(e => {
         e.loadAmount = e.repertoryAmount
@@ -393,14 +388,12 @@ export default {
       })
 
       if (arr.length) {
-        console.log('7778888')
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
           this.leftTable = this.leftTable.filter(em => {
             return em.repertoryId != e.repertoryId
           })
         })
       } else {
-        console.log('77799999')
         this.leftTable = Object.assign([], this.orgLeftTable)
       }
       this.$nextTick(() => {
@@ -412,7 +405,6 @@ export default {
     },
     fetchList() {
       // this.loading = false
-      console.log('99999')
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
 
@@ -432,7 +424,6 @@ export default {
     },
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
-      console.log(el)
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         setData: function(dataTransfer) {
@@ -478,7 +469,6 @@ export default {
       })
     },
     goLeft() { // 右边穿梭到左边
-      console.log('1000000')
       this.selectedRight.forEach((e, index) => {
         let find = this.leftTable.filter(em => {
           return em.repertoryId === e.repertoryId
@@ -512,7 +502,6 @@ export default {
       this.$emit('loadTable', this.orgRightTable)
     },
     goRight() { // 左边穿梭到右边
-      console.log('this.loadTable goRight1', this.loadTable, this.dofoLen)
       if (this.dofoLen === 0) {
         this.$message.warning('请添加一个车型！')
       }else {
@@ -524,7 +513,6 @@ export default {
             e.loadAmount = e.repertoryAmount
             e.loadWeight = e.repertoryWeight
             e.loadVolume = e.repertoryVolume
-            console.log('goRight', this.truckIndex, this.rightTable, this.orgRightTable, this.orgRightTable[this.truckIndex])
             this.rightTable.push(e)
             this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
             this.orgRightTable[this.truckIndex].push(e)
@@ -534,15 +522,12 @@ export default {
             this.orgLeftTable = this.orgLeftTable.filter(el => {
               return el.repertoryId !== e.repertoryId
             })
-            console.log('2222222222222222222222', this.rightTable.length)
           }
-
         })
         this.$nextTick(() => {
           this.setSort() // 右边列表行拖拽
         })
         this.tablekey = Math.random()
-        console.log('this.loadTable goRight2')
         this.$emit('loadCurTable', this.rightTable)
         this.$emit('loadTable', this.orgRightTable)
       }
@@ -569,17 +554,14 @@ export default {
       this.goLeft()
     },
     addALLList() { // 添加全部
-      console.log('444444')
       this.selectedLeft = Object.assign([], this.leftTable)
       this.goRight()
     },
     minusAllList() { // 减去全部
-      console.log('5555555')
       this.selectedRight = Object.assign([], this.rightTable)
       this.goLeft()
     },
     clickLeftRow(row) {
-      console.log(row.shipSn)
       // this.selectedLeft = []
       // this.selectedLeft[0] = row
       this.$refs.multipleTableLeft.toggleRowSelection(row)
@@ -592,7 +574,6 @@ export default {
     getSelectionLeft(list) {},
     getSelectionRight(list) {},
     showAllLeft() {
-      console.log('333333')
       this.isShowLeftTable = !this.isShowLeftTable
       this.tableColumnLeft = this.isShowLeftTable ? Object.assign([], this.tableColumnLeftAll) : this.tableColumnLeftDepart
       this.showTableMessage = this.isShowLeftTable ? '点击隐藏' : '全屏查看'
