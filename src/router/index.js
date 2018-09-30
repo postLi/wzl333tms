@@ -90,7 +90,7 @@ export const constantRouterMap = [
       name: 'console2',
       icon: 'c',
       meta: {
-        title: '数据控制台',
+        title: '运输控制台',
         noCache: false,
         // 'code': 'HOME_PAGE_5',
         'proute': 'dashboard'

@@ -282,7 +282,10 @@ export default {
       this.searchQuery.vo.buttonKey = 5
       this.searchQuery.vo.nowStartTime = val[0]
       this.searchQuery.vo.nowEndTime = val[1]
-      this.currentkey = 5
+      this.currentkey = ''
+      this.$nextTick(() => {
+        this.currentkey = 5
+      })
     },
     doAction(type) {
       switch (type) {
