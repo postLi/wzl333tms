@@ -1,5 +1,5 @@
 <template>
-  <div class="html5index2 main_html5_content">
+  <div class="html5index3 main_html5_content2">
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <div class="getorglist">
@@ -24,40 +24,34 @@
       </div>
       <el-row class="main_forthUl" :gutter="15">
           <el-col :span="6">
-            <ul>
-              <li>总账 </li>
-              <li>收入:<span>{{ thedata.amountCollect }}</span>元</li>
-              <li>支出:<span>{{ thedata.amountPay}}</span>元</li>
+            <ul :class="{'activetab':currenttab === 0}" @click="currenttab=0">
+              <li>待提货 <i class="data-s">(<i>{{ thedata.amountPickWeight }}</i>吨,<i>{{ thedata.amountPickVolume }}</i>m³)</i></li>
+              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountPick }}</span>票</i><i class="xline"></i></li>
             </ul>
           </el-col>
           <el-col :span="6">
-            <ul>
+            <ul :class="{'activetab':currenttab === 1}" @click="currenttab=1">
               <li>
-                收入分布
+                待配载 <i class="data-s">(<i>{{ thedata.amountUnloadWeight }}</i>吨,<i>{{ thedata.amountUnloadVolume }}</i>m³)</i>
               </li>
-              <li>收入小计:<span>{{ totalIncome }}</span>元</li>
-              <li>已<i class="marginem"></i>收:<span>{{ thedata.amountReceivableFee }}</span>元</li>
-              <li>未<i class="marginem"></i>收:<span>{{ thedata.amountUnreceivableFee }}</span>元</li>
+              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountUnload }}</span>票</i><i class="xline"></i></li>
             </ul>
           </el-col>
           <el-col :span="6">
-            <ul class="zhichulie">
+            <ul class="zhichulie" :class="{'activetab':currenttab === 2}" @click="currenttab=2">
               <li>
-                支出分布
+                待发车<i class="data-s">(<i>{{ thedata.amountUnSendWeight }}</i>吨,<i>{{ thedata.amountUnSendVolume }}</i>m³)</i>
               </li>
-              <li>支出小计: <span class="marginleft">{{ totalpay }}</span>元</li>
-              <li>车<i class="marginem"></i>费: 已付<span>{{ thedata.hadPayCarFee }}</span>元，未付<span>{{thedata.unPayCarFee}}</span>元</li>
-              <li>中<i class="marginem"></i>转: 已付<span>{{ thedata.hadPayTransferFee }}</span>元，未付<span>{{thedata.unPayTransferFee}}</span>元</li>
-              <li>其<i class="marginem"></i>它: 已付<span>{{ thedata.hadPayOtherFee }}</span>元，未付<span>{{thedata.unPayOtherFee}}</span>元</li>
+              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountUnSend }}</span>车</i><i class="xline"></i></li>
             </ul>
           </el-col>
           <el-col :span="6">
-            <ul>
+            <ul :class="{'activetab':currenttab === 3}" @click="currenttab=3">
               <li>
-                利润情况
+                已发车<i class="data-s">(<i>{{ thedata.amountSendingWeight }}</i>吨,<i>{{ thedata.amountSendingVolume }}</i>m³)</i>
 
               </li>
-              <li class="profit-num"><i class="xdata"><span>{{ thedata.profit }}</span>元</i><i class="xline"></i><i class="xtip">毛利润</i></li>
+              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountSending }}</span>车，</i><i class="xdata"><span>{{ thedata.amountSending }}</span>票</i><i class="xline"></i></li>
             </ul>
           </el-col>
       </el-row>
@@ -67,22 +61,27 @@
           <ul class="ul_left" id="main"></ul>
         </el-col>
         <el-col :span="6">
-          <div class="databox datablue">
-            <span class="dataico"><icon-svg icon-class="caiwugl2_yingfu" /></span>
-            <span class="databox-value">{{thedata.amountReceivableFee}}元</span>
-            <span class="databox-label">现金流入</span>
+          <div :class="{'activetab':currenttab === 4}" @click="currenttab=4" class="databox datablue">
+            <span class="databox-label">已到车<i class="data-s">(<i>{{ thedata.amountArrivedWeight }}</i>吨,<i>{{ thedata.amountArrivedVolume }}</i>m³)</i></span>
+            <!-- <div class="databox-tip">(对方网点已确认到车)</div> -->
+            <span class="dataico"><icon-svg icon-class="yygl7_daoche" /></span>
+            <span class="databox-value">{{thedata.amountArrived}}车,{{thedata.amountArrived}}票</span>
+            
           </div>
           <div class="databox-line"></div>
-          <div class="databox datared">
-            <span class="dataico"><icon-svg icon-class="caiwugl1_yingshou" /></span>
-            <span class="databox-value">{{thedata.amountPayableFee}}元</span>
-            <span class="databox-label">现金流出</span>
+          <div :class="{'activetab':currenttab === 5}" @click="currenttab=5" class="databox datared">
+            <span class="databox-label">运输异常<i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i></span>
+            
+            <span class="dataico"><icon-svg icon-class="btn27_yichangdj" /></span>
+            <span class="databox-value">{{thedata.amountAbonormal}}票</span>
+            
           </div>
           <div class="databox-line"></div>
-          <div class="databox datagreen">
-            <span class="dataico"><icon-svg icon-class="caiwu" /></span>
-            <span class="databox-value">{{ thedata.amountReceivableFee - thedata.amountPayableFee }}元</span>
-            <span class="databox-label">流水差</span>
+          <div :class="{'activetab':currenttab === 6}" @click="currenttab=6" class="databox datagreen">
+            <span class="databox-label">已签收</span>
+            <span class="dataico"><icon-svg icon-class="xiugai" /></span>
+            <span class="databox-value">{{ thedata.amountSigned }}票</span>
+            
           </div>
         </el-col>
       </el-row>
@@ -95,7 +94,7 @@
 // https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
 import { pickerOptions4, tmsMath, pickerOptions } from '@/utils/index'
-import { postHomedetail, getHomeYearDetail, getConsoleData, getConsoleChartData } from '@/api/index'
+import { postHomedetail, getHomeYearDetail, getConsoleData2, getConsoleChartData2 } from '@/api/index'
 import Arrow from './arrow'
 import SelectTree from '@/components/selectTree/index'
 
@@ -104,16 +103,11 @@ export default {
     Arrow,
     SelectTree
   },
-  watch: {
-    currentkey(newVal) {
-      if (newVal !== '') {
-        this.getData()
-        // this.doAction(newVal)
-      }
-    }
-  },
+
   data() {
     return {
+      currenttab: 0,
+      tabtitle: ['目的城市', '目的城市', '目的网点', '目的网点', '目的网点', '责任网点', '签收方式'],
       dataset: [],
       currentkey: '',
       orgId: [],
@@ -273,6 +267,18 @@ export default {
       return tmsMath.add(data.hadPayCarFee, data.unPayCarFee, data.hadPayTransferFee, data.unPayTransferFee, data.hadPayOtherFee, data.unPayOtherFee).result()
     }
   },
+  watch: {
+    currentkey(newVal) {
+      if (newVal !== '') {
+        this.getData()
+        this.getChartData()
+        // this.doAction(newVal)
+      }
+    },
+    currenttab(newVal) {
+      this.getChartData()
+    }
+  },
   methods: {
     setCurrentKey(item) {
       this.currentkey = item.value
@@ -347,8 +353,8 @@ export default {
       data.orgAllId = this.orgId.map((res, index) => {
         return (index + 1)
       }).join(',')
-      data.buttonKey = this.currentkey
-      getConsoleData(data).then(res => {
+      data.timeKey = this.currentkey
+      getConsoleData2(data).then(res => {
         const data = res.data
         if (data) {
           for (const i in data) {
@@ -365,10 +371,49 @@ export default {
         this.$message.warning('查不到相关数据。')
       })
     },
-    initYearChart(echart, shipArr, volumeArr) {
+    getChartData() {
+      const myChart3 = this.myChart3
+      // 获取年度运力数据
+      myChart3.showLoading()
+      const data = Object.assign({}, this.searchQuery.vo)
+      data.orgAllId = this.orgId.join(',')
+      // 临时测试数据
+      data.orgAllId = this.orgId.map((res, index) => {
+        return (index + 1)
+      }).join(',')
+      data.timeKey = this.currentkey + 1
+      data.detailKey = this.currenttab + 1
+
+      getConsoleChartData2(data).then(res => {
+        const data = res.data || []
+        const monthArr = []
+        const shipArr = []
+        const volumeArr = []
+        const fangArr = []
+        data.map(el => {
+          shipArr.push(el.amountWeight)
+          volumeArr.push(el.amountVloume)
+          fangArr.push(el.amount)
+          let name = ''
+          if (this.currenttab < 2) {
+            name = 'shipToCityName'
+          } else if (this.currenttab < 5) {
+            name = 'shipToOrgid'
+          } else if (this.currenttab === 5) {
+            name = 'dutyOrgId'
+          } else if (this.currenttab === 6) {
+            name = 'signWay'
+          }
+          monthArr.push(el[name])
+        })
+        console.log(res, monthArr, shipArr, volumeArr, fangArr, this.tabtitle[this.currenttab])
+        this.initYearChart(myChart3, monthArr, shipArr, volumeArr, fangArr, this.tabtitle[this.currenttab])
+      })
+    },
+    initYearChart(echart, xdata, shipArr, volumeArr, fangArr, title) {
       const option3 = {
         title: {
-          text: '收支走势',
+          text: title,
           subtext: ''
         },
         tooltip: {
@@ -377,17 +422,18 @@ export default {
         legend: {
           // selectedMode: 'single',
           selected: {
-            '收入': true,
-            '支出': true
+            '票': true,
+            '吨': true,
+            '方': true
           },
-          data: ['收入', '支出']
+          data: ['票', '吨', '方']
         },
         toolbox: {
           show: true,
           feature: {
             mark: { show: true },
             dataView: { show: false, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
+            magicType: { show: true, type: ['bar'] },
             restore: { show: false },
             saveAsImage: { show: false }
           }
@@ -396,9 +442,9 @@ export default {
         xAxis: [
           {
             type: 'category',
-            boundaryGap: false,
+            boundaryGap: true,
             // '2018年\n\r1月'
-            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+            data: xdata
           }
         ],
         yAxis: [
@@ -408,8 +454,8 @@ export default {
         ],
         series: [
           {
-            name: '收入',
-            type: 'line',
+            name: '票',
+            type: 'bar',
             smooth: true,
             itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
@@ -422,12 +468,26 @@ export default {
             }
           },
           {
-            name: '支出',
-            type: 'line',
+            name: '吨',
+            type: 'bar',
             smooth: true,
             itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: volumeArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '方',
+            type: 'bar',
+            smooth: true,
+            itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
+            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+            data: fangArr,
             markPoint: {
               data: [
                       { type: 'max', name: '最大值' },
@@ -455,20 +515,8 @@ export default {
         height: 'auto'
       })
     }
-   // 获取年度运力数据
-    myChart3.showLoading()
-    getConsoleChartData().then(res => {
-      const data = res.data || []
-      const monthArr = []
-      const shipArr = []
-      const weightArr = []
-      const volumeArr = []
-      data.map(el => {
-        shipArr.push(el.amountCollect)
-        weightArr.push(el.amountPay)
-      })
-      this.initYearChart(myChart3, shipArr, weightArr)
-    })
+    this.myChart3 = myChart3
+    this.getChartData()
     /* getHomeYearDetail().then(data => {
       data = data || []
       const monthArr = []
@@ -498,13 +546,13 @@ export default {
 // .app-main{
 //   background:rgb(235,235,235);
 // }
-.html5index2{
+.html5index3{
   min-width: 1100px;
   height: 100%;
   min-height: 666px;
   background:rgb(235,235,235);
 }
-.main_html5_content{
+.main_html5_content2{
   padding: 15px;
   overflow-y: hidden;
   // background:rgb(235,235,235);
@@ -626,6 +674,11 @@ export default {
     &:hover{
       box-shadow: 0 3px 10px rgba(0,0,0,.3);
     }
+    &.activetab{
+      .dataico{
+        opacity: 1;
+      }
+    }
     .dataico{
       position: absolute;
       left:20px;
@@ -640,10 +693,32 @@ export default {
       margin-bottom: 10px;
       display: block;
     }
+    .databox-tip{
+      position: absolute;
+      left: 10px;
+      top: 35px;
+      font-size: 12px;
+      color: #ccc;
+    }
     .databox-label{
-      font-size: 16px;
+      font-size: 20px;
       color: #fff;
-      color: rgba(255,255,255,.6);
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-weight: bold;
+      i{
+        font-style: normal;
+        font-size: 12px;
+        color: #fff;
+        font-weight: normal;
+        color: rgba(255,255,255,.7);
+        margin-left: 5px;
+        i{
+          font-style: normal;
+          
+        }
+      }
     }
   }
   .datablue{
@@ -705,6 +780,16 @@ export default {
         padding: 0 20px;
         box-sizing: border-box;
         border-radius: 5px 5px 0 0;
+
+        .data-s{
+          font-style: normal;
+          font-weight: normal;
+          font-size: 12px;
+          i{
+            color: #fe0000;
+            font-style: normal;
+          }
+        }
         
         .marginem{
           display: inline-block;
@@ -730,6 +815,7 @@ export default {
         font-weight: bold;
         font-size: 16px;
       }
+
       li.profit-num{
         text-align: center;
         line-height: 1.5;
@@ -768,6 +854,10 @@ export default {
     ul:nth-child(4){
       margin:15px 0 15px 0;
     }
+  }
+  .main_forthUl ul.activetab{
+    color: #3e9ff1;
+    border:1px solid #3e9ff1;
   }
   .main_forthUl ul:hover {
     border:1px solid #3e9ff1;

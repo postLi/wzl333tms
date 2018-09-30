@@ -68,7 +68,7 @@
                         <el-form-item label="司机" class="formItemTextDanger" :key="changeDriverKey" :prop="'dataList.'+index+'.dirverName'" :rules="{required: true, message: '请选择司机~', trigger: ['blur', 'change']}">
                           <el-autocomplete popper-class="lll-autocomplete" v-model="item.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="(val) => handleSelectName(val, item._index)" auto-complete="off" :maxlength="10">
                             <i class="intAddF" slot="suffix" @click="doAction('addDriver')">
-                            <icon-svg icon-class="inadd_lll"></icon-svg>
+                            <icon-svg icon-class="inadd_lll"></icon-svg>  
                           </i>
                             <template slot-scope="{ item }">
                               <div class="name">{{ item.driverName }}</div>
@@ -1038,6 +1038,7 @@ export default {
               padding-top: 15px;
               width: 100%;
               display: inline-block;
+              animation: rowFormMoveIn 0.4s 0.1s ease backwards;
               .loadInfo_item_form_row {
                 display: flex;
                 flex-direction: row;
@@ -1115,5 +1116,14 @@ export default {
     }
   }
 }
-
+@keyframes rowFormMoveIn {
+  0% {
+    transform: translate(100%, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
 </style>

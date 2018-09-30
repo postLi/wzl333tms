@@ -70,7 +70,7 @@ export const constantRouterMap = [
       meta: {
         title: '运营控制台',
         noCache: false,
-        'code': 'HOME_PAGE_4',
+        'code': 'HOME_PAGE_1',
         'proute': 'dashboard'
       }
     }, {
@@ -81,7 +81,18 @@ export const constantRouterMap = [
       meta: {
         title: '财务控制台',
         noCache: false,
-        'code': 'HOME_PAGE_1',
+        'code': 'HOME_PAGE_4',
+        'proute': 'dashboard'
+      }
+    }, {
+      path: '/console2',
+      component: _import('html5/index2'),
+      name: 'console2',
+      icon: 'c',
+      meta: {
+        title: '运输控制台',
+        noCache: false,
+        // 'code': 'HOME_PAGE_5',
         'proute': 'dashboard'
       }
     }, {
