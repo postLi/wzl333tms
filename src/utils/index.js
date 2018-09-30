@@ -935,42 +935,43 @@ export const uniqueArray = (array, key) => {
  */
 export function cacheDEVInfo(pfix, data) {
   // 如果是非正式环境，缓存最近50条js报错信息
-  if (window.location.host.indexOf('28tms.cn') === -1) {
-    try {
-      data = JSON.stringify(data)
-      var maxlen = 50
-      var find = false
-      // 第一遍查找空位，有就插进去
-      for (var i = 0; i < maxlen; i++) {
-        var date1 = new Date()
-        if (!localStorage[pfix + i]) {
-          localStorage[pfix + i] = (+date1) + '||' + date1.toLocaleString() + ' || ' + data
-          find = true
+  // 正式环境下只用sessionStorage缓存
+  var is28tms = window.location.host.indexOf('28tms.cn') !== -1
+  var lc = is28tms ? window.sessionStorage : window.localStorage
+
+  try {
+    data = JSON.stringify(data)
+    var maxlen = 50
+    var find = false
+    var date1 = new Date()
+
+    // 第一遍查找空位，有就插进去
+    for (var i = 0; i < maxlen; i++) {
+      if (!lc.getItem(pfix + i)) {
+        lc.setItem(pfix + i, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
+        find = true
+        break
+      }
+    }
+    // 第二遍找旧值，有就插进去
+    if (!find) {
+      for (var j = 0; j < maxlen; j++) {
+        var fd = lc.getItem(pfix + j).split('||')
+        if (j < (maxlen - 1)) {
+          var fd2 = lc.getItem(pfix + (j + 1)).split('||')
+          if ((+fd2[0]) > (+fd[0])) {
+            lc.setItem(pfix + j, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
+            break
+          }
+        } else {
+          // 如果是最后一条，则直接替换更新
+          lc.setItem(pfix + j, (+date1) + ' || ' + date1.toLocaleString() + '||' + data)
           break
         }
       }
-      // 第二遍找旧值，有就插进去
-      if (!find) {
-        for (var j = 0; j < maxlen; j++) {
-          var fd = localStorage[pfix + j].split('||')
-          if (j < (maxlen - 1)) {
-            var fd2 = localStorage[pfix + (j + 1)].split('||')
-            if ((+fd2[0]) > (+fd[0])) {
-              var date2 = new Date()
-              localStorage[pfix + j] = (+date2) + '||' + date2.toLocaleString() + ' || ' + data
-              break
-            }
-          } else {
-            // 如果是最后一条，则直接替换更新
-            var date3 = new Date()
-            localStorage[pfix + j] = (+date3) + ' || ' + date3.toLocaleString() + '||' + data
-            break
-          }
-        }
-      }
-    } catch (err) {
-      console.log('转换数据出错了：', err, data)
     }
+  } catch (err) {
+    console.log('转换数据出错了：', err, data)
   }
 }
 

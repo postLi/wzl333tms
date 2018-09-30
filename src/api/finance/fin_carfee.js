@@ -10,7 +10,7 @@ import fetch from '../../utils/fetch'
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarfShortDetailList(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/carFeePagelist/', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/carFeePagelist/', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }
@@ -25,7 +25,7 @@ export function postCarfShortDetailList(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarfBillCheckCarBaseInfo(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/getBillCheckCarBaseInfo/', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/getBillCheckCarBaseInfo/', params).then(res => {
     return res.data
   })
 }
@@ -37,20 +37,20 @@ export function postCarfBillCheckCarBaseInfo(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarfBillCheckCarInitList(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheckcardetail/v1/getBillCheckCarInitList', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheckcardetail/v1/getBillCheckCarInitList', params).then(res => {
     return res.data
   })
 }
 
 /**
- http://localhost:7010/tmsfinanceservice/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo?access_token={{access_token}}
+ http://localhost:7010/api-finance/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo?access_token={{access_token}}
  {"orgId": 1, "checkBillCode": "DZ1805210004","payDetailList":[{"arrSendPay":100},{"arrSendPay":10}],"hadPayDetailList":[{"arrSendPay":101},{"arrSendPay":10}]}
  车费创建对账单应付 已付
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCreateBillCheckCarInfo(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/createBillCheckCarInfo', params).then(res => {
     return res.data
   })
 }
@@ -61,7 +61,7 @@ export function postCreateBillCheckCarInfo(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarfDtoById(id) {
-  return fetch.get('/tmsfinanceservice/finance/tmsfinancebillcheck/v1/getDtoById/' + id)
+  return fetch.get('/api-finance/finance/tmsfinancebillcheck/v1/getDtoById/' + id)
 }
 
 /**
@@ -70,13 +70,12 @@ export function postCarfDtoById(id) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarfBillCheckCarUpdateList(params) {
-  return fetch.post('/tmsfinanceservice/finance/tmsfinancebillcheckcardetail/v1/getBillCheckCarUpdateList', params).then(res => {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheckcardetail/v1/getBillCheckCarUpdateList', params).then(res => {
     return res.data
   })
 }
 
-
-//公用方法
+// 公用方法
 
 /**
  * /finance/tmsfinancebillcheckcardetail/v1/{id}
@@ -85,7 +84,7 @@ export function postCarfBillCheckCarUpdateList(params) {
  * @returns {*}
  */
 export function deleteCarShort(id) {
-  return fetch.delete('/api-finance/finance/tmsfinancebillcheck/v1/' + id )
+  return fetch.delete('/api-finance/finance/tmsfinancebillcheck/v1/' + id)
 }
 /**
  * http://localhost:7010/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective?access_token={{access_token}}
@@ -95,5 +94,5 @@ export function deleteCarShort(id) {
  * @returns {*}
  */
 export function postUpdateBillCheckSelective(params) {
-  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective' , params )
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective', params)
 }
