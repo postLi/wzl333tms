@@ -4,7 +4,7 @@ import { getRefreshToken } from '../utils/auth'
 export function login(username, password, orgid) {
   var grant_type = 'password'
   var scope = 'webApp'
-/*   return fetch.post('/uaa/oauth/token', {
+/*   return fetch.post('/api-uaa/oauth/token', {
     username,
     password,
     grant_type,
@@ -18,7 +18,7 @@ export function login(username, password, orgid) {
   }) */
   console.log('login:', arguments, fetch.axios)
   return fetch.request({
-    url: '/uaa/oauth/token',
+    url: '/api-uaa/oauth/token',
     method: 'post',
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
@@ -39,7 +39,7 @@ export function getInfo(username, orgid) {
 }
 
 export function logout() {
-  return fetch.delete('/uaa/oauth/token', {
+  return fetch.delete('/api-uaa/oauth/token', {
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
       'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
