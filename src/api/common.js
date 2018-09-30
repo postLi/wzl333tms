@@ -189,21 +189,21 @@ export function putChangeTableSetup(orgId, module, data) {
  * 返回上传id
  */
 export function getUploadId() {
-  return fetch.get('/tmspluginservice/common/qrcode/v1/applyId')
+  return fetch.get('/api-plugin/common/qrcode/v1/applyId')
 }
 /**
  * 返回上传的id对应的信息
  * @param {*} id 上传用的id
  */
 export function getUploadIdInfo(id) {
-  return fetch.get('/tmspluginservice/common/qrcode/v1/findByID?id=' + id)
+  return fetch.get('/api-plugin/common/qrcode/v1/findByID?id=' + id)
 }
 /**
  * 生成二维码链接
  * @param {*} url 要生成二维码的链接
  */
 export function getTwocodeUrl(url) {
-  return '/tmspluginservice/common/qrcode/v1/qrcode?access_token=' + getToken() + '&url=' + encodeURIComponent(url)
+  return '/api-plugin/common/qrcode/v1/qrcode?access_token=' + getToken() + '&url=' + encodeURIComponent(url)
 }
 /**
  * 保存链接
@@ -211,5 +211,5 @@ export function getTwocodeUrl(url) {
  * @param {*} url 要保存的内容
  */
 export function postUploadIdInfo(id, url) {
-  return fetch.post('/tmspluginservice/common/qrcode/v1/SaveByID?k=' + id + '&v=' + url)
+  return fetch.post('/api-plugin/common/qrcode/v1/SaveByID?k=' + id + '&v=' + url)
 }

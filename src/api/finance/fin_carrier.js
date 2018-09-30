@@ -1,8 +1,6 @@
 import fetch from '../../utils/fetch'
 
-
 /**
-
 
  /finance/carrierdetail/v1/carrierList
  查询承运商对账分页信息 首页
@@ -10,11 +8,10 @@ import fetch from '../../utils/fetch'
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCarrierCarrierList(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/carrierList', params).then(res => {
+  return fetch.post('/api-finance/finance/carrierdetail/v1/carrierList', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }
-
 
 /**
  /finance/carrierdetail/v1/
@@ -40,7 +37,6 @@ export function postCarrierinitialize(params) {
   })
 }
 
-
 /**
  /finance/carrierdetail/v1/saveCarrierDetail
  保存或修改对账
@@ -49,7 +45,7 @@ export function postCarrierinitialize(params) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function postCreatesaveCarrierDetail(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
+  return fetch.post('/api-finance/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
     return res.data
   })
 }
@@ -62,7 +58,7 @@ export function postCreatesaveCarrierDetail(params) {
  * @returns {*}
  */
 export function deleteCarrierdetail(id) {
-  return fetch.delete('/api-finance/finance/carrierdetail/v1/' + id )
+  return fetch.delete('/api-finance/finance/carrierdetail/v1/' + id)
 }
 
 /**
@@ -84,7 +80,7 @@ export function getCarrierCarrierdetail(id) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function getCarriercarrierdetail(id) {
-  return fetch.get('/tmsfinanceservice/finance/carrierdetail/v1/' + id)
+  return fetch.get('/api-finance/finance/carrierdetail/v1/' + id)
 }
 
 /**
@@ -94,11 +90,11 @@ export function getCarriercarrierdetail(id) {
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
 export function putCarriercarrierdetail(id) {
-  return fetch.put('/tmsfinanceservice/finance/carrierdetail/v1/' + id)
+  return fetch.put('/api-finance/finance/carrierdetail/v1/' + id)
 }
-//备用
+// 备用
 export function postCreatesaveCustomerDetail(params) {
-  return fetch.post('/tmsfinanceservice/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
+  return fetch.post('/api-finance/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
     return res.data
   })
 }
