@@ -83,7 +83,7 @@ service.interceptors.response.use(
   */
     const res = response.data
 
-    if (res.status !== 200 && response.config.url.indexOf('/uaa/oauth/token') === -1) {
+    if (res.status !== 200 && response.config.url.indexOf('/api-uaa/oauth/token') === -1) {
       const data = {
         url: response.config.url,
         method: response.config.method,
