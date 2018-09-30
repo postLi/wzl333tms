@@ -357,7 +357,7 @@ h1{
   var apiurl = '/api';
 
   $('.submitbtn').on('click', function(){
-    $.post(apiurl + '/tmspluginservice/common/qrcode/v1/SaveByID?access_token='+PAGE.data.token+'&k=' + PAGE.data.id + '&v=' + encodeURIComponent(PAGE.data.upurl)).done(function(res){
+    $.post(apiurl + '/api-plugin/common/qrcode/v1/SaveByID?access_token='+PAGE.data.token+'&k=' + PAGE.data.id + '&v=' + encodeURIComponent(PAGE.data.upurl)).done(function(res){
       if(res.status === 200){
         showSuccessPage();
       } else {
@@ -396,7 +396,7 @@ h1{
     } else {
       return false;
     }
-    $.get(apiurl + '/anfacommonservice/common/oss/v1/policy?access_token='+PAGE.data.token).done(function(res){
+    $.get(apiurl + '/api-common/common/oss/v1/policy?access_token='+PAGE.data.token).done(function(res){
       var data = res.data;
       if(res.status === 200){
         PAGE.data.policydata = data

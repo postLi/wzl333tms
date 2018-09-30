@@ -29,7 +29,7 @@ import { getToken } from '@/utils/auth'
 }
  */
 export function getTradeRecord(data) {
-  return fetch.post('/tmspluginservice/system/traderecord/v1.1/', data).then(res => {
+  return fetch.post('/api-plugin/system/traderecord/v1.1/', data).then(res => {
     return res.data || []
   })
 }
@@ -41,8 +41,8 @@ export function getTradeRecord(data) {
  * companyId 公司id
  */
 export function getWeixinPayTwocode(data) {
-  return fetch.get('/tmspluginservice/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId)
-  // return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
+  return fetch.get('/api-plugin/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId)
+  // return '/' + (window.tms_testapiurl || 'api') + '/api-plugin/pay/weixin/v1.1/weixin/wx?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
 }
 /**
  * 获取支付宝二维码链接
@@ -52,15 +52,15 @@ export function getWeixinPayTwocode(data) {
  * companyId 公司id
  */
 export function getAliPayTwocode(data) {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId)
-  // return '/' + (window.tms_testapiurl || 'api') + '/tmspluginservice/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
+  return fetch.get('/api-plugin/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId)
+  // return '/' + (window.tms_testapiurl || 'api') + '/api-plugin/common/Pay/v1.1/scanPay/ali?fee=' + data.fee + '&companyId=' + data.companyId + '&access_token=' + getToken()
 }
 
 /**
  * 获取交易ID
  */
 export function getTradeId() {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/')
+  return fetch.get('/api-plugin/common/Pay/v1.1/')
 }
 
 /**
@@ -68,21 +68,21 @@ export function getTradeId() {
  * @param {*} id 交易id
  */
 export function getAliTradeResult(id) {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/' + id)
+  return fetch.get('/api-plugin/common/Pay/v1.1/' + id)
 }
 /**
  * 获取微信支付的交易结果
  * @param {*} id 交易id
  */
 export function getWXTradeResult(id) {
-  return fetch.get('/tmspluginservice/pay/weixin/v1.1/' + id)
+  return fetch.get('/api-plugin/pay/weixin/v1.1/' + id)
 }
 
 /**
  * 获取账户余额
  */
 export function getMyWallet() {
-  return fetch.get('/tmspluginservice/common/Pay/v1.1/findMywallet').then(res => {
+  return fetch.get('/api-plugin/common/Pay/v1.1/findMywallet').then(res => {
     return res.data || 0
   })
 }
