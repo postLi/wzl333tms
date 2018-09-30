@@ -28,6 +28,11 @@
         width="120">
       </el-table-column>
       <el-table-column
+        label="手机号码"
+        prop="phone"
+        width="110">
+      </el-table-column>
+      <el-table-column
         label="发送时间"
         prop="sendTime"
         width="160">

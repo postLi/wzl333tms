@@ -83,6 +83,9 @@ export default {
     addOrgRightTable: { // 判断是否给orgRightTable添加一辆车
       type: [String, Number],
       default: () => {}
+    },
+    dofo: {
+      type: [Array, Object]
     }
   },
   data() {
@@ -246,7 +249,7 @@ export default {
         this.getinfoed2 = true
       }
     },
-    loadTable: { // 深度监听数组变换
+    loadTable: { // 深度监听数组变换  
       handler(cval, oval) { // 拿到智能配载返回的数据
         if (this.getinfoed2) {
           return
@@ -293,8 +296,7 @@ export default {
           console.log('delCurTruck5', cval.list.carLoadDetail, cval, this.orgRightTable.length)
           this.orgRightTable.splice(this.delData.number, 1)
         }
-        console.log('delCurTruck6', cval.list.carLoadDetail, this.orgRightTable)
-
+        console.log('delCurTruck6', cval.list.carLoadDetail, this.orgRightTable, this.dofo, this.rightTable)
       },
       deep: true
     },
@@ -350,6 +352,9 @@ export default {
     this.initTable()
   },
   computed: {
+    dofoLen() {
+      return this.dofo ? this.dofo.length : 0
+    },
     showLeftStyle() {
       let showWidth = '30%'
       showWidth = this.isShowLeftTable ? '100%' : (this.isShowRightTable ? '0%' : '30%')
@@ -507,34 +512,41 @@ export default {
       this.$emit('loadTable', this.orgRightTable)
     },
     goRight() { // 左边穿梭到右边
-      this.selectedLeft.forEach((e, index) => {
-        let find = this.rightTable.filter(em => {
-          return em.repertoryId === e.repertoryId
-        })
-        if (find.length === 0) {
-          e.loadAmount = e.repertoryAmount
-          e.loadWeight = e.repertoryWeight
-          e.loadVolume = e.repertoryVolume
-          console.log('goRight', this.truckIndex, this.rightTable, this.orgRightTable, this.orgRightTable[this.truckIndex])
-          this.rightTable.push(e)
-          this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
-          this.orgRightTable[this.truckIndex].push(e)
-          this.leftTable = this.leftTable.filter(el => {
-            return el.repertoryId !== e.repertoryId
+      console.log('this.loadTable goRight1', this.loadTable, this.dofoLen)
+      if (this.dofoLen === 0) {
+        this.$message.warning('请添加一个车型！')
+      }else {
+        this.selectedLeft.forEach((e, index) => {
+          let find = this.rightTable.filter(em => {
+            return em.repertoryId === e.repertoryId
           })
-          this.orgLeftTable = this.orgLeftTable.filter(el => {
-            return el.repertoryId !== e.repertoryId
-          })
-          console.log('2222222222222222222222', this.rightTable.length)
-        }
+          if (find.length === 0) {
+            e.loadAmount = e.repertoryAmount
+            e.loadWeight = e.repertoryWeight
+            e.loadVolume = e.repertoryVolume
+            console.log('goRight', this.truckIndex, this.rightTable, this.orgRightTable, this.orgRightTable[this.truckIndex])
+            this.rightTable.push(e)
+            this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
+            this.orgRightTable[this.truckIndex].push(e)
+            this.leftTable = this.leftTable.filter(el => {
+              return el.repertoryId !== e.repertoryId
+            })
+            this.orgLeftTable = this.orgLeftTable.filter(el => {
+              return el.repertoryId !== e.repertoryId
+            })
+            console.log('2222222222222222222222', this.rightTable.length)
+          }
 
-      })
-      this.$nextTick(() => {
-        this.setSort() // 右边列表行拖拽
-      })
-      this.tablekey = Math.random()
-      this.$emit('loadCurTable', this.rightTable)
-      this.$emit('loadTable', this.orgRightTable)
+        })
+        this.$nextTick(() => {
+          this.setSort() // 右边列表行拖拽
+        })
+        this.tablekey = Math.random()
+        console.log('this.loadTable goRight2')
+        this.$emit('loadCurTable', this.rightTable)
+        this.$emit('loadTable', this.orgRightTable)
+      }
+
     },
     dclickAddItem(row, event) { // 双击添加单行
       this.selectedLeft = []

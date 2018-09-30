@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="searchAll_lyy">
   <el-form-item label="自定义查询" class="zdycx">
     <el-select
       v-model="datalist"
@@ -18,17 +18,6 @@
         {{item.queryKey}} <i class="el-icon-circle-close-outline" @click.stop.prevent="deleteItem(item.id)"></i>
       </el-option>
     </el-select>
-    <!-- <el-autocomplete
-      v-model="datalist"
-      :fetch-suggestions="querySearchAsync"
-      placeholder="请输入内容"
-      @select="handleSelect"
-      clearable
-      >
-      <template slot-scope="{ item }">
-        <div class="name">{{ item.queryKey }}</div>
-      </template>
-    </el-autocomplete> -->
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
   <addSave :searchObj="searchObj" :popVisible="popVisible"    @close="closeAddDot" @success="fetchAllloadAll" />
@@ -147,9 +136,12 @@ export default {
 }
 </script>
 <style lang="scss">
+.searchAll_lyy{
+  display: inline;
+}
 .zdycx{
     .el-form-item__label{
-    width:85px !important;
+    font-size: 13px;
   }
   
 }
