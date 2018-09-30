@@ -85,7 +85,7 @@ export default {
       total: 0,
       dataList: [],
       popVisibleDialog: false,
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
       // {
@@ -208,9 +208,11 @@ export default {
       this.fetchList()
     },
     fetchList() {
+      this.loading = true
       return postFindLowList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
       }).catch((err)=>{
         this.loading = false
         this._handlerCatchMsg(err)

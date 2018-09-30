@@ -138,8 +138,7 @@ export default {
 <style lang="scss">
 .searchAll_lyy{
   display: inline;
-}
-.zdycx{
+  .zdycx{
     .el-form-item__label{
     font-size: 13px;
   }
@@ -158,4 +157,6 @@ export default {
     }
   }
 }
+}
+
 </style>
