@@ -108,7 +108,7 @@ export default {
       tableColumnLeftDepart: [{
           label: '运单号',
           prop: 'shipSn',
-          width: '140'
+          width: '130'
         },
         {
           label: '库存重量',
@@ -270,6 +270,7 @@ export default {
         this.leftTable = Object.assign([], cval.left)
         this.oldList = this.rightTable.map(v => v.repertoryId)
         this.newList = this.oldList.slice()
+        console.log('newList============', this.newList, this.rightTable.map(v => v.repertoryId))
         this.initTable()
       },
       deep: true
@@ -396,6 +397,7 @@ export default {
       } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
       }
+      
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽
       })
@@ -404,23 +406,8 @@ export default {
 
     },
     fetchList() {
-      // this.loading = false
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-
-      // getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => { // 库存运单列表
-      //     data.data.forEach(e => {
-      //       e.loadAmount = e.repertoryAmount
-      //   e.loadWeight = e.repertoryWeight
-      //   e.loadVolume = e.repertoryVolume
-      //     })
-      //     this.loading = true
-      //     this.orgLeftTable = data.data
-      //     this.initTable()
-      //   })
-      //   .catch(err => {
-      //     this._handlerCatchMsg(err)
-      //   })
     },
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
@@ -434,10 +421,11 @@ export default {
         onEnd: evt => {
           const targetRow = this.rightTable.splice(evt.oldIndex, 1)[0]
           this.rightTable.splice(evt.newIndex, 0, targetRow)
-          this.orgRightTable[this.truckIndex].splice(evt.newIndex, 0, targetRow)
+          this.orgRightTable[this.truckIndex] = Object.assign([],  this.rightTable)
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
+          console.log('setSort onEnd1=============================', this.orgRightTable, this.rightTable)
         }
       })
 
@@ -504,7 +492,7 @@ export default {
     goRight() { // 左边穿梭到右边
       if (this.dofoLen === 0) {
         this.$message.warning('请添加一个车型！')
-      }else {
+      } else {
         this.selectedLeft.forEach((e, index) => {
           let find = this.rightTable.filter(em => {
             return em.repertoryId === e.repertoryId

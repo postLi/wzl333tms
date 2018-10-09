@@ -5,8 +5,8 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_GX_ADD>新增配载
         </el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="doAction('Intelligent')" v-has:LOAD_GX_SMART>智能配载
-        </el-button>
+        <!-- <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="doAction('Intelligent')" v-has:LOAD_GX_SMART>智能配载
+        </el-button> -->
         <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')" v-has:LOAD_GX_LOADDEPART>发车
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deselectCar')" plain v-has:LOAD_GX_CANCELDEPART>取消发车
@@ -66,7 +66,6 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
-// import AddLntelligent from './components/intelligentParameterSet'
 // import AddLntelligent from './components/intelligentFreight'
 // import AddLntelligent from './components/intelligentHint'
 // import AddLntelligent from './components/intelligentPayHint'
@@ -375,7 +374,8 @@ export default {
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '././load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
+          console.log(this.$router)
           break
           // 添加客户
         case 'storage':
@@ -409,7 +409,7 @@ export default {
               return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
             }
           }
           break

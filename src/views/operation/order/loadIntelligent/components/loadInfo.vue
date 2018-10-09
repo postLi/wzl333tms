@@ -1,11 +1,13 @@
 <template>
   <div class="loadInfo_wrapper">
     <div class="loadInfo_btns clraefix">
-      <!-- <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
-      </el-button> -->
-      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">保存配载
+     <el-button type="primary" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading" disabled>保存当前方案
       </el-button>
-      <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">取消
+      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">存为配载单
+      </el-button>
+       <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
+      </el-button>
+      <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">关闭
       </el-button>
     </div>
     <div class="loadInfo_tab">

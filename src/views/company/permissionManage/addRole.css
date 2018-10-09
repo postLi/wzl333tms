@@ -16,6 +16,7 @@
 /*头部输入框*/
 .add-role-top{
   position: fixed;
+  /*position: absolute;*/
   z-index: 34;
   top: 25px;
   left: 0;

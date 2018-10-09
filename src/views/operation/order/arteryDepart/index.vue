@@ -1,29 +1,18 @@
 <template>
-  <div class="arteryDepart-manager tab-wrapper tab-wrapper-100">
+  <div class="arteryDepart-manager tab-wrapper">
+    <div class="eltab clearfix">
+      <router-link to="/operation/order/arteryDepart/sender" class="tab-label">干线配载列表</router-link>
+      <router-link to="/operation/order/arteryDepart/loadList" class="tab-label">智能配载列表</router-link>
+      <router-link to="/operation/order/repertory/allrepertory" class="tab-label">库存总表</router-link>
+    </div>
     <keep-alive>
-      <component v-bind:is="component"></component>
+      <router-view></router-view>
     </keep-alive>
   </div>
 </template>
 
 <script>
-import Sender from './sender'
-
 export default {
-  name: 'arteryDepart',
-  components: {
-    Sender
-  },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      component: 'Sender'
-    }
-  }
+  name: 'arteryDepart'
 }
 </script>

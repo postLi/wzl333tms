@@ -130,8 +130,31 @@ export default {
       path: '/operation/order/arteryDepart',
       icon: 'yygl6_fache',
       name: 'arteryDepart',
+      redirect: '/operation/order/arteryDepart/sender',
       component: _import('operation/order/arteryDepart/index'),
-      meta: { role: ['admin'], title: '干线发车', noCache: false, 'code': 'ORDER_ARTER' }
+      meta: { role: ['admin'], title: '干线发车', noCache: false, 'code': 'ORDER_ARTER' },
+      children: [{
+          path: '/operation/order/arteryDepart/sender',
+          icon: 'QQ',
+          name: '干线发车列表',
+          component: _import('operation/order/arteryDepart/sender'),
+          meta: { role: ['admin'], ptitle: '干线发车', title: '干线发车列表', noCache: true, istab: true, code: 'ORDER_ARTER' }
+        },
+        {
+          path: '/operation/order/arteryDepart/loadList',
+          icon: 'QQ',
+          name: '智能配载列表',
+          component: _import('operation/order/arteryDepart/loadList'),
+          meta: { role: ['admin'], ptitle: '干线发车', title: '智能配载列表', noCache: true, istab: true }
+        },
+        {
+          path: '/operation/order/repertory/allrepertory',
+          icon: 'QQ',
+          name: '当前总库存',
+          component: _import('operation/order/repertory/allrepertory'),
+          meta: { role: ['admin'], ptitle: '干线发车', title: '当前总库存', noCache: true, istab: true, code: 'ORDER_REPER_ALL'  }
+        }
+      ]
     },
     {
       path: '/operation/order/arteryDelivery',

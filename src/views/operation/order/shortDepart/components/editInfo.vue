@@ -1,10 +1,10 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" v-loading="loading" class="trackInfoPop">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" v-loading="loading" class="shortInfoPop">
     <template slot="content">
-      <div class="content_head">
+      <div class="truck_content_head">
         批次号： {{info.batchNo}}
       </div>
-      <div class="editInfoPop_content">
+      <div class="truck_editInfoPop_content">
         <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
           <el-tab-pane label="批次详情" name="first">
             <Detail :info="info" :arrivalStatus="info.bathStatusName" :isShow="popVisible" @isSuccess="isSuccess" :type="type" class="animated fadeInRight"></Detail>
@@ -32,7 +32,6 @@
                           </template>
                         </el-col>
                         <el-col :span="4" class="">
-                          <!-- <p>{{item.operatorTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</p> -->
                           <p>{{item.operatorTime}}</p>
                         </el-col>
                         <el-col :span="3" class="">
@@ -183,23 +182,23 @@ export default {
         if (valid) {
           if (this.formModel.id) {
             this.$confirm('此操作将修改跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.editTrack()
-            })
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.editTrack()
+              })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
           } else {
             this.$confirm('此操作将添加跟踪信息, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.addTrack()
-            })
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.addTrack()
+              })
               .catch(() => {
                 this.$message({ type: 'warning', message: '取消操作' })
               })
@@ -224,18 +223,18 @@ export default {
     },
     deleteTrack(item) {
       this.$confirm('此操作将删除本跟踪信息, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        return deleteTrack(item.id).then(data => {
-          this.$message({ type: 'success', message: '删除成功' })
-          this.getDetail()
-        })
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          return deleteTrack(item.id).then(data => {
+              this.$message({ type: 'success', message: '删除成功' })
+              this.getDetail()
+            })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
-      })
+        })
         .catch(() => {
           this.$message({ type: 'warning', message: '取消操作' })
         })
@@ -248,25 +247,25 @@ export default {
     editTrack() { // 修改
       this.formModel.transferId = 0
       putUpdateTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '修改成功' })
-        this.getDetail()
-        this.resetForm()
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+          this.$message({ type: 'success', message: '修改成功' })
+          this.getDetail()
+          this.resetForm()
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     addTrack() { // 添加
       this.formModel.loadId = this.id
       postAddTrack(this.formModel).then(data => {
-        this.$message({ type: 'success', message: '添加成功' })
-        this.getDetail()
-        this.resetForm()
-        this.getSystemTime()
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+          this.$message({ type: 'success', message: '添加成功' })
+          this.getDetail()
+          this.resetForm()
+          this.getSystemTime()
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     handleClick() {
       if (this.activeName === 'second') {
@@ -313,162 +312,177 @@ export default {
   vertical-align: middle;
 }
 
-.trackInfoPop {
+.shortInfoPop {
   width: 1000px !important;
-}
-
-.content_head {
-  background-color: #E9F3FA;
-  line-height: 36px;
-  height: 36px;
-  width: 100%;
-  padding: 0 10px;
-  position: fixed;
-  top: 30px;
-  left: 0;
-  z-index: 34;
-}
-
-.editInfoPop_content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .el-tabs__header {
-    position: fixed;
-    z-index: 34;
-    top: 66px;
-    left: 0;
-    padding: 0 10px;
-    background-color: #ffffff;
-    width: 100%;
+  .el-tabs{
+    height: 100%;
+    .el-tabs__content{
+      height: calc(100%);
+      .el-tab-pane{
+        height: calc(100% - 90px);
+      }
+    }
   }
-  .info_box {
-    margin: 76px 10px 0 10px;
+  .truck_content_head {
+    background-color: #E9F3FA;
+    line-height: 36px;
+    height: 36px;
+    width: 100%;
+    padding: 0 10px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    z-index: 34;
+  }
+  .truck_editInfoPop_content {
+    width: 100%;
+    height:100%;
     display: flex;
     flex-direction: column;
-    /* 覆盖ele样式 */
-    .el-form--inline .el-form-item {
-      margin-bottom: 0;
-    }
-    .el-step.is-vertical .el-step__head {
-      width: 18px;
-      position: relative;
-      top: 0px;
-    }
-    .el-step.is-vertical .el-step__line {
-      left: 8px;
-    }
-    .el-step__icon.is-text {
-      border-color: transparent;
-      border: 0;
-      width: 18px;
-      height: 18px;
-    }
-    .el-steps--vertical {
-      height: auto;
-    }
-    .el-step__main {
-      padding-bottom: 10px;
-    }
-    .el-step__description {
-      padding-right: 0;
-      font-size: 14px;
-      color: #333;
-    }
 
-    .textcenter {
-      text-align: center;
+    .el-tabs__header {
+      position: absolute;
+      z-index: 34;
+      top: 36px;
+      left: 0;
+      padding: 0 10px;
+      background-color: #ffffff;
+      width: 100%;
     }
-    .typebox {
-      background: url("../../../../../assets/png/track-bg.png") no-repeat;
-      width: 118px;
-      height: 24px;
-      padding-left: 16px;
-      text-align: center;
-      color: #333;
-      display: inline-block;
-      line-height: 24px;
-    }
-    .location {
-      background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-    }
-    .modifybtn,
-    .deletebtn {
-      display: inline-block;
-      display: none;
-      vertical-align: middle;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      margin-right: 3px;
-      background: url("../../../../../assets/png/delete-icon.png") no-repeat;
-
-      &:hover {}
-    }
-    /* 鼠标划过样式 */
-    .trackactive{
-    .modifybtn, .deletebtn{
-        display: inline-block;
+    .info_box {
+      margin: 76px 10px 0 10px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      /* 覆盖ele样式 */
+      .el-form--inline .el-form-item {
+        margin-bottom: 0;
       }
-    }
-    .trackactive,.firstactive {
+      .el-step.is-vertical .el-step__head {
+        width: 18px;
+        position: relative;
+        top: 0px;
+      }
+      .el-step.is-vertical .el-step__line {
+        left: 8px;
+      }
+      .el-step__icon.is-text {
+        border-color: transparent;
+        border: 0;
+        width: 18px;
+        height: 18px;
+      }
+      .el-steps--vertical {
+        height: auto;
+      }
+      .el-step__main {
+        padding-bottom: 10px;
+      }
+      .el-step__description {
+        padding-right: 0;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .textcenter {
+        text-align: center;
+      }
       .typebox {
-        background: url("../../../../../assets/png/track-active.png") no-repeat;
-        color: #fff;
+        background: url("../../../../../assets/png/track-bg.png") no-repeat;
+        width: 118px;
+        height: 24px;
+        padding-left: 16px;
+        text-align: center;
+        color: #333;
+        display: inline-block;
+        line-height: 24px;
       }
       .location {
-        background: url("../../../../../assets/png/active-point.png") no-repeat;
+        background: url("../../../../../assets/png/unactive-icon.png") no-repeat;
+        width: 18px;
+        height: 18px;
+        display: inline-block;
       }
-      .el-step__line {
-        background-color: #3e9ff1;
-      }
-    }
-    .modifybtn {
-      margin-left: 10px;
-      background: url("../../../../../assets/png/edit-icon.png") no-repeat;
-      margin-right: 8px;
-    }
-    .steptitle {
-      font-size: 14px;
-      color: #333;
-      height: 34px;
-    }
-    .stepItem_title {
-      color: #333;
-      margin-top: 10px;
-      padding-left: 28px;
-      height: 34px;
-      .el-col {
-        text-align: left;
-      }
-      .tracktype {
-        text-align: left;
-        text-indent: 20px;
-      }
-    }
+      .modifybtn,
+      .deletebtn {
+        display: inline-block;
+        display: none;
+        vertical-align: middle;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-right: 3px;
+        background: url("../../../../../assets/png/delete-icon.png") no-repeat;
 
-    .stepItem {
-      /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
-      .el-col>p {
-        min-width: 1px;
-        min-height: 1px;
+        &:hover {}
       }
-    }
-    .stepinfo {
-      flex: 1;
-      overflow: auto;
-    }
-    .stepinfo-footer {
-      border-top: 1px solid #d8d8d8;
-      height: 70px;
-      padding-top: 30px;
+      /* 鼠标划过样式 */
+      .trackactive {
+        .modifybtn,
+        .deletebtn {
+          display: inline-block;
+        }
+      }
+      .trackactive,
+      .firstactive {
+        .typebox {
+          background: url("../../../../../assets/png/track-active.png") no-repeat;
+          color: #fff;
+        }
+        .location {
+          background: url("../../../../../assets/png/active-point.png") no-repeat;
+        }
+        .el-step__line {
+          background-color: #3e9ff1;
+        }
+      }
+      .modifybtn {
+        margin-left: 10px;
+        background: url("../../../../../assets/png/edit-icon.png") no-repeat;
+        margin-right: 8px;
+      }
+      .steptitle {
+        font-size: 14px;
+        color: #333;
+        height: 34px;
+      }
+      .stepItem_title {
+        color: #333;
+        margin-top: 10px;
+        padding-left: 28px;
+        height: 34px;
+        .el-col {
+          text-align: left;
+        }
+        .tracktype {
+          text-align: left;
+          text-indent: 20px;
+        }
+      }
+
+      .stepItem {
+        /* 解决当出现空值项造成高度为0，使得样式坍塌的异常 */
+        .el-col>p {
+          min-width: 1px;
+          min-height: 1px;
+        }
+      }
+      .stepinfo {
+        flex: 1;
+        overflow: auto;
+      }
+      .stepinfo-footer {
+        border-top: 1px solid #d8d8d8;
+        height: 70px;
+        padding-top: 30px;
+      }
     }
   }
 }
+
+
+
+
 
 .stepFrom {
   background-color: #f2f2f2;
