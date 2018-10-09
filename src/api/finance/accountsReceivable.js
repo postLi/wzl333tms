@@ -423,3 +423,10 @@ export function deleteFeeDetail(id) {
 export function putChangeFromSign(data) {
   return fetch.put('/api-finance/finance/tmsfinancefeedetailreceivable/v1/updateFromSign', data)
 }
+
+/**
+ * 运单应收列表待办条数
+ */
+export function getListTotal() {
+  return fetch.get('/api-finance/finance/feeReceivable/v1/getReceivableToDoCount')
+}

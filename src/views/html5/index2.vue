@@ -70,7 +70,7 @@
           </div>
           <div class="databox-line"></div>
           <div :class="{'activetab':currenttab === 5}" @click="currenttab=5" class="databox datared">
-            <span class="databox-label">运输异常<i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i></span>
+            <span class="databox-label">运输异常<!-- <i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i> --></span>
             
             <span class="dataico"><icon-svg icon-class="btn27_yichangdj" /></span>
             <span class="databox-value">{{thedata.amountAbonormal}}票</span>
@@ -403,6 +403,8 @@ export default {
             name = 'dutyOrgId'
           } else if (this.currenttab === 6) {
             name = 'signWay'
+          } else {
+            name = 'shipToCityName'
           }
           monthArr.push(el[name])
         })

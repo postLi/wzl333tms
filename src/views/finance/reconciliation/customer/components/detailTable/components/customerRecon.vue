@@ -10,11 +10,12 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
-                        @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
-                        auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <el-input v-else v-model.trim="checkBillName"
+                         :disabled="disabledName"
+                        auto-complete="off" 
                         @blur="tooltip = false;disabledName = true"
-                        @mouseenter.native=" disabledName === true && (tooltip = true)"
+                        
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
 
             </el-tooltip>
@@ -1080,7 +1081,6 @@
             })
             this.loading = false
           }
-          
         }).catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -1344,6 +1344,12 @@
 <style lang="scss">
   .costomerCreat_lll {
     margin: 0 9px;
+
+    .el-table__footer-wrapper{
+      td:nth-child(n+1){
+        color: #fe0000;
+      }
+    }
     .sTop {
 
       .short_searchinfo {
@@ -1352,6 +1358,20 @@
         .sTitle {
           flex: 1;
           text-align: center;
+          .showBg{
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-bottom: 3px double #c0c4cc;
+            font-size: 18px;
+            color: #333333;
+            font-weight: 600;
+            line-height: 1.3;
+            max-width: 600px;
+            min-width: 100px;
+            text-align: center;
+            display: inline-block;
+          }
           .el-tooltip.showBg {
             .el-input__inner {
               border-left-color: #c0c4cc;
@@ -1383,19 +1403,19 @@
             font-weight: 600;
           }
           .el-input__inner {
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-top-color: transparent;
-            border-bottom: 3px double #c0c4cc;
+            
             font-size: 18px;
             color: #333333;
             font-weight: 600;
+            padding-left: 0;
+            padding-right: 0;
           }
           .el-input__inner:focus {
             border-bottom-color: #c0c4cc;
           }
           .el-input {
-            width: 158%;
+            display: block;
+            width: 600px;
           }
         }
         .el-form-item__content {
