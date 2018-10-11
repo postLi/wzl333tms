@@ -15,7 +15,7 @@
             <div class="content_left">
               <el-form :model="intelligentLeftData" :size="btnsize" ref="formModel" label-width="65px">
                 <el-form-item label="到达网点" prop="arriveOrgid">
-                  <SelectTree v-model="intelligentLeftData.arriveOrgid" :orgid="otherinfo.orgid" clearable class="orgClass" disabled></SelectTree>
+                  <SelectTree v-model="intelligentLeftData.arriveOrgid"  clearable class="orgClass" disabled></SelectTree>
                   <!--<el-input v-model="intelligentLeftData.arriveOrgid" disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="分摊方式" prop="apportionTypeId">
@@ -393,10 +393,10 @@ export default {
   methods: {
     converToCn() {
       let i = 0
-      let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
+      const arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
       this.changeNumCN = []
       while (i++ < 99) {
-        let nums = (i + '').split('')
+        const nums = (i + '').split('')
         let str = nums[1] ? (nums[0] === '1' ? '' : arr[nums[0]]) + '十' + (nums[1] === '0' ? '' : arr[nums[1]]) : arr[nums[0]]
         if (i === 10) {
           str = '十'
@@ -406,8 +406,8 @@ export default {
     },
     setCurPageView(index) { // 设置只显示三个车型
       console.log('setCurPageView1', index)
-      let maxShowLen = this.maxShowLen // 最多显示车型数量
-      let orgLen = this.intelligentData.dataList ? this.intelligentData.dataList.length : 0 // 车型列表的长度
+      const maxShowLen = this.maxShowLen // 最多显示车型数量
+      const orgLen = this.intelligentData.dataList ? this.intelligentData.dataList.length : 0 // 车型列表的长度
       if (orgLen) {
         if (orgLen > maxShowLen) {
           if (index + maxShowLen > orgLen) {
@@ -416,7 +416,6 @@ export default {
 
           console.log('setCurPageView2', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList.slice(index, index + 3)
-
         } else {
           console.log('setCurPageView3', index)
           this.showCurPagesData.dataList = this.intelligentData.dataList
@@ -462,14 +461,14 @@ export default {
         this.$message({
           type: 'success',
           message: '已关闭成功!'
-        });
+        })
         this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已成功取消!'
-        });
-      });
+        })
+      })
     },
     addFreight(val, index, item) {
       this.intFreightItem = Object.assign({}, item.tmsOrderLoadFee)
@@ -503,7 +502,7 @@ export default {
       this.getSystemTruck()
     },
     getSystemTruck() {
-      let obj = {
+      const obj = {
         pageNum: 1,
         pageSize: 100
       }
@@ -606,7 +605,7 @@ export default {
       if (!this.paramTuck || this.paramTuck.length < 1) {
         this.$message.warning('请进行参数设置')
       } else {
-        let arr = []
+        const arr = []
         this.paramTuck.forEach(e => {
           arr.push({
             cid: e.cid,
@@ -628,7 +627,7 @@ export default {
       let arr = []
       let data = {} // 数组中的单个对象
       arr = Object.assign([], this.intelligentData.dataList)
-      console.log('arr.length',arr.length)
+      console.log('arr.length', arr.length)
       arr.forEach((e, index) => {
         console.log('eeeee111', e)
         this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
@@ -654,7 +653,7 @@ export default {
           truckUserId: e.truckUserId,
           loadTypeId: this.intelligentLeftData.loadTypeId,
           orgid: this.otherinfo.orgid,
-          remark: e.remark,
+          remark: e.remark
         }
         this.$set(e, 'tmsOrderLoad', curinfo)
         this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
@@ -699,7 +698,7 @@ export default {
               } else {
                 postIntnteSmartLoad(this.loadDataArray).then(res => {
                   this.$message({ type: 'success', message: '保存配载成功！' })
-                  this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
+                  this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() }})
                   this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
                   this.loading = false
                 }).catch(err => {
@@ -725,7 +724,6 @@ export default {
         this.$set(this.intelligentData.dataList[index].tmsOrderLoadFee, 'nowpayCarriage', val)
       }
       this.$emit('truckPrecent', this.intelligentData.dataList[index])
-
     },
     selectCurrentTuck(index, item) {
       this.currentIndex = index
@@ -747,16 +745,16 @@ export default {
       // this.$set(this.showCurrenFormStyle, this.currentIndex, true)
       var len = this.intelligentData.dataList.length
       if (this.currentIndex < 0 && len) {
-        console.log('delCurTruck2.2',this.currentIndex)
+        console.log('delCurTruck2.2', this.currentIndex)
         this.currentIndex = 0
         this.showCurrenFormStyle[this.currentIndex] = true
-      }else if (index > 0){
+      } else if (index > 0) {
         this.$set(this.showCurrenFormStyle, this.currentIndex, true)
 
         // this.showCurrenFormStyle[this.currentIndex] = true
-        console.log('delCurTruck2.3',this.currentIndex, this.showCurrenFormStyle[this.currentIndex])
-      }else {
-        console.log('delCurTruck2.4',this.currentIndex)
+        console.log('delCurTruck2.3', this.currentIndex, this.showCurrenFormStyle[this.currentIndex])
+      } else {
+        console.log('delCurTruck2.4', this.currentIndex)
       }
       // var flag = false
       // while (len--) {
@@ -773,7 +771,7 @@ export default {
       // if (!flag) {
       //   this.showCurrenFormStyle[this.currentIndex] = true
       // }
-      
+
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckInfo', this.intelligentData.dataList)
       this.$emit('truckPrecent', this.intelligentData.dataList[0])
@@ -819,7 +817,6 @@ export default {
       this.setCurPageView(index - 2) // 设置显示
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
-
     },
     pretruck() { // 展示上一个车型
       if (this.intelligentData.dataList.length < 2) { // 列表为空或者有一条数据的时候 都不可以切换
