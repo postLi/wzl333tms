@@ -79,7 +79,7 @@ export function putLoadDepart(params) {
 /**
  * 获取公司车辆及其对应司机
  */
-export function getTrucK () {
+export function getTrucK() {
   return fetch.get('/api-system/system/trunk/v1/findCarAndDriver/').then(data => {
     return data
   })
@@ -87,7 +87,7 @@ export function getTrucK () {
 /**
  * 获取公司司机及其对应车辆
  */
-export function getDrivers () {
+export function getDrivers() {
   return fetch.get('/api-system/system/trunk/v1/findDriverAndCar/').then(data => {
     return data
   })

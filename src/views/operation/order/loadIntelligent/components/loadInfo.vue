@@ -1,23 +1,23 @@
 <template>
-  <div class="loadInfo_wrapper">
+  <div class="loadInfo_wrapper" v-loading="loading">
     <div class="loadInfo_btns clraefix">
-     <el-button type="primary" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading" disabled>保存当前方案
+      <el-button type="primary" @click="saveForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">保存当前方案
       </el-button>
-      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">存为配载单
+      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
       </el-button>
-       <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" :disabled="isSubmitLoad">计算配载
+      <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" >计算配载
       </el-button>
       <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">关闭
       </el-button>
     </div>
     <div class="loadInfo_tab">
-      <el-tabs type="border-card">
-        <el-tab-pane label="方案一">
+      <el-tabs type="border-card" v-model="activeTab" :closable="transpList && transpList.length !==1" @tab-remove="removeTab" @tab-click="tabSelect" ref="schemeTab">
+        <el-tab-pane :label="(transpIndex === 0 ? '原始方案' :'方案'+changeNumCN[transpIndex])" v-for="(transpItem, transpIndex) in transpList" :key="transpIndex" :name="transpIndex + ''" :object="transpList">
           <div class="loadInfo_content">
             <div class="content_left">
               <el-form :model="intelligentLeftData" :size="btnsize" ref="formModel" label-width="65px">
                 <el-form-item label="到达网点" prop="arriveOrgid">
-                  <SelectTree v-model="intelligentLeftData.arriveOrgid" :orgid="otherinfo.orgid" clearable class="orgClass" disabled></SelectTree>
+                  <SelectTree v-model="intelligentLeftData.arriveOrgid" clearable class="orgClass" disabled></SelectTree>
                   <!--<el-input v-model="intelligentLeftData.arriveOrgid" disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="分摊方式" prop="apportionTypeId">
@@ -112,7 +112,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import { REGEX } from '@/utils/validate'
-import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2, tmsMath } from '@/utils/index'
 import { mapGetters } from 'vuex'
 import SelectType from '@/components/selectType/index'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
@@ -122,7 +122,7 @@ import { getAllDriver } from '@/api/company/driverManage'
 import { getSystemTime } from '@/api/common'
 import AddLntelligentFreight from './intelligentFreight'
 import { postIntnteSmartLoad } from '@/api/operation/arteryDepart'
-import { getIntnteSMainInfoList } from '@/api/operation/arteryDepart'
+import { postSaveScheme, deleteSchemeById, putUpdateScheme, getIntnteCarInfo, getIntnteInit } from '@/api/operation/arteryDepart'
 
 export default {
   components: {
@@ -133,6 +133,7 @@ export default {
     AddLntelligentFreight
   },
   props: {
+    modify: Boolean, // true-修改方案 false-新增配载
     orgid: [Number, String],
     dofo: [Array, Object],
     model: [Array, Object],
@@ -142,6 +143,18 @@ export default {
     paramTuck: {
       type: [Array, Object],
       default: () => {}
+    },
+    transpList: {
+      type: Array,
+      default: []
+    },
+    leftTableArr: {
+      type: Array,
+      default: []
+    },
+    orgFirstScheme: {
+      type: Array,
+      default: []
     }
   },
   computed: {
@@ -183,7 +196,14 @@ export default {
   },
   data() {
     return {
-      truckOptions: [],
+      loading: false,
+      tabInfo: {
+        all: null, // 整个tab实例
+        name: '', // 当前tab的下标
+        list: [], // 方案组
+        object: {} // 当前方案 
+      },
+      activeTab: '0',
       noLoadListCount: 0,
       intFreightItem: {},
       intFreightIndex: '',
@@ -202,6 +222,7 @@ export default {
       addDriverVisible: false,
       lntelligentFVisible: false,
       saveLoading: false,
+      submitLoading: false,
       inited: false,
       loadInfoPercentOrg: [],
       loadTableInfo: [],
@@ -268,6 +289,7 @@ export default {
       pretruckDisable: true,
       nexttruckDisable: false,
       loadDataArray: [],
+      loadDataObject: {},
       maxShowLen: 3,
       maxDataLength: 20,
       truckTotalPage: 0,
@@ -289,10 +311,27 @@ export default {
         leaveOtherFee: '',
         arriveHandlingFee: '',
         arriveOtherFee: ''
-      }
+      },
+      initOrgFirstScheme: false,
+      firstScheme: [],
+      isEditCurrentScheme: false // true-修改当前方案 false-添加当前方案
     }
   },
   watch: {
+    orgFirstScheme: {
+      handler(newVal) {
+        if (!this.initOrgFirstScheme) {
+          this.initOrgFirstScheme = true
+          this.firstScheme = objectMerge2([], this.orgFirstScheme)
+        }
+      }
+    },
+    leftTableArr: {
+      handler(newVal) {}
+    },
+    modify: {
+      handler(newVal) {}
+    },
     orgid: {
       handler(newVal) {
         this.intelligentLeftData.arriveOrgid = this.orgid
@@ -302,6 +341,14 @@ export default {
     dofo: {
       handler(newVal) {
         if (!this.inited2) {
+          this.tabInfo = {
+            all: null, // 整个tab实例
+            name: '0', // 当前tab的下标
+            list: this.transpList, // 方案组
+            object: this.transpList[0] // 当前方案 
+          }
+          // this.orgFirstScheme = objectMerge2({}, this.transpList) // 页面存储原始方案为副本，方便添加后还原数据
+          console.warn('======this.orgFirstScheme=====', this.orgFirstScheme)
           this.intelligentData.dataList = Object.assign([], this.dofo)
           this.intelligentData.dataList.forEach((e, index) => {
             this.inited2 = true
@@ -310,14 +357,26 @@ export default {
             e.weight = e.weight ? e.weight : 0
             e.volume = e.volume ? e.volume : 0
             e._index = index
-            this.$set(e, 'tmsOrderLoadFee', this.feeData)
-            this.$set(e.tmsOrderLoadFee, 'nowpayCarriage', e.price)
-            this.feeData = this.$options.data().feeData
+            this.truckOptions.forEach(el => {
+              if (el.cid === e.cid + '') {
+                this.$set(e, 'name', el.name)
+              }
+            })
+            if (!this.modify) {
+              this.intelligentLeftData.arriveOrgid = this.orgid
+              this.$set(e, 'tmsOrderLoadFee', this.feeData)
+              this.$set(e.tmsOrderLoadFee, 'nowpayCarriage', e.price)
+              this.feeData = this.$options.data().feeData
+            } else {
+              this.intelligentLeftData.arriveOrgid = e.arriveOrgid
+              this.intelligentLeftData.apportionTypeId = e.apportionTypeId
+            }
           })
           this.showCurPagesData = Object.assign({}, this.intelligentData)
           this.setCurPageView(0) // 设置显示
           this.$emit('truckIndex', this.currentIndex)
           this.$emit('truckPrecent', this.intelligentData.dataList[0])
+          this.$emit('schemeIndex', this.tabInfo.name)
         }
       }
     },
@@ -332,64 +391,85 @@ export default {
         }
       }
     },
+    transpList: {
+      handler(cval, oval) {
+        if (cval) {
+          console.log('=====transpList====', cval)
+
+        }
+      }
+    },
     paramTuck: {
       handler(cval, oval) {
-        // 计算配载按钮显示可用
+          // 计算配载按钮显示可用
         this.isSubmitLoad = false
-        // 替换车型列表 并显示
-        let selArr = []
-        // 保存需要去除的运单
-        if (cval.length < this.intelligentData.dataList.length) {
-          this.preDelDataList = this.intelligentData.dataList.slice(cval.length, this.intelligentData.dataList.length)
-        } else {
-          this.pretruckDisable = []
-        }
-        cval.forEach((e, index) => {
-          selArr.push({
-            name: e.name,
-            cid: e.cid,
-            volume: e.vol ? e.vol : 0,
-            weight: e.weight ? e.weight : 0,
-            price: e.price,
-            carDriver: '',
-            tagid: e.tagid,
-            carDriverId: '',
-            carDriverPhone: '',
-            carId: '',
-            carLoadDetail: this.intelligentData.dataList[index] ? this.intelligentData.dataList[index].carLoadDetail : [],
-            carNo: '',
-            reachDate: '',
-            spri: '',
-            svol: '',
-            swei: '',
-            url: '',
-            loadTime: parseTime(new Date()),
-            tmsOrderLoadFee: this.feeData,
-            planArrivedTime: '',
-            requireArrivedTime: '',
-            _index: index
-          })
-        })
+        // 替换车型列表 并显示 需求只能选择一个车型来替换当前的车型
+        // let selArr = []
+          this.getIntnteCarInfo()
+          let selObj = Object.assign({}, cval[0])
+          console.warn('paramTuck', cval, oval)
+          this.$set(this.intelligentData.dataList[this.currentIndex], 'cid', selObj.cid)
+          this.$set(this.intelligentData.dataList[this.currentIndex], 'name', selObj.name)
+          this.$set(this.intelligentData.dataList[this.currentIndex], 'volume', selObj.vol)
+          this.$set(this.intelligentData.dataList[this.currentIndex], 'weight', selObj.weight)
 
-        this.intFreightIndex = 0
-        this.currentIndex = 0
-        this.showCurrenFormStyle = []
-        this.showCurrenFormStyle[this.currentIndex] = true
-        this.$emit('truckIndex', this.currentIndex)
-        this.intelligentData.dataList = Object.assign([], selArr)
-        selArr = []
-        this.setCurPageView(0) // 设置显示
-        this.showCurPagesData = Object.assign({}, this.intelligentData)
-        // 如果选择的车型比之前的车型列表数量少 就要把运单返回到左边列表
-        this.$emit('resetTrucDelList')
+        // 保存需要去除的运单
+        // if (cval.length < this.intelligentData.dataList.length) {
+        //   this.preDelDataList = this.intelligentData.dataList.slice(cval.length, this.intelligentData.dataList.length)
+        // } else {
+        //   this.pretruckDisable = []
+        // }
+        // cval.forEach((e, index) => {
+        //   selArr.push({
+        //     name: e.name,
+        //     cid: e.cid,
+        //     volume: e.vol ? e.vol : 0,
+        //     weight: e.weight ? e.weight : 0,
+        //     price: e.price,
+        //     carDriver: '',
+        //     tagid: e.tagid,
+        //     carDriverId: '',
+        //     carDriverPhone: '',
+        //     carId: '',
+        //     carLoadDetail: this.intelligentData.dataList[index] ? this.intelligentData.dataList[index].carLoadDetail : [],
+        //     carNo: '',
+        //     reachDate: '',
+        //     spri: '',
+        //     svol: '',
+        //     swei: '',
+        //     url: '',
+        //     loadTime: parseTime(new Date()),
+        //     tmsOrderLoadFee: this.feeData,
+        //     planArrivedTime: '',
+        //     requireArrivedTime: '',
+        //     _index: index
+        //   })
+        // })
+
+        // this.intFreightIndex = 0
+        // this.currentIndex = 0
+        // this.showCurrenFormStyle = []
+        // this.showCurrenFormStyle[this.currentIndex] = true
+        // this.$emit('truckIndex', this.currentIndex)
+        // this.intelligentData.dataList = Object.assign([], selArr)
+        // selArr = []
+        // this.setCurPageView(0) // 设置显示
+        // this.showCurPagesData = Object.assign({}, this.intelligentData)
+        // // 如果选择的车型比之前的车型列表数量少 就要把运单返回到左边列表
+        // this.$emit('resetTrucDelList')
       }
     }
   },
   mounted() {
+    this.getIntnteCarInfo()
     this.converToCn()
     this.init()
     this.getSystemTime()
-    this.intelligentLeftData.arriveOrgid = this.orgid
+    if (this.modify) {
+
+    } else {
+      this.intelligentLeftData.arriveOrgid = this.orgid
+    }
   },
   methods: {
     converToCn() {
@@ -425,7 +505,6 @@ export default {
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
-          // this.showMessage(msg)
           callback(new Error(msg))
         } else {
           callback()
@@ -458,13 +537,8 @@ export default {
           type: 'success',
           message: '已关闭成功!'
         });
-        this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已成功取消!'
-        });
-      });
+        this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart/loadList')
+      }).catch(() => {})
     },
     addFreight(val, index, item) {
       this.intFreightItem = Object.assign({}, item.tmsOrderLoadFee)
@@ -483,6 +557,7 @@ export default {
         this.inited = true
         this.initInfo()
       }
+
     },
     initInfo() { // 车牌号和司机信息 init
       this.loading = false
@@ -495,15 +570,12 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
-      this.getSystemTruck()
     },
-    getSystemTruck() {
-      let obj = {
-        pageNum: 1,
-        pageSize: 100
-      }
-      getIntnteSMainInfoList(obj).then(data => {
-        this.truckOptions = data.list
+    getIntnteCarInfo() {
+      // 获取车型列表
+      // sign 1查询系统车型 2查询当前网点自定义车型 3查询系统车型+当前网点自定义车型
+      getIntnteCarInfo(this.otherinfo.orgid, 3).then(data => {
+        this.truckOptions = data
       })
     },
     getDrivers(orgid) {
@@ -568,6 +640,7 @@ export default {
     },
     handleTuckOptions(val, item, index) {
       let obj = {}
+      this.isSubmitLoad = false
       this.truckOptions.forEach(e => {
         if (e.name === val) {
           obj = Object.assign({}, e)
@@ -577,6 +650,7 @@ export default {
 
       this.$set(this.intelligentData.dataList[index], 'volume', obj.vol)
       this.$set(this.intelligentData.dataList[index], 'weight', obj.weight)
+      this.$set(this.intelligentData.dataList[index], 'cid', obj.cid)
     },
     fetchData() {
       this.initInfo() // 添加完司机或车辆之后，刷新下拉数据
@@ -597,47 +671,114 @@ export default {
     openlntelligent() {
       this.lntelligentFVisible = true
     },
-    submitLoad() { // 结算配载\\
-      if (!this.paramTuck || this.paramTuck.length < 1) {
-        this.$message.warning('请进行参数设置')
-      } else {
-        let arr = []
-        this.paramTuck.forEach(e => {
-          arr.push({
-            cid: e.cid,
-            price: e.price
-          })
-        })
+    submitLoad() { // 计算配载
+      console.log('this.intelligentData.dataList', this.intelligentData.dataList)
+      // if (!this.paramTuck || this.paramTuck.length < 1) {
+      //   this.$message.warning('请进行参数设置')
+      // } else {
         this.loading = true
-        this.$router.push({
-          path: '/operation/order/loadIntelligent/components/intelligentImg',
-          query: {
-            orgId: this.$route.query.orgId,
-            sendData: JSON.stringify(arr)
+        let truckObject = {
+          orgId: this.intelligentLeftData.arriveOrgid,
+          standCar: []
+        }
+        if (this.intelligentData.dataList.length ===0) {
+          this.$message.warning('请添加车型！')
+          return
+        }
+        this.intelligentData.dataList.forEach(e => {
+          let item = {
+            id: e.id ? e.id : e.cid,
+            spri: e.price ?  e.spri : 0,
+            carNo: e.truckIdNumber ? e.truckIdNumber : ''
+          }
+          truckObject.standCar.push(item)
+          item = {}
+        })
+        console.log('submitLoad', truckObject)
+        
+        getIntnteInit(truckObject).then(data => {
+          if (data) {
+          this.loading = false
+            console.log('计算配载', data)
+            let arr = objectMerge2([], data.transp)
+            arr.forEach((e, index) => {
+              this.$set(e, 'repertoryList', e.storeOrderListloss)
+              this.$set(e, 'tmsLoadSchemeDetailDtoList', e.standacars)
+              e.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
+                this.$set(el, 'arriveOrgid', truckObject.orgId)
+                this.$set(el, 'dirverName', el.carDriver ? el.carDriver : '')
+                this.$set(el, 'dirverMobile', el.carDriverPhone ? el.carDriverPhone : '')
+                this.$set(el, 'truckIdNumber', el.carNo ? el.carNo : '')
+                this.$set(el, '_index', elindex)
+                let obj = {}
+                for (let item in el) {
+                  this.$set(obj, item, el[item])
+                }
+                this.$set(el, 'tmsOrderLoad', obj)
+                this.$set(el, 'tmsOrderLoadDetailsList', el.carLoadDetail)
+                this.$set(el, 'tmsOrderLoadFee', { nowpayCarriage: el.price })
+              })
+              console.log('计算配置后格式化的json', arr)
+            })
+            this.tabInfo.object.tmsLoadSchemeDetailDtoList = Object.assign([], arr[0].tmsLoadSchemeDetailDtoList)
+            // this.transpList[this.tabInfo.name] = arr[0]
+            // this.tabInfo.object = objectMerge2({}, arr[0])
+            // this.tabInfo.list[this.tabInfo.name] = this.tabInfo.object
+            // this.intelligentData.dataList = Object.assign([], arr)
+
+             // 区域二  intelligentData
+          this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+          this.showCurPagesData = Object.assign({}, this.intelligentData)
+          this.setCurPageView(0) // 设置显示
+          this.currentIndex = 0
+          this.showCurrenFormStyle = []
+          this.showCurrenFormStyle[this.currentIndex] = true
+          this.$emit('truckIndex', this.currentIndex)
+          this.$emit('truckPrecent', this.intelligentData.dataList[0])
+          this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+          this.$emit('submitLoadNew', {
+            left: this.tabInfo.object.repertoryList,
+            right: this.intelligentData.dataList
+          })
+            truckObject = {}
+          } else {
+            truckObject = {}
+            this.$message({ type: 'warning', message: '无配载信息' })
           }
         })
-        this.eventBus.$emit('closeCurrentView')
-      }
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
+      // }
     },
-    setData() { // 设置提交给后台的数据结构
+    setData(orgFirstScheme) { // 为存为配载单设置提交给后台的数据结构
+      this.loadDataObject = {
+        schemeGroup: '',
+        tmsLoadSchemeDetailDtoList: []
+      }
       let arr = []
       let data = {} // 数组中的单个对象
-      arr = Object.assign([], this.intelligentData.dataList)
-      arr.forEach((e, index) => {
-        this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
-      })
+      arr = objectMerge2([], orgFirstScheme ? this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList : this.intelligentData.dataList)
+      console.log('this.orgFirstScheme', this.orgFirstScheme)
+      console.log('this.intelligentData.dataList', this.intelligentData.dataList, this.tabInfo)
+      // arr.forEach((e, index) => {
+      //   this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
+      // })
+
       this.noLoadListCount = 0
       this.loadDataArray = []
       arr.forEach((e, index) => {
+        this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
         let curinfo = {
-          apportionTypeId: this.intelligentLeftData.apportionTypeId,
+          apportionTypeId: orgFirstScheme ? '' : this.intelligentLeftData.apportionTypeId,
           arriveOrgid: this.intelligentLeftData.arriveOrgid,
           contractNo: e.contractNo || '',
           batchNo: e.batchNo || '',
           batchTypeId: this.intelligentLeftData.batchTypeId,
-          truckIdNumber: e.truckIdNumber,
-          dirverName: e.dirverName,
-          dirverMobile: e.dirverMobile,
+          truckIdNumber: e.truckIdNumber ? e.truckIdNumber : '',
+          dirverName: e.dirverName ? e.dirverName : '',
+          dirverMobile: e.dirverMobile ? e.dirverMobile : '',
           truckLoad: e.weight,
           truckVolume: e.volume,
           loadTime: e.loadTime,
@@ -647,6 +788,7 @@ export default {
           loadTypeId: this.intelligentLeftData.loadTypeId,
           orgid: this.otherinfo.orgid,
           remark: e.remark,
+          cid: e.id ? e.id : (e.cid ? e.cid : null)
         }
         this.$set(e, 'tmsOrderLoad', curinfo)
         this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
@@ -657,54 +799,284 @@ export default {
           em.loadWeight = em.repertoryWeight
           em.loadVolume = em.repertoryVolume
         })
-        this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
-        this.$set(this.loadDataArray, index, data)
+        if (orgFirstScheme) {
+          console.error(this.orgFirstScheme)
+          this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList.forEach((em, emindex) => {
+            this.$set(data, 'tmsOrderLoadDetailsList', em.carLoadDetail)
+          })
+          this.$set(this.loadDataArray, index, data)
+        } else {
+          this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
+          this.$set(this.loadDataArray, index, data)
+        }
         data = {}
         curinfo = {}
-        // this.loadDataArray = this.loadDataArray.filter((e, index) => {
-        //   return (e.tmsOrderLoadDetailsList && e.tmsOrderLoadDetailsList.length > 0)
-        // })
       })
-      this.loadDataArray.forEach(e => { // 计算几个车型 是否有配载清单为空的 如果为空就加一不可以提交
-        if (e.tmsOrderLoadDetailsList.length === 0) {
-          this.noLoadListCount++
+      if (!orgFirstScheme) {
+        // 计算几个车型 是否有配载清单为空的 如果为空就加一不可以提交
+        // 保存方案时，配载清单可以为空，提交配载单时，不能为空
+        this.loadDataArray.forEach(e => {
+          if (e.tmsOrderLoadDetailsList.length === 0) {
+            this.noLoadListCount++
+          }
+        })
+      }
+    },
+    setSaveData(orgFirstScheme) {
+      // setSaveData()为保存当前方案设置提交的数据结构
+      // 如果当前方案组有 方案组标识schemeGroup (true) 就【不需要保存原始方案】
+      // 如果当前方案组没有 方案组标识schemeGroup (false) 【需要保存原始方案】以及【当前方案】
+      // 如果有方案组就会直接添加当前方案到方案组里面，否则就新增一条当前方案到列表
+      console.log('this.transpList[0].schemeGroup', this.transpList[0].schemeGroup)
+
+      if (this.transpList[0].schemeGroup) {
+        this.setData()
+        this.$set(this.loadDataObject, 'schemeGroup', this.transpList[0].schemeGroup)
+        this.$set(this.loadDataObject, 'tmsLoadSchemeDetailDtoList', this.loadDataArray)
+      } else {
+        if (orgFirstScheme) {
+          this.setData(orgFirstScheme) // 设置原始方案
+        } else {
+          this.setData() // 设置当前方案
+        }
+        this.$set(this.loadDataObject, 'schemeGroup', '')
+        this.$set(this.loadDataObject, 'tmsLoadSchemeDetailDtoList', this.loadDataArray)
+      }
+    },
+    saveForm() { // 保存当前方案
+      this.saveLoading = true
+      this.loading = true
+      if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
+        this.$message.warning('配载清单不可以为空')
+        this.noLoadListCount = 0
+        this.saveLoading = false
+        return
+      }
+      if (!this.transpList[0].schemeGroup) {
+        // 新增保存 原始方案
+        this.setSaveData(true)
+        console.log('需要添加原始方案', this.loadDataObject)
+        this.postSaveScheme(this.loadDataObject)
+      } else {
+        // 如果当前方案右schemeId 那么为修改当前方案 否则为新增当前方案
+        this.isEditCurrentScheme = this.tabInfo.object.schemeId ? true : false
+        console.log('saveForm - isEditCurrentScheme', this.isEditCurrentScheme, this.tabInfo.name)
+        if (this.isEditCurrentScheme && this.tabInfo.name !== '0') {
+          // 修改保存 当前方案
+          this.setSaveData()
+          console.log('需要修改当前方案', this.loadDataObject)
+          this.$set(this.loadDataObject, 'schemeId', this.tabInfo.object.schemeId)
+          this.putUpdateScheme(this.loadDataObject)
+        } else {
+          // 新增保存 当前方案
+          this.setSaveData()
+          console.log('需要添加当前方案', this.loadDataObject, this.transpList[0].schemeGroup)
+          this.postSaveScheme(this.loadDataObject)
+        }
+      }
+
+    },
+    putUpdateScheme(dataObject) {
+      putUpdateScheme(dataObject).then(data => {
+          if (data) {
+            this.saveLoading = false
+            this.loading = false
+            console.log('editForm', data)
+            this.$message({ type: 'success', message: '修改当前方案成功！' })
+            this.eventBus.$emit('replaceCurrentView', {
+              path: '/operation/order/loadIntelligent/load',
+              query: {
+                tab: '智能配载',
+                schemeGroup: data.schemeGroup,
+                orgid: this.otherinfo.orgid,
+                time: new Date().getTime()
+              }
+            })
+            console.log('修改后刷新页面后的tabinfo', this.tabInfo)
+          }
+        })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
+    },
+    postSaveScheme(dataObject) {
+      // 调用保存接口以及将成功返回的方案组标识schemeGroup和当前方案的id分别设置进方案中，
+      // 以便删除和修改方案
+      postSaveScheme(dataObject).then(data => {
+          if (data) {
+            this.saveLoading = false
+            console.log('saveForm', data)
+            if (this.transpList[0].schemeGroup) {
+              this.$message({ type: 'success', message: '保存当前方案成功！' })
+            } else {
+              this.$message({ type: 'success', message: '保存原始方案成功！' })
+            }
+            let loadDataObject = objectMerge2({}, dataObject)
+            // 设置页面显示数据结构
+            this.$set(loadDataObject, 'schemeGroup', data.schemeGroup)
+            this.$set(loadDataObject, 'schemeId', data.schemeId)
+            if (this.initScheme) {
+              this.eventBus.$emit('replaceCurrentView', {
+                path: '/operation/order/loadIntelligent/load',
+                query: {
+                  tab: '智能配载',
+                  schemeGroup: data.schemeGroup,
+                  orgid: this.otherinfo.orgid,
+                  time: new Date().getTime()
+                }
+              })
+            }
+            if (this.transpList[0].schemeGroup === '' || this.transpList[0].schemeGroup === undefined || !this.transpList[0].schemeGroup) {
+              this.transpList[0] = this.orgFirstScheme[0]
+              this.$set(this.transpList[0], 'schemeGroup', data.schemeGroup)
+              this.$set(this.transpList[0], 'schemeId', data.schemeId)
+              this.orgFirstScheme[0] = objectMerge2({}, this.transpList[0])
+              this.initScheme = true
+              this.saveForm()
+            }
+
+            this.$set(loadDataObject, 'repertoryList', this.leftTableArr)
+            loadDataObject.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
+              this.$set(el, 'carLoadDetail', el.tmsOrderLoadDetailsList)
+              this.$set(el, '_index', elindex)
+              for (let item in el.tmsOrderLoad) {
+                this.$set(el, item, el.tmsOrderLoad[item])
+                this.$set(el, 'weight', el.tmsOrderLoad.truckLoad)
+                this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
+              }
+              this.truckOptions.forEach(em => {
+                if (em.cid === el.cid) {
+                  this.$set(el, 'name', em.name)
+                }
+              })
+              // 计算现付费用 为 车型费用price
+              let totalPrice = tmsMath.add(
+                el.tmsOrderLoadFee.nowpayCarriage,
+                el.tmsOrderLoadFee.nowpayOilCard,
+                el.tmsOrderLoadFee.backpayCarriage,
+                el.tmsOrderLoadFee.backpayOilCard,
+                el.tmsOrderLoadFee.arrivepayCarriage,
+                el.tmsOrderLoadFee.arrivepayOilCard).result()
+              this.$set(el, 'price', totalPrice)
+              totalPrice = 0
+            })
+            // 将新的方案添加到方案组列表里面
+            if (!this.initScheme) {
+              this.transpList.push(loadDataObject)
+            }
+            this.activeTab = this.transpList.length - 1 + '' // 设置高亮最新的tab
+            this.tabInfo.name = this.activeTab
+            this.tabInfo.object = this.tabInfo.list[this.activeTab]
+            loadDataObject = {}
+            this.loading = false
+            // 高亮最新的方案
+            this.$emit('schemeIndex', this.activeTab)
+          }
+        })
+        .catch(err => {
+          this.saveLoading = false
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
+    },
+    submitForm() { // 存为配载单
+      this.submitLoading = true
+      console.log("this.$refs['ruleForm']", this.$refs['ruleForm'], this)
+      this.$refs['ruleForm'][0].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          this.setData()
+          if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
+            this.$message.warning('配载清单不可以为空')
+            this.noLoadListCount = 0
+            this.submitLoading = false
+            return false
+          } else {
+            postIntnteSmartLoad(this.loadDataArray).then(res => {
+              this.$message({ type: 'success', message: '保存配载成功！' })
+              this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
+              this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
+              this.loading = false
+            }).catch(err => {
+              this.submitLoading = false
+              this._handlerCatchMsg(err)
+              this.loading = false
+            })
+          }
+        } else {
+          this.submitLoading = false
+          return false
         }
       })
     },
-    submitForm() {
-      this.saveLoading = true
-      this.$refs['formModel'].validate((valid) => {
-        if (valid) {
-          this.$refs['ruleForm'].validate((valid) => {
-            if (valid) {
-              this.loading = true
-              this.setData()
-              if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
-                this.$message.warning('配载清单不可以为空')
-                this.noLoadListCount = 0
-                this.saveLoading = false
-                return false
-              } else {
-                postIntnteSmartLoad(this.loadDataArray).then(res => {
-                  this.$message({ type: 'success', message: '保存配载成功！' })
-                  this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
-                  this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
-                  this.loading = false
-                }).catch(err => {
-                  this.saveLoading = false
-                  this._handlerCatchMsg(err)
-                  this.loading = false
-                })
-              }
-            } else {
-              this.saveLoading = false
-              return false
-            }
+    tabSelect(obj) { // click: current tab
+      console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
+      if (obj.name !== this.tabInfo.name) {
+        this.$confirm('还没有保存当前方案，是否保存?', '提示', {
+          confirmButtonText: '保存',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.saveForm()
+        }).catch(() => {
+          this.$notify.info({
+            title: '消息',
+            message: '已取消保存当前方案'
           })
-        } else {
-          this.saveLoading = false
+          this.isSubmitLoad = true
+          // this.$message.info('已取消保存当前方案')
+          this.tabInfo = {
+            all: obj, // 整个tab实例
+            name: obj.name, // 当前tab的下标
+            list: obj.$attrs.object, // 方案组
+            object: obj.$attrs.object[obj.name] // 当前方案 
+          }
+          this.activeTab = this.tabInfo.name
+          console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
+          // 点击tab页面后 开始设置数据视图
+          // 区域一  intelligentLeftData 到达网点+分摊方式
+          this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
+          this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
+          // 区域二  intelligentData
+          this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+          this.showCurPagesData = Object.assign({}, this.intelligentData)
+          this.setCurPageView(0) // 设置显示
+          this.currentIndex = 0
+          this.showCurrenFormStyle = []
+          this.showCurrenFormStyle[this.currentIndex] = true
+          this.$emit('truckIndex', this.currentIndex)
+          this.$emit('truckPrecent', this.intelligentData.dataList[0])
+          this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+        })
+      }
+
+    },
+    removeTab(targetName) { // 删除当前方案
+      let obj = {
+        schemeId: this.transpList[targetName].schemeId
+      }
+      if (targetName === '0') {
+        this.$message.warning('不可以删除原始方案！')
+        return
+      } else {
+        if (this.transpList && this.transpList.length > 0) {
+          this.isSubmitLoad = true
+          deleteSchemeById(obj).then(data => {
+              this.$message.success('删除成功！')
+              this.transpList.splice(targetName, 1) // 删除当前tab
+              this.activeTab = this.transpList.length - 1 + '' // 设置高亮最新的tab
+              this.currentIndex = 0
+              this.$emit('truckIndex', this.currentIndex)
+              this.$emit('truckPrecent', this.intelligentData.dataList[0])
+              this.$emit('schemeIndex', this.activeTab) // 当前方案的下标
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
+            })
         }
-      })
+      }
+
     },
     changeLoadNum(val, index, type) {
       this.$set(this.intelligentData.dataList[index], type, val)
@@ -716,6 +1088,10 @@ export default {
 
     },
     selectCurrentTuck(index, item) {
+      if (this.currentIndex !== index) {
+        this.isSubmitLoad = true
+      }
+      console.log('当前点击是车型', index, item)
       this.currentIndex = index
       this.showCurrenFormStyle = []
       this.showCurrenFormStyle[index] = true
@@ -724,42 +1100,20 @@ export default {
     },
     delCurTruck(index, item) {
       this.currentIndex = index - 1
-      console.log('delCurTruck1', index, this.intelligentData.dataList, this.intelligentData.dataList[index], this.loadTable[index])
       this.$emit('delCurTruck', {
         number: index,
         list: this.intelligentData.dataList[index]
       })
+      this.isSubmitLoad = true
       this.intelligentData.dataList.splice(index, 1)
-      console.log('delCurTruck2.1', index, this.intelligentData.dataList, this.intelligentData.dataList.length)
       this.showCurrenFormStyle = []
-      // this.$set(this.showCurrenFormStyle, this.currentIndex, true)
       var len = this.intelligentData.dataList.length
       if (this.currentIndex < 0 && len) {
-        console.log('delCurTruck2.2',this.currentIndex)
         this.currentIndex = 0
         this.showCurrenFormStyle[this.currentIndex] = true
-      }else if (index > 0){
+      } else if (index > 0) {
         this.$set(this.showCurrenFormStyle, this.currentIndex, true)
-        console.log('delCurTruck2.3',this.currentIndex, this.showCurrenFormStyle[this.currentIndex])
-      }else {
-        console.log('delCurTruck2.4',this.currentIndex)
-      }
-      // var flag = false
-      // while (len--) {
-      //   console.log('delCurTruck2.2',this.currentIndex, this.showCurrenFormStyle[len])
-      //   if (this.showCurrenFormStyle[len]) {
-      //     this.currentIndex = len
-      //     console.log('delCurTruck2.3',this.currentIndex)
-      //     flag = true
-
-      //     break
-      //   }
-      // }
-      // this.showCurrenFormStyle = []
-      // if (!flag) {
-      //   this.showCurrenFormStyle[this.currentIndex] = true
-      // }
-      
+      } else {}
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckInfo', this.intelligentData.dataList)
       this.$emit('truckPrecent', this.intelligentData.dataList[0])
@@ -772,6 +1126,7 @@ export default {
       this.setCurPageView(this.currentIndex) // 设置显示
     },
     addtuck() {
+      this.isSubmitLoad = true
       var index = this.intelligentData.dataList.length
       if (index > this.maxDataLength) {
         return false
@@ -798,13 +1153,14 @@ export default {
         carLoadDetail: [],
         _index: index
       })
-      this.$emit('addOrgRightTable')
+      this.$emit('addOrgRightTable') // 同时添加为车型添加相应的配载清单空列表
       this.showCurrenFormStyle = []
       this.showCurrenFormStyle[index] = true
       this.currentIndex = index
       this.setCurPageView(index - 2) // 设置显示
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
+      console.log('当前添加是车型', this.currentIndex)
 
     },
     pretruck() { // 展示上一个车型
@@ -866,13 +1222,12 @@ export default {
   }
   .loadInfo_tab {
     padding: 10px 10px 0px 10px;
+    min-height: 174px;
     .el-tabs--border-card {
       box-shadow: none;
       border: 1px solid #cdf;
       .el-tabs__header.is-top {
-        .el-tabs__nav-wrap {
-          // background: rgb(251, 255, 244);
-        }
+        .el-tabs__nav-wrap {}
       }
     }
     .el-tabs--border-card>.el-tabs__content {
@@ -1102,6 +1457,7 @@ export default {
     }
   }
 }
+
 @keyframes rowFormMoveIn {
   0% {
     transform: translate(100%, 0);
@@ -1112,4 +1468,5 @@ export default {
     opacity: 1;
   }
 }
+
 </style>

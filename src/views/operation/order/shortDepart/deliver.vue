@@ -315,6 +315,7 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.getAllList()
     },
     fetchAllShortDepartList() {
       this.getAllList()

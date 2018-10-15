@@ -10,9 +10,13 @@
           <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
             <el-tab-pane name="first">
               <span slot="label"> 系统车型</span>
-              <el-table ref="multipleTable1" :data="systemList" stripe border @row-click="clickDetail" @selection-change="getSelectionSys" height="200" tooltip-effect="dark" style="width: 450px" class="tableIntelligent">
-                <el-table-column type="selection" width="35">
+              <el-table ref="multipleTable1" :data="systemList" stripe border @row-click="clickDetail" height="181" tooltip-effect="dark" @current-change="handleCurChangeSystem" highlight-current-row style="width: 450px" class="tableIntelligent">
+                <el-table-column width="50">
+                  <template slot-scope="scope">
+                    <i class="el-icon-success" style="color:#67C23A;" v-if="scope.row.isSelect"></i>
+                  </template>
                 </el-table-column>
+                <!-- <el-table-column type="selection" width="35"></el-table-column> -->
                 <el-table-column prop="name" label="车型">
                 </el-table-column>
                 <el-table-column prop="weight" width="120" label="承载重(千克)">
@@ -23,21 +27,30 @@
             </el-tab-pane>
             <el-tab-pane label="自定义车型" name="second">
               <div class="tableIntelligentPSet">
-                <el-table ref="multipleTable" :data="definedList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="206" tooltip-effect="dark" style="width: 450px">
-                  <el-table-column type="selection" width="35">
+                <el-table ref="multipleTable" :data="definedList" stripe border @row-click="clickDetails" height="206" highlight-current-row @current-change="handleCurChangeDefined" tooltip-effect="dark" style="width: 450px">
+                  <!-- <el-table-column type="selection" width="35"></el-table-column> -->
+                  <el-table-column width="50">
+                    <template slot-scope="scope">
+                      <i class="el-icon-success" style="color:#67C23A;" v-if="scope.row.isSelect"></i>
+                    </template>
                   </el-table-column>
                   <el-table-column prop="name" label="车型">
                     <template slot-scope="scope">
-                      <el-input placeholder="车型" v-model.number="scope.row.name" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'name', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
+                      <!-- <input v-model.trim="scope.row.name" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'name', val)" :maxlength="8" placeholder="车型" @click.stop.prevent.native :disabled="scope.row['selectdCheck']"></input> -->
+                      <el-input placeholder="车型" v-model.number="scope.row.name" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'name', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native>
+                        <template slot="append">米</template>
+                      </el-input>
                     </template>
                   </el-table-column>
                   <el-table-column prop="weight" width="120" label="承载重(千克)">
                     <template slot-scope="scope">
+                      <!-- <input v-model.trim="scope.row.weight" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'weight', val)" :maxlength="8" placeholder="承载重(千克)" @click.stop.prevent.native :disabled="scope.row['selectdCheck']"></input> -->
                       <el-input placeholder="承载重" v-model.number="scope.row.weight" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'weight', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column prop="vol" width="100" label="承载方(方)">
                     <template slot-scope="scope">
+                      <!-- <input v-model.trim="scope.row.vol" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'vol', val)" :maxlength="8" placeholder="承载方(方)" @click.stop.prevent.native :disabled="scope.row['selectdCheck']"></input> -->
                       <el-input placeholder="承载方" v-model.number="scope.row.vol" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'vol', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
@@ -154,8 +167,7 @@ export default {
       this.fetchGetIntnteCarDefinedInfo()
     },
     selectTruck: {
-      handler(newVal) {
-      }
+      handler(newVal) {}
     }
   },
   mounted() {
@@ -221,15 +233,15 @@ export default {
         }
       }
     },
-    fetchGetIntnteCarInfo() {
+    fetchGetIntnteCarInfo() { // 获取系统车型信息
       this.loading = true
       return getIntnteCarInfo(this.infoGetSystemList.orgid, this.infoGetSystemList.sign).then(data => {
-
         this.systemList = data
         this.loading = false
+
       })
     },
-    fetchGetIntnteCarDefinedInfo() {
+    fetchGetIntnteCarDefinedInfo() { // 获取自定义车型信息
       this.loading = true
       return getIntnteCarInfo(this.infoGetDefinedList.orgid, this.infoGetDefinedList.sign).then(data => {
         this.definedList = data
@@ -276,79 +288,85 @@ export default {
     },
     submitForm() {
       if (this.selectedSys && this.selectedSys.length > 0) {
-        if (this.selected.length === 0) {
-          this.$emit('savaParamTruck', this.selectedSys)
-          this.$message.success('参数设置成功！')
-          this.closeMe()
-        }
-      }
-      this.isEditSuccess = 0
-      if (this.selected && this.selected.length > 0) {
-        this.selected.forEach(e => {
-          this.putPzcarinfotms(e)
-        })
-      }
-      if (this.isEditSuccess === 0) { // 循环提交自定义的车型 如果isEditSuccess ===0表示提交成功
+        this.$emit('savaParamTruck', this.selectedSys)
+        this.$message.success('参数设置成功！')
         this.closeMe()
-        this.$message.success('保存修改成功')
-        let arr = []
-        this.selectedSys.forEach(e => {
-          arr.push(e)
-        })
+      } else {
         this.selected.forEach(e => {
-          arr.push(e)
-        })
-        this.$emit('savaParamTruck', arr)
-      }
-    },
-    putPzcarinfotms(row) {
-      putPzcarinfotms(row).then(data => { // 保存修改
-
-          // this.$message.success('操作成功,只能修改打勾选择的第一项！')
-        })
-        .catch(err => {
-          this.isEditSuccess++
+          putPzcarinfotms(e).then(data => {}).catch(err => {
             this._handlerCatchMsg(err)
+          })
         })
-    },
-    clickDetail(row, event, column) {
-      this.$refs.multipleTable1.toggleRowSelection(row)
-    },
-    clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
-      // if (this.selected.length < 1) {  
-      //   this.$refs.multipleTable.toggleRowSelection(row)
+        this.closeMe()
+        this.$notify.success({
+          title: '成功',
+          message: '保存修改车型操作成功'
+        })
+        this.$emit('savaParamTruck', this.selected)
+      }
+      // if (this.selectedSys && this.selectedSys.length > 0) {
+      //   if (this.selected.length === 0) {
+      //     this.$emit('savaParamTruck', this.selectedSys)
+      //     this.$message.success('参数设置成功！')
+      //     this.closeMe()
+      //   }
       // } else {
-      //   this.$confirm('还未保存修改的车型,是否保存?', '提示', {
-      //     confirmButtonText: '保存',
-      //     cancelButtonText: '取消',
-      //     type: 'warning'
-      //   }).then(() => {
-      //     // this.$refs.multipleTable.clearSelection()
-      //     this.$refs.multipleTable.toggleRowSelection(row)
-
-
-      //   }).catch(() => {
-      //     this.$message({
-      //       type: 'info',
-      //       message: '已取消保存编辑的车型信息'
+      //   this.isEditSuccess = 0
+      //   if (this.selected && this.selected.length > 0) {
+      //     this.selected.forEach(e => {
+      //       this.putPzcarinfotms(e) // 保存修改的车型
       //     })
-      //   })
+      //   }
+      //   if (this.isEditSuccess === 0) { // 循环提交自定义的车型 如果isEditSuccess ===0表示提交成功
+      //     this.closeMe()
+      //     this.$notify.success({
+      //       title: '成功',
+      //       message: '保存修改车型操作成功'
+      //     })
+      //     let arr = []
+      //     this.selectedSys.forEach(e => {
+      //       arr.push(e)
+      //     })
+      //     this.selected.forEach(e => {
+      //       arr.push(e)
+      //     })
+      //     this.$emit('savaParamTruck', arr)
+      //   }
       // }
     },
-    getSelectionSys(selection) {
-      this.selectedSys = selection
-    },
-    getSelection(selection) {
-      this.definedList.forEach(el => {
-        el.selectdCheck = true
+    putPzcarinfotms(row) { // 保存修改
+      putPzcarinfotms(row).then(data => {}).catch(err => {
+        this.isEditSuccess++
+          this._handlerCatchMsg(err)
       })
-      if (selection) {
-        this.selected = selection
-        this.selected.forEach(el => {
-          el.selectdCheck = false
-        })
-      }
+    },
+    handleCurChangeSystem(val) {
+      this.selectedSys = []
+      this.selected = []
+      this.selectedSys.push(val)
+      console.log('system', val, this.selected)
+    },
+    handleCurChangeDefined(val) {
+      this.selected = []
+      this.selectedSys = []
+      this.selected.push(val)
+      console.log('defined', val, this.selected)
+    },
+    clickDetail(row, event, column) { // 选择系统车型
+      this.systemList.forEach(e => {
+        this.$set(e, 'isSelect', false)
+      })
+      this.$refs.multipleTable1.setCurrentRow(row)
+      this.$set(row, 'isSelect', true)
+    },
+    clickDetails(row, event, column) { // 选择自定义车型
+      this.definedList.forEach(e => {
+        this.$set(e, 'isSelect', false)
+        e.selectdCheck = true
+      })
+      this.$refs.multipleTable.setCurrentRow(row)
+      this.$set(row, 'isSelect', true)
+      this.$set(row, 'selectdCheck', false)
     },
     handleClick(tab, event) {
       if (this.activeName === 'second') {
@@ -386,11 +404,9 @@ export default {
               .cell {
                 padding-left: 0;
                 padding-right: 0;
-                .el-input.el-input--mini {
-                  /*width: 114%;*/
-                  // .el-input__inner {
-                  //   border-radius: 0;
-                  // }
+                .el-input-group__append,
+                .el-input-group__prepend {
+                  padding: 0 10px;
                 }
               }
             }

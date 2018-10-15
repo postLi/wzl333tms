@@ -1,10 +1,14 @@
 <template>
   <div class="transferTable_wrapper" v-loading="loading">
-    <div class="transferTable_head"></div>
+    <!-- <div class="transferTable_head"></div> -->
+    <div class="transferTable_head clearfix">
+      <!-- 搜索左边表格 -->
+    </div>
     <div class="transferTable_main">
       <div class="transferTable_main_left" style="height:100%;" :style="showLeftStyle">
         <div class="transferTable_main_left_head">
           <b v-if="!isShowRightTable">库存运单</b>
+          <currentSearch :info="orgLeftTable" @change="getSearch" v-if="!isShowRightTable"></currentSearch>
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="left" v-if="!isShowRightTable">
             <el-button :icon="isShowLeftTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllLeft"></el-button>
           </el-tooltip>
@@ -32,7 +36,7 @@
           <el-tooltip class="item" effect="dark" :content="showTableMessage" placement="top" v-if="!isShowLeftTable">
             <el-button :icon="isShowRightTable ? 'el-icon-close' : 'el-icon-rank'" type="primary" circle size="mini" plain @click="showAllRight"></el-button>
           </el-tooltip>
-          <!-- <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button> -->
+          <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
         </div>
         <el-table row-key="repertoryId" ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
           <el-table-column fixed sortable width="50" label="序号">
@@ -61,7 +65,11 @@ import draggable from 'vuedraggable'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { objectMerge2 } from '@/utils/index'
 import Sortable from 'sortablejs'
+import currentSearch from './currentSearch'
 export default {
+  components: {
+    currentSearch
+  },
   props: {
     getinfoed: Boolean,
     truckIndex: {
@@ -86,6 +94,14 @@ export default {
     },
     dofo: {
       type: [Array, Object]
+    },
+    schemeIndex: {
+      type: [Number, String],
+      default: ''
+    },
+    submitLoadNew: {
+      type: Object,
+      default: {}
     }
   },
   data() {
@@ -244,6 +260,26 @@ export default {
     }
   },
   watch: {
+    submitLoadNew: {
+      handler(cval, oval) {
+        if (cval && cval.right) {
+          console.log('jsdifjisdjfisjdifjsifjiwjeifjsdijf', cval, oval)
+          // this.orgLeftTable[this.truckIndex] = Object.assign([], cval)
+          let arr = []
+          this.orgLeftTable = Object.assign([], cval.left)
+          cval.right.forEach(e => {
+            arr.push(e.tmsOrderLoadDetailsList)
+          })
+          this.orgRightTable = Object.assign([], arr)
+          this.initTable()
+        }
+      }
+    },
+    schemeIndex: {
+      handler(cval, oval) {
+        console.log('schemeIndex watch', cval, oval)
+      }
+    },
     getinfoed() {
       if (this.getinfoed) {
         this.getinfoed2 = true
@@ -256,13 +292,6 @@ export default {
         }
         if (cval) {
           this.isDelOtherTruck = false
-          cval.right.forEach(el => {
-            el.forEach(e => {
-              e.loadAmount = e.repertoryAmount
-              e.loadWeight = e.repertoryWeight
-              e.loadVolume = e.repertoryVolume
-            })
-          })
         }
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
@@ -270,7 +299,6 @@ export default {
         this.leftTable = Object.assign([], cval.left)
         this.oldList = this.rightTable.map(v => v.repertoryId)
         this.newList = this.oldList.slice()
-        console.log('newList============', this.newList, this.rightTable.map(v => v.repertoryId))
         this.initTable()
       },
       deep: true
@@ -283,20 +311,16 @@ export default {
     },
     delData: {
       handler(cval, oval) { // 删除车型时
-        console.log('delCurTruck3', cval, oval)
         this.isDel = true
         if (cval.list.carLoadDetail && cval.list.carLoadDetail.length > 0) {
           this.selectedRight = []
           cval.list.carLoadDetail.forEach(e => {
             this.selectedRight.push(e)
           })
-          console.log('delCurTruck4', cval, this.selectedRight)
           this.goLeft()
         } else {
-          console.log('delCurTruck5', cval.list.carLoadDetail, cval, this.orgRightTable.length)
           this.orgRightTable.splice(this.delData.number, 1)
         }
-        console.log('delCurTruck6', cval.list.carLoadDetail, this.orgRightTable, this.dofo, this.rightTable)
       },
       deep: true
     },
@@ -329,14 +353,18 @@ export default {
     },
     rightTable() {
       console.log('rightTable:', this.rightTable.length)
+      this.$emit('leftTable', this.leftTable)
     },
     leftTable() {
       console.log('leftTable:', this.leftTable.length)
+      this.$emit('leftTable', this.leftTable)
     },
     addOrgRightTable: {
       handler(cval, oval) {
         if (cval !== oval) {
+          console.log('添加车型前的orgRightTable', this.orgRightTable.length, this.orgRightTable)
           this.orgRightTable.push([])
+          console.log('添加车型后的orgRightTable', this.orgRightTable.length, this.orgRightTable)
         }
       },
       deep: true
@@ -370,23 +398,18 @@ export default {
   },
   methods: {
     initTable() {
-      console.log('#$%#$%#$')
-      this.rightTable = Object.assign([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
-      this.rightTable.forEach(e => {
-        e.loadAmount = e.repertoryAmount
-        e.loadWeight = e.repertoryWeight
-        e.loadVolume = e.repertoryVolume
-      })
+      console.log('#$%#$%#$1')
+      this.rightTable = objectMerge2([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
 
       let arr = [] // 存储所有被配载的运单
       this.orgRightTable.forEach((e, index) => {
-        e.forEach(em => {
-          em.loadAmount = em.repertoryAmount
-          em.loadWeight = em.repertoryWeight
-          em.loadVolume = em.repertoryVolume
-          arr.push(em)
-        })
+        if (e) {
+          e.forEach(em => {
+            arr.push(em)
+          })
+        }
       })
+
 
       if (arr.length) {
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
@@ -397,17 +420,18 @@ export default {
       } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
       }
-      
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽
       })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
-
     },
     fetchList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
+    },
+    getSearch(arr) {
+      this.leftTable = arr
     },
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
@@ -421,11 +445,10 @@ export default {
         onEnd: evt => {
           const targetRow = this.rightTable.splice(evt.oldIndex, 1)[0]
           this.rightTable.splice(evt.newIndex, 0, targetRow)
-          this.orgRightTable[this.truckIndex] = Object.assign([],  this.rightTable)
+          this.orgRightTable[this.truckIndex] = Object.assign([], this.rightTable)
           // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
-          console.log('setSort onEnd1=============================', this.orgRightTable, this.rightTable)
         }
       })
 
@@ -462,9 +485,6 @@ export default {
           return em.repertoryId === e.repertoryId
         })
         if (find.length === 0) {
-          e.loadAmount = e.repertoryAmount
-          e.loadWeight = e.repertoryWeight
-          e.loadVolume = e.repertoryVolume
           this.leftTable.push(e)
           this.orgLeftTable.push(e)
 
@@ -498,16 +518,14 @@ export default {
             return em.repertoryId === e.repertoryId
           })
           if (find.length === 0) {
-            e.loadAmount = e.repertoryAmount
-            e.loadWeight = e.repertoryWeight
-            e.loadVolume = e.repertoryVolume
             this.rightTable.push(e)
             this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
             this.orgRightTable[this.truckIndex].push(e)
-            this.leftTable = this.leftTable.filter(el => {
+            console.log('给右表格添加', this.rightTable, e, this.orgRightTable)
+            this.leftTable = objectMerge2([], this.leftTable).filter(el => {
               return el.repertoryId !== e.repertoryId
             })
-            this.orgLeftTable = this.orgLeftTable.filter(el => {
+            this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
               return el.repertoryId !== e.repertoryId
             })
           }
@@ -515,7 +533,7 @@ export default {
         this.$nextTick(() => {
           this.setSort() // 右边列表行拖拽
         })
-        this.tablekey = Math.random()
+        this.tablekey = new Date().getTime()
         this.$emit('loadCurTable', this.rightTable)
         this.$emit('loadTable', this.orgRightTable)
       }
@@ -613,6 +631,16 @@ export default {
     .transferTable_main_left_head {
       border-right: 1px solid #cdf;
       border-top: 2px solid #b8cbd5;
+      position: relative;
+      .tableHeadItemForm {
+        margin-left: 0px;
+        position: absolute;
+        top: -4px;
+        left: 75px;
+        .el-form-item {
+          margin-bottom: 0px;
+        }
+      }
     }
     .transferTable_main_right_head {
       border-left: 1px solid #cdf;

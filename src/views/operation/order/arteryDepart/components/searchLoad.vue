@@ -6,7 +6,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="到达网点">
-        <SelectTree v-model="searchForm.orgId"></SelectTree>
+        <SelectTree v-model="searchForm.arriveOrgid" :disabledOption="[otherinfo.orgid]"></SelectTree>
       </el-form-item>
     </div>
     <el-form-item class="staff_searchinfo--btn art_marginTop">
@@ -27,6 +27,10 @@ export default {
       btnsize: 'mini',
       rules: {},
       searchForm: {
+        createTimeStart: '',
+        createTimeEnd: '',
+        arriveOrgid: '',
+        orgid: ''
       },
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions2: {
@@ -34,14 +38,19 @@ export default {
       }
     }
   },
-  mounted () {
-    this.searchForm.orgId = this.otherinfo.orgid
-  	this.onSubmit()
+  mounted() {
+    this.searchForm.orgid = this.otherinfo.orgid
+    this.onSubmit()
   },
   methods: {
-    onSubmit() {},
+    onSubmit() {
+      this.searchForm.createTimeStart = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+      this.searchForm.createTimeEnd = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+      this.$emit('change', this.searchForm)
+    },
     clearForm() {
       this.searchForm = this.$options.data().searchForm
+      this.searchForm.orgid = this.otherinfo.orgid
     }
   }
 }

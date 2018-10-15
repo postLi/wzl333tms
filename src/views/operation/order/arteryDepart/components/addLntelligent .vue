@@ -19,7 +19,7 @@
                 <i class="el-icon-info"></i>
               </el-tooltip>
             </el-radio>
-            <el-radio label="2" border disabled>
+            <el-radio label="2" border>
               <span>模式二：配载完库存</span>
               <el-tooltip class="loadType_tips" effect="dark" content="说明：28TMS自动帮助您把当前库存的货一次性拉完，为您提供整体装车建议方案。" placement="top">
                 <i class="el-icon-info"></i>
@@ -32,9 +32,9 @@
           </el-table-column>
           <el-table-column fixed prop="name" label="车型" width="90">
           </el-table-column>
-          <el-table-column fixed prop="name" label="车牌">
+          <el-table-column fixed prop="carNo" label="车牌">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.truckIdNumber" placeholder="请选择车牌号" :size="btnsize" :disabled="scope.row['selectdCheck']" filterable>
+              <el-select v-model="scope.row.carNo" placeholder="请选择车牌号" :size="btnsize" :disabled="scope.row['selectdCheck']" filterable>
                 <el-option v-for="item in Trucks" :key="item.truckIdNumber" :label="item.truckIdNumber" :value="item.truckIdNumber">
                 </el-option>
               </el-select>
@@ -75,7 +75,7 @@ import querySelect from '@/components/querySelect/index'
 import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
 import SelectTree from '@/components/selectTree/index'
 import { mapGetters } from 'vuex'
-import { getIntnteSMainInfoList } from '@/api/operation/arteryDepart'
+import { getIntnteSMainInfoList, getRepertoryInfo } from '@/api/operation/arteryDepart'
 import { getTrucK } from '@/api/operation/load'
 
 export default {
@@ -148,7 +148,7 @@ export default {
     },
     repertoryInfoMessage: {
       get() {
-        return '您选择的路线是： ' + (this.infoMessage ? this.infoMessage : '暂无')
+        return (this.infoMessage ? this.infoMessage : '暂无城市信息！请选择到达网点。')
       },
       set() {}
     }
@@ -158,7 +158,7 @@ export default {
     popVisible(newVal) {
       this.infoFetch()
       if (!newVal) {
-         this.infoMessage = ''
+        this.infoMessage = ''
       }
     },
     orgId(newVal) {
@@ -167,7 +167,15 @@ export default {
   },
   mounted() {},
   methods: {
-    checkOrgid() {
+    checkOrgid(val) {
+      getRepertoryInfo(val).then(data => {
+        if (data) {
+          this.infoMessage = data
+        }
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
+      })
       // this.infoMessage = '广州至长沙。当前路线的库存票数是：56票，件数：50，重量：2500千克，体积：30方。'
     },
     infoFetch() {
@@ -238,6 +246,7 @@ export default {
           let data = this.usersArr.filter(el => {
             return el.selectdCheck === false
           })
+          console.log('===========data',data)
           this.$router.push({
             path: '/operation/order/loadIntelligent/components/intelligentImg',
             query: {
@@ -337,8 +346,8 @@ export default {
         }
       }
       .loadType {
-        border-bottom: 1px solid #ddd; 
-        margin:0 0 10px 0;
+        border-bottom: 1px solid #ddd;
+        margin: 0 0 10px 0;
         .el-radio-group {
           display: flex;
           flex-direction: row;
@@ -361,7 +370,7 @@ export default {
         border: 1px solid #eee;
         margin-bottom: 10px;
         padding: 10px;
-        h4{
+        h4 {
           font-size: 14px;
           line-height: 36px;
         }

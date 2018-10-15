@@ -50,11 +50,11 @@ export default {
     },
     width: {
       type: String,
-      default: '400px'
+      default: '300px'
     },
     height: {
       type: String,
-      default: '400px'
+      default: '300px'
     }
   },
   data() {

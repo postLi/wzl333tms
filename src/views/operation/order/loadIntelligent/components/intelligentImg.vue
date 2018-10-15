@@ -68,7 +68,7 @@ export default {
       const obj = JSON.parse(this.$route.query.sendData)
       this.sendRoute.orgId = this.$route.query.orgId
       this.sendRoute.standCar = obj.map((item, val) => {
-        return { id: item.cid, spri: item.price }
+        return { id: item.cid, spri: item.price , carNo: item.carNo}
       })
       return getIntnteInit(this.sendRoute).then(data => {
         if (data) {
@@ -91,12 +91,10 @@ export default {
           } else {
             this.$router.push({ path: '/operation/order/arteryDepart' })
           }
-
         }, 2000)
       }
     },
     openInteligent() {
-
       this.eventBus.$emit('replaceCurrentView', {
         path: '/operation/order/loadIntelligent/load',
         query: {
