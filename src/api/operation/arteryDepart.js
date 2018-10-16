@@ -18,8 +18,8 @@ export function postSelectLoadMainInfoList(params) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function putLoadDepart(loadIds, loadTypeId) {
-  return fetch.put('/api-order/order/load/v1/loadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
+export function putLoadDepart(loadIds, loadTypeId, putLoadDepart) {
+  return fetch.put('/api-order/order/load/v1/loadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId + '&actualSendtime=' + putLoadDepart)
 }
 
 /**

@@ -3,11 +3,11 @@
     <div class="loadInfo_btns clraefix">
       <el-button type="primary" @click="saveForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">保存当前方案
       </el-button>
-      <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
+      <el-button type="success" @click="dialogVisible = true" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
       </el-button>
       <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini">计算配载
       </el-button>
-      <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">关闭
+      <el-button type="danger" @click="dialogCloseVisible = true" icon="el-icon-circle-close-outline" plain size="mini">关闭
       </el-button>
     </div>
     <div class="loadInfo_tab">
@@ -107,6 +107,26 @@
     <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="otherinfo.orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
     <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
     <AddLntelligentFreight :popVisible.sync="lntelligentFVisible" @close="openlntelligent" @getIntFreight="getIntFreight" :intFreightItem="intFreightItem" :sendDataList="intelligentData.dataList" :intFreightIndex="intFreightIndex"></AddLntelligentFreight>
+    <!-- 完成配载单 -->
+    <el-dialog :title="'您正选择把方案'+changeNumCN[tabInfo.name]+'作为正式配载运单'" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <p>温馨提示：</p>
+      <span>1，保存当前配载方案后，其他未被选中的侯选方案同步作废。系统的正式库存亦会同步减少；</span>
+      <br />
+      <span>2，如果您对当前配载方案不满意，可取消后重新配载，系统库存会恢复为原始状态。</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">返回重选</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 关闭 -->
+    <el-dialog :title="'当前的1个方案都未保存！'" :visible.sync="dialogCloseVisible" width="30%" :before-close="handleClose">
+      <p>当前系列方案还未保存哦！需要保存吗？</p>
+      <span>说明：保存或删除配载方案（草稿）不会影响系统的库存，只有使用某一方案作为正式配载运单时，才会减少系统库存。</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelButtonText">不保存</el-button>
+        <el-button type="primary" @click="submitLoad">保  存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -122,7 +142,7 @@ import { getAllDriver } from '@/api/company/driverManage'
 import { getSystemTime } from '@/api/common'
 import AddLntelligentFreight from './intelligentFreight'
 import { postIntnteSmartLoad } from '@/api/operation/arteryDepart'
-import { postSaveScheme, deleteSchemeById, putUpdateScheme, getIntnteCarInfo, getIntnteInit } from '@/api/operation/arteryDepart'
+import { postSaveScheme, deleteSchemeById, putUpdateScheme, getIntnteCarInfo, getIntnteInit, deleteScheme } from '@/api/operation/arteryDepart'
 
 export default {
   components: {
@@ -196,6 +216,8 @@ export default {
   },
   data() {
     return {
+      dialogCloseVisible: false,
+      dialogVisible: false,
       loading: false,
       tabInfo: {
         all: null, // 整个tab实例
@@ -530,17 +552,12 @@ export default {
       }
     },
     cancelButtonText() {
-      this.$confirm('页面没保存，确定关闭吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '已关闭成功!'
-        });
-        this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart/loadList')
-      }).catch(() => {})
+      this.$message({
+        type: 'success',
+        message: '已关闭成功!'
+      })
+      this.dialogCloseVisible = false
+      this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart/loadList')
     },
     addFreight(val, index, item) {
       this.intFreightItem = Object.assign({}, item.tmsOrderLoadFee)
@@ -700,6 +717,7 @@ export default {
 
       getIntnteInit(truckObject).then(data => {
           if (data) {
+            this.dialogCloseVisible = false
             this.loading = false
             console.log('计算配载', data)
             let arr = objectMerge2([], data.transp)
@@ -750,6 +768,7 @@ export default {
           }
         })
         .catch(err => {
+          this.dialogCloseVisible = false
           this.loading = false
           this._handlerCatchMsg(err)
         })
@@ -1001,18 +1020,29 @@ export default {
             return false
           } else {
             postIntnteSmartLoad(this.loadDataArray).then(res => {
+              this.dialogVisible = false
               this.submitLoading = false
               this.$message({ type: 'success', message: '保存配载成功！' })
+              // 删除当前方案组
+              if (this.tabInfo.object.schemeGroup) {
+                let obj = {
+                  schemeGroup: this.tabInfo.object.schemeGroup,
+                  orgid: this.otherinfo.orgid
+                }
+                deleteScheme(obj).then(data => {}).catch(err => { this._handlerCatchMsg(err) })
+              }
               this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
               this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
               this.loading = false
             }).catch(err => {
+              this.dialogVisible = false
               this.submitLoading = false
               this._handlerCatchMsg(err)
               this.loading = false
             })
           }
         } else {
+          this.dialogVisible = false
           this.submitLoading = false
           return false
         }
@@ -1065,33 +1095,33 @@ export default {
             this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
           })
         }
-      }else {
+      } else {
         orgTranspList = ''
         curTranspList = ''
         copyobj = {}
-         this.isSubmitLoad = true
-            this.tabInfo = {
-              all: obj, // 整个tab实例
-              name: obj.name, // 当前tab的下标
-              list: obj.$attrs.object, // 方案组
-              object: obj.$attrs.object[obj.name] // 当前方案 
-            }
-            this.activeTab = this.tabInfo.name
-            console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
-            // 点击tab页面后 开始设置数据视图
-            // 区域一  intelligentLeftData 到达网点+分摊方式
-            this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
-            this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
-            // 区域二  intelligentData
-            this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
-            this.showCurPagesData = Object.assign({}, this.intelligentData)
-            this.setCurPageView(0) // 设置显示
-            this.currentIndex = 0
-            this.showCurrenFormStyle = []
-            this.showCurrenFormStyle[this.currentIndex] = true
-            this.$emit('truckIndex', this.currentIndex)
-            this.$emit('truckPrecent', this.intelligentData.dataList[0])
-            this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+        this.isSubmitLoad = true
+        this.tabInfo = {
+          all: obj, // 整个tab实例
+          name: obj.name, // 当前tab的下标
+          list: obj.$attrs.object, // 方案组
+          object: obj.$attrs.object[obj.name] // 当前方案 
+        }
+        this.activeTab = this.tabInfo.name
+        console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
+        // 点击tab页面后 开始设置数据视图
+        // 区域一  intelligentLeftData 到达网点+分摊方式
+        this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
+        this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
+        // 区域二  intelligentData
+        this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+        this.showCurPagesData = Object.assign({}, this.intelligentData)
+        this.setCurPageView(0) // 设置显示
+        this.currentIndex = 0
+        this.showCurrenFormStyle = []
+        this.showCurrenFormStyle[this.currentIndex] = true
+        this.$emit('truckIndex', this.currentIndex)
+        this.$emit('truckPrecent', this.intelligentData.dataList[0])
+        this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
       }
     },
     removeTab(targetName) { // 删除当前方案
@@ -1248,6 +1278,10 @@ export default {
       }
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
+    },
+    handleClose(done) {
+      this.dialogVisible = false
+      this.dialogCloseVisible = false
     }
   }
 }

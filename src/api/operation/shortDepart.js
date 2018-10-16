@@ -4,14 +4,17 @@ import fetch from '../../utils/fetch'
  */
 export function postAllshortDepartList(params) {
   return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 /**
  * 短驳批量发车
  */
 export function putTruckDepart(data) {
-  return fetch.put('/api-order/order/load/v1/loadDepart/?loadTypeId=' + data.loadTypeId + '&loadIds=' + data.loadIds)
+  return fetch.put('/api-order/order/load/v1/loadDepart/?loadTypeId=' + data.loadTypeId + '&loadIds=' + data.loadIds + '&actualSendtime=' + data.actualSendtime)
 }
 /**
  * 短驳取消发车
@@ -30,7 +33,10 @@ export function putTruckLoad(data) {
  */
 export function postLoadList(data) {
   return fetch.post('/api-order/order/load/v1/list/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 /**
@@ -55,5 +61,5 @@ export function postAddRepertory(typeId, data) {
  * 到车确认
  */
 export function postConfirmToCar(data) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar/' + data.id + '/?typeId=' + data.typeId)
+  return fetch.post('/api-order/order/load/v1/confirmToCar/' + data.id + '/?typeId=' + data.typeId + '&actualArrivetime=' + data.actualArrivetime)
 }
