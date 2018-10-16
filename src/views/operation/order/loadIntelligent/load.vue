@@ -200,6 +200,7 @@ export default {
               })
             })
             this.transpList = objectMerge2([], arr)
+            this.orgFirstScheme = objectMerge2([], arr)
             this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息 
             this.setLoadTableList.left = data[0].repertoryList // 第一个方案的库存列表
             this.intelligentData.forEach((e, index) => {
@@ -279,12 +280,6 @@ export default {
         this.truckPrecent = obj
       })
     },
-    getSubmitLoadNew(obj) { // 计算配置后获得的数据
-      this.submitLoadNew = {}
-      this.$nextTick(() => {
-      this.submitLoadNew = objectMerge2({}, obj)
-      })
-    },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
     },
@@ -360,6 +355,14 @@ export default {
     getLoadCurTable(arr) {
       this.loadInfoPercentOrg = objectMerge2([], arr)
     },
+     getSubmitLoadNew(obj) { // 计算配置后获得的数据
+      this.transpList[this.schemeIndex].repertoryList = obj.left
+      this.transpList[this.schemeIndex].tmsLoadSchemeDetailDtoList = obj.right
+      this.submitLoadNew = {}
+      this.$nextTick(() => {
+      this.submitLoadNew = obj
+      })
+    },
     getSchemeIndex(num) { // 获取当前方案下标index
       this.schemeIndex = num
       console.log('this.transpList[num]===========', this.transpList[num])
@@ -367,7 +370,6 @@ export default {
       this.$nextTick(() => {
         if (this.transpList && this.transpList.length > 0) {
           if (this.modify) {
-
             this.setLoadTableList.left = this.transpList[num].repertoryList // 第一个方案的库存列表
             this.transpList[num].tmsLoadSchemeDetailDtoList.forEach((e, index) => {
               this.$set(this.setLoadTableList.right, index, e.carLoadDetail)

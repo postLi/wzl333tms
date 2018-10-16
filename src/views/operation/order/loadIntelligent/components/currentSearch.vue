@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm">
     <el-form-item label="到达城市">
-      <el-autocomplete 
+      <el-autocomplete
       v-model="searchForm.shipToCityName" 
       :size="btnsize" 
       clearable
@@ -35,6 +35,14 @@ export default {
     info: {
       type: Array,
       default: []
+    }
+  },
+  watch: {
+    info: {
+      handler (cval, oval) {
+        console.error('orgLefTable', cval, oval)
+      },
+      deep: true
     }
   },
   methods: {

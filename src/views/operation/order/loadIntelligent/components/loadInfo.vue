@@ -5,14 +5,14 @@
       </el-button>
       <el-button type="success" @click="submitForm" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
       </el-button>
-      <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini" >计算配载
+      <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini">计算配载
       </el-button>
       <el-button type="danger" @click="cancelButtonText" icon="el-icon-circle-close-outline" plain size="mini">关闭
       </el-button>
     </div>
     <div class="loadInfo_tab">
       <el-tabs type="border-card" v-model="activeTab" :closable="transpList && transpList.length !==1" @tab-remove="removeTab" @tab-click="tabSelect" ref="schemeTab">
-        <el-tab-pane :label="(transpIndex === 0 ? '原始方案' :'方案'+changeNumCN[transpIndex])" v-for="(transpItem, transpIndex) in transpList" :key="transpIndex" :name="transpIndex + ''" :object="transpList">
+        <el-tab-pane :label="(transpIndex === 0 ? '原始方案' :'方案'+changeNumCN[transpIndex])" v-for="(transpItem, transpIndex) in transpList" :key="transpIndex" :name="transpIndex + ''" :object="orgTranspList">
           <div class="loadInfo_content">
             <div class="content_left">
               <el-form :model="intelligentLeftData" :size="btnsize" ref="formModel" label-width="65px">
@@ -314,6 +314,7 @@ export default {
       },
       initOrgFirstScheme: false,
       firstScheme: [],
+      orgTranspList: [],
       isEditCurrentScheme: false // true-修改当前方案 false-添加当前方案
     }
   },
@@ -341,10 +342,11 @@ export default {
     dofo: {
       handler(newVal) {
         if (!this.inited2) {
+          this.orgTranspList = objectMerge2([], this.transpList)
           this.tabInfo = {
             all: null, // 整个tab实例
             name: '0', // 当前tab的下标
-            list: this.transpList, // 方案组
+            list: this.orgTranspList, // 方案组
             object: this.transpList[0] // 当前方案 
           }
           // this.orgFirstScheme = objectMerge2({}, this.transpList) // 页面存储原始方案为副本，方便添加后还原数据
@@ -401,17 +403,17 @@ export default {
     },
     paramTuck: {
       handler(cval, oval) {
-          // 计算配载按钮显示可用
+        // 计算配载按钮显示可用
         this.isSubmitLoad = false
         // 替换车型列表 并显示 需求只能选择一个车型来替换当前的车型
         // let selArr = []
-          this.getIntnteCarInfo()
-          let selObj = Object.assign({}, cval[0])
-          console.warn('paramTuck', cval, oval)
-          this.$set(this.intelligentData.dataList[this.currentIndex], 'cid', selObj.cid)
-          this.$set(this.intelligentData.dataList[this.currentIndex], 'name', selObj.name)
-          this.$set(this.intelligentData.dataList[this.currentIndex], 'volume', selObj.vol)
-          this.$set(this.intelligentData.dataList[this.currentIndex], 'weight', selObj.weight)
+        this.getIntnteCarInfo()
+        let selObj = Object.assign({}, cval[0])
+        console.warn('paramTuck', cval, oval)
+        this.$set(this.intelligentData.dataList[this.currentIndex], 'cid', selObj.cid)
+        this.$set(this.intelligentData.dataList[this.currentIndex], 'name', selObj.name)
+        this.$set(this.intelligentData.dataList[this.currentIndex], 'volume', selObj.vol)
+        this.$set(this.intelligentData.dataList[this.currentIndex], 'weight', selObj.weight)
 
         // 保存需要去除的运单
         // if (cval.length < this.intelligentData.dataList.length) {
@@ -676,32 +678,33 @@ export default {
       // if (!this.paramTuck || this.paramTuck.length < 1) {
       //   this.$message.warning('请进行参数设置')
       // } else {
-        this.loading = true
-        let truckObject = {
-          orgId: this.intelligentLeftData.arriveOrgid,
-          standCar: []
+      this.loading = true
+      let truckObject = {
+        orgId: this.intelligentLeftData.arriveOrgid,
+        standCar: []
+      }
+      if (this.intelligentData.dataList.length === 0) {
+        this.$message.warning('请添加车型！')
+        return
+      }
+      this.intelligentData.dataList.forEach(e => {
+        let item = {
+          id: e.id ? e.id : e.cid,
+          spri: e.price ? e.spri : 0,
+          carNo: e.truckIdNumber ? e.truckIdNumber : ''
         }
-        if (this.intelligentData.dataList.length ===0) {
-          this.$message.warning('请添加车型！')
-          return
-        }
-        this.intelligentData.dataList.forEach(e => {
-          let item = {
-            id: e.id ? e.id : e.cid,
-            spri: e.price ?  e.spri : 0,
-            carNo: e.truckIdNumber ? e.truckIdNumber : ''
-          }
-          truckObject.standCar.push(item)
-          item = {}
-        })
-        console.log('submitLoad', truckObject)
-        
-        getIntnteInit(truckObject).then(data => {
+        truckObject.standCar.push(item)
+        item = {}
+      })
+      console.log('submitLoad', truckObject)
+
+      getIntnteInit(truckObject).then(data => {
           if (data) {
-          this.loading = false
+            this.loading = false
             console.log('计算配载', data)
             let arr = objectMerge2([], data.transp)
             arr.forEach((e, index) => {
+              this.tabInfo.object.repertoryList = objectMerge2([], e.storeOrderListloss)
               this.$set(e, 'repertoryList', e.storeOrderListloss)
               this.$set(e, 'tmsLoadSchemeDetailDtoList', e.standacars)
               e.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
@@ -726,20 +729,20 @@ export default {
             // this.tabInfo.list[this.tabInfo.name] = this.tabInfo.object
             // this.intelligentData.dataList = Object.assign([], arr)
 
-             // 区域二  intelligentData
-          this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
-          this.showCurPagesData = Object.assign({}, this.intelligentData)
-          this.setCurPageView(0) // 设置显示
-          this.currentIndex = 0
-          this.showCurrenFormStyle = []
-          this.showCurrenFormStyle[this.currentIndex] = true
-          this.$emit('truckIndex', this.currentIndex)
-          this.$emit('truckPrecent', this.intelligentData.dataList[0])
-          this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
-          this.$emit('submitLoadNew', {
-            left: this.tabInfo.object.repertoryList,
-            right: this.intelligentData.dataList
-          })
+            // 区域二  intelligentData
+            this.intelligentData.dataList = objectMerge2([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+            this.showCurPagesData = Object.assign({}, this.intelligentData)
+            this.setCurPageView(0) // 设置显示
+            this.currentIndex = 0
+            this.showCurrenFormStyle = []
+            this.showCurrenFormStyle[this.currentIndex] = true
+            this.$emit('truckIndex', this.currentIndex)
+            this.$emit('truckPrecent', this.intelligentData.dataList[0])
+            this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+            this.$emit('submitLoadNew', {
+              left: this.tabInfo.object.repertoryList,
+              right: this.tabInfo.object.tmsLoadSchemeDetailDtoList
+            })
             truckObject = {}
           } else {
             truckObject = {}
@@ -781,7 +784,7 @@ export default {
           dirverMobile: e.dirverMobile ? e.dirverMobile : '',
           truckLoad: e.weight,
           truckVolume: e.volume,
-          loadTime: e.loadTime,
+          loadTime: e.loadTime ? e.loadTime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}'),
           planArrivedTime: e.planArrivedTime,
           requireArrivedTime: e.requireArrivedTime,
           truckUserId: e.truckUserId,
@@ -964,12 +967,16 @@ export default {
             // 将新的方案添加到方案组列表里面
             if (!this.initScheme) {
               this.transpList.push(loadDataObject)
+              this.orgTranspList.push(loadDataObject)
             }
+
             this.activeTab = this.transpList.length - 1 + '' // 设置高亮最新的tab
             this.tabInfo.name = this.activeTab
             this.tabInfo.object = this.tabInfo.list[this.activeTab]
+            this.transpList[0] = this.orgFirstScheme[0]
             loadDataObject = {}
             this.loading = false
+            console.log('transpList&&&&&&&&&&&&&&&&&&', this.transpList, loadDataObject)
             // 高亮最新的方案
             this.$emit('schemeIndex', this.activeTab)
           }
@@ -994,6 +1001,7 @@ export default {
             return false
           } else {
             postIntnteSmartLoad(this.loadDataArray).then(res => {
+              this.submitLoading = false
               this.$message({ type: 'success', message: '保存配载成功！' })
               this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
               this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
@@ -1012,45 +1020,79 @@ export default {
     },
     tabSelect(obj) { // click: current tab
       console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
-      if (obj.name !== this.tabInfo.name) {
-        this.$confirm('还没有保存当前方案，是否保存?', '提示', {
-          confirmButtonText: '保存',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.saveForm()
-        }).catch(() => {
-          this.$notify.info({
-            title: '消息',
-            message: '已取消保存当前方案'
-          })
-          this.isSubmitLoad = true
-          // this.$message.info('已取消保存当前方案')
-          this.tabInfo = {
-            all: obj, // 整个tab实例
-            name: obj.name, // 当前tab的下标
-            list: obj.$attrs.object, // 方案组
-            object: obj.$attrs.object[obj.name] // 当前方案 
-          }
-          this.activeTab = this.tabInfo.name
-          console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
-          // 点击tab页面后 开始设置数据视图
-          // 区域一  intelligentLeftData 到达网点+分摊方式
-          this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
-          this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
-          // 区域二  intelligentData
-          this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
-          this.showCurPagesData = Object.assign({}, this.intelligentData)
-          this.setCurPageView(0) // 设置显示
-          this.currentIndex = 0
-          this.showCurrenFormStyle = []
-          this.showCurrenFormStyle[this.currentIndex] = true
-          this.$emit('truckIndex', this.currentIndex)
-          this.$emit('truckPrecent', this.intelligentData.dataList[0])
-          this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
-        })
-      }
+      let orgTranspList = JSON.stringify(this.orgFirstScheme[this.tabInfo.name])
+      let copyobj = objectMerge2({}, this.tabInfo.object)
+      copyobj.tmsLoadSchemeDetailDtoList.forEach(el => {
+        delete el.loadTime
+      })
+      let curTranspList = JSON.stringify(copyobj)
 
+      if (curTranspList.indexOf(orgTranspList) < 0) {
+        if (obj.name !== this.tabInfo.name) {
+          this.$confirm('还没有保存当前方案，是否保存?', '提示', {
+            confirmButtonText: '保存',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.saveForm()
+          }).catch(() => {
+            this.$notify.info({
+              title: '消息',
+              message: '已取消保存当前方案'
+            })
+            this.isSubmitLoad = true
+            this.tabInfo = {
+              all: obj, // 整个tab实例
+              name: obj.name, // 当前tab的下标
+              list: obj.$attrs.object, // 方案组
+              object: obj.$attrs.object[obj.name] // 当前方案 
+            }
+            this.activeTab = this.tabInfo.name
+            console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
+            // 点击tab页面后 开始设置数据视图
+            // 区域一  intelligentLeftData 到达网点+分摊方式
+            this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
+            this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
+            // 区域二  intelligentData
+            this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+            this.showCurPagesData = Object.assign({}, this.intelligentData)
+            this.setCurPageView(0) // 设置显示
+            this.currentIndex = 0
+            this.showCurrenFormStyle = []
+            this.showCurrenFormStyle[this.currentIndex] = true
+            this.$emit('truckIndex', this.currentIndex)
+            this.$emit('truckPrecent', this.intelligentData.dataList[0])
+            this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+          })
+        }
+      }else {
+        orgTranspList = ''
+        curTranspList = ''
+        copyobj = {}
+         this.isSubmitLoad = true
+            this.tabInfo = {
+              all: obj, // 整个tab实例
+              name: obj.name, // 当前tab的下标
+              list: obj.$attrs.object, // 方案组
+              object: obj.$attrs.object[obj.name] // 当前方案 
+            }
+            this.activeTab = this.tabInfo.name
+            console.log('Tab方案' + this.changeNumCN[this.activeTab] + '信息：tabInfo', this.tabInfo)
+            // 点击tab页面后 开始设置数据视图
+            // 区域一  intelligentLeftData 到达网点+分摊方式
+            this.intelligentLeftData.arriveOrgid = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].arriveOrgid
+            this.intelligentLeftData.apportionTypeId = this.tabInfo.object.tmsLoadSchemeDetailDtoList[0].apportionTypeId
+            // 区域二  intelligentData
+            this.intelligentData.dataList = Object.assign([], this.tabInfo.object.tmsLoadSchemeDetailDtoList)
+            this.showCurPagesData = Object.assign({}, this.intelligentData)
+            this.setCurPageView(0) // 设置显示
+            this.currentIndex = 0
+            this.showCurrenFormStyle = []
+            this.showCurrenFormStyle[this.currentIndex] = true
+            this.$emit('truckIndex', this.currentIndex)
+            this.$emit('truckPrecent', this.intelligentData.dataList[0])
+            this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+      }
     },
     removeTab(targetName) { // 删除当前方案
       let obj = {

@@ -271,7 +271,7 @@ export default {
             arr.push(e.tmsOrderLoadDetailsList)
           })
           this.orgRightTable = Object.assign([], arr)
-          this.initTable()
+          // this.initTable()
         }
       }
     },
@@ -287,6 +287,7 @@ export default {
     },
     loadTable: { // 深度监听数组变换  
       handler(cval, oval) { // 拿到智能配载返回的数据
+        console.log('loadtable&&&&&&&&&&&&')
         if (this.getinfoed2) {
           return
         }
@@ -305,6 +306,7 @@ export default {
     },
     truckIndex: {
       handler(cval, oval) { // 深度监听车型下标index 例如：0-车型一
+        console.log('truckIndex%^^^^^^^^^^')
         this.initTable()
       },
       deep: true
@@ -409,13 +411,12 @@ export default {
           })
         }
       })
-
-
       if (arr.length) {
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
           this.leftTable = this.leftTable.filter(em => {
             return em.repertoryId != e.repertoryId
           })
+          this.orgLeftTable = Object.assign([], this.leftTable)
         })
       } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
@@ -525,9 +526,11 @@ export default {
             this.leftTable = objectMerge2([], this.leftTable).filter(el => {
               return el.repertoryId !== e.repertoryId
             })
-            this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            console.log('goRighr1', this.orgLeftTable)
+            this.orgLeftTable = this.orgLeftTable.filter(el => {
               return el.repertoryId !== e.repertoryId
             })
+            console.log('goRighr2', this.orgLeftTable)
           }
         })
         this.$nextTick(() => {
