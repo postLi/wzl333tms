@@ -33,6 +33,8 @@
     </div>
     <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
+    <!-- 实际发车时间 弹出框 -->
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
   </div>
 </template>
 <script>
@@ -45,12 +47,14 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import actualSendtime from '../load/components/actualSendtimeDialog'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddCustomer
+    AddCustomer,
+    actualSendtime
   },
   computed: {
     ...mapGetters([
@@ -65,6 +69,7 @@ export default {
   },
   data() {
     return {
+      timeInfoVisible: false,
       // 控制显示提示消息
       isChecked: false,
       isCheckedShow: false,
@@ -139,6 +144,11 @@ export default {
           width: '110',
           fixed: false
         }, {
+          label: '实际到车时间',
+          prop: 'actualArrivetime',
+          width: '160',
+          fixed: false
+        },{
           label: '到车时间',
           prop: 'receivingTime',
           width: '160',
@@ -368,35 +378,7 @@ export default {
 
           break
         case 'sure':
-          this.closeAddCustomer()
-          if (this.selected.length > 1) {
-            this.$message({
-              message: '每次只能修改单条数据~',
-              type: 'warning'
-            })
-            return false
-          } else {
-            const id = this.selected[0].id
-            if (this.selected[0].bathStatusName === '在途中') {
-              postConfirmToCar(id, 54).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '到车确定成功~'
-                })
-                this.fetchData()
-              }).catch(err => {
-                this._handlerCatchMsg(err)
-              })
-            } else {
-              this.closeAddCustomer()
-              const bathStatusName = this.selected[0].bathStatusName
-              this.$message({
-                message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
-                type: 'warning'
-              })
-              return false
-            }
-          }
+          this.timeInfoVisible = true
           break
         case 'deselectCar':
           this.closeAddCustomer()
@@ -487,7 +469,41 @@ export default {
           break
 
       }
+      if (type !== 'sure') {
+
       this.$refs.multipleTable.clearSelection()
+      }
+    },
+    getActualTime (obj) {
+      this.closeAddCustomer()
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+            return false
+          } else {
+            const id = this.selected[0].id
+            if (this.selected[0].bathStatusName === '在途中') {
+              postConfirmToCar(id, 54, obj.actualArrivetime).then(res => {
+                this.$message({
+                  type: 'success',
+                  message: '到车确定成功~'
+                })
+                this.fetchData()
+              }).catch(err => {
+                this._handlerCatchMsg(err)
+              })
+            } else {
+              this.closeAddCustomer()
+              const bathStatusName = this.selected[0].bathStatusName
+              this.$message({
+                message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
+                type: 'warning'
+              })
+              return false
+            }
+          }
     },
     setTable() {
       this.setupTableVisible = true

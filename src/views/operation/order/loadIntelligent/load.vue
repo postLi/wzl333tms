@@ -1,12 +1,12 @@
 <template>
-  <div class="loadIntelligent_content" v-loading="loading">
+  <div class="loadIntelligent_content" v-loading="loading" :key="loadKey">
     <div class="loadIntelligent_main">
-      <loadInfo @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable" @truckInfo="getTruckInfo"></loadInfo>
+      <loadInfo :modify="modify" :transpList="transpList" @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable" @truckInfo="getTruckInfo" @schemeIndex="getSchemeIndex" :leftTableArr="leftTableArr" :orgFirstScheme="orgFirstScheme" @submitLoadNew="getSubmitLoadNew"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable" :dofo="truckInfo"></transferTable>
+        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable" :dofo="truckInfo" :schemeIndex="schemeIndex" @leftTable="getLeftTable" :submitLoadNew="submitLoadNew"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
@@ -26,18 +26,18 @@ import { REGEX } from '@/utils/validate'
 import transferTable from './components/transferTable'
 import loadChart from './components/loadChart'
 import loadInfo from './components/loadInfo'
-import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2, tmsMath } from '@/utils/index'
 import { mapGetters } from 'vuex'
 import SelectType from '@/components/selectType/index'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
 import { getDrivers, getTrucK, getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
-import { getIntnteInit } from '@/api/operation/arteryDepart'
+import { getIntnteInit, selectSchemeGroupDetail, getIntnteCarInfo } from '@/api/operation/arteryDepart'
 import AddLntelligent from './components/intelligentParameterSet'
 
 export default {
-  name: "load",
+  name: "Load",
   components: {
     transferTable,
     loadChart,
@@ -54,6 +54,7 @@ export default {
   },
   data() {
     return {
+      modify: false, // true-修改 false-添加
       truckIndex: '',
       truckPrecent: {},
       isAddOrgRightTable: '',
@@ -102,7 +103,14 @@ export default {
       paramTuck: [],
       resetTrucDelListLen: '',
       getinfoed: false,
-      truckInfo: {}
+      truckInfo: {},
+      transpList: [],
+      truckOptions: [],
+      schemeIndex: 0,
+      leftTableArr: [],
+      orgFirstScheme: [],
+      loadKey: 0,
+      submitLoadNew: {}
     }
   },
   computed: {
@@ -129,66 +137,151 @@ export default {
     },
     loadInfoPercent() {
       const data = Object.assign([], this.loadInfoPercentOrg)
-      console.log('loadTable2.3', data)
       return data
     }
   },
+  watch: {
+    $route(newVal, oldVal) {
+      console.log('this.$router', newVal, this.$router)
+
+      if (newVal.fullPath.indexOf('/operation/order/loadIntelligent/load') !== -1 && newVal.fullPath !== window.intelligentUrl) {
+        this.inited = false
+        this.loadKey = new Date().getTime()
+        window.intelligentUrl = newVal.fullPath
+
+        this.init()
+        this.infoData()
+      }
+    }
+  },
   mounted() {
+    console.log('load mounted~~~~~~~~~~')
+    this.getSystemTruck()
     this.init()
     this.infoData()
+    window.intelligentUrl = this.$route.fullPath
   },
   methods: {
     infoData() {
-      let obj = JSON.parse(this.$route.query.sendDate)
-      this.sendRoute.orgId = this.$route.query.orgId
-      this.sendRoute.standCar = obj.map((item, val) => {
-        return { id: item.cid, spri: item.price }
-      })
-      this.loading = true
-      return getIntnteInit(this.sendRoute).then(data => {
-        if (data) {
-          this.intelligentData = data.transp[0].standacars
-          console.log('9090909090')
-          this.setLoadTableList.left = data.transp[0].storeOrderListloss
-          this.intelligentData.forEach((e, index) => {
-            this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
+      if (this.$route.query && this.$route.query.schemeGroup) { // 查看修改配载
+        this.modify = true
+        this.loading = true
+        return selectSchemeGroupDetail(this.$route.query).then(data => {
+            let arr = objectMerge2([], data) // 这里不能用Object.assign 需要深拷贝
+            console.log('修改', data)
+            arr.forEach((e, index) => {
+              e.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => { // 将数据改成新增配载时原始方案的数据结构
+                this.$set(el, 'carLoadDetail', el.tmsOrderLoadDetailsList)
+                this.$set(el, '_index', elindex)
+                for (let item in el.tmsOrderLoad) {
+                  if (item !== 'schemeId' && item !== 'id') {
+                    this.$set(el, item, el.tmsOrderLoad[item])
+                  }
+                  this.$set(el, 'weight', el.tmsOrderLoad.truckLoad)
+                  this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
+                  this.$set(el, 'dirverName', el.dirverName ? el.dirverName : '')
+                  this.$set(el, 'dirverMobile', el.dirverMobile ? el.dirverMobile : '')
+                  this.$set(el, 'truckIdNumber', el.truckIdNumber ? el.truckIdNumber : '')
+                }
+                this.truckOptions.forEach(em => {
+                  if (em.cid === el.cid) {
+                    this.$set(el, 'name', em.name)
+                  }
+                })
+                let totalPrice = tmsMath.add(
+                  el.tmsOrderLoadFee.nowpayCarriage,
+                  el.tmsOrderLoadFee.nowpayOilCard,
+                  el.tmsOrderLoadFee.backpayCarriage,
+                  el.tmsOrderLoadFee.backpayOilCard,
+                  el.tmsOrderLoadFee.arrivepayCarriage,
+                  el.tmsOrderLoadFee.arrivepayOilCard).result()
+                this.$set(el, 'price', totalPrice)
+                totalPrice = 0
+              })
+            })
+            this.transpList = objectMerge2([], arr)
+            this.orgFirstScheme = objectMerge2([], arr)
+            this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息 
+            this.setLoadTableList.left = data[0].repertoryList // 第一个方案的库存列表
+            this.intelligentData.forEach((e, index) => {
+              this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
+              this.loading = false
+            })
           })
-
-        } else {
+          .catch(err => {
+            this._handlerCatchMsg(err)
+            this.loading = false
+          })
+      } else { // 新增配载
+        this.modify = false
+        let obj = JSON.parse(this.$route.query.sendDate)
+        this.sendRoute.orgId = this.$route.query.orgId
+        this.sendRoute.standCar = obj.map((item, val) => {
+          return { id: item.cid, spri: item.price, carNo: item.carNo }
+        })
+        this.loading = true
+        return getIntnteInit(this.sendRoute).then(data => {
+          if (data) {
+            console.log('新增', data)
+            let arr = objectMerge2([], data.transp)
+            arr.forEach((e, index) => {
+              this.$set(e, 'repertoryList', e.storeOrderListloss)
+              this.$set(e, 'tmsLoadSchemeDetailDtoList', e.standacars)
+              e.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
+                this.$set(el, 'arriveOrgid', this.$route.query.orgId)
+                this.$set(el, 'dirverName', el.carDriver ? el.carDriver : '')
+                this.$set(el, 'dirverMobile', el.carDriverPhone ? el.carDriverPhone : '')
+                this.$set(el, 'truckIdNumber', el.carNo ? el.carNo : '')
+                this.$set(el, '_index', elindex)
+                let obj = {}
+                for (let item in el) {
+                  this.$set(obj, item, el[item])
+                }
+                this.$set(el, 'tmsOrderLoad', obj)
+                this.$set(el, 'tmsOrderLoadDetailsList', el.carLoadDetail)
+                this.$set(el, 'tmsOrderLoadFee', { nowpayCarriage: el.price })
+              })
+            })
+            this.transpList = objectMerge2([], arr)
+            this.orgFirstScheme = objectMerge2([], arr)
+            console.log('transpList=========', this.transpList)
+            this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息 
+            this.setLoadTableList.left = this.transpList[0].repertoryList // 第一个方案的库存列表
+            this.intelligentData.forEach((e, index) => {
+              this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
+              this.loading = false
+            })
+          } else {
+            this.eventBus.$emit('closeCurrentView')
+            this.$message({ type: 'warning', message: '无配载信息' })
+          }
+          setTimeout(() => {
+            this.getinfoed = true
+          }, 1000)
+          this.loading = false
+        }).catch(err => {
+          this._handlerCatchMsg(err)
+          this.$router.push({ path: '../arteryDepart' })
           this.eventBus.$emit('closeCurrentView')
-          this.$message({ type: 'warning', message: '无配载信息' })
+          this.loading = false
+        })
 
-        }
-        setTimeout(() => {
-          this.getinfoed = true
-        }, 1000)
-        this.loading = false
-      }).catch(err => {
-        this._handlerCatchMsg(err)
-        this.$router.push({ path: '../arteryDepart' })
-        this.eventBus.$emit('closeCurrentView')
-        this.loading = false
-      })
+      }
     },
     getTruckIndex(obj) {
-      console.log('this.truckIndex:', this.truckIndex, obj)
       this.truckIndex = ''
       this.$nextTick(() => {
         this.truckIndex = obj
       })
-
     },
     getTruckPrecent(obj) {
-      console.log('loadTable2.3', obj)
       this.truckPrecent = {}
       this.$nextTick(() => {
         this.truckPrecent = obj
-
       })
     },
     getDelCurTruck(obj) { // 删除车辆的时候 需要将右边的数据减到左边
       this.delCurTruckData = Object.assign({}, obj)
-      console.log('delCurTruck2', obj, this.delCurTruckData)
     },
     getTruckInfo(obj) {
       this.truckInfo = {}
@@ -239,23 +332,52 @@ export default {
       this.infoDriver = {}
       this.addDriverVisible = true
     },
+    getSystemTruck() {
+      getIntnteCarInfo(this.otherinfo.orgid, 1).then(data => {
+        this.truckOptions = data
+      })
+    },
     closeAddDriver() {
       this.addDriverVisible = false
     },
     closeAddTruckVisible() {
       this.addTruckVisible = false
     },
+    getLeftTable(arr) { // 获取当前方案的库存列表
+      this.leftTableArr = Object.assign([], arr)
+    },
     getSavaParamTruck(arr) { // 参数设置时返回的数据
-      console.log('getSavaParamTruck', arr)
       this.paramTuck = Object.assign([], arr)
     },
     getLoadTable(arr) {
       this.loadTableInfo = arr
     },
     getLoadCurTable(arr) {
-      console.log('loadTable2', arr)
       this.loadInfoPercentOrg = objectMerge2([], arr)
-      console.log('loadTable2.1', arr)
+    },
+     getSubmitLoadNew(obj) { // 计算配置后获得的数据
+      this.transpList[this.schemeIndex].repertoryList = obj.left
+      this.transpList[this.schemeIndex].tmsLoadSchemeDetailDtoList = obj.right
+      this.submitLoadNew = {}
+      this.$nextTick(() => {
+      this.submitLoadNew = obj
+      })
+    },
+    getSchemeIndex(num) { // 获取当前方案下标index
+      this.schemeIndex = num
+      console.log('this.transpList[num]===========', this.transpList[num])
+      // 设置库存运单和配载清单
+      this.$nextTick(() => {
+        if (this.transpList && this.transpList.length > 0) {
+          if (this.modify) {
+            this.setLoadTableList.left = this.transpList[num].repertoryList // 第一个方案的库存列表
+            this.transpList[num].tmsLoadSchemeDetailDtoList.forEach((e, index) => {
+              this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
+              this.loading = false
+            })
+          }
+        }
+      })
     },
     showFullViewTable(val) { // 穿梭框全屏展示
       this.isShowViewTable = val

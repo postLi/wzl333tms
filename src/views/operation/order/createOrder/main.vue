@@ -1459,6 +1459,7 @@ export default {
       // 4.1 正常的创建运单
       // 5. 从弹窗过来
       this.loading = true
+
       this.reset()
       this.getBaseSetting().then(res => {
         console.log('base setting info:', res, this.$route)
@@ -2087,6 +2088,9 @@ export default {
       // this.setOrderDate()
 
       this.output = {}
+      // 所有操作变量都需要重置
+      this.isSaveAndNew = false
+      this.isSavePrint = false
     },
     /** * 提交表单 */
     checkshipSn() {
@@ -2792,6 +2796,10 @@ export default {
           break
         case 'saveShipKey':
           this.isSavePrint = false // false-不保存并打印，只保存
+          this.submitForm()
+          break
+        case 'saveAndNew':
+          this.isSaveAndNew = true
           this.submitForm()
           break
         case 'savePrintKey':

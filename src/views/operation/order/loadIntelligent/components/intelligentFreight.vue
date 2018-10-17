@@ -167,7 +167,6 @@ export default {
     popVisible(newVal) {
       if (newVal) {
         this.$set(this.usersArr, 0, this.intFreightItem)
-        console.log(this.intFreightItem)
       }
     }
   },
@@ -182,7 +181,6 @@ export default {
   methods: {
     changeFright(index, prop, newVal) {
       // newVal = newVal.replace(REGEX.FLOAT2ING, '')
-      console.log(index, prop, newVal)
       newVal = newVal.target.value
 
       this.usersArr[index][prop] = Number(newVal)
@@ -235,7 +233,6 @@ export default {
         this.usersArr[0].backpayOilCard,
         this.usersArr[0].arrivepayCarriage,
         this.usersArr[0].arrivepayOilCard).result()
-      console.log(this.usersArr[0], '234234')
       this.$emit('getIntFreight', {
         obj: this.usersArr[0],
         val: this.total

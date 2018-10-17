@@ -45,6 +45,8 @@
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
+    <!-- 实际发车时间 弹出框 -->
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
   </div>
 </template>
 <script>
@@ -57,13 +59,15 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, loadJs } from '@/utils/index'
 import SignFrom from './components/sign'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import actualSendtime from '../load/components/actualSendtimeDialog'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
     editInfo,
-    SignFrom
+    SignFrom,
+    actualSendtime
   },
   computed: {
     ...mapGetters([
@@ -84,6 +88,7 @@ export default {
   data() {
     let LODOP
     return {
+      timeInfoVisible: false,
       loading: false,
       btnsize: 'mini',
       infoList: [],
@@ -164,7 +169,15 @@ export default {
           width: "120"
         },
         {
-          label: "送货时间",
+          label: "实际送货时间",
+          prop: "actualSendtime",
+          width: "180",
+          slot: (scope) => {
+            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: "送货操作时间",
           prop: "loadTime",
           width: "180",
           slot: (scope) => {
@@ -272,7 +285,7 @@ export default {
           break
         case 'deliverFinish': // 送货完成(批量)
           if (isWork) {
-            this.deliverFinish()
+            this.timeInfoVisible = true
           }
           break
         case 'cancelDeliver': // 取消送货(批量)
@@ -295,8 +308,10 @@ export default {
           })
           break
       }
-      // 清除选中状态，避免影响下个操作
-      this.$refs.multipleTable.clearSelection()
+      if (type !== 'deliverFinish') {
+        // 清除选中状态，避免影响下个操作
+        this.$refs.multipleTable.clearSelection()
+      }
     },
     setData(type) {
       let data = {}
@@ -333,14 +348,21 @@ export default {
         this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货' } })
       }
     },
-    deliverFinish() { // 送货完成
+    getActualTime(obj) { // 送货完成
       this.setData(57) //57-送货中
       if (this.isBatch) {
+        let timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+        this.$set(this.commonData, 'actualSendtime', timer)
+        this.loading = true
         putCompleteDelivery(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '保存成功' })
-            this.fetchData()
+            if (data) {
+              this.loading = false
+              this.$message({ type: 'success', message: '保存成功' })
+              this.fetchData()
+            }
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       } else {
@@ -351,11 +373,16 @@ export default {
     cancelDeliver() { // 取消送货
       this.setData(57)
       if (this.isBatch) {
+        this.loading = true
         putDeliverLoad(this.commonData).then(data => {
-            this.$message({ type: 'success', message: '保存成功' })
-            this.fetchData()
+            if (data) {
+              this.loading = false
+              this.$message({ type: 'success', message: '保存成功' })
+              this.fetchData()
+            }
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       } else {

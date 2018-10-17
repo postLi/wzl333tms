@@ -18,8 +18,8 @@ export function postSelectLoadMainInfoList(params) {
  * @param loadTypeId
  * @returns {AxiosPromise<any>}
  */
-export function putLoadDepart(loadIds, loadTypeId) {
-  return fetch.put('/api-order/order/load/v1/loadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId)
+export function putLoadDepart(loadIds, loadTypeId, putLoadDepart) {
+  return fetch.put('/api-order/order/load/v1/loadDepart?loadIds=' + loadIds + '&loadTypeId=' + loadTypeId + '&actualSendtime=' + putLoadDepart)
 }
 
 /**
@@ -64,20 +64,36 @@ export function getEditContract(params) {
   return fetch.put('/api-order/order/load/v1/contract', params)
 }
 
-//智能配载
+/**
+ *************************************************
+ *
+ *                    智能配载--干线
+ * 
+ * ***********************************************
+ */
 
+/**
+ * 智能配载_获得标准车型列表
+ * @param  {[type]} params [description]
+ */
 export function getIntnteSMainInfoList(params) {
   return fetch.get('/api-order/aitransport/tmsstandardcar/v1/', params).then(res => {
     return res.data
   })
 }
-
+/**
+ * 智能配载 得到配载方案
+ * @param  {[type]} params [description]
+ */
 export function getIntnteInit(params) {
   return fetch.post('/api-order/aitransport/intelligen/v1/init', params).then(res => {
     return res.data
   })
 }
-
+/**
+ * 智能配载_批量插入(把配载插入放到一个数组中)
+ * @param  {[type]} params [description]
+ */
 export function postIntnteSmartLoad(params) {
   return fetch.post('/api-order/order/load/v1/smartLoad', params)
 }
@@ -85,7 +101,7 @@ export function postIntnteSmartLoad(params) {
 //系统车型获取车型列表
 //sign 1查询系统车型 2查询当前网点自定义车型 3查询系统车型+当前网点自定义车型
 export function getIntnteCarInfo(orgid, sign) {
-  return fetch.get('/api-order/aitransport/pzcarinfotms/v1/getCarInfo/?orgid=' + orgid + '&sign=' + sign,).then(res => {
+  return fetch.get('/api-order/aitransport/pzcarinfotms/v1/getCarInfo/?orgid=' + orgid + '&sign=' + sign, ).then(res => {
     return res.data
   })
 }
@@ -103,4 +119,46 @@ export function putPzcarinfotms(params) {
 //_删除自定义车型
 export function deletePzcarinfotms(id) {
   return fetch.delete('/api-order/aitransport/pzcarinfotms/v1/' + id)
+}
+// 查询方案列表
+export function postLoadSchemeList(params) {
+  return fetch.post('/api-order/aitransport/tmssmartloadscheme/v1/loadSchemeList/', params).then(res => {
+    return res.data
+  })
+}
+// 修改保存方案
+export function putUpdateScheme(params) {
+  return fetch.put('/api-order/aitransport/tmssmartloadscheme/v1/updateScheme/', params).then(res => {
+    return res.data
+  })
+}
+// 删除当前方案组
+export function deleteScheme(params) {
+  return fetch.delete('/api-order/aitransport/tmssmartloadscheme/v1/deleteScheme/?schemeGroup=' + params.schemeGroup + '&orgid=' + params.orgid).then(res => {
+    return res.data
+  })
+}
+// 删除当前方案
+export function deleteSchemeById(params) {
+  return fetch.delete('/api-order/aitransport/tmssmartloadscheme/v1/deleteSchemeById/?schemeId=' + params.schemeId).then(res => {
+    return res.data
+  })
+}
+// 新增保存方案
+export function postSaveScheme(params) {
+  return fetch.post('/api-order/aitransport/tmssmartloadscheme/v1/saveScheme/', params).then(res => {
+    return res.data
+  })
+}
+// 查看当前方案组
+export function selectSchemeGroupDetail(params) {
+  return fetch.get('/api-order/aitransport/tmssmartloadscheme/v1/selectSchemeGroupDetail?schemeGroup=' + params.schemeGroup + '&orgid=' + params.orgid).then(res => {
+    return res.data
+  })
+}
+// 到达网点查询城市及运单信息 新增智能时的弹框
+export function getRepertoryInfo(arriveOrgid) {
+  return fetch.get('/api-order/aitransport/tmssmartloadscheme/v1/getRepertoryInfo?arriveOrgid=' + arriveOrgid).then(res => {
+    return res.data
+  })
 }

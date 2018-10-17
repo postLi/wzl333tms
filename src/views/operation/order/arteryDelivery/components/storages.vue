@@ -409,19 +409,19 @@
       </div>
     </template>
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootSecond">
-      <el-form inline :model="formModel" :rules="ruleForm" ref="formModel">
+      <el-form inline :model="formModelTrack" :rules="ruleForm" ref="formModelTrack">
         <el-form-item label="类型" prop="loadStatus">
-          <el-input v-model="formModel.loadStatus" placeholder="类型" size="mini"></el-input>
+          <el-input v-model="formModelTrack.loadStatus" placeholder="类型" size="mini"></el-input>
         </el-form-item>
         <el-form-item label="时间" prop="operatorTime">
-          <el-date-picker v-model.trim="formModel.operatorTime" type="datetime" placeholder="选择时间" size="mini">
+          <el-date-picker v-model.trim="formModelTrack.operatorTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="操作信息" prop="operatorInfo">
-          <el-input v-model="formModel.operatorInfo" placeholder="" size="mini"></el-input>
+          <el-input v-model="formModelTrack.operatorInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
-          <el-button type="primary" @click="submitForm('formModel')" size="mini">保 存</el-button>
+          <el-button type="primary" @click="submitForm('formModelTrack')" size="mini">保 存</el-button>
           <transition name="el-zoom-in-center">
             <el-button v-if="isCancelFootEdit" type="warning" @click="resetForm()" size="mini">取 消</el-button>
           </transition>
@@ -463,6 +463,11 @@
       }
 
       return {
+        formModelTrack: {
+          loadStatus: '',
+          operatorTime: +new Date(),
+          operatorInfo: ''
+        },
         ruleData: {
           arriveHandlingFee: [
             { validator: validateNum, trigger: 'blur' }
@@ -816,6 +821,9 @@
           this.inited = true
           this.initInfo()
         }
+        if (newVal) {
+          this.formModelTrack = this.$options.data().formModelTrack
+        }
       }
     },
     mounted() {
@@ -987,12 +995,12 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.formModel.id) {
+            if (this.formModelTrack.id) {
               this.editTrack()
-              console.log('FORMMODEL_EDIT', this.formModel)
+              console.log('FORMMODEL_EDIT', this.formModelTrack)
             } else {
               this.addTrack()
-              console.log('FORMMODEL_ADD', this.formModel)
+              console.log('FORMMODEL_ADD', this.formModelTrack)
             }
           }
           this.closeMe()
@@ -1019,13 +1027,14 @@
       },
       editItem(item) {
         // this.resetForm()
-        this.formModel = objectMerge2({}, item)
+        this.formModelTrack = objectMerge2({}, item)
         this.isCancelFootEdit = true
       },
       editTrack() {
-        console.log('修改')
-        this.formModel.transferId = 0
-        return putUpdateTrack(this.formModel).then(data => {
+        console.log('修改', this.info)
+        this.formModelTrack.transferId = 0
+        this.formModelTrack.operatorTime = parseTime(this.formModelTrack.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
+        return putUpdateTrack(this.formModelTrack).then(data => {
           this.$message({ type: 'success', message: '修改成功' })
           this.getDetail()
           this.resetForm()
@@ -1035,9 +1044,11 @@
         })
       },
       addTrack() {
-        console.log('添加')
-        this.formModel.loadId = this.id
-        return postAddTrack(this.formModel).then(data => {
+        console.log('添加', this.info)
+        this.formModelTrack.loadId = this.info.id
+        this.formModelTrack.addStatus = 1 // 0-自动添加 1-手动添加
+        this.formModelTrack.operatorTime = parseTime(this.formModelTrack.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
+        return postAddTrack(this.formModelTrack).then(data => {
           this.$message({ type: 'success', message: '添加成功' })
           this.getDetail()
           this.resetForm()
@@ -1048,8 +1059,8 @@
       },
       resetForm() {
         this.$nextTick(() => {
-          this.$refs['formModel'].resetFields()
-          this.formModel = this.$options.data().formModel
+          this.$refs['formModelTrack'].resetFields()
+          this.formModelTrack = this.$options.data().formModelTrack
           this.isCancelFootEdit = false
         })
       },
@@ -1409,6 +1420,7 @@
     margin: 76px 10px 0 10px;
     display: flex;
     flex-direction: column;
+    height: 100%;
     /* 覆盖ele样式 */
     .el-form--inline .el-form-item {
       margin-bottom: 0;
@@ -1562,6 +1574,16 @@
     bottom: auto;
     min-width: 1100px;
     max-width: 1100px;
+    height: 100%;
+    .el-tabs {
+    height: 100%;
+    .el-tabs__content {
+      height: 100%;
+      .el-tab-pane {
+        height: calc(100% - 90px);
+      }
+    }
+  }
     /*z-index: 1001 !important;*/
     .el-input.is-disabled {
       .el-input__inner {
@@ -1581,8 +1603,8 @@
     font-size: 14px;
     background: rgb(223, 233, 245);
     padding-left: 15px;
-    position: fixed;
-    top: 30px;
+    position: absolute;
+    top: 0px;
     left: 0;
     z-index: 34;
   }
@@ -1606,15 +1628,16 @@
     // width: 100%;
     // display: flex;
     // flex-direction: column;
+    height: 100%;
     .tab-card {
       .el-tabs__content {
         padding: 0 !important;
       }
     }
     .el-tabs__header {
-      position: fixed;
+      position: absolute;
       z-index: 34;
-      top: 66px;
+      top: 36px;
       left: 0;
       padding: 0 10px;
       background-color: #ffffff;

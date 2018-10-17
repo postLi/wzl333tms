@@ -70,7 +70,7 @@
           </div>
           <div class="databox-line"></div>
           <div :class="{'activetab':currenttab === 5}" @click="currenttab=5" class="databox datared">
-            <span class="databox-label">运输异常<i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i></span>
+            <span class="databox-label">运输异常<!-- <i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i> --></span>
             
             <span class="dataico"><icon-svg icon-class="btn27_yichangdj" /></span>
             <span class="databox-value">{{thedata.amountAbonormal}}票</span>
@@ -353,7 +353,7 @@ export default {
       data.orgAllId = this.orgId.map((res, index) => {
         return (index + 1)
       }).join(',')
-      data.timeKey = this.currentkey
+      data.timeKey = this.currentkey + 1
       getConsoleData2(data).then(res => {
         const data = res.data
         if (data) {
@@ -396,13 +396,15 @@ export default {
           fangArr.push(el.amount)
           let name = ''
           if (this.currenttab < 2) {
-            name = 'shipToCityName'
+            name = 'cityName'
           } else if (this.currenttab < 5) {
             name = 'shipToOrgid'
           } else if (this.currenttab === 5) {
             name = 'dutyOrgId'
           } else if (this.currenttab === 6) {
             name = 'signWay'
+          } else {
+            name = 'cityName'
           }
           monthArr.push(el[name])
         })
@@ -420,11 +422,11 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          // selectedMode: 'single',
+          selectedMode: 'single',
           selected: {
-            '票': true,
+            '票': false,
             '吨': true,
-            '方': true
+            '方': false
           },
           data: ['票', '吨', '方']
         },
@@ -457,6 +459,7 @@ export default {
             name: '票',
             type: 'bar',
             smooth: true,
+            barMaxWidth: '10%',
             itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
             data: shipArr,
@@ -471,6 +474,7 @@ export default {
             name: '吨',
             type: 'bar',
             smooth: true,
+            barMaxWidth: '10%',
             itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: volumeArr,
@@ -485,6 +489,7 @@ export default {
             name: '方',
             type: 'bar',
             smooth: true,
+            barMaxWidth: '10%',
             itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: fangArr,

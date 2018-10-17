@@ -94,14 +94,12 @@ export default {
   watch: {
     info: {
       handler(cval, oval) {
-        console.log('loadTable3.1', cval, oval, this.baseInfo)
         this.baseInfo.weight = 0
         this.baseInfo.volume = 0
         cval.forEach(e => {
           this.baseInfo.weight += Number(e.repertoryWeight) || 0
           this.baseInfo.volume += Number(e.repertoryVolume) || 0
         })
-        console.log('loadTable3.2', cval, this.baseInfo)
         if (cval) {
           this.initChart()
         }

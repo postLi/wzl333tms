@@ -10,11 +10,12 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
-                        @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
-                        auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <el-input v-else v-model.trim="checkBillName"
+                         :disabled="disabledName"
+                        auto-complete="off" 
                         @blur="tooltip = false;disabledName = true"
-                        @mouseenter.native=" disabledName === true && (tooltip = true)"
+                        
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
 
             </el-tooltip>
@@ -457,7 +458,7 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime,tmsMath ,objectMerge2} from '@/utils/'
+  import { pickerOptions2, parseTime, tmsMath, objectMerge2 } from '@/utils/'
   import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
@@ -604,7 +605,7 @@
           ]
         }
       }
-  },
+    },
     computed: {
       ...mapGetters([
         'otherinfo'
@@ -618,10 +619,10 @@
         this.moodifyList().then(() => {
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
-        }).catch((err)=>{
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
+        }).catch((err) => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
         this.moodifyDealPay()
         this.moodifyReadyPay()
       } else {
@@ -637,14 +638,14 @@
             data: objectMerge2({}, this.form),
             name: '新建对账'
           })
-        }else {
+        } else {
           this.$message({
             message: '请选择车牌号进行查询~',
             type: 'error'
           })
           return false
         }
-    },
+      },
       truckName() {
         this.loading = true
         return getTrucK().then(data => {
@@ -902,24 +903,24 @@
           if (index === 0) {
             sums[index] = '合计'
             return
-        }
+          }
           if (index === 3 || index === 4 || index === 5) {
             sums[index] = ''
             return
-        }
+          }
           const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev , curr)
+                return tmsMath._add(prev, curr)
                 // return prev + curr
               } else {
                 return prev
               }
             }, 0)
             sums[index] += ' '
-        } else {
+          } else {
             sums[index] = ''
           }
         })
@@ -1019,6 +1020,13 @@
 <style lang="scss">
   .ahort_lll {
     margin: 0 9px;
+
+    .el-table__footer-wrapper{
+      td:nth-child(n+1){
+        color: #fe0000;
+      }
+    }
+
     .sTop {
 
       .short_searchinfo {
@@ -1027,6 +1035,22 @@
         .sTitle {
           flex: 1;
           text-align: center;
+
+          .showBg{
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-bottom: 3px double #c0c4cc;
+            font-size: 18px;
+            color: #333333;
+            font-weight: 600;
+            line-height: 1.3;
+            max-width: 600px;
+            min-width: 100px;
+            text-align: center;
+            display: inline-block;
+          }
+
           /*showBg*/
           .el-tooltip.showBg {
             .el-input__inner {
@@ -1058,18 +1082,19 @@
             font-weight: 600;
           }
           .el-input__inner {
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-top-color: transparent;
-            border-bottom: 3px double #c0c4cc;
             font-size: 18px;
             color: #333333;
             font-weight: 600;
-            width: 200%;
+            padding-left: 0;
+            padding-right: 0;
             text-align: center;
           }
           .el-input__inner:focus {
             border-bottom-color: #c0c4cc;
+          }
+          .el-input {
+            display: block;
+            width: 600px;
           }
         }
         .el-form-item__content {

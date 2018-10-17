@@ -11,11 +11,12 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
-                        @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
-                        auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <el-input v-else v-model.trim="checkBillName"
+                         :disabled="disabledName"
+                        auto-complete="off" 
                         @blur="tooltip = false;disabledName = true"
-                        @mouseenter.native=" disabledName === true && (tooltip = true)"
+                        
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
 
             </el-tooltip>
@@ -781,13 +782,13 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime,objectMerge2,tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCarrierinitialize, getCarrierCarrierdetail } from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import { SaveAsFileCarrier} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCarrier } from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
 
   export default {
@@ -810,21 +811,21 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ],
           'memberPersonPhone': [
-            {trigger: 'change', validator: validateMobile}
+            { trigger: 'change', validator: validateMobile }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         },
         pickerOptions2: {
@@ -920,7 +921,7 @@
       export1() {
         this.sendData()
         SaveAsFileCarrier({
-          data: objectMerge2({},this.form),
+          data: objectMerge2({}, this.form),
           name: '新建对账'
         })
       },
@@ -928,7 +929,6 @@
         this.loading = true
         this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
         return postCarrierinitialize(this.searchTitle).then(data => {
-
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)
           this.infoList()
@@ -943,7 +943,6 @@
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
               } else {
-
                 this.alreadyPayInfo = []
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
@@ -1029,7 +1028,7 @@
                 this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
                 this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                 this.countTotal() // 计算合计
+                this.countTotal() // 计算合计
                 if (!this.form.carrierDetailDtoList.length) {
                   this.$message({
                     message: '各款项不能为空~',
@@ -1048,29 +1047,29 @@
           }
         })
       },
-      countTotal () {
+      countTotal() {
         this.tota.dealtota = this.dealInfo ? this.dealInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalFee
+          const a = {}
+          a.totalFee = el.totalFee
 
-                  return a
-                }) : []
-                this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalCost
+          return a
+        }) : []
+        this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
+          const a = {}
+          a.totalFee = el.totalCost
 
-                  return a
-                }) : []
-                this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalFee
-                  return a
-                }) : []
-                this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
-                  const a = {}
-                  a.totalFee = el.totalCost
-                  return a
-                }) : []
+          return a
+        }) : []
+        this.tota.alreadytota = this.alreadyInfo ? this.alreadyInfo.map(el => {
+          const a = {}
+          a.totalFee = el.totalFee
+          return a
+        }) : []
+        this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
+          const a = {}
+          a.totalFee = el.totalCost
+          return a
+        }) : []
       },
       sendData() {
         this.form.tmsFinanceBillCheckDto.checkBillName = this.checkBillName
@@ -1125,7 +1124,7 @@
         this.delCont()
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
@@ -1141,7 +1140,7 @@
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return tmsMath._add(prev,curr)
+                return tmsMath._add(prev, curr)
               } else {
                 return prev
               }
@@ -1261,6 +1260,13 @@
 <style lang="scss">
   .carrierCreat_lll {
     margin: 0 10px;
+    
+    .el-table__footer-wrapper{
+      td:nth-child(n+1){
+        color: #fe0000;
+      }
+    }
+
     .sTop {
       .short_searchinfo {
         display: flex;
@@ -1273,10 +1279,23 @@
           margin-bottom: 0px;
           width: 100%;
           .el-form-item__content{
-            width: 50%;
             min-width: 400px;
           }
          }
+         .showBg{
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-bottom: 3px double #c0c4cc;
+            font-size: 18px;
+            color: #333333;
+            font-weight: 600;
+            line-height: 1.3;
+            max-width: 600px;
+            min-width: 100px;
+            text-align: center;
+            display: inline-block;
+          }
           /*showBg*/
           .el-tooltip.showBg {
             .el-input__inner {
@@ -1308,21 +1327,21 @@
             font-weight: 600;
           }
           .el-input__inner {
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-top-color: transparent;
-            border-bottom: 3px double #c0c4cc;
+            
             font-size: 18px;
             color: #333333;
             font-weight: 600;
             text-align: center;
+             padding-left: 0;
+            padding-right: 0;
           }
 
           .el-input__inner:focus {
             border-bottom-color: #c0c4cc;
           }
           .el-input {
-            // width: 158%;
+           display: block;
+            width: 600px;
           }
         }
         // .el-form-item__content {

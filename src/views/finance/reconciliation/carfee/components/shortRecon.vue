@@ -11,11 +11,12 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <el-input :class="{'showBg':disabledName === false}" v-model.trim="checkBillName" clearable
-                        @dblclick.native="(disabledName = false) ; (tooltip = false)" :disabled="disabledName"
-                        auto-complete="off" @mouseover.native=" disabledName === true && (tooltip = true)"
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <el-input v-else v-model.trim="checkBillName"
+                         :disabled="disabledName"
+                        auto-complete="off" 
                         @blur="tooltip = false;disabledName = true"
-                        @mouseenter.native=" disabledName === true && (tooltip = true)"
+                        
                         @mouseleave.native="tooltip = false;disabledName = true"></el-input>
 
             </el-tooltip>
@@ -364,8 +365,8 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -373,10 +374,10 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {getTrucK} from '@/api/operation/load'
-  import {SaveAsFileCarfeefeeShort} from '@/utils/recLodopFuncs'
+  import { getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarfeefeeShort } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -498,15 +499,15 @@
         },
         rules: {
           'bankAccount': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -528,7 +529,7 @@
           this.truckKey = new Date().getTime()
           this.searchDealPay.memberName = this.searchTitle.memberName
           this.searchAlReadyPay.memberName = this.searchTitle.memberName
-        }).catch((err)=>{
+        }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
         })
@@ -628,7 +629,6 @@
           this.dealPaytota = []
           this.dealPayInfo = data
           this.dealPaytota = data
-
 
           this.loading = false
         }).catch(err => {
@@ -832,7 +832,7 @@
         }
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
@@ -965,6 +965,13 @@
 <style lang="scss">
   .short_lll {
     margin: 0 9px;
+
+    .el-table__footer-wrapper{
+      td:nth-child(n+1){
+        color: #fe0000;
+      }
+    }
+
     .sTop {
 
       .short_searchinfo {
@@ -973,6 +980,22 @@
         .sTitle {
           flex: 1;
           text-align: center;
+
+          .showBg{
+            border-left-color: transparent;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            border-bottom: 3px double #c0c4cc;
+            font-size: 18px;
+            color: #333333;
+            font-weight: 600;
+            line-height: 1.3;
+            max-width: 600px;
+            min-width: 100px;
+            text-align: center;
+            display: inline-block;
+          }
+
           /*showBg*/
           .el-tooltip.showBg {
             .el-input__inner {
@@ -1004,18 +1027,19 @@
             font-weight: 600;
           }
           .el-input__inner {
-            border-left-color: transparent;
-            border-right-color: transparent;
-            border-top-color: transparent;
-            border-bottom: 3px double #c0c4cc;
             font-size: 18px;
             color: #333333;
             font-weight: 600;
-            width: 200%;
+            padding-left: 0;
+            padding-right: 0;
             text-align: center;
           }
           .el-input__inner:focus {
             border-bottom-color: #c0c4cc;
+          }
+          .el-input {
+            display: block;
+            width: 600px;
           }
         }
         .el-form-item__content {

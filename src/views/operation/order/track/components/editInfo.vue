@@ -171,7 +171,9 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.formModel.id) {
         getSystemTime().then(data => {
-            this.formModel.operatorTime = parseTime(data.trim())
+            if (data) {
+              this.formModel.operatorTime = parseTime(data.trim(), '{y}-{m}-{d} {h}:{i}:{s}')
+            }
           })
           .catch(err => {
             this._handlerCatchMsg(err)
@@ -239,7 +241,7 @@ export default {
     editTrack() { // 修改跟踪信息
       console.log('修改', this.formModel)
       this.formModel.transferId = 0
-      this.formModel.operatorTime = parseTime(this.formModel.operatorTime)
+      this.formModel.operatorTime = parseTime(this.formModel.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
       return putUpdateTrack(this.formModel).then(data => {
           this.$message({ type: 'success', message: '修改成功' })
           this.getDetail()
@@ -252,6 +254,7 @@ export default {
     addTrack() { // 添加跟踪信息
       console.log('添加')
       this.formModel.loadId = this.id
+      this.formModel.operatorTime = parseTime(this.formModel.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
       return postAddTrack(this.formModel).then(data => {
           this.$message({ type: 'success', message: '添加成功' })
           this.getDetail()
@@ -274,7 +277,7 @@ export default {
         this.isModify = false
         this.$refs['formModel'].resetFields()
         this.formModel = this.$options.data().formModel
-        // this.getSystemTime()
+        this.getSystemTime()
       })
     },
     // 取消高亮样式
@@ -306,6 +309,15 @@ export default {
 
 .trackInfoPop {
   width: 1000px !important;
+  .el-tabs{
+    height: 100%;
+    .el-tabs__content{
+      height: calc(100%);
+      .el-tab-pane{
+        height: calc(100% - 90px);
+      }
+    }
+  }
 }
 
 .content_head {
@@ -314,21 +326,22 @@ export default {
   height: 36px;
   width: 100%;
   padding: 0 10px;
-  position: fixed;
-  top: 30px;
+  position: absolute;
+  top: 0px;
   left: 0;
   z-index: 34;
 }
 
 .editInfoPop_content {
   width: 100%;
+  height:100%;
   display: flex;
   flex-direction: column;
 
   .el-tabs__header {
-    position: fixed;
+    position: absolute;
     z-index: 34;
-    top: 66px;
+    top: 36px;
     left: 0;
     padding: 0 10px;
     background-color: #ffffff;
@@ -340,6 +353,7 @@ export default {
   margin: 76px 10px 0 10px;
   display: flex;
   flex-direction: column;
+  height: 100%;
   /* 覆盖ele样式 */
   .el-form--inline .el-form-item {
     margin-bottom: 0;
