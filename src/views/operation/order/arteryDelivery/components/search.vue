@@ -102,7 +102,7 @@
 
       return {
         searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-        searchEndTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
+        searchEndTime: '',
         pickOption: {
           firstDayOfWeek: 1,
           disabledDate(time) {
@@ -163,7 +163,8 @@
         this.searchForm.arrivedbeginDate = ''
         this.searchForm.arrivedEndDate = ''
         this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
-        this.searchEndTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+        // this.searchEndTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+        this.searchEndTime = ''
         this.searchForm.dirverName = ''
         this.searchForm.orgid = ''
         this.searchForm.arriveOrgid = this.otherinfo.orgid

@@ -99,6 +99,8 @@
       </div>
     </div>
     <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns="tableColumn" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+     <!-- 实际发车时间 弹出框 -->
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
   </div>
 </template>
 <script>
@@ -107,9 +109,11 @@ import { postAddRepertory } from '@/api/operation/shortDepart'
 import { objectMerge2 } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import actualSendtime from '../../load/components/actualSendtimeDialog'
 export default {
   components: {
-    TableSetup
+    TableSetup,
+    actualSendtime
   },
   props: {
     info: {
@@ -130,6 +134,7 @@ export default {
   },
   data() {
     return {
+      timeInfoVisible: false,
       textChangeDanger: [],
       isNeedArrival: true, // true-未入库状态  false-已入库状态
       setupTableVisible: false,
@@ -394,13 +399,14 @@ export default {
     doAction(type) {
       switch (type) {
         case 'add': // 短驳入库
-          this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.postAddRepertory()
-          })
+            this.timeInfoVisible = true
+          // this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+          //   confirmButtonText: '确定',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
+          //   this.postAddRepertory()
+          // })
           break
         case 'print': // 打印
           PrintInFullPage({
@@ -537,13 +543,17 @@ export default {
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
       this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)
     },
-    postAddRepertory() {
+    getActualTime (obj) {
+      this.postAddRepertory(obj)
+    },
+    postAddRepertory(obj) {
       this.setData()
       if (this.newData.tmsOrderLoadDetailsList.length === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[0], true)
         this.$message({ type: 'warning', message: '至少要有一条数据' })
         return false
       } else {
+        this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         postAddRepertory(50, this.newData).then(data => {
             if (data.status === 200) {
               this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
