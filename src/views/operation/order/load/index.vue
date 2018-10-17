@@ -23,8 +23,7 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
-                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabled="isDirectDelivery">
-                    </SelectTree>
+                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini"  :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
                   </el-form-item>
                 </div>
                 <div>
@@ -230,6 +229,8 @@
       <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="otherinfo.orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
+      <!-- 实际发车时间 弹出框 -->
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
     </div>
   </div>
 </template>
@@ -249,6 +250,7 @@ import addDriverInfo from '@/views/company/driverManage/components/add'
 import loadChart from './components/loadChart'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
+import actualSendtime from './components/actualSendtimeDialog'
 export default {
   name: 'orderload',
   data() {
@@ -302,6 +304,7 @@ export default {
     }
 
     return {
+      timeInfoVisible: false,
       driverKey: 0,
       truckKey: 0,
       tablekey: '',
@@ -427,7 +430,8 @@ export default {
     SelectTree,
     addTruckInfo,
     addDriverInfo,
-    loadChart
+    loadChart,
+    actualSendtime
   },
   created() {
     this.setLoadTypeId()
@@ -598,7 +602,8 @@ export default {
           this.finishLoadInfo()
           break
         case 'finishTruck': // 完成并发车
-          this.finishTruckInfo()
+          this.timeInfoVisible = true
+          // this.finishTruckInfo()
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -694,7 +699,10 @@ export default {
         })
       }
     },
-    finishTruckInfo() {
+    getActualTime (obj) {
+      this.finishTruckInfo(obj)
+    },
+    finishTruckInfo(obj) {
       if (this.loading) {
         return false
       }
@@ -703,6 +711,7 @@ export default {
         this.setDataFinishTruck() // 处理数据
         this.$nextTick(() => {
           this.loading = true
+          this.$set(this.loadInfo.tmsOrderLoad, 'actualSendtime', obj.actualSendtime)
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
               this.loading = false
               this.$message({ type: 'success', message: '保存成功' })

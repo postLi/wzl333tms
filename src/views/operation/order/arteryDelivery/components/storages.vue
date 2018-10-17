@@ -1,6 +1,8 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
+       <!-- 实际发车时间 弹出框 -->
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
         批次：{{getBatchNo}}
       </div>
@@ -432,6 +434,7 @@
     <div slot="footer" class="dialog-footer" v-else>
       <el-button @click="closeMe">关闭</el-button>
     </div>
+   
 
   </pop-right>
 
@@ -448,6 +451,7 @@
   import { objectMerge2, parseTime, closest } from '@/utils/'
   import TableSetup from '@/components/tableSetup'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+  import actualSendtime from '../../load/components/actualSendtimeDialog'
 
   export default {
     data() {
@@ -477,6 +481,7 @@
           ]
         },
         tablekey: '1',
+        timeInfoVisible: false,
         // titleIcon:"到车确定",
         // titleIcon:"到车入库",
         getBatchNo: '',
@@ -729,7 +734,8 @@
       popRight,
       SelectTree,
       selectType,
-      TableSetup
+      TableSetup,
+      actualSendtime
 
     },
     computed: {
@@ -1099,7 +1105,17 @@
             break
           // 添加客户
           case 'sure':
-            let data
+            this.timeInfoVisible = true
+            console.log('sure', this.timeInfoVisible)
+            break
+        }
+        if (type !=='sure') {
+          // 清除选中状态，避免影响下个操作
+        this.$refs.multipleTable.clearSelection()
+        }
+      },
+      getActualTime (obj) {
+        let data
             if (this.popTitle === '到车确定') {
               data = 54
               postConfirmToCar(this.formModel.id, data).then(res => {
@@ -1151,12 +1167,14 @@
                     })
                   })
                   data = this.sendModel
+                  this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
                   postAddRepertory(55, data).then(res => {
                     this.$message({
                       type: 'success',
                       message: '到车入库成功'
                     })
                     this.$emit('success')
+                    this.$refs.multipleTable.clearSelection()
                   }).catch(err => {
                     this._handlerCatchMsg(err)
                   })
@@ -1164,10 +1182,6 @@
                 }
               })
             }
-            break
-        }
-        // 清除选中状态，避免影响下个操作
-        this.$refs.multipleTable.clearSelection()
       },
       setTable() {
         this.setupTableVisible = true
