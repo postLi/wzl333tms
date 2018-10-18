@@ -383,7 +383,7 @@ export default {
             e.volume = e.volume ? e.volume : 0
             e._index = index
             this.truckOptions.forEach(el => {
-              if (el.cid === e.cid + '') {
+              if (el.cid === e.cid + '' || el.cid === e.cid) {
                 this.$set(e, 'name', el.name)
               }
             })
@@ -420,7 +420,6 @@ export default {
       handler(cval, oval) {
         if (cval) {
           console.log('=====transpList====', cval)
-
         }
       }
     },
@@ -596,6 +595,7 @@ export default {
       // sign 1查询系统车型 2查询当前网点自定义车型 3查询系统车型+当前网点自定义车型
       getIntnteCarInfo(this.otherinfo.orgid, 3).then(data => {
         this.truckOptions = data
+        console.error('getIntnteCarInfo2', data)
       })
     },
     getDrivers(orgid) {
@@ -983,7 +983,8 @@ export default {
                 this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
               }
               this.truckOptions.forEach(em => {
-                if (em.cid === el.cid) {
+                if (em.cid === el.cid || em.cid === el.cid+ '') {
+                  console.log(em.cid)
                   this.$set(el, 'name', em.name)
                 }
               })
