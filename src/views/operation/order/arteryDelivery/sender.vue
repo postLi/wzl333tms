@@ -155,7 +155,7 @@ export default {
           fixed: false
         }, {
           label: '发车时间',
-          prop: 'departureTime',
+          prop: 'actualSendtime',
           width: '160',
           fixed: false
         }, {
