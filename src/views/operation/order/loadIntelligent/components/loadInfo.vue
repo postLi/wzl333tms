@@ -124,7 +124,7 @@
       <span>说明：保存或删除配载方案（草稿）不会影响系统的库存，只有使用某一方案作为正式配载运单时，才会减少系统库存。</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancelButtonText">不保存</el-button>
-        <el-button type="primary" @click="submitLoad">保  存</el-button>
+        <el-button type="primary" @click="saveForm">保  存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -726,7 +726,6 @@ export default {
 
       getIntnteInit(truckObject).then(data => {
           if (data) {
-            this.dialogCloseVisible = false
             this.loading = false
             console.log('计算配载', data)
             let arr = objectMerge2([], data.transp)
@@ -876,13 +875,13 @@ export default {
     saveForm() { // 保存当前方案
       this.saveLoading = true
       this.loading = true
-      if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
-        this.$message.warning('配载清单不可以为空')
-        this.noLoadListCount = 0
-        this.saveLoading = false
-        this.loading = false
-        return
-      }
+      // if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
+      //   this.$message.warning('配载清单不可以为空')
+      //   this.noLoadListCount = 0
+      //   this.saveLoading = false
+      //   this.loading = false
+      //   return
+      // }
       if (!this.transpList[0].schemeGroup) {
         // 新增保存 原始方案
         this.setSaveData(true)
@@ -911,7 +910,12 @@ export default {
       putUpdateScheme(dataObject).then(data => {
           if (data) {
             console.log('editForm', data)
-            this.$message({ type: 'success', message: '修改当前方案成功！' })
+            if (this.dialogCloseVisible) {
+              this.$message({ type: 'success', message: '保存当前方案成功！' })
+              this.$router.push({path: '/operation/order/arteryDepart/loadList'})
+              this.eventBus.$emit('closeCurrentView')
+            }else {
+              this.$message({ type: 'success', message: '修改当前方案成功！' })
             this.eventBus.$emit('replaceCurrentView', {
               path: '/operation/order/loadIntelligent/load',
               query: {
@@ -922,6 +926,8 @@ export default {
               }
             })
             console.log('修改后刷新页面后的tabinfo', this.tabInfo)
+            }
+            
           }
            this.saveLoading = false
             this.loading = false
