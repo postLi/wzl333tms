@@ -184,8 +184,9 @@ export default {
                   this.$set(el, 'truckIdNumber', el.truckIdNumber ? el.truckIdNumber : '')
                 }
                 this.truckOptions.forEach(em => {
-                  if (em.cid === el.cid) {
+                  if (em.cid === el.cid || em.cid === el.cid + '') {
                     this.$set(el, 'name', em.name)
+                    console.log('车：======', el, em.cid, em, em.name, el.cid)
                   }
                 })
                 let totalPrice = tmsMath.add(
@@ -197,6 +198,7 @@ export default {
                   el.tmsOrderLoadFee.arrivepayOilCard).result()
                 this.$set(el, 'price', totalPrice)
                 totalPrice = 0
+                console.log('==============el', el)
               })
             })
             this.transpList = objectMerge2([], arr)
@@ -237,6 +239,7 @@ export default {
                 for (let item in el) {
                   this.$set(obj, item, el[item])
                 }
+
                 this.$set(el, 'tmsOrderLoad', obj)
                 this.$set(el, 'tmsOrderLoadDetailsList', el.carLoadDetail)
                 this.$set(el, 'tmsOrderLoadFee', { nowpayCarriage: el.price })
@@ -333,8 +336,11 @@ export default {
       this.addDriverVisible = true
     },
     getSystemTruck() {
-      getIntnteCarInfo(this.otherinfo.orgid, 1).then(data => {
-        this.truckOptions = data
+      getIntnteCarInfo(this.otherinfo.orgid, 3).then(data => {
+        if (data) {
+          this.truckOptions = data
+          console.error('getIntnteCarInfo', data)
+        }
       })
     },
     closeAddDriver() {
@@ -355,12 +361,12 @@ export default {
     getLoadCurTable(arr) {
       this.loadInfoPercentOrg = objectMerge2([], arr)
     },
-     getSubmitLoadNew(obj) { // 计算配置后获得的数据
+    getSubmitLoadNew(obj) { // 计算配置后获得的数据
       this.transpList[this.schemeIndex].repertoryList = obj.left
       this.transpList[this.schemeIndex].tmsLoadSchemeDetailDtoList = obj.right
       this.submitLoadNew = {}
       this.$nextTick(() => {
-      this.submitLoadNew = obj
+        this.submitLoadNew = obj
       })
     },
     getSchemeIndex(num) { // 获取当前方案下标index

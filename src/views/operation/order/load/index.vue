@@ -230,7 +230,7 @@
       <!-- 添加司机信息 -->
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
       <!-- 实际发车时间 弹出框 -->
-    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" ></actualSendtime>
     </div>
   </div>
 </template>
@@ -599,7 +599,7 @@ export default {
           this.showPercent()
           break
         case 'finish': // 完成配载
-          this.finishLoadInfo()
+            this.finishLoadInfo()
           break
         case 'finishTruck': // 完成并发车
           this.timeInfoVisible = true

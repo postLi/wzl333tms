@@ -41,7 +41,7 @@
       <!-- 表格设置弹出框 -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
       <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
     </div>
   </div>
 </template>
@@ -139,6 +139,15 @@ export default {
           fixed: false,
           slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '实际发车时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

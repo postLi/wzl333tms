@@ -1,8 +1,8 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
     <template class="addCustomerPop-content" slot="content">
-       <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
+       <!-- 实际到车时间 弹出框 -->
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
         批次：{{getBatchNo}}
       </div>

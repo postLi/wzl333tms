@@ -115,7 +115,7 @@
       <span>2，如果您对当前配载方案不满意，可取消后重新配载，系统库存会恢复为原始状态。</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">返回重选</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitFormLoading">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 关闭 -->
@@ -216,6 +216,7 @@ export default {
   },
   data() {
     return {
+      submitFormLoading: false,
       dialogCloseVisible: false,
       dialogVisible: false,
       loading: false,
@@ -382,7 +383,7 @@ export default {
             e.volume = e.volume ? e.volume : 0
             e._index = index
             this.truckOptions.forEach(el => {
-              if (el.cid === e.cid + '') {
+              if (el.cid === e.cid + '' || el.cid === e.cid) {
                 this.$set(e, 'name', el.name)
               }
             })
@@ -419,7 +420,6 @@ export default {
       handler(cval, oval) {
         if (cval) {
           console.log('=====transpList====', cval)
-
         }
       }
     },
@@ -595,6 +595,7 @@ export default {
       // sign 1查询系统车型 2查询当前网点自定义车型 3查询系统车型+当前网点自定义车型
       getIntnteCarInfo(this.otherinfo.orgid, 3).then(data => {
         this.truckOptions = data
+        console.error('getIntnteCarInfo2', data)
       })
     },
     getDrivers(orgid) {
@@ -695,24 +696,35 @@ export default {
       // if (!this.paramTuck || this.paramTuck.length < 1) {
       //   this.$message.warning('请进行参数设置')
       // } else {
+      let emptyCountTruck = 0
       this.loading = true
       let truckObject = {
         orgId: this.intelligentLeftData.arriveOrgid,
         standCar: []
       }
       if (this.intelligentData.dataList.length === 0) {
+        this.loading = false
         this.$message.warning('请添加车型！')
         return
       }
-      this.intelligentData.dataList.forEach(e => {
-        let item = {
-          id: e.id ? e.id : e.cid,
+      this.intelligentData.dataList.forEach((e, index) => {
+          let item = {
+          id: e.cid ? e.cid : e.id,
           spri: e.price ? e.spri : 0,
           carNo: e.truckIdNumber ? e.truckIdNumber : ''
+        }
+        if (!item.id) {
+          this.$message.warning('车型'+this.changeNumCN[index]+'不能为空！')
+          emptyCountTruck++
         }
         truckObject.standCar.push(item)
         item = {}
       })
+      if (emptyCountTruck > 0) {
+          emptyCountTruck = 0
+          this.loading = false
+          return
+        }
       console.log('submitLoad', truckObject)
 
       getIntnteInit(truckObject).then(data => {
@@ -783,7 +795,7 @@ export default {
       let data = {} // 数组中的单个对象
       arr = objectMerge2([], orgFirstScheme ? this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList : this.intelligentData.dataList)
       console.log('this.orgFirstScheme', this.orgFirstScheme)
-      console.log('this.intelligentData.dataList', this.intelligentData.dataList, this.tabInfo)
+      console.log('this.intelligentData.dataList', this.intelligentData.dataList, this.tabInfo, arr, this.loadTable)
       // arr.forEach((e, index) => {
       //   this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
       // })
@@ -822,11 +834,13 @@ export default {
           em.loadVolume = em.repertoryVolume
         })
         if (orgFirstScheme) {
-          console.error(this.orgFirstScheme)
           this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList.forEach((em, emindex) => {
-            this.$set(data, 'tmsOrderLoadDetailsList', em.carLoadDetail)
+            if (emindex === index) {
+              this.$set(data, 'tmsOrderLoadDetailsList', em.carLoadDetail)
+              this.$set(this.loadDataArray, index, data)
+            }
           })
-          this.$set(this.loadDataArray, index, data)
+          console.log('this.loadDataArray', this.loadDataArray)
         } else {
           this.$set(data, 'tmsOrderLoadDetailsList', e.carLoadDetail)
           this.$set(this.loadDataArray, index, data)
@@ -955,6 +969,7 @@ export default {
               this.$set(this.transpList[0], 'schemeId', data.schemeId)
               this.orgFirstScheme[0] = objectMerge2({}, this.transpList[0])
               this.initScheme = true
+              console.log('=========', this.orgFirstScheme[0], this.transpList[0])
               this.saveForm()
             }
 
@@ -968,7 +983,8 @@ export default {
                 this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
               }
               this.truckOptions.forEach(em => {
-                if (em.cid === el.cid) {
+                if (em.cid === el.cid || em.cid === el.cid+ '') {
+                  console.log(em.cid)
                   this.$set(el, 'name', em.name)
                 }
               })
@@ -1011,7 +1027,7 @@ export default {
       console.log("this.$refs['ruleForm']", this.$refs['ruleForm'], this)
       this.$refs['ruleForm'][0].validate((valid) => {
         if (valid) {
-          this.loading = true
+          // this.loading = true
           this.setData()
           if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
             this.$message.warning('配载清单不可以为空')
@@ -1019,9 +1035,11 @@ export default {
             this.submitLoading = false
             return false
           } else {
+            this.submitFormLoading = true
             postIntnteSmartLoad(this.loadDataArray).then(res => {
               this.dialogVisible = false
               this.submitLoading = false
+              this.submitFormLoading = false
               this.$message({ type: 'success', message: '保存配载成功！' })
               // 删除当前方案组
               if (this.tabInfo.object.schemeGroup) {
@@ -1035,6 +1053,7 @@ export default {
               this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
               this.loading = false
             }).catch(err => {
+              this.submitFormLoading = false
               this.dialogVisible = false
               this.submitLoading = false
               this._handlerCatchMsg(err)
@@ -1042,6 +1061,8 @@ export default {
             })
           }
         } else {
+          this.submitFormLoading = false
+          this.loading = false
           this.dialogVisible = false
           this.submitLoading = false
           return false

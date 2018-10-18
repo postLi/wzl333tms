@@ -46,7 +46,7 @@
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
     <!-- 实际发车时间 弹出框 -->
-    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'送货'"></actualSendtime>
   </div>
 </template>
 <script>
@@ -169,7 +169,7 @@ export default {
           width: "120"
         },
         {
-          label: "实际送货时间",
+          label: "实际送货完成时间",
           prop: "actualSendtime",
           width: "180",
           slot: (scope) => {
@@ -177,7 +177,7 @@ export default {
           }
         },
         {
-          label: "送货操作时间",
+          label: "实际送货时间",
           prop: "loadTime",
           width: "180",
           slot: (scope) => {
