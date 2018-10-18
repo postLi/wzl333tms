@@ -378,9 +378,9 @@ export default {
       const data = Object.assign({}, this.searchQuery.vo)
       data.orgAllId = this.orgId.join(',')
       // 临时测试数据
-      data.orgAllId = this.orgId.map((res, index) => {
+      /* data.orgAllId = this.orgId.map((res, index) => {
         return (index + 1)
-      }).join(',')
+      }).join(',') */
       data.timeKey = this.currentkey + 1
       data.detailKey = this.currenttab + 1
 
