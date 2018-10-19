@@ -339,7 +339,7 @@ export default {
       getIntnteCarInfo(this.otherinfo.orgid, 3).then(data => {
         if (data) {
           this.truckOptions = data
-          console.error('getIntnteCarInfo', data)
+          console.log('getIntnteCarInfo', data)
         }
       })
     },
