@@ -3,7 +3,7 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <div class="getorglist">
-          <SelectTree multiple :multiple-limit="10"  v-model="orgId" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
+          <SelectTree multiple :multiple-limit="10"  v-model="orgId" @change="getData" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
         </div>
         <ul>
         <li v-for="(item, index) in dataBtns" :class="{'active':item.value === currentkey} " :key="index" @click="()=>{setCurrentKey(item)}">{{item.label}}</li>
@@ -94,7 +94,7 @@
 // echarts的各模块
 // https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
-import { pickerOptions4, tmsMath, pickerOptions } from '@/utils/index'
+import { pickerOptions4, tmsMath, pickerOptions, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail, getConsoleData, getConsoleChartData } from '@/api/index'
 import Arrow from './arrow'
 import SelectTree from '@/components/selectTree/index'
@@ -280,8 +280,8 @@ export default {
     },
     getDateChange(val) {
       this.searchQuery.vo.buttonKey = 5
-      this.searchQuery.vo.nowStartTime = val[0]
-      this.searchQuery.vo.nowEndTime = val[1]
+      this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
+      this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
       this.currentkey = ''
       this.$nextTick(() => {
         this.currentkey = 5

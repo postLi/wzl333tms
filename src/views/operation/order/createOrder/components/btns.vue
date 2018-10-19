@@ -1,11 +1,11 @@
 <template>
   <div class="order-btns">
-    <el-button @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
-    <el-button @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
-    <el-button @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
-    <el-button @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
-    <el-button @click="doAction('saveAndNew')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveShipKey}}）</el-button>
-    <el-button @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
+    <el-button size="medium" @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
+    <el-button size="medium" @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
+    <el-button size="medium" @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
+    <el-button size="medium" @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
+    <el-button class="saveInsertKey" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button>
+    <el-button size="medium" @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
     
     <el-dropdown type="primary" trigger="click" class="createOrder-setup"  @command="handleCommand">
       <span class="el-dropdown-link">
