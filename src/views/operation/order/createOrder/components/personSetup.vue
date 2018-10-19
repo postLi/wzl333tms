@@ -34,6 +34,9 @@
         <el-form-item label="保存运单">
           <el-input v-model="form.printKey.saveShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveShipKey', $event)"></el-input>
         </el-form-item>
+        <el-form-item label="保存并新增">
+          <el-input v-model="form.printKey.saveInsertKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveInsertKey', $event)"></el-input>
+        </el-form-item>
         <el-form-item label="保存并打印">
           <el-input v-model="form.printKey.savePrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('savePrintKey', $event)"></el-input>
         </el-form-item>
@@ -110,7 +113,8 @@ export default {
           'savePrintKey': '',
           'saveShipKey': '',
           'cleanKey': '',
-          'printShipKey': ''
+          'printShipKey': '',
+          saveInsertKey: ''
         },
         'shipSetKey': {
           'receiptType': '',

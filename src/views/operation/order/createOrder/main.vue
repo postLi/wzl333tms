@@ -435,7 +435,7 @@
     </div>
     </el-form>
     <!-- 底部按钮操作部分 -->
-    <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
+    <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
     <!-- 弹窗 -->
     <FeeDialog @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
     <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
@@ -891,7 +891,8 @@ export default {
       isSavePrint: false, // false-不保存并打印 true-保存并打印,
       printDataObject: {},
       cargoKey: 'init',
-      resOrderId: '' // 开单成功后返回的运单id
+      resOrderId: '', // 开单成功后返回的运单id
+      hideSaveNew: false // 判断是否隐藏“保存并新增按钮”
     }
   },
   computed: {
@@ -1487,6 +1488,7 @@ export default {
           this.output.ordernum = Math.min(parseInt(param.ordernum, 10) || 1, 10)
           this.output.isbatch = true
           this.output.batchinfo = param.batchobj
+          this.hideSaveNew = true
           this.initBatch()
         } else {
           this.output.iscreate = true
@@ -2091,6 +2093,7 @@ export default {
       // 所有操作变量都需要重置
       this.isSaveAndNew = false
       this.isSavePrint = false
+      this.hideSaveNew = false
     },
     /** * 提交表单 */
     checkshipSn() {
@@ -2715,7 +2718,9 @@ export default {
                 this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex()
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
                   } else {
@@ -2756,7 +2761,9 @@ export default {
                   if (this.output.isPreOrder) {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex()
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)
                   } else {
@@ -2798,7 +2805,7 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           this.submitForm()
           break
-        case 'saveAndNew':
+        case 'saveInsertKey':
           this.isSaveAndNew = true
           this.submitForm()
           break
@@ -3041,6 +3048,10 @@ $backgroundcolor: #cbe1f7;
           cursor: default;
         }
       }
+    }
+
+    .hideSaveNew .saveInsertKey{
+      display: none;
     }
 
     /* &.creatBatch-main{
@@ -3443,7 +3454,8 @@ $backgroundcolor: #cbe1f7;
       height: 72px;
 
       .el-button{
-        font-size: 16px;
+        font-size: 14px;
+        padding: 10px;
         //background: transparent;
         i{
           font-size: 1.5em;

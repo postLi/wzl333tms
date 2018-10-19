@@ -3,7 +3,7 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <div class="getorglist">
-          <SelectTree multiple :multiple-limit="10"  v-model="orgId" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
+          <SelectTree multiple :multiple-limit="10"  v-model="orgId" @change="getData" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
         </div>
         <ul>
         <li v-for="(item, index) in dataBtns" :class="{'active':item.value === currentkey} " :key="index" @click="()=>{setCurrentKey(item)}">{{item.label}}</li>
@@ -25,14 +25,14 @@
       <el-row class="main_forthUl" :gutter="15">
           <el-col :span="6">
             <ul :class="{'activetab':currenttab === 0}" @click="currenttab=0">
-              <li>待提货 <i class="data-s">(<i>{{ thedata.amountPickWeight }}</i>吨,<i>{{ thedata.amountPickVolume }}</i>m³)</i></li>
+              <li>待提货 <i class="data-s">(<i>{{ thedata.amountPickWeight }}</i>千克,<i>{{ thedata.amountPickVolume }}</i>方)</i></li>
               <li class="profit-num"><i class="xdata"><span>{{ thedata.amountPick }}</span>票</i><i class="xline"></i></li>
             </ul>
           </el-col>
           <el-col :span="6">
             <ul :class="{'activetab':currenttab === 1}" @click="currenttab=1">
               <li>
-                待配载 <i class="data-s">(<i>{{ thedata.amountUnloadWeight }}</i>吨,<i>{{ thedata.amountUnloadVolume }}</i>m³)</i>
+                待配载 <i class="data-s">(<i>{{ thedata.amountUnloadWeight }}</i>千克,<i>{{ thedata.amountUnloadVolume }}</i>方)</i>
               </li>
               <li class="profit-num"><i class="xdata"><span>{{ thedata.amountUnload }}</span>票</i><i class="xline"></i></li>
             </ul>
@@ -40,7 +40,7 @@
           <el-col :span="6">
             <ul class="zhichulie" :class="{'activetab':currenttab === 2}" @click="currenttab=2">
               <li>
-                待发车<i class="data-s">(<i>{{ thedata.amountUnSendWeight }}</i>吨,<i>{{ thedata.amountUnSendVolume }}</i>m³)</i>
+                待发车<i class="data-s">(<i>{{ thedata.amountUnSendWeight }}</i>千克,<i>{{ thedata.amountUnSendVolume }}</i>方)</i>
               </li>
               <li class="profit-num"><i class="xdata"><span>{{ thedata.amountUnSend }}</span>车</i><i class="xline"></i></li>
             </ul>
@@ -48,7 +48,7 @@
           <el-col :span="6">
             <ul :class="{'activetab':currenttab === 3}" @click="currenttab=3">
               <li>
-                已发车<i class="data-s">(<i>{{ thedata.amountSendingWeight }}</i>吨,<i>{{ thedata.amountSendingVolume }}</i>m³)</i>
+                已发车<i class="data-s">(<i>{{ thedata.amountSendingWeight }}</i>千克,<i>{{ thedata.amountSendingVolume }}</i>方)</i>
 
               </li>
               <li class="profit-num"><i class="xdata"><span>{{ thedata.amountSending }}</span>车，</i><i class="xdata"><span>{{ thedata.amountSending }}</span>票</i><i class="xline"></i></li>
@@ -62,7 +62,7 @@
         </el-col>
         <el-col :span="6">
           <div :class="{'activetab':currenttab === 4}" @click="currenttab=4" class="databox datablue">
-            <span class="databox-label">已到车<i class="data-s">(<i>{{ thedata.amountArrivedWeight }}</i>吨,<i>{{ thedata.amountArrivedVolume }}</i>m³)</i></span>
+            <span class="databox-label">已到车<i class="data-s">(<i>{{ thedata.amountArrivedWeight }}</i>千克,<i>{{ thedata.amountArrivedVolume }}</i>方)</i></span>
             <!-- <div class="databox-tip">(对方网点已确认到车)</div> -->
             <span class="dataico"><icon-svg icon-class="yygl7_daoche" /></span>
             <span class="databox-value">{{thedata.amountArrived}}车,{{thedata.amountArrived}}票</span>
@@ -70,7 +70,7 @@
           </div>
           <div class="databox-line"></div>
           <div :class="{'activetab':currenttab === 5}" @click="currenttab=5" class="databox datared">
-            <span class="databox-label">运输异常<!-- <i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>吨,<i>{{ thedata.amountAbonormalVolume }}</i>m³)</i> --></span>
+            <span class="databox-label">运输异常<!-- <i class="data-s">(<i>{{ thedata.amountAbonormalWeight }}</i>千克,<i>{{ thedata.amountAbonormalVolume }}</i>方)</i> --></span>
             
             <span class="dataico"><icon-svg icon-class="btn27_yichangdj" /></span>
             <span class="databox-value">{{thedata.amountAbonormal}}票</span>
@@ -93,7 +93,7 @@
 // echarts的各模块
 // https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
-import { pickerOptions4, tmsMath, pickerOptions } from '@/utils/index'
+import { pickerOptions4, tmsMath, pickerOptions, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail, getConsoleData2, getConsoleChartData2 } from '@/api/index'
 import Arrow from './arrow'
 import SelectTree from '@/components/selectTree/index'
@@ -286,8 +286,8 @@ export default {
     },
     getDateChange(val) {
       this.searchQuery.vo.buttonKey = 5
-      this.searchQuery.vo.nowStartTime = val[0]
-      this.searchQuery.vo.nowEndTime = val[1]
+      this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
+      this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
       this.currentkey = ''
       this.$nextTick(() => {
         this.currentkey = 5
@@ -350,9 +350,9 @@ export default {
       const data = Object.assign({}, this.searchQuery.vo)
       data.orgAllId = this.orgId.join(',')
       // 临时测试数据
-      data.orgAllId = this.orgId.map((res, index) => {
+      /* data.orgAllId = this.orgId.map((res, index) => {
         return (index + 1)
-      }).join(',')
+      }).join(',') */
       data.timeKey = this.currentkey + 1
       getConsoleData2(data).then(res => {
         const data = res.data
@@ -391,9 +391,12 @@ export default {
         const volumeArr = []
         const fangArr = []
         data.map(el => {
-          shipArr.push(el.amountWeight)
-          volumeArr.push(el.amountVloume)
-          fangArr.push(el.amount)
+          // 千克数 amountWeight
+          // 票数 amount
+          // 体积 amountVloume
+          shipArr.push(el.amount)
+          volumeArr.push(el.amountWeight)
+          fangArr.push(el.amountVloume)
           let name = ''
           if (this.currenttab < 2) {
             name = 'cityName'
@@ -413,6 +416,18 @@ export default {
       })
     },
     initYearChart(echart, xdata, shipArr, volumeArr, fangArr, title) {
+      let selectShow = {
+        '票': false,
+        '千克': true,
+        '方': false
+      }
+      let selectData = ['票', '千克', '方']
+      if (this.currenttab === 5 || this.currenttab === 6) {
+        selectShow = {
+          '票': true
+        }
+        selectData = ['票']
+      }
       const option3 = {
         title: {
           text: title,
@@ -423,12 +438,8 @@ export default {
         },
         legend: {
           selectedMode: 'single',
-          selected: {
-            '票': false,
-            '吨': true,
-            '方': false
-          },
-          data: ['票', '吨', '方']
+          selected: selectShow,
+          data: selectData
         },
         toolbox: {
           show: true,
@@ -459,7 +470,7 @@ export default {
             name: '票',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '10%',
+            barMaxWidth: '30%',
             itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
             data: shipArr,
@@ -471,10 +482,10 @@ export default {
             }
           },
           {
-            name: '吨',
+            name: '千克',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '10%',
+            barMaxWidth: '30%',
             itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: volumeArr,
@@ -489,7 +500,7 @@ export default {
             name: '方',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '10%',
+            barMaxWidth: '30%',
             itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: fangArr,

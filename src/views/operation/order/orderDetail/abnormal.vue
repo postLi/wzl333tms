@@ -63,7 +63,7 @@
       </el-table-column>
     </el-table>
     </div>
-    <Addabnormal :issender="true" :isModify="false"  :isCheck="false" :info="{}" :id="''" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId"
+    <Addabnormal :orderinfo="orderinfo" :issender="true" :isModify="false"  :isCheck="false" :info="{}" :id="''" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId"
     :shipSn="shipsn" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
   </div>
 </template>
@@ -77,7 +77,11 @@ export default {
   },
   props: {
     orderid: [String, Number],
-    shipsn: [String, Number]
+    shipsn: [String, Number],
+    orderinfo: {
+      type: Object,
+      default: () => {}
+    }
   },
   data() {
     return {

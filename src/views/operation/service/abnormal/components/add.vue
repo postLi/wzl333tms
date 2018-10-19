@@ -9,12 +9,13 @@
             <el-input v-model="form.shipSn" @change="fetchShipInfo('shipSn')" :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input>
           </el-form-item> -->
           <el-form-item label="运单号" prop="shipSn">
-            <!--<el-input v-model="formInline.shipSn"></el-input>-->
-            <querySelect valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" :key="querykey"
-                         v-model="form.shipSn" :disabled="(isCheck || isDeal || shipSn) ? true : false"/>
+            <el-input v-if="shipSn" v-model="form.shipSn" disabled></el-input>
+            <querySelect v-else valuekey="shipSn" search="shipSn" type="order" @change="getShipSn" :key="querykey"
+                         v-model="form.shipSn" :disabled="(isCheck || isDeal ) ? true : false"/>
           </el-form-item>
           <el-form-item label="货号" prop="shipGoodsSn">
-            <querySelect valuekey="shipGoodsSn" search="shipGoodsSn" :key="querykey" type="order" @change="getShipSn"
+            <el-input v-if="shipSn" v-model="form.shipGoodsSn" disabled></el-input>
+            <querySelect v-else valuekey="shipGoodsSn" search="shipGoodsSn" :key="querykey" type="order" @change="getShipSn"
                          v-model="form.shipGoodsSn" :disabled="(isCheck || isDeal || shipSn) ? true : false"/>
             <!-- <el-input v-model="form.shipGoodsSn"  @change="fetchShipInfo('shipGoodsSn')" :maxlength="20" auto-complete="off" :disabled="isCheck || isDeal ? true : false"></el-input> -->
           </el-form-item>
@@ -97,10 +98,10 @@
         <div class="box1 control" v-if="isDeal" style="height:400px">
           <div class="titles">
             <h4 class="h4">异常处理</h4>
-            <el-form-item label="处理结果：" prop="disposeResult" class="result label">
+          </div>
+          <el-form-item required  label="处理结果：" prop="disposeResult" >
               <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
             </el-form-item>
-          </div>
           <el-form-item label="处理时间" prop="disposeTime">
             <el-input :value="form.disposeTime |parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :maxlength="20"
                       auto-complete="off" :disabled=" true"></el-input>
@@ -158,6 +159,7 @@
   import { objectMerge2 } from '@/utils/index'
   // import { parseTime } from '@/utils/index'
   import querySelect from '@/components/querySelect/index'
+  import orderManageApi from '@/api/operation/orderManage'
 
   export default {
     components: {
@@ -193,6 +195,10 @@
       shipSn: {
         type: [String, Number],
         default: ''
+      },
+      orderinfo: {
+        type: Object,
+        default: () => {}
       },
       companyId: {
         type: [Number, String]
@@ -352,7 +358,18 @@
           this.initInfo()
         }
         if (newVal) {
-          this.getShipSn()
+          if (this.shipSn) {
+            console.log('this.orderinfo::::', this.shipSn, this.orderinfo)
+            orderManageApi.getAllShip({
+              'currentPage': 1,
+              'pageSize': 5,
+              vo: {
+                shipSn: this.shipSn
+              }
+            }).then(data => {
+              this.getShipSn(data.list[0])
+            })
+          }
         }
       },
       orgid(newVal) {
@@ -523,7 +540,7 @@
       },
       getShipSn(data) {
         if (data) {
-          // console.log('data:', data)
+          console.log('getShipSn data:', data)
           // this.formInline.shipGoodsSn = data.shipGoodsSn
           // this.sendId.pickupId = data.id
 

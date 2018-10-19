@@ -31,7 +31,7 @@
             <el-option label="女" value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="归属网点" :label-width="formLabelWidth" prop="orgid">
+        <el-form-item required prop="orgid" label="归属网点" :label-width="formLabelWidth">
           <SelectTree filterable v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="权限角色" :label-width="formLabelWidth" prop="rolesId">
@@ -148,6 +148,9 @@ export default {
         mobilephone: [
           { required: true, message: '请输入手机号码', pattern: REGEX.MOBILE }
         ],
+        orgid: [
+          { required: true, message: '请选择归属网点' }
+        ],
         username: [
           { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
           { max: 15, message: '不能超过15个字符', trigger: 'blur' }
@@ -172,6 +175,7 @@ export default {
   },
   mounted() {
     this.form.orgid = this.orgid
+    console.log('orgid2222::::::', this.orgid)
     if (!this.inited) {
       this.inited = true
       this.initInfo()
@@ -185,6 +189,7 @@ export default {
       }
     },
     orgid(newVal) {
+      console.log('orgid::::::', newVal)
       this.form.orgid = newVal
     },
     userInfo() {
@@ -201,7 +206,10 @@ export default {
         for (const i in this.form) {
           this.form[i] = i === 'password' ? '123456' : i === 'rolesId' ? [] : ''
         }
-        this.form.orgid = this.orgid
+        this.$nextTick(() => {
+          console.log('orgid333333', this.orgid)
+          this.form.orgid = this.orgid
+        })
       }
     }
   },
@@ -292,7 +300,7 @@ export default {
       })
     },
     closeMe(done) {
-      this.$refs['ruleForm'].resetFields()
+      this.reset()
       this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()

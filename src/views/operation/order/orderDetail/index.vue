@@ -14,7 +14,7 @@
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
-        <abnormal v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
+        <abnormal :orderinfo="orderdata" v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="five" label="改单日志">
         <log v-if="activeTab.five" :orderid="output.orderid" />

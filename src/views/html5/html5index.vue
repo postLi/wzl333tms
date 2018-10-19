@@ -280,8 +280,8 @@ export default {
   methods: {
     getDateChange(val) {
       this.searchQuery.vo.buttonKey = 5
-      this.searchQuery.vo.nowStartTime = val[0].getTime()
-      this.searchQuery.vo.nowEndTime = val[1].getTime()
+      this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
+      this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
       this.currentkey = 5
     },
     doAction(type) {
