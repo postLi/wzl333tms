@@ -143,7 +143,7 @@ export default {
         },
         {
           label: '实际发车时间',
-          prop: 'departureTime',
+          prop: 'actualSendtime',
           width: '160',
           fixed: false,
           slot: (scope) => {
