@@ -655,12 +655,7 @@
             prop: 'shipToCityName',
             width: '120',
             fixed: false
-          }, {
-            label: '出发城市',
-            prop: 'shipFromCityName',
-            width: '120',
-            fixed: false
-          }, {
+          },  {
             label: '发货人',
             prop: 'shipSenderName',
             width: '100',

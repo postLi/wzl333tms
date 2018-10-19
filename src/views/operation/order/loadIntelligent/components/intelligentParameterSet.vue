@@ -291,11 +291,14 @@ export default {
         this.$emit('savaParamTruck', this.selectedSys)
         this.$message.success('参数设置成功！')
         this.closeMe()
-      } else {
+      } else if (this.selected && this.selected.length > 0) {
+        console.log('selected', this.selected)
         this.selected.forEach(e => {
-          putPzcarinfotms(e).then(data => {}).catch(err => {
-            this._handlerCatchMsg(err)
-          })
+          if (e && e.cid) {
+            putPzcarinfotms(e).then(data => {}).catch(err => {
+              this._handlerCatchMsg(err)
+            })
+          }
         })
         this.closeMe()
         this.$notify.success({

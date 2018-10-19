@@ -45,10 +45,10 @@
                 <font color="white" size="2">应付合计</font>
               </th>
               <th bgcolor="dimGray" width="90px">
-                <font color="white" size="2">已收</font>
+                <font color="white" size="2">已付</font>
               </th>
               <th bgcolor="dimGray" width="90px">
-                <font color="white" size="2">未收</font>
+                <font color="white" size="2">未付</font>
               </th>
               <th bgcolor="dimGray" width="90px">
                 <font color="white" size="2">数量</font>

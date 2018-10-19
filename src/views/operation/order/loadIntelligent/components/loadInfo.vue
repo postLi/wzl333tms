@@ -908,14 +908,18 @@ export default {
     },
     putUpdateScheme(dataObject) {
       putUpdateScheme(dataObject).then(data => {
-          if (data) {
-            console.log('editForm', data)
-            if (this.dialogCloseVisible) {
-              this.$message({ type: 'success', message: '保存当前方案成功！' })
-              this.$router.push({path: '/operation/order/arteryDepart/loadList'})
-              this.eventBus.$emit('closeCurrentView')
-            }else {
-              this.$message({ type: 'success', message: '修改当前方案成功！' })
+          // if (data) {
+          console.log('putUpdateScheme', data, this.dialogCloseVisible)
+          if (this.dialogCloseVisible) {
+            console.log('sdfsdfsdf')
+            this.$message({ type: 'success', message: '保存当前方案成功！' })
+            this.saveLoading = false
+            this.loading = false
+            this.dialogCloseVisible = false
+            this.$router.push({ path: '/operation/order/arteryDepart/loadList' })
+            this.eventBus.$emit('closeCurrentView')
+          } else {
+            this.$message({ type: 'success', message: '修改当前方案成功！' })
             this.eventBus.$emit('replaceCurrentView', {
               path: '/operation/order/loadIntelligent/load',
               query: {
@@ -926,15 +930,17 @@ export default {
               }
             })
             console.log('修改后刷新页面后的tabinfo', this.tabInfo)
-            }
-            
-          }
-           this.saveLoading = false
+            this.saveLoading = false
             this.loading = false
+            this.dialogCloseVisible = false
+          }
+
+          // }
+
         })
         .catch(err => {
-           this.saveLoading = false
-            this.loading = false
+          this.saveLoading = false
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },
@@ -943,80 +949,90 @@ export default {
       // 以便删除和修改方案
       postSaveScheme(dataObject).then(data => {
           if (data) {
-            console.log('saveForm', data)
-            if (this.transpList[0].schemeGroup) {
+            if (this.dialogCloseVisible) {
+              console.log('sdfsdfsdf')
               this.$message({ type: 'success', message: '保存当前方案成功！' })
+              this.saveLoading = false
+              this.loading = false
+              this.dialogCloseVisible = false
+              this.$router.push({ path: '/operation/order/arteryDepart/loadList' })
+              this.eventBus.$emit('closeCurrentView')
             } else {
-              this.$message({ type: 'success', message: '保存原始方案成功！' })
-            }
-            let loadDataObject = objectMerge2({}, dataObject)
-            // 设置页面显示数据结构
-            this.$set(loadDataObject, 'schemeGroup', data.schemeGroup)
-            this.$set(loadDataObject, 'schemeId', data.schemeId)
-            if (this.initScheme) {
-              this.eventBus.$emit('replaceCurrentView', {
-                path: '/operation/order/loadIntelligent/load',
-                query: {
-                  tab: '智能配载',
-                  schemeGroup: data.schemeGroup,
-                  orgid: this.otherinfo.orgid,
-                  time: new Date().getTime()
-                }
-              })
-            }
-            if (this.transpList[0].schemeGroup === '' || this.transpList[0].schemeGroup === undefined || !this.transpList[0].schemeGroup) {
-              this.transpList[0] = this.orgFirstScheme[0]
-              this.$set(this.transpList[0], 'schemeGroup', data.schemeGroup)
-              this.$set(this.transpList[0], 'schemeId', data.schemeId)
-              this.orgFirstScheme[0] = objectMerge2({}, this.transpList[0])
-              this.initScheme = true
-              console.log('=========', this.orgFirstScheme[0], this.transpList[0])
-              this.saveForm()
-            }
-
-            this.$set(loadDataObject, 'repertoryList', this.leftTableArr)
-            loadDataObject.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
-              this.$set(el, 'carLoadDetail', el.tmsOrderLoadDetailsList)
-              this.$set(el, '_index', elindex)
-              for (let item in el.tmsOrderLoad) {
-                this.$set(el, item, el.tmsOrderLoad[item])
-                this.$set(el, 'weight', el.tmsOrderLoad.truckLoad)
-                this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
+              console.log('saveForm', data)
+              if (this.transpList[0].schemeGroup) {
+                this.$message({ type: 'success', message: '保存当前方案成功！' })
+              } else {
+                this.$message({ type: 'success', message: '保存原始方案成功！' })
               }
-              this.truckOptions.forEach(em => {
-                if (em.cid === el.cid || em.cid === el.cid + '') {
-                  console.log(em.cid)
-                  this.$set(el, 'name', em.name)
-                }
-              })
-              // 计算现付费用 为 车型费用price
-              let totalPrice = tmsMath.add(
-                el.tmsOrderLoadFee.nowpayCarriage,
-                el.tmsOrderLoadFee.nowpayOilCard,
-                el.tmsOrderLoadFee.backpayCarriage,
-                el.tmsOrderLoadFee.backpayOilCard,
-                el.tmsOrderLoadFee.arrivepayCarriage,
-                el.tmsOrderLoadFee.arrivepayOilCard).result()
-              this.$set(el, 'price', totalPrice)
-              totalPrice = 0
-            })
-            // 将新的方案添加到方案组列表里面
-            if (!this.initScheme) {
-              this.transpList.push(loadDataObject)
-              this.orgTranspList.push(loadDataObject)
-            }
+              let loadDataObject = objectMerge2({}, dataObject)
+              // 设置页面显示数据结构
+              this.$set(loadDataObject, 'schemeGroup', data.schemeGroup)
+              this.$set(loadDataObject, 'schemeId', data.schemeId)
+              if (this.initScheme) {
+                this.eventBus.$emit('replaceCurrentView', {
+                  path: '/operation/order/loadIntelligent/load',
+                  query: {
+                    tab: '智能配载',
+                    schemeGroup: data.schemeGroup,
+                    orgid: this.otherinfo.orgid,
+                    time: new Date().getTime()
+                  }
+                })
+              }
+              if (this.transpList[0].schemeGroup === '' || this.transpList[0].schemeGroup === undefined || !this.transpList[0].schemeGroup) {
+                this.transpList[0] = this.orgFirstScheme[0]
+                this.$set(this.transpList[0], 'schemeGroup', data.schemeGroup)
+                this.$set(this.transpList[0], 'schemeId', data.schemeId)
+                this.orgFirstScheme[0] = objectMerge2({}, this.transpList[0])
+                this.initScheme = true
+                console.log('=========', this.orgFirstScheme[0], this.transpList[0])
+                this.saveForm()
+              }
 
-            this.activeTab = this.transpList.length - 1 + '' // 设置高亮最新的tab
-            this.tabInfo.name = this.activeTab
-            this.tabInfo.object = this.tabInfo.list[this.activeTab]
-            this.transpList[0] = this.orgFirstScheme[0]
-            loadDataObject = {}
-            console.log('transpList&&&&&&&&&&&&&&&&&&', this.transpList, loadDataObject)
-            // 高亮最新的方案
-            this.$emit('schemeIndex', this.activeTab)
+              this.$set(loadDataObject, 'repertoryList', this.leftTableArr)
+              loadDataObject.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => {
+                this.$set(el, 'carLoadDetail', el.tmsOrderLoadDetailsList)
+                this.$set(el, '_index', elindex)
+                for (let item in el.tmsOrderLoad) {
+                  this.$set(el, item, el.tmsOrderLoad[item])
+                  this.$set(el, 'weight', el.tmsOrderLoad.truckLoad)
+                  this.$set(el, 'volume', el.tmsOrderLoad.truckVolume)
+                }
+                this.truckOptions.forEach(em => {
+                  if (em.cid === el.cid || em.cid === el.cid + '') {
+                    console.log(em.cid)
+                    this.$set(el, 'name', em.name)
+                  }
+                })
+                // 计算现付费用 为 车型费用price
+                let totalPrice = tmsMath.add(
+                  el.tmsOrderLoadFee.nowpayCarriage,
+                  el.tmsOrderLoadFee.nowpayOilCard,
+                  el.tmsOrderLoadFee.backpayCarriage,
+                  el.tmsOrderLoadFee.backpayOilCard,
+                  el.tmsOrderLoadFee.arrivepayCarriage,
+                  el.tmsOrderLoadFee.arrivepayOilCard).result()
+                this.$set(el, 'price', totalPrice)
+                totalPrice = 0
+              })
+              // 将新的方案添加到方案组列表里面
+              if (!this.initScheme) {
+                this.transpList.push(loadDataObject)
+                this.orgTranspList.push(loadDataObject)
+              }
+
+              this.activeTab = this.transpList.length - 1 + '' // 设置高亮最新的tab
+              this.tabInfo.name = this.activeTab
+              this.tabInfo.object = this.tabInfo.list[this.activeTab]
+              this.transpList[0] = this.orgFirstScheme[0]
+              loadDataObject = {}
+              console.log('transpList&&&&&&&&&&&&&&&&&&', this.transpList, loadDataObject)
+              // 高亮最新的方案
+              this.$emit('schemeIndex', this.activeTab)
+            }
+            this.saveLoading = false
+            this.loading = false
           }
-          this.saveLoading = false
-          this.loading = false
         })
         .catch(err => {
           this.saveLoading = false
