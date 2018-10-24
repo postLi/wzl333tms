@@ -194,8 +194,8 @@ export default {
       } else {
         let item = {
           name: '自定义车型',
-          weight: 0,
-          vol: 0
+          weight: 8000,
+          vol: 25
         }
         postPzcarinfotms(item).then(data => {
             this.fetchData()
@@ -266,6 +266,7 @@ export default {
             message: '承载方和承载重不能为0',
             type: 'warning'
           })
+          this.definedList[index][prop] = 1
         }
       }
     },
@@ -287,25 +288,37 @@ export default {
       this.formInline.pickupFee = ''
     },
     submitForm() {
-      if (this.selectedSys && this.selectedSys.length > 0) {
+      let zeroCount = 0
+      if (this.selectedSys && this.selectedSys.length > 0) { // 选择系统车型时
         this.$emit('savaParamTruck', this.selectedSys)
         this.$message.success('参数设置成功！')
         this.closeMe()
-      } else if (this.selected && this.selected.length > 0) {
+      } else if (this.selected && this.selected.length > 0) { // 选择自定义车型时
         console.log('selected', this.selected)
         this.selected.forEach(e => {
+          if (e.weight === 0 || e.vol === 0) {
+            zeroCount++ // 记录 承载重和承载方是否有为0的情况
+          }
           if (e && e.cid) {
-            putPzcarinfotms(e).then(data => {}).catch(err => {
+            putPzcarinfotms(e).then(data => {}).catch(err => { // 选择自定义车型 需要保存修改后的当前自定义车型
               this._handlerCatchMsg(err)
             })
           }
         })
-        this.closeMe()
-        this.$notify.success({
-          title: '成功',
-          message: '保存修改车型操作成功'
-        })
-        this.$emit('savaParamTruck', this.selected)
+        if (zeroCount > 0) {
+          this.$notify({
+            title: '提示',
+            message: '承载方和承载重不能为0',
+            type: 'warning'
+          })
+        } else {
+          this.closeMe()
+          this.$notify.success({
+            title: '成功',
+            message: '保存修改车型操作成功'
+          })
+          this.$emit('savaParamTruck', this.selected)
+        }
       }
       // if (this.selectedSys && this.selectedSys.length > 0) {
       //   if (this.selected.length === 0) {

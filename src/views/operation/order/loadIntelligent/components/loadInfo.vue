@@ -3,7 +3,7 @@
     <div class="loadInfo_btns clraefix">
       <el-button type="primary" @click="saveForm" icon="el-icon-document" plain size="mini" :loading="saveLoading">保存当前方案
       </el-button>
-      <el-button type="success" @click="dialogVisible = true" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
+      <el-button type="success" @click="checkSubmitForm" icon="el-icon-document" plain size="mini" :loading="submitLoading">存为配载单
       </el-button>
       <el-button :type="isSubmitLoad ? 'info' : 'primary'" @click="submitLoad" icon="el-icon-refresh" plain size="mini">计算配载
       </el-button>
@@ -314,8 +314,9 @@ export default {
       nexttruckDisable: false,
       loadDataArray: [],
       loadDataObject: {},
-      maxShowLen: 3,
-      maxDataLength: 20,
+      maxShowLen: 3, // 限制当前页面显示最多车型数量
+      maxDataLength: 20, // 限制添加最多车型数量
+      maxSchemeLength: 5, // 限制添加最多方案数量
       truckTotalPage: 0,
       isShowCurPages: true,
       showCurPagesData: {
@@ -497,7 +498,7 @@ export default {
     }
   },
   methods: {
-    converToCn() {
+    converToCn() { // 车数字转中文
       let i = 0
       let arr = ['十', '一', '二', '三', '四', '五', '六', '七', '八', '九']
       this.changeNumCN = []
@@ -868,16 +869,11 @@ export default {
       }
     },
     saveForm() { // 保存当前方案
+
       this.saveLoading = true
       this.loading = true
       this.lastSaveFormLoading = true
-      // if (this.noLoadListCount > 0) { // 判断右边的表格时候为空 清单不能为空
-      //   this.$message.warning('配载清单不可以为空')
-      //   this.noLoadListCount = 0
-      //   this.saveLoading = false
-      //   this.loading = false
-      //   return
-      // }
+      this.$emit('setPageLoading', true) // 通知父页面 整个页面呈现加载状态
       if (!this.transpList[0].schemeGroup) {
         // 新增保存 原始方案
         this.setSaveData(true)
@@ -886,7 +882,6 @@ export default {
       } else {
         // 如果当前方案有schemeId 那么为修改当前方案 否则为新增当前方案
         this.isEditCurrentScheme = this.tabInfo.object.schemeId ? true : false
-        console.log('saveForm - isEditCurrentScheme', this.isEditCurrentScheme, this.tabInfo.name)
         if (this.isEditCurrentScheme && this.tabInfo.name !== '0') {
           // 修改保存 当前方案
           this.setSaveData()
@@ -894,12 +889,21 @@ export default {
           this.$set(this.loadDataObject, 'schemeId', this.tabInfo.object.schemeId)
           this.putUpdateScheme(this.loadDataObject)
         } else {
+          if (this.tabInfo.list.length >= this.maxSchemeLength) {
+            this.$message.warning('方案组最多有5个方案！不能继续保存新的方案！')
+            this.saveLoading = false
+            this.loading = false
+            this.lastSaveFormLoading = false
+            this.$emit('setPageLoading', false) // 通知父页面 整个页面呈现加载状态
+            return
+          }
           // 新增保存 当前方案
           this.setSaveData()
           console.log('需要添加当前方案', this.loadDataObject, this.transpList[0].schemeGroup)
           this.postSaveScheme(this.loadDataObject)
         }
       }
+
 
     },
     putUpdateScheme(dataObject) {
@@ -920,7 +924,8 @@ export default {
                 tab: '智能配载',
                 schemeGroup: data.schemeGroup,
                 orgid: this.otherinfo.orgid,
-                time: new Date().getTime()
+                time: new Date().getTime(),
+                tabname: this.tabInfo.name
               }
             })
             console.log('修改后刷新页面后的tabinfo', this.tabInfo)
@@ -1031,6 +1036,15 @@ export default {
           this.loading = false
           this._handlerCatchMsg(err)
         })
+    },
+    checkSubmitForm() {
+      this.$refs['ruleForm'][0].validate((valid) => {
+        if (valid) {
+          this.dialogVisible = true
+        } else {
+          this.$message.warning('请填写完整车型信息！')
+        }
+      })
     },
     submitForm() { // 存为配载单
       this.submitLoading = true

@@ -39,67 +39,93 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://192.168.1.79:7010',
-        pathRewrite: { '^/api': '' },
+        pathRewrite: {
+          '^/api': ''
+        },
         changeOrigin: true
       },
       '/157service': {
         target: 'http://192.168.1.157:7010',
-        pathRewrite: { '^/157service': '' },
+        pathRewrite: {
+          '^/157service': ''
+        },
         changeOrigin: true
       },
       '/180service': {
         target: 'http://192.168.1.180:7010',
-        pathRewrite: { '^/180service': '' },
+        pathRewrite: {
+          '^/180service': ''
+        },
         changeOrigin: true
       },
       '/ceshi': {
         target: 'http://192.168.1.78:7010',
-        pathRewrite: { '^/ceshi': '' },
+        pathRewrite: {
+          '^/ceshi': ''
+        },
         changeOrigin: true
       },
       '/localapi': {
         target: 'http://192.168.1.233:7010',
-        pathRewrite: { '^/localapi': '' },
+        pathRewrite: {
+          '^/localapi': ''
+        },
         changeOrigin: true
       },
       '/wukunzhi': {
         target: 'http://192.168.1.42:7010',
-        pathRewrite: { '^/wukunzhi': '' },
+        pathRewrite: {
+          '^/wukunzhi': ''
+        },
         changeOrigin: true
       },
       '/lingzhiying': {
         target: 'http://192.168.1.34:7010',
-        pathRewrite: { '^/lingzhiying': '' },
+        pathRewrite: {
+          '^/lingzhiying': ''
+        },
         changeOrigin: true
       },
       '/huangyuwen': {
         target: 'http://192.168.1.123:7010',
-        pathRewrite: { '^/huangyuwen': '' },
+        pathRewrite: {
+          '^/huangyuwen': ''
+        },
         changeOrigin: true
       },
       '/dingfei': {
-        target: 'http://192.168.1.57:7010',
-        pathRewrite: { '^/dingfei': '' },
+        target: 'http://192.168.1.68:7010',
+        pathRewrite: {
+          '^/dingfei': ''
+        },
         changeOrigin: true
       },
       '/chenrongtao': {
         target: 'http://192.168.1.127:7010',
-        pathRewrite: { '^/chenrongtao': '' },
+        pathRewrite: {
+          '^/chenrongtao': ''
+        },
         changeOrigin: true
       },
       '/home': {
         target: 'http://frp.nanedo.com:8080',
-        pathRewrite: { '^/home': '' },
+        pathRewrite: {
+          '^/home': ''
+        },
         changeOrigin: true
       },
       '/fangjian': {
         target: 'http://192.168.1.25:7010',
-        pathRewrite: { '^/fangjian': '' },
+        pathRewrite: {
+          '^/fangjian': ''
+        },
         changeOrigin: true
       },
       '/aliyun': {
         target: 'http://119.23.201.233:9528/api',
-        pathRewrite: { '^/aliyun': '' },
+        pathRewrite: {
+          '^/aliyun': ''
+        },
         changeOrigin: true
       }
     },
