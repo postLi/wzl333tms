@@ -1076,6 +1076,10 @@ export default {
               this.submitLoading = false
               this._handlerCatchMsg(err)
               this.loading = false
+              if (!data) {
+                this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
+                this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
+              }
             })
           }
         } else {
