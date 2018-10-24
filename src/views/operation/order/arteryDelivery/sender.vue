@@ -34,7 +34,7 @@
     <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
     <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
 </template>
 <script>
@@ -149,7 +149,7 @@ export default {
           width: '160',
           fixed: false
         },{
-          label: '到车时间',
+          label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
           fixed: false

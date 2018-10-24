@@ -287,7 +287,6 @@ export default {
     },
     loadTable: { // 深度监听数组变换  
       handler(cval, oval) { // 拿到智能配载返回的数据
-        console.log('loadtable&&&&&&&&&&&&')
         if (this.getinfoed2) {
           return
         }
@@ -306,7 +305,6 @@ export default {
     },
     truckIndex: {
       handler(cval, oval) { // 深度监听车型下标index 例如：0-车型一
-        console.log('truckIndex%^^^^^^^^^^')
         this.initTable()
       },
       deep: true
@@ -522,15 +520,12 @@ export default {
             this.rightTable.push(e)
             this.orgRightTable[this.truckIndex] = this.orgRightTable[this.truckIndex] || []
             this.orgRightTable[this.truckIndex].push(e)
-            console.log('给右表格添加', this.rightTable, e, this.orgRightTable)
             this.leftTable = objectMerge2([], this.leftTable).filter(el => {
               return el.repertoryId !== e.repertoryId
             })
-            console.log('goRighr1', this.orgLeftTable)
             this.orgLeftTable = this.orgLeftTable.filter(el => {
               return el.repertoryId !== e.repertoryId
             })
-            console.log('goRighr2', this.orgLeftTable)
           }
         })
         this.$nextTick(() => {
