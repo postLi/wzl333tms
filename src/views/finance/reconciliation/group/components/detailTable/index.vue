@@ -6,6 +6,7 @@
   </div>
 </template>
 
+
 <script>
 import Sender from './detailIndex'
 
