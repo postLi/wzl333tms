@@ -81,7 +81,7 @@
           <div class="databox-line"></div>
           <div class="databox datagreen">
             <span class="dataico"><icon-svg icon-class="caiwu" /></span>
-            <span class="databox-value">{{ thedata.amountReceivableFee - thedata.amountPayableFee }}元</span>
+            <span class="databox-value">{{ liushuicha }}元</span>
             <span class="databox-label">流水差</span>
           </div>
         </el-col>
@@ -271,6 +271,9 @@ export default {
     totalpay() {
       const data = this.thedata
       return tmsMath.add(data.hadPayCarFee, data.unPayCarFee, data.hadPayTransferFee, data.unPayTransferFee, data.hadPayOtherFee, data.unPayOtherFee).result()
+    },
+    liushuicha() {
+      return tmsMath.sub(this.thedata.amountReceivableFee, this.thedata.amountPayableFee).result()
     }
   },
   methods: {
@@ -366,6 +369,7 @@ export default {
       })
     },
     initYearChart(echart, shipArr, volumeArr) {
+      console.log('initYearChart:', shipArr, volumeArr)
       const option3 = {
         title: {
           text: '收支走势',
