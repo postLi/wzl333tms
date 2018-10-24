@@ -51,7 +51,7 @@
                 已发车<i class="data-s">(<i>{{ thedata.amountSendingWeight }}</i>千克,<i>{{ thedata.amountSendingVolume }}</i>方)</i>
 
               </li>
-              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountSending }}</span>车，</i><i class="xdata"><span>{{ thedata.amountSending }}</span>票</i><i class="xline"></i></li>
+              <li class="profit-num"><i class="xdata"><span>{{ thedata.amountSendingCar }}</span>车，</i><i class="xdata"><span>{{ thedata.amountSending }}</span>票</i><i class="xline"></i></li>
             </ul>
           </el-col>
       </el-row>
@@ -65,7 +65,7 @@
             <span class="databox-label">已到车<i class="data-s">(<i>{{ thedata.amountArrivedWeight }}</i>千克,<i>{{ thedata.amountArrivedVolume }}</i>方)</i></span>
             <!-- <div class="databox-tip">(对方网点已确认到车)</div> -->
             <span class="dataico"><icon-svg icon-class="yygl7_daoche" /></span>
-            <span class="databox-value">{{thedata.amountArrived}}车,{{thedata.amountArrived}}票</span>
+            <span class="databox-value">{{thedata.amountArrivedCar}}车,{{thedata.amountArrived}}票</span>
             
           </div>
           <div class="databox-line"></div>
@@ -470,7 +470,7 @@ export default {
             name: '票',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '30%',
+            // barMaxWidth: '30%',
             itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
             // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
             data: shipArr,
@@ -485,7 +485,7 @@ export default {
             name: '千克',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '30%',
+            // barMaxWidth: '30%',
             itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: volumeArr,
@@ -500,7 +500,7 @@ export default {
             name: '方',
             type: 'bar',
             smooth: true,
-            barMaxWidth: '30%',
+            // barMaxWidth: '30%',
             itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
             // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
             data: fangArr,

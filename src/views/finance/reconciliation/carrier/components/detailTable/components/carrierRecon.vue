@@ -75,7 +75,7 @@
         </ul>
         <ul>
           <li>
-            <el-form-item label="客户编号">
+            <el-form-item label="承运商编号">
               <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
             </el-form-item>
           </li>
