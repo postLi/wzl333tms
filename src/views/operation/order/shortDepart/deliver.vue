@@ -131,6 +131,12 @@ export default {
           fixed: false
         },
         {
+          label: '操作费(元)',
+          prop: 'handlingFeeAll',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '100'

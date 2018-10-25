@@ -97,8 +97,8 @@ export default {
           batchTypeId: '', //
           batchNo: '', //
           loadTypeId: 39, //
-          endTime: '', //
-          beginTime: '', //
+          endDate: '', //
+          beginDate: '', //
           arrivedbeginDate: '', //
           arrivedEndDate: ''//
         }

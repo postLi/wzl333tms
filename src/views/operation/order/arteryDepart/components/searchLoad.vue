@@ -50,6 +50,7 @@ export default {
     },
     clearForm() {
       this.searchForm = this.$options.data().searchForm
+      this.searchCreatTime = this.$options.data().searchCreatTime
       this.searchForm.orgid = this.otherinfo.orgid
     }
   }
