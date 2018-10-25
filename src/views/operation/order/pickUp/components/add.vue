@@ -30,8 +30,8 @@
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <el-input v-model="form.tmsOrderPickup.pickupAmount" v-numberOnly auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupAmount" @change="(e)=>{setInputVal(e.target.value, 'pickupAmount')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only type="text">
           </el-form-item>
           <el-form-item label="体积" prop="">
             <input class="nativeinput" :value="form.tmsOrderPickup.pickupVolume" @change="(e)=>{setInputVal(e.target.value, 'pickupVolume')}" :maxlength="8" auto-complete="off" clearable
