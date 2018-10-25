@@ -930,9 +930,9 @@
               <th colspan="1">
                 备注
               </th>
-              <th colspan="11" >
+              <th colspan="11">
                 <el-form-item label="">
-                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>
+                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" class="input-class-width"></el-input>
                 </el-form-item>
               </th>
             </tr>
@@ -1579,7 +1579,7 @@
                 }
               }
               .el-form-item__error{
-                z-index: 1;
+                z-index: 20;
               }
               .input-class.el-input--suffix {
                 .el-input__inner {

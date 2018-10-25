@@ -1349,7 +1349,11 @@
 <style lang="scss">
   .groupCreat_lll {
     margin: 0 10px;
-
+    .el-table__footer-wrapper{
+      td:nth-child(n+1){
+        color: #fe0000;
+      }
+    }
     table.table-class {
       border-collapse: collapse;
       width: 100%;
@@ -1381,7 +1385,7 @@
                 }
               }
               .el-form-item__error{
-                z-index: 1;
+                z-index: 20;
               }
               .input-class.el-input--suffix {
                 .el-input__inner {
@@ -1536,7 +1540,7 @@
     }
 
     .sBottom {
-      /*margin-bottom: 90px;*/
+      margin-bottom: 90px;
       .sMessageCont_info {
         background-color: #e2eaff;
         p {
