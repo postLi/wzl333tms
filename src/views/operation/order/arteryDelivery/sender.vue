@@ -34,7 +34,7 @@
     <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
     <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true"></actualSendtime>
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
 </template>
 <script>
@@ -149,12 +149,12 @@ export default {
           width: '160',
           fixed: false
         },{
-          label: '到车时间',
+          label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
           fixed: false
         }, {
-          label: '发车时间',
+          label: '实际发车时间',
           prop: 'actualSendtime',
           width: '160',
           fixed: false
@@ -402,7 +402,7 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              postCancelLoad(ids, 54).then(res => {
+              postCancelLoad(ids, 39).then(res => {
                 this.$message({
                   type: 'success',
                   message: '已取消到车~'

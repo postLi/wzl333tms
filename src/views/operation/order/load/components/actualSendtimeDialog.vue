@@ -66,7 +66,8 @@ export default {
           })
       }
     },
-    isArrival () {}
+    isArrival () {
+    }
   },
   methods: {
     submitForm (formName) {

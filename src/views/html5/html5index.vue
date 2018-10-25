@@ -282,7 +282,10 @@ export default {
       this.searchQuery.vo.buttonKey = 5
       this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
       this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
-      this.currentkey = 5
+      this.currentkey = ''
+      this.$nextTick(() => {
+        this.currentkey = 5
+      })
     },
     doAction(type) {
       switch (type) {
@@ -467,7 +470,7 @@ export default {
         ]
       }
       echart.hideLoading()
-      echart.setOption(option3)
+      echart.setOption(option3, true)
     }
   },
   mounted() {

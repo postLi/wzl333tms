@@ -180,7 +180,7 @@ export default {
           width: '120'
         },
         {
-          label: '接收时间',
+          label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
           slot: (scope) => {

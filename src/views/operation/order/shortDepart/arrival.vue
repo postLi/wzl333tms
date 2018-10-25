@@ -133,12 +133,12 @@ export default {
           fixed: false
         },
         {
-          label: '短驳时间',
-          prop: 'loadTime',
+          label: '短驳操作时间',
+          prop: 'departureTime',
           width: '160',
           fixed: false,
           slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
@@ -160,7 +160,7 @@ export default {
           }
         },
         {
-          label: '接收时间',
+          label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
           fixed: false,

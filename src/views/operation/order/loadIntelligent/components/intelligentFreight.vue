@@ -7,7 +7,7 @@
         <el-table ref="multipleTable" :data="usersArr" stripe border height="66" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="nowpayCarriage" label="现付运费">
             <template slot-scope="scope">
-              <input v-model="scope.row.nowpayCarriage" class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayCarriage', val)" v-number-only:point></input>
+              <input v-model="scope.row.nowpayCarriage" class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayCarriage', val)" v-number-only:point :maxlength="10"></input>
               <!-- <el-input v-model.trim="scope.row.nowpayCarriage" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="10"></el-input> -->
             </template>.
           </el-table-column>

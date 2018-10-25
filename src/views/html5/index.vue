@@ -442,7 +442,7 @@ export default {
         ]
       }
       echart.hideLoading()
-      echart.setOption(option3)
+      echart.setOption(option3, true)
     }
   },
   mounted() {

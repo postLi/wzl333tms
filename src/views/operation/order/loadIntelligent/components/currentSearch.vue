@@ -40,7 +40,6 @@ export default {
   watch: {
     info: {
       handler (cval, oval) {
-        console.log('orgLefTable', cval, oval)
       },
       deep: true
     }

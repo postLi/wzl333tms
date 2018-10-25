@@ -103,7 +103,6 @@ export default {
           sendDate: this.$route.query.sendData
         }
       })
-      console.log('======loadImg====', this.$route)
     }
   }
 }

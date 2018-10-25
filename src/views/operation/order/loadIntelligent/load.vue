@@ -1,23 +1,78 @@
 <template>
   <div class="loadIntelligent_content" v-loading="loading" :key="loadKey">
     <div class="loadIntelligent_main">
-      <loadInfo :modify="modify" :transpList="transpList" @truckPrecent="getTruckPrecent" @delCurTruck="getDelCurTruck" :loadTable="loadTableInfo" :orgid="$route.query.orgId" :dofo="intelligentData" @truckIndex="getTruckIndex" :paramTuck="paramTuck" @resetTrucDelList="resetTrucDelList" @addOrgRightTable="addOrgRightTable" @truckInfo="getTruckInfo" @schemeIndex="getSchemeIndex" :leftTableArr="leftTableArr" :orgFirstScheme="orgFirstScheme" @submitLoadNew="getSubmitLoadNew"></loadInfo>
+      <loadInfo 
+      :modify="modify" 
+      :transpList="transpList" 
+      @truckPrecent="getTruckPrecent"
+      @delCurTruck="getDelCurTruck" 
+      :loadTable="loadTableInfo" 
+      :orgid="$route.query.orgId" 
+      :dofo="intelligentData" 
+      @truckIndex="getTruckIndex" 
+      :paramTuck="paramTuck" 
+      @resetTrucDelList="resetTrucDelList" 
+      @addOrgRightTable="addOrgRightTable" 
+      @truckInfo="getTruckInfo" 
+      @schemeIndex="getSchemeIndex" 
+      :leftTableArr="leftTableArr" 
+      :orgFirstScheme="orgFirstScheme" 
+      @submitLoadNew="getSubmitLoadNew" 
+      @setPageLoading="setPageLoading"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
-        <transferTable :truckIndex="truckIndex" :getinfoed="getinfoed" :loadTable="setLoadTableList" :delData="delCurTruckData" @showViewTable="showFullViewTable" @loadTable="getLoadTable" @loadCurTable="getLoadCurTable" @openParamSet="openlntelligent" :resetTuckLoad="resetTrucDelListLen" :addOrgRightTable="isAddOrgRightTable" :dofo="truckInfo" :schemeIndex="schemeIndex" @leftTable="getLeftTable" :submitLoadNew="submitLoadNew"></transferTable>
+        <transferTable 
+        :truckIndex="truckIndex" 
+        :getinfoed="getinfoed" 
+        :loadTable="setLoadTableList" 
+        :delData="delCurTruckData" 
+        @showViewTable="showFullViewTable" 
+        @loadTable="getLoadTable" 
+        @loadCurTable="getLoadCurTable" 
+        @openParamSet="openlntelligent" 
+        :resetTuckLoad="resetTrucDelListLen" 
+        :addOrgRightTable="isAddOrgRightTable" 
+        :dofo="truckInfo" 
+        :schemeIndex="schemeIndex" 
+        @leftTable="getLeftTable" 
+        :submitLoadNew="submitLoadNew"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
         <!-- 配载率 -->
-        <loadChart :info="loadInfoPercent" ref="loadchart" :truckInfo="truckPrecent" @showViewChart="showFullViewChart"></loadChart>
+        <loadChart 
+        :info="loadInfoPercent" 
+        ref="loadchart" 
+        :truckInfo="truckPrecent" 
+        @showViewChart="showFullViewChart"></loadChart>
       </div>
       <!-- 添加车辆信息 -->
-      <addTruckInfo :truckSources="truckSources" :truckTypes="truckTypes" :issender="true" :isModify="isModify" :info="selectInfo" :orgid="otherinfo.orgid" :popVisible.sync="addTruckVisible" @close="closeAddTruckVisible" @success="fetchData"></addTruckInfo>
+      <addTruckInfo 
+      :truckSources="truckSources" 
+      :truckTypes="truckTypes" 
+      :issender="true" 
+      :isModify="isModify" 
+      :info="selectInfo" 
+      :orgid="otherinfo.orgid" 
+      :popVisible.sync="addTruckVisible" 
+      @close="closeAddTruckVisible" 
+      @success="fetchData"></addTruckInfo>
       <!-- 添加司机信息 -->
-      <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
+      <addDriverInfo 
+      :licenseTypes="licenseTypes" 
+      :issender="true" 
+      :isModifyDriver="isModifyDriver" 
+      :infoDriver="selectInfoDriver" 
+      :orgid="otherinfo.orgid" 
+      :popVisible.sync="addDriverVisible" 
+      @close="closeAddDriver" 
+      @success="fetchData"></addDriverInfo>
       <!-- 参数设置 -->
-      <AddLntelligent :popVisible.sync="lntelligentVisible" @close="closelntelligent" @savaParamTruck="getSavaParamTruck" :selectTruck="intelligentData"></AddLntelligent>
+      <AddLntelligent 
+      :popVisible.sync="lntelligentVisible" 
+      @close="closelntelligent" 
+      @savaParamTruck="getSavaParamTruck" :selectTruck="intelligentData"></AddLntelligent>
     </div>
   </div>
 </template>
@@ -396,6 +451,9 @@ export default {
     },
     closelntelligent() {
       this.lntelligentVisible = false
+    },
+    setPageLoading (boolean) {
+      this.loading = boolean
     }
   }
 }

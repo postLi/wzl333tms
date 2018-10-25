@@ -422,11 +422,59 @@ export default {
         '方': false
       }
       let selectData = ['票', '千克', '方']
+      const series = []
+      series.push({
+        name: '票',
+        type: 'bar',
+        smooth: true,
+        // barMaxWidth: '30%',
+        itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
+        // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
+        data: shipArr,
+        markPoint: {
+          data: [
+                  { type: 'max', name: '最大值' },
+                  { type: 'min', name: '最小值' }
+          ]
+        }
+      })
       if (this.currenttab === 5 || this.currenttab === 6) {
         selectShow = {
           '票': true
         }
         selectData = ['票']
+      } else {
+        series.push(
+          {
+            name: '千克',
+            type: 'bar',
+            smooth: true,
+            // barMaxWidth: '30%',
+            itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
+            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+            data: volumeArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          },
+          {
+            name: '方',
+            type: 'bar',
+            smooth: true,
+            // barMaxWidth: '30%',
+            itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
+            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
+            data: fangArr,
+            markPoint: {
+              data: [
+                      { type: 'max', name: '最大值' },
+                      { type: 'min', name: '最小值' }
+              ]
+            }
+          })
       }
       const option3 = {
         title: {
@@ -465,56 +513,10 @@ export default {
             type: 'value'
           }
         ],
-        series: [
-          {
-            name: '票',
-            type: 'bar',
-            smooth: true,
-            // barMaxWidth: '30%',
-            itemStyle: { normal: { color: '#FF7F50', areaStyle: { type: 'macarons', color: '#FF7F50' }}},
-            // data: [2.0, 4.9, 7.0, 0, 25.6, 76.7, 135.6, 162.2, '', '', '', ''],
-            data: shipArr,
-            markPoint: {
-              data: [
-                      { type: 'max', name: '最大值' },
-                      { type: 'min', name: '最小值' }
-              ]
-            }
-          },
-          {
-            name: '千克',
-            type: 'bar',
-            smooth: true,
-            // barMaxWidth: '30%',
-            itemStyle: { normal: { color: '#5AB1EF', areaStyle: { type: 'macarons', color: '#5AB1EF' }}},
-            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-            data: volumeArr,
-            markPoint: {
-              data: [
-                      { type: 'max', name: '最大值' },
-                      { type: 'min', name: '最小值' }
-              ]
-            }
-          },
-          {
-            name: '方',
-            type: 'bar',
-            smooth: true,
-            // barMaxWidth: '30%',
-            itemStyle: { normal: { color: '#9E63FF', areaStyle: { type: 'macarons', color: '#9E63FF' }}},
-            // data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 0, 0, 0, 0],
-            data: fangArr,
-            markPoint: {
-              data: [
-                      { type: 'max', name: '最大值' },
-                      { type: 'min', name: '最小值' }
-              ]
-            }
-          }
-        ]
+        series: series
       }
       echart.hideLoading()
-      echart.setOption(option3)
+      echart.setOption(option3, true)
     }
   },
   mounted() {

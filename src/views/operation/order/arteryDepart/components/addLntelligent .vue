@@ -46,7 +46,9 @@
           </el-table-column>
           <el-table-column fixed prop="price" width="120" label="车费">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.price" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
+               <input type="text"  :size="btnsize" class="nativeinput" v-numberOnly:pointer :value="scope.row.price" @change="(e)=>changeFright(scope.$index, 'price', e.target.value)" ref="price" :maxlength="10" 
+               @click.stop :disabled="scope.row['selectdCheck']" />
+              <!-- <el-input v-model.number="scope.row.price" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="10" @click.stop.prevent.native></el-input> -->
             </template>
           </el-table-column>
         </el-table>
@@ -190,6 +192,7 @@ export default {
       })
     },
     changeFright(index, prop, newVal) {
+      console.log(index, prop, newVal)
       this.usersArr[index][prop] = Number(newVal)
       const newfreght = this.usersArr[index].price
       if (newfreght === 0) {
