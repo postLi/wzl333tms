@@ -25,7 +25,7 @@
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
-        <el-table-column prop="shipTotalFee" sortable label="运费(元)" width="90">
+        <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120">
         </el-table-column>
         <el-table-column prop="brokerageFee" sortable label="回扣(元)" width="90">
         </el-table-column>
@@ -98,10 +98,10 @@
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)"  :maxlength="10"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="shipTotalFee" sortable label="运费(元)" width="90" v-if="loadTypeId !== 40">
+        <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120" v-if="loadTypeId !== 40">
         </el-table-column>
         <el-table-column prop="brokerageFee" sortable label="回扣(元)" width="90" v-if="loadTypeId !== 40">
         </el-table-column>
@@ -238,16 +238,15 @@ export default {
     countHandingFee() {
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
-        let totalBrokerageFee = 0
-        let totalShipTotalFee = 0
-        this.rightTable.map(e =>{
-          totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee)
-          totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee)
-        })
-        this.rightTable.forEach((e, index) => {
-          e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
-        })
-          // this.$message.warning('暂无该分摊方式计算功能，尚在开发中！')
+          let totalBrokerageFee = 0 // 总回扣
+          let totalShipTotalFee = 0 // 总运费合计
+          this.rightTable.forEach(e => {
+            totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee ? e.brokerageFee : 0)
+            totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
+          })
           break
         case 44: // 按票数分摊 车费/票数
           this.rightTable.forEach((e, index) => {
@@ -281,20 +280,38 @@ export default {
           this.rightTable.forEach((e, index) => {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadAmount, totalAmount), this.handlingFeeInfo.handlingFeeAll))
           })
-
           break
       }
 
       let count = 0
+      let countFeeZero = 0
+      let listLen = this.rightTable.length
+
       this.rightTable.forEach((e, index) => {
-        count = tmsMath._add(count,e.handlingFee)
-        if(count > this.handlingFeeInfo.handlingFeeAll){
-          e.handlingFee = tmsMath._sub(e.handlingFee ,tmsMath._sub(count, this.handlingFeeInfo.handlingFeeAll))
+        count = tmsMath._add(count, e.handlingFee)
+        if (count > this.handlingFeeInfo.handlingFeeAll) {
+          e.handlingFee = tmsMath._sub(e.handlingFee, tmsMath._sub(count, this.handlingFeeInfo.handlingFeeAll))
+        }
+        e.handlingFee = e.handlingFee ? e.handlingFee : 0
+        if (e.handlingFee === 0) {
+          countFeeZero++
         }
       })
+      if (this.handlingFeeInfo.apportionTypeId && this.handlingFeeInfo.handlingFeeAll && countFeeZero === listLen) {
+        // 判断是否所有的费用都为0 总计为0的时候和操作费不一致需要特殊处理
+        // 特殊处理： 提示“运单相关数据不足以分摊操作，默认为【按票数分摊】。”
+        this.$notify.info({
+          title: '消息',
+          message: '运单相关数据不足以分摊操作，默认为【按票数分摊】。'
+        })
+        this.$emit('resetHandlingFeeInfo', {
+          apportionTypeId: 44
+        })
+
+      }
     },
-    calc(n){
-      return tmsMath._div(Math.round( tmsMath._mul(n, 100) ), 100)
+    calc(n) {
+      return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
     },
     getList() {
       this.leftTable = this.$options.data().leftTable
@@ -475,7 +492,7 @@ export default {
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|','handlingFee', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
+      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|', 'handlingFee', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
       return getSummaries(param, propsArr)
     }
   }
