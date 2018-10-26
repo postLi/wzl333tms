@@ -14,13 +14,13 @@ export function postGroupList(params) {
 }
 
 /**
- /finance/carrierdetail/v1/
- 插入承运商对账信息
+ /finance/tmsfinancebillcheck/v1/getOrgDetailList
+ 查询获取网点对账明细分页信息
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCarrierdetailList(params) {
-  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/getCarrierDetailList', params).then(res => {
+export function postGroupDetailList(params) {
+  return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/getOrgDetailList', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }

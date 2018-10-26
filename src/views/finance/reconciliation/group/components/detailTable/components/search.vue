@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="车牌号">
-          <el-input  v-model="searchForm.orgid"></el-input>
+          <el-input  v-model="searchForm.truckIdNumber"></el-input>
           <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />-->
         </el-form-item>
       </div>
@@ -87,6 +87,8 @@ export default {
       searchForm: {
         orgid: '',
         checkStatus: '',
+        arriveOrgid: '',
+        truckIdNumber: '',
         startTime: '', //
         endTime: ''
       },
@@ -105,6 +107,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.orgid
+    this.searchForm.arriveOrgid = this.$route.query.arriveOrgid
     this.searchCreatTime = this.defaultTime
     this.onSubmit()
   },
@@ -117,6 +120,8 @@ export default {
     clearForm() {
       this.searchForm.orgid = this.orgid
       this.searchForm.checkStatus = ''
+      this.searchForm.truckIdNumber = ''
+      this.searchForm.arriveOrgid = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime
