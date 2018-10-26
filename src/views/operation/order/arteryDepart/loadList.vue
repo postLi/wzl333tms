@@ -78,6 +78,7 @@ export default {
           if (data) {
             this.loading = false
             this.dataList = data.list
+            this.total = data.total
           }
         })
         .catch(err => {

@@ -357,7 +357,7 @@ export default {
         putCompleteDelivery(this.commonData).then(data => {
             if (data) {
               this.loading = false
-              this.$message({ type: 'success', message: '保存成功' })
+              this.$message({ type: 'success', message: '操作成功' })
               this.fetchData()
             }
           })
@@ -377,7 +377,7 @@ export default {
         putDeliverLoad(this.commonData).then(data => {
             if (data) {
               this.loading = false
-              this.$message({ type: 'success', message: '保存成功' })
+              this.$message({ type: 'success', message: '操作成功' })
               this.fetchData()
             }
           })

@@ -168,6 +168,7 @@
                             <span v-else>
                                <el-input
                                @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                                @click.stop.prevent.native
                                  v-model.number="scope.row[column.prop]"
                                  :size="btnsize"
                                  v-number-only
@@ -178,7 +179,7 @@
                             </span>
                           </div>
                           <div v-else-if="column.expand">
-                            <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" v-model.number="scope.row[column.prop]" :size="btnsize" v-number-only @change="(val) => changeData(scope.$index, column.prop, val)">
+                            <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" v-model.number="scope.row[column.prop]" :size="btnsize" v-number-only  @click.stop.prevent.native @change="(val) => changeData(scope.$index, column.prop, val)">
                             </el-input>
                           </div>
                           <span class="clickitem" v-else-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)">

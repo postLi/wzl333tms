@@ -429,7 +429,9 @@ export default {
           })
         })
         this.selectedRight = [] // 清空选择列表
-        this.countHandingFee()
+        if (this.$route.query.loadTypeId !== 40) {
+          this.countHandingFee()
+        }
         console.log('rightTable', this.rightTable.length, this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
@@ -455,7 +457,9 @@ export default {
         })
         this.selectedLeft = [] // 清空选择列表
         console.log('rightTable', this.rightTable)
-        this.countHandingFee()
+        if (this.$route.query.loadTypeId !== 40) {
+          this.countHandingFee()
+        }
         this.$emit('loadTable', this.rightTable)
       }
     },
