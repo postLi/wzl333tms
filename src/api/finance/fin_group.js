@@ -2,13 +2,13 @@ import fetch from '../../utils/fetch'
 
 /**
 
- /finance/carrierdetail/v1/carrierList
- 查询承运商对账分页信息 首页
+ /finance/orgdetail/v1/list
+ 查询网点对账明细分页信息  首页
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCarrierCarrierList(params) {
-  return fetch.post('/api-finance/finance/carrierdetail/v1/carrierList', params).then(res => {
+export function postGroupList(params) {
+  return fetch.post('/api-finance/finance/orgdetail/v1/list', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }
@@ -26,26 +26,26 @@ export function postCarrierdetailList(params) {
 }
 
 /**
- /finance/carrierdetail/v1/initialize
- 初始化创建客户对账明细页面
+ /finance/orgdetail/v1/initialize
+ 初始化创建网点账明细页面
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCarrierinitialize(params) {
-  return fetch.post('/api-finance/finance/carrierdetail/v1/initialize/', params).then(res => {
+export function postGroupInitialize(params) {
+  return fetch.post('/api-finance/finance/orgdetail/v1/initialize/', params).then(res => {
     return res.data || { list: [], totalCount: 0 }
   })
 }
 
 /**
- /finance/carrierdetail/v1/saveCarrierDetail
+ /finance/orgdetail/v1/saveOrgDetail
  保存或修改对账
  {"orgId": 1, "checkBillCode": "DZ1805210004","payDetailList":[{"arrSendPay":100},{"arrSendPay":10}],"hadPayDetailList":[{"arrSendPay":101},{"arrSendPay":10}]}
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function postCreatesaveCarrierDetail(params) {
-  return fetch.post('/api-finance/finance/carrierdetail/v1/saveCarrierDetail', params).then(res => {
+export function postCreatesaveGroup(params) {
+  return fetch.post('/api-finance/finance/orgdetail/v1/saveOrgDetail', params).then(res => {
     return res.data
   })
 }
@@ -63,13 +63,13 @@ export function deleteCarrierdetail(id) {
 
 /**
 
- /finance/carrierdetail/v1/{id}
+ /finance/orgdetail/v1/{id}
  查询详情/修改页面 根据主表id查询明细表的所有数据
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */
-export function getCarrierCarrierdetail(id) {
-  return fetch.get('/api-finance/finance/carrierdetail/v1/' + id)
+export function getGroupOrgdetail(id) {
+  return fetch.get('/api-finance/finance/orgdetail/v1/' + id)
 }
 
 /**

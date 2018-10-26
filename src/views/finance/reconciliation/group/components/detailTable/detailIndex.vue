@@ -57,7 +57,6 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
   import {postCarrierdetailList} from '@/api/finance/fin_carrier'
   import {deleteCarShort, postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
@@ -246,7 +245,10 @@
               path: '/finance/reconciliation/group/detailTable/groupRecon',
               query: {
                 tab: '网点对账-创建对账',
-                id: this.$route.query.id
+                // id: this.$route.query.id,
+                arriveOrgid: this.$route.query.arriveOrgid,
+                orgid: this.$route.query.orgid,
+                orgName: this.$route.query.orgName
               }
             })
 

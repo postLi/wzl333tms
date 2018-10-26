@@ -877,8 +877,8 @@
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-          searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+          searchObj.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+          searchObj.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
           this.fetchList()
           this.fetchDealPay()
@@ -1157,6 +1157,7 @@
         font-size: 14px;
         th:nth-child(odd) {
           padding: 0 8px;
+          white-space: nowrap;
         }
         th {
           border: 1px solid #cad9ea;
@@ -1227,6 +1228,7 @@
             min-width: 100px;
             text-align: center;
             display: inline-block;
+            white-space: nowrap;
           }
 
           /*showBg*/

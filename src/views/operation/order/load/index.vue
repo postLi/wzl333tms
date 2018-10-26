@@ -76,16 +76,20 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="可载体积" prop="truckVolume">
-                    <el-input size="mini" v-model="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8">
-                      <template slot="append">方</template>
-                    </el-input>
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckVolume" ref="truckVolume" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckVolume')" />
+                    <span class="input-append">方</span>
+                    <!-- <el-input size="mini" v-model="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8"> -->
+                      <!-- <template slot="append">方</template> -->
+                    <!-- </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
-                    <el-input size="mini" v-model="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
+                    <span class="input-append" style="margin-left: -40px;">千克</span>
+                    <!-- <el-input size="mini" v-model="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
                       <template slot="append">千克</template>
-                    </el-input>
+                    </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
@@ -106,7 +110,9 @@
                 </div>
                 <div>
                   <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40" class="formItemTextDanger">
-                    <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input>
+                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
+                     <span class="input-append">元</span>
+                    <!-- <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input> -->
                   </el-form-item>
                   <el-form-item label="备注" v-else>
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
@@ -116,7 +122,9 @@
               <div class="loadFrom-type-baseInfo">
                 <div>
                   <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
-                    <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input>
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.shortFee" ref="shortFee" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'shortFee')" />
+                    <span class="input-append">元</span>
+                    <!-- <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input> -->
                   </el-form-item>
                 </div>
                 <div>
@@ -236,7 +244,7 @@
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :handlingFeeInfo="handlingFeeInfo" @changeHandlingFeeAll="getHandingFeeAll"></dataTable>
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :handlingFeeInfo="handlingFeeInfo" @changeHandlingFeeAll="getHandingFeeAll" @resetHandlingFeeInfo="resetHandlingFeeInfo"></dataTable>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="formModel" :popVisible.sync="showRightTablePercent"></loadChart>
@@ -1001,14 +1009,15 @@ export default {
           this._handlerCatchMsg(err)
         })
     },
-    changeTruckNum(val, type) {
+    changeTruckNum(val, type) { // 原生input 设置值
       this.$set(this.formModel, type, Number(val))
     },
     changeLoadNum(val, type) {
       this.$set(this.formFee, type, val)
     },
     changeHandlingFeeAll(val) {
-      this.handlingFeeInfo.handlingFeeAll = val
+      this.$set(this.handlingFeeInfo, 'handlingFeeAll', Number(val))
+      this.$set(this.formModel, 'handlingFeeAll', Number(val))
     },
     getApportionTypeId(value) { // 选择分摊方式
       console.log('getApportionTypeId', value, this.formModel.apportionTypeId)
@@ -1016,6 +1025,12 @@ export default {
     },
     getHandingFeeAll(value) {
       this.$set(this.formModel, 'handlingFeeAll', value)
+    },
+    resetHandlingFeeInfo (value) {
+      console.log( 'resetHandlingFeeInfo',value)
+      this.$set(this.formModel, 'apportionTypeId', value.apportionTypeId)
+      this.$set(this.handlingFeeInfo, 'apportionTypeId', value.apportionTypeId)
+      
     }
   }
 }
@@ -1094,8 +1109,21 @@ export default {
       display: flex;
       flex-direction: row;
       margin-bottom: -10px;
+      .input-append{
+        position: absolute;
+        left: 100%;
+        top: 0;
+        font-size: 14px;
+        margin-left: -25px;
+        color: #999;
+      }
       .el-input {
         width: 210px;
+      }
+      .nativeinput{
+        width: 210px;
+        border: 1px solid #dcdfe6; 
+        border-radius: 4px;
       }
       .el-input-group__append,
       .el-input-group__prepend {

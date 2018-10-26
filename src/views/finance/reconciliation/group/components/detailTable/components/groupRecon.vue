@@ -65,7 +65,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-                <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10"
+                <el-input v-model="messageInfo.memberPerson" auto-complete="off" :maxlength="10"
                           clearable></el-input>
               </el-form-item>
             </th>
@@ -182,69 +182,69 @@
           <el-table-column
             fixed
             sortable
-            prop="createTime"
+            prop="departureTime"
             width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="shipSn"
+            prop="truckIdNumber"
             width="120"
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="dirverName"
             sortable
             width="120"
             label="司机姓名">
           </el-table-column>
           <el-table-column
-            prop="shipFromCityName"
+            prop="batchNo"
             sortable
             width="120"
             label="发车批次">
           </el-table-column>
           <el-table-column
-            prop="signStatusName"
+            prop="contractNo"
             sortable
             width="120"
             label="合同编号">
           </el-table-column>
           <el-table-column
-            prop="shipToCityName"
+            prop="arriveOrgName"
             sortable
             width="120"
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
-            prop="cargoName"
+            prop="shipArrivepayFee"
             width="110"
             label="到付款">
           </el-table-column>
           <el-table-column
-            prop="cargoAmount"
+            prop="agencyFund"
             label="代收货款"
             width="120"
             sortable
           >
           </el-table-column>
-
           <el-table-column
-            prop="shipDeliveryMethod"
+            prop="handlingFeeReceivable"
+            label="操作费"
+            width="110"
             sortable
-            width="120"
-            label="配载总数量">
+          >
           </el-table-column>
           <el-table-column
-            prop="paymentMethod"
+            prop="loadAmountall"
             label="配载总件数"
             width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="shipArrivepayFee"
+            prop="loadVolumeall"
             label="配载总体积"
             width="120"
             sortable
@@ -252,7 +252,7 @@
           </el-table-column>
 
           <el-table-column
-            prop="agencyFund"
+            prop="loadWeightall"
             label="配载总重量"
             width="120"
             sortable
@@ -325,92 +325,79 @@
           <el-table-column
             fixed
             sortable
-            prop="createTime"
+            prop="departureTime"
             width="160"
-            label="中转时间">
+            label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="shipSn"
-            width="140"
+            prop="truckIdNumber"
+            width="120"
             sortable
-            label="运单号">
+            label="车牌号码">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="dirverName"
             sortable
             width="120"
-            label="中转单号">
+            label="司机姓名">
           </el-table-column>
           <el-table-column
-            prop="signStatusName"
+            prop="batchNo"
             sortable
             width="120"
-            label="签收状态">
+            label="发车批次">
           </el-table-column>
           <el-table-column
-            prop="shipFromCityName"
+            prop="contractNo"
             sortable
-            width="100"
-            label="出发城市">
+            width="120"
+            label="合同编号">
           </el-table-column>
           <el-table-column
-            prop="shipToCityName"
+            prop="arriveOrgName"
             sortable
-            width="100"
-            label="到达城市">
+            width="120"
+            label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
-            prop="cargoName"
-            width="140"
-            label="货品名">
+            prop="shipArrivepayFee"
+            width="110"
+            label="到付款">
           </el-table-column>
           <el-table-column
-            prop="cargoAmount"
-            label="件数"
-            width="80"
+            prop="agencyFund"
+            label="代收货款"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="handlingFeeReceivable"
+            label="操作费"
+            width="110"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="loadAmountall"
+            label="配载总件数"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="loadVolumeall"
+            label="配载总体积"
+            width="120"
             sortable
           >
           </el-table-column>
 
           <el-table-column
-            prop="shipDeliveryMethod"
-            sortable
-            width="90"
-            label="交接方式">
-          </el-table-column>
-          <el-table-column
-            prop="paymentMethod"
-            label="中转付款方式"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="transferCharge"
-            label="中转费"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="deliveryExpense"
-            label="中转送货费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="transferOtherFee"
-            label="中转其他费"
-            width="110"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="totalCost"
-            label="中转费合计"
-            width="110"
+            prop="loadWeightall"
+            label="配载总重量"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -474,120 +461,92 @@
           <el-table-column
             fixed
             sortable
-            prop="createTime"
+            prop="departureTime"
             width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="shipSn"
+            prop="truckIdNumber"
             width="130"
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="dirverName"
             sortable
             width="150"
             label="司机姓名">
           </el-table-column>
           <el-table-column
-            prop="signStatusName"
+            prop="batchNo"
             sortable
             width="120"
             label="发车批次">
           </el-table-column>
           <el-table-column
-            prop="shipFromCityName"
+            prop="contractNo"
             sortable
             width="120"
             label="合同编号">
           </el-table-column>
           <el-table-column
-            prop="shipToCityName"
+            prop="arriveOrgName"
             sortable
             width="130"
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
-            prop="cargoName"
-            width="150"
+            prop="handlingFeePayable"
+            width="100"
             label="操作费">
           </el-table-column>
           <el-table-column
-            prop="cargoAmount"
+            prop="arriveHandlingFee"
             label="到站装卸费"
-            width="100"
+            width="110"
             sortable
           >
           </el-table-column>
 
           <el-table-column
-            prop="shipDeliveryMethod"
+            prop="arriveOtherFee"
             sortable
-            width="100"
+            width="110"
             label="到站其他费">
           </el-table-column>
           <el-table-column
-            prop="paymentMethod"
+            prop="arrivepayCarriage"
             label="到付运费"
             width="110"
             sortable
           >
           </el-table-column>
-          <!--<el-table-column-->
-          <!--prop="abnormalType"-->
-          <!--label="异常类型"-->
-          <!--width="100"-->
-          <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-          <!--prop="abnormalAmount"-->
-          <!--label="异常件数"-->
-          <!--width="90"-->
-          <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
-          <!--<el-table-column-->
-          <!--prop="registerFee"-->
-          <!--label="异常费用"-->
-          <!--width="100"-->
-          <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
           <el-table-column
-            prop="shipArrivepayFee"
+            prop="arrivepayOilCard"
             label="到付油卡"
-            width="150"
+            width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="agencyFund"
-            label="配载总数量"
-            width="150"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="agencyFund"
+            prop="loadAmountall"
             label="配载总件数"
-            width="150"
+            width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="agencyFund"
+            prop="loadVolumeall"
             label="配载总体积"
-            width="150"
+            width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="agencyFund"
+            prop="loadWeightall"
             label="配载总重量"
-            width="150"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -614,7 +573,7 @@
       </div>
 
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>未付 (应付账款)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -653,92 +612,92 @@
           <el-table-column
             fixed
             sortable
-            prop="createTime"
+            prop="departureTime"
             width="160"
-            label="中转时间">
+            label="发车时间">
           </el-table-column>
           <el-table-column
-            prop="shipSn"
-            width="140"
+            prop="truckIdNumber"
+            width="130"
             sortable
-            label="运单号">
+            label="车牌号码">
           </el-table-column>
           <el-table-column
-            prop="oddNumbers"
+            prop="dirverName"
+            sortable
+            width="150"
+            label="司机姓名">
+          </el-table-column>
+          <el-table-column
+            prop="batchNo"
             sortable
             width="120"
-            label="中转单号">
+            label="发车批次">
           </el-table-column>
           <el-table-column
-            prop="signStatusName"
+            prop="contractNo"
             sortable
             width="120"
-            label="签收状态">
+            label="合同编号">
           </el-table-column>
           <el-table-column
-            prop="shipFromCityName"
+            prop="arriveOrgName"
             sortable
+            width="130"
+            label="到达网点">
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="handlingFeePayable"
             width="100"
-            label="出发城市">
+            label="操作费">
           </el-table-column>
           <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="100"
-            label="出发城市">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="cargoName"
-            width="140"
-            label="货品名">
-          </el-table-column>
-          <el-table-column
-            prop="cargoAmount"
-            label="件数"
-            width="80"
+            prop="arriveHandlingFee"
+            label="到站装卸费"
+            width="110"
             sortable
           >
           </el-table-column>
 
           <el-table-column
-            prop="shipDeliveryMethod"
+            prop="arriveOtherFee"
             sortable
-            width="90"
-            label="交接方式">
+            width="110"
+            label="到站其他费">
           </el-table-column>
           <el-table-column
-            prop="paymentMethod"
-            label="中转付款方式"
+            prop="arrivepayCarriage"
+            label="到付运费"
             width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferCharge"
-            label="中转费"
-            width="100"
-            sortable
-          >
-          </el-table-column>
-          <el-table-column
-            prop="deliveryExpense"
-            label="中转送货费"
+            prop="arrivepayOilCard"
+            label="到付油卡"
             width="110"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="transferOtherFee"
-            label="中转其他费"
-            width="110"
+            prop="loadAmountall"
+            label="配载总件数"
+            width="120"
             sortable
           >
           </el-table-column>
           <el-table-column
-            prop="totalCost"
-            label="中转费合计"
-            width="110"
+            prop="loadVolumeall"
+            label="配载总体积"
+            width="120"
+            sortable
+          >
+          </el-table-column>
+          <el-table-column
+            prop="loadWeightall"
+            label="配载总重量"
+            width="120"
             sortable
           >
           </el-table-column>
@@ -781,7 +740,7 @@
               <th colspan="1">网点</th>
               <th colspan="1">
                 <el-form-item label="">
-                  <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgName" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
 
@@ -866,14 +825,14 @@
     </div>
     <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
                 :sendId="sendId" :memberId="messageInfo.memberId" @success="fetchList"
-                :urlId="$route.query.urlId" :popKey="popKey"></SaveDialog>
+                :urlId="$route.query.urlId" :popKey="popKey" :query="$route.query"></SaveDialog>
   </div>
 </template>
 
 <script>
   import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
-  import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
+  import {postGroupInitialize,getGroupOrgdetail} from '@/api/finance/fin_group'
   import querySelect from '@/components/querySelect/index'
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
@@ -927,7 +886,7 @@
         messageArr: [],
         checkBillName: '',
         messageInfo: {
-          orgName: '',
+          // orgName: '',
           memberId: '',
           orgId: '',
           companyId: '',
@@ -955,7 +914,8 @@
           orgFinancialOfficerPhone: '', //
           createTime: '',
           remark: '',
-          totalCount: ''
+          totalCount: '',
+          orgName: ''
         },
         dealPayInfo: [],
         dealInfo: [],
@@ -966,7 +926,7 @@
           tmsFinanceBillCheckDto: {
             checkBillName: ''
           },
-          carrierDetailDtoList: []
+          orgDetailQueryList: []
         },
         // 总计
         tota: {
@@ -984,10 +944,10 @@
         visibleDialog: false,
         loading: false,
         btnsize: 'mini',
-
         searchTitle: {
-          carrierId: '', //
-          paymentId: '', //
+          arriveOrgid: '', //
+          // feetypeid: 2, //
+          orgid: '', //
           startTime: '',
           endTime: ''
         },
@@ -1015,24 +975,26 @@
         })
       },
       fetchList() {
-        this.loading = true
-        this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
-        return postCarrierinitialize(this.searchTitle).then(data => {
+        // this.loading = true
+        this.searchTitle.arriveOrgid = this.$route.query.arriveOrgid
+        this.searchTitle.orgid = this.$route.query.orgid
+        // this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
+        return postGroupInitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)
           this.infoList()
-          if (data.carrierDetailDtoList.length > 0) {
-            data.carrierDetailDtoList.forEach((el, val) => {
+          //1-已收 2-已付 3-未收 4-未付
+          if (data.orgDetailQueryList.length > 0) {
+            data.orgDetailQueryList.forEach((el, val) => {
               if (el.type === 1) {
                 this.dealInfo.push(el)
-              } else if (el.type === 2) {
+              } else if (el.type === 3) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
-              } else if (el.type === 3) {
+              } else if (el.type === 2) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
-              } else {
-                this.alreadyPayInfo = []
+              } else if (el.type === 4) {
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
               }
@@ -1043,7 +1005,7 @@
             this.alreadyInfo = []
             this.alreadyPayInfo = []
           }
-          this.loading = false
+          // this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -1051,7 +1013,7 @@
       modifyList() {
         this.loading = true
         this.searchTitle.carrierId = this.$route.query.id
-        return getCarrierCarrierdetail(this.searchTitle.carrierId).then(res => {
+        return getGroupOrgdetail(this.searchTitle.carrierId).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)
@@ -1093,8 +1055,8 @@
           this.searchCreatTime = this.defaultTime
           this.onSearch()
         } else {
-          this.modifyList()
-          this.sendId = this.$route.query.id
+          // this.modifyList()
+          // this.sendId = this.$route.query.id
         }
       },
       // 保存 /////////////
@@ -1112,13 +1074,13 @@
                 for (const i in this.messageButtonInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
                 }
-                this.form.carrierDetailDtoList = []
-                this.dealInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
-                this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
+                this.form.orgDetailQueryList = []
+                this.dealInfo.map(el => this.form.orgDetailQueryList.push(el))
+                this.dealPayInfo.map(el => this.form.orgDetailQueryList.push(el))
+                this.alreadyInfo.map(el => this.form.orgDetailQueryList.push(el))
+                this.alreadyPayInfo.map(el => this.form.orgDetailQueryList.push(el))
                 this.countTotal() // 计算合计
-                if (!this.form.carrierDetailDtoList.length) {
+                if (!this.form.orgDetailQueryList.length) {
                   this.$message({
                     message: '各款项不能为空~',
                     type: 'error'
@@ -1170,11 +1132,11 @@
         for (const i in this.messageButtonInfo) {
           this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
         }
-        this.form.carrierDetailDtoList = []
-        this.dealInfo.map(el => this.form.carrierDetailDtoList.push(el))
-        this.dealPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
-        this.alreadyInfo.map(el => this.form.carrierDetailDtoList.push(el))
-        this.alreadyPayInfo.map(el => this.form.carrierDetailDtoList.push(el))
+        this.form.orgDetailQueryList = []
+        this.dealInfo.map(el => this.form.orgDetailQueryList.push(el))
+        this.dealPayInfo.map(el => this.form.orgDetailQueryList.push(el))
+        this.alreadyInfo.map(el => this.form.orgDetailQueryList.push(el))
+        this.alreadyPayInfo.map(el => this.form.orgDetailQueryList.push(el))
       },
       //
       canBtn() {
@@ -1298,7 +1260,7 @@
         this.visibleDialog = false
       },
       infoMessage(item) {
-        this.messageInfo.orgName = item.orgName
+        this.messageButtonInfo.orgName = item.orgName
         this.messageInfo.memberName = item.memberName
         this.messageInfo.memberPersonPhone = item.memberPersonPhone
         this.messageInfo.memberPerson = item.memberPerson
@@ -1361,6 +1323,7 @@
         font-size: 14px;
         th:nth-child(odd) {
           padding: 0 8px;
+          white-space: nowrap;
         }
         th {
           border: 1px solid #cad9ea;
@@ -1437,6 +1400,7 @@
             min-width: 100px;
             text-align: center;
             display: inline-block;
+            white-space: nowrap;
           }
           /*showBg*/
           .el-tooltip.showBg {
