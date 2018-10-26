@@ -423,8 +423,15 @@ export default {
       }
       let selectData = ['票', '千克', '方']
       const series = []
+      let name = '票'
+      if (this.currenttab === 2 || this.currenttab === 3 || this.currenttab === 4) {
+        name = '车'
+        selectShow['车'] = false
+        selectData = ['车', '千克', '方']
+        delete selectShow['票']
+      }
       series.push({
-        name: '票',
+        name: name,
         type: 'bar',
         smooth: true,
         // barMaxWidth: '30%',

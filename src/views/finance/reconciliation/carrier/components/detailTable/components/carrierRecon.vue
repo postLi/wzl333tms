@@ -869,40 +869,40 @@
               <th class="sMessageCont_info" colspan="12"><p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p></th>
             </tr>
             <tr>
-              <th colspan="1">公司名称</th>
-              <th colspan="1">
+              <th>公司名称</th>
+              <th>
                 <el-form-item label="">
                 <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
-              <th colspan="1">业务负责人</th>
-              <th colspan="1">
+              <th>业务负责人</th>
+              <th>
                 <el-form-item label="">
                 <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
-              <th colspan="1">联系方式</th>
-              <th colspan="1">
+              <th>联系方式</th>
+              <th>
                 <el-form-item label="" prop="orgBusinessOfficerPhone">
                 <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
-              <th colspan="1">财务负责人</th>
-              <th colspan="1">
+              <th>财务负责人</th>
+              <th>
                 <el-form-item label="">
                 <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
                 clearable></el-input>
                 </el-form-item>
               </th>
-              <th colspan="1">财务联系电话</th>
-              <th colspan="1">
+              <th>财务联系电话</th>
+              <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
                 <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
                 clearable></el-input>
                 </el-form-item>
               </th>
-              <th colspan="1">时间</th>
-              <th colspan="1">
+              <th>时间</th>
+              <th>
                 <el-form-item label="">
                 <el-date-picker
                 v-model="messageButtonInfo.createTime"
@@ -1481,7 +1481,7 @@
                 }
               }
               .el-form-item__error{
-                z-index: 1;
+                z-index: 20;
               }
               .input-class.el-input--suffix {
                 .el-input__inner {

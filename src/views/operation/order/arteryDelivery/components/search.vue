@@ -122,8 +122,8 @@
           batchTypeId: '', //
           batchNo: '', //
           loadTypeId: 39, //
-          endTime: '', //
-          beginTime: '', //
+          endDate: '', //
+          beginDate: '', //
           arrivedbeginDate: '', //
           arrivedEndDate: '', //
           arriveOrgid: '' //
@@ -150,16 +150,16 @@
 
       },
       onSubmit() {
-        this.searchForm.beginTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
-        this.searchForm.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
+        this.searchForm.beginDate = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+        this.searchForm.endDate = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
         this.searchForm.arrivedbeginDate = this.searchEndTime ? parseTime(this.searchEndTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
         this.searchForm.arrivedEndDate = this.searchEndTime ? parseTime(this.searchEndTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
         this.$emit('change', this.searchForm)
       },
       clearForm() {
-        this.searchForm.beginTime = ''
+        this.searchForm.beginDate = ''
         this.searchForm.batchTypeId = ''
-        this.searchForm.endTime = ''
+        this.searchForm.endDate = ''
         this.searchForm.arrivedbeginDate = ''
         this.searchForm.arrivedEndDate = ''
         this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]

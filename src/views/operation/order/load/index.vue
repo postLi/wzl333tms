@@ -23,7 +23,7 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
-                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini"  :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
+                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
                   </el-form-item>
                 </div>
                 <div>
@@ -59,7 +59,17 @@
                 </div>
                 <div>
                   <el-form-item label="分摊方式" prop="apportionTypeId">
-                    <selectType v-model="formModel.apportionTypeId" type="apportion_type" clearable size="mini"></selectType>
+                    <el-select v-model="formModel.apportionTypeId" placeholder="请选择" @change="getApportionTypeId">
+                      <el-option v-for="(item, index) in apportionTypeList" :key="index" :label="item.dictName" :value="item.id">
+                        <span style="float: left;">{{ item.dictName }}</span>
+                        <span style="float: right;margin-left: 10px;">
+                            <el-tooltip class="item" effect="dark" :content="item.descript" placement="left">
+                            <el-button type="text">说明</el-button>
+                            </el-tooltip>
+                          </span>
+                      </el-option>
+                    </el-select>
+                    <!-- <selectType v-model="formModel.apportionTypeId" type="apportion_type" clearable size="mini" @change="getApportionTypeId"></selectType> -->
                   </el-form-item>
                 </div>
               </div>
@@ -95,8 +105,8 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="备注" v-if="loadTypeId !== 38">
-                    <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
+                  <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40" class="formItemTextDanger">
+                    <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input>
                   </el-form-item>
                   <el-form-item label="备注" v-else>
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
@@ -107,6 +117,11 @@
                 <div>
                   <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
                     <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input>
+                  </el-form-item>
+                </div>
+                <div>
+                  <el-form-item label="备注" v-if="loadTypeId !== 40">
+                    <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
               </div>
@@ -123,67 +138,67 @@
                 <li>
                   <p>现付运费(元)</p>
                   <el-form-item prop="nowpayCarriage">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.nowpayCarriage" ref="nowpayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'nowpayCarriage')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.nowpayCarriage" ref="nowpayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'nowpayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>现付油卡(元)</p>
                   <el-form-item prop="nowpayOilCard">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.nowpayOilCard" ref="nowpayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'nowpayOilCard')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.nowpayOilCard" ref="nowpayOilCard" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'nowpayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付运费(元)</p>
                   <el-form-item prop="backpayCarriage">
-                   <input type="text" class="nativeinput"  v-number-only:point :value="formFee.backpayCarriage" ref="backpayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'backpayCarriage')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.backpayCarriage" ref="backpayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'backpayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>回付油卡(元)</p>
                   <el-form-item prop="backpayOilCard">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.backpayOilCard" ref="backpayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'backpayOilCard')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.backpayOilCard" ref="backpayOilCard" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'backpayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付运费(元)</p>
                   <el-form-item prop="arrivepayCarriage">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arrivepayCarriage" ref="arrivepayCarriage" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arrivepayCarriage')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.arrivepayCarriage" ref="arrivepayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'arrivepayCarriage')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到付油卡(元)</p>
                   <el-form-item prop="arrivepayOilCard">
-                   <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arrivepayOilCard" ref="arrivepayOilCard" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arrivepayOilCard')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.arrivepayOilCard" ref="arrivepayOilCard" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'arrivepayOilCard')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>整车保险费(元)</p>
                   <el-form-item prop="carloadInsuranceFee">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.carloadInsuranceFee" ref="carloadInsuranceFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'carloadInsuranceFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.carloadInsuranceFee" ref="carloadInsuranceFee" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'carloadInsuranceFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站装卸费(元)</p>
                   <el-form-item prop="leaveHandlingFee">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.leaveHandlingFee" ref="leaveHandlingFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'leaveHandlingFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.leaveHandlingFee" ref="leaveHandlingFee" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'leaveHandlingFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>发站其他费(元)</p>
                   <el-form-item prop="leaveOtherFee">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.leaveOtherFee" ref="leaveOtherFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'leaveOtherFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.leaveOtherFee" ref="leaveOtherFee" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'leaveOtherFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站装卸费(元)</p>
                   <el-form-item prop="arriveHandlingFee">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arriveHandlingFee" ref="arriveHandlingFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arriveHandlingFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.arriveHandlingFee" ref="arriveHandlingFee" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'arriveHandlingFee')" />
                   </el-form-item>
                 </li>
                 <li>
                   <p>到站其他费(元)</p>
                   <el-form-item prop="arriveOtherFee">
-                    <input type="text" class="nativeinput"  v-number-only:point :value="formFee.arriveOtherFee" ref="arriveOtherFee" :maxlength="10"  @change="(e)=>changeLoadNum(e.target.value, 'arriveOtherFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formFee.arriveOtherFee" ref="arriveOtherFee" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'arriveOtherFee')" />
                   </el-form-item>
                 </li>
                 <li>
@@ -195,7 +210,7 @@
                 <li>
                   <p>油卡号</p>
                   <el-form-item prop="oilCardNumber">
-                    <input type="text" class="nativeinput"  v-numberOnly :value="formFee.oilCardNumber" ref="oilCardNumber" :maxlength="25"  @change="(e)=>changeLoadNum(e.target.value, 'oilCardNumber')" />
+                    <input type="text" class="nativeinput" v-numberOnly :value="formFee.oilCardNumber" ref="oilCardNumber" :maxlength="25" @change="(e)=>changeLoadNum(e.target.value, 'oilCardNumber')" />
                   </el-form-item>
                 </li>
               </ul>
@@ -221,7 +236,7 @@
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"></dataTable>
+        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :handlingFeeInfo="handlingFeeInfo" @changeHandlingFeeAll="getHandingFeeAll"></dataTable>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="formModel" :popVisible.sync="showRightTablePercent"></loadChart>
@@ -230,21 +245,19 @@
       <!-- 添加司机信息 -->
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
       <!-- 实际发车时间 弹出框 -->
-    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" ></actualSendtime>
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
     </div>
   </div>
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
+import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
 import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
-// import { getAllTrunk } from '@/api/company/trunkManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
 import SelectTree from '@/components/selectTree/index'
-// import addTruckInfo from './components/addTruckInfo'
-// import addDriverInfo from './components/addDriverInfo'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
 import loadChart from './components/loadChart'
@@ -255,9 +268,6 @@ export default {
   name: 'orderload',
   data() {
     const validateInt = function(rule, value, callback) {
-      // if (value === '' || value === null || !value || value === undefined) {
-      //   callback(new Error('不能为空'))
-      // } else
       if (REGEX.ONLY_NUMBER_GT.test(value)) {
         callback()
       } else {
@@ -265,13 +275,10 @@ export default {
       }
     }
     const validateBigDecimal = function(rule, value, callback) {
-      // if (value === '' || value === null || !value || value === undefined) {
-      //   callback(new Error('不能为空'))
-      // } else
       const reg = /^\d+(\.([1-9]|\d[1-9]))?$/
       if (!reg.test(value) && value !== undefined && value !== '') {
         callback(new Error('请输入最多两位小数'))
-      } else{
+      } else {
         callback()
       }
     }
@@ -302,9 +309,13 @@ export default {
         callback()
       }
     }
-
     return {
+      handlingFeeInfo: {
+        handlingFeeAll: null,
+        apportionTypeId: null
+      },
       timeInfoVisible: false,
+      apportionTypeList: [],
       driverKey: 0,
       truckKey: 0,
       tablekey: '',
@@ -368,6 +379,7 @@ export default {
       formModelRules: {
         // arriveOrgid: [{ required: true, trigger: 'change', message: '不能为空' }],
         apportionTypeName: [{ required: true, trigger: 'change', message: '必选' }],
+        handlingFeeAll: [{ required: true, trigger: 'change', validator: validateStringEight }],
         truckIdNumber: [{ required: true, trigger: 'change', validator: validateStringEight }],
         dirverName: [{ required: true, trigger: 'change', validator: validateStringTen }],
         dirverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }]
@@ -385,7 +397,8 @@ export default {
         // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
-      }
+      },
+      apportionTypeDescript: ['(运单 - 回扣）/（总运费 - 总回扣）* 车费', '车费 / 票数', '该单重量 / 本车总重量 * 车费', '该单体积 / 本车总体积 * 车费', '该单件数 / 本车总件数 * 车费']
     }
   },
   computed: {
@@ -437,6 +450,7 @@ export default {
     this.setLoadTypeId()
   },
   mounted() {
+    this.getSelectType()
     this.init()
     this.getSystemTime()
   },
@@ -492,7 +506,6 @@ export default {
         this.loadTypeId = 38 // 默认是新增短驳
         this.batchTypeIdFinish = 47 // 完成配载
         this.batchTypeIdFinishTruck = 48 // 配载并发车
-        console.log('默认38', this.loadTypeId, this.batchTypeIdFinish, this.batchTypeIdFinishTruck)
       }
     },
     initIsEdit() {
@@ -525,7 +538,10 @@ export default {
         data.remark = this.orgData.remark
         data.deliveryDetailFee = this.orgData.deliveryDetailFee // 送货费 40-送货管理修改的时候用
         data.deliveryHandlingFee = this.orgData.deliveryHandlingFee
+        data.handlingFeeAll = this.orgData.handlingFeeAll
         this.formModel = objectMerge2({}, data)
+        this.handlingFeeInfo.apportionTypeId = this.orgData.apportionTypeId
+        this.handlingFeeInfo.handlingFeeAll = this.orgData.handlingFeeAll
         // formFee 数据
         const dataFee = {}
         dataFee.nowpayCarriage = this.orgData.nowpayCarriage
@@ -560,10 +576,6 @@ export default {
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
         getSystemTime().then(data => {
-          // this.formModel.requireArrivedTime = parseTime(data, '{y}-{m}-{d} ') + '23:59:59'
-          // this.formModel.requireArrivedTime = data.trim()
-          // this.formModel.planArrivedTime = data.trim()
-          // this.formModel.loadTime = parseTime(new Date(data))
           this.formModel.loadTime = data.trim()
         }).catch((err) => {
           this.loading = false
@@ -599,11 +611,10 @@ export default {
           this.showPercent()
           break
         case 'finish': // 完成配载
-            this.finishLoadInfo()
+          this.finishLoadInfo()
           break
         case 'finishTruck': // 完成并发车
           this.timeInfoVisible = true
-          // this.finishTruckInfo()
           break
         case 'addTruck': // 添加车辆信息
           this.addTruck()
@@ -699,7 +710,7 @@ export default {
         })
       }
     },
-    getActualTime (obj) {
+    getActualTime(obj) {
       this.finishTruckInfo(obj)
     },
     finishTruckInfo(obj) {
@@ -777,6 +788,8 @@ export default {
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
       }
+      delete this.formFee.oilCardNumber
+      delete this.formFee.sealNumber
 
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
@@ -788,11 +801,11 @@ export default {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'handlingFeeAll', this.formModel.handlingFeeAll)
+        delete this.loadInfo.tmsOrderLoad.shortFee
+        delete this.loadInfo.tmsOrderLoad.handlingFeeAll
       }
-
       // 时间处理
-      // this.loadInfo.tmsOrderLoad.loadTime = parseTime(this.loadInfo.tmsOrderLoad.loadTime)
-      // this.loadInfo.tmsOrderLoad.requireArrivedTime = parseTime(this.loadInfo.tmsOrderLoad.requireArrivedTime)
       this.formModel.requireArrivedTime = this.formModel.requireArrivedTime ? parseTime(this.formModel.requireArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.planArrivedTime = this.formModel.planArrivedTime ? parseTime(this.formModel.planArrivedTime, '{y}-{m}-{d} ') + '23:59:59' : ''
       this.formModel.loadTime = parseTime(this.formModel.loadTime, '{y}-{m}-{d} ') + '00:00:00'
@@ -807,6 +820,9 @@ export default {
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
       }
+      delete this.formFee.oilCardNumber
+      delete this.formFee.sealNumber
+
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
@@ -817,6 +833,9 @@ export default {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
       } else {
         this.$set(this.loadInfo.tmsOrderLoadFee, 'shortFee', this.formModel.shortFee)
+        this.$set(this.loadInfo.tmsOrderLoadFee, 'handlingFeeAll', this.formModel.handlingFeeAll)
+        delete this.loadInfo.tmsOrderLoad.shortFee
+        delete this.loadInfo.tmsOrderLoad.handlingFeeAll
       }
       // console.log('短驳完成发车', this.loadInfo)
       // 时间处理
@@ -890,7 +909,6 @@ export default {
         getDrivers().then(data => {
           this.Drivers = data.data
           this.cacheDriverList[orgid] = data.data
-          console.log('Drivers', this.Drivers)
         })
       }
     },
@@ -901,7 +919,6 @@ export default {
         getTrucK().then(data => {
             this.Trucks = data.data
             this.cacheTruckList[orgid] = data.data
-            console.log('Trucks', this.Trucks)
           })
           .catch(err => {
             this._handlerCatchMsg(err)
@@ -970,11 +987,35 @@ export default {
         }
       })
     },
+    getSelectType() {
+      getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
+          if (data) {
+            this.apportionTypeList = data
+            this.apportionTypeList.forEach((e, index) => {
+              this.$set(e, 'descript', this.apportionTypeDescript[index])
+            })
+            console.log('apportionTypeList', this.apportionTypeList)
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
     changeTruckNum(val, type) {
       this.$set(this.formModel, type, Number(val))
     },
-    changeLoadNum (val, type) {
+    changeLoadNum(val, type) {
       this.$set(this.formFee, type, val)
+    },
+    changeHandlingFeeAll(val) {
+      this.handlingFeeInfo.handlingFeeAll = val
+    },
+    getApportionTypeId(value) { // 选择分摊方式
+      console.log('getApportionTypeId', value, this.formModel.apportionTypeId)
+      this.handlingFeeInfo.apportionTypeId = value
+    },
+    getHandingFeeAll(value) {
+      this.$set(this.formModel, 'handlingFeeAll', value)
     }
   }
 }

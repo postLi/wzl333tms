@@ -190,6 +190,12 @@ export default {
           width: '90',
           fixed: false
         },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        },
         // {
         //   label: "应到件数",
         //   prop: "loadAmount",

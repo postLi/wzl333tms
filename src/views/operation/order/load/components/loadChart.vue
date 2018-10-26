@@ -4,10 +4,10 @@
     <el-dialog title="配载率提示" :isShow="popVisible" :visible.sync="popVisible" @close="closeMe" v-loading="loading" :before-close="closeMe" width="50%" :close-on-click-modal="false" center>
       <el-row>
         <el-col :span="12">
-          <div :class="className" :id="idWeigth" :style="{height:height,width:width}" ref="echartWeight"></div>
+          <div :class="className" :id="idWeigth" :style="{height:height,width:width, margin: '0 auto'}" ref="echartWeight" ></div>
         </el-col>
         <el-col :span="12">
-          <div :class="className" :id="idVolume" :style="{height:height,width:width}" ref="echartVolume"></div>
+          <div :class="className" :id="idVolume" :style="{height:height,width:width, margin: '0 auto'}" ref="echartVolume"></div>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">

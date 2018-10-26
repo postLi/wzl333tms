@@ -282,6 +282,7 @@ export default {
       this.searchQuery.vo.buttonKey = 5
       this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
       this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
+
       this.currentkey = ''
       this.$nextTick(() => {
         this.currentkey = 5
@@ -342,8 +343,8 @@ export default {
       private Integer buttonKey;
         */
       const data = Object.assign({}, this.searchQuery.vo)
-      data.nowStartTime = parseTime(data.nowStartTime, '{y}-{m}-{d}')
-      data.nowEndTime = parseTime(data.nowEndTime, '{y}-{m}-{d}')
+      // data.nowStartTime = parseTime(data.nowStartTime, '{y}-{m}-{d}')
+      // data.nowEndTime = parseTime(data.nowEndTime, '{y}-{m}-{d}')
       postHomedetail(this.otherinfo.orgid, data).then(data => {
         if (data) {
           this.thedata = data
