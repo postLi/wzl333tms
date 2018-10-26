@@ -17,9 +17,13 @@
             <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="对账网点">
-          <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" :filterable="true" show="select" v-model="searchForm.carrierId" @change="getCarrier"/>
+          <SelectTree v-model="searchForm.arriveOrgid" :orgid="otherinfo.companyId" />
 
         </el-form-item>
+        <!--<el-form-item label="对账网点">-->
+          <!--<querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" :filterable="true" show="select" v-model="searchForm.arriveOrgid" @change="getCarrier"/>-->
+
+        <!--</el-form-item>-->
       </div>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -46,6 +50,9 @@ export default {
       default: 'mini'
     },
     orgid: {
+      type: Number
+    },
+    companyId: {
       type: Number
     },
     issender: {
@@ -79,7 +86,7 @@ export default {
       },
       searchForm: {
         orgid: '',
-        carrierId: '', // /
+        arriveOrgid: '', // /
         startTime: '', //
         endTime: ''
 
@@ -95,6 +102,9 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgid = newVal
+    },
+    companyId(newVal) {
+      this.searchForm.arriveOrgid = newVal
     }
   },
   mounted() {
@@ -107,7 +117,7 @@ export default {
     getCarrier(item) {
       if (item) {
         // console.log(item)
-        this.searchForm.carrierId = item.carrierId
+        // this.searchForm.arriveOrgid = item.carrierId
       }
     },
     onSubmit() {
@@ -117,7 +127,7 @@ export default {
     },
     clearForm() {
       this.searchForm.orgid = this.orgid
-      this.searchForm.carrierId = ''
+      this.searchForm.arriveOrgid = ''
       this.searchForm.startTime = ''
       this.searchForm.endTime = ''
       this.searchCreatTime = this.defaultTime

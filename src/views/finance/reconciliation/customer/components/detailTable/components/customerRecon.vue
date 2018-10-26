@@ -1189,6 +1189,7 @@
         const type = 'custoer_fee_type'
         getSelectType(type, this.otherinfo.orgid).then(data => {
           this.feeIdsArr = data
+          console.log(this.feeIdsArr);
           data.forEach((e, index) => {
             this.orgFeeTypeIds[index] = e.dictValue
           })
@@ -1555,6 +1556,7 @@
         font-size: 14px;
         th:nth-child(odd) {
           padding: 0 8px;
+          white-space: nowrap;
         }
         th {
           border: 1px solid #cad9ea;
@@ -1625,6 +1627,7 @@
             min-width: 100px;
             text-align: center;
             display: inline-block;
+            white-space: nowrap;
           }
           .el-tooltip.showBg {
             .el-input__inner {

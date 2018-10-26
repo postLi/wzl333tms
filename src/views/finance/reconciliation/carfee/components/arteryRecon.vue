@@ -1157,6 +1157,7 @@
         font-size: 14px;
         th:nth-child(odd) {
           padding: 0 8px;
+          white-space: nowrap;
         }
         th {
           border: 1px solid #cad9ea;
@@ -1227,6 +1228,7 @@
             min-width: 100px;
             text-align: center;
             display: inline-block;
+            white-space: nowrap;
           }
 
           /*showBg*/

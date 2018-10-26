@@ -14,7 +14,8 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="对账网点">
-            <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+          <el-input  v-model="$route.query.orgName" disabled class="input-disabled"></el-input>
+            <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />-->
         </el-form-item>
         <el-form-item label="对账状态
   ">
@@ -23,6 +24,10 @@
             <el-option label="已对账" :value="1"></el-option>
             <el-option label="全部" value=""></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="车牌号">
+          <el-input  v-model="searchForm.orgid"></el-input>
+          <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />-->
         </el-form-item>
       </div>
       <el-form-item class="staff_searchinfo--btn art_marginTop" >
