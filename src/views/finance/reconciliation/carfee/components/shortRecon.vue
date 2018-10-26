@@ -814,8 +814,8 @@
           const searchObj = {}
           // debugger
           // this.searchCreatTime = this.defaultTime
-          searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-          searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+          searchObj.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+          searchObj.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
           // console.log(searchObj.startTime,"打印2")
           // console.log(this.defaultTime[0],"打印3")
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)

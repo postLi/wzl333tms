@@ -482,8 +482,8 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -491,10 +491,10 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {getTrucK} from '@/api/operation/load'
-  import {SaveAsFileCarfeeDeliver} from '@/utils/recLodopFuncs'
+  import { getTrucK } from '@/api/operation/load'
+  import { SaveAsFileCarfeeDeliver } from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -617,15 +617,15 @@
         },
         rules: {
           'bankAccount': [
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -784,8 +784,8 @@
           }
           const searchObj = {}
           // this.searchCreatTime = this.defaultTime
-          searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-          searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+          searchObj.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+          searchObj.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
           this.fetchList()
           this.fetchDealPay()
@@ -988,7 +988,7 @@
         this.searchAlReadyPay.endTime = endTime
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
