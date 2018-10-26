@@ -1,9 +1,12 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
-import { Message, MessageBox } from 'element-ui'
+import {
+  Message,
+  MessageBox
+} from 'element-ui'
 
-const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
+const shouldCalcProperty = ['_index|1|单', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
 /**
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
@@ -13,7 +16,10 @@ const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'not
  * _index|索引（|单位）
  */
 export function getSummaries(param, propsArr) {
-  const { columns, data } = param
+  const {
+    columns,
+    data
+  } = param
   const sums = []
   // 获取需要计算的属性值列表
   propsArr = propsArr || shouldCalcProperty
@@ -28,6 +34,9 @@ export function getSummaries(param, propsArr) {
 
     let unit = '元'
     const find = propsArr.filter(el => {
+      if (el === 'notNowPayFee') {
+        console.log('findddddddddd:', el, column.property)
+      }
       // 完全等于属性名
       if (el === column.property || el === column.prop) {
         prop = el
@@ -49,6 +58,7 @@ export function getSummaries(param, propsArr) {
           return true
         }
       } else {
+
         // 没有匹配
         return false
       }
@@ -56,6 +66,7 @@ export function getSummaries(param, propsArr) {
 
     // if (!values.every(value => isNaN(value))) {
     if (find.length) {
+
       if (prop === '_index') {
         sums[index] = data.length + unit
       } else {
@@ -176,7 +187,9 @@ export function getByteLen(val) {
   for (let i = 0; i < val.length; i++) {
     if (val[i].match(/[^\x00-\xff]/ig) != null) {
       len += 1
-    } else { len += 0.5 }
+    } else {
+      len += 0.5
+    }
   }
   return Math.floor(len)
 }
@@ -200,7 +213,7 @@ export function param(json) {
   return cleanArray(Object.keys(json).map(key => {
     if (json[key] === undefined) return ''
     return encodeURIComponent(key) + '=' +
-            encodeURIComponent(json[key])
+      encodeURIComponent(json[key])
   })).join('&')
 }
 
@@ -246,27 +259,27 @@ export function objectMerge2() {
   var copy
   var copyIsArray
   var clone
-  var target = arguments[ 0 ] || {}
+  var target = arguments[0] || {}
   var i = 1
-  var	length = arguments.length
-  var	deep = true
+  var length = arguments.length
+  var deep = true
   var obj = {}
 
-	// 是否深层拷贝可以通过第一个参数控制
+  // 是否深层拷贝可以通过第一个参数控制
   if (typeof target === 'boolean') {
     deep = target
 
-		// 往前移，去获取要合并的对象信息
-    target = arguments[ i ] || {}
+    // 往前移，去获取要合并的对象信息
+    target = arguments[i] || {}
     i++
   }
 
-	// 当合并对象为其它类型的值时，则忽略
+  // 当合并对象为其它类型的值时，则忽略
   if (typeof target !== 'object' && !(typeof target === 'function')) {
     target = {}
   }
 
-	// 当只传了一个参数过来时
+  // 当只传了一个参数过来时
   if (i === length) {
     // 当仅传一个参数时
     target = Array.isArray(target) ? [] : {}
@@ -274,21 +287,21 @@ export function objectMerge2() {
   }
 
   for (; i < length; i++) {
-		// 合并对象必须为非null或者undefined值
-    if ((options = arguments[ i ]) != null) {
-			// Extend the base object
+    // 合并对象必须为非null或者undefined值
+    if ((options = arguments[i]) != null) {
+      // Extend the base object
       for (name in options) {
-        src = target[ name ]
-        copy = options[ name ]
+        src = target[name]
+        copy = options[name]
 
         // 避免循环引用的copy情况
         if (target === copy) {
           continue
         }
 
-          // 当为数组或者对象时处理深层拷贝
+        // 当为数组或者对象时处理深层拷贝
         if (deep && copy && (obj.toString.call(copy) === '[object Object]' ||
-              (copyIsArray = Array.isArray(copy)))) {
+            (copyIsArray = Array.isArray(copy)))) {
           if (copyIsArray) {
             copyIsArray = false
             clone = src && Array.isArray(src) ? src : []
@@ -296,18 +309,18 @@ export function objectMerge2() {
             clone = src && obj.toString.call(src) ? src : {}
           }
 
-                // 不要修改原有的数据
-          target[ name ] = objectMerge2(deep, clone, copy)
+          // 不要修改原有的数据
+          target[name] = objectMerge2(deep, clone, copy)
 
-            // undefined值不用传递过去
+          // undefined值不用传递过去
         } else if (copy !== undefined) {
-          target[ name ] = copy
+          target[name] = copy
         }
       }
     }
   }
 
-	// Return the modified object
+  // Return the modified object
   return target
 }
 
@@ -346,13 +359,13 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
       // for in循环会被跳过，不执行for in循环
       for (name in options) {
-          // src用于判断target对象是否存在name属性
+        // src用于判断target对象是否存在name属性
         src = target[name]
         // copy用于复制
         copy = options[name]
@@ -564,40 +577,39 @@ export const pickerOptions2 = [{
   }
 }]
 
-export const pickerOptions = [
-  {
-    text: '今天',
-    onClick(picker) {
-      const end = new Date()
-      const start = new Date(new Date().toDateString())
-      end.setTime(start.getTime())
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一周',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近三个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
-  }]
+export const pickerOptions = [{
+  text: '今天',
+  onClick(picker) {
+    const end = new Date()
+    const start = new Date(new Date().toDateString())
+    end.setTime(start.getTime())
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近一周',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近一个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近三个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+    picker.$emit('pick', [start, end])
+  }
+}]
 
 export function getTime(type) {
   if (type === 'start') {
@@ -766,18 +778,18 @@ export function loadJs(src, callback) {
 
     script.onload = script.onreadystatechange = function() {
       if (!script.readyState || /loaded|complete/.test(script.readyState)) {
-      // Handle memory leak in IE
+        // Handle memory leak in IE
         script.onload = script.onreadystatechange = null
 
-      // Remove the script
+        // Remove the script
         if (head && script.parentNode) {
           head.removeChild(script)
         }
 
-      // Dereference the script
+        // Dereference the script
         script = undefined
 
-      // Callback if not abort
+        // Callback if not abort
         if (callback) {
           callback()
         }
