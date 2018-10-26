@@ -341,7 +341,7 @@
         <tbody>
           <tr v-for="(item,index) in form.tmsOrderTransferList" :key="index">
             <td>
-              {{ item.createTime}}
+              {{ item.transferTime}}
             </td>
             <td>
               {{ item.oddNumbers }}

@@ -1,7 +1,10 @@
- import { getSummaries } from './index'
+ import { getSummaries, objectMerge2 } from './index'
  // import ExportJsonExcel from 'js-export-excel'
  //  const ExportJsonExcel = require('js-export-excel')
- const ExportJsonExcel = require('./excel')
+//  const ExportJsonExcel = require('./excel')
+ const ExportJsonExcel2 = require('./exceljs.min')
+ const FileSaver = require('./fileSaver')
+
  //  console.log('ExportJsonExcel:', ExportJsonExcel)
 
  var CreatedOKLodop7766 = null
@@ -355,7 +358,11 @@
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
-         el[column.prop] = k + 1
+         if (column.label === '序号') {
+           el['index'] = k + 1
+         } else {
+           el['id'] = k + 1
+         }
        }
        if (typeof el[column.prop] === 'undefined') {
          el[column.prop] = ''
@@ -366,8 +373,135 @@
    return obj
  }
 
+ function SaveExcelByOne(option) {
+  // 旧版代码
+   var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
+  //  var toExcel = new ExportJsonExcel(option) // new
+   toExcel.saveExcel() // 保存
+ }
+
+ function SaveExcelByTwo(option) {
+   // https://github.com/guyonroche/exceljs
+   var workbook = new ExcelJS.Workbook()
+   workbook.creator = '28TMS'
+   workbook.lastModifiedBy = '28TMS'
+   workbook.created = new Date()
+   workbook.modified = new Date()
+   workbook.lastPrinted = new Date()
+
+   // 暂时只处理第一个表格
+   // 如果需要，可以改成遍历表格
+   const data = option.datas[0]
+
+   // 表格名称
+   var worksheet = workbook.addWorksheet('Sheet')
+   // 冻结第一行
+   worksheet.views = [
+   { state: 'frozen', xSplit: 0, ySplit: 1 }
+   ]
+
+   // 添加过滤器
+   /* worksheet.autoFilter = {
+     from: 'A1',
+     to: 'M1'
+   } */
+   // 定义列样式
+   const columnsStyle = {
+     alignment: {
+       wrapText: true,
+       horizontal: 'center',
+       vertical: 'middle'
+     },
+     border: {
+       top: { style: 'thin', color: { argb: 'FF999999' }},
+       left: { style: 'thin', color: { argb: 'FF999999' }},
+       bottom: { style: 'thin', color: { argb: 'FF999999' }},
+       right: { style: 'thin', color: { argb: 'FF999999' }}
+     }
+   }
+   const columns = []
+   data.sheetHeader.forEach((el, index) => {
+     columns.push({
+       header: el,
+       key: data.sheetFilter[index] || 'index',
+       width: 15,
+       height: 20,
+       style: columnsStyle
+     })
+   })
+   worksheet.columns = columns
+/*    worksheet.columns = [
+   { header: 'Index', key: 'Index', width: 15 },
+   { header: 'Title', key: 'title', width: 25, style: { alignment: { wrapText: true }}},
+   { header: 'Authors', key: 'authors', width: 20, style: { alignment: { wrapText: true }}},
+   { header: 'Journal/Conference', key: 'jc', width: 25, style: { alignment: { wrapText: true }}},
+   { header: 'Type', key: 'type', width: 12, style: { alignment: { wrapText: true }}},
+   { header: 'Year', key: 'year', width: 12, style: { numFmt: '0000' }},
+   { header: 'Month', key: 'month', width: 12 },
+   { header: 'volume', key: 'volume', width: 12 },
+   { header: 'number', key: 'number', width: 12 },
+   { header: 'Pages', key: 'pages', width: 12 },
+   { header: 'Location', key: 'location', width: 20, style: { alignment: { wrapText: true }}},
+   { header: 'doi', key: 'doi', width: 22, style: { alignment: { wrapText: true }}},
+   { header: 'affiliation', key: 'affiliation', width: 20, style: { alignment: { wrapText: true }}}
+   ] */
+
+   // 设置第一行标题样式
+   var firstRow = worksheet.getRow(1)
+   firstRow.font = { name: 'MicrosoftYaHei', family: 1, size: 10, bold: true, color: { argb: '80333333' }}
+   firstRow.alignment = { vertical: 'middle', horizontal: 'center' }
+   firstRow.height = 20
+   firstRow.border = {
+     top: { style: 'thin', color: { argb: 'FF999999' }},
+     left: { style: 'thin', color: { argb: 'FF999999' }},
+     bottom: { style: 'thin', color: { argb: 'FF999999' }},
+     right: { style: 'thin', color: { argb: 'FF999999' }}
+   }
+   firstRow.fill = {
+     type: 'pattern',
+     pattern: 'solid',
+     fgColor: { argb: 'FFCCCCCC' }
+   }
+
+   const datas = []
+
+   data.sheetData.map((el, index) => {
+     const arr = []
+     data.sheetFilter.map(ee => {
+       arr.push(el[ee || 'index'])
+     })
+     datas.push(arr)
+   })
+
+  //  csv.shift();
+   worksheet.addRows(datas)
+  // 添加数据
+
+  // 设置间隔样式
+  // 除第一行外的奇数行设置背景色
+   worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
+    //  console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values))
+     if (rowNumber > 1 && rowNumber % 2) {
+       row.fill = {
+         type: 'pattern',
+         pattern: 'solid',
+         fgColor: { argb: 'FFEEEEEE' }
+       }
+     }
+   })
+
+   var buff = workbook.xlsx.writeBuffer().then(function(data) {
+     var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+     saveAs(blob, (option.fileName || '报表') + '.xlsx')
+   })
+
+   console.log('option:::::', option)
+  //global .FileSaver
+ }
+
  // 保存为xls文件
  export function SaveAsFile(obj) {
+   console.log('SaveAsFile:::::', objectMerge2({}, obj))
    obj = formatTableData(obj)
    // 如果是ie10+则用js-export-excel
    // 否则用lodop
@@ -397,19 +531,20 @@
      obj.columns.forEach((column, index) => {
        optionObj.sheetHeader.push(column.label)
        // optionObj.columnWidths.push(column.width || 120)
-       optionObj.sheetFilter.push(column.prop)
-       sumObj[column.prop] = summaries[index]
+       optionObj.sheetFilter.push(column.prop || 'index')
+       sumObj[column.prop || 'index'] = summaries[index]
      })
      obj.data.forEach(el => {
        optionObj.sheetData.push(el)
      })
      optionObj.sheetData.push(sumObj)
      option.datas = [optionObj]
-     var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
-     //  var toExcel = new ExportJsonExcel(option) // new
-     toExcel.saveExcel() // 保存
+
+    //  SaveExcelByOne(option)
+     SaveExcelByTwo(option)
    } else {
      try {
+       // by lyy
        // let tableId = createTable(data, columns) // 重新创建打印视图table
        const tableId = createTable(obj) // 重新创建打印视图table
        LODOP = getLodop()
