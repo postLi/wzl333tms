@@ -124,7 +124,7 @@
           }, {
             label: '创建时间',
             prop: 'createTime',
-            width: '130',
+            width: '160',
             fixed: true
           }, {
             label: '对账单名称',
@@ -199,12 +199,11 @@
           }
         ]
       }
-      
+
     },
     methods: {
       fetchAllCustomer() {
         this.loading = true
-        console.log(this.searchQuery)
         return postGroupDetailList(this.searchQuery).then(data => {
           this.usersArr = data.list
           this.total = data.total
@@ -262,7 +261,11 @@
               query: {
                 tab: '网点对账-修改查看',
                 id: this.selected[0].id,
-                urlId: this.$route.query.id
+                // urlId: this.$route.query.id
+
+                arriveOrgid: this.$route.query.arriveOrgid,
+                orgid: this.$route.query.orgid,
+                orgName: this.$route.query.orgName
               }
             })
 

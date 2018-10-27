@@ -64,7 +64,7 @@ export function deleteCarrierdetail(id) {
 /**
 
  /finance/orgdetail/v1/{id}
- 查询详情/修改页面 根据主表id查询明细表的所有数据
+ 查询详情/修改页面 根据主表checkId查询明细表的所有数据
  * @param params
  * @returns {*|PromiseLike<T>|Promise<T>}
  */

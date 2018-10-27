@@ -88,19 +88,19 @@
         dialogInfo:[
           {
             toPay:10,
-            date:"未收账款"
+            date:"已收（应收账款）"
           },
           {
             toPay:20,
-            date:"未付账款"
+            date:"未收（应收账款）"
           },
           {
             toPay:10,
-            date:"已收货款"
+            date:"已付（应付账款）"
           },
           {
             toPay:20,
-            date:"已付账款"
+            date:"未付（应付账款）"
           }
         ],
         dialogData:{},

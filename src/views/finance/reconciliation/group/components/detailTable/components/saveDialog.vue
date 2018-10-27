@@ -102,19 +102,19 @@
         dialogInfo: [
           {
             toPay: 0,
-            date: '未收清单'
+            date: '已收（应收账款）'
           },
           {
             toPay: 0,
-            date: '未付清单'
+            date: '未收（应收账款）'
           },
           {
             toPay: 0,
-            date: '已收清单'
+            date: '已付（应付账款）'
           },
           {
             toPay: 0,
-            date: '已付清单'
+            date: '未付（应付账款）'
           }
         ],
         dialogData: {},
@@ -184,28 +184,28 @@
         this.dialogInfo[3].toPay = 0
         this.dialogData.dealtota.map(el => {
           this.$set(this.dialogInfo, 0, {
-            date: '未收清单',
+            date: '已收 (应收账款)',
             toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
 
         })
         this.dialogData.dealPaytota.map(el => {
           this.$set(this.dialogInfo, 1, {
-            date: '未付清单',
+            date: '未收（应收账款）',
             toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
 
         })
         this.dialogData.alreadytota.map(el => {
           this.$set(this.dialogInfo, 2, {
-            date: '已收清单',
+            date: '已付（应付账款）',
             toPay: tmsMath.add(this.dialogInfo[2].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
 
         })
         this.dialogData.alreadyPaytota.map(el => {
           this.$set(this.dialogInfo, 3, {
-            date: '已付清单',
+            date: '未付（应付账款）',
             toPay: tmsMath.add(this.dialogInfo[3].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
         })
@@ -230,16 +230,13 @@
           data[i] = this.dotInfo[i]
         }
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
-        if (this.sendId) {
-          data.tmsFinanceBillCheckDto.id = this.sendId
+        if (this.query.id) {
+          data.tmsFinanceBillCheckDto.id = this.query.id
           promiseObj = postCreatesaveGroup(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&id=' + this.urlId)
         } else {
           promiseObj = postCreatesaveGroup(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.query.arriveOrgid + '&orgid=' + this.query.orgid + '&orgName=' + this.query.orgName)
         }
         if (this.totaMoney === 0) {
-
         }
 
         promiseObj.then(res => {
@@ -248,6 +245,7 @@
             message: '添加成功~',
             type: 'success'
           })
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.query.arriveOrgid + '&orgid=' + this.query.orgid + '&orgName=' + this.query.orgName)
           this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
