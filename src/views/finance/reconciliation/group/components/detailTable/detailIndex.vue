@@ -57,7 +57,7 @@
   </div>
 </template>
 <script>
-  import {postCarrierdetailList} from '@/api/finance/fin_carrier'
+  import {postGroupDetailList} from '@/api/finance/fin_group'
   import {deleteCarShort, postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
@@ -83,7 +83,6 @@
     },
     mounted() {
       this.searchQuery.vo.orgid = this.$route.query.orgid
-      this.searchQuery.vo.carrierId = this.$route.query.id
     },
     data() {
       return {
@@ -105,9 +104,10 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgid': '',
-            carrierId: 1, //
-            checkStatus: '', // 0未 1已
+            orgid: '',
+            checkStatus: '',
+            arriveOrgid: '',
+            truckIdNumber: '',
             startTime: '', //
             endTime: ''
           }
@@ -123,8 +123,8 @@
             }
           }, {
             label: '创建时间',
-            prop: 'orgName',
-            width: '130',
+            prop: 'createTime',
+            width: '160',
             fixed: true
           }, {
             label: '对账单名称',
@@ -133,62 +133,62 @@
             fixed: true
           }, {
             label: '开始时间',
-            prop: 'createTime',
-            width: '160',
-            fixed: false
-          }, {
-            label: '结束时间',
-            prop: 'createTime',
-            width: '160',
-            fixed: false
-          }, {
-            label: '对账网点',
-            prop: 'checkBillCode',
-            width: '160',
-            fixed: false
-          }, {
-            label: '对账状态',
             prop: 'checkStartTime',
             width: '160',
             fixed: false
           }, {
-            label: '已收（应收）',
+            label: '结束时间',
             prop: 'checkEndTime',
             width: '160',
             fixed: false
           }, {
+            label: '对账网点',
+            prop: 'orgName',
+            width: '160',
+            fixed: false
+          }, {
+            label: '对账状态',
+            prop: 'checkStatusName',
+            width: '160',
+            fixed: false
+          }, {
+            label: '已收（应收）',
+            prop: 'receivedFee',
+            width: '130',
+            fixed: false
+          }, {
             label: '未收（应收）',
-            prop: 'totalCountFee',
-            width: '180',
+            prop: 'receivableFee',
+            width: '130',
             fixed: false
           }, {
             label: '未付（应付）',
-            prop: 'receivableFee',
-            width: '150',
+            prop: 'payableFee',
+            width: '130',
             fixed: false
           }, {
             label: '已付（应付）',
-            prop: 'payableFee',
-            width: '120',
+            prop: 'paidFee',
+            width: '130',
             fixed: false
           }, {
             label: '车牌号',
-            prop: 'receivedFee',
+            prop: 'truckIdNumber',
             width: '120',
             fixed: false
           }, {
             label: '对账单编号',
-            prop: 'paidFee',
+            prop: 'checkBillCode',
             width: '120',
             fixed: false
           }, {
             label: '负责人',
-            prop: 'checkStatusName',
+            prop: 'memberPerson',
             width: '120',
             fixed: false
           }, {
             label: '联系方式',
-            prop: 'createBy',
+            prop: 'memberPersonPhone',
             width: '120',
             fixed: false
           }, {
@@ -199,11 +199,12 @@
           }
         ]
       }
+
     },
     methods: {
       fetchAllCustomer() {
         this.loading = true
-        return postCarrierdetailList(this.searchQuery).then(data => {
+        return postGroupDetailList(this.searchQuery).then(data => {
           this.usersArr = data.list
           this.total = data.total
           this.loading = false
@@ -260,7 +261,11 @@
               query: {
                 tab: '网点对账-修改查看',
                 id: this.selected[0].id,
-                urlId: this.$route.query.id
+                // urlId: this.$route.query.id
+
+                arriveOrgid: this.$route.query.arriveOrgid,
+                orgid: this.$route.query.orgid,
+                orgName: this.$route.query.orgName
               }
             })
 

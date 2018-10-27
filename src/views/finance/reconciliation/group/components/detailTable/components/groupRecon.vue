@@ -25,9 +25,24 @@
         </div>
         <div class="sPayType">
           <el-form-item label="费用项" prop="">
-            <selectType v-model="searchTitle.paymentId" type="payment_type" clearable
-                        size="mini" class=""></selectType>
+          <el-select
+            v-model="value11"
+            multiple
+            collapse-tags
+            style="margin-left: 20px;"
+            placeholder="可多选">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
           </el-form-item>
+          <!--<el-form-item label="费用项" prop="">-->
+            <!--<selectType v-model="searchTitle.paymentId" type="payment_type" clearable-->
+                        <!--size="mini" class=""></selectType>-->
+          <!--</el-form-item>-->
         </div>
         <div class="sDate">
           <el-date-picker
@@ -824,8 +839,8 @@
       </div>
     </div>
     <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
-                :sendId="sendId" :memberId="messageInfo.memberId" @success="fetchList"
-                :urlId="$route.query.urlId" :popKey="popKey" :query="$route.query"></SaveDialog>
+                 @success="fetchList"
+                 :popKey="popKey" :query="$route.query"></SaveDialog>
   </div>
 </template>
 
@@ -951,7 +966,25 @@
           startTime: '',
           endTime: ''
         },
-        popKey: 0 // 用于刷新弹出框数据
+        popKey: 0, // 用于刷新弹出框数据
+        options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        // value5: [],
+        value11: []
       }
     },
 
@@ -975,7 +1008,7 @@
         })
       },
       fetchList() {
-        // this.loading = true
+        this.loading = true
         this.searchTitle.arriveOrgid = this.$route.query.arriveOrgid
         this.searchTitle.orgid = this.$route.query.orgid
         // this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
@@ -1018,14 +1051,14 @@
           this.messageArr = data.tmsFinanceBillCheckDto
           this.infoMessage(this.messageArr)
           this.infoList()
-          data.carrierDetailDtoList.forEach((el, val) => {
+          data.orgDetailQueryList.forEach((el, val) => {
             if (el.type === 1) {
               this.dealInfo.push(el)
               this.dealInfoData.push(el)
-            } else if (el.type === 2) {
+            } else if (el.type === 3) {
               this.dealPayInfo.push(el)
               this.dealPayInfoData.push(el)
-            } else if (el.type === 3) {
+            } else if (el.type === 2) {
               this.alreadyInfo.push(el)
               this.alreadyInfoData.push(el)
             } else {
@@ -1055,7 +1088,7 @@
           this.searchCreatTime = this.defaultTime
           this.onSearch()
         } else {
-          // this.modifyList()
+          this.modifyList()
           // this.sendId = this.$route.query.id
         }
       },
@@ -1149,12 +1182,7 @@
             type: 'success',
             message: '取消成功!'
           })
-          // this.$router.back(-1)
-          if (this.$route.query.tab === '网点对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&id=' + this.$route.query.id)
-          } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&id=' + this.$route.query.urlId)
-          }
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.$route.query.arriveOrgid + '&orgid=' + this.$route.query.orgid + '&orgName=' + this.$route.query.orgName)
         }).catch(() => {
           this.$message({
             type: 'info',
