@@ -63,7 +63,7 @@
 <script>
 import draggable from 'vuedraggable'
 import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, tmsMath } from '@/utils/index'
 import Sortable from 'sortablejs'
 import currentSearch from './currentSearch'
 export default {
@@ -102,6 +102,10 @@ export default {
     submitLoadNew: {
       type: Object,
       default: {}
+    },
+    handlingFeeInfo: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -196,6 +200,10 @@ export default {
           prop: 'cargoName'
         },
         {
+          label: '操作费',
+          prop: 'handlingFee'
+        },
+        {
           label: '库存重量',
           prop: 'repertoryWeight'
         },
@@ -208,6 +216,10 @@ export default {
           label: '运单号',
           prop: 'shipSn',
           width: '140'
+        },
+        {
+          label: '操作费',
+          prop: 'handlingFee'
         },
         {
           label: '到达网点',
@@ -260,6 +272,15 @@ export default {
     }
   },
   watch: {
+    handlingFeeInfo: {
+      handler(cval, oval) {
+        console.log('-----获取操作费 obj 2------', cval, oval)
+        if (cval) {
+          this.countHandingFee()
+        }
+      },
+      deep: true
+    },
     submitLoadNew: {
       handler(cval, oval) {
         if (cval && cval.right) {
@@ -287,12 +308,16 @@ export default {
     },
     loadTable: { // 深度监听数组变换  
       handler(cval, oval) { // 拿到智能配载返回的数据
+        console.log('loadTable1')
         if (this.getinfoed2) {
+        console.log('loadTable2')
           return
         }
         if (cval) {
+          console.log('loadTable3')
           this.isDelOtherTruck = false
         }
+
         this.orgData = Object.assign([], cval)
         this.orgRightTable = Object.assign([], cval.right)
         this.orgLeftTable = Object.assign([], cval.left)
@@ -300,11 +325,13 @@ export default {
         this.oldList = this.rightTable.map(v => v.repertoryId)
         this.newList = this.oldList.slice()
         this.initTable()
+
       },
       deep: true
     },
     truckIndex: {
       handler(cval, oval) { // 深度监听车型下标index 例如：0-车型一
+        console.log('truckIndex')
         this.initTable()
       },
       deep: true
@@ -398,7 +425,7 @@ export default {
   },
   methods: {
     initTable() {
-      console.log('#$%#$%#$1')
+      console.log('#$%#$%#$1 initTable')
       this.rightTable = objectMerge2([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
 
       let arr = [] // 存储所有被配载的运单
@@ -504,6 +531,7 @@ export default {
       }
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽
+        this.countHandingFee()
       })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
@@ -530,6 +558,7 @@ export default {
         })
         this.$nextTick(() => {
           this.setSort() // 右边列表行拖拽
+          // this.countHandingFee()
         })
         this.tablekey = new Date().getTime()
         this.$emit('loadCurTable', this.rightTable)
@@ -574,6 +603,100 @@ export default {
       // this.selectedRight = []
       // this.selectedRight[0] = row
       this.$refs.multipleTableRight.toggleRowSelection(row)
+    },
+    countHandingFee() {
+      if (!this.handlingFeeInfo.apportionTypeId || !this.handlingFeeInfo.handlingFeeAll || this.rightTable.length === 0) {
+        return
+      }
+      console.log('-----获取操作费 switch 3------ ')
+      switch (this.handlingFeeInfo.apportionTypeId) {
+        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+          let totalBrokerageFee = 0 // 总回扣
+          let totalShipTotalFee = 0 // 总运费合计
+          this.rightTable.forEach(e => {
+            totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee ? e.brokerageFee : 0)
+            totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
+          })
+          this.rightTable.forEach((e, index) => {
+            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            if (sub < 0) {
+              console.log('-----获取操作费 switch 4------ ', sub)
+              e.handlingFee = 0
+            } else {
+              e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
+            }
+          })
+          break
+        case 44: // 按票数分摊 车费/票数
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._div(this.handlingFeeInfo.handlingFeeAll, this.rightTable.length))
+          })
+          break
+        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*车费
+          let totalWeight = 0
+          this.rightTable.map(e => {
+            totalWeight = tmsMath._add(totalWeight, e.repertoryWeight)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.repertoryWeight, totalWeight), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*车费
+          let totalVolume = 0
+          this.rightTable.map(e => {
+            totalVolume = tmsMath._add(totalVolume, e.repertoryVolume)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.repertoryVolume, totalVolume), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*车费
+          let totalAmount = 0
+          this.rightTable.map(e => {
+            totalAmount = tmsMath._add(totalAmount, e.repertoryAmount)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.repertoryAmount, totalAmount), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+      }
+
+      let count = 0
+      let countFeeZero = 0
+      let listLen = this.rightTable.length
+
+      this.rightTable.forEach((e, index) => {
+        count = tmsMath._add(count, e.handlingFee)
+
+        if (count > this.handlingFeeInfo.handlingFeeAll) {
+          e.handlingFee = tmsMath._sub(e.handlingFee, tmsMath._sub(count, this.handlingFeeInfo.handlingFeeAll))
+          count = this.handlingFeeInfo.handlingFeeAll
+        }
+        e.handlingFee = e.handlingFee ? e.handlingFee : 0
+        if (e.handlingFee === 0) {
+          countFeeZero++
+        }
+      })
+
+      if (count < this.handlingFeeInfo.handlingFeeAll) {
+        this.rightTable[this.rightTable.length - 1].handlingFee = tmsMath._add(this.rightTable[this.rightTable.length - 1].handlingFee, tmsMath._sub(this.handlingFeeInfo.handlingFeeAll, count))
+      }
+
+      // if (this.handlingFeeInfo.apportionTypeId && this.handlingFeeInfo.handlingFeeAll && countFeeZero === listLen) {
+      //   // 判断是否所有的费用都为0 总费计为0的时候和操作不一致需要特殊处理
+      //   // 特殊处理： 提示“运单相关数据不足以分摊操作，默认为【按票数分摊】。”
+      //   this.$notify.info({
+      //     title: '消息',
+      //     message: '运单相关数据不足以分摊操作，默认为【按票数分摊】。'
+      //   })
+      //   this.$emit('resetHandlingFeeInfo', {
+      //     apportionTypeId: 44
+      //   })
+      // }
+      this.orgRightTable[this.truckIndex] = this.rightTable
+    },
+    calc(n) {
+      return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
     },
     getSelectionLeft(list) {},
     getSelectionRight(list) {},

@@ -83,22 +83,22 @@
         </el-table-column>
         <el-table-column prop="handlingFee" sortable label="操作费(元)" width="120" v-if="loadTypeId !== 40">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.handlingFee" @change="(val) =>changHandlingFee(scope.$index, val)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.handlingFee" @change="(val) =>changHandlingFee(scope.$index, val)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量(千克)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120" v-if="loadTypeId !== 40">
@@ -204,9 +204,9 @@ export default {
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
-        console.log('setLoadTable', cval)
-        this.orgData = objectMerge2({}, cval)
-        this.getList()
+          console.log('setLoadTable', cval)
+          this.orgData = objectMerge2({}, cval)
+          this.getList()
         }
       },
       deep: true
@@ -247,7 +247,12 @@ export default {
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
           })
           this.rightTable.forEach((e, index) => {
-            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
+            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            if (sub < 0) { // 当前运单 回扣比运费合计多的话 就设置为0 不小于0
+              e.handlingFee = 0
+            } else {
+              e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
+            }
           })
           break
         case 44: // 按票数分摊 车费/票数
@@ -272,7 +277,6 @@ export default {
           this.rightTable.forEach((e, index) => {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadVolume, totalVolume), this.handlingFeeInfo.handlingFeeAll))
           })
-
           break
         case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*车费
           let totalAmount = 0
@@ -314,7 +318,6 @@ export default {
         this.$emit('resetHandlingFeeInfo', {
           apportionTypeId: 44
         })
-
       }
     },
     calc(n) {
