@@ -1038,7 +1038,7 @@
             this.alreadyInfo = []
             this.alreadyPayInfo = []
           }
-          // this.loading = false
+          this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
         })

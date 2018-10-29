@@ -178,6 +178,7 @@ export default {
       e.stopPropagation()
       console.log('showkeycode:', e)
       this.$set(this.form.printKey, type, hotkeys.getPressedKey(e))
+      // 需要判断是否与现有的快捷键冲突
       return false
     }
   }
