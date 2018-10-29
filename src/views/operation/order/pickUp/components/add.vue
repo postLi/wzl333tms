@@ -351,7 +351,9 @@
         }
       },
       info() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -366,7 +368,9 @@
         }
       },
       isModify() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -381,7 +385,9 @@
         }
       },
       isDbclick() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'
