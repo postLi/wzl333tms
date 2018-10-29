@@ -27,14 +27,14 @@
             fixed
             sortable
             prop="date"
-            width="120"
+            width="164"
             label="费用项">
             </el-table-column>
             <el-table-column
             fixed
             sortable
             prop="toPay"
-            width="230"
+            width="220"
             label="金额">
             </el-table-column>
           </el-table>
@@ -130,10 +130,10 @@
         this.dialogInfo[1].toPay = 0
         this.dialogInfo[2].toPay = 0
         this.dialogInfo[3].toPay = 0
-        this.dialogInfo[0].toPay = this.dotInfo.receivableFee
-        this.dialogInfo[1].toPay = this.dotInfo.payableFee
-        this.dialogInfo[2].toPay = this.dotInfo.receivedFee
-        this.dialogInfo[3].toPay = this.dotInfo.paidFee
+        this.dialogInfo[1].toPay = this.dotInfo.receivableFee
+        this.dialogInfo[0].toPay = this.dotInfo.payableFee
+        this.dialogInfo[3].toPay = this.dotInfo.receivedFee
+        this.dialogInfo[2].toPay = this.dotInfo.paidFee
 
         // this.totaMoney = tmsMath(this.dotInfo.receivableFee,this.dotInfo.payableFee,this.dotInfo.payableFee,this.dotInfo.paidFee).result()
         // this.dotInfo.receivableFee + this.dotInfo.payableFee + this.dotInfo.receivedFee + this.dotInfo.paidFee

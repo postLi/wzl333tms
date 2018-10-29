@@ -25,23 +25,24 @@
         </div>
         <div class="sPayType">
           <el-form-item label="费用项" prop="">
-          <el-select
-            v-model="value11"
-            multiple
-            collapse-tags
-            style="margin-left: 20px;"
-            placeholder="可多选">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+            <el-select
+              v-model="typeIds"
+              multiple
+              collapse-tags
+              style="margin-left: 20px;"
+              placeholder="可多选"
+              @change="changeFeeType">
+              <el-option
+                v-for="item in feeIdsArr"
+                :key="item.id"
+                :label="item.dictName"
+                :value="item.dictValue">
+              </el-option>
+            </el-select>
           </el-form-item>
           <!--<el-form-item label="费用项" prop="">-->
-            <!--<selectType v-model="searchTitle.paymentId" type="payment_type" clearable-->
-                        <!--size="mini" class=""></selectType>-->
+          <!--<selectType v-model="searchTitle.paymentId" type="payment_type" clearable-->
+          <!--size="mini" class=""></selectType>-->
           <!--</el-form-item>-->
         </div>
         <div class="sDate">
@@ -149,7 +150,8 @@
             </th>
             <th colspan="9">
               <el-form-item label="" class="sWetPay">
-                <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable class="input-class-wx"></el-input>
+                <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable
+                          class="input-class-wx"></el-input>
               </el-form-item>
             </th>
           </tr>
@@ -235,33 +237,35 @@
             sortable
             prop="shipArrivepayFee"
             width="110"
-            label="到付款">
+            label="到付款"
+            v-if="currentFeeTypeIds.indexOf('2')!==-1">
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
             width="120"
             sortable
+            v-if="currentFeeTypeIds.indexOf('2659')!==-1"
           >
           </el-table-column>
           <el-table-column
             prop="handlingFeeReceivable"
             label="操作费"
-            width="110"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadAmountall"
             label="配载总件数"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadVolumeall"
             label="配载总体积"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
@@ -269,21 +273,14 @@
           <el-table-column
             prop="loadWeightall"
             label="配载总重量"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
-          <!--<el-table-column-->
-            <!--prop="totalFee"-->
-            <!--label="小计"-->
-            <!--width="120"-->
-            <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width=""
             sortable
           >
             <template slot-scope="scope">
@@ -378,13 +375,15 @@
             sortable
             prop="shipArrivepayFee"
             width="110"
-            label="到付款">
+            label="到付款"
+            v-if="currentFeeTypeIds.indexOf('2')!==-1">
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
             width="120"
             sortable
+            v-if="currentFeeTypeIds.indexOf('2659')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -419,7 +418,7 @@
           <el-table-column
             prop="remark"
             label="备注"
-            width="130"
+            width="140"
             sortable
           >
             <template slot-scope="scope">
@@ -514,13 +513,15 @@
             sortable
             prop="handlingFeePayable"
             width="100"
-            label="操作费">
+            label="操作费"
+            v-if="currentFeeTypeIds.indexOf('235')!==-1">
           </el-table-column>
           <el-table-column
             prop="arriveHandlingFee"
             label="到站装卸费"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('28')!==-1"
           >
           </el-table-column>
 
@@ -528,13 +529,15 @@
             prop="arriveOtherFee"
             sortable
             width="110"
-            label="到站其他费">
+            label="到站其他费"
+            v-if="currentFeeTypeIds.indexOf('29')!==-1">
           </el-table-column>
           <el-table-column
             prop="arrivepayCarriage"
             label="到付运费"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('23')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -542,6 +545,7 @@
             label="到付油卡"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('24')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -566,10 +570,10 @@
           >
           </el-table-column>
           <!--<el-table-column-->
-            <!--prop="totalFee"-->
-            <!--label="小计"-->
-            <!--width="120"-->
-            <!--sortable-->
+          <!--prop="totalFee"-->
+          <!--label="小计"-->
+          <!--width="120"-->
+          <!--sortable-->
           <!--&gt;-->
           <!--</el-table-column>-->
           <el-table-column
@@ -665,13 +669,15 @@
             sortable
             prop="handlingFeePayable"
             width="100"
-            label="操作费">
+            label="操作费"
+            v-if="currentFeeTypeIds.indexOf('235')!==-1">
           </el-table-column>
           <el-table-column
             prop="arriveHandlingFee"
             label="到站装卸费"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('28')!==-1"
           >
           </el-table-column>
 
@@ -679,13 +685,15 @@
             prop="arriveOtherFee"
             sortable
             width="110"
-            label="到站其他费">
+            label="到站其他费"
+            v-if="currentFeeTypeIds.indexOf('29')!==-1">
           </el-table-column>
           <el-table-column
             prop="arrivepayCarriage"
             label="到付运费"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('23')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -693,6 +701,7 @@
             label="到付油卡"
             width="110"
             sortable
+            v-if="currentFeeTypeIds.indexOf('24')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -742,9 +751,10 @@
               <th colspan="1">
                 备注
               </th>
-              <th colspan="11" >
+              <th colspan="11">
                 <el-form-item label="">
-                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" clearable class="input-class-width"></el-input>
+                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" clearable
+                            class="input-class-width"></el-input>
                 </el-form-item>
               </th>
             </tr>
@@ -768,7 +778,8 @@
               <th>联系方式</th>
               <th colspan="1">
                 <el-form-item label="" prop="orgBusinessOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>财务负责人</th>
@@ -781,8 +792,8 @@
               <th>财务联系电话</th>
               <th colspan="1">
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
-                clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>时间</th>
@@ -798,35 +809,6 @@
               </th>
             </tr>
           </table>
-
-
-
-
-          <!--<el-form-item label="公司名称">-->
-            <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
-                      <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务联系电话" prop="orgFinancialOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-                      <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-            <!--<el-date-picker-->
-              <!--v-model="messageButtonInfo.createTime"-->
-              <!--type="date"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>
@@ -839,20 +821,21 @@
       </div>
     </div>
     <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
-                 @success="fetchList"
-                 :popKey="popKey" :query="$route.query"></SaveDialog>
+                @success="fetchList"
+                :popKey="popKey" :query="$route.query"></SaveDialog>
   </div>
 </template>
 
 <script>
   import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
   import {REGEX} from '@/utils/validate'
-  import {postGroupInitialize,getGroupOrgdetail} from '@/api/finance/fin_group'
+  import {postGroupInitialize, getGroupOrgdetail} from '@/api/finance/fin_group'
   import querySelect from '@/components/querySelect/index'
   import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
   import {SaveAsFileCarrier} from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
+  import {getSelectType} from '@/api/common'
 
   export default {
     components: {
@@ -961,30 +944,17 @@
         btnsize: 'mini',
         searchTitle: {
           arriveOrgid: '', //
-          // feetypeid: 2, //
+          feeTypeId: '', //
           orgid: '', //
           startTime: '',
           endTime: ''
         },
         popKey: 0, // 用于刷新弹出框数据
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        feeIdsArr: [],
+        orgFeeTypeIds: [],
+        currentFeeTypeIds: [],
         // value5: [],
-        value11: []
+        typeIds: []
       }
     },
 
@@ -998,6 +968,10 @@
     },
     mounted() {
       this.onSubmit()
+      this.currentFeeTypeIds = []
+      this.orgFeeTypeIds = []
+      this.getSelectType()
+
     },
     methods: {
       export1() {
@@ -1007,13 +981,28 @@
           name: '新建对账'
         })
       },
+      changeFeeType(obj) {
+
+        // console.log('changeFeeType', obj, this.typeIds,'数据ll')
+      },
+      getSelectType() {
+        const type = 'org_fee_type'
+        getSelectType(type, this.$route.query.orgid).then(data => {
+          this.feeIdsArr = data
+          data.forEach((e, index) => {
+            this.orgFeeTypeIds[index] = e.dictValue
+          })
+        })
+      },
       fetchList() {
         this.loading = true
         this.searchTitle.arriveOrgid = this.$route.query.arriveOrgid
         this.searchTitle.orgid = this.$route.query.orgid
-        // this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
+        this.searchTitle.feeTypeId = this.typeIds.join(',')
         return postGroupInitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
+          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
+          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           //1-已收 2-已付 3-未收 4-未付
@@ -1027,16 +1016,13 @@
               } else if (el.type === 2) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
-              } else if (el.type === 4) {
+              } else {
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
               }
             })
           } else {
-            this.dealInfo = []
-            this.dealPayInfo = []
-            this.alreadyInfo = []
-            this.alreadyPayInfo = []
+            this.infoList()
           }
           this.loading = false
         }).catch(err => {
@@ -1081,11 +1067,13 @@
         searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
         this.infoSearchTime(searchObj.startTime, searchObj.endTime)
         this.fetchList()
+        this.infoList()
         this.closeVisibleDialog()
       },
       onSubmit() {
         if (this.$route.query.tab === '网点对账-创建对账') {
           this.searchCreatTime = this.defaultTime
+
           this.onSearch()
         } else {
           this.modifyList()
@@ -1140,7 +1128,7 @@
         }) : []
         this.tota.dealPaytota = this.dealPayInfo ? this.dealPayInfo.map(el => {
           const a = {}
-          a.totalFee = el.totalCost
+          a.totalFee = el.totalFee
 
           return a
         }) : []
@@ -1151,7 +1139,7 @@
         }) : []
         this.tota.alreadyPaytota = this.alreadyPayInfo ? this.alreadyPayInfo.map(el => {
           const a = {}
-          a.totalFee = el.totalCost
+          a.totalFee = el.totalFee
           return a
         }) : []
       },
@@ -1280,6 +1268,7 @@
         this.alreadyInfo = []
         this.alreadyInfoData = []
         this.alreadyPayInfoData = []
+        this.alreadyPayInfo = []
       },
       oopenVisibleDialog() {
         this.visibleDialog = true
@@ -1339,8 +1328,8 @@
 <style lang="scss">
   .groupCreat_lll {
     margin: 0 10px;
-    .el-table__footer-wrapper{
-      td:nth-child(n+1){
+    .el-table__footer-wrapper {
+      td:nth-child(n+1) {
         color: #fe0000;
       }
     }
@@ -1375,7 +1364,7 @@
                   border: none;
                 }
               }
-              .el-form-item__error{
+              .el-form-item__error {
                 z-index: 20;
               }
               .input-class.el-input--suffix {
@@ -1383,14 +1372,14 @@
                   padding-right: 15px;
                 }
               }
-              .input-class-width{
-                .el-input__inner{
+              .input-class-width {
+                .el-input__inner {
                   max-width: 1600px;
                   width: 1600px;
                 }
               }
-              .input-class-wx{
-                .el-input__inner{
+              .input-class-wx {
+                .el-input__inner {
                   max-width: 700px;
                   width: 700px;
                 }
