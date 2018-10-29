@@ -243,12 +243,6 @@ export default {
         this.isShow = false
       }
     }
-    // info(newVal) {
-    //   if (newVal) {
-    //     console.log('sdfsdfsd',this.info)
-    //     return this.info
-    //   }
-    // }
   },
   mounted() {
     this.postTmsFfinancialwayList()
@@ -400,15 +394,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log(this.dataName, this.submitData)
-          // return false ////////////////////////////////////////////
           postLoadSettlement(this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-            console.log(currentPage)
             this.$router.push({ path: './accountsPayable/batch/' + currentPage })
-            console.log('./accountsPayable/batch/' + currentPage)
           })
             .catch(err => {
               this._handlerCatchMsg(err)
@@ -471,7 +461,7 @@ export default {
           }, 0)
           sums[index] += ''
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ''
         }
       })
       return sums

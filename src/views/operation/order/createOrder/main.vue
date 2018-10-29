@@ -1789,7 +1789,6 @@ export default {
       }
       // 回显控货
       this.shipOther = this.form.tmsOrderShip.shipOther.split(',') || []
-      console.log('回显控货:', this.shipOther)
 
       this.form.customerList = data.customerList || []
       console.log('setOrderInfo:', data, this.form)

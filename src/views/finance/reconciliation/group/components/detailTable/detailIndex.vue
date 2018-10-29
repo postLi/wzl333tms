@@ -129,7 +129,7 @@
           }, {
             label: '对账单名称',
             prop: 'checkBillName',
-            width: '320',
+            width: '350',
             fixed: true
           }, {
             label: '开始时间',
@@ -149,7 +149,7 @@
           }, {
             label: '对账状态',
             prop: 'checkStatusName',
-            width: '160',
+            width: '120',
             fixed: false
           }, {
             label: '已收（应收）',

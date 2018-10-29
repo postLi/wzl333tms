@@ -71,6 +71,7 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        console.log('sdfjisjdfisjdifjsdifjsidfjisdj')
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },

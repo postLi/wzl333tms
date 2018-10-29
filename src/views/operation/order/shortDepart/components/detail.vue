@@ -1,5 +1,5 @@
 <template>
-  <div class="detailTable">
+  <div class="detailTable" v-loading="detailTableLoading">
     <el-form inline v-model="info" label-width="100" class="detailTable_info">
       <table>
         <tbody>
@@ -99,8 +99,8 @@
       </div>
     </div>
     <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns="tableColumn" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
-     <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
+    <!-- 实际发车时间 弹出框 -->
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
 </template>
 <script>
@@ -134,6 +134,7 @@ export default {
   },
   data() {
     return {
+      detailTableLoading: true,
       timeInfoVisible: false,
       textChangeDanger: [],
       isNeedArrival: true, // true-未入库状态  false-已入库状态
@@ -349,18 +350,20 @@ export default {
     // this.setTableColumn()
   },
   watch: {
-    isShow() {
-      if (this.isShow) {
-        if (this.arrivalStatus === '已入库') {
-          this.isNeedArrival = false
-        } else {
-          this.isNeedArrival = true
+    isShow: {
+      handler(cval, oval) {
+        if (cval) {
+          if (this.arrivalStatus === '已入库') {
+            this.isNeedArrival = false
+          } else {
+            this.isNeedArrival = true
+          }
+          this.getLoadTrack()
+          this.toggleAllRows()
+          this.setTableColumn()
         }
-        console.log('type', this.type)
-        this.getLoadTrack()
-        this.toggleAllRows()
-        this.setTableColumn()
-      }
+      },
+      immediate: true
     },
     info(newVal) {
       if (newVal) {
@@ -405,14 +408,7 @@ export default {
     doAction(type) {
       switch (type) {
         case 'add': // 短驳入库
-            this.timeInfoVisible = true
-          // this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   this.postAddRepertory()
-          // })
+          this.timeInfoVisible = true
           break
         case 'print': // 打印
           PrintInFullPage({
@@ -451,10 +447,10 @@ export default {
         })
       }
       if (curVal !== loadVal) { // 实到数量如果不等于配载数量 则字体样式变红
-        this.$set(this.detailList[index], prop+'lyy', true)
+        this.$set(this.detailList[index], prop + 'lyy', true)
       } else {
         if (this.detailList[index].actualAmount === this.detailList[index].loadAmount && this.detailList[index].actualWeight === this.detailList[index].loadWeight && this.detailList[index].actualVolume === this.detailList[index].loadVolume) {
-          this.$set(this.detailList[index], prop+'lyy', false)
+          this.$set(this.detailList[index], prop + 'lyy', false)
         }
       }
       console.log(curVal, loadVal, this.textChangeDanger[index], prop, index)
@@ -549,7 +545,7 @@ export default {
       this.newData.tmsOrderLoadFee = objectMerge2({}, dataFee)
       this.newData.tmsOrderLoadDetailsList = Object.assign([], this.selectDetailList)
     },
-    getActualTime (obj) {
+    getActualTime(obj) {
       this.postAddRepertory(obj)
     },
     postAddRepertory(obj) {
@@ -563,7 +559,6 @@ export default {
         postAddRepertory(50, this.newData).then(data => {
             if (data.status === 200) {
               this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
-              console.log(this.$route)
               this.$message({ type: 'success', message: '短驳入库操作成功' })
               this.message = true
             } else {
@@ -579,6 +574,7 @@ export default {
       }
     },
     getLoadTrack() {
+       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
           if (data) {
@@ -586,18 +582,23 @@ export default {
             this.setData()
             this.toggleAllRows()
             this.$nextTick(() => {
+              console.log('isNeedArrival', this.isNeedArrival)
               this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  e.actualAmount = e.loadAmount
-                  e.actualWeight = e.loadWeight
-                  e.actualVolume = e.loadVolume
+                  if (e.warehouStatus === 0) { // 部分入库
+                    e.actualAmount = e.loadAmount
+                    e.actualWeight = e.loadWeight
+                    e.actualVolume = e.loadVolume
+                  }
                 } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
                 }
               })
             })
+            this.detailTableLoading = false
           }
         })
         .catch(error => {
+          this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)
         })
     },
@@ -611,16 +612,16 @@ export default {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
           this.$refs.multipleTable.toggleRowSelection(e, true)
-          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
-          //   this.$refs.multipleTable.toggleRowSelection(e, false)
-          // } else {
-          //   this.$refs.multipleTable.toggleRowSelection(e, true)
-          // }
+          if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0) {
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(e, false)
+          }
         })
       })
     },
     isWareStatus(index, row) {
-      if (!this.isNeedArrival) {
+      if (!this.isNeedArrival && row.warehouStatus === 1) {
         return true
       }
       if (row.warehouStatus === 1) {

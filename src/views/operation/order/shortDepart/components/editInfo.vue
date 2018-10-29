@@ -146,11 +146,14 @@ export default {
   },
   watch: {
     id() {},
-    info(newVal) {
-      if (newVal) {
-        this.getDetail()
-        this.getSystemTime()
-      }
+    info: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.getDetail()
+          this.getSystemTime()
+        }
+      },
+      deep: true
     },
     popVisible(newVal, oldVal) {
       if (this.popVisible) {
@@ -314,11 +317,11 @@ export default {
 
 .shortInfoPop {
   width: 1000px !important;
-  .el-tabs{
+  .el-tabs {
     height: 100%;
-    .el-tabs__content{
+    .el-tabs__content {
       height: calc(100%);
-      .el-tab-pane{
+      .el-tab-pane {
         height: calc(100% - 90px);
       }
     }
@@ -336,7 +339,7 @@ export default {
   }
   .truck_editInfoPop_content {
     width: 100%;
-    height:100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
 

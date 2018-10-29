@@ -83,22 +83,22 @@
         </el-table-column>
         <el-table-column prop="handlingFee" sortable label="操作费(元)" width="120" v-if="loadTypeId !== 40">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.handlingFee" @change="(val) =>changHandlingFee(scope.$index, val)" required :maxlength="10"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.handlingFee" @change="(val) =>changHandlingFee(scope.$index, val)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required :maxlength="10"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量(千克)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)" :maxlength="10"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120" v-if="loadTypeId !== 40">
@@ -199,14 +199,14 @@ export default {
       handler(cval, oval) { // 深度监听
         this.getList()
       },
-      deep: true
+      immediate: true
     },
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
-          console.log('setLoadTable')
-          this.orgData = objectMerge2({}, cval)
-          this.getList()
+        console.log('setLoadTable', cval)
+        this.orgData = objectMerge2({}, cval)
+        this.getList()
         }
       },
       deep: true
@@ -227,12 +227,14 @@ export default {
     }
   },
   mounted() {
-    if (this.leftTable.length === 0) {
-      this.getList()
-    }
+    this.getList()
+    // if (this.leftTable.length === 0) {
+    //   this.getList()
+    // }
   },
   activated() {
-    this.getList()
+
+    // this.getList()
   },
   methods: {
     countHandingFee() {
@@ -297,6 +299,11 @@ export default {
           countFeeZero++
         }
       })
+
+      if (count < this.handlingFeeInfo.handlingFeeAll) {
+        this.rightTable[this.rightTable.length - 1].handlingFee = tmsMath._add(this.rightTable[this.rightTable.length - 1].handlingFee, tmsMath._sub(this.handlingFeeInfo.handlingFeeAll, count))
+      }
+
       if (this.handlingFeeInfo.apportionTypeId && this.handlingFeeInfo.handlingFeeAll && countFeeZero === listLen) {
         // 判断是否所有的费用都为0 总计为0的时候和操作费不一致需要特殊处理
         // 特殊处理： 提示“运单相关数据不足以分摊操作，默认为【按票数分摊】。”
@@ -314,15 +321,18 @@ export default {
       return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
     },
     getList() {
+      console.log('getList1')
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
+        console.log('getList2')
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
         this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
+        console.log('getList3')
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
           this.orgLeftTable = data.data
@@ -393,6 +403,9 @@ export default {
         this.rightTable[newVal].loadWeight = currepertWeight
         this.rightTable[newVal].loadVolume = currepertVolume
       } else {}
+      if (this.$route.query.loadTypeId !== 40) {
+        this.countHandingFee()
+      }
       this.$emit('loadTable', this.rightTable)
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
     },
