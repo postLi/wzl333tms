@@ -200,50 +200,50 @@
             fixed
             sortable
             prop="departureTime"
-            width="160"
+            width=""
             label="发车时间">
           </el-table-column>
           <el-table-column
             prop="truckIdNumber"
-            width="120"
+            width=""
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
             prop="dirverName"
             sortable
-            width="120"
+            width=""
             label="司机姓名">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             sortable
-            width="120"
+            width=""
             label="发车批次">
           </el-table-column>
           <el-table-column
             prop="contractNo"
             sortable
-            width="120"
+            width=""
             label="合同编号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="120"
+            width=""
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
             prop="shipArrivepayFee"
-            width="110"
+            width=""
             label="到付款"
             v-if="currentFeeTypeIds.indexOf('2')!==-1">
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="120"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('2659')!==-1"
           >
@@ -253,6 +253,7 @@
             label="操作费"
             width=""
             sortable
+            v-if="currentFeeTypeIds.indexOf('325')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -338,50 +339,50 @@
             fixed
             sortable
             prop="departureTime"
-            width="160"
+            width=""
             label="发车时间">
           </el-table-column>
           <el-table-column
             prop="truckIdNumber"
-            width="120"
+            width=""
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
             prop="dirverName"
             sortable
-            width="120"
+            width=""
             label="司机姓名">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             sortable
-            width="120"
+            width=""
             label="发车批次">
           </el-table-column>
           <el-table-column
             prop="contractNo"
             sortable
-            width="120"
+            width=""
             label="合同编号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="120"
+            width=""
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
             prop="shipArrivepayFee"
-            width="110"
+            width=""
             label="到付款"
             v-if="currentFeeTypeIds.indexOf('2')!==-1">
           </el-table-column>
           <el-table-column
             prop="agencyFund"
             label="代收货款"
-            width="120"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('2659')!==-1"
           >
@@ -389,21 +390,22 @@
           <el-table-column
             prop="handlingFeeReceivable"
             label="操作费"
-            width="110"
+            width=""
             sortable
+            v-if="currentFeeTypeIds.indexOf('325')!==-1"
           >
           </el-table-column>
           <el-table-column
             prop="loadAmountall"
             label="配载总件数"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadVolumeall"
             label="配载总体积"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
@@ -411,14 +413,14 @@
           <el-table-column
             prop="loadWeightall"
             label="配载总重量"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width=""
             sortable
           >
             <template slot-scope="scope">
@@ -476,50 +478,50 @@
             fixed
             sortable
             prop="departureTime"
-            width="160"
+            width=""
             label="发车时间">
           </el-table-column>
           <el-table-column
             prop="truckIdNumber"
-            width="130"
+            width=""
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
             prop="dirverName"
             sortable
-            width="150"
+            width=""
             label="司机姓名">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             sortable
-            width="120"
+            width=""
             label="发车批次">
           </el-table-column>
           <el-table-column
             prop="contractNo"
             sortable
-            width="120"
+            width=""
             label="合同编号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="130"
+            width=""
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
             prop="handlingFeePayable"
-            width="100"
+            width=""
             label="操作费"
-            v-if="currentFeeTypeIds.indexOf('235')!==-1">
+            v-if="currentFeeTypeIds.indexOf('325')!==-1">
           </el-table-column>
           <el-table-column
             prop="arriveHandlingFee"
             label="到站装卸费"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('28')!==-1"
           >
@@ -528,14 +530,14 @@
           <el-table-column
             prop="arriveOtherFee"
             sortable
-            width="110"
+            width=""
             label="到站其他费"
             v-if="currentFeeTypeIds.indexOf('29')!==-1">
           </el-table-column>
           <el-table-column
             prop="arrivepayCarriage"
             label="到付运费"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('23')!==-1"
           >
@@ -543,7 +545,7 @@
           <el-table-column
             prop="arrivepayOilCard"
             label="到付油卡"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('24')!==-1"
           >
@@ -551,35 +553,28 @@
           <el-table-column
             prop="loadAmountall"
             label="配载总件数"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadVolumeall"
             label="配载总体积"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadWeightall"
             label="配载总重量"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
-          <!--<el-table-column-->
-          <!--prop="totalFee"-->
-          <!--label="小计"-->
-          <!--width="120"-->
-          <!--sortable-->
-          <!--&gt;-->
-          <!--</el-table-column>-->
           <el-table-column
             prop="remark"
             label="备注"
-            width="140"
+            width=""
             sortable
           >
             <template slot-scope="scope">
@@ -632,50 +627,50 @@
             fixed
             sortable
             prop="departureTime"
-            width="160"
+            width=""
             label="发车时间">
           </el-table-column>
           <el-table-column
             prop="truckIdNumber"
-            width="130"
+            width=""
             sortable
             label="车牌号码">
           </el-table-column>
           <el-table-column
             prop="dirverName"
             sortable
-            width="150"
+            width=""
             label="司机姓名">
           </el-table-column>
           <el-table-column
             prop="batchNo"
             sortable
-            width="120"
+            width=""
             label="发车批次">
           </el-table-column>
           <el-table-column
             prop="contractNo"
             sortable
-            width="120"
+            width=""
             label="合同编号">
           </el-table-column>
           <el-table-column
             prop="arriveOrgName"
             sortable
-            width="130"
+            width=""
             label="到达网点">
           </el-table-column>
           <el-table-column
             sortable
             prop="handlingFeePayable"
-            width="100"
+            width=""
             label="操作费"
-            v-if="currentFeeTypeIds.indexOf('235')!==-1">
+            v-if="currentFeeTypeIds.indexOf('325')!==-1">
           </el-table-column>
           <el-table-column
             prop="arriveHandlingFee"
             label="到站装卸费"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('28')!==-1"
           >
@@ -684,14 +679,14 @@
           <el-table-column
             prop="arriveOtherFee"
             sortable
-            width="110"
+            width=""
             label="到站其他费"
             v-if="currentFeeTypeIds.indexOf('29')!==-1">
           </el-table-column>
           <el-table-column
             prop="arrivepayCarriage"
             label="到付运费"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('23')!==-1"
           >
@@ -699,7 +694,7 @@
           <el-table-column
             prop="arrivepayOilCard"
             label="到付油卡"
-            width="110"
+            width=""
             sortable
             v-if="currentFeeTypeIds.indexOf('24')!==-1"
           >
@@ -707,28 +702,28 @@
           <el-table-column
             prop="loadAmountall"
             label="配载总件数"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadVolumeall"
             label="配载总体积"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="loadWeightall"
             label="配载总重量"
-            width="120"
+            width=""
             sortable
           >
           </el-table-column>
           <el-table-column
             prop="remark"
             label="备注"
-            width="130"
+            width=""
             sortable
           >
             <template slot-scope="scope">
