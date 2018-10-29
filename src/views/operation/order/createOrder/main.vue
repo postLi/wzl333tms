@@ -965,7 +965,6 @@ export default {
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
-        console.log('form.tmsOrderShip.shipReceiptRequire', newVal)
         let num = 1
         if (newVal === 80 || newVal === '80' || newVal === null) {
           num = 0
@@ -1342,6 +1341,15 @@ export default {
       if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
+      // 只有在库中且没有结算状态的才能修改创建时间
+      if (this.canChangeOrderDate && this.output.ismodify) {
+        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.ShipReceivableFeeStatus === 'NOSETTLEMENT')) {
+
+        } else {
+          this.canChangeOrderDate = false
+        }
+        // shipStatus 59
+      }
     },
     // 选择出发城市
     selectFromCity(item, city) {
@@ -1397,6 +1405,10 @@ export default {
     // 设置中转表单
     setOrderTransfer() {
       this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === '1'
+      // 当为修改运单时，隐藏中转信息
+      if (this.output.ismodify) {
+        this.shouldInputTransfer = false
+      }
     },
     // 设置默认值
     setDefaultValue() {
@@ -1760,6 +1772,10 @@ export default {
     // 将null值转为空值
     setOrderData(data) {
       data.tmsOrderShip = data.tmsOrderShipInfo || data.tmsOrderShip || {}
+      // 当为修改运单时，运费计算规则重新获取
+      if (this.output.ismodify && this.output.isOrder && !this.output.isbatch && data.orderShipSettingMap && data.orderShipSettingMap.shipFee) {
+        this.config.shipFee = data.orderShipSettingMap.shipFee
+      }
       // 设置运单信息
       for (const i in this.form.tmsOrderShip) {
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i] === null ? '' : data.tmsOrderShip[i]
