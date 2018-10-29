@@ -266,17 +266,23 @@ export default {
     }
   },
   watch: {
-    isShow() {
-      if (this.isShow) {
-        this.getLoadTrack()
-        this.toggleAllRows()
-      }
+    isShow: {
+      handler(cval, oval) {
+        if (cval) {
+          this.getLoadTrack()
+          this.toggleAllRows()
+        }
+      },
+      immediate: true
     },
-    info(newVal) {
-      if (newVal) {
-        this.getLoadTrack()
-        this.toggleAllRows()
-      }
+    info: {
+      handler(cval, oval) {
+        if (cval) {
+          this.getLoadTrack()
+          this.toggleAllRows()
+        }
+      },
+      deep: true
     }
   },
   methods: {
@@ -314,7 +320,7 @@ export default {
           this.detailList = data.data
           this.toggleAllRows()
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

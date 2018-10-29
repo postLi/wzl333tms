@@ -451,8 +451,43 @@ export default {
       meta: {
         role: ['admin'],
         title: '新增配载',
-        noCache: false
-      }
+        noCache: false,
+        istab: true
+      },
+      // children: [{
+      //   path: '/operation/order/load/short',
+      //   icon: 'QQ',
+      //   name: '新增短驳',
+      //   component: _import('operation/order/load/short'),
+      //   meta: {
+      //     role: ['admin'],
+      //     ptitle: '新增短驳',
+      //     title: '新增短驳',
+      //     noCache: false
+      //   }
+      // }, {
+      //   path: '/operation/order/load/artery',
+      //   icon: 'QQ',
+      //   name: '新增配载',
+      //   component: _import('operation/order/load/artery'),
+      //   meta: {
+      //     role: ['admin'],
+      //     ptitle: '新增配载',
+      //     title: '新增配载',
+      //     noCache: false
+      //   }
+      // }, {
+      //   path: '/operation/order/load/deliver',
+      //   icon: 'QQ',
+      //   name: '新增送货',
+      //   component: _import('operation/order/load/deliver'),
+      //   meta: {
+      //     role: ['admin'],
+      //     ptitle: '新增送货',
+      //     title: '新增送货',
+      //     noCache: false
+      //   }
+      // }]
     },
     // {
     //   path: '/operation/order/loadIntelligent/index',

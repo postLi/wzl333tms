@@ -179,7 +179,7 @@
                             </span>
                           </div>
                           <div v-else-if="column.expand">
-                            <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" v-model.number="scope.row[column.prop]" :size="btnsize" v-number-only  @click.stop.prevent.native @change="(val) => changeData(scope.$index, column.prop, val)">
+                            <el-input @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" v-model.number="scope.row[column.prop]" :size="btnsize" v-number-only @click.stop.prevent.native @change="(val) => changeData(scope.$index, column.prop, val)">
                             </el-input>
                           </div>
                           <span class="clickitem" v-else-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)">
@@ -442,7 +442,7 @@ export default {
       activeName: 'first',
       trackDetail: [],
       ruleForm: {},
-      loading: false,
+      loading: true,
       isFootEdit: false,
       isFootSecond: false,
       isFootOther: false,
@@ -898,18 +898,12 @@ export default {
           this.detailList.forEach(e => {
             // 入库前
             if (!this.isAlFun) {
-              e.actualAmount = e.loadAmount
-              e.actualWeight = e.loadWeight
-              e.actualVolume = e.loadVolume
-            } else {
-              e.actualAmount = e.actualAmount
-              e.actualWeight = e.actualWeight
-              e.actualVolume = e.actualVolume
+              if (e.warehouStatus === 0) {
+                e.actualAmount = e.loadAmount
+                e.actualWeight = e.loadWeight
+                e.actualVolume = e.loadVolume
+              }
             }
-
-            // e.actualAmount = e.loadAmount - e.actualAmount
-            // e.actualWeight = e.loadWeight - e.actualWeight
-            // e.actualVolume = e.loadVolume - e.actualVolume
           })
         })
       }).catch(err => {
@@ -927,12 +921,12 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          // if (e.actualVolume === 0 && e.actualWeight === 0 && e.actualAmount === 0 ) {
-          //   this.$refs.multipleTable.toggleRowSelection(e, false)
-          // } else {
-          //   this.$refs.multipleTable.toggleRowSelection(e, true)
-          // }
           this.$refs.multipleTable.toggleRowSelection(e, true)
+          if (e.warehouStatus === 1) {
+            this.$refs.multipleTable.toggleRowSelection(e, false)
+          } else {
+            this.$refs.multipleTable.toggleRowSelection(e, true)
+          }
         })
       })
     },
@@ -1520,6 +1514,8 @@ export default {
     }
   }
 }
+
+
 
 
 /*批次详情*/

@@ -1422,6 +1422,8 @@ export default {
   .pact {
     margin-top: 85px;
     padding-left: 20px;
+    height: 100%;
+    overflow: auto;
     .pact_top {
       position: relative;
       height: 40px;

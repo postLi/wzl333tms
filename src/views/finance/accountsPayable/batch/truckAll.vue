@@ -240,7 +240,7 @@ export default {
           fixed: false,
           slot: (scope) => {
             const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.paidBackpayOilCard, row.paidBackpayOilCard)
+            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
           }
         },
         {
