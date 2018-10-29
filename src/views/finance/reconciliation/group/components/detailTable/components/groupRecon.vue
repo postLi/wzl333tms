@@ -822,15 +822,15 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postGroupInitialize, getGroupOrgdetail} from '@/api/finance/fin_group'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postGroupInitialize, getGroupOrgdetail } from '@/api/finance/fin_group'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCarrier} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCarrier } from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
-  import {getSelectType} from '@/api/common'
+  import { getSelectType } from '@/api/common'
 
   export default {
     components: {
@@ -852,21 +852,21 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ],
           'memberPersonPhone': [
-            {trigger: 'change', validator: validateMobile}
+            { trigger: 'change', validator: validateMobile }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         },
         pickerOptions2: {
@@ -966,8 +966,7 @@
       this.currentFeeTypeIds = []
       this.orgFeeTypeIds = []
       this.getSelectType()
-
-    },
+  },
     methods: {
       export1() {
         this.sendData()
@@ -996,11 +995,12 @@
         this.searchTitle.feeTypeId = this.typeIds.join(',')
         return postGroupInitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
-          this.currentFeeTypeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : this.orgFeeTypeIds
-          this.typeIds = data.tmsFinanceBillCheckDto.feeTypeId !== '' ? data.tmsFinanceBillCheckDto.feeTypeId.split(',') : []
+          const fees = data.tmsFinanceBillCheckDto.feeTypeId || ''
+          this.currentFeeTypeIds = fees !== '' ? fees.split(',') : this.orgFeeTypeIds
+          this.typeIds = fees !== '' ? fees.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
-          //1-已收 2-已付 3-未收 4-未付
+          // 1-已收 2-已付 3-未收 4-未付
           if (data.orgDetailQueryList.length > 0) {
             data.orgDetailQueryList.forEach((el, val) => {
               if (el.type === 1) {
@@ -1186,7 +1186,7 @@
         this.delCont()
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
