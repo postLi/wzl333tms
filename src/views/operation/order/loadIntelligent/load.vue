@@ -201,12 +201,10 @@ export default {
   watch: {
     $route(newVal, oldVal) {
       console.log('this.$router', newVal, this.$router)
-
       if (newVal.fullPath.indexOf('/operation/order/loadIntelligent/load') !== -1 && newVal.fullPath !== window.intelligentUrl) {
         this.inited = false
         this.loadKey = new Date().getTime()
         window.intelligentUrl = newVal.fullPath
-
         this.init()
         this.infoData()
       }
@@ -219,7 +217,25 @@ export default {
     this.infoData()
     window.intelligentUrl = this.$route.fullPath
   },
+  activated () {
+    let visitedViewsArr = this.visitedViews()
+    let viewCount = 0
+    console.error('visitedViews : ', visitedViewsArr)
+    visitedViewsArr.forEach((e, index) => {
+      if (this.$route.fullPath === e.fullPath) {
+        console.log(this.$route.fullPath, '====',e.fullPath)
+        viewCount++
+      }
+    })
+    console.error('viewCount : ', viewCount)
+    if (viewCount !== 1) {
+      console.error('reinit : ', viewCount !== visitedViewsArr.length)
+    }
+  },
   methods: {
+     visitedViews() {
+      return this.$store.state.tagsView.visitedViews
+    },
     infoData() {
       if (this.$route.query && this.$route.query.schemeGroup) { // 查看修改配载
         this.modify = true

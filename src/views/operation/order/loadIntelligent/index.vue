@@ -1,31 +1,13 @@
 <template>
   <div class="loadIntelligent_wrapper">
     <keep-alive>
-      <router-view>
-        <!-- <component v-bind:is="component"></component> -->
-      </router-view>
+      <router-view></router-view>
     </keep-alive>
   </div>
 </template>
 <script>
-import Load from './load'
-
 export default {
-  name: 'loadIntelligentPage',
-  components: {
-    Load
-  },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      component: 'Load'
-    }
-  }
+  name: 'loadIntelligentPage'
 }
 
 </script>

@@ -18,7 +18,6 @@
               <el-form :model="intelligentLeftData" :size="btnsize" ref="formModel" label-width="65px">
                 <el-form-item label="到达网点" prop="arriveOrgid">
                   <SelectTree v-model="intelligentLeftData.arriveOrgid" clearable class="orgClass" disabled></SelectTree>
-                  <!--<el-input v-model="intelligentLeftData.arriveOrgid" disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="分摊方式" prop="apportionTypeId">
                   <el-select v-model="intelligentLeftData.apportionTypeId" placeholder="请选择" @change="handleFeeAll">
@@ -31,7 +30,6 @@
                           </span>
                     </el-option>
                   </el-select>
-                  <!-- <selectType v-model="intelligentLeftData.apportionTypeId" type="apportion_type" clearable size="mini" class="apportClass" @change="handleFeeAll"></selectType> -->
                 </el-form-item>
               </el-form>
             </div>
@@ -513,7 +511,6 @@ export default {
     this.init()
     this.getSystemTime()
     if (this.modify) {
-
     } else {
       this.intelligentLeftData.arriveOrgid = this.orgid
     }
@@ -612,6 +609,7 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
+
     },
     getIntnteCarInfo() {
       // 获取车型列表
@@ -813,7 +811,7 @@ export default {
       //   this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
       // })
       // 
-      
+
       this.noLoadListCount = 0
       this.loadDataArray = []
       arr.forEach((e, index) => {
@@ -1236,7 +1234,6 @@ export default {
         }
       }
     },
-    handleApportionTypeId(value) {},
     handleFeeAll(type, fee) { // 操作费
       console.log('-----获取操作费 obj 0------', type, fee)
       if (!fee) {
@@ -1246,11 +1243,11 @@ export default {
       let feeAll = this.intelligentData.dataList[this.currentIndex].handlingFeeAll
       if (feeAll) {
 
-      this.$emit('handlingFeeInfo', {
-        index: this.currentIndex,
-        apportionTypeId: Number(type),
-        handlingFeeAll: fee ? Number(fee) : feeAll ? Number(feeAll) :''
-      })
+        this.$emit('handlingFeeInfo', {
+          index: this.currentIndex,
+          apportionTypeId: Number(type),
+          handlingFeeAll: fee ? Number(fee) : feeAll ? Number(feeAll) : ''
+        })
       }
     },
     changeLoadNum(val, index, type) {
@@ -1275,6 +1272,11 @@ export default {
       this.showCurrenFormStyle[index] = true
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
+      // this.$nextTick(() => {
+      //   setTimeout(() => {
+      //     this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
+      //   }, 300)
+      // })
     },
     delCurTruck(index, item) {
       this.currentIndex = index - 1
