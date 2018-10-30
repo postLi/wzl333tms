@@ -1647,6 +1647,7 @@ export default {
         // 收发货人信息
         this.form.sender.customerType = 1
         this.form.sender.customerName = data.customerName
+        this.form.sender.customerUnit = data.customerUnit
         this.form.sender.customerMobile = data.customerMobile
         this.form.sender.detailedAddress = data.detailedAddress
         this.form.sender.customerId = data.senderId
