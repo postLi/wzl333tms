@@ -50,7 +50,7 @@
   </div>
 </template>
 <script>
-import { postSelectLoadMainInfoList, putDeliverLoad, putCompleteDelivery } from '@/api/operation/deliverManage'
+import { postSelectLoadMainInfoListDeliver, putDeliverLoad, putCompleteDelivery } from '@/api/operation/deliverManage'
 import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
@@ -236,7 +236,7 @@ export default {
       if (this.searchQuery.vo.batchTypeId === 56) {
         this.searchQuery.vo.batchTypeId = undefined
       }
-      return postSelectLoadMainInfoList(this.searchQuery).then(data => {
+      return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
           this.infoList = data.list
           this.total = data.total
           this.loading = false
@@ -332,7 +332,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' } })
+      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货',timer: new Date().getTime() } })
     },
     edit() {
       if (this.selected.length !== 1) {
@@ -345,7 +345,7 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
-        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货' } })
+        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货', timer: new Date().getTime(),flag: this.selectInfo.batchNo } })
       }
     },
     getActualTime(obj) { // 送货完成

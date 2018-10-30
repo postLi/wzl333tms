@@ -177,6 +177,10 @@ export default {
     handlingFeeInfo: {
       type: Object,
       default: () => {}
+    },
+    isRestorage: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -206,7 +210,9 @@ export default {
         if (cval) {
           console.log('setLoadTable', cval)
           this.orgData = objectMerge2({}, cval)
-          this.getList()
+          // if (!this.isRestorage) {
+            this.getList()
+          // }
         }
       },
       deep: true
@@ -238,6 +244,9 @@ export default {
   },
   methods: {
     countHandingFee() {
+      if (!this.handlingFeeInfo.apportionTypeId || !this.handlingFeeInfo.handlingFeeAll || this.rightTable.length < 1) {
+        return
+      }
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
@@ -324,7 +333,7 @@ export default {
       return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
     },
     getList() {
-      console.log('getList1')
+      console.log('getList1', this.isModify)
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
@@ -334,16 +343,23 @@ export default {
         this.rightTable = this.orgData.right
         this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       } else {
         console.log('getList3')
-        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-          this.leftTable = data.data
-          this.orgLeftTable = data.data
-          this.$emit('loadTable', this.rightTable)
-        }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
-        })
+        this.leftTable = this.orgData.left
+        this.rightTable = []
+        this.orgLeftTable = this.orgData.left
+        this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
+        // getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+        //   this.leftTable = data.data
+        //   this.orgLeftTable = data.data
+        //   this.$emit('loadTable', this.rightTable)
+        //   this.$emit('repertoryList', this.orgLeftTable)
+        // }).catch((err) => {
+        //   this.loading = false
+        //   this._handlerCatchMsg(err)
+        // })
       }
     },
     getSearch(obj) { // 搜索
@@ -410,6 +426,7 @@ export default {
         this.countHandingFee()
       }
       this.$emit('loadTable', this.rightTable)
+      this.$emit('repertoryList', this.orgLeftTable)
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
     },
     changHandlingFee(index, newVal) {
@@ -450,6 +467,7 @@ export default {
         }
         console.log('rightTable', this.rightTable.length, this.rightTable)
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       }
     },
     goRight() { // 数据从右边穿梭到左边
@@ -477,6 +495,7 @@ export default {
           this.countHandingFee()
         }
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       }
     },
     addItem(row, index) { // 添加单行

@@ -25,6 +25,52 @@ export default {
       default: false
     }
   },
+  // beforeRouteEnter (to, from , next) {
+  //   console.log('beforeRouteEnter1')
+  //   next()
+  // },
+  // beforeRouteUpdate (to, from , next) {
+  //   console.log(to.path);
+  //   console.log(to.query);
+  //   console.log('beforeRouteUpdate1')
+  //   next()
+  // },
+  // beforeRouteLeave (to, from , next) {
+  //   console.log('beforeRouteLeave1')
+  //   next()
+  // },
+  // beforeCreate () {
+  //   console.error('beforeCreate')
+  // },
+  // created () {
+  //   console.error('created')
+  // },
+  // beforeMount () {
+  //   console.error('beforeMount')
+  // },
+  // mounted () {
+  //   console.error('mount')
+  // },
+  // beforeUpdate () {
+  //   console.error('beforeUpdate')
+  // },
+  // updated () {
+  //   console.error('updated')
+  // },
+  // beforeDestroy () {
+  //   console.error('beforeDestroy')
+  // },
+  // destroyed () {
+  //   console.error('destroyed')
+  // },
+  // activated () {
+  //   console.error('activated')
+  // },
+  methods: {
+    visitedViews() {
+      return this.$store.state.tagsView.visitedViews
+    }
+  },
   computed: {
     component() {
       let loadTypeId = Number(this.$route.query.loadTypeId)
@@ -32,9 +78,9 @@ export default {
         case 38:
           return 'short'
         case 39:
-          return 'artery'
+          return 'short'
         case 40:
-          return 'deliver'
+          return 'short'
       }
     }
   }

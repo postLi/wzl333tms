@@ -1,7 +1,7 @@
 <template>
   <!-- 搜索框-搜索左边列表数据 -->
   <!-- shipSn 运单号   batchNo 批次号 -->
-  <el-autocomplete v-model="currentSearch" :size="btnsize" :fetch-suggestions="querySearch" placeholder="请输入运单号" prefix-icon="el-icon-search" @select="handleSelect">
+  <el-autocomplete v-model="currentSearch" :size="btnsize" :fetch-suggestions="querySearch" :placeholder="placeholderText" prefix-icon="el-icon-search" @select="handleSelect">
     <template slot-scope="{ item }">
       <div class="name" v-if="item.shipSn">{{ item.shipSn }}</div>
       <div class="name" v-else>{{ item.batchNo }}</div>
@@ -21,6 +21,18 @@ export default {
     return {
       currentSearch: '',
       btnsize: 'mini'
+    }
+  },
+  computed: {
+    placeholderText: {
+      get() {
+        if (this.$route.query.currentPage.indexOf('batch') !== -1) {
+          return '请输入' + '批次号'
+        } else {
+          return '请输入' + '运单号'
+        }
+      },
+      set() {}
     }
   },
   methods: {
@@ -56,9 +68,6 @@ export default {
 
       this.currentSearch = ''
       this.$emit('change', obj, this.info.indexOf(obj))
-      // let array = []
-      // array.push(obj)
-      // this.$emit('change', array)
     }
   }
 }

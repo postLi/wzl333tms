@@ -4,7 +4,7 @@ import fetch from '../../utils/fetch'
  * 送货列表 39
  */
 
-export function postSelectLoadMainInfoList(data) {
+export function postSelectLoadMainInfoListDeliver(data) {
 	return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', data).then(res => {
 		return res.data || {
 			list: [],
