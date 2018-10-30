@@ -268,7 +268,8 @@ export default {
       ],
       oldList: [],
       newList: [],
-      sortable: null
+      sortable: null,
+      isChangeHandlingFee: false
     }
   },
   watch: {
@@ -310,22 +311,22 @@ export default {
       handler(cval, oval) { // 拿到智能配载返回的数据
         console.log('loadTable1')
         if (this.getinfoed2) {
-        console.log('loadTable2')
+          console.log('loadTable2')
           return
         }
         if (cval) {
           console.log('loadTable3')
           this.isDelOtherTruck = false
         }
-
-        this.orgData = Object.assign([], cval)
-        this.orgRightTable = Object.assign([], cval.right)
-        this.orgLeftTable = Object.assign([], cval.left)
-        this.leftTable = Object.assign([], cval.left)
-        this.oldList = this.rightTable.map(v => v.repertoryId)
-        this.newList = this.oldList.slice()
-        this.initTable()
-
+        if (!this.isChangeHandlingFee) {
+          this.orgData = Object.assign([], cval)
+          this.orgRightTable = Object.assign([], cval.right)
+          this.orgLeftTable = Object.assign([], cval.left)
+          this.leftTable = Object.assign([], cval.left)
+          this.oldList = this.rightTable.map(v => v.repertoryId)
+          this.newList = this.oldList.slice()
+          this.initTable()
+        }
       },
       deep: true
     },
@@ -529,12 +530,13 @@ export default {
         this.orgRightTable.splice(this.delData.number, 1)
         this.isDel = false
       }
+      this.countHandingFee()
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽
-        this.countHandingFee()
       })
       this.$emit('loadCurTable', this.rightTable)
       this.$emit('loadTable', this.orgRightTable)
+      // this.isChangeHandlingFee = false
     },
     goRight() { // 左边穿梭到右边
       if (this.dofoLen === 0) {
@@ -556,13 +558,14 @@ export default {
             })
           }
         })
+        this.countHandingFee()
         this.$nextTick(() => {
           this.setSort() // 右边列表行拖拽
-          // this.countHandingFee()
         })
         this.tablekey = new Date().getTime()
         this.$emit('loadCurTable', this.rightTable)
         this.$emit('loadTable', this.orgRightTable)
+        // this.isChangeHandlingFee = false
       }
 
     },
@@ -595,19 +598,16 @@ export default {
       this.goLeft()
     },
     clickLeftRow(row) {
-      // this.selectedLeft = []
-      // this.selectedLeft[0] = row
       this.$refs.multipleTableLeft.toggleRowSelection(row)
     },
     clickRightRow(row) {
-      // this.selectedRight = []
-      // this.selectedRight[0] = row
       this.$refs.multipleTableRight.toggleRowSelection(row)
     },
     countHandingFee() {
       if (!this.handlingFeeInfo.apportionTypeId || !this.handlingFeeInfo.handlingFeeAll || this.rightTable.length === 0) {
         return
       }
+      this.isChangeHandlingFee = true
       console.log('-----获取操作费 switch 3------ ')
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费

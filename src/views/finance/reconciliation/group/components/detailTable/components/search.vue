@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="车牌号">
-          <el-input  v-model="searchForm.truckIdNumber"></el-input>
+          <el-input  v-model="searchForm.truckIdNumber" clearable></el-input>
           <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />-->
         </el-form-item>
       </div>

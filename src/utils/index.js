@@ -1,6 +1,7 @@
 /**
- * Created by jiachenpan on 16/11/18.
+ * Created by lyy
  */
+import { getUsername } from '@/utils/auth'
 import {
   Message,
   MessageBox
@@ -58,7 +59,6 @@ export function getSummaries(param, propsArr) {
           return true
         }
       } else {
-
         // 没有匹配
         return false
       }
@@ -66,7 +66,6 @@ export function getSummaries(param, propsArr) {
 
     // if (!values.every(value => isNaN(value))) {
     if (find.length) {
-
       if (prop === '_index') {
         sums[index] = data.length + unit
       } else {
@@ -359,7 +358,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
@@ -944,6 +943,10 @@ export const uniqueArray = (array, key) => {
  * 缓存开发环境的一些操作数据
  * @param {*} pfix 缓存前缀
  * @param {*} data 缓存数据
+ * update:
+ * 增加用户名；
+ * 改进数据结构，改为栈结构，先进先出，方便浏览
+ * 修正浏览顺序，小于两位补0
  */
 export function cacheDEVInfo(pfix, data) {
   // 如果是非正式环境，缓存最近50条js报错信息
@@ -956,35 +959,41 @@ export function cacheDEVInfo(pfix, data) {
     var maxlen = 50
     var find = false
     var date1 = new Date()
+    var hadData = []
 
     // 第一遍查找空位，有就插进去
     for (var i = 0; i < maxlen; i++) {
-      if (!lc.getItem(pfix + i)) {
-        lc.setItem(pfix + i, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
+      var n = i < 10 ? '0' + i : i
+      if (!lc.getItem(pfix + n)) {
+        // lc.setItem(pfix + n, (+date1) + '||' + date1.toLocaleString() + ' || ' + getUsername() + ' || ' + data)
         find = true
         break
+      } else {
+        hadData.push(lc.getItem(pfix + n))
       }
     }
-    // 第二遍找旧值，有就插进去
+    // 插进去
+    hadData.unshift((+date1) + '||' + date1.toLocaleString() + ' || ' + getUsername() + ' || ' + data)
     if (!find) {
-      for (var j = 0; j < maxlen; j++) {
-        var fd = lc.getItem(pfix + j).split('||')
-        if (j < (maxlen - 1)) {
-          var fd2 = lc.getItem(pfix + (j + 1)).split('||')
-          if ((+fd2[0]) > (+fd[0])) {
-            lc.setItem(pfix + j, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
-            break
-          }
-        } else {
-          // 如果是最后一条，则直接替换更新
-          lc.setItem(pfix + j, (+date1) + ' || ' + date1.toLocaleString() + '||' + data)
-          break
-        }
-      }
+      // 如果已经填满，则删除最后一位
+      hadData = hadData.slice(0, maxlen)
     }
+    setCacheDEVInfo(hadData, pfix)
   } catch (err) {
     console.log('转换数据出错了：', err, data)
   }
+}
+
+function setCacheDEVInfo(data, pfix) {
+   // 如果是非正式环境，缓存最近50条js报错信息
+  // 正式环境下只用sessionStorage缓存
+  var is28tms = window.location.host.indexOf('28tms.cn') !== -1
+  var lc = is28tms ? window.sessionStorage : window.localStorage
+  data = data || []
+  data.map((el, i) => {
+    var n = i < 10 ? '0' + i : i
+    lc.setItem(pfix + n, el)
+  })
 }
 
 export function handleErrorMsg(err, premsg = '') {

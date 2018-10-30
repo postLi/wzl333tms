@@ -93,7 +93,8 @@ export default {
     doView(row, index) { // 查看方案
       this.$router.push({path: '/operation/order/loadIntelligent/load',query:{
         schemeGroup: row.schemeGroup,
-        orgid: this.otherinfo.orgid
+        orgid: this.otherinfo.orgid,
+        timer: new Date().getTime()
       }})
     },
     doDelete(row, index) { // 删除方案

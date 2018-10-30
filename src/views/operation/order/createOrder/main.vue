@@ -179,7 +179,7 @@
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="16" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="11" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                   </el-form-item>
                 </template>
@@ -1647,6 +1647,7 @@ export default {
         // 收发货人信息
         this.form.sender.customerType = 1
         this.form.sender.customerName = data.customerName
+        this.form.sender.customerUnit = data.customerUnit
         this.form.sender.customerMobile = data.customerMobile
         this.form.sender.detailedAddress = data.detailedAddress
         this.form.sender.customerId = data.senderId

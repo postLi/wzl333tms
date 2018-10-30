@@ -200,7 +200,7 @@
             fixed
             sortable
             prop="departureTime"
-            width=""
+            width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
@@ -339,7 +339,7 @@
             fixed
             sortable
             prop="departureTime"
-            width=""
+            width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
@@ -478,7 +478,7 @@
             fixed
             sortable
             prop="departureTime"
-            width=""
+            width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
@@ -627,7 +627,7 @@
             fixed
             sortable
             prop="departureTime"
-            width=""
+            width="160"
             label="发车时间">
           </el-table-column>
           <el-table-column
@@ -822,15 +822,15 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
-  import { REGEX } from '@/utils/validate'
-  import { postGroupInitialize, getGroupOrgdetail } from '@/api/finance/fin_group'
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
+  import {REGEX} from '@/utils/validate'
+  import {postGroupInitialize, getGroupOrgdetail} from '@/api/finance/fin_group'
   import querySelect from '@/components/querySelect/index'
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
-  import { SaveAsFileCarrier } from '@/utils/recLodopFuncs'
+  import {SaveAsFileGroup} from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
-  import { getSelectType } from '@/api/common'
+  import {getSelectType} from '@/api/common'
 
   export default {
     components: {
@@ -852,21 +852,21 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
+            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
           ],
           'memberPersonPhone': [
-            { trigger: 'change', validator: validateMobile }
+            {trigger: 'change', validator: validateMobile}
           ],
           'financialOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ]
         },
         pickerOptions2: {
@@ -966,11 +966,11 @@
       this.currentFeeTypeIds = []
       this.orgFeeTypeIds = []
       this.getSelectType()
-  },
+    },
     methods: {
       export1() {
         this.sendData()
-        SaveAsFileCarrier({
+        SaveAsFileGroup({
           data: objectMerge2({}, this.form),
           name: '新建对账'
         })
@@ -1003,17 +1003,45 @@
           // 1-已收 2-已付 3-未收 4-未付
           if (data.orgDetailQueryList.length > 0) {
             data.orgDetailQueryList.forEach((el, val) => {
+              const shipArrivepayFeeType = this.currentFeeTypeIds.indexOf('2')
+              const agencyFundType = this.currentFeeTypeIds.indexOf('2659')
+              const handlingFeeReceivableType = this.currentFeeTypeIds.indexOf('325')
+              //
+              const arriveHandlingFeeType = this.currentFeeTypeIds.indexOf('28')
+              const arriveOtherFeeType = this.currentFeeTypeIds.indexOf('29')
+              const arrivepayCarriageType = this.currentFeeTypeIds.indexOf('23')
+              const arrivepayOilCardType = this.currentFeeTypeIds.indexOf('24')
               if (el.type === 1) {
-                this.dealInfo.push(el)
+                if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                  this.dealInfo.push(el)
+                } else {
+                  this.dealInfo = []
+                }
               } else if (el.type === 3) {
-                this.dealPayInfo.push(el)
-                this.dealPayInfoData.push(el)
+                if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                  this.dealPayInfo.push(el)
+                  this.dealPayInfoData.push(el)
+                } else {
+                  this.dealPayInfo = []
+                  this.dealPayInfoData = []
+                }
               } else if (el.type === 2) {
-                this.alreadyInfo.push(el)
-                this.alreadyInfoData.push(el)
+                if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                  this.alreadyInfo.push(el)
+                  this.alreadyInfoData.push(el)
+                } else {
+                  this.alreadyInfo = []
+                  this.alreadyInfoData = []
+                }
               } else {
-                this.alreadyPayInfo.push(el)
-                this.alreadyPayInfoData.push(el)
+                if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                  this.alreadyPayInfo.push(el)
+                  this.alreadyPayInfoData.push(el)
+                } else {
+                  this.alreadyPayInfo = []
+                  this.alreadyPayInfoData = []
+                }
+
               }
             })
           } else {
@@ -1186,7 +1214,7 @@
         this.delCont()
       },
       getSummaries(param) {
-        const { columns, data } = param
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {

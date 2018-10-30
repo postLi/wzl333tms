@@ -1,6 +1,6 @@
 <template>
   <div class="load_wrapper">
-     <keep-alive  v-if="$route.query.info">
+    <keep-alive v-if="$route.query.info">
       <component v-bind:is="component"></component>
     </keep-alive>
     <keep-alive v-else>
@@ -26,7 +26,7 @@ export default {
     }
   },
   computed: {
-    component () {
+    component() {
       let loadTypeId = Number(this.$route.query.loadTypeId)
       switch (loadTypeId) {
         case 38:

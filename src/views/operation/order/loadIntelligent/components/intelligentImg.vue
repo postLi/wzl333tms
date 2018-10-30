@@ -100,7 +100,8 @@ export default {
         query: {
           tab: '智能配载',
           orgId: this.$route.query.orgId,
-          sendDate: this.$route.query.sendData
+          sendDate: this.$route.query.sendData,
+          timer: new Date().getTime()
         }
       })
     }
