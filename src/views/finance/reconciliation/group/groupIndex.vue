@@ -200,7 +200,8 @@
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
-              columns: this.tableColumn
+              columns: this.tableColumn,
+              name: '网点对账'
             })
             break
           // 打印

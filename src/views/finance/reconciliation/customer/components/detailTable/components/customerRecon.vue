@@ -372,7 +372,7 @@
             label="回单付"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('4')!==-1"
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -380,7 +380,7 @@
             label="月结"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('3')!==-1"
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -721,7 +721,7 @@
             label="回单付"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('4')!==-1"
+             v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -729,7 +729,7 @@
             label="月结"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('3')!==-1"
+             v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -1189,7 +1189,7 @@
         const type = 'custoer_fee_type'
         getSelectType(type, this.otherinfo.orgid).then(data => {
           this.feeIdsArr = data
-          console.log(this.feeIdsArr);
+          console.log(this.feeIdsArr,'ll-feeIdsArr');
           data.forEach((e, index) => {
             this.orgFeeTypeIds[index] = e.dictValue
           })
@@ -1390,7 +1390,7 @@
         }).then(() => {
           this.$message({
             type: 'success',
-            message: '保存成功!'
+            message: '取消成功!'
           })
           // this.$router.back(-1)
           if (this.$route.query.tab === '客户对账-创建对账') {

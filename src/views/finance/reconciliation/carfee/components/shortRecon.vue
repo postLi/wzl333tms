@@ -942,7 +942,7 @@
         }).then(() => {
           this.$message({
             type: 'success',
-            message: '保存成功!'
+            message: '取消成功!'
           })
           // this.$router.back(-1)
           this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carfee/shortDepart')
