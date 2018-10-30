@@ -177,7 +177,6 @@
       watchData() {
 
         this.dialogData = this.tota
-        console.log(this.dialogData,'弹框');
         this.dialogInfo[0].toPay = 0
         this.dialogInfo[1].toPay = 0
         this.dialogInfo[2].toPay = 0

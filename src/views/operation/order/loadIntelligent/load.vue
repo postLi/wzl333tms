@@ -18,6 +18,7 @@
       :leftTableArr="leftTableArr" 
       :orgFirstScheme="orgFirstScheme" 
       @submitLoadNew="getSubmitLoadNew" 
+      @handlingFeeInfo="getHandlingFeeInfo"
       @setPageLoading="setPageLoading"></loadInfo>
     </div>
     <div class="loadIntelligent_dataview">
@@ -35,6 +36,7 @@
         :resetTuckLoad="resetTrucDelListLen" 
         :addOrgRightTable="isAddOrgRightTable" 
         :dofo="truckInfo" 
+        :handlingFeeInfo="handlingFeeInfo"
         :schemeIndex="schemeIndex" 
         @leftTable="getLeftTable" 
         :submitLoadNew="submitLoadNew"></transferTable>
@@ -165,7 +167,8 @@ export default {
       leftTableArr: [],
       orgFirstScheme: [],
       loadKey: 0,
-      submitLoadNew: {}
+      submitLoadNew: {},
+      handlingFeeInfo: {}
     }
   },
   computed: {
@@ -238,10 +241,11 @@ export default {
                   this.$set(el, 'dirverMobile', el.dirverMobile ? el.dirverMobile : '')
                   this.$set(el, 'truckIdNumber', el.truckIdNumber ? el.truckIdNumber : '')
                 }
+                this.$set(el, 'handlingFeeAll', el.tmsOrderLoadFee.handlingFeeAll)
                 this.truckOptions.forEach(em => {
                   if (em.cid === el.cid || em.cid === el.cid + '') {
                     this.$set(el, 'name', em.name)
-                    console.log('车：======', el, em.cid, em, em.name, el.cid)
+                    // console.log('车：======', el, em.cid, em, em.name, el.cid)
                   }
                 })
                 let totalPrice = tmsMath.add(
@@ -253,7 +257,7 @@ export default {
                   el.tmsOrderLoadFee.arrivepayOilCard).result()
                 this.$set(el, 'price', totalPrice)
                 totalPrice = 0
-                console.log('==============el', el)
+                // console.log('==============el', el)
               })
             })
             this.transpList = objectMerge2([], arr)
@@ -294,7 +298,7 @@ export default {
                 for (let item in el) {
                   this.$set(obj, item, el[item])
                 }
-
+                this.$set(el, 'handlingFeeAll','')
                 this.$set(el, 'tmsOrderLoad', obj)
                 this.$set(el, 'tmsOrderLoadDetailsList', el.carLoadDetail)
                 this.$set(el, 'tmsOrderLoadFee', { nowpayCarriage: el.price })
@@ -411,7 +415,7 @@ export default {
       this.paramTuck = Object.assign([], arr)
     },
     getLoadTable(arr) {
-      this.loadTableInfo = arr
+      this.loadTableInfo = objectMerge2([], arr)
     },
     getLoadCurTable(arr) {
       this.loadInfoPercentOrg = objectMerge2([], arr)
@@ -439,6 +443,10 @@ export default {
           }
         }
       })
+    },
+    getHandlingFeeInfo (obj) { // 获取操作费
+      console.log('-----获取操作费 obj 1------', obj)
+      this.handlingFeeInfo = obj
     },
     showFullViewTable(val) { // 穿梭框全屏展示
       this.isShowViewTable = val

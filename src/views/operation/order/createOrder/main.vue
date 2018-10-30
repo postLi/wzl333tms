@@ -449,11 +449,14 @@ import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
 import { closest, getTotal, objectMerge2, parseTime, tmsMath } from '@/utils/'
+import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 请求接口
 import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
 import * as preOrderManage from '@/api/operation/manage'
+import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
+import { getOrgId } from '@/api/company/groupManage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
@@ -465,9 +468,6 @@ import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
-import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
-import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
-import { getOrgId } from '@/api/company/groupManage'
 
 export default {
   components: {
@@ -990,7 +990,7 @@ export default {
     },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
-        this.initIndex()
+        // this.initIndex()
       }
     },
     'ispop'(newVal) {
@@ -1013,6 +1013,7 @@ export default {
     this.initIndex()
     this.getSelectType()
     this.getShipPayWay()
+    // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
   },
   methods: {
@@ -2995,11 +2996,6 @@ export default {
         this._handlerCatchMsg(err)
       })
     }
-  }, // 路由更新时触发，用来切换渲染数据
-  // 需要对应router-view的组件才能触发
-  beforeRouteUpdate(to, from, next) {
-    next()
-    console.log('beforeRouteUpdate:', to, from)
   }
 }
 </script>

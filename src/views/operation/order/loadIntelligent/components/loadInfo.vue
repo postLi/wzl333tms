@@ -21,7 +21,17 @@
                   <!--<el-input v-model="intelligentLeftData.arriveOrgid" disabled></el-input>-->
                 </el-form-item>
                 <el-form-item label="分摊方式" prop="apportionTypeId">
-                  <selectType v-model="intelligentLeftData.apportionTypeId" type="apportion_type" clearable size="mini" class="apportClass"></selectType>
+                  <el-select v-model="intelligentLeftData.apportionTypeId" placeholder="请选择" @change="handleFeeAll">
+                    <el-option v-for="(item, index) in apportionTypeList" :key="index" :label="item.dictName" :value="item.id">
+                      <span style="float: left;">{{ item.dictName }}</span>
+                      <span style="float: right;margin-left: 10px;">
+                            <el-tooltip class="item" effect="dark" :content="item.descript" placement="left">
+                            <el-button type="text">说明</el-button>
+                            </el-tooltip>
+                          </span>
+                    </el-option>
+                  </el-select>
+                  <!-- <selectType v-model="intelligentLeftData.apportionTypeId" type="apportion_type" clearable size="mini" class="apportClass" @change="handleFeeAll"></selectType> -->
                 </el-form-item>
               </el-form>
             </div>
@@ -60,6 +70,10 @@
                           <input type="text" class="nativeinput" v-numberOnly :value="item.weight" @change="(e)=>changeLoadNum(e.target.value, item._index, 'weight')" ref="weight" :maxlength="6" />
                           </el-input>
                         </el-form-item>
+                        <el-form-item label="操作费(元)" prop="handlingFeeAll">
+                          <input type="text" class="nativeinput" v-numberOnly:point :value="item.handlingFeeAll" @change="(e)=>changeLoadNum(e.target.value, item._index, 'handlingFeeAll')" ref="handlingFeeAll" :maxlength="6" />
+                          </el-input>
+                        </el-form-item>
                       </div>
                       <div class="loadInfo_item_form_row">
                         <el-form-item label="车费">
@@ -86,6 +100,8 @@
                         <el-form-item label="到达日期">
                           <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                           </el-date-picker>
+                        </el-form-item>
+                        <el-form-item>
                         </el-form-item>
                       </div>
                     </div>
@@ -139,7 +155,7 @@ import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
 import { getDrivers, getTrucK, postLoadInfo } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
-import { getSystemTime } from '@/api/common'
+import { getSystemTime, getSelectType } from '@/api/common'
 import AddLntelligentFreight from './intelligentFreight'
 import { postIntnteSmartLoad } from '@/api/operation/arteryDepart'
 import { postSaveScheme, deleteSchemeById, putUpdateScheme, getIntnteCarInfo, getIntnteInit, deleteScheme } from '@/api/operation/arteryDepart'
@@ -216,6 +232,7 @@ export default {
   },
   data() {
     return {
+      apportionTypeList: [],
       lastSaveFormLoading: false,
       submitFormLoading: false,
       dialogCloseVisible: false,
@@ -280,7 +297,8 @@ export default {
         planArrivedTime: '',
         requireArrivedTime: '',
         truckUserId: '',
-        remark: ''
+        remark: '',
+        apportionTypeId: ''
       },
       // intelligentLeftData: {
       //   apportionTypeId: '',
@@ -309,6 +327,7 @@ export default {
       currentIndex: 0,
       formModelRules: {},
       changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四'],
+      apportionTypeDescript: ['(运单 - 回扣）/（总运费 - 总回扣）* 操作费', '操作费 / 票数', '该单重量 / 本车总重量 * 操作费', '该单体积 / 本车总体积 * 操作费', '该单件数 / 本车总件数 * 操作费'],
       dataList: [],
       pretruckDisable: true,
       nexttruckDisable: false,
@@ -410,6 +429,7 @@ export default {
     loadTable: {
       handler(cval, oval) {
         if (cval) {
+          console.log('loadTable 2')
           this.$nextTick(() => {
             if (cval[this.currentIndex]) {
               this.intelligentData.dataList[this.currentIndex].carLoadDetail = cval[this.currentIndex]
@@ -487,6 +507,7 @@ export default {
     }
   },
   mounted() {
+    this.getSelectType()
     this.getIntnteCarInfo()
     this.converToCn()
     this.init()
@@ -721,6 +742,7 @@ export default {
       if (emptyCountTruck > 0) {
         emptyCountTruck = 0
         this.loading = false
+        this.$emit('setPageLoading', false)
         return
       }
       console.log('submitLoad', truckObject)
@@ -790,7 +812,8 @@ export default {
       // arr.forEach((e, index) => {
       //   this.$set(arr[index], 'carLoadDetail', this.loadTable[index] ? this.loadTable[index] : [])
       // })
-
+      // 
+      
       this.noLoadListCount = 0
       this.loadDataArray = []
       arr.forEach((e, index) => {
@@ -815,6 +838,7 @@ export default {
           remark: e.remark,
           cid: e.cid ? e.cid : (e.id ? e.id : null)
         }
+        this.$set(e.tmsOrderLoadFee, 'handlingFeeAll', e.handlingFeeAll)
         this.$set(e, 'tmsOrderLoad', curinfo)
         this.$set(data, 'tmsOrderLoad', e.tmsOrderLoad)
         this.$set(data, 'tmsOrderLoadFee', e.tmsOrderLoadFee)
@@ -903,8 +927,21 @@ export default {
           this.postSaveScheme(this.loadDataObject)
         }
       }
+    },
+    getSelectType() { // 获取分摊方式
+      getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
+          if (data) {
+            this.apportionTypeList = data
+            this.apportionTypeList.forEach((e, index) => {
+              this.$set(e, 'descript', this.apportionTypeDescript[index])
+            })
+            console.log('apportionTypeList', this.apportionTypeList)
+          }
+        })
+        .catch(err => {
 
-
+          this._handlerCatchMsg(err)
+        })
     },
     putUpdateScheme(dataObject) {
       putUpdateScheme(dataObject).then(data => {
@@ -939,6 +976,7 @@ export default {
           this.lastSaveFormLoading = false
           this.saveLoading = false
           this.loading = false
+          this.$emit('setPageLoading', false)
           this._handlerCatchMsg(err)
         })
     },
@@ -1034,6 +1072,7 @@ export default {
           this.lastSaveFormLoading = false
           this.saveLoading = false
           this.loading = false
+          this.$emit('setPageLoading', false)
           this._handlerCatchMsg(err)
         })
     },
@@ -1196,7 +1235,23 @@ export default {
             })
         }
       }
+    },
+    handleApportionTypeId(value) {},
+    handleFeeAll(type, fee) { // 操作费
+      console.log('-----获取操作费 obj 0------', type, fee)
+      if (!fee) {
+        this.$set(this.intelligentLeftData, 'apportionTypeId', type)
+        console.log('-----获取操作费 obj 0.1------', type, fee, this.intelligentLeftData)
+      }
+      let feeAll = this.intelligentData.dataList[this.currentIndex].handlingFeeAll
+      if (feeAll) {
 
+      this.$emit('handlingFeeInfo', {
+        index: this.currentIndex,
+        apportionTypeId: Number(type),
+        handlingFeeAll: fee ? Number(fee) : feeAll ? Number(feeAll) :''
+      })
+      }
     },
     changeLoadNum(val, index, type) {
       this.$set(this.intelligentData.dataList[index], type, val)
@@ -1204,8 +1259,11 @@ export default {
         this.$set(this.intelligentData.dataList[index], 'tmsOrderLoadFee', this.$options.data().feeData)
         this.$set(this.intelligentData.dataList[index].tmsOrderLoadFee, 'nowpayCarriage', val)
       }
-      this.$emit('truckPrecent', this.intelligentData.dataList[index])
-
+      if (type === 'handlingFeeAll') {
+        this.handleFeeAll(this.intelligentLeftData.apportionTypeId, val)
+      } else {
+        this.$emit('truckPrecent', this.intelligentData.dataList[index])
+      }
     },
     selectCurrentTuck(index, item) {
       if (this.currentIndex !== index) {
@@ -1256,6 +1314,7 @@ export default {
         batchNo: '',
         batchTypeId: 52,
         loadTypeId: 39,
+        handlingFeeAll: '',
         truckIdNumber: '',
         dirverName: '',
         dirverMobile: '',
