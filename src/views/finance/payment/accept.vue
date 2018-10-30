@@ -83,7 +83,7 @@
               >
               <template slot-scope="scope">{{ scope.row.acceptTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
             </el-table-column>
-            
+
             <el-table-column
               sortable
               prop="shipFromCityName"
@@ -97,7 +97,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="agencyFund"
               label="代收货款"
@@ -112,7 +112,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="senderName"
               label="发货人"
@@ -190,7 +190,7 @@
               sortable
               >
             </el-table-column>
-            
+
             <el-table-column
               prop="shipPayWayName"
               label="付款方式"
@@ -226,7 +226,7 @@
               sortable
               >
             </el-table-column>
-  
+
             <el-table-column
               prop=""
               label="多笔付"
@@ -239,7 +239,7 @@
               width="120"
               sortable
               >
-              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>     
+              <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
             </el-table-column>
             <el-table-column
               label="到达市"
@@ -268,13 +268,13 @@
             </el-table-column>
           </template>
         </el-table>
-        </div>  
+        </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
       </div>
-      
+
       <AddPayment :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" proptitle="到账" :searchQuery="searchQuery"  @close="closeAddDot" @success="featchAllpayment" :isModify="isModify" :isAccept="isAccept"/>
       <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
-      
+
 </div>
 </template>
 <script>
@@ -564,7 +564,7 @@ export default {
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
-            name: '货款汇款'
+            name: '货款到账'
           })
           break
           // 汇款

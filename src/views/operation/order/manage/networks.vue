@@ -318,7 +318,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'网络订单'
           })
           this.$refs.multipleTable.clearSelection()
           // if (this.selected.length === 0) {

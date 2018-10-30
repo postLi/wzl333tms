@@ -663,7 +663,7 @@
           // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeeDeliver({
             data: objectMerge2({}, this.form),
-            name: '新建对账'
+            name: '送货对账'
           })
         } else {
           this.$message({

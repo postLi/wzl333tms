@@ -682,7 +682,7 @@
           // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeefeeShort({
             data: objectMerge2({}, this.form),
-            name: '新建对账'
+            name: '短驳对账'
           })
         } else {
           this.$message({

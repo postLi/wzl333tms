@@ -121,12 +121,6 @@
             width: '200',
             fixed: true
           },
-          // {
-          //   label: '发车时间',
-          //   prop: 'carrierMobile',
-          //   width: '220',
-          //   fixed: false
-          // },
           {
             label: '已收（应收）',
             prop: 'recFee',
@@ -213,6 +207,8 @@
             break
           // 明细
           case 'storage':
+            console.log(this.selected[0]);
+            debugger
             this.$router.push({
               path: '/finance/reconciliation/group/detailTable',
               query: {

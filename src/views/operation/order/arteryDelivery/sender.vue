@@ -122,7 +122,7 @@ export default {
           prop: 'shipArrivepayFee',
           width: '90',
           fixed: false
-        }, 
+        },
         {
           label: '操作费(元)',
           prop: 'handlingFeeAll',
@@ -260,7 +260,7 @@ export default {
           prop: 'backpayOilCard',
           width: '110',
           fixed: false
-        }, 
+        },
         {
           label: '运费合计(元)',
           prop: 'totalFee',
@@ -353,7 +353,8 @@ export default {
         case 'import':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'干线到车'
           })
           break
         case 'print':

@@ -973,7 +973,7 @@
         this.sendData()
         SaveAsFileGroup({
           data: objectMerge2({}, this.form),
-          name: '新建对账'
+          name: '网点对账'
         })
       },
       changeFeeType(obj) {
@@ -1369,8 +1369,6 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
-        // this.feeTypeId = item.feeTypeId
-        console.log(item)
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime
@@ -1385,9 +1383,6 @@
     },
     getSelection(selection) {
       this.selected = selection
-    },
-    getDetail() {
-
     }
   }
 </script>

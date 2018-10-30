@@ -360,7 +360,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'干线发车'
           })
           break
           // 打印
@@ -465,7 +466,7 @@ export default {
                 })
                 this.fetchData()
                 }
-                
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
@@ -511,7 +512,7 @@ export default {
                 })
                 this.fetchData()
                 }
-                
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
@@ -531,7 +532,7 @@ export default {
       if (type !=='depart') {
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
-        
+
       }
     },
     getActualTime (obj) { // 发车
