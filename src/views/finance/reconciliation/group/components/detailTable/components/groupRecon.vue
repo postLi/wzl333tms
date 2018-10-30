@@ -949,7 +949,8 @@
         orgFeeTypeIds: [],
         currentFeeTypeIds: [],
         // value5: [],
-        typeIds: []
+        typeIds: [],
+        typeIdsSend: '',
       }
     },
 
@@ -996,6 +997,7 @@
         return postGroupInitialize(this.searchTitle).then(data => {
           this.messageArr = data.tmsFinanceBillCheckDto
           const fees = data.tmsFinanceBillCheckDto.feeTypeId || ''
+          this.typeIdsSend = data.tmsFinanceBillCheckDto.feeTypeId || ''
           this.currentFeeTypeIds = fees !== '' ? fees.split(',') : this.orgFeeTypeIds
           this.typeIds = fees !== '' ? fees.split(',') : []
           this.infoMessage(this.messageArr)
@@ -1014,8 +1016,10 @@
               if (el.type === 1) {
                 if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
                   this.dealInfo.push(el)
+                  this.dealInfoData.push(el)
                 } else {
                   this.dealInfo = []
+                  this.dealInfoData = []
                 }
               } else if (el.type === 3) {
                 if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
@@ -1054,26 +1058,62 @@
       },
       modifyList() {
         this.loading = true
-        this.searchTitle.carrierId = this.$route.query.id
-        return getGroupOrgdetail(this.searchTitle.carrierId).then(res => {
+        this.searchTitle.arriveOrgid = this.$route.query.id
+        this.searchTitle.orgid = this.$route.query.orgid
+        this.searchTitle.feeTypeId = this.feeTypeId
+        return getGroupOrgdetail(this.searchTitle.arriveOrgid).then(res => {
           const data = res.data
           this.messageArr = data.tmsFinanceBillCheckDto
+          const fees = data.tmsFinanceBillCheckDto.feeTypeId || ''
+          this.typeIdsSend = data.tmsFinanceBillCheckDto.feeTypeId || ''
+          this.currentFeeTypeIds = fees !== '' ? fees.split(',') : this.orgFeeTypeIds
+          this.typeIds = fees !== '' ? fees.split(',') : []
           this.infoMessage(this.messageArr)
           this.infoList()
           data.orgDetailQueryList.forEach((el, val) => {
+            const shipArrivepayFeeType = this.currentFeeTypeIds.indexOf('2')
+            const agencyFundType = this.currentFeeTypeIds.indexOf('2659')
+            const handlingFeeReceivableType = this.currentFeeTypeIds.indexOf('325')
+            //
+            const arriveHandlingFeeType = this.currentFeeTypeIds.indexOf('28')
+            const arriveOtherFeeType = this.currentFeeTypeIds.indexOf('29')
+            const arrivepayCarriageType = this.currentFeeTypeIds.indexOf('23')
+            const arrivepayOilCardType = this.currentFeeTypeIds.indexOf('24')
             if (el.type === 1) {
-              this.dealInfo.push(el)
-              this.dealInfoData.push(el)
+              if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                this.dealInfo.push(el)
+                this.dealInfoData.push(el)
+              } else {
+                this.dealInfo = []
+                this.dealInfoData = []
+              }
             } else if (el.type === 3) {
-              this.dealPayInfo.push(el)
-              this.dealPayInfoData.push(el)
+              if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                this.dealPayInfo.push(el)
+                this.dealPayInfoData.push(el)
+              } else {
+                this.dealPayInfo = []
+                this.dealPayInfoData = []
+              }
             } else if (el.type === 2) {
-              this.alreadyInfo.push(el)
-              this.alreadyInfoData.push(el)
+              if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                this.alreadyInfo.push(el)
+                this.alreadyInfoData.push(el)
+              } else {
+                this.alreadyInfo = []
+                this.alreadyInfoData = []
+              }
             } else {
-              this.alreadyPayInfo.push(el)
-              this.alreadyPayInfoData.push(el)
+              if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                this.alreadyPayInfo.push(el)
+                this.alreadyPayInfoData.push(el)
+              } else {
+                this.alreadyPayInfo = []
+                this.alreadyPayInfoData = []
+              }
+
             }
+
           })
           this.loading = false
         }).catch(err => {
@@ -1096,11 +1136,9 @@
       onSubmit() {
         if (this.$route.query.tab === '网点对账-创建对账') {
           this.searchCreatTime = this.defaultTime
-
           this.onSearch()
         } else {
           this.modifyList()
-          // this.sendId = this.$route.query.id
         }
       },
       // 保存 /////////////
@@ -1115,6 +1153,7 @@
                 }
                 this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0]
                 this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1]
+                this.form.tmsFinanceBillCheckDto.feeTypeId = this.typeIdsSend
                 for (const i in this.messageButtonInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
                 }
@@ -1330,6 +1369,8 @@
         this.messageButtonInfo.remark = item.remark
         this.messageButtonInfo.totalCount = item.totalCount
         this.checkBillName = item.checkBillName
+        // this.feeTypeId = item.feeTypeId
+        console.log(item)
       },
       infoSearchTime(startTime, endTime) {
         this.searchTitle.startTime = startTime
@@ -1344,6 +1385,9 @@
     },
     getSelection(selection) {
       this.selected = selection
+    },
+    getDetail() {
+
     }
   }
 </script>

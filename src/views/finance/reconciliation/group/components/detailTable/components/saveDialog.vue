@@ -228,6 +228,7 @@
         for (const i in this.dotInfo) {
           data[i] = this.dotInfo[i]
         }
+        // debugger
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
         if (this.query.id) {
           data.tmsFinanceBillCheckDto.id = this.query.id
