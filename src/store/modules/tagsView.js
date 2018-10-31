@@ -36,6 +36,8 @@ const tagsView = {
 
       if (!view.meta.noCache) {
         state.cachedViews.push(view.name)
+        // state.cachedViews.push(view.fullPath)
+        console.log('state.cachedViews:',state.cachedViews)
       }
     },
     DEL_VISITED_VIEWS: (state, view) => {

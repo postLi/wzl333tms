@@ -161,25 +161,25 @@
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
-                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" maxlength="20"
-                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" />
+                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" 
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="11" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" maxlength="20"
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="16"
                   :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" maxlength="20"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="8"
                   :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="11" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                   </el-form-item>
                 </template>
@@ -435,7 +435,7 @@
     </div>
     </el-form>
     <!-- 底部按钮操作部分 -->
-    <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
+    <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
     <!-- 弹窗 -->
     <FeeDialog @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
     <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
@@ -449,11 +449,14 @@ import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
 import { closest, getTotal, objectMerge2, parseTime, tmsMath } from '@/utils/'
+import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 请求接口
 import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
 import * as preOrderManage from '@/api/operation/manage'
+import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
+import { getOrgId } from '@/api/company/groupManage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
@@ -465,9 +468,6 @@ import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
-import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
-import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
-import { getOrgId } from '@/api/company/groupManage'
 
 export default {
   components: {
@@ -891,7 +891,8 @@ export default {
       isSavePrint: false, // false-不保存并打印 true-保存并打印,
       printDataObject: {},
       cargoKey: 'init',
-      resOrderId: '' // 开单成功后返回的运单id
+      resOrderId: '', // 开单成功后返回的运单id
+      hideSaveNew: false // 判断是否隐藏“保存并新增按钮”
     }
   },
   computed: {
@@ -964,7 +965,6 @@ export default {
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
-        console.log('form.tmsOrderShip.shipReceiptRequire', newVal)
         let num = 1
         if (newVal === 80 || newVal === '80' || newVal === null) {
           num = 0
@@ -990,7 +990,7 @@ export default {
     },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
-        this.initIndex()
+        // this.initIndex()
       }
     },
     'ispop'(newVal) {
@@ -1013,6 +1013,7 @@ export default {
     this.initIndex()
     this.getSelectType()
     this.getShipPayWay()
+    // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
   },
   methods: {
@@ -1341,6 +1342,15 @@ export default {
       if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
+      // 只有在库中且没有结算状态的才能修改创建时间
+      if (this.canChangeOrderDate && this.output.ismodify) {
+        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.ShipReceivableFeeStatus === 'NOSETTLEMENT')) {
+
+        } else {
+          this.canChangeOrderDate = false
+        }
+        // shipStatus 59
+      }
     },
     // 选择出发城市
     selectFromCity(item, city) {
@@ -1396,6 +1406,10 @@ export default {
     // 设置中转表单
     setOrderTransfer() {
       this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === '1'
+      // 当为修改运单时，隐藏中转信息
+      if (this.output.ismodify) {
+        this.shouldInputTransfer = false
+      }
     },
     // 设置默认值
     setDefaultValue() {
@@ -1459,6 +1473,7 @@ export default {
       // 4.1 正常的创建运单
       // 5. 从弹窗过来
       this.loading = true
+
       this.reset()
       this.getBaseSetting().then(res => {
         console.log('base setting info:', res, this.$route)
@@ -1486,6 +1501,7 @@ export default {
           this.output.ordernum = Math.min(parseInt(param.ordernum, 10) || 1, 10)
           this.output.isbatch = true
           this.output.batchinfo = param.batchobj
+          this.hideSaveNew = true
           this.initBatch()
         } else {
           this.output.iscreate = true
@@ -1631,6 +1647,7 @@ export default {
         // 收发货人信息
         this.form.sender.customerType = 1
         this.form.sender.customerName = data.customerName
+        this.form.sender.customerUnit = data.customerUnit
         this.form.sender.customerMobile = data.customerMobile
         this.form.sender.detailedAddress = data.detailedAddress
         this.form.sender.customerId = data.senderId
@@ -1757,6 +1774,10 @@ export default {
     // 将null值转为空值
     setOrderData(data) {
       data.tmsOrderShip = data.tmsOrderShipInfo || data.tmsOrderShip || {}
+      // 当为修改运单时，运费计算规则重新获取
+      if (this.output.ismodify && this.output.isOrder && !this.output.isbatch && data.orderShipSettingMap && data.orderShipSettingMap.shipFee) {
+        this.config.shipFee = data.orderShipSettingMap.shipFee
+      }
       // 设置运单信息
       for (const i in this.form.tmsOrderShip) {
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i] === null ? '' : data.tmsOrderShip[i]
@@ -1786,7 +1807,6 @@ export default {
       }
       // 回显控货
       this.shipOther = this.form.tmsOrderShip.shipOther.split(',') || []
-      console.log('回显控货:', this.shipOther)
 
       this.form.customerList = data.customerList || []
       console.log('setOrderInfo:', data, this.form)
@@ -2087,6 +2107,10 @@ export default {
       // this.setOrderDate()
 
       this.output = {}
+      // 所有操作变量都需要重置
+      this.isSaveAndNew = false
+      this.isSavePrint = false
+      this.hideSaveNew = false
     },
     /** * 提交表单 */
     checkshipSn() {
@@ -2711,7 +2735,9 @@ export default {
                 this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex()
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
                   } else {
@@ -2752,7 +2778,9 @@ export default {
                   if (this.output.isPreOrder) {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex()
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)
                   } else {
@@ -2792,6 +2820,10 @@ export default {
           break
         case 'saveShipKey':
           this.isSavePrint = false // false-不保存并打印，只保存
+          this.submitForm()
+          break
+        case 'saveInsertKey':
+          this.isSaveAndNew = true
           this.submitForm()
           break
         case 'savePrintKey':
@@ -2965,11 +2997,6 @@ export default {
         this._handlerCatchMsg(err)
       })
     }
-  }, // 路由更新时触发，用来切换渲染数据
-  // 需要对应router-view的组件才能触发
-  beforeRouteUpdate(to, from, next) {
-    next()
-    console.log('beforeRouteUpdate:', to, from)
   }
 }
 </script>
@@ -3033,6 +3060,10 @@ $backgroundcolor: #cbe1f7;
           cursor: default;
         }
       }
+    }
+
+    .hideSaveNew .saveInsertKey{
+      display: none;
     }
 
     /* &.creatBatch-main{
@@ -3435,7 +3466,8 @@ $backgroundcolor: #cbe1f7;
       height: 72px;
 
       .el-button{
-        font-size: 16px;
+        font-size: 14px;
+        padding: 10px;
         //background: transparent;
         i{
           font-size: 1.5em;

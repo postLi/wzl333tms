@@ -2,7 +2,7 @@
   <transferTable>
     <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
-     <!-- 搜索左边表格 -->
+      <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
     </div>
     <!-- 左边表格区 -->
@@ -24,6 +24,10 @@
         <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
+        </el-table-column>
+        <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120">
+        </el-table-column>
+        <el-table-column prop="brokerageFee" sortable label="回扣(元)" width="90">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
@@ -60,8 +64,8 @@
     <!-- 右边表格区 -->
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable"  @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-         <el-table-column fixed width="50" label="序号">
+      <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+        <el-table-column fixed width="50" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -75,22 +79,31 @@
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="130">
         </el-table-column>
-         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
+        <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
+        </el-table-column>
+        <el-table-column prop="handlingFee" sortable label="操作费(元)" width="120" v-if="loadTypeId !== 40">
+          <template slot-scope="scope">
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.handlingFee" @change="(val) =>changHandlingFee(scope.$index, val)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
+          </template>
         </el-table-column>
         <el-table-column prop="loadAmount" sortable label="配载件数" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadAmount" @change="changLoadData(scope.$index)" required :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadWeight" sortable label="配载重量(千克)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadWeight" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="loadVolume" sortable label="配载体积(方)" width="120">
           <template slot-scope="scope">
-            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)"></el-input>
+            <el-input type="number" :size="btnsize" v-model.number="scope.row.loadVolume" @change="changLoadData(scope.$index)" :maxlength="10" @dblclick.stop.prevent.native @click.stop.prevent.native></el-input>
           </template>
+        </el-table-column>
+        <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120" v-if="loadTypeId !== 40">
+        </el-table-column>
+        <el-table-column prop="brokerageFee" sortable label="回扣(元)" width="90" v-if="loadTypeId !== 40">
         </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
@@ -130,7 +143,7 @@ import { getSelectAddLoadRepertoryList, postLoadInfo } from '@/api/operation/loa
 import transferTable from '@/components/transferTable'
 import { objectMerge2 } from '@/utils/index'
 import currentSearch from './currentSearch'
-import { getSummaries } from '@/utils/'
+import { getSummaries, tmsMath } from '@/utils/'
 export default {
   data() {
     return {
@@ -160,12 +173,22 @@ export default {
     isModify: {
       type: Boolean,
       default: false
+    },
+    handlingFeeInfo: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
     ...mapGetters([
       'otherinfo'
-    ])
+    ]),
+    loadTypeId: {
+      get() {
+        return Number(this.$route.query.loadTypeId)
+      },
+      set() {}
+    }
   },
   components: {
     transferTable,
@@ -176,39 +199,143 @@ export default {
       handler(cval, oval) { // 深度监听
         this.getList()
       },
-      deep: true
+      immediate: true
     },
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
-          this.orgData = Object.assign({}, cval)
+          console.log('setLoadTable', cval)
+          this.orgData = objectMerge2({}, cval)
           this.getList()
-          console.log('cval', cval)
+        }
+      },
+      deep: true
+    },
+    handlingFeeInfo: {
+      handler(cval, oval) {
+        // 没有填操作费 并且 没有选择运单 就不计算避免浪费
+        // 只有39干线和38短驳需要做操作费处理  40送货不需要
+        if (this.$route.query && this.$route.query.loadTypeId !== 40) {
+          if (!cval.handlingFeeAll || this.rightTable.length === 0) {
+            return
+          }
+          console.log(cval.apportionTypeId, cval.handlingFeeAll)
+          this.countHandingFee()
         }
       },
       deep: true
     }
   },
   mounted() {
-    if (this.leftTable.length === 0) {
-      this.getList()
-    }
+    this.getList()
+    // if (this.leftTable.length === 0) {
+    //   this.getList()
+    // }
   },
   activated() {
-    this.getList()
+
+    // this.getList()
   },
   methods: {
+    countHandingFee() {
+      switch (this.handlingFeeInfo.apportionTypeId) {
+        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+          let totalBrokerageFee = 0 // 总回扣
+          let totalShipTotalFee = 0 // 总运费合计
+          this.rightTable.forEach(e => {
+            totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee ? e.brokerageFee : 0)
+            totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
+          })
+          this.rightTable.forEach((e, index) => {
+            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            if (sub < 0) { // 当前运单 回扣比运费合计多的话 就设置为0 不小于0
+              e.handlingFee = 0
+            } else {
+              e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(tmsMath._sub(e.shipTotalFee, e.brokerageFee), tmsMath._sub(totalShipTotalFee, totalBrokerageFee)), this.handlingFeeInfo.handlingFeeAll))
+            }
+          })
+          break
+        case 44: // 按票数分摊 车费/票数
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._div(this.handlingFeeInfo.handlingFeeAll, this.rightTable.length))
+          })
+          break
+        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*车费
+          let totalWeight = 0
+          this.rightTable.map(e => {
+            totalWeight = tmsMath._add(totalWeight, e.loadWeight)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadWeight, totalWeight), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*车费
+          let totalVolume = 0
+          this.rightTable.map(e => {
+            totalVolume = tmsMath._add(totalVolume, e.loadVolume)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadVolume, totalVolume), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*车费
+          let totalAmount = 0
+          this.rightTable.map(e => {
+            totalAmount = tmsMath._add(totalAmount, e.loadAmount)
+          })
+          this.rightTable.forEach((e, index) => {
+            e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadAmount, totalAmount), this.handlingFeeInfo.handlingFeeAll))
+          })
+          break
+      }
+
+      let count = 0
+      let countFeeZero = 0
+      let listLen = this.rightTable.length
+
+      this.rightTable.forEach((e, index) => {
+        count = tmsMath._add(count, e.handlingFee)
+        if (count > this.handlingFeeInfo.handlingFeeAll) {
+          e.handlingFee = tmsMath._sub(e.handlingFee, tmsMath._sub(count, this.handlingFeeInfo.handlingFeeAll))
+        }
+        e.handlingFee = e.handlingFee ? e.handlingFee : 0
+        if (e.handlingFee === 0) {
+          countFeeZero++
+        }
+      })
+
+      if (count < this.handlingFeeInfo.handlingFeeAll) {
+        this.rightTable[this.rightTable.length - 1].handlingFee = tmsMath._add(this.rightTable[this.rightTable.length - 1].handlingFee, tmsMath._sub(this.handlingFeeInfo.handlingFeeAll, count))
+      }
+
+      if (this.handlingFeeInfo.apportionTypeId && this.handlingFeeInfo.handlingFeeAll && countFeeZero === listLen) {
+        // 判断是否所有的费用都为0 总计为0的时候和操作费不一致需要特殊处理
+        // 特殊处理： 提示“运单相关数据不足以分摊操作，默认为【按票数分摊】。”
+        this.$notify.info({
+          title: '消息',
+          message: '运单相关数据不足以分摊操作，默认为【按票数分摊】。'
+        })
+        this.$emit('resetHandlingFeeInfo', {
+          apportionTypeId: 44
+        })
+      }
+    },
+    calc(n) {
+      return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
+    },
     getList() {
-      console.log('isModify', this.isModify)
+      console.log('getList1')
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
       if (this.isModify) {
+        console.log('getList2')
         this.leftTable = this.orgData.left
         this.rightTable = this.orgData.right
         this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
       } else {
+        console.log('getList3')
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
           this.leftTable = data.data
           this.orgLeftTable = data.data
@@ -239,10 +366,10 @@ export default {
     },
     doAction(type) {
       switch (type) {
-        case 'goLeft': // 右边数据勾选到左边
+        case 'goLeft': // 左边数据勾选到右边 
           this.goLeft()
           break
-        case 'goRight': // 左边数据勾选到右边
+        case 'goRight': // 右边数据勾选到左边
           this.goRight()
           break
       }
@@ -263,7 +390,6 @@ export default {
         this.rightTable[newVal].loadAmount = currepertAmount
         this.rightTable[newVal].loadWeight = currepertWeight
         this.rightTable[newVal].loadVolume = currepertVolume
-        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       } else if (curAmount === currepertAmount) {
         this.$notify({
           title: '提示',
@@ -271,32 +397,39 @@ export default {
           type: 'warning'
         })
         this.rightTable[newVal].loadAmount = currepertAmount
-        // this.rightTable[newVal].loadWeight = currepertWeight
-        // this.rightTable[newVal].loadVolume = currepertVolume
-        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
       } else if (curVolume === currepertVolume && curWeight === currepertWeight) {
         this.$notify({
           title: '提示',
           message: '配载重量与配载体积都等于该库存大小,即所有配载数量为库存数量',
           type: 'warning'
         })
-        // this.rightTable[newVal].loadAmount = currepertAmount
         this.rightTable[newVal].loadWeight = currepertWeight
         this.rightTable[newVal].loadVolume = currepertVolume
-        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
-      } else {
-        // return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
+      } else {}
+      if (this.$route.query.loadTypeId !== 40) {
+        this.countHandingFee()
       }
-      // this.$emit('change', this.rightTable)
       this.$emit('loadTable', this.rightTable)
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
     },
+    changHandlingFee(index, newVal) {
+      console.log(this.rightTable.length)
+      let total = 0
+      this.rightTable.forEach(e => {
+        total = tmsMath._add(total, e.handlingFee ? e.handlingFee : 0)
+      })
+      this.$emit('changeHandlingFeeAll', total)
+    },
     goLeft() { // 数据从左边穿梭到右边
+      console.log('goLeft 数据从左边穿梭到右边')
       if (this.selectedRight.length === 0) {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置配载重量,配载体积,配载数量
+          // 默认设置配载重量,配载体积,配载数量,操作费用
+          if (this.$route.query && this.$route.query.loadTypeId !== 40) {
+            e.handlingFee = 0
+          }
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
@@ -311,13 +444,16 @@ export default {
             return el.repertoryId !== e.repertoryId
           })
         })
-        // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
-        console.log('rightTable', this.rightTable)
+        if (this.$route.query.loadTypeId !== 40) {
+          this.countHandingFee()
+        }
+        console.log('rightTable', this.rightTable.length, this.rightTable)
         this.$emit('loadTable', this.rightTable)
       }
     },
     goRight() { // 数据从右边穿梭到左边
+      console.log('goRight 数据从右边穿梭到左边')
       if (this.selectedLeft.length === 0) {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
@@ -335,9 +471,11 @@ export default {
             return el.repertoryId !== e.repertoryId
           })
         })
-        // this.changeTableKey() // 刷新表格视图
         this.selectedLeft = [] // 清空选择列表
         console.log('rightTable', this.rightTable)
+        if (this.$route.query.loadTypeId !== 40) {
+          this.countHandingFee()
+        }
         this.$emit('loadTable', this.rightTable)
       }
     },
@@ -370,11 +508,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const propsArr = ['_index|2|单','_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       const propsArr = ['_index|2|单','_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
+      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|', 'handlingFee', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
       return getSummaries(param, propsArr)
     }
   }

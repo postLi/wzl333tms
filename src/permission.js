@@ -6,7 +6,10 @@ import { getToken, removeToken, setToken } from '@/utils/auth' // 验权
 import { Message, MessageBox } from 'element-ui'
 
 const whiteList = ['/login']
+
 router.beforeEach((to, from, next) => {
+  const _hmt = window._hmt || []
+  // _hmt.push(['_trackPageview', '/virtual/login']);
   /* must call `next` */
   NProgress.start()
   // 如果链接带有token信息，则将其保存
@@ -17,15 +20,6 @@ router.beforeEach((to, from, next) => {
         path: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, '')
       })
       console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, ''))
-    })
-  } else if (to.query.nologin) {
-    store.dispatch('Login', {
-      password: '123456',
-      username: 'fangjian'
-    }).then(() => {
-      next({
-        path: '/'
-      })
     })
   } else if (getToken()) {
     if (to.path === '/login') {
@@ -40,7 +34,7 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true })
           })
         }).catch((err) => {
-          Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          // Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           next({ path: '/login', query: {
@@ -52,6 +46,7 @@ router.beforeEach((to, from, next) => {
         const title = to.meta.title || to.name || ''
         // window.document.title = (title ? title + ' - ' : '') + '安发TMS管理系统'
         window.document.title = '安发TMS管理系统'
+        _hmt.push(['_trackPageview', to.fullPath])
         next()
       }
     }

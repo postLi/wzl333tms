@@ -44,6 +44,7 @@
             </el-table-column>
             <el-table-column
               :key="column.id"
+              :prop="column.prop"
               :fixed="column.fixed"
               sortable
               :label="column.label"

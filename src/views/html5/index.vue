@@ -3,7 +3,7 @@
     <!-- <h4>数据总览</h4> -->
       <div class="head_title clearfix">
         <div class="getorglist">
-          <SelectTree multiple :multiple-limit="10"  v-model="orgId" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
+          <SelectTree multiple :multiple-limit="10"  v-model="orgId" @change="getData" :orgid="otherinfo.orgid" :filterable="false"></SelectTree>
         </div>
         <ul>
         <li v-for="(item, index) in dataBtns" :class="{'active':item.value === currentkey} " :key="index" @click="()=>{setCurrentKey(item)}">{{item.label}}</li>
@@ -81,7 +81,7 @@
           <div class="databox-line"></div>
           <div class="databox datagreen">
             <span class="dataico"><icon-svg icon-class="caiwu" /></span>
-            <span class="databox-value">{{ thedata.amountReceivableFee - thedata.amountPayableFee }}元</span>
+            <span class="databox-value">{{ liushuicha }}元</span>
             <span class="databox-label">流水差</span>
           </div>
         </el-col>
@@ -94,7 +94,7 @@
 // echarts的各模块
 // https://github.com/apache/incubator-echarts/blob/master/index.js
 import echarts from 'echarts'
-import { pickerOptions4, tmsMath, pickerOptions } from '@/utils/index'
+import { pickerOptions4, tmsMath, pickerOptions, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail, getConsoleData, getConsoleChartData } from '@/api/index'
 import Arrow from './arrow'
 import SelectTree from '@/components/selectTree/index'
@@ -271,6 +271,9 @@ export default {
     totalpay() {
       const data = this.thedata
       return tmsMath.add(data.hadPayCarFee, data.unPayCarFee, data.hadPayTransferFee, data.unPayTransferFee, data.hadPayOtherFee, data.unPayOtherFee).result()
+    },
+    liushuicha() {
+      return tmsMath.sub(this.thedata.amountReceivableFee, this.thedata.amountPayableFee).result()
     }
   },
   methods: {
@@ -280,9 +283,12 @@ export default {
     },
     getDateChange(val) {
       this.searchQuery.vo.buttonKey = 5
-      this.searchQuery.vo.nowStartTime = val[0]
-      this.searchQuery.vo.nowEndTime = val[1]
-      this.currentkey = 5
+      this.searchQuery.vo.nowStartTime = parseTime(val[0], '{y}-{m}-{d} 00:00:00')
+      this.searchQuery.vo.nowEndTime = parseTime(val[1], '{y}-{m}-{d} 23:59:59')
+      this.currentkey = ''
+      this.$nextTick(() => {
+        this.currentkey = 5
+      })
     },
     doAction(type) {
       switch (type) {
@@ -341,9 +347,9 @@ export default {
       const data = Object.assign({}, this.searchQuery.vo)
       data.orgAllId = this.orgId.join(',')
       // 临时测试数据
-      data.orgAllId = this.orgId.map((res, index) => {
-        return (index + 1)
-      }).join(',')
+      // data.orgAllId = this.orgId.map((res, index) => {
+      //   return (index + 1)
+      // }).join(',')
       data.buttonKey = this.currentkey
       getConsoleData(data).then(res => {
         const data = res.data
@@ -363,6 +369,7 @@ export default {
       })
     },
     initYearChart(echart, shipArr, volumeArr) {
+      console.log('initYearChart:', shipArr, volumeArr)
       const option3 = {
         title: {
           text: '收支走势',
@@ -435,7 +442,7 @@ export default {
         ]
       }
       echart.hideLoading()
-      echart.setOption(option3)
+      echart.setOption(option3, true)
     }
   },
   mounted() {
@@ -725,6 +732,7 @@ export default {
       li:nth-child(1){
         border-bottom: 1px solid #ddd;
         font-weight: bold;
+        font-size: 16px;
       }
       li.profit-num{
         text-align: center;

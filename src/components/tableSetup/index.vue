@@ -352,7 +352,7 @@ export default {
       }).catch(err => {
         // 如果从服务器上拿取数据出错，则将其当做本地数据处理
         // this.$message.info('获取表格数据失败。')
-        console.log('获取表格数据失败：', this.thecode)
+        // console.log('获取表格数据失败：', this.thecode)
         this.fetchFail()
       })
     },
@@ -507,7 +507,7 @@ export default {
       if (queryString.label === undefined) {
         if (!this.searchLeft) { // 如果搜索框为空则恢复左边列表
           this.columnData = Object.assign([], this.orgColumnData)
-          console.log('querySearchLeft', queryString.label, this.orgColumnData)
+          // console.log('querySearchLeft', queryString.label, this.orgColumnData)
         }
       }
       const col = Object.assign([], this.orgColumnData)
@@ -568,7 +568,7 @@ export default {
     handleSwitch(obj) {},
     callback() {
       const data = Object.assign([], this.showColumnData)
-      console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
+      // console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
       this.$emit('success', data)
       this.listKey = Math.random()
 

@@ -11,6 +11,8 @@ var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 var ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
+var shouldmap = process.env.BUILD_ENV === 'test' ? false : '#source-map'
+console.log('process.env.BUILD_ENV',process.env.BUILD_ENV,shouldmap)
 
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
@@ -24,7 +26,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     })
   },
  // devtool: config.build.productionSourceMap ? '#source-map' : false,
-  devtool: false,
+ devtool: shouldmap,
+  // devtool: '#source-map',
   output: {
     path: config.build.assetsRootTemp,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
@@ -43,6 +46,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     }), */
     new ParallelUglifyPlugin({
       cacheDir: '.cache/',
+      // sourceMap: env !== 'test' ? true : false,
+      sourceMap: shouldmap ? true : false,
       uglifyJS:{
         output: {
           comments: false

@@ -148,10 +148,13 @@ service.interceptors.response.use(
         MessageBox.alert('你已被登出，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
+          showClose: false,
           type: 'warning'
         }).then(() => {
           store.dispatch('FedLogOut').then(() => {
-            location.href = '/login' // 为了重新实例化vue-router对象 避免bug
+            if (location.pathname.indexOf('/login') === -1) {
+              location.href = '/login' // 为了重新实例化vue-router对象 避免bug
+            }
           })
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {

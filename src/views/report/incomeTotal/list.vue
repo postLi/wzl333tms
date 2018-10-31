@@ -3,7 +3,7 @@
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
-    <div class="tab_info">
+    <div class="tab_info" v-loading="loading">
       <div class="btns_box">
         <el-button type="primary" v-has:REPORT_PRINT_5 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
@@ -30,6 +30,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       chartIframe: '',
       hideiframe: 'hide',
       query: {
@@ -88,9 +89,11 @@ export default {
   },
   methods: {
     report() {
+      this.loading = true
       reportIncomeTotal(this.query).then(res => {
         let data = res
         let countColVal = []
+        this.loading = false
 
         let table = document.getElementById('report_incomeTotal_table')
         if (!table) {

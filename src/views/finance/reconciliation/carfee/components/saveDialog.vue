@@ -221,6 +221,8 @@
         data.checkStartTime = (data.checkStartTime + ' 00:00:00')
         data.checkEndTime = (data.checkEndTime) + ' 23:59:59'
         data.createTime = parseTime(data.createTime)
+        console.log(data)
+        // return false
         if (this.sendId) {
           data.id = this.sendId
           if (this.deliver) {

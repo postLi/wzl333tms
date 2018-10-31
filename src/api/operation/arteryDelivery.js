@@ -7,7 +7,10 @@ import fetch from '../../utils/fetch'
  */
 export function postArtList(params) {
   return fetch.post('/api-order/order/load/v1/list/', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 
@@ -19,7 +22,10 @@ export function postArtList(params) {
  */
 export function postSelectLoadMainInfoList(params) {
   return fetch.post('/api-order/order/load/v1/selectLoadMainInfoList/', params).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 
@@ -50,8 +56,8 @@ export function postAddRepertory(typeId, params) {
  * @param params
  * @returns {Promise<AxiosResponse<any>>}
  */
-export function postConfirmToCar(id, typeId) {
-  return fetch.post('/api-order/order/load/v1/confirmToCar/ ' + id + '?&typeId=' + typeId).then(res => {
+export function postConfirmToCar(id, typeId, actualArrivetime) {
+  return fetch.post('/api-order/order/load/v1/confirmToCar/ ' + id + '?&typeId=' + typeId + '&actualArrivetime=' + actualArrivetime).then(res => {
     return res.data || {}
   })
 }

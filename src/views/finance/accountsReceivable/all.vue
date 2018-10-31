@@ -43,6 +43,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+              :prop="column.prop"
               sortable
               :label="column.label"
               v-else
@@ -392,7 +393,7 @@ export default {
     },
     // 计算总数
     getSummaries(param) {
-      // const propsArr = ['_index|2|单', 'nowPayFee','finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee|', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'finishChangeFee', 'notChangeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+       const propsArr = ['_index|2|单', 'nowPayFee','finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee|', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'finishChangeFee', 'notChangeFee','cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param)
     }
   }

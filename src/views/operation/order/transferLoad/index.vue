@@ -16,7 +16,7 @@
                 </querySelect>
               </el-form-item>
               <el-form-item prop="transferTime" label="中转日期"  class="formItemTextDanger">
-                <el-date-picker size="mini" v-model="formModel.transferTime" value-format="yyyy-MM-dd hh:mm:ss" type="datetime" placeholder="中转日期">
+                <el-date-picker size="mini" v-model="formModel.transferTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="中转日期">
                 </el-date-picker>
               </el-form-item>
               <el-form-item label="承运商电话" prop="carrierMobile">

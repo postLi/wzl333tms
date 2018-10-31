@@ -45,6 +45,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+              :prop="column.prop"
               sortable
               :label="column.label"
               v-else

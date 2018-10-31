@@ -12,13 +12,27 @@
     height: 32px;
     line-height: 30px;
     border-bottom: 1px solid #91cbf7;
+    .el-badge{
+        float: left;
+    }
+    .el-badge__content.is-fixed{
+        z-index: 3;
+        top: 1px;
+        right: 12px;
+    }
+    .el-badge:first-child .tab-label{
+        margin-left: 1px;
+        border-left-width: 1px;
+      }
   }
 
-  .tab-label:first-child{
+  &>.tab-label:first-child{
     margin-left: 1px;
-    border-left-width: 1px; 
+    border-left-width: 1px;
   }
-  
+
+
+
   .tab-label{
     float: left;
     padding-left: 12px;
@@ -81,7 +95,7 @@
             width: 100%;
             height: calc(100% - 38px);
             // flex-grow: 1;
-            
+
             .el-table{
                 table{
                     th,td{
@@ -144,9 +158,9 @@
     padding:0 0 10px;
     margin: 0 10px;
     padding-right: 126px;
-    
+
     border-bottom:1px dashed #999;
-    
+
     .el-input__inner{
         border-color: #ccc;
         border-radius: 2px;
@@ -189,6 +203,14 @@
         .staff_searchinfo--input{
           .el-form-item{
             margin-top: 7px;
+            .input-disabled.el-input.is-disabled {
+              .el-input__inner {
+                background-color: #fff;
+                border-color: #ccc;
+                color: #606266;
+              }
+
+            }
           }
         }
         .staff_searchinfo--btn{

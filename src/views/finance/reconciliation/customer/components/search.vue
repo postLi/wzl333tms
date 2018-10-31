@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
       <div class="staff_searchinfo--input">
-        <el-form-item label="发车时间">
+        <el-form-item label="开单时间">
           <el-date-picker
             v-model="searchCreatTime"
             :default-value="defaultTime"
