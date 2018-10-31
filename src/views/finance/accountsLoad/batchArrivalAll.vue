@@ -62,7 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input @dbclick.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input  @dblclick.stop.prevent.native @click.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -187,7 +187,7 @@ export default {
         {
           label: '已结到付运费',
           prop: 'paidArrivepayCarriage',
-          width: '180',
+          width: '150',
           fixed: false,
           slot: (scope) => {
             const row = scope.row

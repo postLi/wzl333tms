@@ -62,7 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" @dbclick.stop.prevent.native 
+                  <el-input type="number"  @dblclick.stop.prevent.native @click.stop.prevent.native
                   :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>

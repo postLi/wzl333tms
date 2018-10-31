@@ -93,8 +93,8 @@
         </el-table-column>
         <el-table-column prop="totalCost" sortable label="中转费合计" width="120">
           <template slot-scope="scope">
-            <el-input size="mini" disabled  
-            v-model="rightTable[scope.$index].totalCost" ></el-input>
+            <!-- <el-input size="mini" disabled v-model="rightTable[scope.$index].totalCost" ></el-input> -->
+            <el-input size="mini" disabled v-model="scope.row.totalCost" ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="paymentId" sortable label="中转费付款方式" width="120">
@@ -224,6 +224,7 @@ export default {
       this.$set(_this.rightTable, index, Object.assign(_this.rightTable[index], {
         totalCost: current['totalCost']
       }))
+      console.log(_this.rightTable)
       // _this.rightTable[index].totalCost = current['totalCost']
       _this.$emit('loadTable', _this.rightTable)
     },
