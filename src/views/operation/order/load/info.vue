@@ -490,14 +490,14 @@ export default {
     '$route':{
       handler(to, from) {
         const bothBool = false
-        if (to.path.indexOf('/operation/order/load') !== -1) {
+        if (to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
           // 1
           // 3
-          if (from && from.path.indexOf('/operation/order/load') !== -1) {
+          if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
             this.switchUrl(from.fullPath, true)
           }
           this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
-        } else if (from.path.indexOf('/operation/order/load') !== -1) {
+        } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
           // 2
           // 4
           this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
