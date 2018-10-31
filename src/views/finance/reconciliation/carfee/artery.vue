@@ -346,14 +346,14 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
             PrintInFullPage({
               data: this.usersArr, // 列表中的数据
               columns: this.tableColumn, // 表格设置好的列
-              name: '全部对账单' // 文件名称
+              name: '干线对账' // 文件名称
             })
             break
           case 'export': // 导出表格常用方法
             SaveAsFile({
               data: this.usersArr, // 列表中的数据
               columns: this.tableColumn, // 表格设置好的列
-              name: '全部对账单' // 文件名称
+              name: '干线对账' // 文件名称
             })
             break
         }

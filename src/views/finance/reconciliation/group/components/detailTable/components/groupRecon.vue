@@ -40,10 +40,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--<el-form-item label="费用项" prop="">-->
-          <!--<selectType v-model="searchTitle.paymentId" type="payment_type" clearable-->
-          <!--size="mini" class=""></selectType>-->
-          <!--</el-form-item>-->
         </div>
         <div class="sDate">
           <el-date-picker
@@ -1013,8 +1009,10 @@
               const arriveOtherFeeType = this.currentFeeTypeIds.indexOf('29')
               const arrivepayCarriageType = this.currentFeeTypeIds.indexOf('23')
               const arrivepayOilCardType = this.currentFeeTypeIds.indexOf('24')
+              const typeDealInfo = shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1
+              const typeDealPayInfo = handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1
               if (el.type === 1) {
-                if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                if (typeDealInfo !== -1) {
                   this.dealInfo.push(el)
                   this.dealInfoData.push(el)
                 } else {
@@ -1022,7 +1020,7 @@
                   this.dealInfoData = []
                 }
               } else if (el.type === 3) {
-                if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+                if (typeDealInfo) {
                   this.dealPayInfo.push(el)
                   this.dealPayInfoData.push(el)
                 } else {
@@ -1030,7 +1028,7 @@
                   this.dealPayInfoData = []
                 }
               } else if (el.type === 2) {
-                if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                if (typeDealPayInfo !== -1) {
                   this.alreadyInfo.push(el)
                   this.alreadyInfoData.push(el)
                 } else {
@@ -1038,7 +1036,7 @@
                   this.alreadyInfoData = []
                 }
               } else {
-                if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+                if (typeDealPayInfo !== -1) {
                   this.alreadyPayInfo.push(el)
                   this.alreadyPayInfoData.push(el)
                 } else {
@@ -1079,8 +1077,10 @@
             const arriveOtherFeeType = this.currentFeeTypeIds.indexOf('29')
             const arrivepayCarriageType = this.currentFeeTypeIds.indexOf('23')
             const arrivepayOilCardType = this.currentFeeTypeIds.indexOf('24')
+            const typeDealInfo = shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1
+            const typeDealPayInfo = handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1
             if (el.type === 1) {
-              if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+              if (typeDealInfo) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
               } else {
@@ -1088,7 +1088,7 @@
                 this.dealInfoData = []
               }
             } else if (el.type === 3) {
-              if (shipArrivepayFeeType !== -1 || agencyFundType !== -1 || handlingFeeReceivableType !== -1) {
+              if (typeDealInfo) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
               } else {
@@ -1096,7 +1096,7 @@
                 this.dealPayInfoData = []
               }
             } else if (el.type === 2) {
-              if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+              if (typeDealPayInfo) {
                 this.alreadyInfo.push(el)
                 this.alreadyInfoData.push(el)
               } else {
@@ -1104,14 +1104,13 @@
                 this.alreadyInfoData = []
               }
             } else {
-              if (handlingFeeReceivableType !== -1 || arriveHandlingFeeType !== -1 || arriveOtherFeeType !== -1 || arrivepayCarriageType !== -1 || arrivepayOilCardType !== -1) {
+              if (typeDealPayInfo) {
                 this.alreadyPayInfo.push(el)
                 this.alreadyPayInfoData.push(el)
               } else {
                 this.alreadyPayInfo = []
                 this.alreadyPayInfoData = []
               }
-
             }
 
           })
