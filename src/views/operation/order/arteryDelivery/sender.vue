@@ -1,20 +1,18 @@
-
 <template>
   <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-has:LOAD_GX_ARRIVE>到车确定</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('storage')" v-has:LOAD_GX_REPERTORY>到货入库</el-button>
-          <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deselectCar')" plain v-has:LOAD_GX_CANCEL>取消到车</el-button>
-          <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deleteStor')" plain v-has:LOAD_GX_CANCELREPE>取消入库</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('import')" plain v-has:LOAD_E1>导出批次</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_E2>导出配载</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_P1>打印配载清单</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-has:LOAD_GX_ARRIVE>到车确定</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('storage')" v-has:LOAD_GX_REPERTORY>到货入库</el-button>
+        <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deselectCar')" plain v-has:LOAD_GX_CANCEL>取消到车</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deleteStor')" plain v-has:LOAD_GX_CANCELREPE>取消入库</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('import')" plain v-has:LOAD_E1>导出批次</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_E2>导出配载</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_P1>打印配载清单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -27,14 +25,17 @@
             </el-table-column>
           </template>
         </el-table>
-
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <div class="info_tab_footer">共计:{{ total }}
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange" />
+        </div>
+      </div>
     </div>
-    <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
+    <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <!-- 实际发车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
 </template>
 <script>
@@ -100,11 +101,10 @@ export default {
           endDate: '', //
           beginDate: '', //
           arrivedbeginDate: '', //
-          arrivedEndDate: ''//
+          arrivedEndDate: '' //
         }
       },
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '序号',
           width: '70',
           fixed: true,
@@ -154,7 +154,7 @@ export default {
           prop: 'actualArrivetime',
           width: '160',
           fixed: false
-        },{
+        }, {
           label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
@@ -220,17 +220,17 @@ export default {
           width: '140',
           fixed: false
         }, {
-            label: '封签号',
-            prop: 'sealNumber',
-            width: '120',
-            fixed: false
-          },
-          {
-            label: '油卡号',
-            prop: 'oilCardNumber',
-            width: '120',
-            fixed: false
-          },{
+          label: '封签号',
+          prop: 'sealNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '油卡号',
+          prop: 'oilCardNumber',
+          width: '120',
+          fixed: false
+        }, {
           label: '现付运费(元)',
           prop: 'nowpayCarriage',
           width: '110',
@@ -337,8 +337,7 @@ export default {
       this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
       this.fetchData()
     },
-    showImport() {
-    },
+    showImport() {},
     doAction(type) {
       if (!this.selected.length && type !== 'import') {
         this.closeAddCustomer()
@@ -354,7 +353,7 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name:'干线到车'
+            name: '干线到车'
           })
           break
         case 'print':
@@ -390,12 +389,13 @@ export default {
         case 'deselectCar':
           this.closeAddCustomer()
 
-          let ids = this.selected.filter(el => {
-            return el.bathStatusName === '已到车'
-          }).map(el => {
-            return el.id
-          })
-          if (!ids.length) {
+          if (this.selected && this.selected.length > 1) {
+            this.$message.warning('只能选择一个批次取消到车')
+            this.$refs.multipleTable.clearSelection()
+            return
+          }
+          let id = ''
+          if (this.selected[0].bathStatusName !== '已到车') {
             const bathStatusName = this.selected[0].bathStatusName
             this.$message({
               message: '批次状态为：' + bathStatusName + '不允许取消到车~',
@@ -403,25 +403,22 @@ export default {
             })
             return false
           } else {
-            ids = ids.join(',')
+            id = this.selected[0].id
             this.$confirm('确定要取消到车？', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              postCancelLoad(ids, 39).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '已取消到车~'
-                })
-                this.fetchData()
+              postCancelLoad(id, 39).then(res => {
+                if (res) {
+                  this.$message({
+                    type: 'success',
+                    message: '已取消到车~'
+                  })
+                  this.fetchData()
+                }
               }).catch(err => {
                 this._handlerCatchMsg(err)
-              })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消'
               })
             })
           }
@@ -477,40 +474,39 @@ export default {
 
       }
       if (type !== 'sure') {
-
-      this.$refs.multipleTable.clearSelection()
+        this.$refs.multipleTable.clearSelection()
       }
     },
-    getActualTime (obj) {
+    getActualTime(obj) {
       this.closeAddCustomer()
-          if (this.selected.length > 1) {
+      if (this.selected.length > 1) {
+        this.$message({
+          message: '每次只能修改单条数据~',
+          type: 'warning'
+        })
+        return false
+      } else {
+        const id = this.selected[0].id
+        if (this.selected[0].bathStatusName === '在途中') {
+          postConfirmToCar(id, 54, obj.actualArrivetime).then(res => {
             this.$message({
-              message: '每次只能修改单条数据~',
-              type: 'warning'
+              type: 'success',
+              message: '到车确定成功~'
             })
-            return false
-          } else {
-            const id = this.selected[0].id
-            if (this.selected[0].bathStatusName === '在途中') {
-              postConfirmToCar(id, 54, obj.actualArrivetime).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '到车确定成功~'
-                })
-                this.fetchData()
-              }).catch(err => {
-                this._handlerCatchMsg(err)
-              })
-            } else {
-              this.closeAddCustomer()
-              const bathStatusName = this.selected[0].bathStatusName
-              this.$message({
-                message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
-                type: 'warning'
-              })
-              return false
-            }
-          }
+            this.fetchData()
+          }).catch(err => {
+            this._handlerCatchMsg(err)
+          })
+        } else {
+          this.closeAddCustomer()
+          const bathStatusName = this.selected[0].bathStatusName
+          this.$message({
+            message: '批次状态为：' + bathStatusName + '不允许做到车确定~',
+            type: 'warning'
+          })
+          return false
+        }
+      }
     },
     setTable() {
       this.setupTableVisible = true
@@ -556,4 +552,5 @@ export default {
     }
   }
 }
+
 </script>
