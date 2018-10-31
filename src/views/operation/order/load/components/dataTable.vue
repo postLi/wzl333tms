@@ -1,6 +1,6 @@
 <template>
   <transferTable>
-    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="regetList"></el-button>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
@@ -233,13 +233,6 @@ export default {
   },
   mounted() {
     this.getList()
-    // if (this.leftTable.length === 0) {
-    //   this.getList()
-    // }
-  },
-  activated() {
-
-    // this.getList()
   },
   methods: {
     countHandingFee() {
@@ -360,6 +353,9 @@ export default {
         //   this._handlerCatchMsg(err)
         // })
       }
+    },
+    regetList () {
+      this.$emit('reset')
     },
     getSearch(obj) { // 搜索
       this.leftTable = obj

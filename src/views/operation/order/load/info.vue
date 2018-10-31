@@ -69,7 +69,6 @@
                           </span>
                       </el-option>
                     </el-select>
-                    <!-- <selectType v-model="formModel.apportionTypeId" type="apportion_type" clearable size="mini" @change="getApportionTypeId"></selectType> -->
                   </el-form-item>
                 </div>
               </div>
@@ -78,18 +77,12 @@
                   <el-form-item label="可载体积" prop="truckVolume">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckVolume" ref="truckVolume" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckVolume')" />
                     <span class="input-append">方</span>
-                    <!-- <el-input size="mini" v-model="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8"> -->
-                    <!-- <template slot="append">方</template> -->
-                    <!-- </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
                     <span class="input-append" style="margin-left: -40px;">千克</span>
-                    <!-- <el-input size="mini" v-model="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
-                      <template slot="append">千克</template>
-                    </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
@@ -244,7 +237,17 @@
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" @repertoryList="getRepertoryList" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :handlingFeeInfo="handlingFeeInfo" @changeHandlingFeeAll="getHandingFeeAll" @resetHandlingFeeInfo="resetHandlingFeeInfo" :isRestorage="isRestorage"></dataTable>
+        <dataTable 
+        @loadTable="getLoadTable" 
+        @repertoryList="getRepertoryList" 
+        :setLoadTable="setLoadTableList" 
+        :isModify="isEdit" 
+        @change="getTableChange" 
+        :handlingFeeInfo="handlingFeeInfo" 
+        @changeHandlingFeeAll="getHandingFeeAll" 
+        @resetHandlingFeeInfo="resetHandlingFeeInfo" 
+        :isRestorage="isRestorage" 
+        @reset="getSelectAddLoadRepertoryList"></dataTable>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="formModel" :popVisible.sync="showRightTablePercent"></loadChart>
