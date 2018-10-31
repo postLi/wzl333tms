@@ -12,6 +12,12 @@ const tagsView = {
       } else {
         if (state.visitedViews.some(v => v.path === view.path)) return
       }
+      // 列表里没有该记录，查找本地存储，如果有记录需要先清除
+      if (sessionStorage.getItem(decodeURIComponent(view.fullPath))) {
+        sessionStorage.setItem(decodeURIComponent(view.fullPath), '')
+      }
+
+
       // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面
       if (view.meta.istab && state.visitedViews.some(v => v.title === view.meta.ptitle)) {
@@ -37,7 +43,7 @@ const tagsView = {
       if (!view.meta.noCache) {
         state.cachedViews.push(view.name)
         // state.cachedViews.push(view.fullPath)
-        console.log('state.cachedViews:',state.cachedViews)
+        console.log('state.cachedViews:', state.cachedViews)
       }
     },
     DEL_VISITED_VIEWS: (state, view) => {
@@ -76,22 +82,33 @@ const tagsView = {
     }
   },
   actions: {
-    addVisitedViews({ commit }, view) {
+    addVisitedViews({
+      commit
+    }, view) {
       commit('ADD_VISITED_VIEWS', view)
     },
-    delVisitedViews({ commit, state }, view) {
+    delVisitedViews({
+      commit,
+      state
+    }, view) {
       return new Promise((resolve) => {
         commit('DEL_VISITED_VIEWS', view)
         resolve([...state.visitedViews])
       })
     },
-    delOthersViews({ commit, state }, view) {
+    delOthersViews({
+      commit,
+      state
+    }, view) {
       return new Promise((resolve) => {
         commit('DEL_OTHERS_VIEWS', view)
         resolve([...state.visitedViews])
       })
     },
-    delAllViews({ commit, state }) {
+    delAllViews({
+      commit,
+      state
+    }) {
       return new Promise((resolve) => {
         commit('DEL_ALL_VIEWS')
         resolve([...state.visitedViews])

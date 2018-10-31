@@ -916,9 +916,10 @@ export default {
       data.customerList = data.customerList || []
       data.tmsOrderCargoList = data.tmsOrderCargoList || []
       data.tmsOrderShipInfo = data.tmsOrderShipInfo || {}
+
       // 设置运单信息
       for (const i in data.tmsOrderShipInfo) {
-        this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i]
+        this.form.tmsOrderShipInfo[i] = data.tmsOrderShipInfo[i] === null ? '' : data.tmsOrderShipInfo[i]
       }
       // 设置城市名称
       this.fromCityName = data.tmsOrderShipInfo.shipFromCityName || ''

@@ -14,7 +14,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="发车网点">
-            <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
+            <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible/>
         </el-form-item>
         <el-form-item label="对账网点">
           <SelectTree v-model="searchForm.arriveOrgid" :orgid="otherinfo.companyId" />

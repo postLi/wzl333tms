@@ -162,18 +162,18 @@
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
                     <input ref="tmsOrdercargoAmount" v-number-only size="mini" 
-                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="11" />
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="6" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="16"
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="11"
                   :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="8"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="7"
                   :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
@@ -937,7 +937,7 @@ export default {
         console.log('3333333333333333333')
         // 如果是弹窗才响应这个变化
         if (this.ispop) {
-          this.initIndex()
+          this.initIndex('orderobj')
         }
       },
       deep: true
@@ -995,13 +995,13 @@ export default {
     },
     'ispop'(newVal) {
       if (newVal) {
-        this.initIndex()
+        this.initIndex('ispop')
       }
     }
   },
   activated() {
     // if (this.ispop) {
-    this.initIndex()
+    this.initIndex('activated')
     // }
   },
   deactivated() {
@@ -1010,7 +1010,7 @@ export default {
   mounted() {
     this.loading = true
 
-    this.initIndex()
+    this.initIndex('mounted')
     this.getSelectType()
     this.getShipPayWay()
     // 中转默认付款方式
@@ -1316,6 +1316,7 @@ export default {
             },
             'tmsOrderCargoList': this.form.cargoList.map(el => {
               const a = {}
+              // a.cargoAmount = el.cargoAmount1 || el.cargoAmount || 0
               a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
               return a
             })
@@ -1343,8 +1344,9 @@ export default {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
       // 只有在库中且没有结算状态的才能修改创建时间
+      // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
       if (this.canChangeOrderDate && this.output.ismodify) {
-        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.ShipReceivableFeeStatus === 'NOSETTLEMENT')) {
+        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
 
         } else {
           this.canChangeOrderDate = false
@@ -1454,7 +1456,8 @@ export default {
     /**
      * 初始化各类情况
      */
-    initIndex() {
+    initIndex(whereAreYou) {
+      console.log('whereAreYou::', whereAreYou)
       // 1.判断有无运单id
       // 1.1 判断是否为修改
       // 1.1.1 判断是否已结算，设置可修改部分
@@ -1520,6 +1523,7 @@ export default {
     // 初始化运单
     initOrder() {
       this.output.ismodify = true
+      console.log('initOrder=initOrder=initOrder')
 
       const errFn = () => {
         this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
@@ -1929,7 +1933,12 @@ export default {
       }, 100)
     },
     detectCargoNumChange(index, name, event) {
-      this.form.cargoList[index][name] = event.target.value
+      // if (name === 'cargoAmount') {
+      //   this.form.cargoList[index][name] = event.target.value + ''
+      //   console.log('cargoAmount',this.form.cargoList[index][name])
+      // }else {
+        this.form.cargoList[index][name] = event.target.value
+      // }
       this.setCargoNum()
     },
     // 修改货品列表
@@ -2736,7 +2745,7 @@ export default {
 
                 if (!this.output.isbatch) {
                   if (this.isSaveAndNew) {
-                    this.initIndex()
+                    this.initIndex('isSaveAndNew')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
@@ -2779,7 +2788,7 @@ export default {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
                   if (this.isSaveAndNew) {
-                    this.initIndex()
+                    this.initIndex('isSaveAndNew -> 2')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)

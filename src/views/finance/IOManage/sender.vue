@@ -209,7 +209,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'收支方式'
 
           })
           this.$refs.multipleTable.clearSelection()

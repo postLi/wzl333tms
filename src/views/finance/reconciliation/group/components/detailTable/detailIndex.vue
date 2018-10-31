@@ -411,7 +411,9 @@
           query: {
             tab: '网点对账-修改查看',
             id: row.id,
-            urlId: this.$route.query.id
+            arriveOrgid: this.$route.query.arriveOrgid,
+            orgid: this.$route.query.orgid,
+            orgName: this.$route.query.orgName
           }
         })
       },

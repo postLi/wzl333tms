@@ -28,7 +28,7 @@
                 </div>
                 <div>
                   <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck" :maxlength="8">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -69,7 +69,6 @@
                           </span>
                       </el-option>
                     </el-select>
-                    <!-- <selectType v-model="formModel.apportionTypeId" type="apportion_type" clearable size="mini" @change="getApportionTypeId"></selectType> -->
                   </el-form-item>
                 </div>
               </div>
@@ -78,18 +77,12 @@
                   <el-form-item label="可载体积" prop="truckVolume">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckVolume" ref="truckVolume" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckVolume')" />
                     <span class="input-append">方</span>
-                    <!-- <el-input size="mini" v-model="formModel.truckVolume" @change="(val) => {changeTruckNum(val,'truckVolume')}" placeholder="可载体积" clearable v-number-only:point :maxlength="8"> -->
-                      <!-- <template slot="append">方</template> -->
-                    <!-- </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
                   <el-form-item label="可载重量" prop="truckLoad">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
                     <span class="input-append" style="margin-left: -40px;">千克</span>
-                    <!-- <el-input size="mini" v-model="formModel.truckLoad" @change="(val) => {changeTruckNum(val,'truckLoad')}" placeholder="可载重量" clearable v-number-only:point :maxlength="8">
-                      <template slot="append">千克</template>
-                    </el-input> -->
                   </el-form-item>
                 </div>
                 <div>
@@ -110,8 +103,8 @@
                 </div>
                 <div>
                   <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40">
-                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
-                     <span class="input-append">元</span>
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
+                    <span class="input-append">元</span>
                     <!-- <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input> -->
                   </el-form-item>
                   <el-form-item label="备注" v-else>
@@ -244,7 +237,17 @@
       </div>
       <div class="load_btn_transferTable">
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" :handlingFeeInfo="handlingFeeInfo" @changeHandlingFeeAll="getHandingFeeAll" @resetHandlingFeeInfo="resetHandlingFeeInfo"></dataTable>
+        <dataTable 
+        @loadTable="getLoadTable" 
+        @repertoryList="getRepertoryList" 
+        :setLoadTable="setLoadTableList" 
+        :isModify="isEdit" 
+        @change="getTableChange" 
+        :handlingFeeInfo="handlingFeeInfo" 
+        @changeHandlingFeeAll="getHandingFeeAll" 
+        @resetHandlingFeeInfo="resetHandlingFeeInfo" 
+        :isRestorage="isRestorage" 
+        @reset="getSelectAddLoadRepertoryList"></dataTable>
       </div>
       <!-- 配载率 -->
       <loadChart :info="loadInfoPercent" :truckInfo="formModel" :popVisible.sync="showRightTablePercent"></loadChart>
@@ -272,6 +275,9 @@ import loadChart from './components/loadChart'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import actualSendtime from './components/actualSendtimeDialog'
+import { postAllshortDepartList } from '@/api/operation/shortDepart'
+import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
+import { postSelectLoadMainInfoListDeliver } from '@/api/operation/deliverManage'
 export default {
   // name: 'orderload',
   data() {
@@ -322,6 +328,18 @@ export default {
         handlingFeeAll: null,
         apportionTypeId: null
       },
+      searchQueryData: {
+        pageSize: 100,
+        currentPage: 1,
+        vo: {
+          orgId: '',
+          loadTypeId: '',
+          batchTypeId: '',
+          truckIdNumber: '',
+          dirverName: ''
+        }
+      },
+      // arriveOrgid: '',
       timeInfoVisible: false,
       apportionTypeList: [],
       driverKey: 0,
@@ -337,7 +355,8 @@ export default {
         orgid: '',
         dirverName: '',
         dirverMobile: '',
-        truckIdNumber: ''
+        truckIdNumber: '',
+        arriveOrgid: ''
         // truckLoad: '',
         // truckVolume: ''
       },
@@ -362,9 +381,10 @@ export default {
         left: [],
         right: []
       },
-      // orgData: {},
+      orgData: {},
       isEdit: false,
       isModify: false,
+      repertoryList: [],
       addTruckVisible: false,
       truckSources: [],
       truckTypes: [],
@@ -393,6 +413,7 @@ export default {
         dirverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }]
         // truckVolume: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
+      isRestorage: false,
       formFeeRules: {
         // nowpayCarriage: [{ trigger: 'blur', validator: validateBigDecimal }],
         // nowpayOilCard: [{ trigger: 'blur', validator: validateBigDecimal }],
@@ -414,7 +435,8 @@ export default {
       'otherinfo'
     ]),
     arriveOrgid(newVal) {
-      this.formModel.arriveOrgid = newVal
+      this.$set(this.formModel, 'arriveOrgid', newVal)
+      // this.formModel.arriveOrgid = newVal
     },
     orgid() {},
     loadInfoPercent() {
@@ -427,14 +449,13 @@ export default {
     typeid() {
       return Number(this.$route.query.loadTypeId)
     },
-    loadTypeId() {
-      return Number(this.$route.query.loadTypeId)
-    },
-    orgData: {
+    loadTypeId: {
       get() {
-        return this.$route.query.info
+        return Number(this.$route.query.loadTypeId)
       },
-      set() {}
+      set() {
+
+      }
     },
     totalFormFee: {
       get() {
@@ -458,24 +479,120 @@ export default {
     this.setLoadTypeId()
   },
   mounted() {
-    this.getSelectType()
-    this.init()
-    this.getSystemTime()
+    // this.getSelectType()
+    // this.init()
+    // this.getSystemTime()
   },
   activated() {
-    // this.init()
     this.getSystemTime()
   },
+  watch: {
+    '$route':{
+      handler(to, from) {
+        const bothBool = false
+        if (to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
+          // 1
+          // 3
+          if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
+            this.switchUrl(from.fullPath, true)
+          }
+          this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
+        } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent')<0) {
+          // 2
+          // 4
+          this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
+        } else {
+          // this.getSelectType()
+          // this.init()
+          // this.getSystemTime()
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
+    switchUrl(path, issave) {
+      const visited = this.visitedViews().filter(el => el.fullPath === path)
+      path = decodeURIComponent(path)
+      let data = {
+        truckMessage: this.truckMessage,
+        contractNo: this.contractNo,
+        formModel: this.formModel,
+        formFee: this.formFee,
+        apportionTypeList: this.apportionTypeList,
+        loadTable: {
+          left: this.repertoryList,
+          right: this.loadTableInfo
+        }
+      }
+      if (issave) {
+        // save data 离开配载页面时需要缓存当前配载页面的数据进sessionStorage
+        console.log('save daTA::::::', path)
+        sessionStorage.setItem(path, JSON.stringify(data))
+        this.loadTableInfo = []
+        this.repertoryList = []
+        this.apportionTypeList = []
+        this.formFee = objectMerge2({}, this.$options.data().orgData)
+        this.formModel = objectMerge2({}, this.$options.data().formModel)
+        this.$refs['formModel'].resetFields()
+      } else {
+        // read data
+        if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
+          console.log('ssssssss22222222222222')
+          data = sessionStorage.getItem(path)
+          if (data) {
+            data = JSON.parse(data)
+            // 初始化前需要重置所有有变更的变量
+            if (this.$route.query.flag) {
+              this.isEdit = true
+            } else {
+              this.isEdit = false
+            }
+            this.isRestorage = true
+            // render data
+            console.log('render data', data)
+            this.formModel = data.formModel
+            this.formFee = data.formFee
+            this.$set(this.setLoadTableList, 'left', data.loadTable.left)
+            this.$set(this.setLoadTableList, 'right', data.loadTable.right)
+            this.apportionTypeList = data.apportionTypeList
+            this.truckMessage = data.truckMessage // 批次号
+            this.contractNo = data.contractNo // 合同编号
+          } else {
+            this.isRestorage = false
+            // normal render
+            this.getSelectType()
+            this.init()
+            this.getSystemTime()
+          }
+        } else {
+          this.isRestorage = false
+          // normal render
+          this.getSelectType()
+          this.init()
+          this.getSystemTime()
+        }
+      }
+    },
+    visitedViews() {
+      return this.$store.state.tagsView.visitedViews
+    },
     init() {
       this.formModel = this.$options.data().formModel
-      this.$refs['formModel'].resetFields()
+      this.$refs['formModel'] && this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
-      this.initIsEdit()
-      this.formModel.orgid = this.orgid
-      this.DriverList = this.Drivers
-      this.TruckList = this.Trucks
-      this.getSelectAddLoadRepertoryList()
+      this.setLoadTableList = {
+        left: [],
+        right: []
+      }
+      this.initIsEdit().then(res => {
+        this.formModel.orgid = this.orgid
+        this.DriverList = this.Drivers
+        this.TruckList = this.Trucks
+        console.log('isEdit', this.isEdit)
+        this.getSelectAddLoadRepertoryList()
+      })
+
       if (!this.inited) {
         this.inited = true
         this.initInfo()
@@ -484,6 +601,9 @@ export default {
     getTableChange(obj) {
       this.loadInfoPercentOrg = objectMerge2([], obj)
       this.loadTableInfo = obj
+    },
+    getRepertoryList(list) {
+      this.repertoryList = list
     },
     /**
      * load_type_id：配载类型（字典表38-40）
@@ -516,70 +636,117 @@ export default {
         this.batchTypeIdFinishTruck = 48 // 配载并发车
       }
     },
+    setOrgData() {
+      console.log('initIsEdit3', this.$route.query.loadTypeId)
+      this.searchQueryData.vo.orgId = this.otherinfo.orgid
+      const loadTypeId = Number(this.$route.query.loadTypeId)
+      let pro
+      switch (loadTypeId) {
+        case 38:
+          console.log('initIsEdit4')
+          this.searchQueryData.vo.loadTypeId = 38
+          this.searchQueryData.vo.batchTypeId = 46
+          this.searchQueryData.vo.batchNo = this.$route.query.flag
+          pro = postAllshortDepartList(this.searchQueryData).then(data => {
+            this.orgData = objectMerge2({}, data.list[0])
+            console.log(data.list[0], this.orgData)
+            this.setAfterOrgData()
+          })
+          break
+        case 39:
+          this.searchQueryData.vo.loadTypeId = 39
+          this.searchQueryData.vo.batchNo = this.$route.query.flag
+          pro = postSelectLoadMainInfoList(this.searchQueryData).then(data => {
+            if (data) {
+              this.orgData = objectMerge2({}, data.list[0])
+              this.setAfterOrgData()
+            }
+          })
+          break
+        case 40:
+          this.searchQueryData.vo.loadTypeId = 40
+          this.searchQueryData.vo.batchTypeId = 56
+          this.searchQueryData.vo.batchNo = this.$route.query.flag
+          pro = postSelectLoadMainInfoListDeliver(this.searchQueryData).then(data => {
+            if (data) {
+              this.orgData = objectMerge2({}, data.list[0])
+              this.setAfterOrgData()
+            }
+          })
+          break
+      }
+      return pro
+    },
+    setAfterOrgData() {
+      // this.isEdit = true
+      this.truckMessage = this.orgData.batchNo
+      this.contractNo = this.orgData.contractNo ? this.orgData.contractNo : null
+      // formModel 数据
+      const data = {}
+      data.id = this.orgData.id
+      data.orgid = this.orgData.orgid
+      data.batchNo = this.orgData.batchNo
+      data.arriveOrgid = this.orgData.arriveOrgid
+      data.loadTypeId = this.loadTypeId
+      data.batchTypeId = this.batchTypeIdFinish
+      data.apportionTypeId = this.orgData.apportionTypeId
+      data.truckIdNumber = this.orgData.truckIdNumber
+      data.dirverName = this.orgData.dirverName
+      data.dirverMobile = this.orgData.dirverMobile
+      data.truckLoad = this.orgData.truckLoad
+      data.truckVolume = this.orgData.truckVolume
+      data.loadTime = this.orgData.loadTime
+      data.shortFee = this.orgData.shortFee
+      data.requireArrivedTime = this.orgData.requireArrivedTime
+      data.planArrivedTime = this.orgData.planArrivedTime
+      data.remark = this.orgData.remark
+      data.deliveryDetailFee = this.orgData.deliveryDetailFee // 送货费 40-送货管理修改的时候用
+      data.deliveryHandlingFee = this.orgData.deliveryHandlingFee
+      data.handlingFeeAll = this.orgData.handlingFeeAll
+      this.formModel = objectMerge2({}, data)
+      this.handlingFeeInfo.apportionTypeId = this.orgData.apportionTypeId
+      this.handlingFeeInfo.handlingFeeAll = this.orgData.handlingFeeAll
+      // formFee 数据
+      const dataFee = {}
+      dataFee.nowpayCarriage = this.orgData.nowpayCarriage
+      dataFee.nowpayOilCard = this.orgData.nowpayOilCard
+      dataFee.backpayCarriage = this.orgData.backpayCarriage
+      dataFee.backpayOilCard = this.orgData.backpayOilCard
+      dataFee.arrivepayCarriage = this.orgData.arrivepayCarriage
+      dataFee.arrivepayOilCard = this.orgData.arrivepayOilCard
+      dataFee.carloadInsuranceFee = this.orgData.carloadInsuranceFee
+      dataFee.leaveHandlingFee = this.orgData.leaveHandlingFee
+      dataFee.leaveOtherFee = this.orgData.leaveOtherFee
+      dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
+      dataFee.arriveOtherFee = this.orgData.arriveOtherFee
+      dataFee.sealNumber = this.orgData.sealNumber
+      dataFee.oilCardNumber = this.orgData.oilCardNumber
+      this.formFee = objectMerge2({}, dataFee)
+    },
     initIsEdit() {
       this.orgData = objectMerge2({}, this.$options.data().orgData)
       this.formFee = objectMerge2({}, this.$options.data().orgData)
-
-      if (this.$route.query.info) {
-        this.orgData = this.$route.query.info
+      if (this.$route.query.flag) {
         this.isEdit = true
-        this.truckMessage = this.orgData.batchNo
-        this.contractNo = this.orgData.contractNo
-        // formModel 数据
-        const data = {}
-        data.id = this.orgData.id
-        data.orgid = this.orgData.orgid
-        data.batchNo = this.orgData.batchNo
-        data.arriveOrgid = this.orgData.arriveOrgid
-        data.loadTypeId = this.loadTypeId
-        data.batchTypeId = this.batchTypeIdFinish
-        data.apportionTypeId = this.orgData.apportionTypeId
-        data.truckIdNumber = this.orgData.truckIdNumber
-        data.dirverName = this.orgData.dirverName
-        data.dirverMobile = this.orgData.dirverMobile
-        data.truckLoad = this.orgData.truckLoad
-        data.truckVolume = this.orgData.truckVolume
-        data.loadTime = this.orgData.loadTime
-        data.shortFee = this.orgData.shortFee
-        data.requireArrivedTime = this.orgData.requireArrivedTime
-        data.planArrivedTime = this.orgData.planArrivedTime
-        data.remark = this.orgData.remark
-        data.deliveryDetailFee = this.orgData.deliveryDetailFee // 送货费 40-送货管理修改的时候用
-        data.deliveryHandlingFee = this.orgData.deliveryHandlingFee
-        data.handlingFeeAll = this.orgData.handlingFeeAll
-        this.formModel = objectMerge2({}, data)
-        this.handlingFeeInfo.apportionTypeId = this.orgData.apportionTypeId
-        this.handlingFeeInfo.handlingFeeAll = this.orgData.handlingFeeAll
-        // formFee 数据
-        const dataFee = {}
-        dataFee.nowpayCarriage = this.orgData.nowpayCarriage
-        dataFee.nowpayOilCard = this.orgData.nowpayOilCard
-        dataFee.backpayCarriage = this.orgData.backpayCarriage
-        dataFee.backpayOilCard = this.orgData.backpayOilCard
-        dataFee.arrivepayCarriage = this.orgData.arrivepayCarriage
-        dataFee.arrivepayOilCard = this.orgData.arrivepayOilCard
-        dataFee.carloadInsuranceFee = this.orgData.carloadInsuranceFee
-        dataFee.leaveHandlingFee = this.orgData.leaveHandlingFee
-        dataFee.leaveOtherFee = this.orgData.leaveOtherFee
-        dataFee.arriveHandlingFee = this.orgData.arriveHandlingFee
-        dataFee.arriveOtherFee = this.orgData.arriveOtherFee
-        dataFee.sealNumber = this.orgData.sealNumber
-        dataFee.oilCardNumber = this.orgData.oilCardNumber
-        this.formFee = objectMerge2({}, dataFee)
+        return this.setOrgData()
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)
         this.isEdit = false
-        this.getLoadNo()
+        return this.getLoadNo()
       }
     },
     getLoadNo() {
-      getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-          this.truckMessage = data.text // 批次号
-          this.contractNo = data.text // 合同编号？？？？？
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
+      // if (this.loadTypeId) {
+        return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
+            this.truckMessage = data.text // 批次号
+            this.contractNo = data.text // 合同编号？？？？？
+          })
+          .catch(err => {
+            this._handlerCatchMsg(err)
+          })
+      // }else {
+      //   return
+      // }
     },
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
@@ -592,18 +759,21 @@ export default {
       }
     },
     getSelectAddLoadRepertoryList() { // 获取列表
+      this.loading = true
       if (this.isEdit) {
         this.getUpdateRepertoryLeft()
         this.getUpdateRepertoryRight()
       } else {
         this.$set(this.setLoadTableList, 'left', [])
-        // getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-        //     this.leftTable = data.data
-        //     console.log('不修改 ')
-        //   })
-        //   .catch(err => {
-        //     this._handlerCatchMsg(err)
-        //   })
+        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+            this.setLoadTableList.left = data.data
+            this.loading = false
+            console.log('不修改 ')
+          })
+          .catch(err => {
+            this.loading = false
+            this._handlerCatchMsg(err)
+          })
       }
     },
     changeTableKey() {
@@ -662,7 +832,7 @@ export default {
       })
     },
     gotoPage() { // 操作成功后跳转回到配载列表页面
-       this.eventBus.$emit('closeCurrentView')
+      this.eventBus.$emit('closeCurrentView')
       switch (this.loadTypeId) {
         case 38: // 短驳
           this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() } })
@@ -804,8 +974,8 @@ export default {
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
-      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
-        let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
+      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee
+        const total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryDetailFee', this.formModel.deliveryDetailFee)
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
@@ -836,8 +1006,8 @@ export default {
       this.loadInfo.tmsOrderLoadFee = objectMerge2({}, this.formFee)
       this.loadInfo.tmsOrderLoad = objectMerge2({}, this.formModel)
       this.loadInfo.tmsOrderLoadDetailsList = objectMerge2([], this.loadTableInfo)
-      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee 
-        let total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
+      if (this.loadTypeId === 40) { // 送货费deliveryFee = 送货费deliveryDetailFee + 装卸费deliveryHandlingFee
+        const total = tmsMath.add(this.formModel.deliveryDetailFee, this.formModel.deliveryHandlingFee).result()
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryFee', total)
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryDetailFee', this.formModel.deliveryDetailFee)
         this.$set(this.loadInfo.tmsOrderLoadFee, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
@@ -858,12 +1028,14 @@ export default {
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
+        this.loading = true
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-            this.$set(this.setLoadTableList, 'left', data.data)
-            // this.setLoadTableList.left = objectMerge2([], data.data)
+            this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
             console.log('修改ing左边列表', this.setLoadTableList.left)
+            this.loading = false
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       }
@@ -910,7 +1082,6 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
-      console.log('刷新了下拉数据')
     },
     getDrivers(orgid) {
       if (this.cacheDriverList[orgid]) {
@@ -973,19 +1144,8 @@ export default {
         }
       }
     },
-    blurTruck() { // 车牌输入框失去响应时
-      const data = ''
-      // this.Trucks.find(el => {
-      //   if (this.formModel.truckIdNumber === el.truckIdNumber) {
-      //     this.formModel.truckIdNumber = el.truckIdNumber
-      //   } else {
-      //     this.formModel.truckIdNumber = undefined
-      //   }
-      // })
-    },
     blurDriver() { // 司机输入框失去响应时
       this.Drivers.forEach(el => {
-        console.log(this.formModel.dirverName, el.driverName, this.isDriverSelect)
         if (this.formModel.dirverName === el.driverName) {
           this.formModel.dirverName = el.driverName
         } else {
@@ -1004,7 +1164,6 @@ export default {
             this.apportionTypeList.forEach((e, index) => {
               this.$set(e, 'descript', this.apportionTypeDescript[index])
             })
-            console.log('apportionTypeList', this.apportionTypeList)
           }
         })
         .catch(err => {
@@ -1028,11 +1187,9 @@ export default {
     getHandingFeeAll(value) {
       this.$set(this.formModel, 'handlingFeeAll', value)
     },
-    resetHandlingFeeInfo (value) {
-      console.log( 'resetHandlingFeeInfo',value)
+    resetHandlingFeeInfo(value) {
       this.$set(this.formModel, 'apportionTypeId', value.apportionTypeId)
       this.$set(this.handlingFeeInfo, 'apportionTypeId', value.apportionTypeId)
-      
     }
   }
 }
@@ -1111,7 +1268,7 @@ export default {
       display: flex;
       flex-direction: row;
       margin-bottom: -10px;
-      .input-append{
+      .input-append {
         position: absolute;
         left: 100%;
         top: 0;
@@ -1122,9 +1279,9 @@ export default {
       .el-input {
         width: 210px;
       }
-      .nativeinput{
+      .nativeinput {
         width: 210px;
-        border: 1px solid #dcdfe6; 
+        border: 1px solid #dcdfe6;
         border-radius: 4px;
       }
       .el-input-group__append,

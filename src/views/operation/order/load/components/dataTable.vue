@@ -1,6 +1,6 @@
 <template>
   <transferTable>
-    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="regetList"></el-button>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
       <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
@@ -152,7 +152,6 @@ export default {
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
-      loading: false,
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],
@@ -177,6 +176,10 @@ export default {
     handlingFeeInfo: {
       type: Object,
       default: () => {}
+    },
+    isRestorage: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -206,7 +209,9 @@ export default {
         if (cval) {
           console.log('setLoadTable', cval)
           this.orgData = objectMerge2({}, cval)
+          // if (!this.isRestorage) {
           this.getList()
+          // }
         }
       },
       deep: true
@@ -228,18 +233,14 @@ export default {
   },
   mounted() {
     this.getList()
-    // if (this.leftTable.length === 0) {
-    //   this.getList()
-    // }
-  },
-  activated() {
-
-    // this.getList()
   },
   methods: {
     countHandingFee() {
+      if (!this.handlingFeeInfo.apportionTypeId || !this.handlingFeeInfo.handlingFeeAll || this.rightTable.length < 1) {
+        return
+      }
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: // 按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
           let totalShipTotalFee = 0 // 总运费合计
           this.rightTable.forEach(e => {
@@ -247,7 +248,7 @@ export default {
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
           })
           this.rightTable.forEach((e, index) => {
-            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            const sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
             if (sub < 0) { // 当前运单 回扣比运费合计多的话 就设置为0 不小于0
               e.handlingFee = 0
             } else {
@@ -291,7 +292,7 @@ export default {
 
       let count = 0
       let countFeeZero = 0
-      let listLen = this.rightTable.length
+      const listLen = this.rightTable.length
 
       this.rightTable.forEach((e, index) => {
         count = tmsMath._add(count, e.handlingFee)
@@ -324,7 +325,7 @@ export default {
       return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)
     },
     getList() {
-      console.log('getList1')
+      console.log('getList1', this.isModify)
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
       this.orgLeftTable = this.$options.data().orgLeftTable
@@ -334,17 +335,27 @@ export default {
         this.rightTable = this.orgData.right
         this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       } else {
         console.log('getList3')
-        getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-          this.leftTable = data.data
-          this.orgLeftTable = data.data
-          this.$emit('loadTable', this.rightTable)
-        }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
-        })
+        this.leftTable = this.orgData.left
+        this.rightTable = this.orgData.right
+        this.orgLeftTable = this.orgData.left
+        this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
+        // getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
+        //   this.leftTable = data.data
+        //   this.orgLeftTable = data.data
+        //   this.$emit('loadTable', this.rightTable)
+        //   this.$emit('repertoryList', this.orgLeftTable)
+        // }).catch((err) => {
+        //   this.loading = false
+        //   this._handlerCatchMsg(err)
+        // })
       }
+    },
+    regetList () {
+      this.$emit('reset')
     },
     getSearch(obj) { // 搜索
       this.leftTable = obj
@@ -366,7 +377,7 @@ export default {
     },
     doAction(type) {
       switch (type) {
-        case 'goLeft': // 左边数据勾选到右边 
+        case 'goLeft': // 左边数据勾选到右边
           this.goLeft()
           break
         case 'goRight': // 右边数据勾选到左边
@@ -410,6 +421,7 @@ export default {
         this.countHandingFee()
       }
       this.$emit('loadTable', this.rightTable)
+      this.$emit('repertoryList', this.orgLeftTable)
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
     },
     changHandlingFee(index, newVal) {
@@ -450,6 +462,7 @@ export default {
         }
         console.log('rightTable', this.rightTable.length, this.rightTable)
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       }
     },
     goRight() { // 数据从右边穿梭到左边
@@ -477,6 +490,7 @@ export default {
           this.countHandingFee()
         }
         this.$emit('loadTable', this.rightTable)
+        this.$emit('repertoryList', this.orgLeftTable)
       }
     },
     addItem(row, index) { // 添加单行

@@ -16,7 +16,11 @@ export default {
       userinfo: {}
     }
   },
+  activated() {
+    console.log('createOrder22----111111111')
+  },
   mounted() {
+    console.log('createOrder22----1222222222')
   }
 }
 </script>

@@ -5,13 +5,13 @@
       <div class="btns_box">
 
         <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="doAction('storage')"
-                   v-has:FINANCE_CARRIERDETAIL>对账明细
+                   v-has:FINANCE_ORGFEE_DETAIL>对账明细
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
-                   v-has:FINANCE_CARRIERPRI>导出
+                   v-has:FINANCE_ORGFEE_EXPORT>导出
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain
-                   v-has:FINANCE_CARRIEREXP>打印
+                   v-has:FINANCE_ORGFEE_PRINT>打印
         </el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
@@ -51,13 +51,13 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {postGroupList} from '@/api/finance/fin_group'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { postGroupList } from '@/api/finance/fin_group'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     components: {
@@ -121,12 +121,6 @@
             width: '200',
             fixed: true
           },
-          // {
-          //   label: '发车时间',
-          //   prop: 'carrierMobile',
-          //   width: '220',
-          //   fixed: false
-          // },
           {
             label: '已收（应收）',
             prop: 'recFee',
@@ -219,7 +213,7 @@
                 tab: '网点对账-对账明细',
                 arriveOrgid: this.selected[0].arriveOrgid,
                 orgid: this.selected[0].orgid,
-                orgName: this.selected[0].orgName
+                orgName: this.selected[0].arriveOrgName
                 // orgid: this.searchQuery.vo.orgid
               }
             })
@@ -254,7 +248,7 @@
             tab: '网点对账-对账明细',
             arriveOrgid: row.arriveOrgid,
             orgid: row.orgid,
-            orgName: row.orgName
+            orgName: row.arriveOrgName
             // id: row.carrierId
           }
         })

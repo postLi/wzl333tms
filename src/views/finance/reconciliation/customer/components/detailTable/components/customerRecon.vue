@@ -1200,7 +1200,7 @@
         // console.log(JSON.stringify(this.form))
         SaveAsFileCustomer({
           data: objectMerge2({}, this.form),
-          name: '新建对账'
+          name: '客户对账'
         })
       },
       fetchList() {

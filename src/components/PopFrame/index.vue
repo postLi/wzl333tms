@@ -38,10 +38,13 @@ export default {
     }
   },
   watch: {
-    isShow() {
-      if (this.isShow) {
-        this.shouldRender = true
-      }
+    isShow: {
+      handler() {
+        if (this.isShow) {
+          this.shouldRender = true
+        }
+      },
+      immediate: true
     }
   },
   data() {

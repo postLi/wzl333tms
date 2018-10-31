@@ -360,7 +360,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'干线发车'
           })
           break
           // 打印
@@ -389,7 +390,7 @@ export default {
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载'}}) // 38-短驳 39-干线 40-送货
           console.log(this.$router)
           break
           // 添加客户
@@ -424,7 +425,7 @@ export default {
               return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo }})
             }
           }
           break
@@ -465,7 +466,7 @@ export default {
                 })
                 this.fetchData()
                 }
-                
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
@@ -511,7 +512,7 @@ export default {
                 })
                 this.fetchData()
                 }
-                
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
@@ -531,7 +532,7 @@ export default {
       if (type !=='depart') {
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
-        
+
       }
     },
     getActualTime (obj) { // 发车

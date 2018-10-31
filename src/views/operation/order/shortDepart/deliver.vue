@@ -272,7 +272,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' } })
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳'} })
           break
         case 'truck': // 发车
           if (isWork) {
@@ -489,7 +489,7 @@ export default {
     edit() { // 修改
       const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' } })
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳', flag: this.selectedData.batchNo } })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

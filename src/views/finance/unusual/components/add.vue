@@ -181,7 +181,8 @@ export default {
   data() {
     const _this = this
     const validatefee = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
+      console.log('fee', value, typeof value)
+      if (!value) {
         callback(new Error('请输异动费用'))
       } else if (REGEX.Number_point.test(value)) {
         callback()
@@ -523,7 +524,7 @@ export default {
       }) */
     },
     submitForm(ruleForm) {
-      console.log(6666, this.info.id)
+      console.log(6666, this.info.id, this.form)
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.loading = true
