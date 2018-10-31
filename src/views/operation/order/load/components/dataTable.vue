@@ -211,7 +211,7 @@ export default {
           console.log('setLoadTable', cval)
           this.orgData = objectMerge2({}, cval)
           // if (!this.isRestorage) {
-            this.getList()
+          this.getList()
           // }
         }
       },
@@ -248,7 +248,7 @@ export default {
         return
       }
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: // 按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
           let totalShipTotalFee = 0 // 总运费合计
           this.rightTable.forEach(e => {
@@ -256,7 +256,7 @@ export default {
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
           })
           this.rightTable.forEach((e, index) => {
-            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            const sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
             if (sub < 0) { // 当前运单 回扣比运费合计多的话 就设置为0 不小于0
               e.handlingFee = 0
             } else {
@@ -300,7 +300,7 @@ export default {
 
       let count = 0
       let countFeeZero = 0
-      let listLen = this.rightTable.length
+      const listLen = this.rightTable.length
 
       this.rightTable.forEach((e, index) => {
         count = tmsMath._add(count, e.handlingFee)
@@ -347,7 +347,7 @@ export default {
       } else {
         console.log('getList3')
         this.leftTable = this.orgData.left
-        this.rightTable = []
+        this.rightTable = this.orgData.right
         this.orgLeftTable = this.orgData.left
         this.$emit('loadTable', this.rightTable)
         this.$emit('repertoryList', this.orgLeftTable)
@@ -382,7 +382,7 @@ export default {
     },
     doAction(type) {
       switch (type) {
-        case 'goLeft': // 左边数据勾选到右边 
+        case 'goLeft': // 左边数据勾选到右边
           this.goLeft()
           break
         case 'goRight': // 右边数据勾选到左边
