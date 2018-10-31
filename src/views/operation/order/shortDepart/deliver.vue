@@ -272,7 +272,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳',timer: new Date().getTime() } })
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳'} })
           break
         case 'truck': // 发车
           if (isWork) {

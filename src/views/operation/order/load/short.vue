@@ -28,7 +28,7 @@
                 </div>
                 <div>
                   <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
-                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" @blur="blurTruck" :maxlength="8">
+                    <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
                       <template slot-scope="{ item }">
                         <div class="name">{{ item.truckIdNumber }}</div>
@@ -484,7 +484,7 @@ export default {
     this.getSystemTime()
   },
   watch: {
-    '$route'(to, from) {
+    '$route' (to, from) {
       const bothBool = false
       if (to.path.indexOf('/operation/order/load') !== -1) {
         // 1
@@ -526,9 +526,9 @@ export default {
         this.loadTableInfo = []
         this.repertoryList = []
         this.apportionTypeList = []
-        // this.orgData = objectMerge2({}, this.$options.data().orgData)
         this.formFee = objectMerge2({}, this.$options.data().orgData)
         this.formModel = objectMerge2({}, this.$options.data().formModel)
+        this.$refs['formModel'].resetFields()
       } else {
         // read data
         if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
@@ -545,7 +545,6 @@ export default {
             console.log('render data', data)
             this.formModel = data.formModel
             this.formFee = data.formFee
-            // this.setLoadTableList = data.loadTable
             this.$set(this.setLoadTableList, 'left', data.loadTable.left)
             this.$set(this.setLoadTableList, 'right', data.loadTable.right)
             this.apportionTypeList = data.apportionTypeList
@@ -719,12 +718,9 @@ export default {
     initIsEdit() {
       this.orgData = objectMerge2({}, this.$options.data().orgData)
       this.formFee = objectMerge2({}, this.$options.data().orgData)
-      console.log('initIsEdit1')
       if (this.$route.query.flag) {
         this.isEdit = true
         return this.setOrgData()
-
-        console.log('initIsEdit2', this.orgData)
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)
         this.isEdit = false
@@ -732,13 +728,17 @@ export default {
       }
     },
     getLoadNo() {
-      return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-        this.truckMessage = data.text // 批次号
-        this.contractNo = data.text // 合同编号？？？？？
-      })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
+      if (this.loadTypeId) {
+        return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
+            this.truckMessage = data.text // 批次号
+            this.contractNo = data.text // 合同编号？？？？？
+          })
+          .catch(err => {
+            this._handlerCatchMsg(err)
+          })
+      }else {
+        return
+      }
     },
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
@@ -757,10 +757,9 @@ export default {
       } else {
         this.$set(this.setLoadTableList, 'left', [])
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-          this.setLoadTableList.left = data.data
-          console.log('getSelectAddLoadRepertoryList:', this.setLoadTableList, data.data)
-          console.log('不修改 ')
-        })
+            this.setLoadTableList.left = data.data
+            console.log('不修改 ')
+          })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -825,15 +824,15 @@ export default {
       this.eventBus.$emit('closeCurrentView')
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() }})
+          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() }})
+          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() }})
+          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() } })
           this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
@@ -850,13 +849,13 @@ export default {
             this.loading = true
             console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
-              this.loading = false
-              this.$message({ type: 'success', message: '修改配载信息成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage() // 操作成功后跳转到配载列表页面
+                this.loading = false
+                this.$message({ type: 'success', message: '修改配载信息成功' })
+                this.resetFieldsForm()
+                this.$nextTick(() => {
+                  this.gotoPage() // 操作成功后跳转到配载列表页面
+                })
               })
-            })
               .catch(err => {
                 this.loading = false
                 this._handlerCatchMsg(err)
@@ -865,13 +864,13 @@ export default {
             console.log('这里是添加完成配载', this.loadInfo)
             this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
-              this.loading = false
-              this.$message({ type: 'success', message: '插入配载信息成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage()
+                this.loading = false
+                this.$message({ type: 'success', message: '插入配载信息成功' })
+                this.resetFieldsForm()
+                this.$nextTick(() => {
+                  this.gotoPage()
+                })
               })
-            })
               .catch(err => {
                 this.loading = false
                 this._handlerCatchMsg(err)
@@ -894,13 +893,13 @@ export default {
           this.loading = true
           this.$set(this.loadInfo.tmsOrderLoad, 'actualSendtime', obj.actualSendtime)
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
-            this.loading = false
-            this.$message({ type: 'success', message: '保存成功' })
-            this.resetFieldsForm()
-            this.$nextTick(() => {
-              this.gotoPage() // 操作成功后跳转到配载列表页面
+              this.loading = false
+              this.$message({ type: 'success', message: '保存成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage() // 操作成功后跳转到配载列表页面
+              })
             })
-          })
             .catch(err => {
               this.loading = false
               this._handlerCatchMsg(err)
@@ -926,7 +925,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
       } else {}
       this.init()
     },
@@ -1019,9 +1018,9 @@ export default {
       console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
-          console.log('修改ing左边列表', this.setLoadTableList.left)
-        })
+            this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
+            console.log('修改ing左边列表', this.setLoadTableList.left)
+          })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -1032,10 +1031,10 @@ export default {
       console.log('right', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
-          this.$set(this.setLoadTableList, 'right', data.data)
+            this.$set(this.setLoadTableList, 'right', data.data)
             // this.setLoadTableList.right = objectMerge2([], data.data)
-          console.log('修改ing右边列表', this.setLoadTableList.right)
-        })
+            console.log('修改ing右边列表', this.setLoadTableList.right)
+          })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -1069,7 +1068,6 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
-      console.log('刷新了下拉数据')
     },
     getDrivers(orgid) {
       if (this.cacheDriverList[orgid]) {
@@ -1086,9 +1084,9 @@ export default {
         this.Trucks = this.cacheTruckList[orgid]
       } else {
         getTrucK().then(data => {
-          this.Trucks = data.data
-          this.cacheTruckList[orgid] = data.data
-        })
+            this.Trucks = data.data
+            this.cacheTruckList[orgid] = data.data
+          })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -1132,19 +1130,8 @@ export default {
         }
       }
     },
-    blurTruck() { // 车牌输入框失去响应时
-      const data = ''
-      // this.Trucks.find(el => {
-      //   if (this.formModel.truckIdNumber === el.truckIdNumber) {
-      //     this.formModel.truckIdNumber = el.truckIdNumber
-      //   } else {
-      //     this.formModel.truckIdNumber = undefined
-      //   }
-      // })
-    },
     blurDriver() { // 司机输入框失去响应时
       this.Drivers.forEach(el => {
-        console.log(this.formModel.dirverName, el.driverName, this.isDriverSelect)
         if (this.formModel.dirverName === el.driverName) {
           this.formModel.dirverName = el.driverName
         } else {
@@ -1158,13 +1145,13 @@ export default {
     },
     getSelectType() {
       getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
-        if (data) {
-          this.apportionTypeList = data
-          this.apportionTypeList.forEach((e, index) => {
+          if (data) {
+            this.apportionTypeList = data
+            this.apportionTypeList.forEach((e, index) => {
               this.$set(e, 'descript', this.apportionTypeDescript[index])
             })
-        }
-      })
+          }
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -1187,7 +1174,6 @@ export default {
       this.$set(this.formModel, 'handlingFeeAll', value)
     },
     resetHandlingFeeInfo(value) {
-      console.log('resetHandlingFeeInfo', value)
       this.$set(this.formModel, 'apportionTypeId', value.apportionTypeId)
       this.$set(this.handlingFeeInfo, 'apportionTypeId', value.apportionTypeId)
     }

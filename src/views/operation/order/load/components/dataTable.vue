@@ -152,7 +152,6 @@ export default {
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
-      loading: false,
       btnsize: 'mini',
       selectedRight: [],
       selectedLeft: [],

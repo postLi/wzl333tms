@@ -390,7 +390,7 @@ export default {
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载', timer: new Date().getTime() }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载'}}) // 38-短驳 39-干线 40-送货
           console.log(this.$router)
           break
           // 添加客户
@@ -425,7 +425,7 @@ export default {
               return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', timer: new Date().getTime(), flag: this.selectInfo.batchNo }})
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo }})
             }
           }
           break
