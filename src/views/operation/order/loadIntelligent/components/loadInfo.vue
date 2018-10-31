@@ -93,7 +93,7 @@
                           </el-autocomplete>
                         </el-form-item>
                         <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '司机电话不能为空~', trigger: ['blur', 'change']}" class="formItemTextDanger">
-                          <el-input v-model="item.dirverMobile" :maxlength="11"></el-input>
+                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
                           <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">

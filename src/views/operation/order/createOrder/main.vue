@@ -162,18 +162,18 @@
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
                     <input ref="tmsOrdercargoAmount" v-number-only size="mini" 
-                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="11" />
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="6" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="16"
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="11"
                   :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="8"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="7"
                   :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
@@ -1316,6 +1316,7 @@ export default {
             },
             'tmsOrderCargoList': this.form.cargoList.map(el => {
               const a = {}
+              // a.cargoAmount = el.cargoAmount1 || el.cargoAmount || 0
               a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
               return a
             })
@@ -1929,7 +1930,12 @@ export default {
       }, 100)
     },
     detectCargoNumChange(index, name, event) {
-      this.form.cargoList[index][name] = event.target.value
+      // if (name === 'cargoAmount') {
+      //   this.form.cargoList[index][name] = event.target.value + ''
+      //   console.log('cargoAmount',this.form.cargoList[index][name])
+      // }else {
+        this.form.cargoList[index][name] = event.target.value
+      // }
       this.setCargoNum()
     },
     // 修改货品列表
