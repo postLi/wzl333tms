@@ -476,32 +476,35 @@ export default {
     this.setLoadTypeId()
   },
   mounted() {
-    this.getSelectType()
-    this.init()
-    this.getSystemTime()
+    // this.getSelectType()
+    // this.init()
+    // this.getSystemTime()
   },
   activated() {
     this.getSystemTime()
   },
   watch: {
-    '$route' (to, from) {
-      const bothBool = false
-      if (to.path.indexOf('/operation/order/load') !== -1) {
-        // 1
-        // 3
-        if (from.path.indexOf('/operation/order/load') !== -1) {
-          this.switchUrl(from.fullPath, true)
+    '$route':{
+      handler(to, from) {
+        const bothBool = false
+        if (to.path.indexOf('/operation/order/load') !== -1) {
+          // 1
+          // 3
+          if (from && from.path.indexOf('/operation/order/load') !== -1) {
+            this.switchUrl(from.fullPath, true)
+          }
+          this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
+        } else if (from.path.indexOf('/operation/order/load') !== -1) {
+          // 2
+          // 4
+          this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
+        } else {
+          // this.getSelectType()
+          // this.init()
+          // this.getSystemTime()
         }
-        this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
-      } else if (from.path.indexOf('/operation/order/load') !== -1) {
-        // 2
-        // 4
-        this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
-      } else {
-        this.getSelectType()
-        this.init()
-        this.getSystemTime()
-      }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -532,8 +535,10 @@ export default {
       } else {
         // read data
         if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
-          data = JSON.parse(sessionStorage.getItem(path))
+          console.log('ssssssss22222222222222')
+          data = sessionStorage.getItem(path)
           if (data) {
+            data = JSON.parse(data)
             // 初始化前需要重置所有有变更的变量
             if (this.$route.query.flag) {
               this.isEdit = true
@@ -571,7 +576,7 @@ export default {
     },
     init() {
       this.formModel = this.$options.data().formModel
-      this.$refs['formModel'].resetFields()
+      this.$refs['formModel'] && this.$refs['formModel'].resetFields()
       this.setLoadTypeId()
       this.setLoadTableList = {
         left: [],
@@ -728,7 +733,7 @@ export default {
       }
     },
     getLoadNo() {
-      if (this.loadTypeId) {
+      // if (this.loadTypeId) {
         return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
             this.truckMessage = data.text // 批次号
             this.contractNo = data.text // 合同编号？？？？？
@@ -736,9 +741,9 @@ export default {
           .catch(err => {
             this._handlerCatchMsg(err)
           })
-      }else {
-        return
-      }
+      // }else {
+      //   return
+      // }
     },
     getSystemTime() { // 获取系统时间
       if (!this.isEdit) {
@@ -751,6 +756,7 @@ export default {
       }
     },
     getSelectAddLoadRepertoryList() { // 获取列表
+      this.loading = true
       if (this.isEdit) {
         this.getUpdateRepertoryLeft()
         this.getUpdateRepertoryRight()
@@ -758,9 +764,11 @@ export default {
         this.$set(this.setLoadTableList, 'left', [])
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
             this.setLoadTableList.left = data.data
+            this.loading = false
             console.log('不修改 ')
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       }
@@ -1017,11 +1025,14 @@ export default {
     getUpdateRepertoryLeft() { // 修改时 左边的数据列表
       console.log('left', this.orgData.orgid)
       if (this.orgData.orgid) {
+        this.loading = true
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
             this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
             console.log('修改ing左边列表', this.setLoadTableList.left)
+            this.loading = false
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       }
