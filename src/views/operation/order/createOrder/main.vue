@@ -937,7 +937,7 @@ export default {
         console.log('3333333333333333333')
         // 如果是弹窗才响应这个变化
         if (this.ispop) {
-          this.initIndex()
+          this.initIndex('orderobj')
         }
       },
       deep: true
@@ -995,13 +995,13 @@ export default {
     },
     'ispop'(newVal) {
       if (newVal) {
-        this.initIndex()
+        this.initIndex('ispop')
       }
     }
   },
   activated() {
     // if (this.ispop) {
-    this.initIndex()
+    this.initIndex('activated')
     // }
   },
   deactivated() {
@@ -1010,7 +1010,7 @@ export default {
   mounted() {
     this.loading = true
 
-    this.initIndex()
+    this.initIndex('mounted')
     this.getSelectType()
     this.getShipPayWay()
     // 中转默认付款方式
@@ -1344,8 +1344,9 @@ export default {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
       // 只有在库中且没有结算状态的才能修改创建时间
+      // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
       if (this.canChangeOrderDate && this.output.ismodify) {
-        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.ShipReceivableFeeStatus === 'NOSETTLEMENT')) {
+        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
 
         } else {
           this.canChangeOrderDate = false
@@ -1455,7 +1456,8 @@ export default {
     /**
      * 初始化各类情况
      */
-    initIndex() {
+    initIndex(whereAreYou) {
+      console.log('whereAreYou::', whereAreYou)
       // 1.判断有无运单id
       // 1.1 判断是否为修改
       // 1.1.1 判断是否已结算，设置可修改部分
@@ -1521,6 +1523,7 @@ export default {
     // 初始化运单
     initOrder() {
       this.output.ismodify = true
+      console.log('initOrder=initOrder=initOrder')
 
       const errFn = () => {
         this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
@@ -2742,7 +2745,7 @@ export default {
 
                 if (!this.output.isbatch) {
                   if (this.isSaveAndNew) {
-                    this.initIndex()
+                    this.initIndex('isSaveAndNew')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
@@ -2785,7 +2788,7 @@ export default {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
                   if (this.isSaveAndNew) {
-                    this.initIndex()
+                    this.initIndex('isSaveAndNew -> 2')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)

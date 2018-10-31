@@ -16,10 +16,10 @@
     </div>
     <LockScreen></LockScreen>
     <el-dialog top="0" width="90%" :close-on-click-modal="false" class="showDetailPop" v-if="showDetail" title="运单详情" :visible.sync="showDetailVisible">
-        <OrderDetail :ispop="showDetailVisible" :orderid="orderid" />
+        <OrderDetail v-if="showDetail" :ispop="showDetailVisible" :orderid="orderid" />
     </el-dialog>
     <el-dialog top="0" :close-on-click-modal="false" width="90%" class="showDetailPop" v-if="showCreate" title="创建运单" :visible.sync="showCreateVisible">
-        <CreateOrder :ispop="showCreateVisible" :orderobj="orderobj" />
+        <CreateOrder v-if="showCreate" :ispop="showCreateVisible" :orderobj="orderobj" />
     </el-dialog>
     <!-- <iframe src="http://192.168.1.170/member/autologin.php" frameborder="0" style="width:0;height:0;"></iframe> -->
     <setApiUrl />

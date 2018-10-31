@@ -240,9 +240,9 @@ export default {
       component: _import('finance/reconciliation/carrier/index'),
       meta: { role: ['admin'], title: '承运商对账', noCache: false, code: 'FINANCE_CARRIER' }
     },
-        {
-          path: '/finance/reconciliation/group', icon: 'QQ', name: '网点对账', component: _import('finance/reconciliation/group/index'), meta: { role: ['admin'], title: '网点对账', noCache: false }
-        },
+    {
+      path: '/finance/reconciliation/group', icon: 'QQ', name: '网点对账', component: _import('finance/reconciliation/group/index'), meta: { role: ['admin'], title: '网点对账', noCache: false, code: 'FINANCE_ORGFEE' }
+    },
     {
       path: '/finance/reconciliation/customer',
       icon: 'QQ',
@@ -380,14 +380,14 @@ export default {
     component: _import('finance/reconciliation/carrier/components/detailTable/index'),
     meta: { role: ['admin'], title: '承运商对账', noCache: true, code: 'FINANCE_CARRIERDETAIL' }
   },
-    {
-      path: '/finance/reconciliation/group/detailTable',
-      icon: 'QQ',
-      hidden: true,
-      name: '网点对账明细',
-      component: _import('finance/reconciliation/group/components/detailTable/index'),
-      meta: { role: ['admin'], title: '网点对账', noCache: true, code: 'FINANCE_CARRIERDETAIL' }
-    },
+  {
+    path: '/finance/reconciliation/group/detailTable',
+    icon: 'QQ',
+    hidden: true,
+    name: '网点对账明细',
+    component: _import('finance/reconciliation/group/components/detailTable/index'),
+    meta: { role: ['admin'], title: '网点对账', noCache: true, code: 'FINANCE_ORGFEE_DETAIL' }
+  },
   {
     path: '/finance/reconciliation/customer/detailTable',
     icon: 'QQ',
@@ -405,14 +405,14 @@ export default {
     component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'),
     meta: { role: ['admin'], title: '创建对账单', noCache: false }
   },
-    {
-      path: '/finance/reconciliation/group/detailTable/groupRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '对账明细',
-      component: _import('finance/reconciliation/group/components/detailTable/components/groupRecon'),
-      meta: { role: ['admin'], title: '创建对账单', noCache: false }
-    },
+  {
+    path: '/finance/reconciliation/group/detailTable/groupRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '对账明细',
+    component: _import('finance/reconciliation/group/components/detailTable/components/groupRecon'),
+    meta: { role: ['admin'], title: '创建对账单', noCache: false }
+  },
     // //客户对账-创建对账 customerRecon
   {
     path: '/finance/reconciliation/customer/detailTable/customerRecon',

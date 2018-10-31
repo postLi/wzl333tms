@@ -32,10 +32,10 @@ Vue.use(Router)
  * noCache 设定是否被缓存默认为 true
  **/
 export const constantRouterMap = [{
-    path: '/login',
-    component: _import('login/index'),
-    hidden: true
-  }, {
+  path: '/login',
+  component: _import('login/index'),
+  hidden: true
+}, {
     path: '/404',
     component: _import('404'),
     hidden: true
@@ -56,19 +56,19 @@ export const constantRouterMap = [{
         }
       }]
     }, */
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    noDropdown: true,
-    icon: 'shouye',
+{
+  path: '/',
+  component: Layout,
+  redirect: '/dashboard',
+  noDropdown: true,
+  icon: 'shouye',
     // name: '首页',
-    name: 'dashboard',
-    meta: {
+  name: 'dashboard',
+  meta: {
       'code': 'HOME_PAGE'
     },
-    hidden: true,
-    children: [{
+  hidden: true,
+  children: [{
       path: '/dashboard',
       component: _import('html5/html5index'),
       name: 'dashboard',
@@ -98,7 +98,7 @@ export const constantRouterMap = [{
       meta: {
         title: '运输控制台',
         noCache: false,
-        // 'code': 'HOME_PAGE_5',
+        'code': 'HOME_PAGE_5',
         'proute': 'dashboard'
       }
     }, {
@@ -134,7 +134,7 @@ export const constantRouterMap = [{
         noCache: true
       }
     }]
-  }
+}
 ]
 
 // 用来展示自定义组件、指令、过滤器等
