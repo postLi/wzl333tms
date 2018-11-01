@@ -1,20 +1,19 @@
-<script
-  src="../../../../../test/vue-element-admin-master/vue-element-admin-master/src/components/TreeTable/eval.js"></script>
+
 <template>
   <div class="pickup-manager tab-wrapper tab-wrapper-100">
-    <keep-alive>
-      <component v-bind:is="component"></component>
-    </keep-alive>
-  </div>
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
+</div>
 </template>
 
 <script>
-import Sender from './financeInfo'
+// import Sender from './fInfo'
 
 export default {
   name: 'orderpickUp',
   components: {
-    Sender
+
   },
   props: {
     isShow: {
@@ -24,7 +23,7 @@ export default {
   },
   data() {
     return {
-      component: 'Sender'
+      component: ''
     }
   }
 }

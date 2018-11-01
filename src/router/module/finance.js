@@ -372,14 +372,32 @@ export default {
     component: _import('finance/IOManage/index'),
     meta: { role: ['admin'], title: '收支方式管理', stitle: '收支', 'code': 'FINANCE_IOMANAGE', noCache: false }
   },
-  //  certificationAudit
-  //   certificationAudit
     {
       path: '/finance/financeInfo',
       icon: 'caiwugl3_shouzhifs',
       name: 'financeInfo',
       component: _import('finance/financeInfo/index'),
-      meta: { role: ['admin'], title: '财务初始化', stitle: '财务初始化', 'code': 'FINANCE_IOMANAGE', noCache: false }
+      meta: { role: ['admin'], title: '财务初始化', stitle: '财务初始化', 'code': '', noCache: false },
+      children: [{
+        path: '/finance/financeInfo/subjectInfo',
+        icon: 'QQ',
+        name: '科目定义',
+        component: _import('finance/financeInfo/subjectInfo'),
+        meta: { role: ['admin'], title: '科目定义', noCache: false, code: '' }
+      },{
+        path: '/finance/financeInfo/subjectClose',
+        icon: 'QQ',
+        name: '科目定义',
+        component: _import('finance/financeInfo/subjectClose'),
+        meta: { role: ['admin'], title: '核销科目', noCache: false, code: '' }
+      },{
+        path: '/finance/financeInfo/subjectDirection',
+        icon: 'QQ',
+        name: '科目定义',
+        component: _import('finance/financeInfo/subjectDirection'),
+        meta: { role: ['admin'], title: '核销方向', noCache: false, code: '' }
+      },
+      ]
     },
     {
       path: '/finance/certificationAudit',
@@ -388,6 +406,7 @@ export default {
       component: _import('finance/certificationAudit/index'),
       meta: { role: ['admin'], title: '凭证审核', stitle: '凭证审核', 'code': 'FINANCE_IOMANAGE', noCache: false }
     },
+
   {
     path: '/finance/reconciliation/carrier/detailTable',
     icon: 'QQ',

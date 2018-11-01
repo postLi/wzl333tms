@@ -1,6 +1,13 @@
 <template>
-  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
-    <el-table-column v-if="columns.length===0" width="150">
+  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll"
+            @selection-change="getSelection">
+    <el-table-column
+      fixed
+      sortable
+      type="selection"
+      width="50">
+    </el-table-column>
+    <el-table-column v-if="columns.length===0" width="150" label="科目名称">
       <template slot-scope="scope">
         <span v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
         <span class="tree-ctrl" v-if="iconShow(0,scope.row)" @click="toggleExpanded(scope.$index)">
@@ -34,6 +41,7 @@ export default {
   name: 'treeTable',
   props: {
     data: {
+      expandAll: false,
       type: [Array, Object],
       required: true
     },
@@ -46,6 +54,11 @@ export default {
     expandAll: {
       type: Boolean,
       default: false
+    }
+  },
+  data(){
+    return {
+      selected: [],
     }
   },
   computed: {
@@ -76,7 +89,10 @@ export default {
     // 图标显示
     iconShow(index, record) {
       return (index === 0 && record.children && record.children.length > 0)
-    }
+    },
+    getSelection(selection) {
+      this.selected = selection
+    },
   }
 }
 </script>
