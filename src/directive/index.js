@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import { MessageBox } from 'element-ui'
 import Clipboard from './clipboard'
-import DragDialog from './el-dragDialog'
-import Waves from './waves'
-import vueSticky from './sticky'
+// import DragDialog from './el-dragDialog'
+// import Waves from './waves'
+// import vueSticky from './sticky'
 import { getUserInfo } from '@/utils/auth'
 
 Clipboard.install()
-DragDialog.install()
-Waves.install()
-vueSticky.install()
+// DragDialog.install()
+// Waves.install()
+// vueSticky.install()
 
 let hasPoint = false
 let pointNum = 2
