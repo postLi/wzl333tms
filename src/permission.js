@@ -46,7 +46,10 @@ router.beforeEach((to, from, next) => {
         const title = to.meta.title || to.name || ''
         // window.document.title = (title ? title + ' - ' : '') + '安发TMS管理系统'
         window.document.title = '安发TMS管理系统'
-        _hmt.push(['_trackPageview', to.fullPath])
+        if (location.href.indexOf('28tms.cn') !== -1) {
+          _hmt.push(['_trackPageview', to.fullPath])
+        }
+
         next()
       }
     }

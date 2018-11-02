@@ -900,8 +900,9 @@ export default {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
     'theFeeConfig'() {
+      let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
-      this.feeConfig = this.feeConfig.filter(el => {
+      fees = fees.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
         if (el.ischeck !== 0) {
@@ -911,10 +912,11 @@ export default {
           return false
         }
       })
-      this.feeConfig.sort((a, b) => {
+      fees.sort((a, b) => {
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
-      return this.feeConfig
+      // this.feeConfig=fees
+      return fees
     }
   },
   watch: {
@@ -1216,18 +1218,18 @@ export default {
     getBaseSetting() {
       console.log('getBaseSetting:::::')
 
-      // return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
-      return Promise.all([this.getOrgId()]).then(dataArr => {
+      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
+      // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
         // 获取全局设置
-        this.config = dataArr[0]
+        this.config = dataArr[0] || {}
         // 获取费用设置
-        this.feeConfig = dataArr[1]
+        this.feeConfig = dataArr[1] || []
         // 获取个人设置
-        this.personConfig = dataArr[2]
+        this.personConfig = dataArr[2] || {}
         // 获取后台时间
-        this.nowTime = dataArr[3]
+        this.nowTime = dataArr[3] || new Date()
         // 获取网点信息
-        this.orgInfo = dataArr[4]
+        this.orgInfo = dataArr[4] || {}
         console.log('get INIT Infomation::', dataArr)
       }).catch((err) => {
         this.loading = false
