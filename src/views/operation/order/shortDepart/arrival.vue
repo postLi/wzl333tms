@@ -293,8 +293,12 @@ export default {
       switch (type) {
         case 'truck': // 短驳到车
           if (isWork) {
-            this.timeInfoVisible = true
-            // this.truck()
+            if (this.loadInfo.bathStatusName === '短驳中') {
+              this.timeInfoVisible = true
+            } else {
+              this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
+              this.clearInfo()
+            }
           }
           break
         case 'repertory': // 短驳入库
@@ -365,11 +369,6 @@ export default {
       console.log(obj, data)
       this.$set(data, 'actualArrivetime', obj.actualArrivetime)
       if (this.loadInfo.bathStatusName === '短驳中') {
-        // this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
         this.loading = true
         postConfirmToCar(data).then(data => {
             if (data) {
@@ -385,7 +384,6 @@ export default {
             this._handlerCatchMsg(err)
             this.clearInfo()
           })
-        // })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
         this.clearInfo()

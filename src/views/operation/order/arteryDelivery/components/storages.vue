@@ -892,7 +892,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    fetchAllCustomer() {
+    fetchAllCustomer() { // 获取运单列表
       this.loading = true
       const _id = this.propsId
       // console.log(_id);
@@ -904,7 +904,7 @@ export default {
           this.detailList.forEach(e => {
             // 入库前
             if (!this.isAlFun) {
-              if (e.warehouStatus === 0) {
+              if (e.warehouStatus !== 1) {
                 e.actualAmount = e.loadAmount
                 e.actualWeight = e.loadWeight
                 e.actualVolume = e.loadVolume

@@ -384,7 +384,23 @@ export default {
 
           break
         case 'sure':
-          this.timeInfoVisible = true
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+            this.$refs.multipleTable.clearSelection()
+            return false
+          }
+          if (this.selected[0].bathStatusName === '在途中') {
+            this.timeInfoVisible = true
+          } else {
+             this.closeAddCustomer()
+            this.$message({
+              message: '批次状态为：' + this.selected[0].bathStatusName + '不允许做到车确定~',
+              type: 'warning'
+            })
+          }
           break
         case 'deselectCar':
           this.closeAddCustomer()

@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      formLabelWidth: '110px',
+      formLabelWidth: '120px',
       systemTime: '',
       currentTime: parseTime(+new Date(), '{y}-{m}-{d} {h}:{i}:{s}'),
       searchForm: {

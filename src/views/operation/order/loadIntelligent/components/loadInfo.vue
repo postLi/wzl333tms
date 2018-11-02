@@ -96,7 +96,7 @@
                           <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
-                          <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
+                          <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" prefix-icon="el-icon" placeholder="预计到达时间">
                           </el-date-picker>
                         </el-form-item>
                         <el-form-item>
