@@ -1,1 +1,0 @@
-﻿{"status":200,"data":{"id":null,"nowPayFee":0,"arrivePayFee":0,"receiptPayFee":0,"monthPayFee":0,"changeFee":0,"totalFee":0,"startCreatTime":null,"endCreatTime":null,"shipFromOrgid":null},"text":"请求成功","errorInfo":null}
