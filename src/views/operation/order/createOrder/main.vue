@@ -156,7 +156,7 @@
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoPack : ''">
-                    <querySelect :maxlength="20" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                    <querySelect :maxlength="10" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
