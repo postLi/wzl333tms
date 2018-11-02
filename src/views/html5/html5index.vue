@@ -131,10 +131,6 @@
 </template>
 
 <script>
-// 需要考虑按需引入，减小引入体积
-// echarts的各模块
-// https://github.com/apache/incubator-echarts/blob/master/index.js
-import echarts from 'echarts'
 import { pickerOptions4, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail } from '@/api/index'
 import Arrow from './arrow'
@@ -480,9 +476,9 @@ export default {
     this.currentkey = 0
 
    //  this.searchForm = this.
-    var myChart = echarts.init(document.getElementById('main_lefttop'))
-    var myChart2 = echarts.init(document.getElementById('main_leftdown'))
-    var myChart3 = echarts.init(document.getElementById('main'))
+    var myChart = this.$echarts.init(document.getElementById('main_lefttop'))
+    var myChart2 = this.$echarts.init(document.getElementById('main_leftdown'))
+    var myChart3 = this.$echarts.init(document.getElementById('main'))
     window.onresize = () => {
       myChart.resize({
         width: 'auto',

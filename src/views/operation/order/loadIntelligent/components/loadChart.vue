@@ -19,10 +19,7 @@
   </div>
 </template>
 <script>
-// 需要考虑按需引入，减小引入体积
-// echarts的各模块
-// https://github.com/apache/incubator-echarts/blob/master/index.js
-import echarts from 'echarts'
+
 import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
@@ -71,23 +68,23 @@ export default {
     }
   },
   computed: {
-    chartItemWeight () {
+    chartItemWeight() {
       return {
         height: this.isShowChart ? '100%' : '50%',
         borderBottom: this.isShowChart ? 'none' : '1px solid #cdf',
         borderRight: this.isShowChart ? '1px solid #cdf' : 'none'
       }
     },
-    chartWeightStyle () {
+    chartWeightStyle() {
       return {
         height: '100%',
-        width:  '100%'
+        width: '100%'
       }
     },
-    chartVolumnStyle () {
+    chartVolumnStyle() {
       return {
         height: '100%',
-        width:  '100%'
+        width: '100%'
       }
     }
   },
@@ -109,8 +106,8 @@ export default {
     truckInfo: {
       handler(cval, oval) {
         if (cval) {
-        this.baseInfo.totalWeight = Number(cval.weight) || 0
-        this.baseInfo.totalVolume = Number(cval.volume) || 0
+          this.baseInfo.totalWeight = Number(cval.weight) || 0
+          this.baseInfo.totalVolume = Number(cval.volume) || 0
           this.initChart()
         }
       },
@@ -131,7 +128,7 @@ export default {
       this.$emit('showViewChart', this.isShowChart)
     },
     initChartWeight() {
-      this.chart = echarts.init(this.$refs.echartWeight)
+      this.chart = this.$echarts.init(this.$refs.echartWeight)
       this.chart.setOption({
         title: {
           subtextStyle: {
@@ -143,10 +140,10 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b} : {c}(千克) ({d}%)"
+          formatter: '{a} <br/>{b} : {c}(千克) ({d}%)'
         },
         series: [{
-          name: '总载重: '+this.baseInfo.totalWeight+'(千克)',
+          name: '总载重: ' + this.baseInfo.totalWeight + '(千克)',
           type: 'pie',
           radius: '45%',
           label: {
@@ -161,29 +158,29 @@ export default {
             }
           },
           data: [{
-              value: this.baseInfo.weight,
-              name: '已配载',
-              itemStyle: {
+            value: this.baseInfo.weight,
+            name: '已配载',
+            itemStyle: {
                 color: '#FFCC66'
               }
-            },
-            {
-              value: this.baseInfo.totalWeight-this.baseInfo.weight,
-              name: '可载重',
-              itemStyle: {
+          },
+          {
+            value: this.baseInfo.totalWeight - this.baseInfo.weight,
+            name: '可载重',
+            itemStyle: {
                 color: '#79F7C1'
               }
-            }
+          }
           ]
         }]
       })
     },
-    resizeChart(){
+    resizeChart() {
       this.chart.resize()
       this.chart2.resize()
     },
     initChartVolume() {
-      this.chart2 = echarts.init(this.$refs.echartVolume)
+      this.chart2 = this.$echarts.init(this.$refs.echartVolume)
 
       this.chart2.setOption({
         title: {
@@ -196,10 +193,10 @@ export default {
         },
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b} : {c}(方) ({d}%)"
+          formatter: '{a} <br/>{b} : {c}(方) ({d}%)'
         },
         series: [{
-          name: '总载方: '+this.baseInfo.totalVolume+'(方)',
+          name: '总载方: ' + this.baseInfo.totalVolume + '(方)',
           type: 'pie',
           radius: '45%',
           label: {
@@ -214,19 +211,19 @@ export default {
             }
           },
           data: [{
-              value: this.baseInfo.volume,
-              name: '已配载',
-              itemStyle: {
+            value: this.baseInfo.volume,
+            name: '已配载',
+            itemStyle: {
                 color: '#FFCC66'
               }
-            },
-            {
-              value: this.baseInfo.totalVolume-this.baseInfo.volume,
-              name: '可载方',
-              itemStyle: {
+          },
+          {
+            value: this.baseInfo.totalVolume - this.baseInfo.volume,
+            name: '可载方',
+            itemStyle: {
                 color: '#79F7C1'
               }
-            }
+          }
           ]
         }]
       })
