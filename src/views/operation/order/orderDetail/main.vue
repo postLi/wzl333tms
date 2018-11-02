@@ -594,10 +594,6 @@
 // 请求接口
 import orderManage from '@/api/operation/orderManage'
 // 外部公用组件
-import SelectType from '@/components/selectType/index'
-import SelectTree from '@/components/selectTree/index'
-import SelectCity from '@/components/selectCity/index'
-import querySelect from '@/components/querySelect/index'
 // 打印插件
 import { CreatePrintPage } from '@/utils/lodopFuncs'
 // 获取打印位置参数接口
@@ -605,10 +601,6 @@ import { getPrintOrderItems, getPrintLibItems } from '@/api/operation/print'
 
 export default {
   components: {
-    SelectType,
-    SelectTree,
-    SelectCity,
-    querySelect
   },
   props: {
     orderid: {
