@@ -53,13 +53,21 @@ export default {
       return this.$store.state.tagsView.visitedViews
     }
   },
+  created() {
+    // 保证直接进入设置了缓存的页面也被存储到
+    this.addViewTags()
+  },
   watch: {
-    $route(newpath, oldpath) {
-      // 如果新的路径是三级路径以上，则不进行加入
-      // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
-      this.addViewTags()
-      this.moveToCurrentTag()
-      // }
+    $route: {
+      handler(newpath, oldpath) {
+        // 如果新的路径是三级路径以上，则不进行加入
+        // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
+        this.addViewTags()
+        this.moveToCurrentTag()
+        // }
+      },
+
+      immediate: false
     },
     visible(value) {
       if (value) {

@@ -482,7 +482,7 @@ export default {
           var netdata = this.selected[0]
           this.selectInfo = {}
           this.$router.push({
-            path: '/operation/order/modifyOrder',
+            path: '/operation/order/createOrder',
             query: {
               orderid: netdata.id,
               type: 'modify',

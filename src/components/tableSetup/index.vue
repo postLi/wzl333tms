@@ -312,6 +312,10 @@ export default {
         // 保存原有数据，用来在上传时格式化数据
         this.orgdata = data
         if (data && data.length) {
+          if (data.length === 1) {
+            data = data[0]
+          }
+          this.orgdata = data
           // 处理格式化本地数据
           // 如果本地存在不同的列，保留还是删除？
 

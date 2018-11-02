@@ -7,7 +7,7 @@
 import Main2 from './main'
 
 export default {
-  // name: 'modifyOrder22',
+  name: 'modifyOrder22',
   components: {
     Main2
   },

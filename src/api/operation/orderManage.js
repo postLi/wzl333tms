@@ -359,9 +359,19 @@ export default {
    * @param {number} userId 用户ID
    */
   getPersonalSetup(userId, type) {
-    return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus).then(res => {
-      return res.data ? (type ? (res.data[type] || {}) : res.data) : {}
-    })
+    type = type || ''
+    if (!(CACHE.get('PersonalSetup' + '_update')) && CACHE.get('PersonalSetup')) {
+      return new Promise((resolve) => {
+        const data = CACHE.get('PersonalSetup')
+        resolve(type ? (data[type] || {}) : data)
+      })
+    } else {
+      return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus).then(res => {
+        CACHE.set('PersonalSetup' + '_update', false)
+        CACHE.set('PersonalSetup', res.data)
+        return res.data ? (type ? (res.data[type] || {}) : res.data) : {}
+      })
+    }
   },
   /**
    * 修改个人设置
@@ -390,6 +400,7 @@ export default {
 }
    */
   putPersonalSetup(data) {
+    CACHE.set('PersonalSetup' + '_update', true)
     return fetch.put('/api-order/order/tmsshipsetting/v1/', data).then(checkStatus)
   },
   /**
@@ -397,6 +408,7 @@ export default {
    * @param {*} userId 用户ID
    */
   resetPersonalSetup(userId) {
+    CACHE.set('PersonalSetup' + '_update', true)
     return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus)
   },
   /**

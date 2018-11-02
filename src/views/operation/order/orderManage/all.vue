@@ -571,7 +571,7 @@ export default {
             }
             if (canModify) {
               this.$router.push({
-                path: '/operation/order/modifyOrder',
+                path: '/operation/order/createOrder',
                 query: {
                   orderid: this.selectInfo.id,
                   type: 'modify',

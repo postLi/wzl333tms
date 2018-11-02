@@ -267,7 +267,7 @@ export default {
     },
     handlevalue(newVal) {
       if (this.show === 'input') {
-        console.log('handlevalue:', this.handlevalue)
+        // console.log('handlevalue:', this.handlevalue)
         this.$emit('input', this.handlevalue)
       }
       if (this.getinput) {
@@ -458,7 +458,7 @@ export default {
     // 初始化请求、请求参数等
     this.canchangeparam = !this.nochangeparam
     this.remoteFn = this.queryFn
-    console.log('handkler2: ', this.value)
+    // console.log('handkler2: ', this.value)
     this.handlevalue = this.value
 
     if (this.value && this.show !== 'input') {
@@ -507,7 +507,7 @@ export default {
       this.findItem(value, this.showkey)
     },
     findValue(value) {
-      console.log('findValue', value)
+      // console.log('findValue', value)
       this.findItem(value, this.valuekey)
     },
     initData() {
