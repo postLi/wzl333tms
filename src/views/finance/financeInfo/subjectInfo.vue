@@ -25,7 +25,7 @@
         <el-button type="info" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('doUp')" plain
                    v-has:PICK_EXP class="table_setup fr_btn">全部收起
         </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus-outline" @click="doAction('doAddSub')" plain
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus-outline" @click="doAction('doAddEnd')" plain
                    v-has:PICK_EXP class="table_setup fr_btn">增加下级
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('doAddStair')" plain
@@ -42,11 +42,11 @@
       <div class="info_tab info_tab_media">
         <!--<tree-table :data="data" :columns="columns" border/>-->
         <tree-table :data="data" :eval-func="func" :eval-args="args" :expand-all="expandAll" border
-                    ref="multipleTable">
+                    ref="multipleTable" height="100%" tooltip-effect="dark" :key="tablekey" @change="getTreeTableParam">
           <el-table-column label="科目代码">
             <template slot-scope="scope">
-            <span style="color:sandybrown">{{ scope.row.event }}</span>
-            <el-tag>{{ scope.row.timeLine+'ms' }}</el-tag>
+              <span style="color:sandybrown">{{ scope.row.event }}</span>
+              <!--<el-tag>{{ scope.row.timeLine+'ms' }}</el-tag>-->
             </template>
           </el-table-column>
           <el-table-column label="是否公共">
@@ -87,14 +87,9 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid"
-                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" :key="mykey"/>
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                @success="setColumn"></TableSetup>
-    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible"
-                @success="fetchData" :dotInfo="selectInfo"></PickupMain>
-    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible"
-                     @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
+    <SubjectDialog :isShow='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
+                   :isDoExport="isDoExport"></SubjectDialog>
+    <SubDownDialog :isShow.sync='downShowDialog' @close='closeDownShowDialog'></SubDownDialog>
 
   </div>
 </template>
@@ -108,6 +103,8 @@
   import AddCustomer from './components/add'
   import PickupMain from './components/pickupMain'
   import PickupRelevance from './components/pickupRelevance'
+  import SubjectDialog from './components/subjectDialog'
+  import SubDownDialog from './components/subDownDialog'
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
@@ -123,6 +120,8 @@
       PickupMain,
       SelectTree,
       PickupRelevance,
+      SubjectDialog,
+      SubDownDialog,
       treeTable
     },
     computed: {
@@ -138,6 +137,9 @@
     },
     data() {
       return {
+        isDoExport: false,
+        isDoAddEnd: false,
+        showDialog: false,
         func: treeToArray,
         expandAll: false,
         data:
@@ -207,7 +209,109 @@
                         id: 8,
                         event: '事件8',
                         timeLine: 25,
-                        comment: '无'
+                        comment: '无',
+                        children: [
+                          {
+                            id: 7,
+                            event: '事件7',
+                            timeLine: 50,
+                            comment: '无',
+                            children: [
+                              {
+                                id: 71,
+                                event: '事件71',
+                                timeLine: 25,
+                                comment: 'xx'
+                              },
+                              {
+                                id: 72,
+                                event: '事件72',
+                                timeLine: 5,
+                                comment: 'xx'
+                              },
+                              {
+                                id: 73,
+                                event: '事件73',
+                                timeLine: 20,
+                                comment: 'xx'
+                              }
+                            ]
+                          },
+                          {
+                            id: 8,
+                            event: '事件8',
+                            timeLine: 25,
+                            comment: '无',
+                            children: [
+                              {
+                                id: 7,
+                                event: '事件7',
+                                timeLine: 50,
+                                comment: '无',
+                                children: [
+                                  {
+                                    id: 71,
+                                    event: '事件71',
+                                    timeLine: 25,
+                                    comment: 'xx'
+                                  },
+                                  {
+                                    id: 72,
+                                    event: '事件72',
+                                    timeLine: 5,
+                                    comment: 'xx'
+                                  },
+                                  {
+                                    id: 73,
+                                    event: '事件73',
+                                    timeLine: 20,
+                                    comment: 'xx'
+                                  }
+                                ]
+                              },
+                              {
+                                id: 8,
+                                event: '事件8',
+                                timeLine: 25,
+                                comment: '无',
+                                children: [
+                                  {
+                                    id: 7,
+                                    event: '事件7',
+                                    timeLine: 50,
+                                    comment: '无',
+                                    children: [
+                                      {
+                                        id: 71,
+                                        event: '事件71',
+                                        timeLine: 25,
+                                        comment: 'xx'
+                                      },
+                                      {
+                                        id: 72,
+                                        event: '事件72',
+                                        timeLine: 5,
+                                        comment: 'xx'
+                                      },
+                                      {
+                                        id: 73,
+                                        event: '事件73',
+                                        timeLine: 20,
+                                        comment: 'xx'
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    id: 8,
+                                    event: '事件8',
+                                    timeLine: 25,
+                                    comment: '无'
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
@@ -224,12 +328,7 @@
         // 加载状态
         loading: false,
         setupTableVisible: false,
-        AddCustomerVisible: false,
-        pickMaintainisible: false,
-        releMaintainisible: false,
-        isModify: false,
-        isDepMain: false,
-        isDbclick: false,
+        downShowDialog: false,
         selectInfo: {},
         searchForm: {
           orgid: '',
@@ -289,7 +388,7 @@
     },
     methods: {
       message(row) {
-        console.log(row,'row')
+        console.log(row, 'row')
         this.$message.info(row.event)
       },
       handleClick(row) {
@@ -324,7 +423,7 @@
       doAction(type) {
         // 判断是否有选中项
         if (!this.selected.length && type !== 'doNext' && type !== 'doAll' && type !== 'doUp' && type !== 'export' && type !== 'print') {
-          this.closeAddCustomer()
+          // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
             type: 'warning'
@@ -332,6 +431,52 @@
           return false
         }
         switch (type) {
+          case 'doExport':
+            // this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            //   confirmButtonText: '确定',
+            //   cancelButtonText: '取消',
+            //   type: 'warning'
+            // }).then(() => {
+            //   this.$message({
+            //     type: 'success',
+            //     message: '删除成功!'
+            //   });
+            //   this.openDownShowDialog()
+            // }).catch(() => {
+            //   this.$message({
+            //     type: 'info',
+            //     message: '已取消删除'
+            //   });
+            // });
+
+            this.openDownShowDialog()
+            console.log(this.downShowDialog, 'downShowDialog');
+            break
+          case 'doAddEnd':
+            if (this.selected.length > 1) {
+              this.$message({
+                message: '每次只能修改单条数据~',
+                type: 'warning'
+              })
+              return false
+            }
+            this.openShowDialog()
+            this.isDoAddEnd = true
+            this.isDoExport = false
+            break
+          case 'doAddStair':
+            if (this.selected.length > 1) {
+              this.$message({
+                message: '每次只能修改单条数据~',
+                type: 'warning'
+              })
+              return false
+            }
+            this.openShowDialog()
+            this.isDoAddEnd = false
+            this.isDoExport = false
+            // console.log(this.selected, 'doAddStair');
+            break
           case 'doNext':
             this.$router.push({
               path: '/finance/financeInfo/subjectClose',
@@ -373,71 +518,6 @@
               columns: this.tableColumn
             })
             break
-          // 新增
-          case 'add':
-            this.closeAddCustomer()
-            this.isModify = false
-            this.isDbclick = false
-            this.selectInfo = {}
-            this.openAddCustomer()
-            break
-          // 修改
-          case 'modify':
-            this.closeAddCustomer()
-            this.isModify = true
-            this.isDbclick = false
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能修改单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '提货完成不能修改~',
-                type: 'warning'
-              })
-              // this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openAddCustomer()
-            break
-          // 提货完成
-          case 'finishPick':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '已经提货完成了~',
-                type: 'warning'
-              })
-              // this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickMaintainisible()
-            break
-          // 关联运单
-          case 'relevance':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickReletainisible()
-            break
           // 删除客户
           case 'delete':
             const ids = this.selected.filter(el => {
@@ -477,41 +557,32 @@
       setTable() {
         this.setupTableVisible = true
       },
-      closeSetupTable() {
-        this.setupTableVisible = false
+
+      closeShowDialog() {
+        this.showDialog = false
       },
-      openAddCustomer() {
-        this.AddCustomerVisible = true
+      openShowDialog() {
+        this.showDialog = true
+      },
+      closeDownShowDialog() {
+        this.downShowDialog = false
+      },
+      openDownShowDialog() {
+        this.downShowDialog = true
       },
 
-      closeAddCustomer() {
-        // this.mykey = Math.random()
-        this.AddCustomerVisible = false
-      },
-      openpickMaintainisible() {
-        this.pickMaintainisible = true
-        this.releMaintainisible = false
-      },
-      openpickReletainisible() {
-        this.releMaintainisible = true
-        this.pickMaintainisible = false
-      },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
-      getSelection(selection) {
-        this.selected = selection
-      },
       getDbClick(row, event) {
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
         this.$refs.multipleTable.clearSelection()
       },
       setColumn(obj) {
         this.tableColumn = obj
         this.tablekey = Math.random()
+      },
+      getTreeTableParam(selection) {
+        this.selected = selection
       }
     }
   }

@@ -1,13 +1,19 @@
 <template>
-  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll"
-            @selection-change="getSelection">
+  <!--<el-table :data="formatData" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll"-->
+            <!--@selection-change="getSelection">-->
+
+
+  <el-table
+    ref="multipleTable" :data="formatData" stripe border  @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort = "{prop: 'id', order: 'ascending'}"
+    style="width: 100%" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll">
     <el-table-column
       fixed
       sortable
       type="selection"
       width="50">
     </el-table-column>
-    <el-table-column v-if="columns.length===0" width="150" label="科目名称">
+    <el-table-column v-if="columns.length===0" width="" label="科目名称" class-name="col-class"
+                     align="left">
       <template slot-scope="scope">
         <span v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
         <span class="tree-ctrl" v-if="iconShow(0,scope.row)" @click="toggleExpanded(scope.$index)">
@@ -29,6 +35,36 @@
     </el-table-column>
     <slot></slot>
   </el-table>
+  <!--<el-table :data="formatData" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll"-->
+            <!--@selection-change="getSelection">-->
+    <!--<el-table-column-->
+      <!--fixed-->
+      <!--sortable-->
+      <!--type="selection"-->
+      <!--width="50">-->
+    <!--</el-table-column>-->
+    <!--<el-table-column v-if="columns.length===0" width="" label="科目名称">-->
+      <!--<template slot-scope="scope">-->
+        <!--<span v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>-->
+        <!--<span class="tree-ctrl" v-if="iconShow(0,scope.row)" @click="toggleExpanded(scope.$index)">-->
+          <!--<i v-if="!scope.row._expanded" class="el-icon-plus"></i>-->
+          <!--<i v-else class="el-icon-minus"></i>-->
+        <!--</span>-->
+        <!--{{scope.$index}}-->
+      <!--</template>-->
+    <!--</el-table-column>-->
+    <!--<el-table-column v-else v-for="(column, index) in columns" :key="column.value" :label="column.text" :width="column.width">-->
+      <!--<template slot-scope="scope">-->
+        <!--<span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>-->
+        <!--<span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">-->
+          <!--<i v-if="!scope.row._expanded" class="el-icon-plus"></i>-->
+          <!--<i v-else class="el-icon-minus"></i>-->
+        <!--</span>-->
+        <!--{{scope.row[column.value]}}-->
+      <!--</template>-->
+    <!--</el-table-column>-->
+    <!--<slot></slot>-->
+  <!--</el-table>-->
 </template>
 
 <script>
@@ -92,6 +128,8 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
+      this.$emit('change',this.selected)
+      // console.log(selection,'selection')
     },
   }
 }

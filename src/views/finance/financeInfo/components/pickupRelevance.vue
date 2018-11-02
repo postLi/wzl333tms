@@ -103,7 +103,7 @@
         default: false
       },
       dotInfo: {
-        type: Object,
+        type: [Object,Boolean],
         default: false
       },
       createrId: [Number, String]
