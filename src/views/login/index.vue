@@ -3,7 +3,10 @@
     <div class="container-top">
       <div class="login-top-wrapper clearfix">
         <img class="logo-img" src="../../assets/login_images/login_03.png" alt="">
+        <a href="http://www.28tms.com" target="_blank" rel="noopener noreferrer"><icon-svg  icon-class="shouye" /> 产品官网</a>
       </div>
+      <!-- 产品官网链接 -->
+
     </div>
     <div class="login-wrapper clearfix">
       <!-- <div class="container-left">
@@ -57,10 +60,10 @@
     <div class="login-wrapper clearfix"> -->
       <div class="button-cont">
         <ul>
-          <li>广州市安发网络科技有限公司</li>
+          <li><a href="http://www.anfanet.com" target="_blank">广州市安发网络科技有限公司</a></li>
           <!-- <li>地址：天河区天河路石牌桥丰兴广场B座1804</li> -->
-          <li>电话 ：020-38856254 </li>
-          <li>网址：www.anfanet.com </li>
+          <li>电话 ：400-999-2828 </li>
+          <li>网址：<a href="http://www.28tms.com" target="_blank">www.28tms.com</a> </li>
           <li class="hoverLink"><a href="http://www.miitbeian.gov.cn">粤ICP备16061301号-5</a></li>
         </ul>
         <div class="down">

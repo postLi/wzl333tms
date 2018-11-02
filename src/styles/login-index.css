@@ -6,6 +6,18 @@
   /*padding: 0 20px;*/
   position: relative;
 }
+.login-top-wrapper a{
+  position: absolute;
+  right: 0;
+  top: 15px;
+  line-height: 25px;
+  text-decoration: none;
+  color: #0a84ff;
+  font-weight: bold;
+}
+.login-top-wrapper a:hover{
+  border-bottom: 1px solid #0a84ff;
+}
 .login-wrapper{
   max-width: 1230px;
   width: 100%;

@@ -934,10 +934,9 @@ export default {
     },
     orderobj: {
       handler(newVal) {
-        console.log('3333333333333333333')
         // 如果是弹窗才响应这个变化
         if (this.ispop) {
-          this.initIndex('orderobj')
+          // this.initIndex('orderobj')
         }
       },
       deep: true
@@ -991,16 +990,21 @@ export default {
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
+        // 这里处理缓存的数据等
       }
     },
+    // 弹窗时处理、如提货转运单，订单转运单
     'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
     }
   },
+  // 新建订单、改单时会触发
+  // 当创建/修改切换时，不会触发，此时需要判断router变化来初始化数据
   activated() {
     // if (this.ispop) {
+    this.loading = true
     this.initIndex('activated')
     // }
   },
@@ -1008,13 +1012,18 @@ export default {
 
   },
   mounted() {
-    this.loading = true
-
-    this.initIndex('mounted')
     this.getSelectType()
     this.getShipPayWay()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
+    if (this.ispop) {
+      this.loading = true
+
+      this.initIndex('mounted')
+
+      // 中转默认付款方式
+      this.form.tmsOrderTransfer.paymentId = 16
+    }
   },
   methods: {
     // 公共工具函数
@@ -1196,24 +1205,19 @@ export default {
       })
     },
     // 获取个人设置
-    getPersonSetting(nocache) {
-      /* if (!nocache && this.dataCache['personSeting']) {
-        return Promise.resolve(this.dataCache['personSeting'])
-      } else { */
+    getPersonSetting() {
       return orderManage.getPersonalSetup(this.otherinfo.id)
-      // }
     },
     // 获取货物设置
     getCargoSetting() {
-      /* if (this.dataCache['cargoSeting']) {
-        return Promise.resolve(this.dataCache['cargoSeting'])
-      } else { */
       return orderManage.getCargoSetting(this.otherinfo.orgid)
-      // }
     },
     // 获取基本设置信息
     getBaseSetting() {
-      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
+      console.log('getBaseSetting:::::')
+
+      // return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
+      return Promise.all([this.getOrgId()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0]
         // 获取费用设置
@@ -1309,7 +1313,7 @@ export default {
               "cargoAmount": 4
             }
           ] */
-        if (!this.output.isOrder &&　this.form.tmsOrderShip.shipSn) {
+        if (!this.output.isOrder && this.form.tmsOrderShip.shipSn) {
           orderManage.postGenerateGoodsSn({
             'tmsOrderShip': {
               'shipSn': this.form.tmsOrderShip.shipSn
@@ -1479,7 +1483,6 @@ export default {
 
       this.reset()
       this.getBaseSetting().then(res => {
-        console.log('base setting info:', res, this.$route)
         let param
         if (this.ispop) {
           console.log('pop create order:', this.orderobj)
@@ -1541,16 +1544,11 @@ export default {
         // 找到运单信息
         this.init()
         this.setOrderData(res.data)
-        this.modifyOrder()
         this.loading = false
       }).catch(err => {
         console.log('initOrder err:', err)
         errFn()
       })
-    },
-    // 修改运单
-    modifyOrder() {
-
     },
     // 从订单创建运单
     initPreOrder() {
@@ -1937,7 +1935,7 @@ export default {
       //   this.form.cargoList[index][name] = event.target.value + ''
       //   console.log('cargoAmount',this.form.cargoList[index][name])
       // }else {
-        this.form.cargoList[index][name] = event.target.value
+      this.form.cargoList[index][name] = event.target.value
       // }
       this.setCargoNum()
     },
