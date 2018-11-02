@@ -12,7 +12,7 @@ import Company from './module/company'
 // 财务
 import Finance from './module/finance'
 // 客服
-import Service from './module/service'
+// import Service from './module/service'
 // 运营
 import Operation from './module/operation'
 // 报表
@@ -36,10 +36,10 @@ export const constantRouterMap = [{
   component: _import('login/index'),
   hidden: true
 }, {
-    path: '/404',
-    component: _import('404'),
-    hidden: true
-  },
+  path: '/404',
+  component: _import('404'),
+  hidden: true
+},
   /*   {
       component: Layout,
       redirect: '/checklist/index',
@@ -65,21 +65,21 @@ export const constantRouterMap = [{
     // name: '首页',
   name: 'dashboard',
   meta: {
-      'code': 'HOME_PAGE'
-    },
+    'code': 'HOME_PAGE'
+  },
   hidden: true,
   children: [{
-      path: '/dashboard',
-      component: _import('html5/html5index'),
-      name: 'dashboard',
-      icon: 'shouye',
-      meta: {
+    path: '/dashboard',
+    component: _import('html5/html5index'),
+    name: 'dashboard',
+    icon: 'shouye',
+    meta: {
         title: '运营控制台',
         noCache: false,
         'code': 'HOME_PAGE_1',
         'proute': 'dashboard'
       }
-    }, {
+  }, {
       path: '/console',
       component: _import('html5/index'),
       name: 'console',

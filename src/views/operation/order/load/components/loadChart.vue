@@ -17,10 +17,6 @@
   </div>
 </template>
 <script>
-// 需要考虑按需引入，减小引入体积
-// echarts的各模块
-// https://github.com/apache/incubator-echarts/blob/master/index.js
-import echarts from 'echarts'
 import { objectMerge2 } from '@/utils/index'
 export default {
   props: {
@@ -126,7 +122,7 @@ export default {
       const surweight = this.baseInfo.totalWeight - this.baseInfo.weight
       this.baseInfo.surplusWeight = surweight
       if (this.popVisible) {
-        this.chart = echarts.init(this.$refs.echartWeight)
+        this.chart = this.$echarts.init(this.$refs.echartWeight)
         this.chart.setOption({
           title: {
             text: '总载重: ' + this.baseInfo.totalWeight,
@@ -140,7 +136,7 @@ export default {
           },
           tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
           },
           series: [{
             name: '总载重',
@@ -158,19 +154,19 @@ export default {
               }
             },
             data: [{
-                value: this.baseInfo.weight,
-                name: '已配载',
-                itemStyle: {
+              value: this.baseInfo.weight,
+              name: '已配载',
+              itemStyle: {
                   color: '#FFCC66'
                 }
-              },
-              {
-                value: this.baseInfo.surplusWeight,
-                name: '可配载',
-                itemStyle: {
+            },
+            {
+              value: this.baseInfo.surplusWeight,
+              name: '可配载',
+              itemStyle: {
                   color: '#79F7C1'
                 }
-              }
+            }
             ]
           }]
         })
@@ -180,7 +176,7 @@ export default {
       const survolume = this.baseInfo.totalVolume - this.baseInfo.volume
       this.baseInfo.surplusVolume = survolume
       if (this.popVisible) {
-        this.chart = echarts.init(this.$refs.echartVolume)
+        this.chart = this.$echarts.init(this.$refs.echartVolume)
         this.chart.setOption({
           title: {
             text: '总载立方: ' + this.baseInfo.totalVolume,
@@ -194,7 +190,7 @@ export default {
           },
           tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
           },
           series: [{
             name: '总载立方',
@@ -212,19 +208,19 @@ export default {
               }
             },
             data: [{
-                value: this.baseInfo.volume,
-                name: '已配载',
-                itemStyle: {
+              value: this.baseInfo.volume,
+              name: '已配载',
+              itemStyle: {
                   color: '#FFCC66'
                 }
-              },
-              {
-                value: this.baseInfo.surplusVolume,
-                name: '可配载',
-                itemStyle: {
+            },
+            {
+              value: this.baseInfo.surplusVolume,
+              name: '可配载',
+              itemStyle: {
                   color: '#79F7C1'
                 }
-              }
+            }
             ]
           }]
         })
