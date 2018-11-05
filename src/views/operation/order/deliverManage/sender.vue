@@ -253,6 +253,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = objectMerge2({}, obj)
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid

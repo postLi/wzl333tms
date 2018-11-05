@@ -301,6 +301,8 @@ export default {
     },
     // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
+      this.searchForm.pageNum = this.$options.data().searchForm.pageNum
+      this.searchForm.pageSize = this.$options.data().searchForm.pageNum
       // 根据搜索参数请求后台获取数据
       Object.assign(this.searchForm, searchParam)
       this.fetchData()

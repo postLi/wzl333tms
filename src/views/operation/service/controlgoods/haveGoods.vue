@@ -544,11 +544,10 @@ export default {
       tablekey: 0,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 1000,
+        'pageSize': 100,
         'vo': {
           'status': 2
         }
-
       },
       total: 0,
       allId: false,
@@ -936,6 +935,8 @@ export default {
     },
          // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
             // 根据搜索参数请求后台获取数据
       objectMerge2(this.searchQuery.vo, searchParam)
             // this.searchQuery.vo.orgId = searchParam.orgid

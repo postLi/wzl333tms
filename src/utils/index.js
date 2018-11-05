@@ -1,7 +1,9 @@
 /**
  * Created by lyy
  */
-import { getUsername } from '@/utils/auth'
+import {
+  getUsername
+} from '@/utils/auth'
 import {
   Message,
   MessageBox
@@ -35,9 +37,6 @@ export function getSummaries(param, propsArr) {
 
     let unit = '元'
     const find = propsArr.filter(el => {
-      if (el === 'notNowPayFee') {
-        console.log('findddddddddd:', el, column.property)
-      }
       // 完全等于属性名
       if (el === column.property || el === column.prop) {
         prop = el
@@ -358,7 +357,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
@@ -985,7 +984,7 @@ export function cacheDEVInfo(pfix, data) {
 }
 
 function setCacheDEVInfo(data, pfix) {
-   // 如果是非正式环境，缓存最近50条js报错信息
+  // 如果是非正式环境，缓存最近50条js报错信息
   // 正式环境下只用sessionStorage缓存
   var is28tms = window.location.host.indexOf('28tms.cn') !== -1
   var lc = is28tms ? window.sessionStorage : window.localStorage

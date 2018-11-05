@@ -522,6 +522,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = obj
       this.loading = false
       this.fetchData()

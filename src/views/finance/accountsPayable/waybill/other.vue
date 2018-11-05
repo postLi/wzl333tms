@@ -269,6 +269,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付回扣 10-实际提货费 13-其他费用支出
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
