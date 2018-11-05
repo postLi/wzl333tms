@@ -14,9 +14,9 @@
         </el-table-column>
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
-        <el-table-column prop="shipSn" label="运单号" width="120">
+        <el-table-column prop="shipSn" label="运单号" width="120" fixed>
         </el-table-column>
-         <el-table-column prop="childShipSn" label="子运单号" width="120">
+        <el-table-column prop="childShipSn" label="子运单号" width="120" fixed>
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
@@ -107,11 +107,11 @@
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
-        <el-table-column prop="repertoryAmount" sortable label="运单件数" width="100">
+        <el-table-column prop="repertoryAmount" sortable label="中转件数" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryWeight" sortable label="运单重量" width="100">
+        <el-table-column prop="repertoryWeight" sortable label="中转重量" width="100">
         </el-table-column>
-        <el-table-column prop="repertoryVolume" sortable label="运单体积" width="100">
+        <el-table-column prop="repertoryVolume" sortable label="中转体积" width="100">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
