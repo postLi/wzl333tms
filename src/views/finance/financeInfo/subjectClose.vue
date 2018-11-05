@@ -12,41 +12,103 @@
 
           </div>
         </el-form>
-        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-down" @click="doAction('doNext')" plain
+        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-down"
+                   @click="doAction('doNext')" plain
                    v-has:PICK_FINASH>下一步
         </el-button>
-        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')" plain
+        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')"
+                   plain
                    v-has:PICK_SEL>上一步
         </el-button>
 
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain-->
-                   <!--v-has:PICK_PRI>打印-->
+        <!--v-has:PICK_PRI>打印-->
         <!--</el-button>-->
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">-->
-          <!--表格设置-->
+        <!--表格设置-->
         <!--</el-button>-->
       </div>
       <div class="info_tab">
 
-
-        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"
-                  @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
-                  style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
-          <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
-                             v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else
-                             :width="column.width">
-              <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)"
-                      @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
-              </template>
-            </el-table-column>
-          </template>
+        <el-table
+          ref="multipleTable"
+          :data="usersArr"
+          stripe
+          border
+          @selection-change="getSelection"
+          height="100%"
+          tooltip-effect="dark"
+          :default-sort="{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
+          <el-table-column
+            fixed
+            sortable
+            prop="id"
+            label="序号"
+            width="150">
+            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="核销科目">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="一级科目">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="一级科目">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="三级科目">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="四级科目">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="abnormalNo"
+            label="操作">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+            </template>
+          </el-table-column>
         </el-table>
+
+
+        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"-->
+        <!--@selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"-->
+        <!--style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
+        <!--&lt;!&ndash;<el-table-column fixed sortable type="selection" width="50"></el-table-column>&ndash;&gt;-->
+        <!--<template v-for="column in tableColumn">-->
+        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"-->
+        <!--v-if="!column.slot" :width="column.width"></el-table-column>-->
+        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else-->
+        <!--:width="column.width">-->
+        <!--<template slot-scope="scope">-->
+        <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)"-->
+        <!--@click.stop="column.click(scope)"></span>-->
+        <!--<span v-else v-html="column.slot(scope)"></span>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
+        <!--</template>-->
+        <!--</el-table>-->
 
 
       </div>
@@ -56,15 +118,10 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid"
-                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" :key="mykey"/>
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                @success="setColumn"></TableSetup>
-    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible"
-                @success="fetchData" :dotInfo="selectInfo"></PickupMain>
-    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible"
-                     @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
-
+    <!--<TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"-->
+    <!--@success="setColumn"></TableSetup>-->
+    <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog'
+                   :isSubClose="isSubClose"></SubjectDialog>
   </div>
 </template>
 <script>
@@ -73,23 +130,19 @@
 
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
-  import AddCustomer from './components/add'
-  import PickupMain from './components/pickupMain'
-  import PickupRelevance from './components/pickupRelevance'
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
   import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
   import SelectTree from '@/components/selectTree/index'
+  import SubjectDialog from './components/subjectDialog'
 
   export default {
     components: {
       SearchForm,
       Pager,
       TableSetup,
-      AddCustomer,
-      PickupMain,
-      PickupRelevance,
+      SubjectDialog,
       SelectTree
     },
     computed: {
@@ -102,6 +155,7 @@
     },
     mounted() {
       this.searchQuery.vo.orgid = this.otherinfo.orgid
+      this.usersArr = this.tableColumn
     },
     data() {
       return {
@@ -115,13 +169,8 @@
         tablekey: 0,
         // 加载状态
         loading: false,
-        setupTableVisible: false,
-        AddCustomerVisible: false,
-        pickMaintainisible: false,
-        releMaintainisible: false,
-        isModify: false,
-        isDepMain: false,
-        isDbclick: false,
+        showDialog: false,
+        isSubClose: false,
         selectInfo: {},
         // 选中的行
         selected: [],
@@ -173,10 +222,14 @@
       }
     },
     methods: {
+      handleClick(row) {
+        this.openShowDialog()
+        this.isSubClose = true
+      },
       fetchAllCustomer() {
         this.loading = true
         return fetchPostlist(this.searchQuery).then(data => {
-          this.usersArr = data.list
+          // this.usersArr = data.list
           this.total = data.total
           this.loading = false
         }).catch((err) => {
@@ -201,7 +254,7 @@
       doAction(type) {
         // 判断是否有选中项
         if (!this.selected.length && type !== 'doNext' && type !== 'doLast' && type !== 'print') {
-          this.closeAddCustomer()
+          // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
             type: 'warning'
@@ -253,71 +306,6 @@
               columns: this.tableColumn
             })
             break
-          // 新增
-          case 'add':
-            this.closeAddCustomer()
-            this.isModify = false
-            this.isDbclick = false
-            this.selectInfo = {}
-            this.openAddCustomer()
-            break
-          // 修改
-          case 'modify':
-            this.closeAddCustomer()
-            this.isModify = true
-            this.isDbclick = false
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能修改单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '提货完成不能修改~',
-                type: 'warning'
-              })
-              this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openAddCustomer()
-            break
-          // 提货完成
-          case 'finishPick':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '已经提货完成了~',
-                type: 'warning'
-              })
-              this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickMaintainisible()
-            break
-          // 关联运单
-          case 'relevance':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickReletainisible()
-            break
           // 删除客户
           case 'delete':
             const ids = this.selected.filter(el => {
@@ -360,39 +348,22 @@
       closeSetupTable() {
         this.setupTableVisible = false
       },
-      openAddCustomer() {
-        this.AddCustomerVisible = true
-      },
-
-      closeAddCustomer() {
-        // this.mykey = Math.random()
-        this.AddCustomerVisible = false
-      },
-      openpickMaintainisible() {
-        this.pickMaintainisible = true
-        this.releMaintainisible = false
-      },
-      openpickReletainisible() {
-        this.releMaintainisible = true
-        this.pickMaintainisible = false
-      },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
       getSelection(selection) {
         this.selected = selection
       },
-      getDbClick(row, event) {
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
-        this.$refs.multipleTable.clearSelection()
-      },
       setColumn(obj) {
         this.tableColumn = obj
         this.tablekey = Math.random()
-      }
+      },
+      closeShowDialog() {
+        this.showDialog = false
+      },
+      openShowDialog() {
+        this.showDialog = true
+      },
     }
   }
 </script>

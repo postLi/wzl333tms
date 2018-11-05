@@ -5,14 +5,12 @@
     width="30%"
     center
     @click="closeMe" :close-on-click-modal="false" :before-close="closeMe" class="sub_dialog">
-    <el-form status-icon size="mini" ref="ruleForm" :model="form" class="sub_form" :rules="rules">
+    <el-form status-icon size="mini" ref="ruleForm" :model="form" class="sub_form" :rules="rules" v-if="isAddLE">
       <div v-if="isDoAddEnd">
         <el-form-item label="科目代码" class="sub_el_form_item">
-          <!--<el-tag>科目代码1</el-tag>-->
           <span>1000</span>
         </el-form-item>
         <el-form-item label="上级科目" class="sub_el_form_item">
-          <!--<el-tag>科目代码1</el-tag>-->
           <span>2000</span>
         </el-form-item>
         <el-form-item label="科目代码">
@@ -21,10 +19,6 @@
 
           </el-tag>
           <el-input v-model="form.name">
-            <!--<template slot="append">-->
-            <!--<el-input v-model="form.name">-->
-            <!--</el-input>-->
-            <!--</template>-->
           </el-input>
         </el-form-item>
       </div>
@@ -36,9 +30,38 @@
       </el-form-item>
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
     </el-form>
+
+    <el-form status-icon size="mini" ref="ruleForm" :model="form" class="sub_form direct" :rules="rules"
+             label-width="80px" v-else-if="isDirect" width="100%">
+      <el-form-item label="核销方向">
+        <el-input v-model="form.name" placeholder="请输入核销方向如：工商银行"></el-input>
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input type="textarea" v-model="form.name" placeholder="最多输入50个字符。" :maxlength='50'></el-input>
+      </el-form-item>
+    </el-form>
+
+    <el-form status-icon size="mini" ref="ruleForm" :model="form" class="sub_form" :rules="rules" v-else>
+      <el-form-item label="核销科目">
+        <el-input v-model="form.name" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="一级科目">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+      <el-form-item label="二级科目" class="">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+      <el-form-item label="三级科目" class="">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+      <el-form-item label="四级科目" class="">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+    </el-form>
     <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="closeMe">取 消</el-button>
-    <el-button size="mini" type="primary" @click="submitForm">确 定</el-button>
+
+    <el-button size="mini" type="primary" @click="submitForm">保 存</el-button>
+      <el-button size="mini" @click="closeMe">取 消</el-button>
   </span>
   </el-dialog>
 </template>
@@ -58,32 +81,50 @@
         type: Boolean,
         default: false
       },
+      isSubClose: {
+        type: Boolean,
+        default: false
+      },
+      isDoAddSub: {
+        type: Boolean,
+        default: false
+      },
+      isDoEdit: {
+        type: Boolean,
+        default: false
+      }
     },
     watch: {
-      isDoAddEnd(newVal, oldVal) {
-        if (this.isDoAddEnd) {
-          this.isTitle = '增加下级'
-        }
-        else if (this.isDoExport) {
-          this.isTitle = '导入模板'
-        }
-        else {
-          this.isTitle = '增加一级'
-        }
-        console.log(this.isDoAddEnd,'isDoAddEnd')
+      isDoAddEnd: {
+        handler() {
+          this.comWatch()
+        },
+        immediate: true
       },
-      isDoExport(newVal, oldVal) {
-        if (this.isDoAddEnd) {
-          this.isTitle = '增加下级'
-        }
-        else if (this.isDoExport) {
-          this.isTitle = '导入模板'
-        }
-        else {
-          this.isTitle = '增加一级'
-        }
-        console.log(this.isDoExport,'isDoExport')
-      }
+      isDoExport: {
+        handler() {
+          this.comWatch()
+        },
+        immediate: true
+      },
+      isSubClose: {
+        handler() {
+          this.comWatch()
+        },
+        immediate: true
+      },
+      isDoAddSub: {
+        handler() {
+          this.comWatch()
+        },
+        immediate: true
+      },
+      isDoEdit: {
+        handler() {
+          this.comWatch()
+        },
+        immediate: true
+      },
     },
     data() {
       return {
@@ -95,14 +136,41 @@
           name: [
             {required: true}
           ]
-        }
-        // isShow: false
+        },
+        isAddLE: false,
+        isDirect: false,
+        // subjectDirection: false
       };
     },
     mounted() {
-      // console.log(this.isShow, 'isShow')
     },
     methods: {
+      comWatch() {
+        this.isAddLE = false
+        this.isDirect = false
+        if (this.isDoAddEnd) {
+          this.isTitle = '增加下级'
+          this.isAddLE = true
+        }
+        else if (this.isDoExport) {
+          this.isTitle = '导入模板'
+        }
+        else if (this.isSubClose) {
+          this.isTitle = '修改'
+        }
+        else if (this.isDoAddSub) {
+          this.isTitle = '新增'
+          this.isDirect = true
+        }
+        else if (this.isDoEdit) {
+          this.isTitle = '修改'
+          this.isDirect = true
+        }
+        else {
+          this.isTitle = '增加一级'
+          this.isAddLE = true
+        }
+      },
       submitForm() {
         this.closeMe()
       },
@@ -125,10 +193,14 @@
       width: 20% !important;
     }
     .el-dialog__header {
-
+      border-bottom: 1px solid #e6e6e6;
+      .el-dialog__title{
+        font-size: 14px;
+        font-weight: bold;
+      }
     }
     .el-dialog__body {
-      padding: 0px 20px 30px;
+      padding: 10px 20px 30px;
       .el-form {
         .el-form-item {
           display: flex;
@@ -144,6 +216,13 @@
             line-height: 32px;
             border-radius: 0;
           }
+          .el-input.el-input--mini.is-disabled{
+            .el-input__inner {
+              background-color: #fff;
+              border-color: #dcdfe6;
+              color: #606266;
+            }
+          }
         }
         .sub_el_form_item:nth-of-type(2) {
           margin-left: 30px;
@@ -151,12 +230,25 @@
         .sub_span {
           font-size: 14px;
           letter-spacing: 1px;
+          color: #606266;
+        }
+      }
+      .direct {
+        .el-form-item__content {
+          margin-left: 0 !important;
+          .el-input__inner {
+            width: 110%;
+          }
+          .el-textarea__inner {
+            width: 116%;
+          }
         }
       }
 
     }
     .el-dialog__footer {
-
+      border-top: 1px solid #b6dfff;
+      padding-bottom: 10px;
     }
   }
 </style>
