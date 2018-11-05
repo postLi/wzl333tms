@@ -5,7 +5,6 @@
       <div class="btns_box">
         <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="openlntelligent" v-has:LOAD_GX_SMART>智能配载
         </el-button>
-        <!-- <span class="dbclickTips">双击查看详情</span> -->
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" border height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" stripe>
@@ -15,9 +14,6 @@
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime" width="180">
-            <!--  <template slot-scope="scope">
-              <span> {{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-            </template> -->
           </el-table-column>
           <el-table-column label="运行路线" prop="line"></el-table-column>
           <el-table-column label="方案数量" prop="schemeNum" width="120"></el-table-column>
@@ -87,6 +83,8 @@ export default {
         })
     },
     getSearchParam(obj) { // 获取查询条件
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery, 'vo', obj)
       this.fetchData()
     },

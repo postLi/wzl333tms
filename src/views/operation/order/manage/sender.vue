@@ -319,8 +319,11 @@
       handlePageChange(obj) {
         this.searchForms.currentPage = obj.pageNum
         this.searchForms.pageSize = obj.pageSize
+        this.fetchAllList()
       },
       getSearchParam(obj) {
+        this.searchForms.currentPage = this.$options.data().searchForms.currentPage
+        this.searchForms.pageSize = this.$options.data().searchForms.pageSize
         this.searchForms.vo = objectMerge2(this.searchForms.vo, obj)
         this.fetchAllList()
       },

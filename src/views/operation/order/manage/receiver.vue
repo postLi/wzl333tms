@@ -244,7 +244,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" :columns="columns"  />
   </div>
 </template>
 <script>
@@ -268,12 +268,12 @@ export default {
           'otherinfo'
       ]),
       orgid () {
-        console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
         return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
   },
   mounted () {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
+    this.searchForm.vo.orgid = this.otherinfo.orgid
     this.fetchAllList(this.otherinfo.orgid).then(res => {
       this.loading = false
     }).catch((err)=>{
@@ -283,6 +283,7 @@ export default {
   },
   data () {
     return {
+      columns: [],
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -317,6 +318,7 @@ export default {
     fetchAllList() {
       this.loading = true
       return getPostlist(this.searchForm).then(data => {
+        // this.total = data.total
         // this.usersArr = data.list
         // this.total = data.totalCount
         this.loading = false
@@ -331,8 +333,13 @@ export default {
     handlePageChange (obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.searchForm.currentPage = obj.pageNum
+      this.searchForm.pageSize = obj.pageSize
+      this.fetchAllList()
     },
     getSearchParam (obj) {
+      this.searchForm.currentPage = this.$options.data().searchForm.currentPage
+      this.searchForm.pageSize = this.$options.data().searchForm.pageSize
       this.searchForm.vo = Object.assign(this.searchForm.vo, obj)
       this.fetchAllList()
     },

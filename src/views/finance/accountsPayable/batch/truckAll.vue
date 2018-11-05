@@ -368,6 +368,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },

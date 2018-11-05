@@ -207,8 +207,11 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchAllCustomer()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo.orgid = obj.orgid
       this.searchQuery.vo.driverMobile = obj.mobile
       this.searchQuery.vo.driverName = obj.name
