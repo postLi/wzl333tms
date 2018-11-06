@@ -1,22 +1,23 @@
 <template>
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
-      <el-form-item label="结算时间">
+      <el-form-item label="核销时间">
         <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @change="changeVal">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="结算网点" prop="orgId">
+      <el-form-item label="核销网点" prop="orgId">
         <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="changeVal">
         </SelectTree>
       </el-form-item>
-      <el-form-item label="费用类型" prop="feeId">
-        <el-select v-model="searchForm.feeId" @change="changeVal">
-          <el-option label="全部" value=""></el-option>
-          <el-option v-for="item in feeIds" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
-        </el-select>
-        <!-- <selectType v-model="searchForm.feeId" type="fee_type" @change="selectFeeType">
-          <el-option slot="head" label="全部" value=""></el-option>
-        </selectType> -->
+      <el-form-item label="方向" prop="paymentsType">
+        <el-select v-model="searchForm.paymentsType" placeholder="方向" :size="btnsize">
+       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
+      </el-select>
+      </el-form-item>
+      <el-form-item label="来源" prop="dataSrc">
+       <el-select v-model="searchForm.dataSrc" placeholder="来源" :size="btnsize">
+       <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
+      </el-select>
       </el-form-item>
       <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
@@ -32,7 +33,6 @@ import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SelectType from '@/components/selectType/index'
-import { getFeeTypeDict } from '@/api/finance/settleLog'
 import searchAll from '@/components/searchAll/index'
 export default {
   components: {
@@ -65,19 +65,17 @@ export default {
       searchObjs: {},
       searchForm: {
         orgId: '',
-        settlementId: '',
-        feeId: ''
+        dataSrc: '',
+        paymentsType: '',
+        startTime: '',
+        endTime: ''
       },
-      feeIds: [],
-      rules: {
-        shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
-      },
+      rules: {},
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
-      },
-      settlementId: ''
+      }
     }
   },
   watch: {
@@ -104,8 +102,6 @@ export default {
   },
   mounted() {
     this.searchForm.orgId = this.orgid
-
-    this.getFeeTypeDict()
     this.onSubmit()
   },
   methods: {
@@ -113,12 +109,6 @@ export default {
       this.searchTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
-    },
-    getFeeTypeDict() {
-      this.settlementId = Number(this.$route.query.settlementId)
-      getFeeTypeDict(this.settlementId).then(data => {
-        this.feeIds = data
-      })
     },
     selectFeeType(obj) {
       console.log(obj)
@@ -138,7 +128,6 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.searchForm.orgId = this.orgid
-        this.searchForm.settlementId = this.$const.SETTLEMENT_ID[0].value
         this.$refs[formName].resetFields()
       })
     }

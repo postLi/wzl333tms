@@ -1,31 +1,31 @@
 <template>
   <div>
     <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
-    <div class="staff_searchinfo--input">
-      <el-form-item label="核销时间">
-        <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
-        </el-date-picker>
+      <div class="staff_searchinfo--input">
+        <el-form-item label="核销时间">
+          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="核销网点" prop="orgId">
+          <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="onSubmit"></SelectTree>
+        </el-form-item>
+        <el-form-item label="方向" prop="paymentsType">
+          <el-select v-model="searchForm.paymentsType" placeholder="方向" :size="btnsize">
+            <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="来源" prop="dataSrc">
+          <el-select v-model="searchForm.dataSrc" placeholder="来源" :size="btnsize">
+            <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
+          </el-select>
+        </el-form-item>
+        <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+      </div>
+      <el-form-item class="staff_searchinfo--btn">
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
       </el-form-item>
-      <el-form-item label="核销网点" prop="orgId">
-        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="onSubmit"></SelectTree>
-      </el-form-item>
-       <el-form-item label="方向" prop="settlementId">
-      <el-select v-model="searchForm.settlementId" placeholder="方向" :size="btnsize">
-       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
-    </el-form-item>
-      <el-form-item label="来源" prop="settlementId">
-          <el-select v-model="searchForm.source" placeholder="来源" :size="btnsize">
-       <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
-      </el-form-item>
-      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
-    </div>
-    <el-form-item class="staff_searchinfo--btn">
-      <el-button type="primary" @click="onSubmit">查询</el-button>
-      <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
-    </el-form-item>
-  </el-form>
+    </el-form>
   </div>
 </template>
 <script>
@@ -81,8 +81,8 @@ export default {
         orgId: '',
         startTime: '',
         endTime: '',
-        settlementId: '',
-        source: ''
+        dataSrc: '',
+        paymentsType: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
@@ -98,8 +98,8 @@ export default {
     },
     searchCreatTime(newVal) {
       if (newVal) {
-         this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-         this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+        this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
+        this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
       }
     },
     // 传到子组件
@@ -121,13 +121,7 @@ export default {
     this.onSubmit()
   },
   methods: {
-    // GetcustomList() {
-    //   return postQueryLogList().then(data => {
-    //     console.log(data)
-    //   })
-    // },
-    // 接收子组件传回来的东西
-    getDataObj(obj) {
+    getDataObj(obj) {  // 接收子组件传回来的东西
       this.searchCreatTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
       this.$emit('change', obj)
@@ -136,13 +130,6 @@ export default {
       this.popVisible = false
     },
     onSubmit() {
-      // const searchObj = Object.assign({}, this.searchForm)
-      // if (this.searchTime) {
-        // this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        // this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-      // }
-
-      // this.searchObj = Object.assign({}, searchObj)
       const searchObj = Object.assign({}, this.searchForm)
       searchObj.settlementId = this.searchForm.settlementId
       searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
@@ -163,9 +150,10 @@ export default {
 
 </script>
 <style lang="scss">
-.zdycx{
-  .el-form-item__label{
-    width:85px !important;
+.zdycx {
+  .el-form-item__label {
+    width: 85px !important;
   }
 }
+
 </style>

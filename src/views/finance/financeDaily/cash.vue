@@ -24,10 +24,10 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('expandtiure')" plain v-has:FLOW_OUT>修改</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-delete" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>返核销</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>反核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -70,7 +70,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postFindLowList, postCancelSettlement } from '@/api/finance/settleLog'
+import { postBillRecordList } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -101,7 +101,9 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          orgId: ''
+          orgId: '',
+          startTime: '',
+          endTime: ''
         }
       },
       tablekey: 0,
@@ -121,140 +123,139 @@ export default {
         },
         {
           label: '来源',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '类别',
-          prop: 'settlementSn',
-          width: '140',
-          fixed: true
-        },
-        {
-          label: '方向',
-          prop: 'settlementIdZh',
+          prop: 'dataSrcZh',
           width: '110',
           fixed: true
         },
         {
+          label: '类别',
+          prop: 'verificationWay',
+          width: '110',
+        },
+        {
+          label: '方向',
+          prop: 'paymentsTypeZh',
+          width: '90',
+          fixed: true
+        },
+        {
           label: '金额',
-          prop: 'settlementBy',
+          prop: 'amount',
           width: '90',
           fixed: false
         },
         {
           label: '发票号码',
-          prop: 'amount',
-          width: '90',
+          prop: 'invoiceNo',
+          width: '130',
           fixed: false
         },
         {
           label: '收据号码',
-          prop: 'amount',
-          width: '90',
+          prop: 'receiptNo',
+          width: '130',
           fixed: false
         },
         {
           label: '支票号码',
-          prop: 'amount',
-          width: '90',
+          prop: 'checkNo',
+          width: '130',
           fixed: false
         },
         {
           label: '凭证日期',
-          prop: 'settlementTime',
+          prop: 'certTime',
           width: '160',
           slot: (scope) => {
-            return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
           fixed: false
         },
         {
           label: '系统操作日期',
-          prop: 'settlementTime',
+          prop: 'verifyTime',
           width: '160',
           slot: (scope) => {
-            return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.verifyTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
           fixed: false
         },
         {
           label: '一级科目',
-          prop: 'financialWay',
-          width: '90',
+          prop: 'subjectOne',
+          width: '110',
           fixed: false
         },
         {
           label: '二级科目',
-          prop: 'bankName',
-          width: '100',
+          prop: 'subjectTwo',
+          width: '110',
           fixed: false
         },
         {
           label: '三级科目',
-          prop: 'bankAccount',
-          width: '150',
+          prop: 'subjectThree',
+          width: '110',
           fixed: false
         },
         {
           label: '四级科目',
-          prop: 'bankAccountName',
-          width: '90',
+          prop: 'subjectFour',
+          width: '110',
           fixed: false
         },
         {
           label: '摘要',
-          prop: 'chequeNumber',
+          prop: 'remark',
           width: '150',
           fixed: false
         },
         {
           label: '记账网点',
-          prop: 'receivableNumber',
+          prop: 'orgName',
           width: '150',
           fixed: false
         },
         {
           label: '核销人',
-          prop: 'wechatAccount',
+          prop: 'createBy',
           width: '120',
           fixed: false
         },
         {
           label: '手工凭证号',
-          prop: 'alipayAccount',
-          width: '120',
+          prop: 'manualCert',
+          width: '150',
           fixed: false
         },
         {
           label: '凭证号',
-          prop: 'remark',
+          prop: 'certNo',
           width: '150',
           fixed: false
         },
         {
           label: '笔数',
-          prop: 'remark',
-          width: '150',
+          prop: 'verifyCount',
+          width: '100',
           fixed: false
         },
         {
           label: '审核人',
-          prop: 'remark',
-          width: '150',
+          prop: 'verifyMan',
+          width: '120',
           fixed: false
         },
         {
           label: '审核状态',
-          prop: 'remark',
-          width: '150',
-          fixed: false
+          prop: 'verifyStatusZh',
+          width: '100',
+          fixed: true
         },
         {
           label: '审核日期',
-          prop: 'remark',
-          width: '150',
+          prop: 'verifyTime',
+          width: '180',
           fixed: false
         }
       ]
@@ -269,6 +270,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -279,7 +282,7 @@ export default {
     },
     fetchList() {
       this.loading = true
-      return postFindLowList(this.searchQuery).then(data => {
+      return postBillRecordList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
         this.loading = false
@@ -325,6 +328,13 @@ export default {
             this.showDetail() // 查看明细
           }
           break
+        case 'edit':
+        if (this.selectedList[0].verifyStatusZh==='未审核') {
+          this.doEdit()
+        }else {
+          this.$message.warning('凭证【 '+this.selectedList[0].verifyStatusZh +' 】不可修改')
+        }
+         break
         case 'export':
           SaveAsFile({
             data: this.dataList,
@@ -355,14 +365,14 @@ export default {
     cancelCount() {
       const data = {}
       this.$set(data, 'flowId', this.selectedList[0].flowId)
-      postCancelSettlement(data).then(data => {
-          this.$message({ type: 'success', message: '取消结算操作成功' })
-          this.fetchList()
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-          this.fetchList()
-        })
+      // postCancelSettlement(data).then(data => {
+      //     this.$message({ type: 'success', message: '取消结算操作成功' })
+      //     this.fetchList()
+      //   })
+      //   .catch(err => {
+      //     this._handlerCatchMsg(err)
+      //     this.fetchList()
+      //   })
     },
     showCount() {
       this.tableReceiptInfo = Object.assign([], this.selectedList)
@@ -391,12 +401,14 @@ export default {
         this.$router.push({
           path: './cashDetail',
           query: {
-            flowId: this.selectedList[0].flowId,
-            settlementId: this.selectedList[0].settlementId,
+            recordId: this.selectedList[0].id,
             orgId: this.searchQuery.vo.orgId
           }
         })
       }
+    },
+    doEdit () { // 修改
+      this.$message.warning('此功能尚在开发中~')
     },
     setTable() {
       this.setupTableVisible = true

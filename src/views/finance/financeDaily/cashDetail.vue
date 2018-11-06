@@ -6,7 +6,11 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>新增</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>查看明细</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>反核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -47,7 +51,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postDetailList, postDetailCancel, postCancelSettlement } from '@/api/finance/settleLog'
+import { postBillRecordDetailList } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -68,7 +72,10 @@ export default {
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
-        vo: {}
+        vo: {
+          recordId: '',
+          orgId: ''
+        }
       },
       tablekey: 0,
       tablekeyBottom: 0,
@@ -79,361 +86,234 @@ export default {
       setupTableVisible: false,
       tableColumn: [],
       columnOrder: [{
-        label: '结算网点',
-        prop: 'orgName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '结算单号',
-        prop: 'settlementSn',
-        width: '140',
-        fixed: true
-      },
-      {
-        label: '运单号',
-        prop: 'shipSn',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '结算类型',
-        prop: 'settlementIdZh',
-        width: '90',
-        fixed: true
-      },
-      {
-        label: '结算人',
-        prop: 'settlementBy',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '金额',
-        prop: 'amount',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '结算时间',
-        prop: 'settlementTime',
-        width: '160',
-        slot: (scope) => {
-          return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          label: '序号',
+          prop: 'id',
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
         },
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'paymentsType',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '现付',
-        prop: 'onPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '到付',
-        prop: 'arrivalPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '回单付',
-        prop: 'backPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '月结',
-        prop: 'monthPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '中转费合计',
-        prop: 'transferPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '异动费用',
-        prop: 'unusualPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '异常费用',
-        prop: 'exceptionPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '实际提货费',
-        prop: 'pickPuPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '回扣',
-        prop: 'kickBackPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '其他费用支出',
-        prop: 'othePay',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '收支方式',
-        prop: 'financialWay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '银行名称',
-        prop: 'bankName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '银行卡号',
-        prop: 'bankAccount',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '开户人',
-        prop: 'bankAccountName',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '支票号码',
-        prop: 'chequeNumber',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '汇款号码',
-        prop: 'receivableNumber',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '微信号',
-        prop: 'wechatAccount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '支付宝号',
-        prop: 'alipayAccount',
-        width: '120',
-        fixed: false
-      }
-      ],
-      columnBatch: [{
-        label: '结算网点',
-        prop: 'orgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '短驳批次',
-        prop: 'shortBatchNo',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '送货批次',
-        prop: 'sendBatchNo',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '干线批次',
-        prop: 'mainBatchNo',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '结算单号',
-        prop: 'settlementSn',
-        width: '150',
-        fixed: true
-      },
-      {
-        label: '结算类型',
-        prop: 'settlementIdZh',
-        width: '110',
-        fixed: true
-      },
-      {
-        label: '结算人',
-        prop: 'settlementBy',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '金额',
-        prop: 'amount',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '结算时间',
-        prop: 'settlementTime',
-        width: '160',
-        fixed: false,
-        slot: (scope) => {
-          return `${parseTime(scope.row.settlementTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        {
+          label: '来源',
+          prop: 'dataSrcZh',
+          width: '110',
+          fixed: true
+        },
+        {
+          label: '核销项目',
+          prop: 'feeType',
+          width: '110',
+          fixed: true
+        },
+        {
+          label: '类别',
+          prop: 'verificationWay',
+          width: '110',
+        },
+        {
+          label: '方向',
+          prop: 'paymentsTypeZh',
+          width: '90',
+        },
+        {
+          label: '金额',
+          prop: 'amount',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '发票号码',
+          prop: 'invoiceNo',
+          width: '130',
+          fixed: false
+        },
+        {
+          label: '收据号码',
+          prop: 'receiptNo',
+          width: '130',
+          fixed: false
+        },
+        {
+          label: '支票号码',
+          prop: 'checkNo',
+          width: '130',
+          fixed: false
+        },
+        {
+          label: '凭证日期',
+          prop: 'certTime',
+          width: '160',
+          slot: (scope) => {
+            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          },
+          fixed: false
+        },
+        {
+          label: '系统操作日期',
+          prop: 'verifyTime',
+          width: '160',
+          slot: (scope) => {
+            return `${parseTime(scope.row.verifyTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          },
+          fixed: false
+        },
+        {
+          label: '一级科目',
+          prop: 'subjectOne',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '二级科目',
+          prop: 'subjectTwo',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '三级科目',
+          prop: 'subjectThree',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '四级科目',
+          prop: 'subjectFour',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '摘要',
+          prop: 'remark',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '核销网点',
+          prop: 'orgName',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '反核销金额',
+          prop: 'amount', 
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '反核销经办人',
+          prop: 'contraryVerifyMan', 
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '反核销日期',
+          prop: 'contraryVerifyTime', 
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '手工凭证号',
+          prop: 'manualCert',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '凭证号',
+          prop: 'certNo',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '审核人',
+          prop: 'verifyMan',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '审核状态',
+          prop: 'verifyStatusZh',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '审核日期',
+          prop: 'verifyTime',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '开单日期',
+          prop: 'shipCreateTime',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车类型',
+          prop: 'loadTypeId',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '发车日期',
+          prop: 'departureTime',
+          width: '180',
+          fixed: false
+        },
+        {
+          label: '司机',
+          prop: 'driverName',
+          width: '100',
+          fixed: false
         }
-      },
-      {
-        label: '收支类型',
-        prop: 'paymentsType',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '短驳费',
-        prop: 'shortPay',
-        width: '90',
-        fixed: false
-      },
-
-      {
-        label: '送货费',
-        prop: 'sendPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '现付运费',
-        prop: 'onSendPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '现付油卡',
-        prop: 'onCardPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '到付运费',
-        prop: 'arrSendPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '到付油卡',
-        prop: 'arrCardPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '回付运费',
-        prop: 'backSendPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '回付油卡',
-        prop: 'backCardPay',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '发站装卸费',
-        prop: 'startLoadPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '发站其他费',
-        prop: 'startOtherPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '到站装卸费',
-        prop: 'endLoadPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '到站其他费',
-        prop: 'endOtherPay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '整车保险费',
-        prop: 'wholeSurePay',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收支方式',
-        prop: 'financialWay',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '银行名称',
-        prop: 'bankName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '银行卡号',
-        prop: 'bankAccount',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '开户人',
-        prop: 'bankAccountName',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '支票号码',
-        prop: 'senderCompanyName',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '汇款号码',
-        prop: 'receivableNumber',
-        width: '150',
-        fixed: false
-      },
-      {
-        label: '微信号',
-        prop: 'wechatAccount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '支付宝号',
-        prop: 'alipayAccount',
-        width: '120',
-        fixed: false
-      }
       ]
     }
   },
@@ -456,6 +336,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -470,17 +352,17 @@ export default {
       if (this.$route.query.settlementId === 178) {
         this.tableColumn = this.columnOrder // 运单视图
       } else {
-        this.tableColumn = this.columnBatch // 没有数据上显示运单视图
+        this.tableColumn = this.columnOrder // 没有数据上显示运单视图
       }
     },
     fetchList() {
       if (this.$route.query) {
-        this.$set(this.searchQuery.vo, 'flowId', this.flowId)
-        this.$set(this.searchQuery.vo, 'settlementId', this.settlementId)
-        postDetailList(this.searchQuery).then(data => {
+        console.log('searchQuery', this.searchQuery)
+        this.$set(this.searchQuery, 'recordId',this.$route.query.recordId)
+        postBillRecordDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
           this.total = data.total
-        }).catch((err)=>{
+        }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
         })
@@ -544,14 +426,14 @@ export default {
           flowId: this.selectedList[0].flowId,
           detailFlowId: this.selectedList[0].id
         }
-        postCancelSettlement(data).then(data => {
-          this.$message({ type: 'success', message: '取消结算操作成功' })
-          this.fetchList()
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-          this.fetchList()
-        })
+        // postCancelSettlement(data).then(data => {
+        //   this.$message({ type: 'success', message: '取消结算操作成功' })
+        //   this.fetchList()
+        // })
+        // .catch(err => {
+        //   this._handlerCatchMsg(err)
+        //   this.fetchList()
+        // })
       })
     },
     showCount() {

@@ -53,6 +53,14 @@ export const COUNT_STATUS = {
   ALLSETTLEMENT: '已结算'
 }
 /**
+ * 日记账来源
+ */
+export const VERIFICATION_SOURCE = {
+  '': '全部',
+  0: '核销产生',
+  1: '手工录入'
+}
+/**
  * 结算方向
  */
 export const SETTLEMENT_ID = {
@@ -101,7 +109,11 @@ export const FINANCE_WAY = {
 
 export const cursorPosition = {
   get: function(textarea) { // 获取 Textarea 元素当前的光标位置
-    var rangeData = { text: "", start: 0, end: 0 };
+    var rangeData = {
+      text: "",
+      start: 0,
+      end: 0
+    };
 
     if (textarea.setSelectionRange) { // W3C    
       textarea.focus();

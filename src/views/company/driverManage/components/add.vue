@@ -232,14 +232,6 @@ export default {
           }
           this.$set(this.searchTime, 0, cval.validityStartdate)
           this.$set(this.searchTime, 1, cval.validityDate)
-          console.log(cval, this.searchTime)
-          // if (this.form.validityStartdate) {
-          //   this.searchTime[0] = this.form.validityStartdate
-          // }
-          // if (this.form.validityDate) {
-          //   this.searchTime[1] = this.form.validityDate
-          //   // this.form.validityDate = +new Date(this.form.validityDate)
-          // }
           this.form.id = data.id
         } else {
           this.popTitle = '新增司机'
@@ -266,7 +258,6 @@ export default {
         if (valid) {
           this.loading = true
           const data = Object.assign({}, this.form)
-          console.log(this.searchTime)
           data.fixPhone = this.fixPhone
           if (this.searchTime) {
             data.validityStartdate = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
