@@ -378,6 +378,7 @@ export default {
               this.isAlFun = false
               this.openAddCustomer()
             } else {
+              this.$message.warning('批次【 '+this.selected[0].batchNo+' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
               this.closeAddCustomer()
               this.$refs.multipleTable.clearSelection()
               return false
