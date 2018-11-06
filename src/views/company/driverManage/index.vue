@@ -150,10 +150,13 @@ export default {
       }, {
         label: '驾驶证有效期',
         prop: 'validityDate',
-        width: '160',
+        width: '300',
         fixed: false,
         slot: (scope) => {
-          return parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}')
+          let start = scope.row.validityStartdate ?  parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+          let end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+          let data = start +' - '+ end
+          return data
         }
       }, {
         label: '银行卡号',
