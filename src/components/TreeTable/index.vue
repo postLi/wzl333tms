@@ -38,6 +38,7 @@
         </div>
       </template>
     </el-table-column>
+    
     <slot>
       <el-table-column label="科目代码">
         <template slot-scope="scope">
