@@ -141,7 +141,13 @@
             overflow-y: auto;
             .col-class{
               text-align: left;
-              padding-left: 30px;
+              //padding-left: 10px;
+            }
+            .scope-node{
+              //margin-left: 14px;
+              //padding-left: 0 !important;
+              //border-bottom: 1px solid #ddd;
+              //border-left: 1px solid #ddd;
             }
           }
         }

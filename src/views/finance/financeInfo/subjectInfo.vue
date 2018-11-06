@@ -40,46 +40,7 @@
         <!--</el-button>-->
       </div>
       <div class="info_tab info_tab_media">
-        <!--<tree-table :data="data" :columns="columns" border/>-->
-        <tree-table :data="data" :eval-func="func" :eval-args="args" :expand-all="expandAll" border
-                    ref="multipleTable" height="100%" tooltip-effect="dark" :key="tablekey" @change="getTreeTableParam">
-          <el-table-column label="科目代码">
-            <template slot-scope="scope">
-              <span style="color:sandybrown">{{ scope.row.event }}</span>
-              <!--<el-tag>{{ scope.row.timeLine+'ms' }}</el-tag>-->
-            </template>
-          </el-table-column>
-          <el-table-column label="是否公共" :render-header="renderHeader">
-            <template slot-scope="scope">
-              <span>{{ scope.row.event }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="200">
-            <template slot-scope="scope">
-              <el-button type="text" @click="message(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </tree-table>
-
-        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"-->
-        <!--@selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"-->
-        <!--style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-        <!--<el-table-column fixed sortable type="selection" width="50"></el-table-column>-->
-        <!--<template v-for="column in tableColumn">-->
-        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"-->
-        <!--v-if="!column.slot" :width="column.width"></el-table-column>-->
-        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else-->
-        <!--:width="column.width">-->
-        <!--<template slot-scope="scope">-->
-        <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)"-->
-        <!--@click.stop="column.click(scope)"></span>-->
-        <!--<span v-else v-html="column.slot(scope)"></span>-->
-        <!--</template>-->
-        <!--</el-table-column>-->
-        <!--</template>-->
-        <!--</el-table>-->
-
-
+        <tree-table :data="data" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"/>
       </div>
       <div class="info_tab_footer">共计:{{ total }}
         <div class="show_pager">
@@ -89,8 +50,8 @@
     </div>
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
                    :isDoExport="isDoExport"></SubjectDialog>
-    <SubDownDialog :isShow.sync='downShowDialog' @close='closeDownShowDialog'></SubDownDialog>
-
+    <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData"
+                  :info="'driver'" :isSubjectInfo='isSubjectInfo'></ImportDialog>
   </div>
 </template>
 <script>
@@ -100,12 +61,12 @@
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import SubjectDialog from './components/subjectDialog'
-  import SubDownDialog from './components/subDownDialog'
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
   import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
   import treeToArray from '@/utils/customEval'
+  import ImportDialog from '@/components/importDialog'
 
   export default {
     components: {
@@ -114,7 +75,7 @@
       TableSetup,
       SelectTree,
       SubjectDialog,
-      SubDownDialog,
+      ImportDialog,
       treeTable
     },
     computed: {
@@ -130,188 +91,163 @@
     },
     data() {
       return {
+        isSubjectInfo: false,
         isDoExport: false,
         isDoAddEnd: false,
         showDialog: false,
+        importDialogVisible: false,
         func: treeToArray,
-        expandAll: false,
-        data: {
-          id: 1,
-          event: '事件1',
-          timeLine: 100,
-          comment: '无',
-          parentId: 0,
-          children: [
-            {
-              id: 2,
-              event: '事件2',
-              timeLine: 10,
-              comment: '无'
-            },
-            {
-              id: 3,
-              event: '事件3',
-              timeLine: 90,
-              comment: '无',
-              children: [
-                {
-                  id: 4,
-                  event: '事件4',
-                  timeLine: 5,
-                  comment: '无'
-                },
-                {
-                  id: 5,
-                  event: '事件5',
-                  timeLine: 10,
-                  comment: '无'
-                },
-                {
-                  id: 6,
-                  event: '事件6',
-                  timeLine: 75,
-                  comment: '无',
-                  children: [
-                    {
-                      id: 7,
-                      event: '事件7',
-                      timeLine: 50,
-                      comment: '无',
-                      children: [
-                        {
-                          id: 71,
-                          event: '事件71',
-                          timeLine: 25,
-                          comment: 'xx'
-                        },
-                        {
-                          id: 72,
-                          event: '事件72',
-                          timeLine: 5,
-                          comment: 'xx'
-                        },
-                        {
-                          id: 73,
-                          event: '事件73',
-                          timeLine: 20,
-                          comment: 'xx'
-                        }
-                      ]
-                    },
-                    {
-                      id: 8,
-                      event: '事件8',
-                      timeLine: 25,
-                      comment: '无',
-                      children: [
-                        {
-                          id: 7,
-                          event: '事件7',
-                          timeLine: 50,
-                          comment: '无',
-                          children: [
-                            {
-                              id: 71,
-                              event: '事件71',
-                              timeLine: 25,
-                              comment: 'xx'
-                            },
-                            {
-                              id: 72,
-                              event: '事件72',
-                              timeLine: 5,
-                              comment: 'xx'
-                            },
-                            {
-                              id: 73,
-                              event: '事件73',
-                              timeLine: 20,
-                              comment: 'xx'
-                            }
-                          ]
-                        },
-                        {
-                          id: 8,
-                          event: '事件8',
-                          timeLine: 25,
-                          comment: '无',
-                          children: [
-                            {
-                              id: 7,
-                              event: '事件7',
-                              timeLine: 50,
-                              comment: '无',
-                              children: [
-                                {
-                                  id: 71,
-                                  event: '事件71',
-                                  timeLine: 25,
-                                  comment: 'xx'
-                                },
-                                {
-                                  id: 72,
-                                  event: '事件72',
-                                  timeLine: 5,
-                                  comment: 'xx'
-                                },
-                                {
-                                  id: 73,
-                                  event: '事件73',
-                                  timeLine: 20,
-                                  comment: 'xx'
-                                }
-                              ]
-                            },
-                            {
-                              id: 8,
-                              event: '事件8',
-                              timeLine: 25,
-                              comment: '无',
-                              children: [
-                                {
-                                  id: 7,
-                                  event: '事件7',
-                                  timeLine: 50,
-                                  comment: '无',
-                                  children: [
-                                    {
-                                      id: 71,
-                                      event: '事件71',
-                                      timeLine: 25,
-                                      comment: 'xx'
-                                    },
-                                    {
-                                      id: 72,
-                                      event: '事件72',
-                                      timeLine: 5,
-                                      comment: 'xx'
-                                    },
-                                    {
-                                      id: 73,
-                                      event: '事件73',
-                                      timeLine: 20,
-                                      comment: 'xx'
-                                    }
-                                  ]
-                                },
-                                {
-                                  id: 8,
-                                  event: '事件8',
-                                  timeLine: 25,
-                                  comment: '无'
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
+        expandAll: true,
+        data: [
+          {
+            id: 0,
+            event: '事件1',
+            timeLine: 50,
+            comment: '无'
+          },
+          {
+            id: 1,
+            event: '事件1',
+            timeLine: 100,
+            comment: '无',
+            children: [
+              {
+                id: 2,
+                event: '事件2',
+                timeLine: 10,
+                comment: '无',
+                children: [
+                  {
+                    id: 2,
+                    event: '事件2',
+                    timeLine: 10,
+                    comment: '无'
+                  },
+                  {
+                    id: 3,
+                    event: '事件3',
+                    timeLine: 90,
+                    comment: '无',
+                    children: [
+                      {
+                        id: 4,
+                        event: '事件4',
+                        timeLine: 5,
+                        comment: '无'
+                      },
+                      {
+                        id: 5,
+                        event: '事件5',
+                        timeLine: 10,
+                        comment: '无'
+                      },
+                      {
+                        id: 6,
+                        event: '事件6',
+                        timeLine: 75,
+                        comment: '无',
+                        children: [
+                          {
+                            id: 7,
+                            event: '事件7',
+                            timeLine: 50,
+                            comment: '无',
+                            children: [
+                              {
+                                id: 71,
+                                event: '事件71',
+                                timeLine: 25,
+                                comment: 'xx'
+                              },
+                              {
+                                id: 72,
+                                event: '事件72',
+                                timeLine: 5,
+                                comment: 'xx'
+                              },
+                              {
+                                id: 73,
+                                event: '事件73',
+                                timeLine: 20,
+                                comment: 'xx'
+                              }
+                            ]
+                          },
+                          {
+                            id: 8,
+                            event: '事件8',
+                            timeLine: 25,
+                            comment: '无'
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                id: 3,
+                event: '事件3',
+                timeLine: 90,
+                comment: '无',
+                children: [
+                  {
+                    id: 4,
+                    event: '事件4',
+                    timeLine: 5,
+                    comment: '无'
+                  },
+                  {
+                    id: 5,
+                    event: '事件5',
+                    timeLine: 10,
+                    comment: '无'
+                  },
+                  {
+                    id: 6,
+                    event: '事件6',
+                    timeLine: 75,
+                    comment: '无',
+                    children: [
+                      {
+                        id: 7,
+                        event: '事件7',
+                        timeLine: 50,
+                        comment: '无',
+                        children: [
+                          {
+                            id: 71,
+                            event: '事件71',
+                            timeLine: 25,
+                            comment: 'xx'
+                          },
+                          {
+                            id: 72,
+                            event: '事件72',
+                            timeLine: 5,
+                            comment: 'xx'
+                          },
+                          {
+                            id: 73,
+                            event: '事件73',
+                            timeLine: 20,
+                            comment: 'xx'
+                          }
+                        ]
+                      },
+                      {
+                        id: 8,
+                        event: '事件8',
+                        timeLine: 25,
+                        comment: '无'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
         args: [null, null, 'timeLine'],
         mykey: '',
         btnsize: 'mini',
@@ -321,7 +257,6 @@
         // 加载状态
         loading: false,
         setupTableVisible: false,
-        downShowDialog: false,
         selectInfo: {},
         searchForm: {
           orgid: '',
@@ -344,12 +279,8 @@
           {
             text: '科目名称',
             value: 'event',
-            width: 200,
             fixed: true,
-            slot: (scope) => {
-              return `${scope.row.value}`
-            },
-          }
+          },
         ],
         tableColumn: [{
           label: '序号',
@@ -370,60 +301,13 @@
           width: '',
           fixed: true
         },
-          {
-            label: '操作',
-            prop: 'customerName',
-            width: '',
-            fixed: false
-          }
         ]
       }
     },
     methods: {
-      renderHeader(h, {column, $index}) {
-        return h('span', {}, [
-          h('span', {}, '是否公共'),
-          h('el-popover', {
-            props: {
-              placement: 'top-end',
-              width: '250',
-              trigger: 'hover',
-              content: '公共为总公司设置的财务科目~'
-            }
-          }, [
-            h('i', {slot: 'reference', class: 'el-icon-warning'}, '')
-          ])
-        ])
 
-        // return h('span', [
-        //   h('span',
-        //     {
-        //       props: {
-        //       },
-        //       class: 'errorIcon2',
-        //       style: {
-        //         marginLeft: ''
-        //       },
-        //     }),
-        //   h('span','333 ')
-        // ])
-      },
-      // tipFn(h, {column}) {
-      //   if(column.labelClassName){
-      //     return(
-      //       <el-tooltip class='item' effect='dark' content='Top Center 提示文字' placement='top'>
-      //       <span>3333</span>
-      //     </el-tooltip>
-      //     )
-      //   }
-      //   console.log(column, 'column');
-      // },
       message(row) {
-        console.log(row, 'row')
         this.$message.info(row.event)
-      },
-      handleClick(row) {
-        console.log(row);
       },
       fetchAllCustomer() {
         // this.loading = true
@@ -453,7 +337,7 @@
       },
       doAction(type) {
         // 判断是否有选中项
-        if (!this.selected.length && type !== 'doNext' && type !== 'doAll' && type !== 'doUp' && type !== 'export' && type !== 'print') {
+        if (!this.selected.length && type !== 'doNext' && type !== 'doAll' && type !== 'doUp' && type !== 'doExport' && type !== 'print') {
           // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -484,16 +368,20 @@
             }
             break
           case 'doExport':
+
+            // fetchData () { // 重新获取列表数据 }
             this.$confirm('确定覆盖原有模板?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-              this.$message({
-                type: 'success',
-                message: '覆盖成功!'
-              });
-              this.openDownShowDialog()
+
+              this.importDialogVisible = true
+              this.isSubjectInfo = true
+              // this.$message({
+              //   type: 'success',
+              //   message: '覆盖成功!'
+              // });
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -538,13 +426,10 @@
             })
             break;
           case 'doAll':
-            // this.expandAll = true
-            // this.expandAll === false ? this.expandAll = true : this.expandAll = false
-            console.log(this.expandAll, 'doAll,false')
+            this.expandAll = true
             break
           case 'doUp':
-            // this.expandAll === true ? this.expandAll = false : this.expandAll = true
-            console.log(this.expandAll, 'doUp')
+            this.expandAll = false
             break
           case 'export':
             SaveAsFile({
@@ -612,12 +497,6 @@
       openShowDialog() {
         this.showDialog = true
       },
-      closeDownShowDialog() {
-        this.downShowDialog = false
-      },
-      openDownShowDialog() {
-        this.downShowDialog = true
-      },
 
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
@@ -630,7 +509,7 @@
         this.tablekey = Math.random()
       },
       getTreeTableParam(obj) {
-        console.log(obj, 'obj')
+        this.selected = obj
       }
     }
 
@@ -638,12 +517,8 @@
 
 </script>
 <style type="text/css" lang="scss">
-  .errorIcon2 {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    margin-right: 3px;
-    width: 15px;
-    height: 15px;
-    background: url('../../../assets/role.png') 100% 100% no-repeat;
+
+  .row-expand-cover .el-table__expand-column .el-icon {
+    visibility: hidden;
   }
 </style>
