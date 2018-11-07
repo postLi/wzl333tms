@@ -1,7 +1,11 @@
 import fetch from '@/utils/fetch'
-import { getToken } from '@/utils/auth'
+import {
+  getToken
+} from '@/utils/auth'
 import CACHE from '@/utils/cache'
-import { handleErrorMsg } from '@/utils/'
+import {
+  handleErrorMsg
+} from '@/utils/'
 
 /**
  * 获取城市数据
@@ -119,9 +123,6 @@ export function postImportExcel(data) {
   return fetch.post('/api-system/system/excel/v1/importExcel/', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      return error.data
-    })
 }
 /**
  * 自定义查询条件接口
@@ -130,9 +131,6 @@ export function postQueryLogList(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/getQueryLogList', data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
 }
 /**
  * 自定义查询条件新增接口
@@ -141,9 +139,6 @@ export function postcreaterQueryCriteriaLog(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/createrQueryCriteriaLog', data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
 }
 
 export function deleteQueryLogListById(id) {

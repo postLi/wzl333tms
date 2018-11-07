@@ -31,3 +31,11 @@ export function postVerificationBaseInfo(params) {
 		return res.data
 	})
 }
+/**
+ * 财务日记账记收入记支出
+ */
+export function postAddIncome(params) {
+	return fetch.post('/api-finance/finance/tmsfinancebillrecord/v1.3/addIncome/', params).then(res => {
+		return res.data
+	})
+}

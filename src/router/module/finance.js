@@ -129,6 +129,17 @@ export default {
         noCache: false
       },
       children: [{
+        path: '/finance/accountsPayable/handleFee',
+        icon: 'QQ',
+        name: 'handleFee',
+        component: _import('finance/accountsPayable/handleFee/index'),
+        meta: {
+          role: ['admin'],
+          title: '操作费核销',
+          noCache: false,
+          'code': ''
+        }
+      }, {
         path: '/finance/accountsPayable/waybill',
         redirect: '/finance/accountsPayable/waybill/kickback',
         icon: 'QQ',

@@ -1,13 +1,13 @@
 <template>
-  <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class=" incomeDialog">
+  <el-dialog :title="dialogTitle" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class=" incomeDialog">
     <h4 class="income_title">{{formModelTitle}}</h4>
-    <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="90px">
+    <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
         <el-form-item label="记账网点">
           <SelectTree v-model="formModel.orgId" :orgid="otherinfo.orgid" :size="btnsize"></SelectTree>
         </el-form-item>
-        <el-form-item label="凭证编号">
-          <el-input v-model="formModel.user" placeholder="凭证编号" :size="btnsize"></el-input>
+        <el-form-item label="凭证编号" prop="certNo">
+          <el-input v-model="formModel.certNo" placeholder="凭证编号" :size="btnsize" disabled></el-input>
         </el-form-item>
         <el-form-item>
         </el-form-item>
@@ -15,77 +15,76 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select v-model="formModel.directions" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in directions" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
+          <el-select v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="凭证日期">
-          <el-date-picker v-model="formModel.date" type="date" :size="btnsize" placeholder="选择日期">
+        <el-form-item label="凭证日期" prop="certTime">
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="去向">
-          <el-select v-model="formModel.ways" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in ways" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.verificationWay" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="item in verificationWay" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select v-model="formModel.firstSubjects" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in firstSubjects" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="item in subjectOne" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目">
-          <el-select v-model="formModel.secondSubjects" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in secondSubjects" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="item in subjectTwo" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目">
-          <el-select v-model="formModel.thirdSubjects" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in thirdSubjects" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="item in subjectThree" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select v-model="formModel.forthSubjects" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in forthSubjects" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="item in subjectFour" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="凭证类别">
-          <el-select v-model="formModel.certificationType" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in certificationType" :key="item.value" :label="item.label" :value="item.value">
+          <el-select v-model="formModel.certType" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="(value, key) in $const.CERT_TYPE" :value="key" :key="key" :label="value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="发生金额">
-          <el-input v-model="formModel.user" placeholder="审批人" :size="btnsize"></el-input>
+        <el-form-item label="发生金额" prop="amount">
+          <el-input v-model.number="formModel.amount" placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
         </el-form-item>
       </div>
       <div class="income_item_line"></div>
       <div class="income_item">
-        <el-form-item label="收据号码">
-          <el-input v-model="formModel.user" placeholder="手工凭证" :size="btnsize"></el-input>
+        <el-form-item label="收据号码" prop="receiptNo">
+          <el-input v-model="formModel.receiptNo" placeholder="收据号码" :size="btnsize" :maxlength="25"></el-input>
         </el-form-item>
-        <el-form-item label="发票号码">
-          <el-input v-model="formModel.user" placeholder="手工凭证" :size="btnsize"></el-input>
+        <el-form-item label="发票号码" prop="invoiceNo">
+          <el-input v-model="formModel.invoiceNo" placeholder="发票号码" :size="btnsize" :maxlength="25"></el-input>
         </el-form-item>
-        <el-form-item label="支票号码">
-          <el-input v-model="formModel.user" placeholder="审批人" :size="btnsize"></el-input>
+        <el-form-item label="支票号码" prop="checkNo">
+          <el-input v-model="formModel.checkNo" placeholder="支票号码" :size="btnsize" :maxlength="25"></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="手工凭证">
-          <el-input v-model="formModel.user" placeholder="手工凭证" :size="btnsize"></el-input>
+        <el-form-item label="手工凭证" prop="manualCert">
+          <el-input v-model="formModel.manualCert" placeholder="手工凭证" :size="btnsize" :maxlength="25"></el-input>
         </el-form-item>
         <el-form-item label="摘要">
-          <el-input v-model="formModel.user" placeholder="摘要" :size="btnsize"></el-input>
+          <el-input v-model="formModel.remark" placeholder="摘要" :size="btnsize" :maxlength="50"></el-input>
         </el-form-item>
         <el-form-item>
         </el-form-item>
@@ -102,6 +101,7 @@
 </template>
 <script>
 import SelectTree from '@/components/selectTree/index'
+import { postVerificationBaseInfo, postAddIncome } from '@/api/finance/financeDaily'
 export default {
   components: {
     SelectTree
@@ -110,16 +110,39 @@ export default {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    info: {
+      type: Object,
+      default: () => {}
+    },
+    isModify: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
-          this.isShow = true
+          this.init()
         }
       },
       immediate: true
+    },
+    isModify: {
+      handler (cval, oval) {
+        if (cval) {
+
+        }
+      },
+      immediate: true
+    },
+    info: {
+      handler(cval, oval) {
+        if (cval) {
+
+        }
+      }
     }
   },
   computed: {
@@ -133,35 +156,87 @@ export default {
   data() {
     return {
       // 记账方向
-      directions: [],
-      firstSubjects: [],
-      secondSubjects: [],
-      thirdSubjects: [],
-      forthSubjects: [],
-      certificationType: [],
-      ways: [],
+      paymentsType: {
+        0: '收入',
+        1: '支出'
+      },
+      subjectOne: [],
+      subjectTwo: [],
+      subjectThree: [],
+      subjectFour: [],
+      verificationWay: [],
       btnsize: 'mini',
       dialogTitle: '记账凭证',
-      loading: false,
+      loading: true,
       formModel: {},
-      rules: {},
-      formModelTitle: '现金记账凭证【出纳】'
+      rules: {
+        amount: [{ required: true, message: '不能为空', trigger: 'blur' }]
+      },
+      formModelTitle: '现金记账凭证【出纳】',
+      searchQuery: {
+        orgId: ''
+      }
     }
   },
   methods: {
+    init() {
+      this.isShow = true
+      this.searchQuery.orgId = this.otherinfo.orgid
+      if (this.isModify) {
+        this.formModel = Object.assign({}, this.info)
+        this.loading = false
+      } else {
+        this.getBaseInfo()
+      }
+    },
+    getBaseInfo() {
+      return postVerificationBaseInfo(this.searchQuery).then(data => {
+          if (data) {
+            this.formModel = data
+            this.formModel.orgId = this.otherinfo.orgid
+            console.log('getBaseInfo', data)
+            this.loading = false
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+          this.loading = false
+        })
+    },
     submitForm(formName, type) {
-      this.$refs['formName'].validate(valid => {
+      if (!this.formModel.certNo) {
+        this.$message.error('缺少凭证编号')
+        this.postVerificationBaseInfo()
+        return
+      }
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          if (type) {
-            this.$message.warning('暂无此功能~')
-          } else {
+          this.loading = true
+          let query = Object.assign({}, this.formModel)
+          this.$set(query, 'dataSrc', 1) // (数据)来源 ,0  核销产生, 1 手工录入
+          this.$set(query, 'orderList', [])
+          query.orderList.push({
+            amount: query.amount
+          })
+          if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }
+          postAddIncome(query).then(data => {
+              query = {}
+              this.closeMe()
+              this.$message.success('记账成功！')
+              this.$emit('success')
+              this.loading = false
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
+              this.loading = false
+            })
         }
       })
     },
     setting() {
-      this.$router.push({path:'/finance/financeInfo/subjectInfo'})
+      this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
     },
     closeMe() {
       this.$emit('close')
@@ -173,53 +248,3 @@ export default {
 }
 
 </script>
-<style lang="scss">
-.incomeDialog {
-  min-width: 640px;
-  .el-dialog__header {
-    text-align: center;
-    background-color: #e6e6e6;
-  }
-  .el-dialog__body {
-    padding: 20px 30px 10px;
-  }
-  .el-dialog__footer{
-    text-align: center;
-  }
-  .income_title {
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  .income_item_line {
-    border-bottom: 1px dashed #999;
-    padding: 10px 0 0 0;
-    margin-bottom: 10px;
-  }
-  .income_item {
-    display: flex;
-    flex-direction: row;
-    .el-form-item {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 0px;
-      width: 100%;
-      .el-form-item__content {
-        width: 100%;
-      }
-      .el-select,
-      .el-input {
-        width: 100%;
-      }
-      .el-date-editor.el-input,
-      .el-date-editor.el-input__inner {
-        width: 100%;
-      }
-      .el-input__inner {
-        width: 100%;
-      }
-    }
-  }
-}
-
-</style>

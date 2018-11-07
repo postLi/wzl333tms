@@ -52,6 +52,12 @@ export const COUNT_STATUS = {
   PARTSETTLEMENT: '部分结算',
   ALLSETTLEMENT: '已结算'
 }
+export const COUNT_STATUS2 = {
+  '': '全部',
+  NOSETTLEMENT: '未核销',
+  PARTSETTLEMENT: '部分核销',
+  ALLSETTLEMENT: '已核销'
+}
 /**
  * 日记账来源
  */
@@ -64,7 +70,6 @@ export const VERIFICATION_SOURCE = {
  * 结算方向
  */
 export const SETTLEMENT_ID = {
-  '': '全部',
   0: '收入',
   1: '支出'
 }
@@ -75,6 +80,10 @@ export const TRADE_TYPE = {
   '': '全部',
   1: '收入',
   2: '支出'
+}
+export const CERT_TYPE = {
+  0: '正常',
+  1: '冲销'
 }
 /**
  * 交账状态

@@ -11,6 +11,7 @@
       </el-form-item>
       <el-form-item label="方向" prop="paymentsType">
         <el-select v-model="searchForm.paymentsType" placeholder="方向" :size="btnsize">
+          <el-option value="" label="全部"></el-option>
        <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
       </el-select>
       </el-form-item>

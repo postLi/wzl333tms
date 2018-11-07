@@ -42,8 +42,6 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
-    <!-- 结算单 -->
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
   </div>
 </template>
 <script>
@@ -53,14 +51,12 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postBillRecordDetailList } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
-import Receipt from './components/receipt'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Receipt
+    TableSetup
   },
   data() {
     return {
@@ -68,7 +64,6 @@ export default {
       feeType: 8,
       selectedList: [],
       selectListShipSns: [],
-      tableReceiptInfo: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -81,7 +76,6 @@ export default {
       tablekeyBottom: 0,
       total: 0,
       dataListTop: [],
-      popVisibleDialog: false,
       loading: false,
       setupTableVisible: false,
       tableColumn: [],
@@ -435,12 +429,6 @@ export default {
         //   this.fetchList()
         // })
       })
-    },
-    showCount() {
-      this.popVisibleDialog = true
-    },
-    closeDialog() {
-      this.popVisibleDialog = false
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)

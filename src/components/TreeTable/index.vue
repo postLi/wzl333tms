@@ -21,7 +21,7 @@
       </template>
     </el-table-column>
 
-    <el-table-column v-else v-for="(column, index) in columns" :prop="column.value" :label="column.text"
+    <el-table-column v-else v-for="(column, index) in columns" :key="index" :prop="column.value" :label="column.text"
                      :width="column.width" class-name="col-class">
       <template slot-scope="scope">
         <div class="scope-node">
@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button
             type="danger" icon="el-icon-delete"
             size="small"

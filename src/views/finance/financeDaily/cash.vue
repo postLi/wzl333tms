@@ -24,6 +24,17 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
+        <button type="button" class="el-button nobutton">
+          <el-dropdown  @command="handleCommand">
+          <el-button type="success"  size="mini" plain>
+            <i class="el-icon-circle-plus"></i> 智能核销
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="income">记收入</el-dropdown-item>
+            <el-dropdown-item command="expand">记支出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        </button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
@@ -38,6 +49,11 @@
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
+           <!--  <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.preview" :width="column.width">
+              <template slot-scope="scope">
+                <el-button type="text">预览</el-button>
+              </template>
+            </el-table-column> -->
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -59,10 +75,8 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
-    <!-- 结算单 -->
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
     <!-- 新增 -->
-    <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome"></Income>
+    <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
   </div>
 </template>
 <script>
@@ -72,7 +86,6 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { postBillRecordList } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
-import Receipt from './components/receipt'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
 export default {
@@ -80,7 +93,6 @@ export default {
     SearchForm,
     Pager,
     TableSetup,
-    Receipt,
     Income
   },
   computed: {
@@ -95,8 +107,8 @@ export default {
       btnsize: 'mini',
       feeType: 8,
       selectedList: [],
+      isModify: false,
       selectListShipSns: [],
-      tableReceiptInfo: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
@@ -257,6 +269,13 @@ export default {
           prop: 'verifyTime',
           width: '180',
           fixed: false
+        },
+        {
+          label: '凭证图片',
+          prop: 'picsPath',
+          width: '180',
+          preview: '预览',
+          fixed: false
         }
       ]
     }
@@ -269,6 +288,14 @@ export default {
     }
   },
   methods: {
+    handleCommand(command) {
+      console.log('智能核销::',command)
+    },
+    setAddSuccess() {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
+      this.fetchList()
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -297,6 +324,7 @@ export default {
       if (this.selectedList.length !== 1 && type !== 'income' && type !== 'expandtiure' && type !== 'export' && type !== 'print') {
         isShow = false
         this.$message({ type: 'warning', message: '请选择一条数据' })
+        return
       } else {
         isShow = true
       }
@@ -329,12 +357,12 @@ export default {
           }
           break
         case 'edit':
-        if (this.selectedList[0].verifyStatusZh==='未审核') {
-          this.doEdit()
-        }else {
-          this.$message.warning('凭证【 '+this.selectedList[0].verifyStatusZh +' 】不可修改')
-        }
-         break
+          if (this.selectedList.length > 0 && this.selectedList[0].verifyStatusZh === '未审核') {
+            this.doEdit()
+          } else {
+            this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可修改')
+          }
+          break
         case 'export':
           SaveAsFile({
             data: this.dataList,
@@ -352,6 +380,7 @@ export default {
       }
     },
     income() { // 新增
+      this.isModify = false
       this.popVisibleIncome = true
     },
     expandtiure() {
@@ -373,14 +402,6 @@ export default {
       //     this._handlerCatchMsg(err)
       //     this.fetchList()
       //   })
-    },
-    showCount() {
-      this.tableReceiptInfo = Object.assign([], this.selectedList)
-      this.popVisibleDialog = true
-      this.$refs.multipleTable.clearSelection()
-    },
-    closeDialog() {
-      this.popVisibleDialog = false
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
@@ -407,8 +428,12 @@ export default {
         })
       }
     },
-    doEdit () { // 修改
-      this.$message.warning('此功能尚在开发中~')
+    doEdit() { // 修改
+      this.currentInfo = Object.assign({}, this.selectedList[0])
+      this.isModify = true
+      this.popVisibleIncome = true
+      this.$refs.multipleTable.clearSelection()
+      // this.$message.warning('此功能尚在开发中~')
     },
     setTable() {
       this.setupTableVisible = true
@@ -416,7 +441,7 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
-    closeDialogIncome () {
+    closeDialogIncome() {
       this.popVisibleIncome = false
     },
     setColumn(obj) { // 重绘表格列表
@@ -428,6 +453,13 @@ export default {
 
 </script>
 <style lang="scss">
+.nobutton{
+  padding: 0;
+  border: none;
+}
+.nobutton.el-button:focus, .nobutton.el-button:hover {
+border: none;
+}
 .tab_count_lyy {
   display: flex;
   flex-direction: row;
@@ -469,32 +501,7 @@ export default {
         padding: 0 10px;
       }
     }
-  } // .green,
-  // .blue,
-  // .orange,
-  // .purple{
-  //   p{
-  //     i{
-  //       border-bottom: 1px solid #ddd;
-  //     }
-  //   }
-  // }
-  // .green{
-  //   color:#fff;
-  //   background-color: #67C23A;
-  // }
-  // .blue {
-  //   color:#fff;
-  //   background-color: #409EFF;
-  // }
-  // .orange{
-  //   color:#fff;
-  //   background-color: #E6A23C;
-  // }
-  // .purple {
-  //   color:#fff;
-  //   background-color: #CC66CC;
-  // }
+  }
 }
 
 </style>

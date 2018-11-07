@@ -344,6 +344,7 @@ export default {
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
         }
       })
+      console.log('router', this.$router)
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
@@ -355,7 +356,6 @@ export default {
       })
     },
     showDetail(order) {
-      console.log('order', order)
       this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
