@@ -4,7 +4,8 @@
       <template class='pickRelationPop-content' slot="content">
         <!--isDepMain-->
         <div class="depmain-div">
-          <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth" ref="formName">
+          <el-form :inline="true" :model="getMentInfo" class="demo-form-inline" :label-width="formLabelWidth"
+                   ref="formName">
             <el-form-item label="提货批次">
               <el-input v-model="getMentInfo.pickupBatchNumber" disabled></el-input>
             </el-form-item>
@@ -27,7 +28,7 @@
             @selection-change="getSelection"
             height="160"
             tooltip-effect="dark"
-            :default-sort = "{prop: 'id', order: 'ascending'}"
+            :default-sort="{prop: 'id', order: 'ascending'}"
             style="width: 560px">
             <el-table-column
               fixed
@@ -58,21 +59,24 @@
             </el-table-column>
           </el-table>
 
-          <el-form :inline="true"  class="order_bottom" :label-width="formLabelWidth" :rules="rules" :model="getMentInfo" >
+          <el-form :inline="true" class="order_bottom" :label-width="formLabelWidth" :rules="rules"
+                   :model="getMentInfo">
             <el-form-item label="运单号" prop="shipSn">
-              <querySelect :searchFn="search" valuekey="shipSn" :param="{shipFromOrgid: otherinfo.orgid}" search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
+              <querySelect :searchFn="search" valuekey="shipSn" :param="{shipFromOrgid: otherinfo.orgid}"
+                           search="shipSn" type="order" @change="getShipSn" v-model="formInline.shipSn"/>
             </el-form-item>
-            <el-form-item label="货号" prop="shipGoodsSn">
-              <querySelect :searchFn="search" :param="{shipFromOrgid: otherinfo.orgid}" valuekey="shipGoodsSn" search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
+            <el-form-item label="货号" prop="shipGoodsSn" class="ship_class">
+              <querySelect :searchFn="search" :param="{shipFromOrgid: otherinfo.orgid}" valuekey="shipGoodsSn"
+                           search="shipGoodsSn" type="order" @change="getShipGoodsSn" v-model="formInline.shipGoodsSn"/>
             </el-form-item>
-            <el-form-item label="本单提货费" >
+            <el-form-item label="本单提货费">
               <el-input v-model="formInline.pickupFee" v-numberOnly></el-input>
             </el-form-item>
           </el-form>
 
         </div>
       </template>
-      <div slot="footer" class="dialog-footer-frame" >
+      <div slot="footer" class="dialog-footer-frame">
         <el-button type="primary" @click="submitForm('formName')">加入列表</el-button>
         <el-button @click="removeList">从列表移除</el-button>
       </div>
@@ -83,10 +87,10 @@
 </template>
 
 <script>
-  import { REGEX } from '@/utils/validate'
+  import {REGEX} from '@/utils/validate'
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
-  import { getFindShipByid, putRelevancyShip, putRremoveShip } from '@/api/operation/pickup'
+  import {getFindShipByid, putRelevancyShip, putRremoveShip} from '@/api/operation/pickup'
 
   export default {
     components: {
@@ -118,19 +122,19 @@
         }
         if (!hasOne) {
           callback(new Error('运单号或货号必填其中一项'))
-        }      else {
+        } else {
           callback()
         }
-    }
+      }
 
       return {
         selected: [],
         rules: {
           shipSn: [
-            { validator: validateShipNum, trigger: 'blur' }
+            {validator: validateShipNum}
           ],
           shipGoodsSn: [
-            { validator: validateShipNum, trigger: 'blur' }
+            {validator: validateShipNum}
           ]
         },
         formLabelWidth: '90',
@@ -144,12 +148,12 @@
           pickupFee: ''
         },
         getMentInfo:
-        {
-          pickupBatchNumber: '',
-          truckFee: '', // 派车费用
-          truckIdNumber: '', // 车牌
-          driverName: ''// 司机姓名
-        },
+          {
+            pickupBatchNumber: '',
+            truckFee: '', // 派车费用
+            truckIdNumber: '', // 车牌
+            driverName: ''// 司机姓名
+          },
         sendId: {
           pickupId: '',
           shipId: '',
@@ -196,7 +200,7 @@
         return getFindShipByid(this.dotInfo.id).then(data => {
           this.usersArr = data
           this.loading = false
-        }).catch((err)=>{
+        }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
         })
@@ -219,17 +223,18 @@
       closeMe(done) {
         this.reset()
         this.$emit('update:popVisible', false)
-      if (typeof done === 'function') {
+        if (typeof done === 'function') {
           done()
         }
       },
       reset() {
         // this.formInline = this.setObject(this.formInline)
-        this.formInline = Object.assign({}, this.formInline)
+        // this.formInline = Object.assign({}, this.formInline)
 
-        this.formInline.shipSn = ''
-        this.formInline.shipGoodsSn = ''
-        this.formInline.pickupFee = ''
+        // this.formInline.shipSn = ''
+        // this.formInline.shipGoodsSn = ''
+        // this.formInline.pickupFee = ''
+        this.formInline={}
       },
       setObject(obj1, obj2) {
         for (var i in obj1) {
@@ -243,6 +248,11 @@
             this.loading = true
             this.sendId.pickupFee = this.formInline.pickupFee
             const pickupFee = this.sendId.pickupFee || ''
+            if(this.formInline.shipSn === '' && this.formInline.shipGoodsSn === ''){
+              this.$message.error('运单号或货号必填其中一项')
+              this.loading = false
+              return false
+            }
             const promiseObj = putRelevancyShip(this.sendId.pickupId, this.sendId.shipId, pickupFee)
 
             promiseObj.then(res => {
@@ -261,9 +271,9 @@
             })
           } else {
             return false
-        }
+          }
         })
-    },
+      },
       removeList() {
         if (!this.selected.length) {
           this.$message({
@@ -271,22 +281,22 @@
             type: 'warning'
           })
           return false
-        }else {
+        } else {
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能选择单条数据~',
               type: 'warning'
             })
             return false
-          }        else {
+          } else {
             const promiseObj = putRremoveShip(this.selected[0].id, this.selected[0].shipId)
             promiseObj.then(res => {
               this.loading = false
               this.$message.success("保存成功")
               this.fetchData()
               this.$emit('success')
-          }).catch(err => {
-            this._handlerCatchMsg(err)
+            }).catch(err => {
+              this._handlerCatchMsg(err)
               this.loading = false
             })
           }
@@ -303,36 +313,42 @@
 </script>
 
 <style lang="scss">
-  .pick-maintain .pickpopDepMain{
+  .pick-maintain .pickpopDepMain {
     top: 29%;
     bottom: auto;
     min-width: 600px;
-    max-width:  600px;
+    max-width: 600px;
 
   }
-  .pick-maintain .popRight-content{
+
+  .pick-maintain .popRight-content {
     padding: 5px 10px 5px 10px;
     box-sizing: border-box;
-    .el-form--inline .el-form-item{
+    .el-form--inline .el-form-item {
       margin-right: -8px;
       margin-bottom: 5px;
     }
-    .el-input{
+    .el-input {
       width: 90%;
 
     }
-    .order_bottom{
+    .order_bottom {
       padding-top: 5px;
-      .el-form-item{
+      .el-form-item {
         margin-right: 0;
         margin-bottom: 0
       }
-      .el-input{
+      .el-input {
         width: 125px;
 
       }
+      .ship_class{
+        .el-input{
+          width: 148px;
+        }
+      }
     }
-    .el-input__inner{
+    .el-input__inner {
       height: 30px;
       font-size: 14px;
 
@@ -350,16 +366,17 @@
 
   }
 
-  .pick_center{
+  .pick_center {
     text-align: center;
     padding-top: 80px;
     font-size: 16px;
   }
-  .pick_input{
+
+  .pick_input {
     padding-top: 60px;
     text-align: center;
     font-size: 14px;
-    .el-input{
+    .el-input {
       width: 40%;
 
     }

@@ -5,51 +5,54 @@
       <div class="btns_box">
         <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchForm"
                  class=" clearfix" style="float: left">
-          <div class="">
-            <el-form-item label="网点">
-              <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible/>
-            </el-form-item>
+          <!--<div class="">-->
+          <!--<el-form-item label="网点">-->
+          <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible @change="changeOrderId"/>-->
+          <!--</el-form-item>-->
 
-          </div>
+          <!--</div>-->
         </el-form>
-        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')" plain
+        <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')"
+                   plain
                    v-has:PICK_FINASH>上一步
         </el-button>
-        <el-button class="table_setup" type="primary" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('doAdd')" plain
+        <el-button class="table_setup" type="primary" :size="btnsize" icon="el-icon-circle-plus"
+                   @click="doAction('doAdd')" plain
                    v-has:PICK_SEL>新增
         </el-button>
       </div>
       <div class="info_tab">
 
         <el-table
-               ref="multipleTable"
-                :data="usersArr"
-                stripe
-                border
-                @selection-change="getSelection"
-                height="100%"
-                tooltip-effect="dark"
-                :default-sort = "{prop: 'id', order: 'ascending'}"
-                style="width: 100%">
-                <el-table-column
-                  fixed
-                  sortable
-                  prop="id"
-                  label="序号"
-                  width="150">
-                  <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
-                </el-table-column>
-                <el-table-column
-                  fixed
-                  sortable
-                  prop="abnormalNo"
-                  width=""
-                  label="核销方向">
-                </el-table-column>
+          ref="multipleTable"
+          :data="usersArr"
+          stripe
+          border
+          @selection-change="getSelection"
+          height="100%"
+          tooltip-effect="dark"
+          :default-sort="{prop: 'id', order: 'ascending'}"
+          style="width: 100%">
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
+            prop="id"
+            label="序号"
+            width="150">
+            <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="verificationWay"
+            width=""
+            label="核销方向">
+          </el-table-column>
+          <el-table-column
+            fixed
+            sortable
+            prop="remark"
             width=""
             label="备注">
           </el-table-column>
@@ -57,33 +60,32 @@
             fixed
             sortable
             prop="abnormalNo"
-            width=""
+            width="300"
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="editClick(scope.row)" type="text" size="small">修改</el-button>
-              <el-button type="text" size="small" @click="removeClick(scope.row)">删除</el-button>
+              <el-button @click="editClick(scope.row)" type="primary" size="small" icon="el-icon-edit">修改</el-button>
+              <el-button type="danger" icon="el-icon-delete" size="small" @click="removeClick(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
 
 
-
-              <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"-->
-                  <!--@selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"-->
-                  <!--style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-          <!--&lt;!&ndash;<el-table-column fixed sortable type="selection" width="50"></el-table-column>&ndash;&gt;-->
-          <!--<template v-for="column in tableColumn">-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"-->
-                             <!--v-if="!column.slot" :width="column.width"></el-table-column>-->
-            <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else-->
-                             <!--:width="column.width">-->
-              <!--<template slot-scope="scope">-->
-                <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)"-->
-                      <!--@click.stop="column.click(scope)"></span>-->
-                <!--<span v-else v-html="column.slot(scope)"></span>-->
-              <!--</template>-->
-            <!--</el-table-column>-->
-          <!--</template>-->
+        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"-->
+        <!--@selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"-->
+        <!--style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
+        <!--&lt;!&ndash;<el-table-column fixed sortable type="selection" width="50"></el-table-column>&ndash;&gt;-->
+        <!--<template v-for="column in tableColumn">-->
+        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"-->
+        <!--v-if="!column.slot" :width="column.width"></el-table-column>-->
+        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else-->
+        <!--:width="column.width">-->
+        <!--<template slot-scope="scope">-->
+        <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)"-->
+        <!--@click.stop="column.click(scope)"></span>-->
+        <!--<span v-else v-html="column.slot(scope)"></span>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
+        <!--</template>-->
         <!--</el-table>-->
 
 
@@ -97,13 +99,13 @@
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
                 @success="setColumn"></TableSetup>
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddSub="isDoAddSub"
-                   :isDoEdit="isDoEdit"></SubjectDialog>
+                   :isDoEdit="isDoEdit" :info="selectInfo" @success="fetchData"></SubjectDialog>
 
 
   </div>
 </template>
 <script>
-  import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
+  import {postFinFicationlList, deleteFinFicationl} from '@/api/finance/finanInfo'
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
@@ -129,10 +131,7 @@
         return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
-    mounted() {
-      this.searchQuery.vo.orgid = this.otherinfo.orgid
-      this.usersArr = this.tableColumn
-    },
+
     data() {
       return {
         searchForm: {
@@ -144,7 +143,7 @@
         total: 0,
         tablekey: 0,
         // 加载状态
-        loading: false,
+        loading: true,
         setupTableVisible: false,
         showDialog: false,
         isDoAddSub: false,
@@ -156,12 +155,7 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgid': 1,
-            pickupStatus: '',
-            startTime: '',
-            pickupBatchNumber: '',
-            truckIdNumber: '',
-            driverName: ''
+            'orgId': 1,
           }
         },
         tableColumn: [{
@@ -178,25 +172,29 @@
           width: '',
           fixed: true
         }, {
-            label: '备注',
-            prop: 'carriage',
-            width: '',
-            fixed: false
-          }, {
-            label: '操作',
-            prop: 'collectionFee',
-            width: '',
-            fixed: false
-          }
-        ]
+          label: '备注',
+          prop: 'carriage',
+          width: '',
+          fixed: false
+        }, {
+          label: '操作',
+          prop: 'collectionFee',
+          width: '200',
+          fixed: false
+        }
+        ],
       }
     },
+    mounted() {
+      this.searchQuery.vo.orgId = this.otherinfo.orgid
+      // this.usersArr = this.tableColumn
+      this.fetchData()
+    },
     methods: {
-
-      fetchAllCustomer() {
+      fetchFinFicationlList() {
         this.loading = true
-        return fetchPostlist(this.searchQuery).then(data => {
-          // this.usersArr = data.list
+        return postFinFicationlList(this.searchQuery).then(data => {
+          this.usersArr = data.list
           this.total = data.total
           this.loading = false
         }).catch((err) => {
@@ -205,15 +203,16 @@
         })
       },
       fetchData() {
-        this.fetchAllCustomer()
+        this.fetchFinFicationlList()
       },
       handlePageChange(obj) {
         this.searchQuery.currentPage = obj.pageNum
         this.searchQuery.pageSize = obj.pageSize
+        this.fetchFinFicationlList()
       },
       getSearchParam(obj) {
         this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
-        this.fetchAllCustomer()
+        this.fetchFinFicationlList()
       },
       showImport() {
         // 显示导入窗口
@@ -265,6 +264,7 @@
             this.openShowDialog()
             this.isDoAddSub = true
             this.isDoEdit = false
+            this.selectInfo = {}
             break
         }
         // 清除选中状态，避免影响下个操作
@@ -274,23 +274,26 @@
         this.openShowDialog()
         this.isDoEdit = true
         this.isDoAddSub = false
+        this.selectInfo = row
       },
       removeClick(row) {
-        this.$confirm('确定删除[支付宝]吗?', '提示', {
-          confirmButtonText: '保存',
+        //
+        this.$confirm('确定删除[' + row.verificationWay + ']吗?', '提示', {
+          confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
+          deleteFinFicationl(row.id).then(res => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+          }).catch(err => {
+            this._handlerCatchMsg(err)
+          })
         });
+        this.$refs.multipleTable.clearSelection()
       },
       setTable() {
         this.setupTableVisible = true

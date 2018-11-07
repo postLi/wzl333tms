@@ -14,6 +14,7 @@ export default function treeToArray(data, expandAll, parent = null, level = null
     if (level !== undefined && level !== null) {
       _level = level + 1
     }
+
     Vue.set(record, '_level', _level)
     // 如果有父元素
     if (parent) {

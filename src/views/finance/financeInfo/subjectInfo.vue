@@ -4,11 +4,11 @@
     <div class="tab_info">
 
       <div class="btns_box">
-        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchForm"
+        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"
                  class=" clearfix" style="float: left">
           <div class="">
             <el-form-item label="网点">
-              <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible/>
+              <SelectTree v-model="searchQuery.vo.orgid" :orgid="otherinfo.orgid" @change="searchOrgid" clearible/>
             </el-form-item>
 
           </div>
@@ -40,7 +40,7 @@
         <!--</el-button>-->
       </div>
       <div class="info_tab info_tab_media">
-        <tree-table :data="data" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"/>
+        <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam" @success="fetchData"/>
       </div>
       <div class="info_tab_footer">共计:{{ total }}
         <div class="show_pager">
@@ -57,6 +57,7 @@
 <script>
   import treeTable from '@/components/TreeTable'
   import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
+  import {getFinSubjectTree} from '@/api/finance/finanInfo'
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
@@ -86,9 +87,7 @@
         return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
-    mounted() {
-      this.searchQuery.vo.orgid = this.otherinfo.orgid
-    },
+
     data() {
       return {
         isSubjectInfo: false,
@@ -98,156 +97,7 @@
         importDialogVisible: false,
         func: treeToArray,
         expandAll: true,
-        data: [
-          {
-            id: 0,
-            event: '事件1',
-            timeLine: 50,
-            comment: '无'
-          },
-          {
-            id: 1,
-            event: '事件1',
-            timeLine: 100,
-            comment: '无',
-            children: [
-              {
-                id: 2,
-                event: '事件2',
-                timeLine: 10,
-                comment: '无',
-                children: [
-                  {
-                    id: 2,
-                    event: '事件2',
-                    timeLine: 10,
-                    comment: '无'
-                  },
-                  {
-                    id: 3,
-                    event: '事件3',
-                    timeLine: 90,
-                    comment: '无',
-                    children: [
-                      {
-                        id: 4,
-                        event: '事件4',
-                        timeLine: 5,
-                        comment: '无'
-                      },
-                      {
-                        id: 5,
-                        event: '事件5',
-                        timeLine: 10,
-                        comment: '无'
-                      },
-                      {
-                        id: 6,
-                        event: '事件6',
-                        timeLine: 75,
-                        comment: '无',
-                        children: [
-                          {
-                            id: 7,
-                            event: '事件7',
-                            timeLine: 50,
-                            comment: '无',
-                            children: [
-                              {
-                                id: 71,
-                                event: '事件71',
-                                timeLine: 25,
-                                comment: 'xx'
-                              },
-                              {
-                                id: 72,
-                                event: '事件72',
-                                timeLine: 5,
-                                comment: 'xx'
-                              },
-                              {
-                                id: 73,
-                                event: '事件73',
-                                timeLine: 20,
-                                comment: 'xx'
-                              }
-                            ]
-                          },
-                          {
-                            id: 8,
-                            event: '事件8',
-                            timeLine: 25,
-                            comment: '无'
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                id: 3,
-                event: '事件3',
-                timeLine: 90,
-                comment: '无',
-                children: [
-                  {
-                    id: 4,
-                    event: '事件4',
-                    timeLine: 5,
-                    comment: '无'
-                  },
-                  {
-                    id: 5,
-                    event: '事件5',
-                    timeLine: 10,
-                    comment: '无'
-                  },
-                  {
-                    id: 6,
-                    event: '事件6',
-                    timeLine: 75,
-                    comment: '无',
-                    children: [
-                      {
-                        id: 7,
-                        event: '事件7',
-                        timeLine: 50,
-                        comment: '无',
-                        children: [
-                          {
-                            id: 71,
-                            event: '事件71',
-                            timeLine: 25,
-                            comment: 'xx'
-                          },
-                          {
-                            id: 72,
-                            event: '事件72',
-                            timeLine: 5,
-                            comment: 'xx'
-                          },
-                          {
-                            id: 73,
-                            event: '事件73',
-                            timeLine: 20,
-                            comment: 'xx'
-                          }
-                        ]
-                      },
-                      {
-                        id: 8,
-                        event: '事件8',
-                        timeLine: 25,
-                        comment: '无'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
+
         args: [null, null, 'timeLine'],
         mykey: '',
         btnsize: 'mini',
@@ -268,17 +118,12 @@
           'pageSize': 100,
           'vo': {
             'orgid': 1,
-            pickupStatus: '',
-            startTime: '',
-            pickupBatchNumber: '',
-            truckIdNumber: '',
-            driverName: ''
           }
         },
         columns: [
           {
             text: '科目名称',
-            value: 'event',
+            value: 'subjectName',
             fixed: true,
           },
         ],
@@ -304,17 +149,27 @@
         ]
       }
     },
+    mounted() {
+      this.searchQuery.vo.orgid = this.otherinfo.orgid
+      this.fetchData()
+    },
     methods: {
-
+      searchOrgid(item) {
+        this.searchQuery.vo.orgid = item
+        this.fetchData()
+        // console.log(item, 'item')
+        // console.log(this.searchQuery.vo.orgid, 'this.this.searchQuery.vo.orgid')
+      },
       message(row) {
         this.$message.info(row.event)
       },
-      fetchAllCustomer() {
+      fetchTreeList() {
         // this.loading = true
-        return fetchPostlist(this.searchQuery).then(data => {
-          this.usersArr = data.list
+        return getFinSubjectTree(this.searchQuery.vo.orgid).then(data => {
+          this.usersArr = data.data
+
           console.log(data)
-          this.total = data.total
+          // this.total = data.total
           // this.loading = false
         }).catch((err) => {
           this.loading = false
@@ -322,7 +177,7 @@
         })
       },
       fetchData() {
-        this.fetchAllCustomer()
+        this.fetchTreeList()
       },
       handlePageChange(obj) {
         this.searchQuery.currentPage = obj.pageNum

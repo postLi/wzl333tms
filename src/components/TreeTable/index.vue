@@ -1,8 +1,4 @@
 <template>
-  <!--<el-table :data="formatData" :row-style="showRow" v-bind="$attrs" :expand-all="expandAll"-->
-  <!--@selection-change="getSelection">-->
-
-
   <el-table
     ref="multipleTable" :data="formatData" stripe border @selection-change="getSelection" height="100%"
     tooltip-effect="light" :default-sort="{prop: 'id', order: 'ascending'}"
@@ -38,23 +34,23 @@
         </div>
       </template>
     </el-table-column>
-    
+
     <slot>
       <el-table-column label="科目代码">
         <template slot-scope="scope">
-          <span>{{ scope.row.event }}</span>
+          <span>{{ scope.row.subjectCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否公共" :render-header="renderHeader">
         <template slot-scope="scope">
-          <span>{{ scope.row.event }}</span>
+          <span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template scope="scope">
           <el-button
+            type="danger" icon="el-icon-delete"
             size="small"
-            type="primary"
             @click="handleDelete(scope.row)">
             删除
           </el-button>
@@ -67,6 +63,7 @@
 
 <script>
   import treeToArray from './eval'
+  import {deleteFinSubject} from '@/api/finance/finanInfo'
 
   export default {
     name: 'treeTable',
@@ -142,8 +139,23 @@
         ])
       },
       handleDelete(row) {
-        this.$message.info(row.event)
-        console.log(row);
+        // this.$message.info(row.subjectName)
+        this.$confirm('确定删除科目代码[' + row.subjectCode + ']吗?', '提示', {
+          confirmButtonText: '删除',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteFinSubject(row.id).then(res => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.$emit('success')
+          }).catch(err => {
+            this._handlerCatchMsg(err)
+          })
+        });
+        this.$refs.multipleTable.clearSelection()
       },
       showRow(row) {
         const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)
