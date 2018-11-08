@@ -1,6 +1,6 @@
 <template>
   <!-- 中转费结算页面 -->
-  <div class="accountsLoad_table">
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -109,7 +109,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -464,6 +464,7 @@ export default {
           e.inputTotalCost = e.unpaidFee
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)

@@ -11,7 +11,7 @@ import batchDeliver from './batchDeliver' // 送货费
 import batchInsurance from './batchInsurance' // 整车保险费
 import batchStationLoad from './batchStationLoad' // 发站装卸费
 import batchStationOther from './batchStationOther' // 发站其他费
-import batchArrivalLoad from './batchArrivalLoad' // 到站装卸费
+import batchArriveLoad from './batchArrivalLoad' // 到站装卸费
 import batchArrivalOther from './batchArrivalOther' // 到站其他费
 import batchTruckAll from './batchTruckAll' // 到车汇总
 import batchArrivalAll from './batchArrivalAll' // 发车汇总
@@ -29,7 +29,7 @@ export default {
     batchInsurance,
     batchStationLoad,
     batchStationOther,
-    batchArrivalLoad,
+    batchArriveLoad,
     batchArrivalOther,
     batchArrivalAll,
     batchTruckAll,

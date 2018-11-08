@@ -1,6 +1,6 @@
 <template>
   <!-- 短驳费结算页面 -->
-  <div class="accountsLoad_table">
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -106,7 +106,7 @@ export default {
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -386,10 +386,12 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      console.log( this.getRouteInfo)
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      // this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
       //   // this.$router.push({ path: './accountsPayable/batch' })
@@ -438,6 +440,7 @@ export default {
             e.amount = e.unpaidFee
           })
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
