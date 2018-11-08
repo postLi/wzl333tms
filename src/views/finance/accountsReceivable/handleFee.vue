@@ -42,7 +42,7 @@
 </template>
 <script>
 import { objectMerge2, parseTime } from '@/utils/index'
-import SearchForm from './components/search'
+import SearchForm from '@/views/finance/accountsPayable/handleFee/components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
@@ -62,7 +62,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          sign: 4
+          sign: 3
         }
       },
       tablekey: 0,

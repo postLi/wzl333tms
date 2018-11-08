@@ -18,7 +18,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="发车批次" prop="batchNo">
-        <el-input v-model="searchForm.batchNo" :maxlength="20"></el-input>
+        <el-input v-model="searchForm.batchNo" :maxlength="30"></el-input>
       </el-form-item>
       <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
@@ -67,7 +67,7 @@ export default {
       maxlength: 25,
       searchObjs: {},
       searchForm: {
-        sign: 4,
+        sign: 4, //sign： 3配载应收操作费 4配载应付操作
         orgid: '',
         arriveOrgid: '',
         ascriptionOrgid: '',

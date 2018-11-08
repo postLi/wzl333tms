@@ -113,6 +113,19 @@ export default {
           istab: true,
           code: 'FINANCE_RECLIST6'
         }
+      }, {
+        path: '/finance/accountsReceivable/handleFee',
+        icon: 'QQ',
+        name: '操作费核销',
+        component: _import('finance/accountsReceivable/handleFee'),
+        meta: {
+          role: ['admin'],
+          ptitle: '应收账款',
+          title: '操作费核销',
+          noCache: true,
+          istab: true,
+          code: ''
+        }
       }]
     }, {
       path: '/finance/accountsPayable',

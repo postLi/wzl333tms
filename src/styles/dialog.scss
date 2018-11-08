@@ -568,6 +568,7 @@ $dialogHeader_bgcolor: #e6e6e6;
 
 .incomeDialog {
   .el-dialog {
+    width: 60%;
     min-width: 680px;
   }
   .el-dialog__header {
@@ -593,6 +594,9 @@ $dialogHeader_bgcolor: #e6e6e6;
   .income_item {
     display: flex;
     flex-direction: row;
+  }
+  .income_item,
+  .income_item_row {
     .el-form-item {
       display: flex;
       flex-direction: row;
@@ -615,6 +619,44 @@ $dialogHeader_bgcolor: #e6e6e6;
       }
       .el-input__inner {
         width: 100%;
+      }
+    }
+  }
+  .income_item_row {
+    .uploadcard {
+      padding: 10px;
+      //上传图片
+      .el-upload-list--picture-card .el-upload-list__item {
+        width: 120px;
+        height: 120px;
+      }
+      .el-upload-dragger {
+        width: 120px;
+        height: 120px;
+      }
+      .el-upload--picture-card {
+        width: 122px;
+        height: 122px;
+        line-height: 20px;
+      }
+      .box_container .el-upload__text{
+        line-height: 20px;
+      }
+      .upload__tip {
+        line-height: 18px;
+      }
+      .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+        margin-top: 5px;
+      }
+      //上传图片end
+      .uploadlist {
+        width: 100%;
+        margin-left: 80px;
+        li {
+          float: left;
+          width: 100px;
+          margin-right: 10px;
+        }
       }
     }
   }

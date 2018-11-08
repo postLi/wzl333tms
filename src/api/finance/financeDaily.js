@@ -39,3 +39,11 @@ export function postAddIncome(params) {
 		return res.data
 	})
 }
+/**
+ * 财务日记账反核销(汇总&明细)
+ */
+export function cancelVerification(params) {
+	return fetch.post('/api-finance/finance/tmsfinancebillrecord/v1.3/cancelVerification/', params).then(res => {
+		return res.data
+	})
+}

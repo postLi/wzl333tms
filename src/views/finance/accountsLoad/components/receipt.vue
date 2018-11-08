@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="80">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name"  show="select" search="name" label="name" :maxlength="maxlength" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name" show="select" search="name" label="name" :maxlength="maxlength" />
             </template>
           </el-table-column>
         </el-table>

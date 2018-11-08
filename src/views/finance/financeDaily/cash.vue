@@ -25,19 +25,20 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
         <button type="button" class="el-button nobutton">
-          <el-dropdown  @command="handleCommand">
-          <el-button type="success"  size="mini" plain>
-            <i class="el-icon-circle-plus"></i> 智能核销
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="income">记收入</el-dropdown-item>
-            <el-dropdown-item command="expand">记支出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+          <el-dropdown @command="handleCommand">
+            <el-button type="success" size="mini" plain>
+              <i class="el-icon-circle-plus"></i> 智能核销
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="income">记收入</el-dropdown-item>
+              <el-dropdown-item command="expand">记支出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
+        <!-- <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="showDetail" plain v-has:FLOW_DETAIL>查看明细</el-button> -->
         <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>反核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
@@ -49,12 +50,12 @@
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
-           <!--  <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.preview" :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.preview" :width="column.width">
               <template slot-scope="scope">
-                <el-button type="text">预览</el-button>
+                <el-button v-if="scope.row[column.prop]" size="mini" type="text" icon="el-icon-picture-outline" @click.stop.prevent.native="previewPicture( scope.row, scope.$index)">预览({{scope.row[column.prop].split(',').length}})</el-button>
               </template>
-            </el-table-column> -->
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
@@ -66,6 +67,13 @@
         </el-table>
       </div>
     </div>
+    <div class="previewPicture">
+      <el-carousel :interval="4000" type="card" height="200px">
+    <el-carousel-item v-for="item in previews" :key="item">
+      <img :src="item" alt="" @click="">
+    </el-carousel-item>
+  </el-carousel>
+      </div>
     <!-- 分页 -->
     <div class="info_tab_footer">
       共计:{{ total }}
@@ -102,6 +110,12 @@ export default {
   },
   data() {
     return {
+      previews: [
+      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0E/0F/ChMkJ1sYylmIJMWEAA2kWnSS2pMAAo2TQGcckMADaRy914.jpg',
+      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/09/09/ChMkJluIoTyIXX2eAB3KJaynnIgAArW1QGZwaQAHco9007.jpg',
+      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/02/04/ChMkJlpZZLeIGFB8AATf7vf_nYQAAkD4wFg_xEABOAG369.jpg',
+      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0A/0B/ChMkJ1tEfAKIeyCwAF6u9pbKmU0AAplXQBdHUIAXq8O746.jpg'
+      ],
       currentInfo: {},
       popVisibleIncome: false,
       btnsize: 'mini',
@@ -122,7 +136,7 @@ export default {
       total: 0,
       dataList: [],
       popVisibleDialog: false,
-      loading: true,
+      loading: false,
       setupTableVisible: false,
       tableColumn: [{
           label: '序号',
@@ -274,7 +288,7 @@ export default {
           label: '凭证图片',
           prop: 'picsPath',
           width: '180',
-          preview: '预览',
+          preview: true,
           fixed: false
         }
       ]
@@ -289,7 +303,7 @@ export default {
   },
   methods: {
     handleCommand(command) {
-      console.log('智能核销::',command)
+      console.log('智能核销::', command)
     },
     setAddSuccess() {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -427,6 +441,12 @@ export default {
           }
         })
       }
+      // this.$router.push({
+      //   path: './cashDetail',
+      //   query: {
+      //     orgId: this.searchQuery.vo.orgId
+      //   }
+      // })
     },
     doEdit() { // 修改
       this.currentInfo = Object.assign({}, this.selectedList[0])
@@ -447,19 +467,34 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    previewPicture(row, index) {
+      console.log('previewPicture', index, row)
     }
   }
 }
 
 </script>
 <style lang="scss">
-.nobutton{
+.nobutton {
   padding: 0;
   border: none;
 }
-.nobutton.el-button:focus, .nobutton.el-button:hover {
-border: none;
+.tab-content{
+  .previewPicture {
+    margin: -30px 10px 40px;
+    .el-carousel{
+      padding-top: 20px;
+      background-color: #eee;
+      box-shadow: 3px -10px 30px #ccc;
+    }
+  }
 }
+.nobutton.el-button:focus,
+.nobutton.el-button:hover {
+  border: none;
+}
+
 .tab_count_lyy {
   display: flex;
   flex-direction: row;
@@ -502,6 +537,7 @@ border: none;
       }
     }
   }
+  
 }
 
 </style>

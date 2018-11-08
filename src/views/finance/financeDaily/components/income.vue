@@ -1,7 +1,7 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class=" incomeDialog">
+  <el-dialog :title="dialogTitle" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class=" incomeDialog" v-loading="loading">
     <h4 class="income_title">{{formModelTitle}}</h4>
-    <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
+    <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px">
       <div class="income_item">
         <el-form-item label="记账网点">
           <SelectTree v-model="formModel.orgId" :orgid="otherinfo.orgid" :size="btnsize"></SelectTree>
@@ -90,6 +90,17 @@
         </el-form-item>
       </div>
       <div class="income_item_line"></div>
+      <div class="income_item_row">
+        <p style="margin-left: 15px;">图片上传
+          <el-tag :size="btnsize">注：最多可上传5张图片，每张图片不能大于5M</el-tag>
+        </p>
+        <el-form-item class="clearfix">
+          <div class="clearfix uploadcard">
+            <Upload :title="'本地上传'" :showFileList="true" :limit="5" listtype="picture" v-model="formModel.picsPath" :disabled="isCheck" />
+          </div>
+        </el-form-item>
+      </div>
+      <div class="income_item_line"></div>
     </el-form>
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document">保存</el-button>
@@ -101,10 +112,12 @@
 </template>
 <script>
 import SelectTree from '@/components/selectTree/index'
+import Upload from '@/components/Upload/singleImage2'
 import { postVerificationBaseInfo, postAddIncome } from '@/api/finance/financeDaily'
 export default {
   components: {
-    SelectTree
+    SelectTree,
+    Upload
   },
   props: {
     popVisible: {
@@ -130,7 +143,7 @@ export default {
       immediate: true
     },
     isModify: {
-      handler (cval, oval) {
+      handler(cval, oval) {
         if (cval) {
 
         }
@@ -151,6 +164,12 @@ export default {
         return this.popVisible
       },
       set() {}
+    },
+    isCheck: {
+      get() {
+        return this.isModify
+      },
+      set() {}
     }
   },
   data() {
@@ -168,7 +187,9 @@ export default {
       btnsize: 'mini',
       dialogTitle: '记账凭证',
       loading: true,
-      formModel: {},
+      formModel: {
+        picsPath: ''
+      },
       rules: {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },

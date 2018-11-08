@@ -20,6 +20,9 @@
       <el-badge :value="counts.changeFeeCount" class="item" v-has:FINANCE_RECLIST6>
       <router-link to="/finance/accountsReceivable/abnormal"  class="tab-label" >异动费用</router-link>
       </el-badge>
+      <el-badge :value="counts.handleFee" class="item" >
+      <router-link to="/finance/accountsReceivable/handleFee"  class="tab-label" >操作费核销</router-link>
+      </el-badge>
     </div>
     <keep-alive>
       <router-view></router-view>
@@ -40,7 +43,8 @@ export default {
         'arrivepayFeeCount': '',
         'receiptpayFeeCount': '',
         'monthpayFeeCount': '',
-        'changeFeeCount': ''
+        'changeFeeCount': '',
+        'handleFee': ''
       }}
   },
   mounted() {
