@@ -140,7 +140,7 @@
       },
       handleDelete(row) {
         // this.$message.info(row.subjectName)
-        this.$confirm('确定删除科目代码[' + row.subjectCode + ']吗?', '提示', {
+        this.$confirm('确定删除科目名称[' + row.subjectName + ']吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'

@@ -42,11 +42,11 @@
       <div class="info_tab info_tab_media">
         <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam" @success="fetchData"/>
       </div>
-      <div class="info_tab_footer">共计:{{ total }}
-        <div class="show_pager">
-          <Pager :total="total" @change="handlePageChange"/>
-        </div>
-      </div>
+      <!--<div class="info_tab_footer">共计:{{ total }}-->
+        <!--<div class="show_pager">-->
+          <!--<Pager :total="total" @change="handlePageChange"/>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
                    :isDoExport="isDoExport"></SubjectDialog>
@@ -157,8 +157,6 @@
       searchOrgid(item) {
         this.searchQuery.vo.orgid = item
         this.fetchData()
-        // console.log(item, 'item')
-        // console.log(this.searchQuery.vo.orgid, 'this.this.searchQuery.vo.orgid')
       },
       message(row) {
         this.$message.info(row.event)

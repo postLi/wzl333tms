@@ -485,7 +485,7 @@
               </template>
             </el-table-column>
           </template>
-          
+
         </el-table>
       </div>
       <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
@@ -527,10 +527,10 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.signOrgid = this.otherinfo.orgid
-    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      // this.loading = false
-            // this.licenseTypes = resArr[1]
-    })
+    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+    //   // this.loading = false
+    //         // this.licenseTypes = resArr[1]
+    // })
   },
   data() {
     return {

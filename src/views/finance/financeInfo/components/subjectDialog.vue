@@ -5,7 +5,7 @@
     width="30%"
     center
     @click="closeMe" :close-on-click-modal="false" :before-close="closeMe" class="sub_dialog" v-loading="loading">
-    <el-form size="mini" ref="ruleForm" :model="form" class="sub_form" :rules="rules" v-if="isAddLE">
+    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isAddLE">
       <div v-if="isDoAddEnd">
         <el-form-item label="科目代码" class="sub_el_form_item">
           <span>1000</span>
@@ -31,7 +31,7 @@
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
     </el-form>
 
-    <el-form size="mini" ref="ruleForm" :model="form" class="sub_form direct" :rules="rules"
+    <el-form size="mini" ref="ruleForm" :model="form" class="direct" :rules="rules"
              label-width="80px" v-else-if="isDirect" width="100%" :show-message="checkShowMessage">
       <el-form-item label="核销方向" prop="verificationWay">
         <el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"
@@ -42,21 +42,33 @@
       </el-form-item>
     </el-form>
 
-    <el-form size="mini" ref="ruleForm" :model="form" class="sub_form" :rules="rules" v-else>
+    <el-form size="mini" ref="ruleForm" :model="form" class="sub_close" :rules="rules" v-else>
       <el-form-item label="核销科目">
-        <el-input v-model="form.name" disabled></el-input>
+        <el-input v-model="form.subjectsFeeType" disabled></el-input>
       </el-form-item>
       <el-form-item label="一级科目">
-        <el-input v-model="form.name"></el-input>
+        <!--<el-input v-model="form.oneName"></el-input>-->
+        <!--<SelectType type="1060422013270622200" placeholder="请选择" :subjetct="isSubject"/>-->
+
+        <el-select v-model="form.oneName" placeholder="请选择" @change="changelist">
+          <!--<el-option-->
+          <!--v-for="item in options"-->
+          <!--:key="item.value"-->
+          <!--:label="item.label"-->
+          <!--:value="item.value">-->
+          <!--</el-option>-->
+        </el-select>
+
       </el-form-item>
       <el-form-item label="二级科目" class="">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.twoName"></el-input>
       </el-form-item>
       <el-form-item label="三级科目" class="">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.threeName"></el-input>
       </el-form-item>
       <el-form-item label="四级科目" class="">
-        <el-input v-model="form.name"></el-input>
+        <!--<SelectType type="oneId" placeholder="请选择" :subjetct="isSubject"/>-->
+        <!--<el-input v-model="form.threeName"></el-input>-->
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -68,12 +80,16 @@
 </template>
 
 <script>
-  import {postAddFinFicationl, putExtFinFicationl} from '@/api/finance/finanInfo'
+  import {postAddFinFicationl, putExtFinFicationl, getSelectList} from '@/api/finance/finanInfo'
   import {mapGetters} from 'vuex'
   import {objectMerge2} from '@/utils/index'
   import {REGEX} from '@/utils/validate'
+  import SelectType from '@/components/selectType/index'
 
   export default {
+    components: {
+      SelectType,
+    },
     props: {
       isShow: {
         type: Boolean,
@@ -126,7 +142,7 @@
       },
       isSubClose: {
         handler() {
-          this.comWatch()
+
         },
         immediate: true
       },
@@ -146,12 +162,28 @@
     data() {
       return {
         checkShowMessage: false,
+        isSubject: true,
         loading: true,
         isTitle: '增加一级',
+        oneId: '',
+        twoId: '',
+        threeId: '',
+        fourId: '',
         form: {
           name: '',
           verificationWay: '',//核销方向
           remark: '',//核销方向
+          subjectsFeeType: '',   //  核销科目
+          oneName: '',
+          twoName: '',
+          threeName: '',
+          fourName: '',//  核销科目
+          // closeIds: {
+          //   oneId: '',
+          //   twoId: '',
+          //   threeId: '',
+          //   fourId: ''
+          // }
         },
         rules: {
           name: [
@@ -169,6 +201,14 @@
     mounted() {
     },
     methods: {
+      changelist(item) {
+        // this.comSelectList(item, 1)
+      },
+      comSelectList(id, type) {
+        getSelectList(id, type).then(data => {
+          console.log(data)
+        })
+      },
       comWatch(item) {
         if (this.$refs['ruleForm']) {
           this.$refs['ruleForm'].resetFields()
@@ -185,6 +225,31 @@
         }
         else if (this.isSubClose) {
           this.isTitle = '修改'
+          this.form.subjectsFeeType = item.subjectsFeeType
+          this.form.oneName = item.oneName
+          this.form.twoName = item.twoName
+          this.form.threeName = item.threeName
+          this.form.fourName = item.fourName
+          this.oneId = item.oneId
+          this.twoId = item.twoId
+          this.threeId = item.threeId
+          this.fourId = item.fourId
+          // if (item.oneId) {
+          //   this.comSelectList(item.oneId, 1)
+          // } else if (item.twoId) {
+          //   this.comSelectList(item.twoId, 2)
+          // } else if (item.threeId) {
+          //   this.comSelectList(item.oneId, 3)
+          // } else {
+          //   this.comSelectList(item.fourId, 4)
+          // }
+          // this.comSelectList()
+
+          Promise.all([this.comSelectList(item.oneId, 1), this.comSelectList(item.twoId, 2), this.comSelectList(item.threeId, 3), this.comSelectList(item.fourId, 4)]).then(resArr => {
+            console.log(resArr, 'resarrd11111111111111ddd')
+            // this.loading = false
+            // this.licenseTypes = resArr[1]
+          })
         }
         else if (this.isDoAddSub) {
           this.isTitle = '新增'
@@ -204,13 +269,11 @@
           this.isTitle = '增加一级'
           this.isAddLE = true
         }
-
-
       },
       submitForm(ruleForm) {
         this.$refs[ruleForm].validate((valid) => {
           // this.checkShowMessage = true
-          if (valid ) {
+          if (valid) {
             let promiseObj
             this.loading = true
             delete this.form.name
@@ -222,6 +285,10 @@
             else if (this.isDoEdit) {
               // debugger
               promiseObj = putExtFinFicationl(this.info.id, data)
+            } else if (this.isSubClose) {
+              delete this.form.verificationWay
+              delete this.form.remark
+              // delete this.form.closeIds
             }
             promiseObj.then(res => {
               this.$emit('success')
@@ -316,6 +383,16 @@
           }
           .el-textarea__inner {
             width: 116%;
+          }
+        }
+      }
+      .sub_close {
+        .el-form-item--mini:first-of-type {
+          .el-input {
+            width: 110%;
+            .el-input__inner {
+              width: 110%;
+            }
           }
         }
       }

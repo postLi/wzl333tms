@@ -38,6 +38,7 @@ export function putExtFinFicationl(id, params) {
 export function getFinSubjectTree(id) {
   return fetch.get('/api-finance/finance/tmsfinancesubjects/v1.3/tree?orgId=' + id)
 }
+
 ///finance/tmsfinancesubjects/v1.3/{id}
 // 根据ID删除财务科目定义信息
 export function deleteFinSubject(id) {
@@ -58,3 +59,31 @@ export function getTemplate(data) {
 }
 
 //科目定义
+
+// 核销科目
+// http://192.168.1.68:7010/api-finance//finance/tmsfinancesubjectsrelation/v1.3/list/?access_token={{access_token}}&orgId=1
+export function postFinRsrelationList(params) {
+  return fetch.post('/api-finance/finance/tmsfinancesubjectsrelation/v1.3/list/', params).then(res => {
+    return res.data || {}
+  })
+}
+
+
+// /finance/tmsfinancesubjectsrelation/v1.3/down
+// 根据ID和级别查询下拉列表
+export function getSelectList(id, type) {
+  return fetch.get('/api-finance/finance/tmsfinancesubjectsrelation/v1.3/down', {
+    params: {
+      id,
+      level: type
+    }
+  })
+}
+
+// export function postTradeQuery(orderSerial,type) {
+//   return Axios.post(''+swg7+'/api/pay/shipper/common/v1/tradeQuery/'+orderSerial,{
+//     payChannel: type
+//   })
+// }
+
+// 核销科目

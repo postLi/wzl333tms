@@ -3,11 +3,11 @@
     <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>-->
     <div class="tab_info">
       <div class="btns_box">
-        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchForm"
+        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"
                  class=" clearfix" style="float: left">
           <div class="">
             <el-form-item label="网点">
-              <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible/>
+              <SelectTree v-model="searchQuery.vo.orgId" :orgid="otherinfo.orgid" clearible @change="searchOrgid"/>
             </el-form-item>
 
           </div>
@@ -53,37 +53,38 @@
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
+            prop="subjectsFeeType"
             label="核销科目">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
+            prop="oneName"
             label="一级科目">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
-            label="一级科目">
+            prop="twoName"
+            label="二级科目">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
+            prop="threeName"
             label="三级科目">
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
+            prop="fourName"
             label="四级科目">
+
+
           </el-table-column>
           <el-table-column
             fixed
             sortable
-            prop="abnormalNo"
             label="操作">
             <template slot-scope="scope">
               <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
@@ -91,43 +92,23 @@
           </el-table-column>
         </el-table>
 
-
-        <!--<el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"-->
-        <!--@selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"-->
-        <!--style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>-->
-        <!--&lt;!&ndash;<el-table-column fixed sortable type="selection" width="50"></el-table-column>&ndash;&gt;-->
-        <!--<template v-for="column in tableColumn">-->
-        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"-->
-        <!--v-if="!column.slot" :width="column.width"></el-table-column>-->
-        <!--<el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else-->
-        <!--:width="column.width">-->
-        <!--<template slot-scope="scope">-->
-        <!--<span class="clickitem" v-if="column.click" v-html="column.slot(scope)"-->
-        <!--@click.stop="column.click(scope)"></span>-->
-        <!--<span v-else v-html="column.slot(scope)"></span>-->
-        <!--</template>-->
-        <!--</el-table-column>-->
-        <!--</template>-->
-        <!--</el-table>-->
-
-
       </div>
-      <div class="info_tab_footer">共计:{{ total }}
-        <div class="show_pager">
-          <Pager :total="total" @change="handlePageChange"/>
-        </div>
-      </div>
+      <!--<div class="info_tab_footer">共计:{{ total }}-->
+        <!--<div class="show_pager">-->
+          <!--<Pager :total="total" @change="handlePageChange"/>-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <!--<TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"-->
     <!--@success="setColumn"></TableSetup>-->
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog'
-                   :isSubClose="isSubClose"></SubjectDialog>
+                   :isSubClose="isSubClose" :info="selectInfo"></SubjectDialog>
   </div>
 </template>
 <script>
   import {getExportExcel} from '@/api/company/customerManage'
   import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
-
+  import {postFinRsrelationList} from '@/api/finance/finanInfo'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import {mapGetters} from 'vuex'
@@ -143,6 +124,7 @@
       Pager,
       TableSetup,
       SubjectDialog,
+
       SelectTree
     },
     computed: {
@@ -153,10 +135,7 @@
         return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
-    mounted() {
-      this.searchQuery.vo.orgid = this.otherinfo.orgid
-      this.usersArr = this.tableColumn
-    },
+
     data() {
       return {
         searchForm: {
@@ -168,7 +147,7 @@
         total: 0,
         tablekey: 0,
         // 加载状态
-        loading: false,
+        loading: true,
         showDialog: false,
         isSubClose: false,
         selectInfo: {},
@@ -178,12 +157,7 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgid': 1,
-            pickupStatus: '',
-            startTime: '',
-            pickupBatchNumber: '',
-            truckIdNumber: '',
-            driverName: ''
+            'orgId': 1
           }
         },
         tableColumn: [{
@@ -221,15 +195,26 @@
         ]
       }
     },
+    mounted() {
+      this.searchQuery.vo.orgId = this.otherinfo.orgid
+      // this.usersArr = this.tableColumn
+      this.fetchData()
+
+    },
     methods: {
+      searchOrgid(item) {
+        this.searchQuery.vo.orgId = item
+        this.fetchData()
+      },
       handleClick(row) {
         this.openShowDialog()
+        this.selectInfo = row
         this.isSubClose = true
       },
       fetchAllCustomer() {
         this.loading = true
-        return fetchPostlist(this.searchQuery).then(data => {
-          // this.usersArr = data.list
+        return postFinRsrelationList(this.searchQuery).then(data => {
+          this.usersArr = data.list
           this.total = data.total
           this.loading = false
         }).catch((err) => {
@@ -243,10 +228,6 @@
       handlePageChange(obj) {
         this.searchQuery.currentPage = obj.pageNum
         this.searchQuery.pageSize = obj.pageSize
-      },
-      getSearchParam(obj) {
-        this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
-        this.fetchAllCustomer()
       },
       showImport() {
         // 显示导入窗口
