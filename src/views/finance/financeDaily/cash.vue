@@ -52,7 +52,7 @@
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.preview" :width="column.width">
               <template slot-scope="scope">
-                <el-button v-if="scope.row[column.prop]" size="mini" type="text" icon="el-icon-picture-outline" @click.stop.prevent.native="previewPicture( scope.row, scope.$index)">预览({{scope.row[column.prop].split(',').length}})</el-button>
+                <el-button v-if="scope.row[column.prop]" size="mini" type="text" icon="el-icon-picture-outline" @click.stop.prevent.native="previewPicture( scope.row, scope.$index, column.prop)">预览({{scope.row[column.prop].split(',').length}})</el-button>
               </template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
@@ -67,13 +67,16 @@
         </el-table>
       </div>
     </div>
-    <div class="previewPicture">
-      <el-carousel :interval="4000" type="card" height="200px">
-    <el-carousel-item v-for="item in previews" :key="item">
-      <img :src="item" alt="" @click="">
-    </el-carousel-item>
-  </el-carousel>
-      </div>
+    <div class="previewPicture" v-if="isShowPre">
+      <el-button @click="isShowPre = false" icon="el-icon-close" size="mini">关闭预览</el-button>
+      <transition name="el-zoom-in-bottom">
+        <el-carousel :interval="3000" height="300px"  arrow="always">
+          <el-carousel-item v-for="item in previews" :key="item">
+            <img :src="item" alt="" @click="prePic(item)">
+          </el-carousel-item>
+        </el-carousel>
+      </transition>
+    </div>
     <!-- 分页 -->
     <div class="info_tab_footer">
       共计:{{ total }}
@@ -111,11 +114,12 @@ export default {
   data() {
     return {
       previews: [
-      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0E/0F/ChMkJ1sYylmIJMWEAA2kWnSS2pMAAo2TQGcckMADaRy914.jpg',
-      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/09/09/ChMkJluIoTyIXX2eAB3KJaynnIgAArW1QGZwaQAHco9007.jpg',
-      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/02/04/ChMkJlpZZLeIGFB8AATf7vf_nYQAAkD4wFg_xEABOAG369.jpg',
-      'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0A/0B/ChMkJ1tEfAKIeyCwAF6u9pbKmU0AAplXQBdHUIAXq8O746.jpg'
+        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0E/0F/ChMkJ1sYylmIJMWEAA2kWnSS2pMAAo2TQGcckMADaRy914.jpg',
+        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/09/09/ChMkJluIoTyIXX2eAB3KJaynnIgAArW1QGZwaQAHco9007.jpg',
+        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/02/04/ChMkJlpZZLeIGFB8AATf7vf_nYQAAkD4wFg_xEABOAG369.jpg',
+        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0A/0B/ChMkJ1tEfAKIeyCwAF6u9pbKmU0AAplXQBdHUIAXq8O746.jpg'
       ],
+      isShowPre: false,
       currentInfo: {},
       popVisibleIncome: false,
       btnsize: 'mini',
@@ -146,6 +150,18 @@ export default {
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           }
+        },
+        {
+          label: '凭证号',
+          prop: 'certNo',
+          width: '150',
+          fixed: true
+        },
+        {
+          label: '手工凭证号',
+          prop: 'manualCert',
+          width: '150',
+          fixed: false
         },
         {
           label: '来源',
@@ -249,18 +265,6 @@ export default {
           fixed: false
         },
         {
-          label: '手工凭证号',
-          prop: 'manualCert',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '凭证号',
-          prop: 'certNo',
-          width: '150',
-          fixed: false
-        },
-        {
           label: '笔数',
           prop: 'verifyCount',
           width: '100',
@@ -275,7 +279,7 @@ export default {
         {
           label: '审核状态',
           prop: 'verifyStatusZh',
-          width: '100',
+          width: '90',
           fixed: true
         },
         {
@@ -287,9 +291,9 @@ export default {
         {
           label: '凭证图片',
           prop: 'picsPath',
-          width: '180',
+          width: '90',
           preview: true,
-          fixed: false
+          fixed: true
         }
       ]
     }
@@ -468,8 +472,12 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    previewPicture(row, index) {
-      console.log('previewPicture', index, row)
+    previewPicture(row, index, prop) {
+      if (row[prop]) {
+      this.previews = Object.assign([], row[prop].split(','))
+      this.isShowPre = true
+      }
+      console.log('previewPicture', index, row, )
     }
   }
 }
@@ -480,16 +488,25 @@ export default {
   padding: 0;
   border: none;
 }
-.tab-content{
+
+.tab-content {
   .previewPicture {
     margin: -30px 10px 40px;
-    .el-carousel{
+    .el-carousel {
       padding-top: 20px;
       background-color: #eee;
-      box-shadow: 3px -10px 30px #ccc;
+      box-shadow: 3px -10px 20px #ccc;
+      .el-carousel__item{
+        text-align: center;
+      }
+      img{
+        width: auto;
+        height: 100%;
+      }
     }
   }
 }
+
 .nobutton.el-button:focus,
 .nobutton.el-button:hover {
   border: none;
@@ -537,7 +554,6 @@ export default {
       }
     }
   }
-  
 }
 
 </style>

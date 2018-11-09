@@ -117,7 +117,7 @@ export default {
   mounted() {
     this.searchForm.orgId = this.orgid
     this.searchCreatTime = this.defaultTime
-    // this.onSubmit()
+    this.onSubmit()
   },
   methods: {
     getDataObj(obj) {  // 接收子组件传回来的东西

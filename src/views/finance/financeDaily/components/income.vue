@@ -167,7 +167,8 @@ export default {
     },
     isCheck: {
       get() {
-        return this.isModify
+        return false
+        // return this.isModify
       },
       set() {}
     }
