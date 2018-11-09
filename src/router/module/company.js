@@ -143,6 +143,54 @@ export default {
       'code': 'CARRIERLIST'
     }
   }, {
+    path: '/company/lineManage',
+    icon: 'chengyunshang',
+    hidden: false,
+    name: 'lineManage',
+    component: _import('company/lineManage/index'),
+    meta: {
+      title: '线路管理',
+      stitle: '线路',
+      noCache: false
+      // 'code': 'CARRIERLIST'
+    }
+  }, {
+    path: '/company/lineManage/detail',
+    icon: 'chengyunshang',
+    hidden: true,
+    name: 'lineManageDetail',
+    component: _import('company/lineManage/create'),
+    meta: {
+      title: '查看线路',
+      stitle: '线路',
+      noCache: false
+      // 'code': 'CARRIERLIST'
+    }
+  }, {
+    path: '/company/lineManage/create',
+    icon: 'chengyunshang',
+    hidden: true,
+    name: 'lineManageDetail',
+    component: _import('company/lineManage/create'),
+    meta: {
+      title: '新增线路',
+      stitle: '线路',
+      noCache: false
+      // 'code': 'CARRIERLIST'
+    }
+  }, {
+    path: '/company/lineManage/modify',
+    icon: 'chengyunshang',
+    hidden: true,
+    name: 'lineManageDetail',
+    component: _import('company/lineManage/create'),
+    meta: {
+      title: '修改线路',
+      stitle: '线路',
+      noCache: false
+      // 'code': 'CARRIERLIST'
+    }
+  }, {
     path: '/company/wallet',
     icon: 'qb',
     hidden: false,

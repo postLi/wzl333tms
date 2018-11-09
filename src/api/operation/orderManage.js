@@ -594,5 +594,19 @@ export default {
         batchNum
       }
     })
+  },
+  /**
+   * 根据运单信息匹配专线
+   * @param {*} data 请求参数
+    {
+    "rangeFromCityName": "广东省,广州市,白云区",
+    "rangeToCityName": "广东省,佛山市,南海区",
+	"weighList":[1,2,3],
+	"volumeList":[1,2,3],
+	"shipFeeList":[2,3,5]
+  }
+   */
+  postMatchLine(data) {
+    return fetch.post('/api-system/system/tmssystemtransportrange/v1/matchRange', data)
   }
 }

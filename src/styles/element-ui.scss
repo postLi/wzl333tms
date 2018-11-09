@@ -162,7 +162,7 @@ $bodercolor: #d0d7e5;
   height: 40px;
   line-height: 40px;
   outline: 0;
-  padding: 0 15px;
+  padding: 0 10px;
   -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
@@ -177,6 +177,17 @@ $bodercolor: #d0d7e5;
 }
 .el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error,.nativeinput-border.is-error{
   border-color: #f56c6c;
+}
+.el-input-group .nativeinput{
+  border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.el-input-group__append, .el-input-group__prepend{
+  padding: 0 10px;
+}
+.el-input__inner{
+  padding: 0 10px;
 }
 
 /*修改全局绿色输入框*/

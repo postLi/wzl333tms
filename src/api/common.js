@@ -20,6 +20,13 @@ export function getCityInfo(name = '') {
   })
 }
 /**
+ * 根据code值查询其对应的城市及其下属行政区域
+ * @param {*} code 行政区code
+ */
+export function getCityByCode(code = 0) {
+  return fetch.get('/api-order/order/region/v1/' + code)
+}
+/**
  * 获取后台时间
  */
 export function getSystemTime() {
