@@ -9,7 +9,7 @@
           <i class="el-icon-warning" slot="reference"></i>
         </el-popover>
         <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存</el-button>
-        <el-button  @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">刷新</el-button>
+        <el-button @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">刷新</el-button>
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <ul class="print_aside_content">
@@ -92,7 +92,13 @@
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
           </el-upload>
           <div class="prinit_aside_setpreview_foot" v-if="imageUrl">
-            <el-button size="mini" @click="setBg('zoomOut')" type="primary" title="放大" icon="el-icon-circle-plus-outline"></el-button><el-button size="mini" @click="setBg('zoomIn')" type="primary" title="缩小" icon="el-icon-remove-outline"></el-button><el-button size="mini"  @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveLeft')" type="primary" title="向左移动" icon="el-icon-caret-left"></el-button><el-button size="mini"  @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveRight')" type="primary" title="向右移动" icon="el-icon-caret-right"></el-button><el-button size="mini"  @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveUp')" type="primary" title="向上移动" icon="el-icon-caret-top"></el-button><el-button size="mini"  @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveDown')" type="primary" title="向下移动" icon="el-icon-caret-bottom"></el-button><el-button size="mini" @click="setBg('reset')" type="primary" title="重置" icon="el-icon-refresh"></el-button>
+            <el-button size="mini" @click="setBg('zoomOut')" type="primary" title="放大" icon="el-icon-circle-plus-outline"></el-button>
+            <el-button size="mini" @click="setBg('zoomIn')" type="primary" title="缩小" icon="el-icon-remove-outline"></el-button>
+            <el-button size="mini" @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveLeft')" type="primary" title="向左移动" icon="el-icon-caret-left"></el-button>
+            <el-button size="mini" @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveRight')" type="primary" title="向右移动" icon="el-icon-caret-right"></el-button>
+            <el-button size="mini" @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveUp')" type="primary" title="向上移动" icon="el-icon-caret-top"></el-button>
+            <el-button size="mini" @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveDown')" type="primary" title="向下移动" icon="el-icon-caret-bottom"></el-button>
+            <el-button size="mini" @click="setBg('reset')" type="primary" title="重置" icon="el-icon-refresh"></el-button>
           </div>
         </div>
         <div class="prinit_aside_info">
@@ -125,8 +131,8 @@
         </div>
       </div>
       <div class="print_main_foot" v-if="classItem.length">
-        <br>
-        按↑ ↓ ← →移动编辑项，按ctrl+↑↓控制高度变化，按ctrl+←→控制宽度变化<br/>按tab键切换编辑项，shift+tab切换回上一个编辑项
+        <br> 按↑ ↓ ← →移动编辑项，按ctrl+↑↓控制高度变化，按ctrl+←→控制宽度变化
+        <br/>按tab键切换编辑项，shift+tab切换回上一个编辑项
       </div>
     </div>
   </el-dialog>
@@ -190,8 +196,7 @@ export default {
       dragDetailInfo: {},
       dragCursor: 'move',
       alignmentValue: ['', 'left', 'center', 'right'],
-      alignmentOptions: [
-        {
+      alignmentOptions: [{
           value: 1,
           label: '文字靠左'
         },
@@ -269,10 +274,19 @@ export default {
       document.removeEventListener('keydown', this.controlEditIndex)
     },
     handleChange(file, list) {
-      this.imageUrl = file.url
-      this.setBg('reset')
+      console.log('handleChange file:',file)
+      console.log('handleChange list:',list)
+      try {
+        file.url = URL.createObjectURL(file.raw)
+        this.imageUrl = file.url
+        this.setBg('reset')
+      } catch (err) {
+        console.error('上传本地图片错误', err);
+        return
+      }
     },
     uploadHandleFile(file) {
+      console.log('uploadHandleFile file:', file)
     },
     startSetBg(type) {
       clearInterval(this.bgtimer)
@@ -563,7 +577,7 @@ export default {
         // rval = this.mm2px - (val % this.mm2px).toFixed(3)
         // rval = rval < 1 ? this.mm2px : rval
 
-       // 2.通过整除计算，按四舍五入去计算移动
+        // 2.通过整除计算，按四舍五入去计算移动
         rval = Math.round(val / this.mm2px) * this.mm2px
 
         // rval = rval - val
@@ -693,20 +707,20 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.formModel.labelList.forEach(e => {
-              e.topy = 0
-              e.leftx = 0
-              e.width = Math.round(150 * this.prxvalue)
-              e.height = Math.round(24 * this.prxvalue)
-              e.fontsize = 10
-              e.bold = 0
-              e.alignment = 1
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.formModel.labelList.forEach(e => {
+                e.topy = 0
+                e.leftx = 0
+                e.width = Math.round(150 * this.prxvalue)
+                e.height = Math.round(24 * this.prxvalue)
+                e.fontsize = 10
+                e.bold = 0
+                e.alignment = 1
+              })
             })
-          })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
@@ -735,9 +749,10 @@ export default {
 
 </script>
 <style lang="scss">
-.prinit_aside_setpreview_foot{
-  .el-button+.el-button{
+.prinit_aside_setpreview_foot {
+  .el-button+.el-button {
     margin-left: 2px;
   }
 }
+
 </style>

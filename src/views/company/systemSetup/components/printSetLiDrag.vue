@@ -228,7 +228,14 @@ export default {
   },
   methods: {
     handleChange(file, list) {
-      this.imageUrl = file.url
+       try {
+        file.url = URL.createObjectURL(file.raw)
+        this.imageUrl = file.url
+        this.setBg('reset')
+      } catch (err) {
+        console.error('上传本地图片错误', err);
+        return
+      }
     },
     uploadHandleFile(file) {
     },
