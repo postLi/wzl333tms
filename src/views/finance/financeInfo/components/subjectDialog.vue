@@ -21,7 +21,7 @@
       </div>
       <el-form-item label="科目代码" v-if="!isDoAddEnd" prop='subjectCode' label-width="98px" class="info_item">
         <el-input v-model="form.subjectCode" v-numberOnly :maxlength="isFNum">
-            <template slot="prepend" v-if="isSubjectLevel > 1">{{currentForm.subjectCode}}</template>
+          <template slot="prepend" v-if="isSubjectLevel > 1">{{currentForm.subjectCode}}</template>
 
         </el-input>
       </el-form-item>
@@ -296,14 +296,14 @@
           this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
-          console.log(item,'增加下级');
+          console.log(item, '增加下级');
           // this.form.subjectCode = item.subjectCode
           // this.form.subjectName = item.subjectName
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
           this.isAddLE = true
-          console.log(item,'增加一级');
+          console.log(item, '增加一级');
           this.currentForm.subjectCode = item.subjectCode
           this.isSubjectLevel = item.subjectLevel
           this.isFNum = item.subjectLevel * 2 + 2
@@ -387,7 +387,11 @@
               delete data.threeName
               delete data.fourName
               // console.log(data, 'data');
-              data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
+              if (this.isSubjectLevel > 1) {
+                data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
+              } else {
+                
+              }
               // debugger
               //postAddLevel
               promiseObj = postAddLevel(this.info.id, data)
