@@ -3,26 +3,17 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>
     <div class="tab_info">
       <div class="btns_box">
-        <!--<el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')"-->
-                   <!--v-has:PICK_ADD>新增提货-->
-        <!--</el-button>-->
-        <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:PICK_EDIT>-->
-          <!--修改-->
-        <!--</el-button>-->
-        <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:PICK_DEL>-->
-          <!--删除-->
-        <!--</el-button>-->
-        <el-button type="success" :size="btnsize" icon="el-icon-success" @click="doAction('theAudit')" plain
+        <el-button type="success" :size="btnsize" icon="el-icon-document" @click="doAction('theAudit')" plain
                    v-has:PICK_FINASH>反审核
         </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-menu" @click="doAction('audit')" plain
+        <el-button type="info" :size="btnsize" icon="el-icon-tickets" @click="doAction('audit')" plain
                    v-has:PICK_SEL>审核
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
                    v-has:PICK_EXP>导出
         </el-button>
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain-->
-                   <!--v-has:PICK_PRI>打印-->
+        <!--v-has:PICK_PRI>打印-->
         <!--</el-button>-->
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain>批量导入</el-button>-->
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
@@ -275,7 +266,7 @@
       },
       doAction(type) {
         // 判断是否有选中项
-        if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
+        if (!this.selected.length && type !== 'export' && type !== 'print') {
           this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -284,6 +275,40 @@
           return false
         }
         switch (type) {
+          case 'theAudit':
+
+            break
+          case 'audit':
+            if (this.selected.length === 1 && this.selected[0].pickupStatusName === '已审核') {
+              this.$message.info('凭证已经审核，不能重复审核~')
+              return false
+            } else {
+              const ids = []
+              const leng = ''
+              this.selected.filter(el => {
+                return el.pickupStatusName === '已审核'
+              }).map(el => {
+                ids = el.id
+                leng = el.id
+              })
+              ids = ids.join(',')
+              this.$confirm('你已选择' + leng + '条凭证？', '提示', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                deletebatchDelete(ids).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this._handlerCatchMsg(err)
+                })
+              })
+            }
+            break
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
@@ -304,102 +329,37 @@
               columns: this.tableColumn
             })
             break
-          // 新增
-          case 'add':
-            this.closeAddCustomer()
-            this.isModify = false
-            this.isDbclick = false
-            this.selectInfo = {}
-            this.openAddCustomer()
-            break
-          // 修改
-          case 'modify':
-            this.closeAddCustomer()
-            this.isModify = true
-            this.isDbclick = false
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能修改单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '提货完成不能修改~',
-                type: 'warning'
-              })
-              this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openAddCustomer()
-            break
-          // 提货完成
-          case 'finishPick':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            if (this.selected[0].pickupStatus === 237) {
-              this.$message({
-                message: '已经提货完成了~',
-                type: 'warning'
-              })
-              this.$refs.multipleTable.clearSelection()
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickMaintainisible()
-            break
-          // 关联运单
-          case 'relevance':
-            this.closeAddCustomer()
-            if (this.selected.length > 1) {
-              this.$message({
-                message: '每次只能生成单条数据~',
-                type: 'warning'
-              })
-              return false
-            }
-            this.selectInfo = this.selected[0]
-            this.openpickReletainisible()
-            break
           // 删除客户
           case 'delete':
-            const ids = this.selected.filter(el => {
-              return el.pickupStatusName === '提货中'
-            }).map(el => {
-              return el.id
-            })
-            if (!ids.length) {
-              this.$message({
-                type: 'info',
-                message: '提货完成的提货单不能删除!'
-              })
-              return false
-            } else {
-              ids = ids.join(',')
-              this.$confirm('确定要删除提货批次吗？', '提示', {
-                confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                deletebatchDelete(ids).then(res => {
-                  this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                  })
-                  this.fetchData()
-                }).catch(err => {
-                  this._handlerCatchMsg(err)
-                })
-              })
-            }
+            // const ids = this.selected.filter(el => {
+            //   return el.pickupStatusName === '提货中'
+            // }).map(el => {
+            //   return el.id
+            // })
+            // if (!ids.length) {
+            //   this.$message({
+            //     type: 'info',
+            //     message: '提货完成的提货单不能删除!'
+            //   })
+            //   return false
+            // } else {
+            //   ids = ids.join(',')
+            //   this.$confirm('确定要删除提货批次吗？', '提示', {
+            //     confirmButtonText: '删除',
+            //     cancelButtonText: '取消',
+            //     type: 'warning'
+            //   }).then(() => {
+            //     deletebatchDelete(ids).then(res => {
+            //       this.$message({
+            //         type: 'success',
+            //         message: '删除成功!'
+            //       })
+            //       this.fetchData()
+            //     }).catch(err => {
+            //       this._handlerCatchMsg(err)
+            //     })
+            //   })
+            // }
             break
         }
         // 清除选中状态，避免影响下个操作

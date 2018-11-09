@@ -40,16 +40,17 @@
         <!--</el-button>-->
       </div>
       <div class="info_tab info_tab_media">
-        <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam" @success="fetchData"/>
+        <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"
+                    @success="fetchData"/>
       </div>
       <!--<div class="info_tab_footer">共计:{{ total }}-->
-        <!--<div class="show_pager">-->
-          <!--<Pager :total="total" @change="handlePageChange"/>-->
-        <!--</div>-->
+      <!--<div class="show_pager">-->
+      <!--<Pager :total="total" @change="handlePageChange"/>-->
+      <!--</div>-->
       <!--</div>-->
     </div>
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
-                   :isDoExport="isDoExport"></SubjectDialog>
+                   :doAddStair="doAddStair" :info="selectInfo" @success="fetchData"></SubjectDialog>
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData"
                   :info="'driver'" :isSubjectInfo='isSubjectInfo'></ImportDialog>
   </div>
@@ -91,7 +92,7 @@
     data() {
       return {
         isSubjectInfo: false,
-        isDoExport: false,
+        doAddStair: false,
         isDoAddEnd: false,
         showDialog: false,
         importDialogVisible: false,
@@ -250,21 +251,23 @@
               })
               return false
             }
-            this.openShowDialog()
             this.isDoAddEnd = true
-            this.isDoExport = false
+            this.doAddStair = false
+            this.openShowDialog()
+            this.selectInfo = this.selected[0]
             break
           case 'doAddStair':
             if (this.selected.length > 1) {
               this.$message({
-                message: '每次只能修改单条数据~',
+                message: '每次只能新增单条数据~',
                 type: 'warning'
               })
               return false
             }
-            this.openShowDialog()
             this.isDoAddEnd = false
-            this.isDoExport = false
+            this.doAddStair = true
+            this.openShowDialog()
+            this.selectInfo = this.selected[0]
             break
           case 'doNext':
             this.$router.push({

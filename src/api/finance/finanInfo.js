@@ -58,6 +58,22 @@ export function getTemplate(data) {
     })
 }
 
+///finance/tmsfinancesubjects/v1.3/insertSameLevel/{id}
+// 新增一级
+export function postAddLevel(id, params) {
+  return fetch.post('/api-finance/finance/tmsfinancesubjects/v1.3/insertSameLevel/' + id, params).then(res => {
+    return res.data || {}
+  })
+}
+
+//
+// /finance/tmsfinancesubjects/v1.3/insertNextLevel/{id}
+// 新增一级
+export function postAddNextLevel(id, params) {
+  return fetch.post('/api-finance/finance/tmsfinancesubjects/v1.3/insertNextLevel/' + id, params).then(res => {
+    return res.data || {}
+  })
+}
 //科目定义
 
 // 核销科目
@@ -67,6 +83,7 @@ export function postFinRsrelationList(params) {
     return res.data || {}
   })
 }
+
 
 
 // /finance/tmsfinancesubjectsrelation/v1.3/down
@@ -79,6 +96,7 @@ export function getSelectList(id, type) {
     }
   })
 }
+
 
 // export function postTradeQuery(orderSerial,type) {
 //   return Axios.post(''+swg7+'/api/pay/shipper/common/v1/tradeQuery/'+orderSerial,{
