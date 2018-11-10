@@ -5,9 +5,8 @@ import fetch from '../../utils/fetch'
  * @param {*} data 请求参数
 {
   "tmsSystemTransportRangeDto": {
-    "createOrgid": 1,
     "fromOrgid": 1,
-    "lowerPrice": 10,
+    "lowerPrice": 10, // 最低一票价
     "priceAbnormal": 20,
     "priceBigabnormal": 30,
     "priceNormal": 10,
@@ -16,15 +15,14 @@ import fetch from '../../utils/fetch'
     "rangeFromContacts": "张三",
     "rangeFromMobile": "13533321545",
     "rangeFromProvince": "广东省",
-    "rangeStatus": "1",
     "rangeToArea": "南海区",
     "rangeToCity": "佛山市",
     "rangeToContacts": "李四",
     "rangeToMobile": "15213545612",
     "rangeToProvince": "广东省",
     "toOrgid": 2,
-    "transportAging": "1",
-    "transportAgingType": "1",
+    "transportAging": "1", // 0-1 3-1
+    "transportAgingType": "1", // 0 天 1 小时 2 多天
     "transportRemark": "备注"
   },
   "tmsSystemTransportRangePriceDtoList": [
@@ -32,7 +30,7 @@ import fetch from '../../utils/fetch'
       "endVolume": 10,
       "primeryPrice": 10,
       "startVolume": 0,
-      "type": "1"
+      "type": "1" // 1 重货 0 轻货
     }
   ]
 }
