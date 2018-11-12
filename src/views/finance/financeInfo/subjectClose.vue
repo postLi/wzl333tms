@@ -7,7 +7,7 @@
                  class=" clearfix" style="float: left">
           <div class="">
             <el-form-item label="网点">
-              <SelectTree v-model="searchQuery.vo.orgId" :orgid="otherinfo.orgid" clearible @change="searchOrgid"/>
+              <SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" clearible @change="searchOrgid"/>
             </el-form-item>
 
           </div>
@@ -132,14 +132,14 @@
         'otherinfo'
       ]),
       orgid() {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
 
     data() {
       return {
         searchForm: {
-          orgid: '',
+          companyId: '',
         },
         mykey: '',
         btnsize: 'mini',
@@ -157,7 +157,7 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgId': 1
+            'companyId': 1
           }
         },
         tableColumn: [{
@@ -196,14 +196,14 @@
       }
     },
     mounted() {
-      this.searchQuery.vo.orgId = this.otherinfo.orgid
+      this.searchQuery.vo.companyId = this.otherinfo.companyId
       // this.usersArr = this.tableColumn
       this.fetchData()
 
     },
     methods: {
       searchOrgid(item) {
-        this.searchQuery.vo.orgId = item
+        this.searchQuery.vo.companyId = item
         this.fetchData()
       },
       handleClick(row) {

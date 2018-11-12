@@ -1,7 +1,7 @@
 <template>
   <el-table
     ref="multipleTable" :data="formatData" stripe border @selection-change="getSelection" height="100%"
-    tooltip-effect="light" :default-sort="{prop: 'id', order: 'ascending'}"
+    tooltip-effect="light" class="lrl-kemu-table" :default-sort="{prop: 'id', order: 'ascending'}"
     style="width: 100%" :row-style="showRow" v-bind="$attrs" @row-click="clickDetails">
     <el-table-column
       fixed
@@ -24,7 +24,7 @@
     <el-table-column v-else v-for="(column, index) in columns" :key="index" :prop="column.value" :label="column.text"
                      :width="column.width" class-name="col-class">
       <template slot-scope="scope">
-        <div class="scope-node">
+        <div class="scope-node" :class="(iconShow(index,scope.row) ? 'lrl-space-' + scope.row._level : '') + (!scope.row._expanded ? ' hide-space' : '')">
           <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
           <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
@@ -41,12 +41,19 @@
           <span>{{ scope.row.subjectCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否公共" :render-header="renderHeader">
+      <el-table-column label="收支方式">
         <template slot-scope="scope">
-          <span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>
+          <!--财务科目类型 0 收入, 1 支出-->
+
+          <span>{{ scope.row.subjectType===1?'支出':'收入' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <!--<el-table-column label="是否公共" :render-header="renderHeader" v-if="isParentId">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column label="操作" width="200" v-if="isParentId">
         <template slot-scope="scope">
           <el-button
             type="text" icon=""
@@ -82,7 +89,12 @@
       expandAll: {
         type: Boolean,
         default: false
-      }
+      },
+      isParentId: {
+        type: Boolean,
+        default: false
+      },
+      // v-if="isParentId"
     },
     data() {
       return {
@@ -100,9 +112,13 @@
             record._expanded = false
           })
         }
+      },
+      isParentId(nVal) {
+
       }
     },
     mounted() {
+
     },
     computed: {
       // 格式化数据源
@@ -115,6 +131,7 @@
         }
         const func = this.evalFunc || treeToArray
         const args = this.evalArgs ? Array.concat([tmp, this.expandAll], this.evalArgs) : [tmp, this.expandAll]
+        console.log(this.data,'data12222')
         return func.apply(null, args)
       }
     },
@@ -182,7 +199,7 @@
     }
   }
 </script>
-<style rel="stylesheet/css">
+<style lang="scss">
   @keyframes treeTableShow {
     from {
       opacity: 0;
@@ -199,6 +216,36 @@
     to {
       opacity: 1;
     }
+  }
+  .lrl-kemu-table{
+    .cell{
+      overflow: visible;
+      line-height: 32px;
+      padding: 0;
+    }
+    td,th {
+      /*line-height: 26px;*/
+      padding: 0;
+    }
+    .ms-tree-space:nth-child(1):after{
+      display: none;
+    }
+    .lrl-space-1{
+      .ms-tree-space:nth-child(1):after{
+        top: 8px;
+      }
+    }
+    .lrl-space-2{
+      .ms-tree-space:nth-child(2):after{
+        top: 8px;
+      }
+    }
+    .lrl-space-3{
+      .ms-tree-space:nth-child(3):after{
+        top: 8px;
+      }
+    }
+
   }
 </style>
 
@@ -217,16 +264,34 @@
     &::before {
       content: ""
     }
+    &::after{
+      position: absolute;
+      content: " ";
+      top: -9px;
+      left: 11px;
+      width: 0;
+      border-left: 1px solid #2196F3;
+      background: #000;
+      height: 34px;
+    }
   }
+  .hide-space{
+    .ms-tree-space::after{
+      display: none;
+    }
+  }
+
+  .tree-ctrl{
+
+  }
+
 
   .processContainer {
     width: 100%;
     height: 100%;
   }
 
-  table td {
-    line-height: 26px;
-  }
+
 
   .tree-ctrl {
     position: relative;

@@ -7,9 +7,9 @@
         <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"
                  class=" clearfix" style="float: left">
           <div class="">
-            <el-form-item label="网点">
-              <SelectTree v-model="searchQuery.vo.orgid" :orgid="otherinfo.orgid" @change="searchOrgid" clearible/>
-            </el-form-item>
+            <!--<el-form-item label="网点">-->
+            <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" @change="searchOrgid" clearible/>-->
+            <!--</el-form-item>-->
 
           </div>
         </el-form>
@@ -26,10 +26,10 @@
                    v-has:PICK_EXP class="table_setup fr_btn">全部收起
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus-outline" @click="doAction('doAddEnd')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn">增加下级
+                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">增加下级
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('doAddStair')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn">新增一级
+                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">新增一级
         </el-button>
         <el-button :size="btnsize" icon="el-icon-tickets" @click="doAction('doDefaultTem')" plain
                    v-has:PICK_EXP class="table_setup fr_btn">获取默认模板
@@ -41,7 +41,7 @@
       </div>
       <div class="info_tab info_tab_media">
         <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"
-                    @success="fetchData"/>
+                    @success="fetchData" :isParentId="isParentId"/>
       </div>
       <!--<div class="info_tab_footer">共计:{{ total }}-->
       <!--<div class="show_pager">-->
@@ -85,13 +85,14 @@
         'otherinfo'
       ]),
       orgid() {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
 
     data() {
       return {
         isSubjectInfo: false,
+        isParentId: false,
         doAddStair: false,
         isDoAddEnd: false,
         showDialog: false,
@@ -110,7 +111,7 @@
         setupTableVisible: false,
         selectInfo: {},
         searchForm: {
-          orgid: '',
+          companyId: '',
         },
         // 选中的行
         selected: [],
@@ -118,7 +119,7 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgid': 1,
+            'companyId': 1,
           }
         },
         columns: [
@@ -151,12 +152,18 @@
       }
     },
     mounted() {
-      this.searchQuery.vo.orgid = this.otherinfo.orgid
+      this.searchQuery.vo.companyId = this.otherinfo.companyId
+      // if (this.otherinfo.companyId === this.otherinfo.orgid) {
+      //   isParentId = true
+      // } else {
+      //   isParentId = false
+      // }
+      this.isParentId = this.otherinfo.orgid === this.otherinfo.companyId ? true : false
       this.fetchData()
     },
     methods: {
       searchOrgid(item) {
-        this.searchQuery.vo.orgid = item
+        this.searchQuery.vo.companyId = item
         this.fetchData()
       },
       message(row) {
@@ -164,7 +171,7 @@
       },
       fetchTreeList() {
         // this.loading = true
-        return getFinSubjectTree(this.searchQuery.vo.orgid).then(data => {
+        return getFinSubjectTree(this.otherinfo.companyId).then(data => {
           this.usersArr = data.data
 
           console.log(data)
@@ -249,6 +256,10 @@
                 message: '每次只能修改单条数据~',
                 type: 'warning'
               })
+              return false
+            }
+            if (this.selected[0].subjectLevel >= 4) {
+              this.$message.info('添加的级数不能超过4级')
               return false
             }
             this.isDoAddEnd = true
