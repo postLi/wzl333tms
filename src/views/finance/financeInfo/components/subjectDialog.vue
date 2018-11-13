@@ -321,7 +321,17 @@
     },
     methods: {
       changelist(item) {
-        console.log(item)
+        Promise.all([getSelectList(item || '', 2), getSelectList(item || '', 3), getSelectList(item || '', 4)]).then((resArr, index) => {
+          this.closeOptions.twoOptions = resArr[0]
+          this.closeOptions.threeOptions = resArr[1].data
+          this.closeOptions.forthOptions = resArr[2].data
+
+          // this.loading = false
+          // this.licenseTypes = resArr[1]
+        }).catch(err => {
+          this._handlerCatchMsg(err)
+          this.loading = false
+        })
         // this.comSelectList(item, 1)
       },
       // comSelectList(id, type) {
@@ -342,7 +352,7 @@
           this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
-          console.log(item,'item1111')
+          console.log(item, 'item1111')
 
           // this.form.subjectCode = item.subjectCode
           // this.form.subjectName = item.subjectName
@@ -367,7 +377,7 @@
           this.isTitle = '导入模板'
         }
         else if (this.isSubClose) {
-          // this.isTitle = '修改'
+          this.isTitle = '修改'
           // this.form.subjectsFeeType = item.subjectsFeeType
           // this.form.oneName = item.oneName
           // this.form.twoName = item.twoName
@@ -416,26 +426,13 @@
       },
       fetchFinSubCloseInfo(id) {
         getFinSubCloseInfo(id).then(res => {
-          console.log(res)
           this.form.subjectsFeeType = res.po.subjectsFeeType
           this.form.oneName = res.po.oneName
-          this.form.twoName = res.po.twoName
-          this.form.threeName = res.po.threeName
-          this.form.fourName = res.po.fourName
-          this.closeOptions.oneOptions = res.po.oneLevel
-          Promise.all([getSelectList(res.po.oneId, 2), getSelectList(res.po.twoId, 3), getSelectList(res.po.threeId, 4), getSelectList(res.po.fourId, 5)]).then((resArr, index) => {
-            console.log(resArr,'Promise.all');
+          // this.form.twoName = res.po.twoName
+          // this.form.threeName = res.po.threeName
+          // this.form.fourName = res.po.fourName
+          this.closeOptions.oneOptions = res.oneLevel
 
-            this.closeOptions.twoOptions = resArr[1].data
-            this.closeOptions.threeOptions = resArr[2].data
-            this.closeOptions.forthOptions = resArr[3].data
-
-            // this.loading = false
-            // this.licenseTypes = resArr[1]
-          }).catch(err => {
-            this._handlerCatchMsg(err)
-            this.loading = false
-          })
         }).catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
