@@ -63,13 +63,14 @@
       </el-form-item>
       <el-form-item label="一级科目">
 
-        <el-select v-model="form.oneName" placeholder="请选择" @change="changelist">
+        <el-select v-model="form.oneName" placeholder="请选择" @change="changeSelctList">
+
           <el-option
-            v-for="item in closeOptions.oneOptions"
+            v-for="(item,index) in closeOptions.oneOptions"
             :key="item.id"
             :label="item.subjectName"
-            :value="item.id"
-            @>
+            :value="item.subjectName"
+          >
           </el-option>
         </el-select>
 
@@ -80,30 +81,30 @@
             v-for="item in closeOptions.twoOptions"
             :key="item.id"
             :label="item.subjectName"
-            :value="item.id"
-            @>
+            :value="item.subjectName"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="三级科目" class="">
-        <el-select v-model="form.threeName" placeholder="请选择" @change="changelist">
+        <el-select v-model="form.threeName" placeholder="请选择" @change="changeListThree">
           <el-option
             v-for="item in closeOptions.threeOptions"
             :key="item.id"
             :label="item.subjectName"
-            :value="item.id"
-            @>
+            :value="item.subjectName"
+          >
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="四级科目" class="">
-        <el-select v-model="form.fourName" placeholder="请选择" @change="changelist">
+        <el-select v-model="form.fourName" placeholder="请选择" @change="changelistFour">
           <el-option
             v-for="item in closeOptions.forthOptions"
             :key="item.id"
             :label="item.subjectName"
-            :value="item.id"
-            @>
+            :value="item.subjectName"
+          >
           </el-option>
         </el-select>
       </el-form-item>
@@ -269,16 +270,20 @@
           fourId: ''
         },
         closeOptions: {
-          oneOptions: {},
-          twoOptions: {},
-          threeOptions: {},
-          forthOptions: {}
+          oneOptions: [],
+          twoOptions: [],
+          threeOptions: [],
+          forthOptions: []
         },
         form: {
           name: '',
           verificationWay: '',//核销方向
           remark: '',//核销方向
           subjectsFeeType: '',   //  核销科目
+          oneId: '',
+          twoId: '',
+          threeId: '',
+          fourId: '',
           oneName: '',
           twoName: '',
           threeName: '',
@@ -320,25 +325,7 @@
     mounted() {
     },
     methods: {
-      changelist(item) {
-        Promise.all([getSelectList(item || '', 2), getSelectList(item || '', 3), getSelectList(item || '', 4)]).then((resArr, index) => {
-          this.closeOptions.twoOptions = resArr[0]
-          this.closeOptions.threeOptions = resArr[1].data
-          this.closeOptions.forthOptions = resArr[2].data
 
-          // this.loading = false
-          // this.licenseTypes = resArr[1]
-        }).catch(err => {
-          this._handlerCatchMsg(err)
-          this.loading = false
-        })
-        // this.comSelectList(item, 1)
-      },
-      // comSelectList(id, type) {
-      //   getSelectList(id, type).then(data => {
-      //     console.log(data)
-      //   })
-      // },
       comWatch(item) {
         if (this.$refs['ruleForm']) {
           this.$refs['ruleForm'].resetFields()
@@ -352,10 +339,6 @@
           this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
-          console.log(item, 'item1111')
-
-          // this.form.subjectCode = item.subjectCode
-          // this.form.subjectName = item.subjectName
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
@@ -367,47 +350,11 @@
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
           }
-
-          // if(this.is)
-          // this.form.subjectCode = item.subjectCode
-          // this.form.subjectName = item.subjectName
-          // console.log(this.isSubjectLevel, 'item')
         }
         else if (this.isDoExport) {
           this.isTitle = '导入模板'
         }
-        else if (this.isSubClose) {
-          this.isTitle = '修改'
-          // this.form.subjectsFeeType = item.subjectsFeeType
-          // this.form.oneName = item.oneName
-          // this.form.twoName = item.twoName
-          // this.form.threeName = item.threeName
-          // this.form.fourName = item.fourName
-          // this.closeIds.oneId = item.oneId || ''
-          // this.closeIds.twoId = item.twoId || ''
-          // this.closeIds.threeId = item.threeId || ''
-          // this.closeIds.fourId = item.fourId || ''
-          // Promise.all([getSelectList(this.closeIds.oneId, 2), getSelectList(this.closeIds.twoId, 3), getSelectList(this.closeIds.threeId, 4), getSelectList(this.closeIds.fourId, 5)]).then((resArr, index) => {
-          //   // console.log(resArr,'666');
-          //   this.closeOptions.oneOptions = resArr[0].data
-          //   this.closeOptions.twoOptions = resArr[1].data
-          //   this.closeOptions.threeOptions = resArr[2].data
-          //   this.closeOptions.forthOptions = resArr[3].data
-          //
-          //   // this.loading = false
-          //   // this.licenseTypes = resArr[1]
-          // }).catch(err => {
-          //   this._handlerCatchMsg(err)
-          //   this.loading = false
-          // })
-          // putFinSubCloseInfo(item.id).then(data => {
-          //   console.log(data);
-          // }).catch(err => {
-          //   this._handlerCatchMsg(err)
-          //   this.loading = false
-          // })
-          this.fetchFinSubCloseInfo(item.id)
-        }
+
         else if (this.isDoAddSub) {
           this.isTitle = '新增'
           this.isDirect = true
@@ -418,24 +365,100 @@
           this.isDirect = true
           this.form.verificationWay = item.verificationWay
           this.form.remark = item.remark
-          // console.log(this.form,'修改')
-          // this.reset()
-          // console.log(this.info,'selectInfo')
+        } else if (this.isSubClose) {
+          this.isTitle = '修改'
+          this.getoptio1(item.id)
+          // this.form.twoId = ''
+          // this.form.threeId = ''
+          // this.form.fourId = ''
         }
-
       },
+      getoptio1(id) {
+        getFinSubCloseInfo(id).then(res => {
+          console.log(res)
+          res.oneLevel.map((item) => {
+            this.closeOptions.oneOptions.push(item)
+          })
+        })
+      },
+      changeSelctList(obj, index) {
+        this.closeOptions.oneOptions.filter((item, index) => {
+          // console.log(item.id, item.subjectName)
+          // return item.subjectName === obj
+          if (item.subjectName === obj) {
+            console.log(item, 'item')
+          } else {
+
+          }
+        })
+        // console.log(obj, index)
+      },
+
+
       fetchFinSubCloseInfo(id) {
         getFinSubCloseInfo(id).then(res => {
           this.form.subjectsFeeType = res.po.subjectsFeeType
-          this.form.oneName = res.po.oneName
-          // this.form.twoName = res.po.twoName
-          // this.form.threeName = res.po.threeName
-          // this.form.fourName = res.po.fourName
+          // this.form.oneName = res.oneLevel[0].subjectName
           this.closeOptions.oneOptions = res.oneLevel
+          // this.form.oneName =
+
+          // console.log()
+          const itemId = this.closeOptions.oneOptions[0].id || ''
+          this.form.oneId = itemId
+
+          this.changelist(itemId)
 
         }).catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
+        })
+      },
+      changelist(item) {
+        this.closeOptions.oneOptions.map((item, index) => {
+          this.closeOptions.oneOptions.push(item)
+          console.log(item.id, index)
+        })
+        // const find =this.closeOptions.oneOptions.filter(el => {
+        //   // const find = el.id
+        //   return el.subjectName === item
+        // })
+        // this.form.twoId = find.id
+        // console.log(find, 'find  ');
+        getSelectList(item, 2).then((res, index) => {
+          if (res === '数据库无对应记录' || '') {
+            this.closeOptions.twoOptions = ''
+            return false
+          } else {
+            this.closeOptions.twoOptions = res
+            // this.form.twoName = res[index].subjectName
+            this.form.oneId = res[0].parentId
+            this.fetchFinSubCloseInfo(this.form.oneId)
+            this.changeListThree(this.closeOptions.twoOptions[0].id)
+          }
+        })
+        //
+      },
+      changeListThree(item) {
+        this.form.threeId = item
+        getSelectList(item, 3).then(res => {
+          if (res === '数据库无对应记录' || '') {
+            this.closeOptions.threeOptions = ''
+            return false
+          } else {
+            this.closeOptions.threeOptions = res
+            this.changelistFour(this.closeOptions.threeOptions[0].id)
+          }
+        })
+      },
+      changelistFour(item) {
+        this.form.fourId = item
+        getSelectList(item, 4).then(res => {
+          if (res === '数据库无对应记录' || '') {
+            this.closeOptions.forthOptions = ''
+            return false
+          } else {
+            this.closeOptions.forthOptions = res
+          }
         })
       },
       submitForm(ruleForm) {
@@ -453,20 +476,16 @@
             else if (this.isDoEdit) {
               promiseObj = putExtFinFicationl(this.info.id, data)
             } else if (this.isSubClose) {
-              delete this.form.verificationWay
-              delete this.form.remark
-
-              // fourName: null
-              // oneName: "主营业务收入"
-              // subjectCode: ""
-              // subjectName: ""
-              // subjectType: ""
-              // subjectsFeeType: "现付"
-              // threeName: null
-              // twoName: "现付"
+              delete data.verificationWay
+              delete data.remark
+              delete data.subjectCode
+              delete data.subjectName
+              delete data.subjectType
+              delete data.subjectsFeeType
+              //
               console.log(this.form, 'isSubClose');
-              // promiseObj = putFinanceEdit(this.info.id, data)
-              // delete this.form.closeIds
+              console.log(data, 'data111');
+              promiseObj = putFinanceEdit(this.info.id, data)
             } else if (this.doAddStair) {
               delete data.verificationWay
               delete data.remark
@@ -475,7 +494,6 @@
               delete data.twoName
               delete data.threeName
               delete data.fourName
-              // console.log(data, 'data');
               if (this.isSubjectLevel > 1) {
                 data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
               }
@@ -589,7 +607,7 @@
                 padding: 0 4px;
               }
               .el-input__inner {
-                width: 82% !important;
+                width: 90% !important;
               }
             }
           }

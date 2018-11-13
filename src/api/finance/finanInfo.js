@@ -109,7 +109,7 @@ export function getFinSubCloseInfo(id) {
 // /finance/tmsfinancesubjectsrelation/v1.3/{id}
 // 根据ID修改核销科目关系表信息
 export function putFinanceEdit(id, params) {
-  return fetch.post('/api-finance/finance/tmsfinancesubjectsrelation/v1.3/' + id, params).then(res => {
+  return fetch.put('/api-finance/finance/tmsfinancesubjectsrelation/v1.3/' + id, params).then(res => {
     return res.data || {}
   })
 }

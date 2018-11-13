@@ -3,15 +3,15 @@
     <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>-->
     <div class="tab_info">
       <div class="btns_box">
-        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"
-                 class=" clearfix" style="float: left">
-          <div class="">
-            <el-form-item label="网点">
-              <SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" clearible @change="searchOrgid"/>
-            </el-form-item>
+        <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"-->
+                 <!--class=" clearfix" style="float: left">-->
+          <!--<div class="">-->
+            <!--<el-form-item label="网点">-->
+              <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" clearible @change="searchOrgid"/>-->
+            <!--</el-form-item>-->
 
-          </div>
-        </el-form>
+          <!--</div>-->
+        <!--</el-form>-->
         <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-down"
                    @click="doAction('doNext')" plain
                    v-has:PICK_FINASH>下一步
@@ -102,7 +102,7 @@
     <!--<TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"-->
     <!--@success="setColumn"></TableSetup>-->
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog'
-                   :isSubClose="isSubClose" :info="selectInfo"></SubjectDialog>
+                   :isSubClose="isSubClose" :info="selectInfo" @success="fetchData"></SubjectDialog>
   </div>
 </template>
 <script>

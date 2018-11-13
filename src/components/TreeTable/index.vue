@@ -30,7 +30,7 @@
           <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
           <i v-else class="el-icon-minus min-scope"></i>
         </span>
-          <span>{{scope.row[column.value]}}</span>
+          <span style="margin-left: 15px">{{scope.row[column.value]}}</span>
         </div>
       </template>
     </el-table-column>
@@ -56,6 +56,7 @@
       <el-table-column label="操作" width="200" v-if="isParentId">
         <template slot-scope="scope">
           <el-button
+            style="color: #f56c6c"
             type="text" icon=""
             size="small"
             @click="handleDelete(scope.row)">
@@ -131,7 +132,6 @@
         }
         const func = this.evalFunc || treeToArray
         const args = this.evalArgs ? Array.concat([tmp, this.expandAll], this.evalArgs) : [tmp, this.expandAll]
-        console.log(this.data,'data12222')
         return func.apply(null, args)
       }
     },
@@ -219,30 +219,30 @@
   }
   .lrl-kemu-table{
     .cell{
-      overflow: visible;
-      line-height: 32px;
-      padding: 0;
+      /*overflow: visible;*/
+      /*line-height: 32px;*/
+      /*padding: 0;*/
     }
     td,th {
       /*line-height: 26px;*/
       padding: 0;
     }
     .ms-tree-space:nth-child(1):after{
-      display: none;
+      /*display: none;*/
     }
     .lrl-space-1{
       .ms-tree-space:nth-child(1):after{
-        top: 8px;
+        /*top: 8px;*/
       }
     }
     .lrl-space-2{
       .ms-tree-space:nth-child(2):after{
-        top: 8px;
+        /*top: 8px;*/
       }
     }
     .lrl-space-3{
       .ms-tree-space:nth-child(3):after{
-        top: 8px;
+        /*top: 8px;*/
       }
     }
 
@@ -265,14 +265,14 @@
       content: ""
     }
     &::after{
-      position: absolute;
+      /*position: absolute;
       content: " ";
       top: -9px;
       left: 11px;
       width: 0;
       border-left: 1px solid #2196F3;
       background: #000;
-      height: 34px;
+      height: 34px;*/
     }
   }
   .hide-space{
@@ -282,7 +282,10 @@
   }
 
   .tree-ctrl{
-
+    i.el-icon-minus,i.el-icon-plus{
+      font-size: 22px;
+      font-weight: 600;
+    }
   }
 
 

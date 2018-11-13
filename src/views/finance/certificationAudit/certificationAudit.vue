@@ -63,6 +63,7 @@
 <script>
   import {getExportExcel} from '@/api/company/customerManage'
   import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
+  import {postFinCerList, postFinCerFicationcert} from '@/api/finance/finCertificationAudit'
 
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
@@ -88,11 +89,11 @@
         'otherinfo'
       ]),
       orgid() {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
     mounted() {
-      this.searchQuery.vo.orgid = this.otherinfo.orgid
+      this.searchQuery.vo.orgId = this.otherinfo.orgid
     },
     data() {
       return {
@@ -117,121 +118,123 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgid': 1,
-            pickupStatus: '',
+            'orgId': 1,
+            verifyStatus: '',
+            paymentsType: '',
+            dataSrc: '',
             startTime: '',
-            pickupBatchNumber: '',
-            truckIdNumber: '',
-            driverName: ''
+            endTime: '',
           }
         },
-        tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '70',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        }, {
-          label: '审核状态',
-          prop: 'pickupBatchNumber',
-          width: '110',
-          fixed: true
-        }, {
-          label: '来源',
-          prop: 'pickupStatusName',
-          width: '110',
-          fixed: true
-        },
+        tableColumn: [
+          {
+            label: '序号',
+            prop: 'id',
+            width: '70',
+            fixed: true,
+            slot: (scope) => {
+              return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+            }
+          }, {
+            label: '审核状态',
+            prop: 'verifyStatusZh',
+            width: '110',
+            fixed: true,
+          }, {
+            label: '来源',
+            prop: 'dataSrcZh',
+            width: '110',
+            fixed: true
+          },
           {
             label: '核销项目',
-            prop: 'customerName',
+            prop: 'subjectName',
             width: '120',
             fixed: false
           }, {
             label: '类别',
-            prop: 'customerMobile',
+            prop: 'verificationWay',
             width: '130',
-            fixed: false
+            fixed: false,
+
           }, {
             label: '方向',
-            prop: 'detailedAddress',
+            prop: 'paymentsTypeZh',
             width: '170',
-            fixed: false
+            fixed: false,
           }, {
             label: '金额',
-            prop: 'pickupName',
+            prop: 'amount',
             width: '120',
             fixed: false
           }, {
             label: '凭证号',
-            prop: 'pickupAmount',
-            width: '80',
+            prop: 'certNo',
+            width: '150',
             fixed: false
           }, {
             label: '凭证日期',
-            prop: 'pickupWeight',
+            prop: 'certTime',
             width: '160',
             fixed: false
           }, {
             label: '系统操作日期',
-            prop: 'pickupVolume',
+            prop: 'createTime',
             width: '160',
             fixed: false
           }, {
             label: '一级科目',
-            prop: 'realWeight',
+            prop: 'subjectOne',
             width: '120',
             fixed: false
           }, {
             label: '二级科目',
-            prop: 'differWeight',
+            prop: 'subjectTwo',
             width: '110',
             fixed: false
           }, {
             label: '三级科目',
-            prop: 'realVolume',
+            prop: 'subjectThree',
             width: '120',
             fixed: false
           }, {
             label: '四级科目',
-            prop: 'differVolume',
+            prop: 'subjectFour',
             width: '120',
             fixed: false
           }, {
             label: '摘要',
-            prop: 'shipSns',
+            prop: 'remark',
             width: '180',
             fixed: false
           }, {
             label: '核销网点',
-            prop: 'pickupFee',
+            prop: 'orgName',
             width: '120',
             fixed: false
           }, {
             label: '笔数',
-            prop: 'toCityName',
+            prop: 'verifyCount',
             width: '150',
             fixed: false
           }, {
             label: '发票号码',
-            prop: 'payMethodName',
+            prop: 'invoiceNo',
             width: '120',
             fixed: false
           }, {
             label: '收据号码',
-            prop: 'remark',
+            prop: 'receiptNo',
             width: '120',
             fixed: false
           }, {
             label: '支票号码',
-            prop: 'carriage',
+            prop: 'checkNo',
             width: '120',
             fixed: false
           }, {
             label: '手工凭证号',
-            prop: 'collectionFee',
+            prop: 'manualCert',
             width: '120',
             fixed: false
           }
@@ -241,7 +244,7 @@
     methods: {
       fetchAllCustomer() {
         this.loading = true
-        return fetchPostlist(this.searchQuery).then(data => {
+        return postFinCerList(this.searchQuery).then(data => {
           this.usersArr = data.list
           this.total = data.total
           this.loading = false
@@ -279,28 +282,28 @@
 
             break
           case 'audit':
-            if (this.selected.length === 1 && this.selected[0].pickupStatusName === '已审核') {
+            if (this.selected.length === 1 && this.selected[0].verifyStatus === 1) {
               this.$message.info('凭证已经审核，不能重复审核~')
               return false
             } else {
-              const ids = []
-              const leng = ''
-              this.selected.filter(el => {
-                return el.pickupStatusName === '已审核'
+              let idList = this.selected.filter(el => {
+                return el.verifyStatus === 1
               }).map(el => {
-                ids = el.id
-                leng = el.id
+                return idList = el.id
               })
-              ids = ids.join(',')
-              this.$confirm('你已选择' + leng + '条凭证？', '提示', {
-                confirmButtonText: '删除',
+              idList = idList.join(',')
+              this.$confirm('你已选择' + idList.length + '条凭证？', '提示', {
+                confirmButtonText: '审核',
                 cancelButtonText: '取消',
                 type: 'warning'
               }).then(() => {
-                deletebatchDelete(ids).then(res => {
+                const data = {}
+                data.idList = idList
+                data.verifyStatus = 1
+                postFinCerFicationcert(data).then(res => {
                   this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                    message: '审核成功!'
                   })
                   this.fetchData()
                 }).catch(err => {

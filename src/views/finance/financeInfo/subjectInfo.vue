@@ -4,15 +4,15 @@
     <div class="tab_info">
 
       <div class="btns_box">
-        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"
-                 class=" clearfix" style="float: left">
-          <div class="">
+        <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"-->
+                 <!--class=" clearfix" style="float: left">-->
+          <!--<div class="">-->
             <!--<el-form-item label="网点">-->
             <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" @change="searchOrgid" clearible/>-->
             <!--</el-form-item>-->
 
-          </div>
-        </el-form>
+          <!--</div>-->
+        <!--</el-form>-->
         <el-button type="success" :size="btnsize" icon="el-icon-sort-down" @click="doAction('doNext')" plain
                    v-has:PICK_FINASH class="table_setup fr_btn">下一步
         </el-button>

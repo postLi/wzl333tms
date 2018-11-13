@@ -8,20 +8,20 @@
         </div>
       </el-form-item>
       <el-form-item label="核销网点">
-        <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible/>
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearible/>
       </el-form-item>
       <el-form-item label="审核状态">
-          <el-select v-model="searchForm.pickupBatchNumber">
+          <el-select v-model="searchForm.verifyStatus">
             <el-option label="未审核" :value="0"></el-option>
             <el-option label="已审核" :value="1"></el-option>
             <el-option label="全部" value=""></el-option>
           </el-select>
-        </el-input>
+        <!--</el-input>-->
       </el-form-item>
       <el-form-item label="方向">
-        <el-select v-model="searchForm.checkStatus">
-          <el-option label="未对账" :value="0"></el-option>
-          <el-option label="已对账" :value="1"></el-option>
+        <el-select v-model="searchForm.paymentsType">
+          <el-option label="收入" :value="0"></el-option>
+          <el-option label="支出" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
         </el-select>
         <!--<el-input placeholder="" maxlength="8" v-model="searchForm.truckIdNumber" clearable>-->
@@ -30,7 +30,7 @@
       <el-form-item label="来源">
         <!--<el-input placeholder="" maxlength="8" v-model="searchForm.driverName" clearable>-->
         <!--</el-input>-->
-        <el-select v-model="searchForm.driverName">
+        <el-select v-model="searchForm.dataSrc">
           <el-option label="结算产生" :value="0"></el-option>
           <el-option label="手工录入" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
@@ -73,16 +73,15 @@ export default {
   },
   data() {
     const _this = this
-
-
     return {
       searchCreatTime: [+new Date(), +new Date() + 60 * 24 * 60 * 60 * 1000],
       searchForm: {
-        pickupStatus: 235,
-        pickupBatchNumber: '',
-        truckIdNumber: '',
-        orgid: '',
-        driverName: ''
+        'orgId': '',
+        verifyStatus: '',
+        paymentsType: '',
+        dataSrc: '',
+        startTime:'',
+        endTime:'',
       },
       rules: {
         mobile: [{
@@ -99,12 +98,12 @@ export default {
   },
   watch: {
     orgid(newVal) {
-      this.searchForm.orgid = newVal
+      this.searchForm.orgId = newVal
     }
   },
   mounted() {
     this.loading = true
-    this.searchForm.orgid = this.orgid
+    this.searchForm.orgId = this.orgId
     this.onSubmit()
   },
   methods: {
@@ -119,13 +118,13 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      this.searchForm.startTime = ''
-      this.searchForm.endTime = ''
-      this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
-      this.searchForm.pickupBatchNumber = ''
-      this.searchForm.truckIdNumber = ''
-      this.searchForm.driverName = ''
-      this.searchForm.pickupStatus = ''
+      // this.searchForm.startTime = ''
+      // this.searchForm.endTime = ''
+      // this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+      // this.searchForm.pickupBatchNumber = ''
+      // this.searchForm.truckIdNumber = ''
+      // this.searchForm.driverName = ''
+      // this.searchForm.pickupStatus = ''
     }
   }
 }
