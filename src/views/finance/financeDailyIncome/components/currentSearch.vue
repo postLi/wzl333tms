@@ -98,7 +98,7 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        return (res[type] ? res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1 : false)
       }
     },
     handleSelect(obj) {

@@ -174,7 +174,7 @@ import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import transferTable from '@/components/transferTable'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
-import { getOrderShipList } from '@/api/finance/settleLog'
+import { getOrderList } from '@/api/finance/financeDaily'
 import currentSearch from './currentSearch'
 import { getSummaries, tmsMath, uniqueArray } from '@/utils/'
 export default {
@@ -380,62 +380,6 @@ export default {
       this.$emit('loadTable', this.rightTable)
       this.countOrgLeftTable = objectMerge2([], this.leftTable)
     },
-
-    // initCount(cval, oval) { // 对智能结算返回的数据进行操作
-    //   // this.getList()
-    //   this.leftTable = [] // 左边表格显示最原始的数据
-    //   this.rightTable = objectMerge2([], cval) // 右边表格显示的数据
-    //   this.$emit('loadTable', this.rightTable) // 方便费用信息处显示计算总额
-
-    //   this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
-    //     if (this.rightTable[index]) {
-    //       return el.shipSn !== this.rightTable[index].shipSn
-    //     } else {
-    //       return true
-    //     }
-    //   })
-    //   if (this.leftTable.length !== 0) {
-    //     this.leftTable = this.uniqueArray(this.leftTable, 'shipSn')
-    //   }
-    //   // 判断右边表格的数据 合计是否为智能结算中输入的值
-    //   let listCount = 0
-    //   let countDifference = 0
-
-    //   this.rightTable.forEach(e => {
-    //     listCount += Number(e.shipFeeTotal)
-    //   })
-    //   if (this.rightTable.length === 0) {
-    //     this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
-    //     return false
-    //   }
-    //   let lastShipFeeTotal = Number(this.rightTable[this.rightTable.length - 1].shipFeeTotal)
-
-    //   if (this.rightTable.length > 1) { // 右边表格不只一条数据的时候
-    //     if (this.countNum < listCount) {
-    //       let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
-    //       this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
-    //       this.leftTable.push(objectMerge2(cval[cval.length - 1]))
-    //       this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
-    //       this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
-    //       this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
-    //       this.$emit('loadTable', this.rightTable)
-    //     } else if (this.countNum > listCount) {
-    //       console.log(this.countNum, listCount, parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2)))
-
-    //     }
-    //   } else if (this.rightTable.length === 1) { // 当右边表格只有一条数据的时候
-    //     if (this.countNum < listCount) {
-    //       let curShipFeeTotal = parseFloat(Number(lastShipFeeTotal - (listCount - this.countNum)).toFixed(2))
-    //       this.rightTable[this.rightTable.length - 1].shipFeeTotal = curShipFeeTotal
-    //       this.leftTable.push(objectMerge2(cval[cval.length - 1]))
-    //       this.leftTable[this.leftTable.length - 1].shipFeeTotal = tmsMath._sub(cval[cval.length - 1].shipFeeTotal, curShipFeeTotal)
-    //       this.leftTable[this.leftTable.length - 1].shipFeeTotalActual = this.leftTable[this.leftTable.length - 1].shipFeeTotal
-    //       this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重
-    //       this.$emit('loadTable', this.rightTable)
-    //     }
-    //   }
-    //   this.countOrgLeftTable = objectMerge2([], this.leftTable)
-    // },
     getList() {
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
@@ -449,13 +393,15 @@ export default {
         this.$emit('loadTable', this.rightTable)
       } else {
         this.$set(obj, 'orgId', this.orgId)
-        this.$set(obj, 'incomePayType', this.incomePayType)
+        // this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
         this.$set(obj, 'settlementId', this.settlementId)
         this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         this.$set(obj, 'autoTotalAmount', '')
-        getOrderShipList(obj).then(data => {
+        this.$set(obj, 'feeId', '')
+        this.$set(obj, 'fiOrderType', 0) // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
+        getOrderList(obj).then(data => {
           this.loading = false
           this.leftTable = data
           this.orgLeftTable = data
@@ -535,16 +481,10 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-          //   return em.shipSn !== e.shipSn
-          // })
           this.leftTable = objectMerge2([], this.leftTable).filter(el => { // 源数据减去被穿梭的数据
             return el.shipSn !== e.shipSn
           })
           this.rightTable.push(e)
-          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => { // 搜索源数据减去被穿梭的数据
-          //   return el.shipSn !== e.shipSn
-          // })
           this.countOrgLeftTable = objectMerge2([], this.countOrgLeftTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
@@ -562,12 +502,6 @@ export default {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
         this.selectedLeft.forEach((e, index) => {
-          // this.leftTable = this.leftTable.filter(el => {
-          //   return el.shipSn !== e.shipSn
-          // })
-          // this.countOrgLeftTable = this.countOrgLeftTable.filter(el => {
-          //   return el.shipSn !== e.shipSn
-          // })
           this.leftTable.push(e)
           this.countOrgLeftTable.push(e)
           // this.orgLeftTable.push(e)

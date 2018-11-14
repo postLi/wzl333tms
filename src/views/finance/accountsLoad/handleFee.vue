@@ -77,7 +77,7 @@
         </div> -->
       </div>
     </transferTable>
-    <Voucher :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Voucher>
+    <Voucher :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog" :orgId="searchQuery.vo.orgid"></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>

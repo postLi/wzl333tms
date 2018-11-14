@@ -339,6 +339,7 @@ export default {
       this.fetchList()
     },
     fetchList() {
+      this.isShowPre = false
       this.loading = true
       return postBillRecordList(this.searchQuery).then(data => {
         this.dataList = data.list

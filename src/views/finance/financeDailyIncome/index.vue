@@ -2,49 +2,6 @@
   <!-- 记收入 -->
   <div class="fee-steup" v-loading="loading">
     <div class="fee-steup-form">
-      <el-collapse v-model="feeInfo">
-        <el-collapse-item name="feeInfoOne">
-          <template slot="title">
-            费用信息
-          </template>
-          <div class="feeFrom clearfix">
-            <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="80px" :rules="formModelRules">
-              <div class="feeFrom-type-baseInfo">
-                <el-form-item label="单据号" prop="settlementSn">
-                  <el-input v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" clearable disabled></el-input>
-                </el-form-item>
-                <el-form-item label="收入金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="收入金额" disabled v-number-only:point :maxlength="8"></el-input>
-                </el-form-item>
-                <el-form-item label="发生时间" prop="settlementTime">
-                  <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="经办人" prop="agent">
-                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="name" search="name" label="name" placeholder="选择经办人" />
-                </el-form-item>
-              </div>
-              <div class="feeFrom-type-baseInfo">
-                <el-form-item label="收支方式" prop="financialWay">
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
-                </el-form-item>
-                <el-form-item label="银行卡号" prop="bankAccount">
-                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable v-numberOnly></el-input>
-                </el-form-item>
-                <el-form-item label="微信号" prop="wechatAccount">
-                  <el-input :size="btnsize" v-model="formModel.wechatAccount" placeholder="微信号" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="支付宝号" prop="alipayAccount">
-                  <el-input :size="btnsize" v-model="formModel.alipayAccount" placeholder="支付宝号" clearable></el-input>
-                </el-form-item>
-              </div>
-              <el-form-item label="说明" prop="remark">
-                <el-input :size="btnsize" v-model="formModel.remark" placeholder="说明" clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
       <!-- 穿梭框 -->
       <div class="fee_btn_transferTable tableItem">
         <!-- 操作按钮区 -->
@@ -55,7 +12,7 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
@@ -65,27 +22,22 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import selectType from '@/components/selectType/index'
-import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
+import { getOrderList } from '@/api/finance/financeDaily'
 import Count from './components/count'
 export default {
   name: 'settleLogIncome',
   components: {
-    SelectTree,
-    selectType,
-    querySelect,
     dataTable,
     Count
   },
   data() {
     return {
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
-      loading: true,
+      loading: false,
       countVisible: false, // 弹出框默认隐藏
       feeInfo: 'feeInfoOne',
       settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
@@ -129,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.getFeeInfo()
+    // this.getFeeInfo()
   },
   methods: {
     getSystemTime() {

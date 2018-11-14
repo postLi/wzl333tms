@@ -202,6 +202,7 @@ export default {
   },
   methods: {
     init() {
+      this.verificationWay = []
       this.isShow = true
       this.searchQuery.orgId = this.otherinfo.orgid
       if (this.isModify) {

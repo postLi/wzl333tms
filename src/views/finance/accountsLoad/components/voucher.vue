@@ -73,17 +73,24 @@
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
+import { getVeryficationList } from '@/api/finance/financeDaily'
 export default {
   props: {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    orgId: {
+      type: [String, Number],
+      default: ''
     }
   },
   watch: {
     popVisible: {
       handler(cval, oval) {
-        if (cval) {}
+        if (cval) {
+          this.getVeryficationList()
+        }
       },
       immediate: true
     }
@@ -123,6 +130,14 @@ export default {
     }
   },
   methods: {
+    getVeryficationList () { // 获取方向列表
+      getVeryficationList({orgId: this.orgId}).then(data => {
+        this.paymentsTypes = data
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {

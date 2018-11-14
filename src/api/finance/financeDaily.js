@@ -90,3 +90,18 @@ export function delBillRecordDetail(params) {
 		return res.data
 	})
 }
+/**
+ * 记收入记支出运单或配载列表
+ * {"orgId":1,
+ * "paymentsType":0,
+ * "fiOrderType":0, //财务订单类型 0-运单；1-干线；2-短驳；3-送货
+ * "startTime":"2018-08-13 00:00:00",
+ * "endTime":"2018-09-12 23:59:59",
+ * "autoTotalAmount":200,
+ * "feeId":""}
+ */
+export function getOrderList(params) {
+	return fetch.post('/api-finance/finance/tmsfinancebillrecord/v1.3/getOrderList/', params).then(res => {
+		return res.data
+	})
+}
