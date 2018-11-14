@@ -131,6 +131,20 @@ export function postImportExcel(data) {
     return res.data
   })
 }
+export function postImportExcelThree(data) {
+  return fetch.post('/api-finance/finance/tmsfinancesubjects/v1.3/importExcel/', data).then(res => {
+    return res.data
+  })
+}
+
+// /finance/tmsfinancesubjects/v1.3/template
+// 获取默认模板
+export function getImportExcelInfo() {
+  return fetch.get('/api-finance/finance/tmsfinancesubjects/v1.3/template/').then(res => {
+    return res.data
+  })
+}
+
 /**
  * 自定义查询条件接口
  */

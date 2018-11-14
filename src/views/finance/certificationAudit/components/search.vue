@@ -11,26 +11,21 @@
         <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearible/>
       </el-form-item>
       <el-form-item label="审核状态">
-          <el-select v-model="searchForm.verifyStatus">
+          <el-select v-model="searchForm.verifyStatus" clearable>
             <el-option label="未审核" :value="0"></el-option>
             <el-option label="已审核" :value="1"></el-option>
             <el-option label="全部" value=""></el-option>
           </el-select>
-        <!--</el-input>-->
       </el-form-item>
       <el-form-item label="方向">
-        <el-select v-model="searchForm.paymentsType">
+        <el-select v-model="searchForm.paymentsType" clearable>
           <el-option label="收入" :value="0"></el-option>
           <el-option label="支出" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
         </el-select>
-        <!--<el-input placeholder="" maxlength="8" v-model="searchForm.truckIdNumber" clearable>-->
-        <!--</el-input>-->
       </el-form-item>
       <el-form-item label="来源">
-        <!--<el-input placeholder="" maxlength="8" v-model="searchForm.driverName" clearable>-->
-        <!--</el-input>-->
-        <el-select v-model="searchForm.dataSrc">
+        <el-select v-model="searchForm.dataSrc" clearable>
           <el-option label="结算产生" :value="0"></el-option>
           <el-option label="手工录入" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
@@ -77,7 +72,7 @@ export default {
       searchCreatTime: [+new Date(), +new Date() + 60 * 24 * 60 * 60 * 1000],
       searchForm: {
         'orgId': '',
-        verifyStatus: '',
+        verifyStatus: 0 ,
         paymentsType: '',
         dataSrc: '',
         startTime:'',
@@ -103,7 +98,7 @@ export default {
   },
   mounted() {
     this.loading = true
-    this.searchForm.orgId = this.orgId
+    this.searchForm.orgId = this.orgid
     this.onSubmit()
   },
   methods: {
@@ -118,13 +113,14 @@ export default {
       this.$emit('change', this.searchForm)
     },
     clearForm() {
-      // this.searchForm.startTime = ''
-      // this.searchForm.endTime = ''
-      // this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
-      // this.searchForm.pickupBatchNumber = ''
-      // this.searchForm.truckIdNumber = ''
-      // this.searchForm.driverName = ''
-      // this.searchForm.pickupStatus = ''
+      this.searchForm.startTime = ''
+      this.searchForm.endTime = ''
+      this.searchCreatTime = [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()]
+      this.searchForm.orgId = this.orgid
+      this.searchForm.verifyStatus = ''
+      this.searchForm.paymentsType = ''
+      this.searchForm.dataSrc = ''
+      this.searchForm.dataSrc = ''
     }
   }
 }

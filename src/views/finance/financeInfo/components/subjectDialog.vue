@@ -63,7 +63,7 @@
       </el-form-item>
       <el-form-item label="一级科目">
 
-        <el-select v-model="form.oneName" placeholder="请选择" @change="changeSelctList">
+        <el-select v-model="form.oneName" placeholder="请选择" @change="changeSelctListO">
 
           <el-option
             v-for="(item,index) in closeOptions.oneOptions"
@@ -76,7 +76,7 @@
 
       </el-form-item>
       <el-form-item label="二级科目" class="">
-        <el-select v-model="form.twoName" placeholder="请选择" @change="changelist">
+        <el-select v-model="form.twoName" placeholder="请选择" @change="changeSelctListTwO1">
           <el-option
             v-for="item in closeOptions.twoOptions"
             :key="item.id"
@@ -87,7 +87,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="三级科目" class="">
-        <el-select v-model="form.threeName" placeholder="请选择" @change="changeListThree">
+        <el-select v-model="form.threeName" placeholder="请选择" @change="changeSelctListThree1">
           <el-option
             v-for="item in closeOptions.threeOptions"
             :key="item.id"
@@ -98,7 +98,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="四级科目" class="">
-        <el-select v-model="form.fourName" placeholder="请选择" @change="changelistFour">
+        <el-select v-model="form.fourName" placeholder="请选择" @change="changeSelctListFour1">
           <el-option
             v-for="item in closeOptions.forthOptions"
             :key="item.id"
@@ -127,6 +127,7 @@
     getFinSubCloseInfo,
     putFinanceEdit
   } from '@/api/finance/finanInfo'
+
   import {mapGetters} from 'vuex'
   import {objectMerge2} from '@/utils/index'
   import {REGEX} from '@/utils/validate'
@@ -276,7 +277,6 @@
           forthOptions: []
         },
         form: {
-          name: '',
           verificationWay: '',//核销方向
           remark: '',//核销方向
           subjectsFeeType: '',   //  核销科目
@@ -339,6 +339,7 @@
           this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
+          console.log(item);
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
@@ -350,6 +351,7 @@
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
           }
+          console.log(item,'item');
         }
         else if (this.isDoExport) {
           this.isTitle = '导入模板'
@@ -368,96 +370,93 @@
         } else if (this.isSubClose) {
           this.isTitle = '修改'
           this.getoptio1(item.id)
-          // this.form.twoId = ''
-          // this.form.threeId = ''
-          // this.form.fourId = ''
         }
       },
       getoptio1(id) {
         getFinSubCloseInfo(id).then(res => {
-          console.log(res)
-          res.oneLevel.map((item) => {
-            this.closeOptions.oneOptions.push(item)
-          })
+          this.form.subjectsFeeType = res.po.subjectsFeeType
+          this.form.oneId = res.oneLevel[0].id
+          this.form.oneName = res.oneLevel[0].subjectName
+          this.closeOptions.oneOptions = res.oneLevel
+          // res.oneLevel.map((item) => {
+          //   this.closeOptions.oneOptions = []
+          //   this.closeOptions.oneOptions.push(item)
+          // })
+          this.changeSelctListTwO(this.form.oneId)
         })
       },
-      changeSelctList(obj, index) {
+      changeSelctListO(obj, index) {
+        // this.closeOptions.oneOptions = []
         this.closeOptions.oneOptions.filter((item, index) => {
-          // console.log(item.id, item.subjectName)
-          // return item.subjectName === obj
           if (item.subjectName === obj) {
-            console.log(item, 'item')
-          } else {
-
+            this.form.oneId = item.id
+            this.form.oneName = item.subjectName
+            this.changeSelctListTwO(this.form.oneId)
           }
         })
-        // console.log(obj, index)
       },
-
-
-      fetchFinSubCloseInfo(id) {
-        getFinSubCloseInfo(id).then(res => {
-          this.form.subjectsFeeType = res.po.subjectsFeeType
-          // this.form.oneName = res.oneLevel[0].subjectName
-          this.closeOptions.oneOptions = res.oneLevel
-          // this.form.oneName =
-
-          // console.log()
-          const itemId = this.closeOptions.oneOptions[0].id || ''
-          this.form.oneId = itemId
-
-          this.changelist(itemId)
-
-        }).catch(err => {
-          this._handlerCatchMsg(err)
-          this.loading = false
-        })
-      },
-      changelist(item) {
-        this.closeOptions.oneOptions.map((item, index) => {
-          this.closeOptions.oneOptions.push(item)
-          console.log(item.id, index)
-        })
-        // const find =this.closeOptions.oneOptions.filter(el => {
-        //   // const find = el.id
-        //   return el.subjectName === item
-        // })
-        // this.form.twoId = find.id
-        // console.log(find, 'find  ');
+      changeSelctListTwO(item) {
         getSelectList(item, 2).then((res, index) => {
           if (res === '数据库无对应记录' || '') {
             this.closeOptions.twoOptions = ''
             return false
           } else {
             this.closeOptions.twoOptions = res
-            // this.form.twoName = res[index].subjectName
-            this.form.oneId = res[0].parentId
-            this.fetchFinSubCloseInfo(this.form.oneId)
-            this.changeListThree(this.closeOptions.twoOptions[0].id)
+            this.form.twoId = res[0].id
+            this.form.twoName = res[0].subjectName
+            this.changeSelctListThree(this.form.twoId)
           }
         })
-        //
       },
-      changeListThree(item) {
-        this.form.threeId = item
+      changeSelctListTwO1(obj) {
+        this.closeOptions.twoOptions.filter(item => {
+          if (item.subjectName === obj) {
+            this.form.twoId = item.id
+            this.form.twoName = item.subjectName
+            this.changeSelctListThree(this.form.twoId)
+          }
+        })
+      },
+      changeSelctListThree(item) {
         getSelectList(item, 3).then(res => {
           if (res === '数据库无对应记录' || '') {
             this.closeOptions.threeOptions = ''
             return false
           } else {
             this.closeOptions.threeOptions = res
-            this.changelistFour(this.closeOptions.threeOptions[0].id)
+            this.form.threeId = res[0].id
+            this.form.threeName = res[0].subjectName
+            this.changeSelctListFour(this.form.threeId)
           }
         })
       },
-      changelistFour(item) {
-        this.form.fourId = item
+      changeSelctListThree1(obj) {
+        this.closeOptions.threeOptions.filter(item => {
+          if (item.subjectName === obj) {
+            this.form.threeId = item.id
+            this.form.threeName = item.subjectName
+            this.changeSelctListFour(this.form.threeId)
+          }
+        })
+      },
+      changeSelctListFour1(obj) {
+        this.closeOptions.forthOptions.filter(item => {
+          if (item.subjectName === obj) {
+            this.form.threeId = item.id
+            this.form.threeName = item.subjectName
+            this.changeSelctListFour(this.form.threeId)
+          }
+        })
+      },
+      changeSelctListFour(item) {
         getSelectList(item, 4).then(res => {
           if (res === '数据库无对应记录' || '') {
             this.closeOptions.forthOptions = ''
             return false
           } else {
             this.closeOptions.forthOptions = res
+            this.form.fourId = res[0].id
+            this.form.fourName = res[0].subjectName
           }
         })
       },
@@ -467,13 +466,29 @@
           if (valid) {
             let promiseObj
             this.loading = true
-            delete this.form.name
 
             const data = objectMerge2({}, this.form)
             if (this.isDoAddSub) {
+
               promiseObj = postAddFinFicationl(data)
+            } else if (this.doAddStair) {
+              // delete data.verificationWay
+              // delete data.remark
+              // delete data.subjectsFeeType
+              // delete data.oneName
+              // delete data.twoName
+              // delete data.threeName
+              // delete data.fourName
+              this.delectFn(data)
+              if (this.isSubjectLevel > 1) {
+                data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
+              }
+              promiseObj = postAddLevel(this.info.id, data)
             }
             else if (this.isDoEdit) {
+              console.log(data);
+              debugger
+              return false
               promiseObj = putExtFinFicationl(this.info.id, data)
             } else if (this.isSubClose) {
               delete data.verificationWay
@@ -482,30 +497,16 @@
               delete data.subjectName
               delete data.subjectType
               delete data.subjectsFeeType
-              //
-              console.log(this.form, 'isSubClose');
-              console.log(data, 'data111');
               promiseObj = putFinanceEdit(this.info.id, data)
-            } else if (this.doAddStair) {
-              delete data.verificationWay
-              delete data.remark
-              delete data.subjectsFeeType
-              delete data.oneName
-              delete data.twoName
-              delete data.threeName
-              delete data.fourName
-              if (this.isSubjectLevel > 1) {
-                data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
-              }
-              promiseObj = postAddLevel(this.info.id, data)
             } else if (this.isDoAddEnd) {
-              delete data.verificationWay
-              delete data.remark
-              delete data.subjectsFeeType
-              delete data.oneName
-              delete data.twoName
-              delete data.threeName
-              delete data.fourName
+              // delete data.verificationWay
+              // delete data.remark
+              // delete data.subjectsFeeType
+              // delete data.oneName
+              // delete data.twoName
+              // delete data.threeName
+              // delete data.fourName
+              this.delectFn(data)
               delete data.subjectType
               data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
 
@@ -536,6 +537,10 @@
           verificationWay: '',//核销方向
           remark: '',//核销方向
           subjectsFeeType: '',   //  核销科目
+          oneId: '',
+          twoId: '',
+          threeId: '',
+          fourId: '',
           oneName: '',
           twoName: '',
           threeName: '',
@@ -545,8 +550,24 @@
           subjectType: '',
         }
       },
+      delectFn(data) {
+        delete data.verificationWay
+        delete data.remark
+        delete data.subjectsFeeType
+        delete data.oneName
+        delete data.twoName
+        delete data.threeName
+        delete data.fourName
+        delete data.oneId
+        delete data.twoId
+        delete data.threeId
+        delete data.fourId
+      },
       closeMe(done) {
-        // this.reset()
+        if (this.isSubClose) {
+          // this.reset()
+        }
+        //
         // this.resetForm('ruleForm')
         this.$emit('update:isShow', false)
         if (typeof done === 'function') {
@@ -588,7 +609,7 @@
                 padding: 0 4px;
               }
               .el-input__inner {
-                width: 88% !important;
+                width: 74% !important;
               }
             }
           }

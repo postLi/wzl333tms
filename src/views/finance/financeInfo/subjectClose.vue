@@ -4,13 +4,13 @@
     <div class="tab_info">
       <div class="btns_box">
         <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"-->
-                 <!--class=" clearfix" style="float: left">-->
-          <!--<div class="">-->
-            <!--<el-form-item label="网点">-->
-              <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" clearible @change="searchOrgid"/>-->
-            <!--</el-form-item>-->
+        <!--class=" clearfix" style="float: left">-->
+        <!--<div class="">-->
+        <!--<el-form-item label="网点">-->
+        <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" clearible @change="searchOrgid"/>-->
+        <!--</el-form-item>-->
 
-          <!--</div>-->
+        <!--</div>-->
         <!--</el-form>-->
         <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-down"
                    @click="doAction('doNext')" plain
@@ -94,9 +94,9 @@
 
       </div>
       <!--<div class="info_tab_footer">共计:{{ total }}-->
-        <!--<div class="show_pager">-->
-          <!--<Pager :total="total" @change="handlePageChange"/>-->
-        <!--</div>-->
+      <!--<div class="show_pager">-->
+      <!--<Pager :total="total" @change="handlePageChange"/>-->
+      <!--</div>-->
       <!--</div>-->
     </div>
     <!--<TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"-->
@@ -197,7 +197,6 @@
     },
     mounted() {
       this.searchQuery.vo.companyId = this.otherinfo.companyId
-      // this.usersArr = this.tableColumn
       this.fetchData()
 
     },
@@ -244,6 +243,7 @@
         }
         switch (type) {
           case 'doNext':
+            this.loading = true
             this.$router.push({
               path: '/finance/financeInfo/subjectDirection',
               // query: {
@@ -254,6 +254,7 @@
               //   // id: row.carrierId
               // }
             })
+            this.loading = false
             break
           case 'doLast':
             this.$router.push({
@@ -266,6 +267,7 @@
               //   // id: row.carrierId
               // }
             })
+            this.loading = false
             break
           case 'export':
             SaveAsFile({

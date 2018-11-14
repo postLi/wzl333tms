@@ -49,7 +49,7 @@
   </el-dialog>
 </template>
 <script>
-  import {getUploadPolicy, postImportExcel} from '@/api/common'
+  import {getUploadPolicy, postImportExcel, postImportExcelThree} from '@/api/common'
 
   export default {
     props: {
@@ -110,6 +110,7 @@
         this.$set(this.importType, 'truck', this.$const.TRUCK_EXCEL)
         this.$set(this.importType, 'carrier', this.$const.CARRIER_EXCEL)
         this.$set(this.importType, 'driver', this.$const.DRIVER_EXCEL)
+        this.$set(this.importType, 'subinfo', this.$const.SUBINFO_EXCEL)
         this.isInitDialog = true
       },
       doAction(type) {
@@ -150,11 +151,17 @@
           return
         }
 
-        let data = new FormData()
+        const data = new FormData()
+        let promiseObj
         data.append('uploadfile', file)
-        data.append('excelSign', this.info)
         this.isProgress = true
-        postImportExcel(data).then(res => {
+        if (this.isSubjectInfo) {
+          promiseObj = postImportExcelThree(data)
+        } else {
+          data.append('excelSign', this.info)
+          promiseObj = postImportExcel(data)
+        }
+        promiseObj.then(res => {
           this.resMessage = res
           this.failInfoList = res.failInfoList
           this.isInitDialog = false
@@ -163,7 +170,7 @@
           this.$message({type: 'success', message: '操作成功'})
         })
           .catch(err => {
-            this.resMessage = error
+            this.resMessage = err
             this.isInitDialog = false
             this.percentageAnimated()
             this._handlerCatchMsg(err)

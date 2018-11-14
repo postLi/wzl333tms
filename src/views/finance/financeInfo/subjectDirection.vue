@@ -277,7 +277,7 @@
         this.selectInfo = row
       },
       removeClick(row) {
-        //
+        this.loading = true
         this.$confirm('确定删除[' + row.verificationWay + ']吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
@@ -289,8 +289,10 @@
               message: '删除成功!'
             })
             this.fetchData()
+            this.loading = false
           }).catch(err => {
             this._handlerCatchMsg(err)
+            this.loading = false
           })
         });
         this.$refs.multipleTable.clearSelection()

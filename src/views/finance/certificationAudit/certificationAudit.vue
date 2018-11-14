@@ -49,27 +49,16 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid"
-                 :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" :key="mykey"/>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
                 @success="setColumn"></TableSetup>
-    <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible"
-                @success="fetchData" :dotInfo="selectInfo"></PickupMain>
-    <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible"
-                     @success="fetchData" :dotInfo="selectInfo"></PickupRelevance>
 
   </div>
 </template>
 <script>
   import {getExportExcel} from '@/api/company/customerManage'
-  import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
   import {postFinCerList, postFinCerFicationcert} from '@/api/finance/finCertificationAudit'
-
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
-  import AddCustomer from './components/add'
-  import PickupMain from './components/pickupMain'
-  import PickupRelevance from './components/pickupRelevance'
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
@@ -80,9 +69,6 @@
       SearchForm,
       Pager,
       TableSetup,
-      AddCustomer,
-      PickupMain,
-      PickupRelevance
     },
     computed: {
       ...mapGetters([
@@ -105,12 +91,6 @@
         // 加载状态
         loading: true,
         setupTableVisible: false,
-        AddCustomerVisible: false,
-        pickMaintainisible: false,
-        releMaintainisible: false,
-        isModify: false,
-        isDepMain: false,
-        isDbclick: false,
         selectInfo: {},
         // 选中的行
         selected: [],
@@ -190,7 +170,7 @@
           }, {
             label: '二级科目',
             prop: 'subjectTwo',
-            width: '110',
+            width: '120',
             fixed: false
           }, {
             label: '三级科目',
@@ -215,27 +195,27 @@
           }, {
             label: '笔数',
             prop: 'verifyCount',
-            width: '150',
+            width: '120',
             fixed: false
           }, {
             label: '发票号码',
             prop: 'invoiceNo',
-            width: '120',
+            width: '150',
             fixed: false
           }, {
             label: '收据号码',
             prop: 'receiptNo',
-            width: '120',
+            width: '150',
             fixed: false
           }, {
             label: '支票号码',
             prop: 'checkNo',
-            width: '120',
+            width: '150',
             fixed: false
           }, {
             label: '手工凭证号',
             prop: 'manualCert',
-            width: '120',
+            width: '150',
             fixed: false
           }
         ]
@@ -264,9 +244,6 @@
         this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
         this.fetchAllCustomer()
       },
-      showImport() {
-        // 显示导入窗口
-      },
       doAction(type) {
         // 判断是否有选中项
         if (!this.selected.length && type !== 'export' && type !== 'print') {
@@ -279,19 +256,44 @@
         }
         switch (type) {
           case 'theAudit':
-
+            const idLists = this.selected.filter(el => {
+              //审核状态, 0 未审核, 1 已审核
+              return el.verifyStatus === 1
+            }).map(el => {
+              return el.id
+            })
+            if (idLists.length) {
+              this.$confirm('你已选择' + idLists.length + '条凭证？', '提示', {
+                confirmButtonText: '审核',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                const data = {}
+                data.idList = idLists
+                data.verifyStatus = 0
+                postFinCerFicationcert(data).then(res => {
+                  this.$message({
+                    type: 'success',
+                    message: '审核成功!'
+                  })
+                  this.fetchData()
+                }).catch(err => {
+                  this._handlerCatchMsg(err)
+                })
+              })
+            } else {
+              this.$message.info('凭证还未审核，不可以反审核~')
+              return false
+            }
             break
           case 'audit':
-            if (this.selected.length === 1 && this.selected[0].verifyStatus === 1) {
-              this.$message.info('凭证已经审核，不能重复审核~')
-              return false
-            } else {
-              let idList = this.selected.filter(el => {
-                return el.verifyStatus === 1
-              }).map(el => {
-                return idList = el.id
-              })
-              idList = idList.join(',')
+            const idList = this.selected.filter(el => {
+              //审核状态, 0 未审核, 1 已审核
+              return el.verifyStatus === 0
+            }).map(el => {
+              return el.id
+            })
+            if (idList.length) {
               this.$confirm('你已选择' + idList.length + '条凭证？', '提示', {
                 confirmButtonText: '审核',
                 cancelButtonText: '取消',
@@ -310,21 +312,19 @@
                   this._handlerCatchMsg(err)
                 })
               })
+            } else {
+              this.$message.info('凭证已经审核，不能重复审核~')
+              return false
             }
             break
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
               columns: this.tableColumn,
-              name: '提货'
+              name: '凭证审核'
             })
             this.$refs.multipleTable.clearSelection()
-            // if (this.selected.length === 0) {
-            //   SaveAsFile(this.usersArr, this.tableColumn)
-            // } else {
-            //   // 筛选选中的项
-            //   SaveAsFile(this.selected, this.tableColumn)
-            // }
+
             break
           case 'print':
             PrintInFullPage({
@@ -332,40 +332,7 @@
               columns: this.tableColumn
             })
             break
-          // 删除客户
-          case 'delete':
-            // const ids = this.selected.filter(el => {
-            //   return el.pickupStatusName === '提货中'
-            // }).map(el => {
-            //   return el.id
-            // })
-            // if (!ids.length) {
-            //   this.$message({
-            //     type: 'info',
-            //     message: '提货完成的提货单不能删除!'
-            //   })
-            //   return false
-            // } else {
-            //   ids = ids.join(',')
-            //   this.$confirm('确定要删除提货批次吗？', '提示', {
-            //     confirmButtonText: '删除',
-            //     cancelButtonText: '取消',
-            //     type: 'warning'
-            //   }).then(() => {
-            //     deletebatchDelete(ids).then(res => {
-            //       this.$message({
-            //         type: 'success',
-            //         message: '删除成功!'
-            //       })
-            //       this.fetchData()
-            //     }).catch(err => {
-            //       this._handlerCatchMsg(err)
-            //     })
-            //   })
-            // }
-            break
         }
-        // 清除选中状态，避免影响下个操作
         this.$refs.multipleTable.clearSelection()
       },
       setTable() {
@@ -374,22 +341,6 @@
       closeSetupTable() {
         this.setupTableVisible = false
       },
-      openAddCustomer() {
-        this.AddCustomerVisible = true
-      },
-
-      closeAddCustomer() {
-        // this.mykey = Math.random()
-        this.AddCustomerVisible = false
-      },
-      openpickMaintainisible() {
-        this.pickMaintainisible = true
-        this.releMaintainisible = false
-      },
-      openpickReletainisible() {
-        this.releMaintainisible = true
-        this.pickMaintainisible = false
-      },
       clickDetails(row, event, column) {
         this.$refs.multipleTable.toggleRowSelection(row)
       },
@@ -397,10 +348,13 @@
         this.selected = selection
       },
       getDbClick(row, event) {
-        this.selectInfo = row
-        this.isModify = false
-        this.isDbclick = true
-        this.openAddCustomer()
+        this.$router.push({
+          path: '/finance/cashDetail',
+          query: {
+            recordId: row.id,
+            orgId: row.orgId
+          }
+        })
         this.$refs.multipleTable.clearSelection()
       },
       setColumn(obj) {

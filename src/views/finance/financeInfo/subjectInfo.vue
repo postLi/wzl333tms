@@ -5,13 +5,13 @@
 
       <div class="btns_box">
         <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"-->
-                 <!--class=" clearfix" style="float: left">-->
-          <!--<div class="">-->
-            <!--<el-form-item label="网点">-->
-            <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" @change="searchOrgid" clearible/>-->
-            <!--</el-form-item>-->
+        <!--class=" clearfix" style="float: left">-->
+        <!--<div class="">-->
+        <!--<el-form-item label="网点">-->
+        <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" @change="searchOrgid" clearible/>-->
+        <!--</el-form-item>-->
 
-          <!--</div>-->
+        <!--</div>-->
         <!--</el-form>-->
         <el-button type="success" :size="btnsize" icon="el-icon-sort-down" @click="doAction('doNext')" plain
                    v-has:PICK_FINASH class="table_setup fr_btn">下一步
@@ -52,13 +52,13 @@
     <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
                    :doAddStair="doAddStair" :info="selectInfo" @success="fetchData"></SubjectDialog>
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData"
-                  :info="'driver'" :isSubjectInfo='isSubjectInfo'></ImportDialog>
+                  :info="'subinfo'" :isSubjectInfo='isSubjectInfo'></ImportDialog>
   </div>
 </template>
 <script>
   import treeTable from '@/components/TreeTable'
-  import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
   import {getFinSubjectTree} from '@/api/finance/finanInfo'
+  import {getImportExcelInfo} from '@/api/common'
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
@@ -107,7 +107,7 @@
         total: 0,
         tablekey: 0,
         // 加载状态
-        loading: false,
+        loading: true,
         setupTableVisible: false,
         selectInfo: {},
         searchForm: {
@@ -170,13 +170,11 @@
         this.$message.info(row.event)
       },
       fetchTreeList() {
-        // this.loading = true
+        this.loading = true
         return getFinSubjectTree(this.otherinfo.companyId).then(data => {
           this.usersArr = data.data
-
-          console.log(data)
           // this.total = data.total
-          // this.loading = false
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -198,7 +196,7 @@
       },
       doAction(type) {
         // 判断是否有选中项
-        if (!this.selected.length && type !== 'doNext' && type !== 'doAll' && type !== 'doUp' && type !== 'doExport' && type !== 'print') {
+        if (!this.selected.length && type !== 'doNext' && type !== 'doAll' && type !== 'doUp' && type !== 'doExport' && type !== 'print' && type !== 'doDefaultTem') {
           // this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
@@ -208,41 +206,40 @@
         }
         switch (type) {
           case 'doDefaultTem':
-            if (this.selected[0].parentId === 0) {
-              this.$confirm('确定覆盖原有模板?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
+            this.$confirm('确定覆盖原有模板?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.loading = true
+              getImportExcelInfo().then(res => {
                 this.$message({
                   type: 'success',
                   message: '覆盖成功!'
                 });
-              }).catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '已取消覆盖'
-                });
+                this.fetchData()
+                this.loading = false
+              }).catch((err) => {
+                this._handlerCatchMsg(err)
+                this.loading = false
+              })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消覆盖'
               });
-            } else {
-              return false
-            }
+            });
+
             break
           case 'doExport':
-
             // fetchData () { // 重新获取列表数据 }
             this.$confirm('确定覆盖原有模板?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
-
               this.importDialogVisible = true
               this.isSubjectInfo = true
-              // this.$message({
-              //   type: 'success',
-              //   message: '覆盖成功!'
-              // });
             }).catch(() => {
               this.$message({
                 type: 'info',
@@ -253,7 +250,7 @@
           case 'doAddEnd':
             if (this.selected.length > 1) {
               this.$message({
-                message: '每次只能修改单条数据~',
+                message: '每次只能新增单条数据~',
                 type: 'warning'
               })
               return false
@@ -283,13 +280,6 @@
           case 'doNext':
             this.$router.push({
               path: '/finance/financeInfo/subjectClose',
-              // query: {
-              //   tab: '网点对账-对账明细',
-              //   arriveOrgid: row.arriveOrgid,
-              //   orgid: row.orgid,
-              //   orgName: row.arriveOrgName
-              //   // id: row.carrierId
-              // }
             })
             break;
           case 'doAll':
@@ -302,53 +292,14 @@
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
               columns: this.tableColumn,
-              name: '提货'
+              name: '财务自定义'
             })
-            // this.$refs.multipleTable.clearSelection()
-            // if (this.selected.length === 0) {
-            //   SaveAsFile(this.usersArr, this.tableColumn)
-            // } else {
-            //   // 筛选选中的项
-            //   SaveAsFile(this.selected, this.tableColumn)
-            // }
             break
           case 'print':
-            PrintInFullPage({
-              data: this.selected.length ? this.selected : this.usersArr,
-              columns: this.tableColumn
-            })
-            break
-          // 删除客户
-          case 'delete':
-            const ids = this.selected.filter(el => {
-              return el.pickupStatusName === '提货中'
-            }).map(el => {
-              return el.id
-            })
-            if (!ids.length) {
-              this.$message({
-                type: 'info',
-                message: '提货完成的提货单不能删除!'
-              })
-              return false
-            } else {
-              ids = ids.join(',')
-              this.$confirm('确定要删除提货批次吗？', '提示', {
-                confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                deletebatchDelete(ids).then(res => {
-                  this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                  })
-                  this.fetchData()
-                }).catch(err => {
-                  this._handlerCatchMsg(err)
-                })
-              })
-            }
+            // PrintInFullPage({
+            //   data: this.selected.length ? this.selected : this.usersArr,
+            //   columns: this.tableColumn
+            // })
             break
         }
         // 清除选中状态，避免影响下个操作
@@ -384,7 +335,6 @@
 
 </script>
 <style type="text/css" lang="scss">
-
   .row-expand-cover .el-table__expand-column .el-icon {
     visibility: hidden;
   }
