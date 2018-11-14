@@ -372,6 +372,16 @@ export default {
         hidden: true,
         'width': '150'
       }, {
+        'label': '线路时效',
+        'prop': 'transportAging',
+        hidden: false,
+        'width': '150'
+      }, {
+        'label': '运单实际用时',
+        'prop': 'actualTime',
+        hidden: false,
+        'width': '150'
+      }, {
         'label': '提货批次',
         'prop': 'pickupBatchNumber',
         hidden: true,

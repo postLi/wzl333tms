@@ -479,9 +479,9 @@ export default {
               if (code === 820000) {
                 name = '澳门'
               }
-              if (code === 710000) {
+              /* if (code === 710000) {
                 name = '台湾'
-              }
+              } */
               if (name) {
                 oldres = resolve({
                   code: code,

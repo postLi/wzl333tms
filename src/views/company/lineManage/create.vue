@@ -6,49 +6,59 @@
         </div>
         <div class="searchInformation information">
             <h2>基本信息</h2>
-            <el-form-item label="出发网点：" prop="startLocationContacts" label-width="100px">
-                <select-tree v-model="ruleForm.fromOrgid" :orgid="otherinfo.orgid" />
+            <el-form-item label="出发网点：" prop="fromOrgid" label-width="100px">
+                <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.orgid" />
             </el-form-item>
             <el-form-item label="出发城市：" label-width="100px" prop="startLocation">
-                <!-- <el-input @focus="()=>{showMap('strartAddress')}"  v-model="ruleForm.startLocation"></el-input> -->
-                <el-input v-model="ruleForm.startLocation" v-if="unable" :disabled="unable"></el-input>
+                <el-input :value="ruleForm.startLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeStart" :ifAera = 'true' class="form-control" @testCity="ifProvice('startLocation')" v-else>
                     <el-input v-model="ruleForm.startLocation" placeholder="请选择出发城市" ></el-input>
                 </vregion>
             </el-form-item>
-            <el-form-item label="联系人：" prop="startLocationContacts" label-width="100px">
-                <el-input v-model="ruleForm.startLocationContacts" :disabled="unable"></el-input>
+            <el-form-item label="联系人：" prop="rangeFromContacts" label-width="100px">
+                <el-input :maxlength="10" v-model="ruleForm.rangeFromContacts" :disabled="unable"></el-input>
             </el-form-item>
-            <el-form-item label="联系电话：" prop="startLocationContactsMobile" label-width="100px">
-                <el-input v-model="ruleForm.startLocationContactsMobile" :disabled="unable" v-numberOnly maxlength="11"></el-input>
+            <el-form-item label="联系电话：" prop="rangeFromMobile" label-width="100px">
+                <div><input class="nativeinput nativeinput-border" :value="ruleForm.rangeFromMobile" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'rangeFromMobile')}" :maxlength="11" auto-complete="off"  clearable
+                        v-number-only :disabled="unable" type="text"></div>
             </el-form-item><br>
-            <el-form-item label="到达网点：" prop="startLocationContacts" label-width="100px">
-                <select-tree v-model="ruleForm.fromOrgid" :orgid="otherinfo.orgid" />
+            <el-form-item label="到达网点：" prop="toOrgid" label-width="100px">
+                <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.orgid" />
             </el-form-item>
             <el-form-item label="到达城市：" label-width="100px" prop="endLocation">
-                <!-- <el-input @focus="()=>{showMap('endAddress')}" v-model="ruleForm.endLocation"></el-input> -->
-                <el-input v-model="ruleForm.endLocation" v-if="unable" :disabled="unable"></el-input>
+                <el-input v-model="ruleForm.endLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeEnd" :ifAera = 'true' class="form-control"  @testCity="ifProvice('endLocation')" v-else>
                     <el-input v-model="ruleForm.endLocation"  placeholder="请选择到达城市"></el-input>
                 </vregion>
             </el-form-item>
-            <el-form-item label="联系人：" prop="endLocationContacts" label-width="100px">
-                <el-input v-model="ruleForm.endLocationContacts" :disabled="unable"></el-input>
+            <el-form-item label="联系人：" prop="rangeToContacts" label-width="100px">
+                <el-input :maxlength="10" v-model="ruleForm.rangeToContacts" :disabled="unable"></el-input>
             </el-form-item>
-            <el-form-item label="联系电话：" prop="endLocationContactsMobile" label-width="100px">
-                <el-input v-model="ruleForm.endLocationContactsMobile" :disabled="unable" v-numberOnly maxlength="11"></el-input>
+            <el-form-item label="联系电话：" prop="rangeToMobile" label-width="100px">
+              <div><input class="nativeinput nativeinput-border" :value="ruleForm.rangeToMobile" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'rangeToMobile')}" :maxlength="11" auto-complete="off"  clearable
+                        v-number-only :disabled="unable" type="text"></div>
+                 
             </el-form-item>
         </div>
         <div class="information priceTime">
             <h2>价格时效</h2>
             <el-form-item label="运输时效：" prop="transportAging">
-                <el-input v-model="ruleForm.transportAging" :disabled="unable" @keyup.native='handlerChoose' ></el-input>
-                <el-radio-group v-model="ruleForm.transportAgingUnit" :disabled="unable">
-                    <el-radio label="天"></el-radio>
-                    <el-radio label="小时"></el-radio>
-                    <el-radio label="多天"></el-radio>
+                <span v-if="ruleForm.transportAgingType === 2">
+                  <input class="nativeinput nativeinput-border" :value="ruleForm.transportAging1" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'transportAging1')}" :maxlength="2" auto-complete="off"  clearable
+                        v-number-only :disabled="unable" @keyup.native='handlerChoose' type="text">-<input class="nativeinput nativeinput-border" :value="ruleForm.transportAging2" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'transportAging2')}" :maxlength="2" auto-complete="off"  clearable
+                        v-number-only :disabled="unable" @keyup.native='handlerChoose' type="text">
+                </span>
+                <span v-else>
+                  <input class="nativeinput nativeinput-border" :value="ruleForm.transportAging" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'transportAging')}" :maxlength="2" auto-complete="off"  clearable
+                        v-number-only :disabled="unable" @keyup.native='handlerChoose' type="text">
+                </span>
+                
+                <el-radio-group v-model="ruleForm.transportAgingType" :disabled="unable">
+                    <el-radio :label="0">天</el-radio>
+                    <el-radio :label="1">小时</el-radio>
+                    <el-radio :label="2">多天</el-radio>
                 </el-radio-group>
                 <span class="supplement">(多天填写如：2-5，其它只能填写阿拉伯数字)</span>
             </el-form-item>
@@ -65,13 +75,11 @@
                         <li>
                             <el-input v-model.number="form.startVolume" v-numberOnly placeholder="包含" maxlength="7" disabled></el-input>
                             <span>----</span>
-                            <!-- <el-input v-model.number="form.endVolume" :disabled="unable" v-numberOnly placeholder="不包含" maxlength="7" @change="ifWrong(weigthPriceForms,keys)"></el-input> -->
                             <input class="nativeinput nativeinput-border" :value="form.endVolume" @change="(e)=>{setInputVal(e.target.value,form, 'endVolume'),ifWrong(weigthPriceForms,keys)}" :maxlength="7" placeholder="不包含" auto-complete="off"  clearable
                             v-number-only :disabled="unable" type="text">
                             公斤
                         </li>
                         <li>
-                            <!-- <el-input v-model="form.primeryPrice" :disabled="unable" v-number-only:point maxlength="7"></el-input> -->
                             <input class="nativeinput nativeinput-border" :value="form.primeryPrice" @change="(e)=>{setInputVal(e.target.value,form, 'primeryPrice'),ifWrong(weigthPriceForms,keys)}" :maxlength="7" auto-complete="off"  clearable
                             v-number-only:point :disabled="unable" type="text">
                             元/公斤
@@ -98,18 +106,14 @@
                         <li>
                             <el-input v-model.number="form.startVolume" v-numberOnly placeholder="包含" maxlength="7" disabled></el-input>
                             <span>----</span>
-                            <!-- <el-input v-model.number="form.endVolume" :disabled="unable" v-numberOnly placeholder="不包含"  maxlength="7" @change="ifWrong(ligthPriceForms,keys)"></el-input> -->
                             <input class="nativeinput nativeinput-border" :value="form.endVolume" @change="(e)=>{setInputVal(e.target.value,form, 'endVolume'),ifWrong(ligthPriceForms,keys)}" :maxlength="7" placeholder="不包含" auto-complete="off"  clearable
                             v-number-only :disabled="unable" type="text">
                             立方
                         </li>
                         <li>
-                            <!-- <el-form-item prop="primeryPrice" style="display:inline-block;"> -->
-                                <!-- <el-input v-model="form.primeryPrice" :disabled="unable" v-number-only:point maxlength="7"></el-input> -->
-                                <input class="nativeinput nativeinput-border" :value="form.primeryPrice" @change="(e)=>{setInputVal(e.target.value,form, 'primeryPrice'),ifWrong(ligthPriceForms,keys)}" :maxlength="7" auto-complete="off"  clearable
-                            v-number-only:point :disabled="unable" type="text">
-                                元/立方
-                            <!-- </el-form-item> -->
+                            <input class="nativeinput nativeinput-border" :value="form.primeryPrice" @change="(e)=>{setInputVal(e.target.value,form, 'primeryPrice'),ifWrong(ligthPriceForms,keys)}" :maxlength="7" auto-complete="off"  clearable
+                        v-number-only:point :disabled="unable" type="text">
+                            元/立方
                         </li>
                         <li class="buttons">
                             <span  @click="addItem('light',keys,form)" class="addItem" v-if="keys == ligthPriceForms.length-1 && keys != 4">
@@ -122,22 +126,23 @@
             </el-form-item>
 
             <el-form-item label="最低一票价格：" prop="lowerPrice">
-                <el-input v-model="ruleForm.lowerPrice" placeholder="报价" :disabled="unable" v-number-only:point></el-input> 元
+                <div><input class="nativeinput nativeinput-border" :value="ruleForm.lowerPrice" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'lowerPrice')}" :maxlength="6" auto-complete="off"  clearable
+                        v-number-only:point1 placeholder="报价" :disabled="unable" type="text"> 元</div>
             </el-form-item>
-            <el-form-item label="价格预警设置：" prop="rangeType" >
+            <el-form-item label="价格预警设置：" >
                 <ul>
-                  <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" placeholder=""  :value="ruleForm.goodsNum" @blur="()=>{}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'goodsNum')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+                  <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceNormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceNormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
                             type="text" />
                   <div class="el-input-group__append">%</div>
                </div> 元 为正常</li>
-               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" placeholder=""  :value="ruleForm.goodsNum" @blur="()=>{}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'goodsNum')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceAbnormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceAbnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
                             type="text" />
                   <div class="el-input-group__append">%</div>
                </div> 元 为异常</li>
-               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" placeholder=""  :value="ruleForm.goodsNum" @blur="()=>{}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'goodsNum')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceBigabnormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceBigabnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
                             type="text" />
                   <div class="el-input-group__append">%</div>
-               </div> 元 以上严重异常</li>
+               </div> 元以上 严重异常</li>
                 </ul>
             </el-form-item> 
 
@@ -146,10 +151,10 @@
                     :disabled="unable"
                     v-model="ruleForm.transportRemark" 
                     :autosize="{ minRows: 3, maxRows: 10}"
-                    :maxlength="maxlength" 
-                    placeholder="请填写备注30-2000个字。提供原创说明有助于提升线路效果。">
+                    :maxlength="500" 
+                    placeholder="请填写备注30-500个字。提供原创说明有助于提升线路效果。">
                 </el-input>
-                <span>{{ruleForm.transportRemark.length}} / {{maxlength}}</span>
+                <span>{{ruleForm.transportRemark.length}} / 500</span>
                 <p class="supplement">请对您的线路进行补充说明，尽量使用市场上或物流行业内的常用词。</p>
             </el-form-item>
 
@@ -175,6 +180,7 @@ import vregion from '@/components/vregion/Region.vue'
 import { objectMerge2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 export default {
+  name: 'lineManageDetail',
   components: {
     upload,
         // tmsmap,
@@ -182,7 +188,7 @@ export default {
     SelectTree
   },
   data() {
-    var checkStartLocationContactsMobile = (rule, value, callback) => {
+    var checkrangeFromMobile = (rule, value, callback) => {
             // console.log(value)
       if (value === '') {
         callback(new Error('请输入手机号码'))
@@ -193,7 +199,7 @@ export default {
         callback()
       }
     }
-    var checkEndLocationContactsMobile = (rule, value, callback) => {
+    var checkrangeToMobile = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入手机号码'))
       } else {
@@ -231,54 +237,39 @@ export default {
       })
     }
     return {
-      rangeLogo: [],
       unable: false,
-      btnText: '请选择',
-      current: '',
-      popVisible: false,
       ifShowRangeType: '0',
-      dedicated: 'AF033',
-      depart: 'AF026',
-      totalNumber: 0, // 當前字數
-      maxlength: 2000,
       ruleForm: {
-        startLocation: '', // 出发城市
-        startLocationCode: '',
-        startProvince: '',
-        startCity: '',
-        startArea: '',
-        startLocationContacts: '', // 出发城市联系人
-        startLocationContactsMobile: '', // 出发城市联系人电话
-        endLocation: '', // 到达城市
-        endLocationCode: '',
-        endProvince: '',
-        endCity: '',
-        endArea: '',
-        endLocationContacts: '', // 到达城市联系人
-        endLocationContactsMobile: '', // 到达城市联系人电话
-        transportAging: '', // 运输时效
-        transportAgingUnit: '天', // 运输时效单位
-        departureHzData: '', // 发车频率天数
-        departureHzTime: '', // 发车频率车次
-        rangePrices: [],
-        lowerPrice: '', // 最低一票价
-        rangeType: 'AF03301',
-        rangeTypeName: '普通线路',
-        departureTimeCode: '', // 发车时间code
-        departureTime: '', // 发车时间
-        transportRemark: '', // 线路说明
-        publishName: '',
-        publishId: '',
-        rangeLogo: '' // 专线图片
+        startLocation: '',
+        endLocation: '',
+        transportAging1: '',
+        transportAging2: '',
+
+        'fromOrgid': '',
+        'lowerPrice': '', // 最低一票价
+        'priceAbnormal': '',
+        'priceBigabnormal': '',
+        'priceNormal': '',
+        'rangeFromArea': '',
+        'rangeFromCity': '',
+        'rangeFromContacts': '',
+        'rangeFromMobile': '',
+        'rangeFromProvince': '',
+        'rangeToArea': '',
+        'rangeToCity': '',
+        'rangeToContacts': '',
+        'rangeToMobile': '',
+        'rangeToProvince': '',
+        'toOrgid': '',
+        'transportAging': '', // 0-1 3-1
+        'transportAgingType': '', // 0 天 1 小时 2 多天
+        'transportRemark': ''
       },
-      rangeTypeClassfy: [], // 专线类型选项
-      departClassfy: [], // 发车时间选项
       ligthPriceForms: [
         {
           startVolume: '0',
           endVolume: '',
           primeryPrice: '', // 标准价
-          discountPrice: '', // 折后价
           type: '0'
         }
       ],
@@ -287,34 +278,39 @@ export default {
           startVolume: '0',
           endVolume: '',
           primeryPrice: '', // 标准价
-          discountPrice: '', // 折后价
           type: '1'
         }
       ],
       rules: {
+        fromOrgid: [
+                    { required: true, message: '请选择出发网点', trigger: 'change' }
+        ],
+        toOrgid: [
+                    { required: true, message: '请选择到达网点', trigger: 'change' }
+        ],
         startLocation: [
                     { required: true, message: '请输入出发城市', trigger: 'change' }
         ],
         endLocation: [
                     { required: true, message: '请输入到达城市', trigger: 'change' }
         ],
-        startLocationContacts: [
+        rangeFromContacts: [
                     { required: true, message: '请输入出发城市联系人信息', trigger: 'blur' }
         ],
-        endLocationContacts: [
+        rangeToContacts: [
                     { required: true, message: '请输入到达城市联系人信息', trigger: 'blur' }
         ],
-        startLocationContactsMobile: [
-                    { required: true, validator: checkStartLocationContactsMobile, trigger: 'change' }
+        rangeFromMobile: [
+                    { required: true, validator: checkrangeFromMobile, trigger: 'change' }
         ],
-        endLocationContactsMobile: [
-                    { required: true, validator: checkEndLocationContactsMobile, trigger: 'change' }
+        rangeToMobile: [
+                    { required: true, validator: checkrangeToMobile, trigger: 'change' }
         ],
         rangeType: [
                     { required: true, message: '请选择专线类型', trigger: 'change' }
         ],
         transportRemark: [
-                    { min: 30, max: 2000, message: '专线说明请在30-2000字', trigger: 'blur' }
+                    { min: 30, max: 500, message: '专线说明请在30-500字', trigger: 'blur' }
         ],
         weigthPriceForms: [
                     { required: true, validator: checkWeigthPriceForms, trigger: 'blur' }
@@ -331,14 +327,33 @@ export default {
   watch: {
 
   },
-  mounted() {
-    this.getInformations()
+  activated() {
+    // 判断是修改/查看/新建
+    // 在router对象里判断是否有缓存
     this.getParams()
+  },
+  mounted() {
+
   },
   methods: {
     setInputVal(val, item, name) {
     //   this.$set(this.form.tmsOrderCargoList, name, val)
       this.$set(item, name, Number(val) || 0)
+    },
+    checkPrice() {
+      const a = this.ruleForm.priceNormal
+      const b = this.ruleForm.priceAbnormal
+      const c = this.ruleForm.priceBigabnormal
+
+      if (c) {
+
+      }
+      if (b) {
+
+      }
+      if (a) {
+
+      }
     },
     ifWrong(item, idx) {
       const flag = item[idx].endVolume < item[idx].startVolume
@@ -362,33 +377,16 @@ export default {
         }
       }
     },
+    isSpecialCity(name) {
+      return /(北京|天津|上海|重庆|香港|澳门)/.test(name)
+    },
     regionChangeStart(d) {
-            // console.log('data:',d)
       this.ruleForm.startLocation = (!d.province && !d.city && !d.area && !d.town) ? '' : `${this.getValue(d.province)}${this.getValue(d.city)}${this.getValue(d.area)}${this.getValue(d.town)}`.trim()
-      // startLocationCode
-      console.log('regionChangeStart', d, this.ruleForm.startLocation)
-      this.ruleForm.startProvince = d.province ? d.province.name : ''
-      this.ruleForm.startCity = d.city ? d.city.name : ''
-      this.ruleForm.startArea = d.area ? d.area.name : ''
-      const obj = d.area || d.city || d.province
-      this.ruleForm.startLocationCode = obj.code
-            // let zhixiashi = ['北京市','天津市','重庆市','上海市'];
-            // let ifZhixia = false;
-            // zhixiashi.forEach(el => {
-            //     if(this.ruleForm.startProvince == el){
-            //         ifZhixia = true;
-            //     }
-            // })
-            // if(this.ruleForm.startCity == '' && ifZhixia == false){
-            //     this.$message({
-            //         type: 'info',
-            //         message: '至少选择到市级范围'
-            //     })
-            //     return this.ruleForm.startLocation = '';
-            // }
+      this.ruleForm.rangeFromProvince = d.province ? d.province.name : ''
+      this.ruleForm.rangeFromCity = this.isSpecialCity(this.ruleForm.rangeFromProvince) ? d.province.name : d.city ? d.city.name : ''
+      this.ruleForm.rangeFromArea = d.area ? d.area.name : ''
     },
     regionChangeEnd(d) {
-            // console.log('data:',d)
       this.ruleForm.endLocation = (!d.province && !d.city && !d.area && !d.town) ? '' : `${this.getValue(d.province)}${this.getValue(d.city)}${this.getValue(d.area)}${this.getValue(d.town)}`.trim()
       if (this.ruleForm.endLocation == this.ruleForm.startLocation) {
         this.$message({
@@ -398,27 +396,9 @@ export default {
         this.ruleForm.endLocation = ''
         return
       }
-      this.ruleForm.endProvince = d.province ? d.province.name : ''
-      this.ruleForm.endCity = d.city ? d.city.name : ''
-      this.ruleForm.endArea = d.area ? d.area.name : ''
-      const obj = d.area || d.city || d.province
-      this.ruleForm.endLocationCode = obj.code
-            // let zhixiashi = ['北京市','天津市','重庆市','上海市'];
-            // let ifZhixia = false;
-            // zhixiashi.forEach(el => {
-            //     if(this.ruleForm.endProvince == el){
-            //         ifZhixia = true;
-            //     }
-            // })
-
-            // console.log(ifZhixia,this.ruleForm.endProvince)
-            // if(this.ruleForm.endCity == '' && ifZhixia == false){
-            //     this.$message({
-            //         type: 'info',
-            //         message: '至少选择到市级范围'
-            //     })
-            //     return this.ruleForm.endLocation = '';
-            // }
+      this.ruleForm.rangeToProvince = d.province ? d.province.name : ''
+      this.ruleForm.rangeToCity = this.isSpecialCity(this.ruleForm.rangeToProvince) ? d.province.name : d.city ? d.city.name : ''
+      this.ruleForm.rangeToArea = d.area ? d.area.name : ''
     },
     ifProvice(type) {
       console.log('ifProvice', type)
@@ -437,36 +417,59 @@ export default {
     getValue(obj) {
       return obj ? obj.value : ''
     },
-        // getInfo(pos, name, info) {
-        //     // info.name  info.pos
-        //     console.log(pos, name, info)
-        //     switch (this.current) {
-        //         case 'strartAddress':
-        //         this.ruleForm.startLocation = info.addressComponent.province + info.addressComponent.city + info.addressComponent.district;
-        //         break;
-        //         case 'endAddress':
-        //         this.ruleForm.endLocation = info.addressComponent.province + info.addressComponent.city + info.addressComponent.district;
-        //         break;
-        //     }
-        // },
-        // showMap(name) {
-        //     this.popVisible = true ;
-        //     this.current = name;
-        // },
     getParams() {
-      if (this.$route.query.data) {
-        this.ifShowRangeType = this.$route.query.ifrevise// 1是修改，2是详情
+      if (this.$route.query.id) {
+        this.ifShowRangeType = this.$route.path.indexOf('modify') !== -1 ? '1' : '2'// 1是修改，2是详情
 
-        const dataObj = this.$route.query.data// 接收数据
-        this.ligthPriceForms = dataObj.lightcargo
-        this.weigthPriceForms = dataObj.weightcargo
-        console.log('```', dataObj)
-        TransportRangeInfo(dataObj.id).then(res => {
-          this.ruleForm = res.data
-          this.rangeLogo = this.ruleForm.rangeLogo.split(',')
-          console.log('this.rangeLogo', this.rangeLogo)
+        TransportRangeInfo(this.$route.query.id).then(res => {
+          const data = res.data
+          if (res.data) {
+          // 格式化数据
+            for (const i in this.ruleForm) {
+              this.ruleForm[i] = res.data[i] || ''
+            }
+            this.ruleForm.id = res.data.id
+          // 出发城市
+            this.ruleForm.startLocation = data.rangeFromProvince + (this.isSpecialCity(data.rangeFromProvince) ? '' : data.rangeFromCity) + data.rangeFromArea
+            this.ruleForm.endLocation = data.rangeToProvince + (this.isSpecialCity(data.rangeToProvince) ? '' : data.rangeToCity) + data.rangeToArea
+            // 价格时效
+            if (data.transportAgingType === '2') {
+              this.ruleForm.transportAgingType = 2
+              this.ruleForm.transportAging1 = data.transportAging.split('-')[0] || ''
+              this.ruleForm.transportAging2 = data.transportAging.split('-')[1] || ''
+            }
+            // 重货、轻货
+
+            if (data.heavePrice.length) {
+              this.weigthPriceForms = []
+              data.heavePrice.forEach(el => {
+                this.weigthPriceForms.push({
+                  startVolume: el.startVolume,
+                  endVolume: el.endVolume,
+                  primeryPrice: el.primeryPrice, // 标准价
+                  type: '1'
+                })
+              })
+            }
+
+            if (data.lightPrice.length) {
+              this.ligthPriceForms = []
+              data.lightPrice.forEach(el => {
+                this.ligthPriceForms.push({
+                  startVolume: el.startVolume,
+                  endVolume: el.endVolume,
+                  primeryPrice: el.primeryPrice, // 标准价
+                  type: '0'
+                })
+              })
+            }
+          } else {
+            this.$message.info('获取失败。')
+          }
+        }).catch(err => {
+          this._handlerCatchMsg(err, '获取失败，原因：')
         })
-        if (this.ifShowRangeType == 2) {
+        if (this.ifShowRangeType == '2') {
           this.unable = true
         }
       }
@@ -486,13 +489,6 @@ export default {
         transportAging = transportAging.replace(/[^0-9\-]+/g, '')
         this.ruleForm.transportAging = transportAging
       }
-    },
-    getInformations() {
-      this.rangeTypeClassfy = []
-      this.departClassfy = []
-      const userInfo = getUserInfo()
-      this.ruleForm.publishName = userInfo.companyName
-      this.ruleForm.publishId = userInfo.id
     },
         // 添加子节点新增
     addItem(type, idx, item) {
@@ -515,7 +511,6 @@ export default {
               startVolume: this.weigthPriceForms[idx].endVolume,
               endVolume: '',
               primeryPrice: '', // 标准价
-              discountPrice: '', // 折后价
               type: '1'
             })
           }
@@ -536,7 +531,6 @@ export default {
               startVolume: this.ligthPriceForms[idx].endVolume,
               endVolume: '',
               primeryPrice: '', // 标准价
-              discountPrice: '', // 折后价
               type: '0'
             })
           }
@@ -553,25 +547,6 @@ export default {
         case 'light':
           this.ligthPriceForms.splice(idx, 1)
           break
-      }
-    },
-    completeName() {
-      this.ruleForm.rangePrices = []
-
-      this.ligthPriceForms.forEach(item => {
-        this.ruleForm.rangePrices.push(item)
-      })
-
-      this.weigthPriceForms.forEach(item => {
-        this.ruleForm.rangePrices.push(item)
-      })
-
-      if (this.ruleForm.rangeType) {
-        this.ruleForm.rangeTypeName = this.rangeTypeClassfy.find(item => item.code == this.ruleForm.rangeType)['name']
-      }
-
-      if (this.ruleForm.departureTimeCode) {
-        this.ruleForm.departureTime = this.departClassfy.find(item => item.code == this.ruleForm.departureTimeCode)['name']
       }
     },
         // 提交按钮
@@ -592,52 +567,48 @@ export default {
           ifNull = false
         }
       })
-
-      const departureHzData = parseInt(this.ruleForm.departureHzData, 10) || 0
-      const departureHzTime = parseInt(this.ruleForm.departureHzTime, 10) || 0
-
-      if ((!departureHzData && departureHzTime) || (departureHzData && !departureHzTime)) {
-    //   if (!departureHzData || !departureHzTime) {
-        messageInfo = '请填写完整的“发车频率”信息'
+      if (this.ruleForm.fromOrgid !== '' && this.ruleForm.fromOrgid === this.ruleForm.toOrgid) {
+        messageInfo = '出发网点跟到达网点不能一样'
         ifNull = false
       }
 
       if (ifNull) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.completeName()
             let commitFunction
-            const data = objectMerge2({}, this.ruleForm)
-            const lists = this.$const.UPLOAD_CAR_IMAGES
-            const len = lists.length
-            const rimg = lists[parseInt(Math.random() * len, 10)]
-            const companyFacadeFile = this.otherinfo.companyFacadeFile
-            // 1.判断是否有照片
-            // 1.1 判断照片是否为随机列表中的一个
-            // 1.2 如果是随机图片，则判端是否有档口图片
-            // 1.3 用档口图片替换随机图片
-            // 1.4 没有就保留随机图片
-            // 2.没有图片
-            // 2.1 如果有档口图片，用之
-            // 2.2 没有就取随机图片
-            if (!data.rangeLogo) {
-              if (companyFacadeFile) {
-                data.rangeLogo = companyFacadeFile
-              } else {
-                data.rangeLogo = rimg
-              }
-            } else {
-              if (companyFacadeFile) {
-                const index = lists.indexOf(data.rangeLogo)
-                if (index !== -1) {
-                  data.rangeLogo = companyFacadeFile
-                }
-              }
+            const obj = {
+              tmsSystemTransportRangeDto: {},
+              tmsSystemTransportRangePriceDtoList: []
             }
+            const data = objectMerge2({}, this.ruleForm)
+
+            // 针对数据进行格式化处理
+            // 处理运输时效
+            if (data.transportAgingType === 2) {
+              data.transportAging = data.transportAging1 + '-' + data.transportAging2
+            }
+            // 处理重货/轻货
+            this.ligthPriceForms.forEach(item => {
+              obj.tmsSystemTransportRangePriceDtoList.push(item)
+            })
+
+            this.weigthPriceForms.forEach(item => {
+              obj.tmsSystemTransportRangePriceDtoList.push(item)
+            })
+
+            // 删去没用的数据
+            delete data.startLocation
+            delete data.endLocation
+            delete data.transportAging1
+            delete data.transportAging2
+
+            obj.tmsSystemTransportRangeDto = data
+
             if (this.ifShowRangeType === '1') {
-              commitFunction = changeTransportRange(data)
+              // commitFunction = newTransportRangeList(obj)
+              commitFunction = changeTransportRange(obj)
             } else {
-              commitFunction = newTransportRangeList(data)
+              commitFunction = newTransportRangeList(obj)
             }
             commitFunction.then(res => {
               console.log('res', res)
@@ -645,19 +616,19 @@ export default {
                 this.$alert('操作成功', '提示', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    this.$router.push({ name: '管理物流专线' })
+                    this.$router.push({ path: '/company/lineManage' })
                   }
                 })
               } else {
                 this.$message({
                   type: 'info',
-                  message: '操作失败，原因：' + res.errorInfo ? res.errorInfo : res.text
+                  message: '操作失败，原因：' + (res.errorInfo ? res.errorInfo : res.text)
                 })
               }
             }).catch(err => {
               this.$message({
                 type: 'info',
-                message: '操作失败，原因：' + err.errorInfo ? err.errorInfo : err.text
+                message: '操作失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
               })
             })
           } else {
@@ -678,13 +649,11 @@ export default {
 
     resetForm(formName) {
       this.$refs[formName].resetFields()
-      this.ruleForm.departureHzTime = ''
       this.ligthPriceForms = [
         {
           startVolume: '0',
           endVolume: '',
           primeryPrice: '', // 标准价
-          discountPrice: '', // 折后价
           type: '0'
         }
       ]
@@ -693,7 +662,6 @@ export default {
           startVolume: '0',
           endVolume: '',
           primeryPrice: '', // 标准价
-          discountPrice: '', // 折后价
           type: '1'
         }
       ]
@@ -801,7 +769,7 @@ export default {
                 }
                 .el-form-item__content{
                     line-height: 28px;
-                    width: 250px;
+                    // width: 250px;
                     .el-input{
                         position: relative;
                         .el-input__inner{
@@ -988,21 +956,8 @@ export default {
 
                 .el-form-item:nth-child(2){
                     .el-form-item__content{
-                        .el-input{
+                        .el-input,.nativeinput{
                             width:130px;
-                            .el-input-group__append{
-                                background-color: #f5f7fa;
-                                color: #909399;
-                                vertical-align: middle;
-                                display: table-cell;
-                                position: relative;
-                                border: 1px solid #dcdfe6;
-                                border-left: 0 none;
-                                padding: 0 20px;
-                                white-space: nowrap;
-                                top: 0;
-                                right: 0;
-                            }
                         }
                     }
                 }
@@ -1108,7 +1063,7 @@ export default {
                 }
                 .el-form-item:nth-child(5),{
                     .el-form-item__content{
-                        .el-input{
+                        .el-input,.nativeinput{
                             width: 100px;
                         }
                     }

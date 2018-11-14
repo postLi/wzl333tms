@@ -28,12 +28,12 @@
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
           
-          <el-table-column
+          <!-- <el-table-column
             fixed
             sortable
             type="selection"
             width="40">
-          </el-table-column>
+          </el-table-column> -->
           <template v-for="column in tableColumn">
             <el-table-column
               :key="column.id"
@@ -151,7 +151,7 @@ export default {
         'prop': 'transportAging',
 
         slot: (scope) => {
-          return scope.row.transportAging + ['天', '小时', '多天'][scope.row.transportAgingType]
+          return scope.row.transportAgingType ? (scope.row.transportAging + ['天', '小时', '天'][scope.row.transportAgingType]) : ''
         }
       }, {
         'label': '重货价格',
@@ -392,9 +392,11 @@ export default {
 }
 </script>
 <style lang="scss">
-.handAccount-manager .tab-content{
+.linemanage-manager .tab-content{
   .tab_info{
-    padding-bottom: 10px;
+  }
+  .hyq-priceList{
+    text-align: left;
   }
 }
 </style>
