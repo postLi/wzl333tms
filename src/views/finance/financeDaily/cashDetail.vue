@@ -6,11 +6,11 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>新增</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>修改</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>查看明细</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>反核销</el-button>
+        <!--  <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('add')" plain v-has:FLOW_CANCEL>新增</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('edit')" plain v-has:FLOW_CANCEL>修改</el-button> -->
+        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
+        <!--   <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>查看明细</el-button> -->
+        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('backCount')" plain v-has:FLOW_CANCEL>反核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -49,7 +49,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordDetailList } from '@/api/finance/financeDaily'
+import { postBillRecordDetailList, cancelVerification, delBillRecordDetail } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
@@ -76,7 +76,7 @@ export default {
       tablekeyBottom: 0,
       total: 0,
       dataListTop: [],
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [],
       columnOrder: [{
@@ -190,19 +190,19 @@ export default {
         },
         {
           label: '反核销金额',
-          prop: 'amount', 
+          prop: 'amount',
           width: '100',
           fixed: false
         },
         {
           label: '反核销经办人',
-          prop: 'contraryVerifyMan', 
+          prop: 'contraryVerifyMan',
           width: '90',
           fixed: false
         },
         {
           label: '反核销日期',
-          prop: 'contraryVerifyTime', 
+          prop: 'contraryVerifyTime',
           width: '180',
           fixed: false
         },
@@ -352,10 +352,11 @@ export default {
     fetchList() {
       if (this.$route.query) {
         console.log('searchQuery', this.searchQuery)
-        this.$set(this.searchQuery, 'recordId',this.$route.query.recordId)
+        this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
         postBillRecordDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
           this.total = data.total
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -379,14 +380,14 @@ export default {
         case 'expandtiure': // 记支出
           this.expandtiure()
           break
-        case 'cancelCount': // 取消结算
+        case 'delCount': // 删除
           if (isShow) {
-            this.cancelCount()
+            this.delCount()
           }
           break
-        case 'showCount': // 查看结算单
+        case 'backCount': // 反核销
           if (isShow) {
-            this.showCount()
+            this.backCount()
           }
           break
         case 'showDetail':
@@ -410,25 +411,68 @@ export default {
           break
       }
     },
-    cancelCount() {
-      this.$confirm('确定要取消结算【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        const data = {
-          flowId: this.selectedList[0].flowId,
-          detailFlowId: this.selectedList[0].id
+    backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
+      console.log('selectedList', this.selectedList)
+      if (this.selectedList[0].verifyStatusZh !== '未审核') {
+        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$confirm('确定要反核销【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.loading = true
+            cancelVerification({
+                id: this.selectedList[0].recordId,
+                recordDetailId: this.selectedList[0].id
+              }).then(data => {
+                this.loading = false
+                this.$message.success('反核销成功！')
+                this.$refs.multipleTable.clearSelection()
+                this.fetchList()
+              })
+              .catch(err => {
+                this.loading = false
+                this.$message.error('反核销失败！')
+                this.$refs.multipleTable.clearSelection()
+                this._handlerCatchMsg(err)
+              })
+          })
+          .catch(() => {})
+      }
+    },
+    delCount() { // 删除 只有手工录入并且未审核的可以删除
+      if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
+        if (this.selectedList[0].dataSrcZh !== '手工录入') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+        } else {
+          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
         }
-        // postCancelSettlement(data).then(data => {
-        //   this.$message({ type: 'success', message: '取消结算操作成功' })
-        //   this.fetchList()
-        // })
-        // .catch(err => {
-        //   this._handlerCatchMsg(err)
-        //   this.fetchList()
-        // })
-      })
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.loading = true
+            delBillRecordDetail({
+                id: this.selectedList[0].id,
+                recordId: this.selectedList[0].recordId,
+                amount: this.selectedList[0].amount
+              }).then(data => {
+                this.loading = false
+                this.$message.success('删除成功！')
+                this.fetchList()
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.loading = false
+              })
+          })
+          .catch(() => {})
+      }
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)

@@ -36,10 +36,9 @@
           </el-dropdown>
         </button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>删除</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
-        <!-- <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="showDetail" plain v-has:FLOW_DETAIL>查看明细</el-button> -->
-        <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>反核销</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:FLOW_FIND>反核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -70,7 +69,7 @@
     <div class="previewPicture" v-if="isShowPre">
       <el-button @click="isShowPre = false" icon="el-icon-close" size="mini">关闭预览</el-button>
       <transition name="el-zoom-in-bottom">
-        <el-carousel :interval="3000" height="300px"  arrow="always">
+        <el-carousel :interval="3000" height="300px" arrow="always">
           <el-carousel-item v-for="item in previews" :key="item">
             <img :src="item" alt="" @click="prePic(item)">
           </el-carousel-item>
@@ -95,7 +94,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordList } from '@/api/finance/financeDaily'
+import { postBillRecordList, cancelVerification, delBillRecord } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
@@ -113,12 +112,7 @@ export default {
   },
   data() {
     return {
-      previews: [
-        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0E/0F/ChMkJ1sYylmIJMWEAA2kWnSS2pMAAo2TQGcckMADaRy914.jpg',
-        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/09/09/ChMkJluIoTyIXX2eAB3KJaynnIgAArW1QGZwaQAHco9007.jpg',
-        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/02/04/ChMkJlpZZLeIGFB8AATf7vf_nYQAAkD4wFg_xEABOAG369.jpg',
-        // 'https://desk-fd.zol-img.com.cn/t_s720x360c5/g5/M00/0A/0B/ChMkJ1tEfAKIeyCwAF6u9pbKmU0AAplXQBdHUIAXq8O746.jpg'
-      ],
+      previews: [],
       isShowPre: false,
       currentInfo: {},
       popVisibleIncome: false,
@@ -140,7 +134,7 @@ export default {
       total: 0,
       dataList: [],
       popVisibleDialog: false,
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [{
           label: '序号',
@@ -177,7 +171,7 @@ export default {
         {
           label: '方向',
           prop: 'paymentsTypeZh',
-          width: '90',
+          width: '50',
           fixed: true
         },
         {
@@ -308,6 +302,25 @@ export default {
   methods: {
     handleCommand(command) {
       console.log('智能核销::', command)
+      switch (command) {
+        case 'income': // 收入
+          this.$router.push({
+            path: './financeDailyIncome',
+            query: {
+              orgId: this.searchQuery.vo.orgId
+            }
+          })
+          break
+        case 'expand': // 支出
+         this.$router.push({
+            path: './financeDailyExpanditure',
+            query: {
+              orgId: this.searchQuery.vo.orgId
+            }
+          })
+        // this.$message.warning('功能尚在开发中~')
+          break
+      }
     },
     setAddSuccess() {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -353,20 +366,14 @@ export default {
         case 'expandtiure': // 记支出
           this.expandtiure()
           break
-        case 'cancelCount': // 取消结算
+        case 'delCount': // 删除 
           if (isShow) {
-            this.$confirm('确定要取消【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              this.cancelCount()
-            })
+            this.delCount()
           }
           break
-        case 'showCount': // 查看结算单
+        case 'backCount': // 反核销
           if (isShow) {
-            this.showCount()
+            this.backCount()
           }
           break
         case 'showDetail':
@@ -385,16 +392,74 @@ export default {
           SaveAsFile({
             data: this.dataList,
             columns: this.tableColumn,
-            name: '资金流水-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '财务日记账-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
             data: this.dataList,
             columns: this.tableColumn,
-            name: '资金流水'
+            name: '财务日记账'
           })
           break
+      }
+    },
+    backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
+      console.log('selectedList', this.selectedList)
+      if (this.selectedList[0].verifyStatusZh === '未审核') {
+        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$confirm('确定要反核销【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.loading = true
+            cancelVerification({
+                id: this.selectedList[0].id,
+                recordDetailId: ''
+              }).then(data => {
+                this.loading = false
+                this.$message.success('反核销成功！')
+                this.$refs.multipleTable.clearSelection()
+                this.fetchList()
+              })
+              .catch(err => {
+                this.loading = false
+                this.$refs.multipleTable.clearSelection()
+                this._handlerCatchMsg(err)
+              })
+          })
+          .catch(() => {})
+      }
+    },
+    delCount() { // 删除 只有手工录入并且未审核的可以删除
+      if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
+        if (this.selectedList[0].dataSrcZh !== '手工录入') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+        } else {
+          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        }
+        this.$refs.multipleTable.clearSelection()
+      } else {
+        this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.loading = true
+            delBillRecord({ id: this.selectedList[0].id }).then(data => {
+                this.loading = false
+                this.$message.success('删除成功！')
+                this.fetchList()
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.loading = false
+              })
+          })
+          .catch(() => {})
       }
     },
     income() { // 新增
@@ -457,7 +522,6 @@ export default {
       this.isModify = true
       this.popVisibleIncome = true
       this.$refs.multipleTable.clearSelection()
-      // this.$message.warning('此功能尚在开发中~')
     },
     setTable() {
       this.setupTableVisible = true
@@ -472,10 +536,11 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
+    prePic(item) {},
     previewPicture(row, index, prop) {
       if (row[prop]) {
-      this.previews = Object.assign([], row[prop].split(','))
-      this.isShowPre = true
+        this.previews = Object.assign([], row[prop].split(','))
+        this.isShowPre = true
       }
       console.log('previewPicture', index, row, )
     }
@@ -496,10 +561,10 @@ export default {
       padding-top: 20px;
       background-color: #eee;
       box-shadow: 3px -10px 20px #ccc;
-      .el-carousel__item{
+      .el-carousel__item {
         text-align: center;
       }
-      img{
+      img {
         width: auto;
         height: 100%;
       }

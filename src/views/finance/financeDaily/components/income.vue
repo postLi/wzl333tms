@@ -15,7 +15,7 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>
@@ -24,27 +24,27 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="去向">
-          <el-select v-model="formModel.verificationWay" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in verificationWay" :key="item.value" :label="item.label" :value="item.value">
+          <el-select clearable v-model="formModel.verificationWay" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="(wayItem, wayIndex) in verificationWay" :key="wayIndex" :label="wayItem.verificationWay" :value="wayItem.id">
             </el-option>
           </el-select>
         </el-form-item>
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="item in subjectOne" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目">
-          <el-select v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="item in subjectTwo" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目">
-          <el-select v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="item in subjectThree" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -52,7 +52,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="item in subjectFour" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -113,7 +113,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import Upload from '@/components/Upload/singleImage2'
-import { postVerificationBaseInfo, postAddIncome } from '@/api/finance/financeDaily'
+import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList  } from '@/api/finance/financeDaily'
 export default {
   components: {
     SelectTree,
@@ -207,15 +207,28 @@ export default {
       if (this.isModify) {
         this.formModel = Object.assign({}, this.info)
         this.loading = false
+        this.getVeryficationList()
       } else {
         this.getBaseInfo()
       }
+      console.log('formModel',this.formModel)
+    },
+    getVeryficationList() { // 去向列表
+      getVeryficationList({orgId: this.otherinfo.orgid}).then(data => {
+        if (data) {
+          this.verificationWay = data
+        }
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
+      })
     },
     getBaseInfo() {
       return postVerificationBaseInfo(this.searchQuery).then(data => {
           if (data) {
             this.formModel = data
             this.formModel.orgId = this.otherinfo.orgid
+            this.verificationWay = data.verificationList
             console.log('getBaseInfo', data)
             this.loading = false
           }
@@ -237,12 +250,39 @@ export default {
           let query = Object.assign({}, this.formModel)
           this.$set(query, 'dataSrc', 1) // (数据)来源 ,0  核销产生, 1 手工录入
           this.$set(query, 'orderList', [])
-          query.orderList.push({
-            amount: query.amount
-          })
+          if (this.isModify) {
+            // 修改的时候 需要获取详情列表
+            let detailSearchQuery = {
+              currentPage: 1,
+              pageSize: 100,
+              vo: {
+                recordId: this.formModel.id,
+                orgId: this.formModel.orgId
+              }
+            }
+            postBillRecordDetailList(detailSearchQuery).then(data => {
+              if (data) {
+                query.orderList = data.list
+              } else { // 如果没有详情列表就创建一个空的详情列表
+                query.orderList.push({
+                  manualAmount: query.amount,
+                  subjectId: '',
+                  subjectName: ''
+                })
+              }
+            })
+          } else {
+            // 添加的时候 需要创建一个空的详情列表
+            query.orderList.push({
+              manualAmount: query.amount,
+              subjectName: '',
+              subjectId: ''
+            })
+          }
           if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }
+          console.log('query:::',query)
           postAddIncome(query).then(data => {
               query = {}
               this.closeMe()

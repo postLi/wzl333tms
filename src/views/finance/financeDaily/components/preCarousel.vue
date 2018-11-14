@@ -25,7 +25,9 @@ export default {
     return {}
   },
   methods: {
-  	prePic (value) {}
+  	prePic (value) {
+      
+    }
   }
 }
 

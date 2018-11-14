@@ -641,11 +641,11 @@ export default {
         code: 'FINANCE_REC'
       }
     }, {
-      path: '/finance/settleLogIncome',
+      path: '/finance/financeDailyIncome',
       icon: 'caiwugl5_zijinls',
       hidden: true,
-      name: 'settleLogIncome',
-      component: _import('finance/settleLogIncome/index'),
+      name: 'financeDailyIncome',
+      component: _import('finance/financeDailyIncome/index'),
       meta: {
         role: ['admin'],
         title: '记收入',
@@ -653,18 +653,45 @@ export default {
         code: 'FLOW_IN'
       }
     }, {
-      path: '/finance/settleLogExpandtiure',
+      path: '/finance/financeDailyExpanditure',
       icon: 'caiwugl5_zijinls',
       hidden: true,
       name: 'settleLogExpandtiure',
-      component: _import('finance/settleLogExpandtiure/index'),
+      component: _import('finance/financeDailyExpanditure/index'),
       meta: {
         role: ['admin'],
         title: '记支出',
         noCache: false,
         code: 'FLOW_OUT'
       }
-    }, {
+    },
+    // {
+    //   path: '/finance/settleLogIncome',
+    //   icon: 'caiwugl5_zijinls',
+    //   hidden: true,
+    //   name: 'settleLogIncome',
+    //   component: _import('finance/settleLogIncome/index'),
+    //   meta: {
+    //     role: ['admin'],
+    //     title: '记收入',
+    //     noCache: false,
+    //     code: 'FLOW_IN'
+    //   }
+    // }, 
+    // {
+    //   path: '/finance/settleLogExpandtiure',
+    //   icon: 'caiwugl5_zijinls',
+    //   hidden: true,
+    //   name: 'settleLogExpandtiure',
+    //   component: _import('finance/settleLogExpandtiure/index'),
+    //   meta: {
+    //     role: ['admin'],
+    //     title: '记支出',
+    //     noCache: false,
+    //     code: 'FLOW_OUT'
+    //   }
+    // }, 
+    {
       path: '/finance/IOManage',
       icon: 'caiwugl3_shouzhifs',
       name: 'IOManage',

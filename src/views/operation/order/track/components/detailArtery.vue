@@ -42,7 +42,7 @@
             </td>
             <th>配载日期</th>
             <td>
-              <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
             <th>预计到达时间</th>
             <td>
