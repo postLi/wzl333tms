@@ -85,7 +85,6 @@
         'otherinfo'
       ]),
       orgid() {
-        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
 
@@ -153,11 +152,6 @@
     },
     mounted() {
       this.searchQuery.vo.companyId = this.otherinfo.companyId
-      // if (this.otherinfo.companyId === this.otherinfo.orgid) {
-      //   isParentId = true
-      // } else {
-      //   isParentId = false
-      // }
       this.isParentId = this.otherinfo.orgid === this.otherinfo.companyId ? true : false
       this.fetchData()
     },
@@ -190,9 +184,6 @@
       getSearchParam(obj) {
         // this.searchQuery.vo = objectMerge2(this.searchQuery.vo, obj)
         // this.fetchAllCustomer()
-      },
-      showImport() {
-        // 显示导入窗口
       },
       doAction(type) {
         // 判断是否有选中项

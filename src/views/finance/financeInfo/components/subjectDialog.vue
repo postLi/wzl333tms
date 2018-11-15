@@ -14,23 +14,23 @@
           <span>{{currentForm.subjectName }}</span>
         </el-form-item>
         <el-form-item label="科目代码" prop='subjectCode' class="sub_subjectCode">
-          <el-input v-model="form.subjectCode" :maxlength="2" v-numberOnly>
+          <el-input v-model="form.subjectCode" :maxlength="2">
             <template slot="prepend">{{currentForm.subjectCode}}</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item">
-          <el-input v-model="form.subjectName" :maxlength="15"></el-input>
+        <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item ">
+          <el-input v-model="form.subjectName" :maxlength="15" clearable></el-input>
         </el-form-item>
       </div>
       <div v-if="!isDoAddEnd">
-        <el-form-item label="科目代码" prop='subjectCode' label-width="98px" class="info_item">
-          <el-input v-model="form.subjectCode" v-numberOnly :maxlength="isFNum">
+        <el-form-item label="科目代码" prop='newScubjectCode' label-width="98px" class="info_item">
+          <el-input v-model="form.newScubjectCode" :maxlength="isFNum" class="info_input">
             <template slot="prepend" v-if="isSubjectLevel > 1">{{currentForm.subjectCode}}</template>
 
           </el-input>
         </el-form-item>
         <el-form-item label="科目名称" prop='subjectName' label-width="98px" class="info_item">
-          <el-input v-model="form.subjectName" :maxlength="15"></el-input>
+          <el-input v-model="form.subjectName" maxlength="15" clearable></el-input>
         </el-form-item>
 
         <!--'财务科目类型 0 收入, 1 支出'
@@ -185,35 +185,50 @@
         },
         immediate: true
       },
-      isDoAddEnd: {
-        handler() {
-          this.comWatch()
-        },
-        immediate: true
+      isDoAddEnd(n) {
+        if (n) {
+          this.comWatch(this.info)
+        }
       },
+      // doAddStair(n,o) {
+      //   if (n) {
+      //     this.comWatch(this.info)
+      //   } else {
+      //     // return
+      //     this.checkShowMessage = false
+      //   }
+      // },
       doAddStair: {
-        handler() {
-          this.comWatch()
+        handler(n, o) {
+          if (n === true) {
+            this.comWatch(this.info)
+
+          } else {
+            this.comWatch(this.info)
+            // debugger
+          }
+
         },
-        immediate: true
+        // immediate: true
+        deep: true
       },
       isDoExport: {
         handler() {
-          this.comWatch()
+          this.comWatch(this.info)
         },
         immediate: true
       },
       isSubClose: {
         handler() {
-
+          // this.comWatch(this.info)
         },
         immediate: true
       },
       isDoAddSub: {
-        // handler() {
-        //   this.comWatch()
-        // },
-        // immediate: true
+        handler() {
+          //   this.comWatch()
+        },
+        immediate: true
       },
       isDoEdit: {
         // handler() {
@@ -223,26 +238,30 @@
       },
     },
     data() {
-      // const reg1 = new RegExp("^[0-9]{4}$")
       const validateSubjectCode = (rule, value, callback) => {
-        if (this.isSubjectLevel === 1) {
-          // this.isFNum = 4
-          if (/[0-9]{4}/.test(value)) {
-            callback()
-          } else {
-            callback(new Error('只能4位数字'))
-          }
+        if (REGEX.ONLY_NUMBER.test(value)) {
+          // callback()
 
-        } else {
-          if (/[0-9]{2}/.test(value)) {
-            callback()
-          } else if (/[0-9]{1}/.test(value)) {
-            callback(new Error('只能2位数字'))
+          if (this.isSubjectLevel === 1) {
+            if (/[0-9]{4}/.test(value)) {
+              callback()
+              console.log(value)
+            } else {
+              callback(new Error('只能4位数字'))
+            }
+
           } else {
-            callback(new Error('只能2位数字'))
+            if (/[0-9]{2}/.test(value)) {
+              callback()
+            } else if (/[0-9]{1}/.test(value)) {
+              callback(new Error('只能2位数字'))
+            } else {
+              callback(new Error('只能2位数字'))
+            }
           }
+        } else {
+          callback(new Error('只能输入数字'))
         }
-        // console.log(this.info, 'infommm')
       }
       const validateSubName = (rule, value, callback) => {
         if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
@@ -291,20 +310,20 @@
           subjectCode: '',//  自定义
           subjectName: '',
           subjectType: '',
-
+          newScubjectCode: ''
           //  自定义
 
         },
         rules: {
-          name: [
-            {required: true}
-          ],
           verificationWay: [
             {required: true, message: '核销方向不能为空~'}
           ],
+          newScubjectCode: [
+            {required: true, message: '科目代码不能为空~'},
+            {validator: validateSubjectCode}
+          ],
           subjectCode: [
-            {required: true, message: '科目代码不能为空~',},
-            // { min: 4, max: 4, message: '一级科目代码只能4位数字4555' },
+            {required: true, message: '科目代码不能为空~'},
             {validator: validateSubjectCode}
           ],
           subjectName: [
@@ -327,10 +346,8 @@
     methods: {
 
       comWatch(item) {
-        if (this.$refs['ruleForm']) {
-          this.$refs['ruleForm'].resetFields()
-        }
-        this.checkShowMessage = false
+
+
         this.isAddLE = false
         this.isDirect = false
 
@@ -339,19 +356,20 @@
           this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
-          console.log(item);
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
           this.isAddLE = true
-          this.currentForm.subjectCode = item.parent.subjectCode
+          if (item.parent) {
+            this.currentForm.subjectCode = item.parent.subjectCode
+          }
           this.isSubjectLevel = item.subjectLevel
           if (this.isSubjectLevel > 1) {
             this.isFNum = 2
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
           }
-          console.log(item,'item');
+          // console.log(item, 'item');
         }
         else if (this.isDoExport) {
           this.isTitle = '导入模板'
@@ -360,6 +378,7 @@
         else if (this.isDoAddSub) {
           this.isTitle = '新增'
           this.isDirect = true
+          this.checkShowMessage = true
           this.reset()
         }
         else if (this.isDoEdit) {
@@ -367,22 +386,34 @@
           this.isDirect = true
           this.form.verificationWay = item.verificationWay
           this.form.remark = item.remark
-        } else if (this.isSubClose) {
+        }
+        else if (this.isSubClose) {
           this.isTitle = '修改'
           this.getoptio1(item.id)
+        }
+
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        } else {
+          this.checkShowMessage = false
         }
       },
       getoptio1(id) {
         getFinSubCloseInfo(id).then(res => {
           this.form.subjectsFeeType = res.po.subjectsFeeType
-          this.form.oneId = res.oneLevel[0].id
-          this.form.oneName = res.oneLevel[0].subjectName
+          this.form.oneId = res.po.oneId
+          this.form.oneName = res.po.oneName
+          // this.form.oneId = res.oneLevel[0].id
+          // this.form.oneName = res.oneLevel[0].subjectName
           this.closeOptions.oneOptions = res.oneLevel
-          // res.oneLevel.map((item) => {
-          //   this.closeOptions.oneOptions = []
-          //   this.closeOptions.oneOptions.push(item)
-          // })
           this.changeSelctListTwO(this.form.oneId)
+
+          this.form.twoId = res.po.twoId
+          this.form.twoName = res.po.twoName
+          this.form.threeId = res.po.threeId
+          this.form.threeName = res.po.threeName
+          this.form.fourId = res.po.fourId
+          this.form.fourName = res.po.fourName
         })
       },
       changeSelctListO(obj, index) {
@@ -392,6 +423,7 @@
             this.form.oneId = item.id
             this.form.oneName = item.subjectName
             this.changeSelctListTwO(this.form.oneId)
+
           }
         })
       },
@@ -402,8 +434,8 @@
             return false
           } else {
             this.closeOptions.twoOptions = res
-            this.form.twoId = res[0].id
-            this.form.twoName = res[0].subjectName
+            // this.form.twoId = res[0].id
+            // this.form.twoName = res[0].subjectName
             this.changeSelctListThree(this.form.twoId)
           }
         })
@@ -424,8 +456,6 @@
             return false
           } else {
             this.closeOptions.threeOptions = res
-            this.form.threeId = res[0].id
-            this.form.threeName = res[0].subjectName
             this.changeSelctListFour(this.form.threeId)
           }
         })
@@ -439,15 +469,7 @@
           }
         })
       },
-      changeSelctListFour1(obj) {
-        this.closeOptions.forthOptions.filter(item => {
-          if (item.subjectName === obj) {
-            this.form.threeId = item.id
-            this.form.threeName = item.subjectName
-            this.changeSelctListFour(this.form.threeId)
-          }
-        })
-      },
+
       changeSelctListFour(item) {
         getSelectList(item, 4).then(res => {
           if (res === '数据库无对应记录' || '') {
@@ -455,40 +477,50 @@
             return false
           } else {
             this.closeOptions.forthOptions = res
-            this.form.fourId = res[0].id
-            this.form.fourName = res[0].subjectName
+          }
+        })
+      },
+      changeSelctListFour1(obj) {
+        this.closeOptions.forthOptions.filter(item => {
+          if (item.subjectName === obj) {
+            this.form.fourId = item.id
+            this.form.fourName = item.subjectName
+            // this.changeSelctListFour(this.form.fourId)
           }
         })
       },
       submitForm(ruleForm) {
         this.$refs[ruleForm].validate((valid) => {
-          // this.checkShowMessage = true
+
           if (valid) {
             let promiseObj
             this.loading = true
 
             const data = objectMerge2({}, this.form)
             if (this.isDoAddSub) {
-
+              this.delectFn(data)
+              delete data.subjectCode
+              delete data.subjectName
+              delete data.subjectType
+              this.checkShowMessage = true
               promiseObj = postAddFinFicationl(data)
             } else if (this.doAddStair) {
-              // delete data.verificationWay
-              // delete data.remark
-              // delete data.subjectsFeeType
-              // delete data.oneName
-              // delete data.twoName
-              // delete data.threeName
-              // delete data.fourName
               this.delectFn(data)
+              delete data.verificationWay
+              delete data.remark
+              // data.subjectCode = this.form.newScubjectCode
               if (this.isSubjectLevel > 1) {
-                data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
+                data.subjectCode = this.currentForm.subjectCode + this.form.newScubjectCode
+                delete data.newScubjectCode
               }
               promiseObj = postAddLevel(this.info.id, data)
             }
             else if (this.isDoEdit) {
-              console.log(data);
-              debugger
-              return false
+              this.delectFn(data)
+              delete data.subjectCode
+              delete data.subjectName
+              delete data.subjectType
+
               promiseObj = putExtFinFicationl(this.info.id, data)
             } else if (this.isSubClose) {
               delete data.verificationWay
@@ -497,20 +529,16 @@
               delete data.subjectName
               delete data.subjectType
               delete data.subjectsFeeType
+
               promiseObj = putFinanceEdit(this.info.id, data)
             } else if (this.isDoAddEnd) {
-              // delete data.verificationWay
-              // delete data.remark
-              // delete data.subjectsFeeType
-              // delete data.oneName
-              // delete data.twoName
-              // delete data.threeName
-              // delete data.fourName
+              delete data.verificationWay
+              delete data.remark
               this.delectFn(data)
               delete data.subjectType
+              delete data.newScubjectCode
               data.subjectCode = this.currentForm.subjectCode + this.form.subjectCode
 
-              // debugger
               promiseObj = postAddNextLevel(this.info.id, data)
             }
             promiseObj.then(res => {
@@ -548,11 +576,11 @@
           subjectCode: '',//  自定义
           subjectName: '',
           subjectType: '',
+          newScubjectCode: '',
         }
       },
       delectFn(data) {
-        delete data.verificationWay
-        delete data.remark
+
         delete data.subjectsFeeType
         delete data.oneName
         delete data.twoName
@@ -566,6 +594,10 @@
       closeMe(done) {
         if (this.isSubClose) {
           // this.reset()
+        }
+        if (this.doAddStair) {
+          this.reset()
+          this.checkShowMessage = false
         }
         //
         // this.resetForm('ruleForm')
@@ -601,21 +633,27 @@
         .info_item {
           .el-form-item__content {
             margin-left: 0 !important;
-            .el-input__inner {
-              width: 109%;
+            .info_input {
+              .el-input__inner {
+                width: 111%;
+              }
             }
+
             .el-input-group {
               .el-input-group__prepend {
                 padding: 0 4px;
+                text-align: center;
+                width: 65px;
               }
               .el-input__inner {
-                width: 74% !important;
+                width: 122px;
               }
             }
           }
         }
         .sub_el_form_item {
           display: inline-flex;
+          margin-bottom: 0;
         }
         .sub_el_form_item:nth-of-type(2) {
           margin-left: 30px;
@@ -626,13 +664,14 @@
             .el-input-group {
               .el-input-group__prepend {
                 padding: 0 4px;
+                text-align: center;
+                width: 65px;
               }
               .el-input__inner {
-                width: 90% !important;
+                width: 124px;
               }
             }
           }
-
         }
 
         .el-form-item__content {
@@ -661,7 +700,7 @@
         .el-form-item__content {
           margin-left: 0 !important;
           .el-input__inner {
-            width: 110%;
+            width: 116%;
           }
           .el-textarea__inner {
             width: 116%;

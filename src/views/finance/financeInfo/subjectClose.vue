@@ -243,17 +243,12 @@
         }
         switch (type) {
           case 'doNext':
-            this.loading = true
+
             this.$router.push({
               path: '/finance/financeInfo/subjectDirection',
-              // query: {
-              //   tab: '网点对账-对账明细',
-              //   arriveOrgid: row.arriveOrgid,
-              //   orgid: row.orgid,
-              //   orgName: row.arriveOrgName
-              //   // id: row.carrierId
-              // }
             })
+            // this.loading = false
+            // this.eventBus.$emit('replaceCurrentView','/finance/financeInfo/subjectDirection')
             this.loading = false
             break
           case 'doLast':

@@ -2,13 +2,13 @@
 <template>
   <div class="pickup-manager tab-wrapper tab-wrapper-100">
   <keep-alive>
-    <router-view></router-view>
+    <router-view ></router-view>
   </keep-alive>
 </div>
 </template>
 
 <script>
-// import Sender from './fInfo'
+// import Sender from './subjectInfo'
 
 export default {
   name: 'orderpickUp',

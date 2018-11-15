@@ -60,7 +60,7 @@
             type="text" icon=""
             size="small"
             @click="handleDelete(scope.row)">
-            删除
+            <span style="border-bottom: 1px solid #f56c6c">删除</span>
           </el-button>
         </template>
       </el-table-column>
@@ -156,8 +156,7 @@
         ])
       },
       handleDelete(row) {
-        // this.$message.info(row.subjectName)
-        this.$confirm('确定删除科目名称[' + row.subjectName + ']吗?', '提示', {
+        this.$confirm('确定删除科目名称 [' + row.subjectName + '] 吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'
@@ -171,8 +170,10 @@
           }).catch(err => {
             this._handlerCatchMsg(err)
           })
+        }).catch(() => {
+          this.$message.info('已取消操作')
+          this.loading = false
         });
-        this.$refs.multipleTable.clearSelection()
       },
       showRow(row) {
         const show = (row.row.parent ? (row.row.parent._expanded && row.row.parent._show) : true)

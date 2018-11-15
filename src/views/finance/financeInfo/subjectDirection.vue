@@ -64,7 +64,8 @@
             label="操作">
             <template slot-scope="scope">
               <el-button @click="editClick(scope.row)" type="text" size="small" icon="">修改</el-button>
-              <el-button type="text" icon="" size="small" @click="removeClick(scope.row)">删除</el-button>
+              <el-button type="text" icon="" size="small" @click="removeClick(scope.row)"><span
+                style="color: #f56c6c;border-bottom: 1px solid #f56c6c">删除</span></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -278,7 +279,7 @@
       },
       removeClick(row) {
         this.loading = true
-        this.$confirm('确定删除[' + row.verificationWay + ']吗?', '提示', {
+        this.$confirm('确定删除 [' + row.verificationWay + '] 吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
           type: 'warning'
@@ -294,6 +295,9 @@
             this._handlerCatchMsg(err)
             this.loading = false
           })
+        }).catch(() => {
+          this.$message.info('已取消操作')
+          this.loading = false
         });
         this.$refs.multipleTable.clearSelection()
       },
