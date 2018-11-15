@@ -263,6 +263,7 @@
           callback(new Error('只能输入数字'))
         }
       }
+      
       const validateSubName = (rule, value, callback) => {
         if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
           // if (REGEX.CHINESE_AND_ENGLISH.test(value)) {
