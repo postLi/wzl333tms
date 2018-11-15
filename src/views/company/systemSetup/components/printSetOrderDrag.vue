@@ -721,9 +721,7 @@ export default {
                 e.alignment = 1
               })
             })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-            })
+            .catch(() => {})
         }
       })
     },
