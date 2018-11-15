@@ -15,6 +15,8 @@
         <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
+       <!-- 核销凭证 -->
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher"></Voucher>
       </div>
     </div>
   </div>
@@ -22,48 +24,38 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
 import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
 import { getOrderList } from '@/api/finance/financeDaily'
 import Count from './components/count'
+import Voucher from '@/views/finance/accountsLoad/components/voucher'
 export default {
   name: 'settleLogIncome',
   components: {
     dataTable,
-    Count
+    Count,
+    Voucher
   },
   data() {
     return {
+      popVisibleDialog: false,
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
       loading: false,
       countVisible: false, // 弹出框默认隐藏
       feeInfo: 'feeInfoOne',
       settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       btnsize: 'mini',
-      formModel: {
-        bankAccount: '',
-        settlementTime: '',
-        wechatAccount: '',
-        alipayAccount: '',
-        financialWay: '',
-        financialWayId: '',
-        settlementSn: '',
-        amount: 0,
-        agent: '',
-        remark: ''
-      },
-      formModelRules: {},
-      setLoadTableList: {},
       countSuccessList: [],
       isEdit: false,
       loadTable: [],
-      addIncomeInfo: {},
       countNum: 0,
-      financialWays: [],
-      isFinancialWays: false,
       tableKey: 0,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       feeName: {
         arrPayName: [],
         arrNoPayName: [],
@@ -80,38 +72,14 @@ export default {
       return this.$route.query.orgId ? this.$route.query.orgId : this.otherinfo.orgid
     }
   },
-  mounted() {
-    // this.getFeeInfo()
-  },
   methods: {
-    getSystemTime() {
-      getSystemTime().then(data => {
-          this.formModel.settlementTime = parseTime(data)
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
     getFeeInfo() {
-      this.getOrgFirstFinancialWay() // 获取收支方式
       getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
           this.loading = false
-          this.getSystemTime()
-          this.formModel.amount = data.amount
-          this.formModel.settlementSn = data.settlementSn
-          // this.formModel.agent = data.szDtoList[0].agent
-          this.formModel.agent = this.otherinfo.name
-          this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
-          this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
-          this.formModel.financialWay = data.szDtoList[0].financialWay
-          this.formModel.bankAccount = data.szDtoList[0].bankAccount
-          this.formModel.remark = data.remark
-          
         })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
-
     },
     doAction(type) {
       switch (type) {
@@ -128,51 +96,19 @@ export default {
           break
       }
     },
-    setFinanceWay(obj) {
-      this.formModel.financialWayId = obj
-      this.formModel.financialWay = obj
-      this.getOrgFirstFinancialWay()
-    },
     setData() { // 设置传给后台的数据结构
-      if (typeof this.formModel.financialWay === 'string') {
-        this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
-        this.formModel.financialWay = this.formModel.financialWay
-      } else {
-        this.formModel.financialWayId = this.formModel.financialWay
-        this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
-      }
       this.loadTable.forEach(e => {
         this.feeName.arrPayName.forEach((el, index) => {
           e[el] = e[this.feeName.arrPayNameActual[index]]
         })
       })
-      const szDtoList = []
-      szDtoList.push(this.formModel)
-      this.addIncomeInfo = Object.assign({}, this.formModel)
-      this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
-      this.$set(this.addIncomeInfo, 'orgId', this.getRouteInfo)
-      this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
-      this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
-      this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
     },
     save() {
       if (this.loadTable.length < 1) {
         this.$message({ type: 'warning', message: '右边表格不能为空！' })
         return false
       }
-      this.setData()
-      this.loading = true
-      postAddIncome(this.addIncomeInfo).then(data => { // 保存
-        this.loading =false
-          this.$message({ type: 'success', message: '保存成功！' })
-          this.getFeeInfo()
-          this.tableKey = new Date().getTime()
-          this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
-        })
-        .catch(err => {
-          this.loading =false
-          this._handlerCatchMsg(err)
-        })
+      this.popVisibleDialog = true
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -193,33 +129,33 @@ export default {
     },
     getLoadTable(obj) { // 获取右边合计总数 = 收入金额
       let amount = 0
+      this.infoTable = this.$options.data().infoTable
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
-        amount += e.shipFeeTotalActual
+        amount = tmsMath._add(amount, e.shipFeeTotalActual)
       })
-      this.formModel.amount = amount
+      this.infoTable = {
+        amount: amount,
+        orderList: this.loadTable
+      }
     },
     countSuccess(list) {
       this.countSuccessList = Object.assign([], list.info)
       this.countNum = list.count
     },
-    getOrgFirstFinancialWay() { // 获取收支方式
-      let obj = {
-        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
-        orgId: this.getRouteInfo
-      }
-      getOrgFirstFinancialWay(obj).then(data => {
-        this.financialWays = data
-        if (this.financialWays) {
-          this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
-          this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
-          this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
-        } else {
-          this.formModel.bankAccount = ''
-          this.formModel.wechatAccount = ''
-          this.formModel.alipayAccount = ''
+    closeDialog() {
+      this.popVisibleDialog = false
+    },
+    submitVoucher (value) {
+      console.log('submitVoucher', value)
+      this.loading = true
+      postAddIncome(value).then(data => {
+        if (data) {
+          this.$message.success('记收入成功！')
         }
-      }).catch((err)=>{
+          this.loading = false
+      })
+      .catch(err => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -259,25 +195,6 @@ export default {
     display: flex;
     flex-direction: column;
 
-    .feeFrom {
-      margin-bottom: 10px;
-      padding: 0 10px;
-      .feeFrom-type {
-        position: absolute;
-        z-index: 33;
-        right: 40px;
-        top: 20px;
-      }
-      .formItemTextDanger {
-        .el-form-item__label {
-          color: #ef0000;
-        }
-      }
-      .el-input.is-disabled .el-input__inner {
-        background-color: #fff;
-        color: #222;
-      }
-    }
     .el-collapse {
       border: 2px solid #cdf;
     }
@@ -309,53 +226,6 @@ export default {
       .el-input {
         width: 220px;
       }
-    }
-  }
-}
-
-.my-autocomplete {
-  li {
-    line-height: normal;
-    padding: 7px;
-
-    .name {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    .addr {
-      font-size: 12px;
-      color: #b4b4b4;
-    }
-    .highlighted .addr {
-      color: #ddd;
-    }
-  }
-}
-
-ul.feeList {
-  margin: 10px;
-  border: 1px solid #d0d7e5;
-  display: flex;
-  li {
-    text-align: center;
-    height: 70px;
-    border-right: 1px solid #d0d7e5;
-    p {
-      background-color: #eaf0ff;
-      line-height: 36px;
-      margin-bottom: -5px;
-    }
-    .el-input__inner {
-      margin-top: -5px;
-      height: 33px;
-      border: none;
-    }
-    .el-input__inner:focus {
-      background-color: #d0d7e5;
-      border-radius: 0px;
-    }
-    .el-form-item__error {
-      margin-top: -6px;
     }
   }
 }

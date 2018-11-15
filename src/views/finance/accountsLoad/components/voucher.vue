@@ -3,8 +3,8 @@
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
         <el-form-item label="方向">
-          <el-select v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="(value, key) in paymentsTypes" :value="key" :key="key" :label="value"></el-option>
+          <el-select v-model="formModel.verificationWay" filterable placeholder="请选择" :size="btnsize">
+            <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
@@ -73,7 +73,7 @@
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
-import { getVeryficationList } from '@/api/finance/financeDaily'
+import { postVerificationBaseInfo, getVeryficationList } from '@/api/finance/financeDaily'
 export default {
   props: {
     popVisible: {
@@ -83,16 +83,26 @@ export default {
     orgId: {
       type: [String, Number],
       default: ''
+    },
+    info: {
+      type: [Object, Array],
+      default: () => []
     }
   },
   watch: {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
-          this.getVeryficationList()
+          this.init()
         }
       },
       immediate: true
+    },
+    info: {
+      handler(cval, oval) {
+        console.log('voucher info-table::', cval, oval)
+      },
+      deep: true
     }
   },
   computed: {
@@ -108,7 +118,13 @@ export default {
       dialogTitle: '核销凭证',
       loading: false,
       btnsize: 'mini',
+      baseQuery: {
+        orgId: '',
+        amount: 0,
+        feeIds: ''
+      },
       formModel: {
+        verificationWay: '',
         paymentsType: '',
         amount: '',
         certTime: '',
@@ -121,8 +137,11 @@ export default {
         subjectThree: '',
         subjectFour: ''
       },
-      rules: {},
-      paymentsTypes: [],
+      rules: {
+        verificationWay: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }]
+      },
+      veryficationType: {},
+      veryficationList: [],
       subjectOne: [],
       subjectTwo: [],
       subjectThree: [],
@@ -130,17 +149,31 @@ export default {
     }
   },
   methods: {
-    getVeryficationList () { // 获取方向列表
-      getVeryficationList({orgId: this.orgId}).then(data => {
-        this.paymentsTypes = data
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+    init() {
+      this.baseQuery = this.$options.data().baseQuery
+      this.postVerificationBaseInfo()
+      this.formModel.amount = this.info.amount || 0
+    },
+    postVerificationBaseInfo() {
+      this.baseQuery.orgId = this.orgId
+      this.baseQuery.amount = this.info.amount
+      postVerificationBaseInfo(this.baseQuery).then(data => {
+          this.formModel = data
+          this.veryficationList = data.verificationList
+          data.verificationList.forEach((el, index) => {
+            this.veryficationType[el.id] = el.verificationWay
+          })
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          let dataInfo = Object.assign({}, this.formModel)
+          this.$set(dataInfo, 'orderList', this.info.orderList)
+          this.$emit('success', dataInfo)
         }
       })
     },
@@ -152,15 +185,7 @@ export default {
       if (typeof done === 'function') {
         done()
       }
-    },
-    getSystemTime() {
-      return getSystemTime().then(data => {
-          this.formModel.certTime = data.trim()
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
+    }
   }
 }
 

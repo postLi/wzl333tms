@@ -187,7 +187,6 @@ export default {
       incomePayType: 'RECEIVABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       paymentsType: 0, // 收支类型, 0 收入, 1 支出
       settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
-      loading: false,
       btnsize: 'mini',
       searchForm: {},
       selectedRight: [],

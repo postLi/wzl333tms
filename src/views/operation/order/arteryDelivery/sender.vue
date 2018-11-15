@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
+    <AddCustomer :arrivalStatus="arrivalStatus" :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      arrivalStatus: '',
       timeInfoVisible: false,
       // 控制显示提示消息
       isChecked: false,
@@ -546,6 +547,7 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event) {
+      this.arrivalStatus = row.bathStatusName
       if (row.bathStatusName === '在途中') {
         this.selectInfo = row
         this.openAddCustomer()
