@@ -562,7 +562,6 @@ export default {
           expand: true,
           fixed: false,
           checkfn: (row) => {
-            console.log('row.warehouStatus:', row.warehouStatus)
             return row.warehouStatus === 1
           },
 
@@ -728,13 +727,18 @@ export default {
       type: Boolean,
       dafault: false
     },
-    //
+    arrivalStatus: {
+      type: String,
+      default: ''
+    },
     id: {
       type: [String, Number],
       dafault: false
     }
   },
   watch: {
+    arrivalStatus() {
+    },
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
@@ -1055,8 +1059,12 @@ export default {
           break
           // 添加客户
         case 'sure':
-          this.timeInfoVisible = true
-          console.log('sure', this.timeInfoVisible)
+        console.log('批次状态：', this.arrivalStatus)
+          if (this.arrivalStatus === '在途中') {
+            this.timeInfoVisible = true
+          } else {
+            this.getActualTime()
+          }
           break
       }
       if (type !== 'sure') {
@@ -1119,7 +1127,9 @@ export default {
           })
         })
         data = this.sendModel
-        this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(55, data).then(res => {
           this.$message({
             type: 'success',
@@ -1520,6 +1530,8 @@ export default {
     }
   }
 }
+
+
 
 
 

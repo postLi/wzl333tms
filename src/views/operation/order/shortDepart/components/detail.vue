@@ -67,7 +67,7 @@
     </el-form>
     <div class="tab_infos">
       <div class="btns_box">
-        <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
+        <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')" :loading="addLoading">短驳入库</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
@@ -134,6 +134,7 @@ export default {
   },
   data() {
     return {
+      addLoading: false,
       detailTableLoading: true,
       timeInfoVisible: false,
       textChangeDanger: [],
@@ -408,7 +409,13 @@ export default {
     doAction(type) {
       switch (type) {
         case 'add': // 短驳入库
-          this.timeInfoVisible = true
+          console.log('批次状态：', this.arrivalStatus)
+          if (this.arrivalStatus === '短驳中') {
+            this.timeInfoVisible = true
+          } else {
+            this.addLoading = true
+            this.postAddRepertory()
+          }
           break
         case 'print': // 打印
           PrintInFullPage({
@@ -553,9 +560,12 @@ export default {
       if (this.newData.tmsOrderLoadDetailsList.length === 0) {
         this.$refs.multipleTable.toggleRowSelection(this.detailList[0], true)
         this.$message({ type: 'warning', message: '至少要有一条数据' })
+        this.addLoading = false
         return false
       } else {
-        this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(50, this.newData).then(data => {
             if (data.status === 200) {
               this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
@@ -564,17 +574,19 @@ export default {
             } else {
               this.message = false
             }
+            this.addLoading = false
             this.$emit('isSuccess', this.message)
           })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
+            this.addLoading = false
             this.$emit('isSuccess', this.message)
           })
       }
     },
     getLoadTrack() {
-       this.detailTableLoading = true
+      this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
           if (data) {

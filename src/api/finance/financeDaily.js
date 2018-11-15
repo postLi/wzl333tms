@@ -62,7 +62,7 @@ export function cancelVerification(params) {
  * {"orgId":"1"}
  */
 export function getVeryficationList(params) {
-	return fetch.post('/tmsfinanceservicechengrt/finance/tmsfinanceverification/v1.3/getVeryficationList/', params).then(res => {
+	return fetch.post('/api-finance/finance/tmsfinanceverification/v1.3/getVeryficationList/', params).then(res => {
 		return res.data
 	})
 }
