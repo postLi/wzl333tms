@@ -598,7 +598,7 @@ import { getEnableLibSetting, getEnableOrderSetting, getSettingCompanyLi, getSet
 import { getSelectType } from '@/api/common'
 // 阿拉伯数字转中文大写
 import { smalltoBIG } from '@/filters/'
-import { tmsMath } from '@/utils/'
+import { tmsMath, parseTime } from '@/utils/'
 
 export default {
   components: {},
@@ -1099,9 +1099,15 @@ export default {
         this.$set(obj, 'customerNumber', infoDetail.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', infoDetail.shipShippingTypeName) // 运输方式
         this.$set(obj, 'businessType', infoDetail.shipBusinessTypeName) // 业务类型
+        this.$set(obj, 'createrName', infoDetail.userName) // 开单员
         this.$set(obj, 'userName', infoDetail.userName) // 制单员
         this.$set(obj, 'remarks', infoDetail.shipRemarks) // 备注
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
+        ////////////////////////////////////////////////////////////
+        ///年月日
+        this.$set(obj, 'createYear', parseTime(infoDetail.createTime, '{y}'))
+        this.$set(obj, 'createMonth', parseTime(infoDetail.createTime, '{m}'))
+        this.$set(obj, 'createDate', parseTime(infoDetail.createTime, '{d}'))
         ////////////////////////////////////////////////////////////
         ///特殊处理 中转费
         let totalTransferFee = 0
@@ -1109,7 +1115,6 @@ export default {
           this.orderdata.tmsOrderTransferList.forEach(e => {
             totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
           })
-          
         }
         this.$set(obj, 'transferFee', totalTransferFee) // 中转费
         console.log('中转费',totalTransferFee)
@@ -1133,7 +1138,6 @@ export default {
             this.$set(obj, 'receiptPay', '√') // 回单付（√）
             this.$set(obj, 'payWay', infoDetail.shipReceiptpayFee) // 付款方式
             break
-
         }
         if (infoDetail.shipDeliveryMethod === 68) {
           this.$set(obj, 'deliveryGood', '√') // 自提（√）

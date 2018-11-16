@@ -32,19 +32,19 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize" @change="getFinanceSubjects()">
+          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目">
-          <el-select clearable v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目">
-          <el-select clearable v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -52,7 +52,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select clearable v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize">
+          <el-select clearable v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -248,6 +248,7 @@ export default {
 
     },
     getFinanceSubjects(subjectLevel, parentId) {
+      console.log(subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
 
@@ -272,11 +273,47 @@ export default {
               this.subjectFour = []
               break
           }
-          console.log('科目: ', data)
+          console.log('科目: ', subjectLevel, data)
         })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
+    },
+    selectSubject(val, type) {
+      console.log(val)
+      let obj = {}
+      switch (type) {
+        case 1:
+          obj = Object.assign({}, this.subjectOne.filter(e => {
+            return e.id === val
+          })[0])
+          this.getFinanceSubjects(2, obj.id)
+          this.formModel.subjectTwo = ''
+          this.formModel.subjectThree = ''
+          this.formModel.subjectFour = ''
+          console.log('科目一 选中的值', obj)
+          break
+        case 2:
+          obj = Object.assign({}, this.subjectTwo.filter(e => {
+            return e.id === val
+          })[0])
+          this.getFinanceSubjects(3, obj.id)
+          this.formModel.subjectThree = ''
+          this.formModel.subjectFour = ''
+          console.log('科目二 选中的值', obj)
+          break
+        case 3:
+          obj = Object.assign({}, this.subjectThree.filter(e => {
+            return e.id === val
+          })[0])
+          this.getFinanceSubjects(4, obj.id)
+          this.formModel.subjectFour = ''
+          console.log('科目三 选中的值', obj)
+          break
+        case 4:
+          break
+      }
+      obj = {}
     },
     submitForm(formName, type) {
       if (!this.formModel.certNo) {
