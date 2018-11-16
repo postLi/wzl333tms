@@ -598,6 +598,7 @@ import { getEnableLibSetting, getEnableOrderSetting, getSettingCompanyLi, getSet
 import { getSelectType } from '@/api/common'
 // 阿拉伯数字转中文大写
 import { smalltoBIG } from '@/filters/'
+import { tmsMath } from '@/utils/'
 
 export default {
   components: {},
@@ -1074,6 +1075,7 @@ export default {
         this.$set(obj, 'deliveryFee', infoDetail.deliveryFee) // 送货费
         this.$set(obj, 'productPrice', infoDetail.productPrice) // 声明价值
         this.$set(obj, 'brokerageFee', infoDetail.brokerageFee) // 回扣
+        this.$set(obj, 'brokerageFeeSign', 'R:'+infoDetail.brokerageFee) // 回扣标识
         this.$set(obj, 'agencyFund', infoDetail.agencyFund) // 代收货款
         this.$set(obj, 'commissionFee', infoDetail.commissionFee) // 代收货款手续费
         this.$set(obj, 'insuranceFee', infoDetail.insuranceFee) // 保险费
@@ -1083,7 +1085,6 @@ export default {
         this.$set(obj, 'realityhandlingFee', infoDetail.realityhandlingFee) // 实际提货费
         this.$set(obj, 'forkliftFee', infoDetail.forkliftFee) // 叉车费
         this.$set(obj, 'customsFee', infoDetail.customsFee) // 报关费
-        this.$set(obj, 'transferFee', infoDetail.shipIsTransfer) // 中转费
         this.$set(obj, 'weightFee', infoDetail.weightFee) // 重量单价
         this.$set(obj, 'volumeFee', infoDetail.volumeFee) // 体积单价
         this.$set(obj, 'amountFee', infoDetail.amountFee) // 件数单价
@@ -1103,7 +1104,16 @@ export default {
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
         ////////////////////////////////////////////////////////////
         ///特殊处理 中转费
-        
+        let totalTransferFee = 0
+        if (this.orderdata.tmsOrderTransferList && this.orderdata.tmsOrderTransferList.length > 0) {
+          this.orderdata.tmsOrderTransferList.forEach(e => {
+            totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+          })
+          
+        }
+        this.$set(obj, 'transferFee', totalTransferFee) // 中转费
+        console.log('中转费',totalTransferFee)
+
         ////////////////////////////////////////////////////////////
         ///特殊处理 打勾
         switch (infoDetail.shipPayWay) { // 付款方式

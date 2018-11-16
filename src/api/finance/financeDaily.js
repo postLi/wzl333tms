@@ -105,3 +105,11 @@ export function getOrderList(params) {
 		return res.data
 	})
 }
+/**
+ * 财务科目列表
+ */
+export function getFinanceSubjects(params) {
+	return fetch.post('/api-finance/finance/tmsfinancesubjects/v1.3/getFinanceSubjects/', params).then(res => {
+		return res.data
+	})
+}

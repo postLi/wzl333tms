@@ -32,20 +32,20 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in subjectOne" :key="item.value" :label="item.label" :value="item.value">
+          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize" @change="getFinanceSubjects()">
+            <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目">
           <el-select clearable v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in subjectTwo" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目">
           <el-select clearable v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in subjectThree" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -53,7 +53,7 @@
       <div class="income_item">
         <el-form-item label="四级科目">
           <el-select clearable v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize">
-            <el-option v-for="item in subjectFour" :key="item.value" :label="item.label" :value="item.value">
+            <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -113,7 +113,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import Upload from '@/components/Upload/singleImage2'
-import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList  } from '@/api/finance/financeDaily'
+import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 export default {
   components: {
     SelectTree,
@@ -197,6 +197,11 @@ export default {
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
         orgId: ''
+      },
+      searchQuerySub: {
+        orgId: '',
+        parentId: '',
+        subjectLevel: ''
       }
     }
   },
@@ -205,6 +210,7 @@ export default {
       this.verificationWay = []
       this.isShow = true
       this.searchQuery.orgId = this.otherinfo.orgid
+      this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
         this.formModel = Object.assign({}, this.info)
         this.loading = false
@@ -212,17 +218,18 @@ export default {
       } else {
         this.getBaseInfo()
       }
-      console.log('formModel',this.formModel)
+      this.getFinanceSubjects()
+      console.log('formModel', this.formModel)
     },
     getVeryficationList() { // 去向列表
-      getVeryficationList({orgId: this.otherinfo.orgid}).then(data => {
-        if (data) {
-          this.verificationWay = data
-        }
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+      getVeryficationList({ orgId: this.otherinfo.orgid }).then(data => {
+          if (data) {
+            this.verificationWay = data
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     getBaseInfo() {
       return postVerificationBaseInfo(this.searchQuery).then(data => {
@@ -237,6 +244,38 @@ export default {
         .catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
+        })
+
+    },
+    getFinanceSubjects(subjectLevel, parentId) {
+      this.searchQuerySub.subjectLevel = subjectLevel || ''
+      this.searchQuerySub.parentId = parentId || ''
+
+      return getFinanceSubjects(this.searchQuerySub).then(data => {
+          switch (subjectLevel) {
+            case 2:
+              this.subjectTwo = data
+              this.subjectThree = []
+              this.subjectFour = []
+              break
+            case 3:
+              this.subjectThree = data
+              this.subjectFour = []
+              break
+            case 4:
+              this.subjectFour = data
+              break
+            default:
+              this.subjectOne = data
+              this.subjectTwo = []
+              this.subjectThree = []
+              this.subjectFour = []
+              break
+          }
+          console.log('科目: ', data)
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
         })
     },
     submitForm(formName, type) {
@@ -283,7 +322,7 @@ export default {
           if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }
-          console.log('query:::',query)
+          console.log('query:::', query)
           postAddIncome(query).then(data => {
               query = {}
               this.closeMe()
