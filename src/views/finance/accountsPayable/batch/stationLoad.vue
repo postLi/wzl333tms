@@ -212,6 +212,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()

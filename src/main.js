@@ -17,6 +17,31 @@ import './mixins'
 
 import './directive'
 
+// 需要考虑按需引入，减小引入体积
+// echarts的各模块
+// https://github.com/apache/incubator-echarts/blob/master/index.js
+import echarts from 'echarts/lib/echarts'
+// 引入柱状图
+import 'echarts/lib/chart/bar'
+// 引入折线图
+import 'echarts/lib/chart/line'
+// 引入饼图
+import 'echarts/lib/chart/pie'
+// 引入提示框和标题组件
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/toolbox'
+
+// import 'echarts/lib/component/dataset'
+// import 'echarts/lib/component/graphic'
+// import 'echarts/lib/component/grid'
+// import 'echarts/lib/component/singleAxis'
+import 'echarts/lib/component/legendScroll'
+// import 'echarts/lib/component/axisPointer'
+// import 'echarts/lib/component/polar'
+
+Vue.prototype.$echarts = echarts
+
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 

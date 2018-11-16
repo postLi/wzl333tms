@@ -289,6 +289,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       // this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
@@ -296,6 +298,7 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchList()
     },
     fetchList() {
       this.$set(this.searchQuery.vo, 'sign', this.sign)

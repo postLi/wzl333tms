@@ -326,7 +326,7 @@ export default {
       loading: true,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 1000,
+        'pageSize': 100,
         'vo': {
           'pageType': 3,
           'fundsAccountStatus': '260'
@@ -522,12 +522,15 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchData()
     },
     // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
             // this.searchQuery.vo.orgid = obj.orgid
             // this.searchQuery.vo.customerMobile = obj.mobile
             // this.searchQuery.vo.customerName = obj.name
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       objectMerge2(this.searchQuery.vo, searchParam)
       this.featchAllpayment()
     },

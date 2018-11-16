@@ -428,6 +428,8 @@ export default {
       }
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllOrderRepertory()
     },
@@ -477,6 +479,7 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchAllOrderRepertory()
     },
     fetchAllOrderRepertory() {
       this.getAllOrderRepertory()

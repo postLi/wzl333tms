@@ -89,10 +89,7 @@
 </template>
 
 <script>
-// 需要考虑按需引入，减小引入体积
-// echarts的各模块
-// https://github.com/apache/incubator-echarts/blob/master/index.js
-import echarts from 'echarts'
+
 import { pickerOptions4, tmsMath, pickerOptions, parseTime } from '@/utils/index'
 import { postHomedetail, getHomeYearDetail, getConsoleData2, getConsoleChartData2 } from '@/api/index'
 import Arrow from './arrow'
@@ -533,7 +530,7 @@ export default {
     this.orgId = [this.otherinfo.orgid]
 
    //  this.searchForm = this.
-    var myChart3 = echarts.init(document.getElementById('main'))
+    var myChart3 = this.$echarts.init(document.getElementById('main'))
     window.onresize = () => {
       myChart3.resize({
         width: 'auto',
@@ -561,7 +558,7 @@ export default {
       this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
     }) */
 
-    // 为echarts对象加载数据
+    // 为this.$echarts对象加载数据
     // myChart.setOption(option)
     // myChart2.setOption(option2)
   }

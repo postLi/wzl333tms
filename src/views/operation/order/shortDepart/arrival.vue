@@ -273,6 +273,8 @@ export default {
       // if (obj.batchTypeId === 46) {
       //   obj.batchTypeId = undefined
       // }
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       // if (!this.searchQuery.vo.arriveOrgid) {
       //   this.searchQuery.vo.arriveOrgid = this.otherinfo.orgid
@@ -357,6 +359,7 @@ export default {
     handlePageChange(obj) { // 翻页
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.getAllList()
     },
     getActualTime(obj) { // 短驳到车确认
       const data = {}

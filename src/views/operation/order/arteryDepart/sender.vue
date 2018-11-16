@@ -314,7 +314,7 @@ export default {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
-
+        
         this.total = data.total
         this.loading = false
       }).catch(err => {
@@ -330,6 +330,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.pageNum = this.$options.data().searchQuery.pageNum
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
