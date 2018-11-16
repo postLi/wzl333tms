@@ -660,21 +660,6 @@ export default {
         width: '130',
         fixed: false
       }, {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      }, {
-        label: '配载重量(kg)',
-        prop: 'loadWeight',
-        width: '120',
-        fixed: false
-      }, {
-        label: '配载体积(m³)',
-        prop: 'loadVolume',
-        width: '120',
-        fixed: false
-      }, {
         label: '运单备注',
         prop: 'shipRemarks',
         width: '120',
