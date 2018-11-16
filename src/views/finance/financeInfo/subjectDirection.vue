@@ -99,8 +99,8 @@
     </div>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
                 @success="setColumn"></TableSetup>
-    <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddSub="isDoAddSub"
-                   :isDoEdit="isDoEdit" :info="selectInfo" @success="fetchData"></SubjectDialog>
+    <SubDirectDialog :popVisible.sync='showDialog' @close='closeShowDialog'
+                   :isDoEdit="isDoEdit" :info="selectInfo" @success="fetchData"></SubDirectDialog>
 
 
   </div>
@@ -110,7 +110,8 @@
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
-  import SubjectDialog from './components/subjectDialog'
+  import SubDirectDialog from './components/subDirectDialog'
+  // import SubjectDialog from './components/subjectDialog'
   import {mapGetters} from 'vuex'
   import Pager from '@/components/Pagination/index'
   import {objectMerge2} from '@/utils/index'
@@ -122,7 +123,7 @@
       Pager,
       TableSetup,
       SelectTree,
-      SubjectDialog,
+      SubDirectDialog,
     },
     computed: {
       ...mapGetters([
@@ -145,7 +146,6 @@
         loading: true,
         setupTableVisible: false,
         showDialog: false,
-        isDoAddSub: false,
         isDoEdit: false,
         selectInfo: {},
         // 选中的行
@@ -249,7 +249,6 @@
           case 'doAdd':
             this.openShowDialog()
             this.selectInfo = {}
-            this.isDoAddSub = true
             this.isDoEdit = false
             break
         }
@@ -259,7 +258,6 @@
       editClick(row) {
         this.openShowDialog()
         this.isDoEdit = true
-        this.isDoAddSub = false
         this.selectInfo = row
       },
       removeClick(row) {

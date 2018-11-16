@@ -9,8 +9,7 @@
     class="sub_dialog"
     v-loading="loading"
     :before-close="closeMe">
-    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isAddLE">
-      <div v-if="isDoAddEnd">
+    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isDoAddEnd" >
         <el-form-item label="科目代码:" class="sub_el_form_item">
           <span>{{currentForm.subjectCode}}</span>
         </el-form-item>
@@ -25,8 +24,12 @@
         <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item ">
           <el-input v-model="form.subjectName" :maxlength="15" clearable></el-input>
         </el-form-item>
-      </div>
-      <div v-if="!isDoAddEnd">
+      <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
+    </el-form>
+
+    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="doAddStair">
+
+      <div >
         <el-form-item label="科目代码" prop='newScubjectCode' label-width="98px" class="info_item">
           <el-input v-model="form.newScubjectCode" :maxlength="isFNum" class="info_input">
             <template slot="prepend" v-if="isSubjectLevel > 1">{{currentForm.subjectCode}}</template>
@@ -50,18 +53,18 @@
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
     </el-form>
 
-    <el-form size="mini" ref="ruleForm" :model="form" class="direct"
-             label-width="80px" v-else-if="isDirect" width="100%" >
-      <el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">
-        <el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"
-                  :maxlength="35"></el-input>
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input type="textarea" v-model="form.remark" placeholder="最多输入50个字符。" :maxlength='50'></el-input>
-      </el-form-item>
-    </el-form>
+    <!--<el-form size="mini" ref="ruleForm" :model="form" class="direct"-->
+             <!--label-width="80px" v-if="false" width="100%">-->
+      <!--<el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">-->
+        <!--<el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"-->
+                  <!--:maxlength="35"></el-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="备注">-->
+        <!--<el-input type="textarea" v-model="form.remark" placeholder="最多输入50个字符。" :maxlength='50'></el-input>-->
+      <!--</el-form-item>-->
+    <!--</el-form>-->
 
-    <el-form size="mini" ref="ruleForm" :model="form" class="sub_close" :rules="rules" v-else>
+    <el-form size="mini" ref="ruleForm" :model="form" class="sub_close" :rules="rules" v-if="isSubClose">
       <el-form-item label="核销科目">
         <el-input v-model="form.subjectsFeeType" disabled></el-input>
       </el-form-item>
@@ -199,10 +202,16 @@
         },
         immediate: true
       },
-      isDoAddEnd(n) {
-        if (n) {
+      // isDoAddEnd(n) {
+      //   if (n) {
+      //     this.comWatch(this.info)
+      //   }
+      // },
+      isDoAddEnd: {
+        handler(n, o) {
           this.comWatch(this.info)
-        }
+        },
+        immediate: true
       },
       // doAddStair(n,o) {
       //   if (n) {
@@ -277,7 +286,6 @@
           if (this.isSubjectLevel === 1) {
             if (/[0-9]{4}/.test(value)) {
               callback()
-              console.log(value)
             } else {
               callback(new Error('只能4位数字'))
             }
@@ -308,7 +316,7 @@
         isFNum: 4,
         checkShowMessage: false,
         isSubject: true,
-        loading: true,
+        loading: false,
         isTitle: '增加一级',
         isSubjectLevel: '',
         currentForm: {
@@ -379,7 +387,9 @@
 
       comWatch(item) {
 
-
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.isAddLE = false
         this.isDirect = false
 
@@ -403,30 +413,22 @@
           }
           // console.log(item, 'item');
         }
-        else if (this.isDoAddSub) {
-          this.isTitle = '新增'
-          this.isDirect = true
-          // console.log(item.length,'新增11111111111')
-          // this.checkShowMessage = true
-          // this.reset()
-        }
         else if (this.isDoEdit) {
           this.isTitle = '修改'
           this.isDirect = true
           this.form.verificationWay = item.verificationWay
           this.form.remark = item.remark
-          console.log(item, '修改');
+          // console.log(item, '修改');
         }
         else if (this.isSubClose) {
           this.isTitle = '修改'
           this.getoptio1(item.id)
+        } else if (this.isDoAddSub) {
+          this.isTitle = '新增'
+          this.isDirect = true
         }
 
-        // if (this.$refs['ruleForm']) {
-        //   this.$refs['ruleForm'].resetFields()
-        // } else {
-        //   this.checkShowMessage = false
-        // }
+
       },
       getoptio1(id) {
         getFinSubCloseInfo(id).then(res => {
@@ -482,6 +484,8 @@
       changeSelctListThree(item) {
         getSelectList(item, 3).then(res => {
           if (res === '数据库无对应记录' || '') {
+            this.form.threeId = ''
+            this.form.threeName = ''
             this.closeOptions.threeOptions = ''
             return false
           } else {
@@ -503,6 +507,8 @@
       changeSelctListFour(item) {
         getSelectList(item, 4).then(res => {
           if (res === '数据库无对应记录' || '') {
+            this.form.fourId = ''
+            this.form.fourName = ''
             this.closeOptions.forthOptions = ''
             return false
           } else {
@@ -539,10 +545,10 @@
               this.delectFn(data)
               delete data.verificationWay
               delete data.remark
-              // data.subjectCode = this.form.newScubjectCode
-              if (this.isSubjectLevel > 1) {
+              if (this.isSubjectLevel = 1) {
                 data.subjectCode = this.currentForm.subjectCode + this.form.newScubjectCode
                 delete data.newScubjectCode
+
               }
               promiseObj = postAddLevel(this.info.id, data)
             }
@@ -603,6 +609,7 @@
       },
       reset() {
         this.$refs['ruleForm'].resetFields()
+        // this.form = {}
       },
       closeMe(done) {
         if (this.isDoEdit) {

@@ -27,8 +27,9 @@
         <div class="scope-node" :class="(iconShow(index,scope.row) ? 'lrl-space-' + scope.row._level : '') + (!scope.row._expanded ? ' hide-space' : '')">
           <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
-          <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-          <i v-else class="el-icon-minus min-scope"></i>
+          <i v-if="!scope.row._expanded" class="el-icon-circle-plus-outline
+" style="font-size: 25px;vertical-align: middle"></i>
+          <i v-else class="el-icon-remove-outline min-scope" style="font-size: 25px;vertical-align: middle"></i>
         </span>
           <span style="margin-left: 15px">{{scope.row[column.value]}}</span>
         </div>
@@ -119,7 +120,7 @@
       }
     },
     mounted() {
-
+     
     },
     computed: {
       // 格式化数据源
@@ -220,30 +221,30 @@
   }
   .lrl-kemu-table{
     .cell{
-      /*overflow: visible;*/
-      /*line-height: 32px;*/
-      /*padding: 0;*/
+      overflow: visible;
+      line-height: 32px;
+      padding: 0;
     }
     td,th {
       /*line-height: 26px;*/
       padding: 0;
     }
     .ms-tree-space:nth-child(1):after{
-      /*display: none;*/
+      display: none;
     }
     .lrl-space-1{
       .ms-tree-space:nth-child(1):after{
-        /*top: 8px;*/
+        top: 21px;
       }
     }
     .lrl-space-2{
       .ms-tree-space:nth-child(2):after{
-        /*top: 8px;*/
+        top: 21px;
       }
     }
     .lrl-space-3{
       .ms-tree-space:nth-child(3):after{
-        /*top: 8px;*/
+        top: 21px;
       }
     }
 
@@ -266,14 +267,14 @@
       content: ""
     }
     &::after{
-      /*position: absolute;
+      position: absolute;
       content: " ";
       top: -9px;
-      left: 11px;
+      left: 16px;
       width: 0;
-      border-left: 1px solid #2196F3;
+      border-left: 1px dotted #2196F3;
       background: #000;
-      height: 34px;*/
+      height: 34px;
     }
   }
   .hide-space{

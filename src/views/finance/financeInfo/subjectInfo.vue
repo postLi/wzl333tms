@@ -32,7 +32,7 @@
                    v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">新增一级
         </el-button>
         <el-button :size="btnsize" icon="el-icon-tickets" @click="doAction('doDefaultTem')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn">获取默认模板
+                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">获取默认模板
         </el-button>
 
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">-->
@@ -49,7 +49,7 @@
       <!--</div>-->
       <!--</div>-->
     </div>
-    <SubjectDialog :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
+    <SubjectDialog v-if="showDialog" :isShow.sync='showDialog' @close='closeShowDialog' :isDoAddEnd="isDoAddEnd"
                    :doAddStair="doAddStair" :info="selectInfo" @success="fetchData"></SubjectDialog>
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData"
                   :info="'subinfo'" :isSubjectInfo='isSubjectInfo'></ImportDialog>

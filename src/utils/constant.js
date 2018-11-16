@@ -12,7 +12,7 @@ export const CARRIER_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/t
 export const CUSTOMER_RECEIVER_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E6%94%B6%E8%B4%A7%E4%BA%BA%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
 // 5、车辆导入模板.xlsx
 export const TRUCK_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E8%BD%A6%E8%BE%86%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
-export const SUBINFO_EXCEL = 'http://aflc.oss-cn-shenzhen.aliyuncs.com//tms/财务标准科目.xlsx'
+export const SUBINFO_EXCEL = 'http://aflc.oss-cn-shenzhen.aliyuncs.com//tms/uploadfile/财务标准科目.xlsx'
 
 // 运单状态 shipStatus
 export const SHIPSTATUS = {
