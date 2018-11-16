@@ -1082,6 +1082,7 @@ export default {
         this.$set(obj, 'handlingFee', infoDetail.handlingFee) // 装卸费
         this.$set(obj, 'packageFee', infoDetail.packageFee) // 包装费
         this.$set(obj, 'pickupFee', infoDetail.pickupFee) // 提货费
+        this.$set(obj, 'upStairsFee', infoDetail.goupstairsFee) // 上楼费
         this.$set(obj, 'realityhandlingFee', infoDetail.realityhandlingFee) // 实际提货费
         this.$set(obj, 'forkliftFee', infoDetail.forkliftFee) // 叉车费
         this.$set(obj, 'customsFee', infoDetail.customsFee) // 报关费
