@@ -327,6 +327,7 @@ export default {
             return a.titleOrder > b.titleOrder ? 1 : -1
           })
           data.forEach(el => {
+            el.label = el.label || el.lable
             const _el = Object.assign({}, el)
             for (let i = 0; i < len; i++) {
               if (this.columns[i].prop === el.prop) {
