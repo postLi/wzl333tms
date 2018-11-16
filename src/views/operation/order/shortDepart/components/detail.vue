@@ -226,129 +226,129 @@ export default {
         //   fixed: false,
         //   hide: true
         // },
-        {
-          label: '实到件数',
-          prop: 'actualAmount',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
-          }
-        },
-        {
-          label: '实到重量(kg)',
-          prop: 'actualWeight',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
-          }
-        },
-        {
-          label: '实到体积(m³)',
-          prop: 'actualVolume',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
-          }
-        },
-        {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单重量(kg)',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单体积(m³)',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '出发城市',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达城市',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '200',
-          fixed: false
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
         }
+      },
+      {
+        label: '实到重量(kg)',
+        prop: 'actualWeight',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
+        }
+      },
+      {
+        label: '实到体积(m³)',
+        prop: 'actualVolume',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
+        }
+      },
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单重量(kg)',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单体积(m³)',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '出发城市',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达城市',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '200',
+        fixed: false
+      }
       ],
       tableColumnDeiver: []
     }
@@ -571,15 +571,15 @@ export default {
           this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         }
         postAddRepertory(50, this.newData).then(data => {
-            if (data.status === 200) {
-              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
-              this.$message({ type: 'success', message: '短驳入库操作成功' })
-              this.message = true
-            } else {
-              this.message = false
-            }
-            this.$emit('isSuccess', this.message)
-          })
+          if (data.status === 200) {
+            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
+            this.$message({ type: 'success', message: '短驳入库操作成功' })
+            this.message = true
+          } else {
+            this.message = false
+          }
+          this.$emit('isSuccess', this.message)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -591,11 +591,11 @@ export default {
       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-          if (data) {
-            this.detailList = data.data
-            this.setData()
-            this.toggleAllRows()
-            this.$nextTick(() => {
+        if (data) {
+          this.detailList = data.data
+          this.setData()
+          this.toggleAllRows()
+          this.$nextTick(() => {
               console.log('isNeedArrival', this.isNeedArrival)
               this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
@@ -608,9 +608,9 @@ export default {
                 }
               })
             })
-            this.detailTableLoading = false
-          }
-        })
+          this.detailTableLoading = false
+        }
+      })
         .catch(error => {
           this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)
