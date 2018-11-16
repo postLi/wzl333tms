@@ -120,7 +120,7 @@
       }
     },
     mounted() {
-     
+
     },
     computed: {
       // 格式化数据源
@@ -193,11 +193,12 @@
       getSelection(selection) {
         this.selected = selection
         this.$emit('change', this.selected)
-        // console.log(selection,'selection')
+        console.log(selection,'selection')
       },
       clickDetails(row) {
         this.$refs.multipleTable.toggleRowSelection(row)
       }
+      
     }
   }
 </script>
