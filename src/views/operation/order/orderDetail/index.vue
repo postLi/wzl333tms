@@ -64,26 +64,22 @@ export default {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
         if (!this.orderid) {
-          console.log('1111111111111')
           this.init()
         }
       }
     },
     orderid(newVal) {
       if (newVal) {
-        console.log('222222222222')
         this.init()
       }
     }
   },
   activated() {
-    console.log('3333333333333')
     if (!this.isInit) {
       this.init()
     }
   },
   mounted() {
-    console.log('4444444444')
     // if (this.ispop) {
     // this.init()
     // }
