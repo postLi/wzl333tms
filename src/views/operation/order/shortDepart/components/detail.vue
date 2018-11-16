@@ -596,8 +596,8 @@ export default {
           this.setData()
           this.toggleAllRows()
           this.$nextTick(() => {
-              console.log('isNeedArrival', this.isNeedArrival)
-              this.detailList.forEach(e => {
+            console.log('isNeedArrival', this.isNeedArrival)
+            this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
                   if (e.warehouStatus === 0) { // 部分入库
                     e.actualAmount = e.loadAmount
@@ -607,7 +607,7 @@ export default {
                 } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
                 }
               })
-            })
+          })
           this.detailTableLoading = false
         }
       })
