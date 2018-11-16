@@ -25,6 +25,7 @@
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
+          <colgroup width="120px"></colgroup>
           <colgroup width="98px"></colgroup>
         </table>
         <table ref="footTotalFee" class="footTotalFee">
@@ -40,6 +41,7 @@
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
+          <colgroup width="100px"></colgroup>
           <colgroup width="98px"></colgroup>
         </table>
       </div>
@@ -140,6 +142,11 @@ export default {
           textAlign: 'right'
         },
         {
+          label: '代收货款(元)',
+          prop: 'agencyFund',
+          textAlign: 'right'
+        },
+        {
           label: '实收金额(元)',
           prop: 'amountCollected',
           textAlign: 'right'
@@ -152,6 +159,7 @@ export default {
         'shipMonthpayFee',
         'totalFee',
         'brokerageFee',
+        'agencyFund',
         'amountCollected'
       ],
       countColVal: [] // 存储底部合计值
@@ -389,7 +397,7 @@ export default {
   /*设置边框的*/
   #report_turnoverDaily_table {
       width: 100%;
-      min-width: 1200px;
+      min-width: 1300px;
 
       tbody tr {
         background-color: #FFF;
@@ -454,7 +462,7 @@ export default {
 .footTotalFee {
   width: 100%;
   position: absolute;
-  min-width: 1200px;
+  min-width: 1300px;
   bottom: 0px;
   left: 0;
   z-index: 2;
