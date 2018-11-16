@@ -572,6 +572,12 @@ export default {
     handleSwitch(obj) {},
     callback() {
       const data = Object.assign([], this.showColumnData)
+      // 修正下数据
+      data.forEach(el => {
+        if (!el.label && el.lable) {
+          el.label = el.lable
+        }
+      })
       // console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
       this.$emit('success', data)
       this.listKey = Math.random()
