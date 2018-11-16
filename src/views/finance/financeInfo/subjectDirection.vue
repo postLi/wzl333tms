@@ -3,15 +3,15 @@
     <!--<SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>-->
     <div class="tab_info">
       <div class="btns_box">
-        <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchForm"
-                 class=" clearfix" style="float: left">
+        <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchForm"-->
+                 <!--class=" clearfix" style="float: left">-->
           <!--<div class="">-->
           <!--<el-form-item label="网点">-->
           <!--<SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" clearible @change="changeOrderId"/>-->
           <!--</el-form-item>-->
 
           <!--</div>-->
-        </el-form>
+        <!--</el-form>-->
         <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')"
                    plain
                    v-has:PICK_FINASH>上一步
@@ -129,15 +129,13 @@
         'otherinfo'
       ]),
       orgid() {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+        // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
       }
     },
 
     data() {
       return {
-        searchForm: {
-          orgid: '',
-        },
+
         mykey: '',
         btnsize: 'mini',
         usersArr: [],
@@ -156,7 +154,7 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'orgId': 1,
+            'companyId': '',
           }
         },
         tableColumn: [{
@@ -187,7 +185,7 @@
       }
     },
     mounted() {
-      this.searchQuery.vo.orgId = this.otherinfo.orgid
+      this.searchQuery.vo.companyId = this.otherinfo.companyId
       // this.usersArr = this.tableColumn
       this.fetchData()
     },
@@ -231,13 +229,6 @@
           case 'doLast':
             this.$router.push({
               path: '/finance/financeInfo/subjectClose',
-              // query: {
-              //   tab: '网点对账-对账明细',
-              //   arriveOrgid: row.arriveOrgid,
-              //   orgid: row.orgid,
-              //   orgName: row.arriveOrgName
-              //   // id: row.carrierId
-              // }
             })
             break
           case 'export':
@@ -247,12 +238,6 @@
               name: '提货'
             })
             this.$refs.multipleTable.clearSelection()
-            // if (this.selected.length === 0) {
-            //   SaveAsFile(this.usersArr, this.tableColumn)
-            // } else {
-            //   // 筛选选中的项
-            //   SaveAsFile(this.selected, this.tableColumn)
-            // }
             break
           case 'print':
             PrintInFullPage({
@@ -263,9 +248,9 @@
           // 新增
           case 'doAdd':
             this.openShowDialog()
+            this.selectInfo = {}
             this.isDoAddSub = true
             this.isDoEdit = false
-            this.selectInfo = {}
             break
         }
         // 清除选中状态，避免影响下个操作
@@ -309,6 +294,7 @@
       },
       closeShowDialog() {
         this.showDialog = false
+        this.selectInfo = {}
       },
       openShowDialog() {
         this.showDialog = true

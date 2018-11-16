@@ -1,10 +1,14 @@
 <template>
   <el-dialog
     :title="isTitle"
-    :visible.sync="isShow"
+    :visible.sync="isVisibleShow"
     width="30%"
     center
-    @click="closeMe" :close-on-click-modal="false" :before-close="closeMe" class="sub_dialog" v-loading="loading">
+    @click="closeMe"
+    :close-on-click-modal="false"
+    class="sub_dialog"
+    v-loading="loading"
+    :before-close="closeMe">
     <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isAddLE">
       <div v-if="isDoAddEnd">
         <el-form-item label="科目代码:" class="sub_el_form_item">
@@ -46,9 +50,9 @@
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
     </el-form>
 
-    <el-form size="mini" ref="ruleForm" :model="form" class="direct" :rules="rules"
-             label-width="80px" v-else-if="isDirect" width="100%" :show-message="checkShowMessage">
-      <el-form-item label="核销方向" prop="verificationWay">
+    <el-form size="mini" ref="ruleForm" :model="form" class="direct"
+             label-width="80px" v-else-if="isDirect" width="100%" >
+      <el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">
         <el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"
                   :maxlength="35"></el-input>
       </el-form-item>
@@ -141,6 +145,13 @@
       ...mapGetters([
         'otherinfo'
       ]),
+      isVisibleShow: {
+        get() {
+          return this.isShow
+        },
+        set() {
+        }
+      }
     },
     props: {
       isShow: {
@@ -179,6 +190,9 @@
       },
     },
     watch: {
+      // isShow(n) {
+      //
+      // },
       info: {
         handler() {
           this.comWatch(this.info)
@@ -225,16 +239,34 @@
         immediate: true
       },
       isDoAddSub: {
-        handler() {
+
+        handler(n) {
+          // if (n === true) {
+          //   // this.form.remark = ''
+          //   // this.form.verificationWay = ''
+          //   this.form = {}
+          //   console.log(n)
+          //   console.log(this.form, 'frommmm')
+          // }
+          // else {
+          //   this.form.remark = ''
+          //   this.form.verificationWay = ''
+          //   console.log(n, 'orllllll')
+          //   console.log(this.form, 'frommmm11111111')
+          //   // this.form.remark === ''
+          //   // this.form.verificationWay === ''
+          // }
+
           //   this.comWatch()
         },
-        immediate: true
+        immediate: true,
+        deep: true
       },
       isDoEdit: {
-        // handler() {
-        //   // this.comWatch()
-        // },
-        // immediate: true
+        handler() {
+          // this.comWatch(this.info)
+        },
+        immediate: true
       },
     },
     data() {
@@ -263,7 +295,6 @@
           callback(new Error('只能输入数字'))
         }
       }
-      
       const validateSubName = (rule, value, callback) => {
         if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
           // if (REGEX.CHINESE_AND_ENGLISH.test(value)) {
@@ -372,32 +403,30 @@
           }
           // console.log(item, 'item');
         }
-        else if (this.isDoExport) {
-          this.isTitle = '导入模板'
-        }
-
         else if (this.isDoAddSub) {
           this.isTitle = '新增'
           this.isDirect = true
-          this.checkShowMessage = true
-          this.reset()
+          // console.log(item.length,'新增11111111111')
+          // this.checkShowMessage = true
+          // this.reset()
         }
         else if (this.isDoEdit) {
           this.isTitle = '修改'
           this.isDirect = true
           this.form.verificationWay = item.verificationWay
           this.form.remark = item.remark
+          console.log(item, '修改');
         }
         else if (this.isSubClose) {
           this.isTitle = '修改'
           this.getoptio1(item.id)
         }
 
-        if (this.$refs['ruleForm']) {
-          this.$refs['ruleForm'].resetFields()
-        } else {
-          this.checkShowMessage = false
-        }
+        // if (this.$refs['ruleForm']) {
+        //   this.$refs['ruleForm'].resetFields()
+        // } else {
+        //   this.checkShowMessage = false
+        // }
       },
       getoptio1(id) {
         getFinSubCloseInfo(id).then(res => {
@@ -503,7 +532,8 @@
               delete data.subjectCode
               delete data.subjectName
               delete data.subjectType
-              this.checkShowMessage = true
+              delete data.newScubjectCode
+              // this.checkShowMessage = true
               promiseObj = postAddFinFicationl(data)
             } else if (this.doAddStair) {
               this.delectFn(data)
@@ -521,6 +551,7 @@
               delete data.subjectCode
               delete data.subjectName
               delete data.subjectType
+              delete data.newScubjectCode
 
               promiseObj = putExtFinFicationl(this.info.id, data)
             } else if (this.isSubClose) {
@@ -546,7 +577,7 @@
               this.$emit('success')
               this.$message.success('保存成功')
               this.closeMe()
-              this.reset()
+              // this.reset()
               this.loading = false
             }).catch(err => {
               this.loading = false
@@ -557,28 +588,6 @@
           }
         })
 
-      },
-      // resetForm(formName) {
-      //   this.$refs[formName].resetFields()
-      // },
-      reset() {
-        this.form = {
-          verificationWay: '',//核销方向
-          remark: '',//核销方向
-          subjectsFeeType: '',   //  核销科目
-          oneId: '',
-          twoId: '',
-          threeId: '',
-          fourId: '',
-          oneName: '',
-          twoName: '',
-          threeName: '',
-          fourName: '',//  核销科目
-          subjectCode: '',//  自定义
-          subjectName: '',
-          subjectType: '',
-          newScubjectCode: '',
-        }
       },
       delectFn(data) {
 
@@ -592,17 +601,16 @@
         delete data.threeId
         delete data.fourId
       },
+      reset() {
+        this.$refs['ruleForm'].resetFields()
+      },
       closeMe(done) {
-        if (this.isSubClose) {
-          // this.reset()
+        if (this.isDoEdit) {
+          this.form = {}
         }
-        if (this.doAddStair) {
-          this.reset()
-          this.checkShowMessage = false
-        }
-        //
-        // this.resetForm('ruleForm')
+        this.reset()
         this.$emit('update:isShow', false)
+        this.$emit('close')
         if (typeof done === 'function') {
           done()
         }

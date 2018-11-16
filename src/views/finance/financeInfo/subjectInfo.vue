@@ -160,6 +160,7 @@
         this.searchQuery.vo.companyId = item
         this.fetchData()
       },
+      //
       message(row) {
         this.$message.info(row.event)
       },
@@ -302,6 +303,8 @@
 
       closeShowDialog() {
         this.showDialog = false
+        // this.isDoAddEnd = false
+        this.selectInfo = {}
       },
       openShowDialog() {
         this.showDialog = true
