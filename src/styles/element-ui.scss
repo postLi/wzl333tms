@@ -170,6 +170,32 @@ $bodercolor: #d0d7e5;
   border-radius: 0;
   height: 28px;
   line-height: 28px;
+
+  &:hover{
+    border-color: #c0c4cc;
+  }
+  
+  &:focus{
+    border-color: #409EFF;
+    outline: 0;
+  }
+  
+}
+.is-error{
+  .nativeinput{
+    border-color: #f56c6c;
+  }
+}
+.el-form-item--mini{
+  .nativeinput{
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+  }
+}
+.el-input-group .nativeinput{
+  border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 .nativeinput-border{
   border-radius: 4px;

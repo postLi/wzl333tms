@@ -32,6 +32,14 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/toolbox'
 
+// import 'echarts/lib/component/dataset'
+// import 'echarts/lib/component/graphic'
+// import 'echarts/lib/component/grid'
+// import 'echarts/lib/component/singleAxis'
+import 'echarts/lib/component/legendScroll'
+// import 'echarts/lib/component/axisPointer'
+// import 'echarts/lib/component/polar'
+
 Vue.prototype.$echarts = echarts
 
 // Vue.use(ElementUI, { locale })

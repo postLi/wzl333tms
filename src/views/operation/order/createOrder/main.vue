@@ -1351,7 +1351,7 @@ export default {
       }
       // 只有在库中且没有结算状态的才能修改创建时间
       // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
-      if (this.canChangeOrderDate && this.output.ismodify) {
+      if (this.canChangeOrderDate && this.output.ismodify && !this.output.isbatch) {
         if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
 
         } else {
