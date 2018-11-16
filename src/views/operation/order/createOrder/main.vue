@@ -2930,7 +2930,11 @@ export default {
         this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
         this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
          for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
-          obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
+          if (item === 'cargoName' || item === 'cargoPack') {
+            obj[item] = this.form.cargoList[0][item]
+          }else {
+            obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
+          }
         }
         console.log('货品信息及其费用项',this.form.cargoList[0])
         this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
