@@ -434,7 +434,9 @@
         <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
+      <TableSetup  :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_ARTER" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </div>
+    
   </pop-right>
 </template>
 <script>
@@ -496,7 +498,7 @@ export default {
       btnsize: 'mini',
       usersArr: [],
       selected: [],
-      //加载状态
+      // 加载状态
       loading: true,
       setupTableVisible: false,
       AddCustomerVisible: false,
@@ -526,16 +528,16 @@ export default {
         //   userName //配载人员
       },
       sendTypeId: {
-        typeId: 54, //等于54为干线到车确认
+        typeId: 54 // 等于54为干线到车确认
       },
       sendModel: {
-        "tmsOrderLoad": {
-          "id": ""
+        'tmsOrderLoad': {
+          'id': ''
         },
         tmsOrderLoadFee: {
-          "id": "",
-          "arriveHandlingFee": "",
-          "arriveOtherFee": ""
+          'id': '',
+          'arriveHandlingFee': '',
+          'arriveOtherFee': ''
         },
         tmsOrderLoadDetailsList: [
           // {
@@ -547,10 +549,10 @@ export default {
         ]
       },
       searchQuery: {
-        "currentPage": 1,
-        "pageSize": 100,
-        "vo": {
-          "loadId": 1
+        'currentPage': 1,
+        'pageSize': 100,
+        'vo': {
+          'loadId': 1
         }
       },
       tableColumn: [{
@@ -582,7 +584,7 @@ export default {
         width: '100',
         fixed: false
       },
-       {
+      {
         label: '操作费(元)',
         prop: 'handlingFee',
         width: '100',
@@ -695,7 +697,7 @@ export default {
   computed: {
     ...mapGetters([
       'otherinfo'
-    ]),
+    ])
   },
   props: {
     popVisible: {
@@ -733,7 +735,6 @@ export default {
         this.fetchGetLookContract()
         this.getBatchNo = this.info.batchNo
       }
-
     },
     isModify(newVal) {},
     popVisible(newVal, oldVal) {
@@ -744,7 +745,7 @@ export default {
       if (newVal) {
         this.formModelTrack = this.$options.data().formModelTrack
       }
-    },
+    }
   },
   mounted() {
     this.propsId = this.info.id ? this.info.id : ''
@@ -754,19 +755,17 @@ export default {
       this.fetchSelectLoadMainInfoList()
       this.fetchGetLookContract()
     }
-
   },
   methods: {
     fetchGetLookContract() {
       this.loading = true
-      let loadId = this.propsId
+      const loadId = this.propsId
       return getLookContract(loadId).then(data => {
         this.sendContract = data.data
         this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
       })
-
     },
     handleClick(tab, event) {
       this.isFootFirst = false
@@ -799,8 +798,6 @@ export default {
             this.editFn = false
             this.loading = false
           })
-
-
         } else {
           return false
         }
@@ -812,27 +809,25 @@ export default {
     },
     fetchSelectLoadMainInfoList() {
       this.loading = true
-      let selectMainId = this.propsId
+      const selectMainId = this.propsId
       this.searchQuery.vo.loadId = selectMainId
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.formModel = data.list[0]
         this.sendContract.loadId = this.formModel.loadId
         this.loading = false
       })
-
     },
     fetchAllCustomer() {
       this.loading = true
-      let _id = this.propsId
+      const _id = this.propsId
       return getSelectLoadList(_id).then(data => {
         this.usersArr = data
         this.loading = false
         this.toggleAllRows()
       })
-
     },
     getDetail() {
-      let id = this.propsId
+      const id = this.propsId
       return getLoadDetail(id).then(data => {
         this.trackDetail = Object.assign([], data)
       })
@@ -862,7 +857,7 @@ export default {
     reset() {},
     closeMe(done) {
       this.reset()
-      this.$emit('update:popVisible', false);
+      this.$emit('update:popVisible', false)
       if (typeof done === 'function') {
         done()
       }
@@ -923,7 +918,6 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
-
       switch (type) {
         // 导出数据table_import
         // 导出
@@ -964,28 +958,27 @@ export default {
     },
     // 取消高亮样式
     offThisActive(e) {
-      let p = closest(e.target, ".el-step")
+      const p = closest(e.target, '.el-step')
       if (p) {
-        p.classList.remove("trackactive")
+        p.classList.remove('trackactive')
       }
     },
     // 设置高亮样式
     setThisActive(e) {
-      let p = closest(e.target, ".el-step")
+      const p = closest(e.target, '.el-step')
       if (p) {
-        p.classList.add("trackactive")
+        p.classList.add('trackactive')
       }
     },
     print() { // 打印合同
       let str = '?'
       this.formModel.checkBillName = this.sendContract.contractName
-      for (let item in this.formModel) {
+      for (const item in this.formModel) {
         str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
-
       }
 
       // JSON.stringify(this.formModel)
-      let path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
+      const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
 
       PrintContract(encodeURI(path))
       // console.log(path);
@@ -993,7 +986,7 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
-    },
+    }
   }
   // }
 }
