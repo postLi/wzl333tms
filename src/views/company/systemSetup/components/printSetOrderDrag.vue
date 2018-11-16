@@ -376,9 +376,20 @@ export default {
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       if (!row.isshow) {
-        const item = Object.assign({}, row)
+        console.log('row::::', row)
+        let item = this.orgLabelList.filter(e => {
+          if (e.filedValue === row.filedValue) {
+            e.leftx = event.offsetX
+            e.topy = event.offsetY
+            e.isshow = true
+            return true
+          }
+        })[0]
+
+        // const item = Object.assign({}, row)
         item.isshow = true
         row.isshow = true
+        
         this.labelListView.push(item)
       } else {
         this.$notify.info({
@@ -460,12 +471,13 @@ export default {
       this.isMove = true
       this.labelListView.forEach(e => {
         if (e.filedValue === strName) {
+          console.log(e.leftx, e.topy, '12312312312312312')
           e.leftx += event.pageX - e.x
           e.topy += event.pageY - e.y
         }
       })
       // 判断是否出纸张边界  如果是 则取消显示
-      console.log(row.leftx, row.width)
+      console.log(row.leftx, row.width, row.leftx, row.topy)
       if (Math.round(row.leftx * this.prxvalue) + row.width < 0 || Math.round(row.topy * this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
         this.dragCursor = 'not-allowed'
         this.deleteItemByIndex(row, index)
