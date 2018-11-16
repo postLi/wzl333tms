@@ -275,7 +275,16 @@ export default {
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       if (!row.isshow) {
-        let item = Object.assign({}, row)
+        console.log('row::::', row)
+        let item = this.orgLabelList.filter(e => {
+          if (e.filedValue === row.filedValue) {
+            e.leftx = event.offsetX
+            e.topy = event.offsetY
+            e.isshow = true
+            return true
+          }
+        })[0]
+        // let item = Object.assign({}, row)
         item.isshow = true
         row.isshow = true
         this.labelListView.push(item)
