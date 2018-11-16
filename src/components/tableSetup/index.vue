@@ -95,7 +95,7 @@
                   <el-checkbox :label="column">
                     {{column.label}}
                   </el-checkbox>
-                  <el-switch v-model="column.fixed" :active-text="column.fixed?'固定':'活动'" @change="handleSwitch(column)"></el-switch>
+                  <el-switch :value="column.fixed" :active-text="column.fixed?'固定':'活动'" @change="handleSwitch(column, index)"></el-switch>
                 </div>
               </transition-group>
             </draggable>
@@ -322,10 +322,12 @@ export default {
           // 1.先取服务器数据
           const copy = []
           const len = this.columns.length
+
           // 格式化数据
           data.sort(function(a, b) {
             return a.titleOrder > b.titleOrder ? 1 : -1
           })
+
           data.forEach(el => {
             el.label = el.label || el.lable
             const _el = Object.assign({}, el)
@@ -349,6 +351,10 @@ export default {
             if (find.length === 0) {
               copy.push(el)
             }
+          })
+
+          copy.sort(function(a, b) {
+            return a.fixed ? -1 : 0
           })
           this.convertData(copy)
         } else {
@@ -570,7 +576,46 @@ export default {
     handleChange(value, direction, movedKeys) {
       this.rightList = Object.assign([], value)
     },
-    handleSwitch(obj) {},
+    handleSwitch(obj, index) {
+      console.log('handleSwitch', obj)
+      let find = 0
+      let unfind = false
+        // 找到最后一个fixed位置
+      this.showColumnData.forEach((el, inx) => {
+        if (el.fixed && !unfind) {
+          find = inx
+        } else {
+          unfind = true
+        }
+      })
+
+      if (obj.fixed) {
+        this.showColumnData.splice(index, 1)
+        this.showColumnData.splice(find, 0, obj)
+        obj.fixed = false
+      } else {
+        // obj.fixed = !obj.fixed
+
+        console.log('find:', find, index)
+        this.showColumnData.splice(find + 1, 0, obj)
+        this.showColumnData.splice(index + 1, 1)
+        obj.fixed = true
+      }
+
+      // this.showColumnData.sort(function(a, b) {
+      //   return a.fixed ? -1 : 0
+      // })
+
+      /* let fixNum = 0
+      this.showColumnData.forEach(e => {
+        if (e.fixed) {
+          console.log('sdfsdf', fixNum)
+          fixNum++
+        }
+      })
+      console.log('fixNum', fixNum)
+      this.showColumnData[index].titleOrder = fixNum + 1 */
+    },
     callback() {
       const data = Object.assign([], this.showColumnData)
       // 修正下数据

@@ -385,14 +385,19 @@
 
  // 格式化数据
  function formatTableData(obj) {
+  /*  obj.columns.sort((a, b) => {
+     return a.fixed ? -1 : 0
+   }) */
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
-         if (column.label === '序号') {
-           el['index'] = k + 1
+         el['index'] = k + 1
+         el['id'] = k + 1
+         /* if (column.label === '序号') {
+
          } else {
-           el['id'] = k + 1
-         }
+
+         } */
        }
        if (typeof el[column.prop] === 'undefined') {
          el[column.prop] = ''
