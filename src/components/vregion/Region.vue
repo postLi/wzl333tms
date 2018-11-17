@@ -28,7 +28,7 @@
         <div class="caller-container" @click.stop.prevent="showDropdown(true)" v-if="ui" ref="caller">
             <slot></slot>
         </div>
-        <v-dropdown v-if="ui" ref="dropdown">
+        <v-dropdown @hidedropdown="hidedropdown" v-if="ui" ref="dropdown">
             <div class="rg-header">
                 <h3>
                     <span v-show="!itemProvince&&!itemCity&&!itemArea&&!itemTown">行政区划选择器</span>
@@ -273,6 +273,10 @@ export default {
         }
       },
       methods: {
+        hidedropdown(val) {
+          this.showDropdown(false)
+          this.$emit('hidedropdown', val)
+        },
         changeCity() {
                 // 如果允许显示区，且没有获取到城市列表，则显示?
           if (this.area || (!this.haveCity && this.province)) {

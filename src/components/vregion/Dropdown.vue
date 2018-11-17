@@ -6,61 +6,60 @@
 
 <script>
     export default {
-        name: "v-dropdown",
-        props:{
-            position: {
-                type: String,
-                default: 'left'
+      name: 'v-dropdown',
+      props: {
+        position: {
+          type: String,
+          default: 'left'
+        }
+      },
+      data() {
+        return {
+          show: false,
+          styleSheet: {
+            top: '',
+            left: ''
+          }
+        }
+      },
+      watch: {
+      },
+      methods: {
+        visible(state, caller) {
+          if (typeof (state) === 'boolean') {
+            this.show = state
+            const that = this
+            this.$nextTick(() => {
+              if (that.show) that.adjust(caller)
+            })
+          }
+        },
+        adjust(caller) {
+          let pos = caller.getBoundingClientRect(), gap = 5, t = 0, l = 0
+          const menuPos = this.$el.getBoundingClientRect()
+          let screenScrollTop = window.scrollY, viewHeight = document.body.clientHeight
+            // console.log(this.caller);
+            // console.log(pos);
+            // console.log(screenScrollTop)
+          if (this.rightClick) {
+            var top = this.y
+            if ((this.y + menuPos.height) > (screenScrollTop + viewHeight)) { top = this.y - menuPos.height }
+            l = this.x
+            t = top
+          } else {
+            t = pos.top + pos.height + gap + screenScrollTop
+            switch (this.position) {
+              case 'left':
+                l = pos.left
+                break
+              case 'center':
+                l = (pos.left + (pos.width / 2)) - (menuPos.width / 2)
+                break
+              case 'right':
+                l = (pos.left + pos.width) - menuPos.width
+                break
             }
-        },
-        data(){
-            return {
-                show: false,
-                styleSheet: {
-                    top: '',
-                    left: ''
-                }
-            };
-        },
-        watch:{
-        },
-        methods: {
-            visible(state, caller){
-                if(typeof(state) === 'boolean'){
-                    this.show = state;
-                    let that = this;
-                    this.$nextTick(()=>{
-                        if(that.show) that.adjust(caller);
-                    });
-                }
-            },
-            adjust(caller){
-                let pos = caller.getBoundingClientRect(), gap = 5, t = 0, l = 0;
-                let menuPos = this.$el.getBoundingClientRect();
-                let screenScrollTop = window.scrollY, viewHeight = document.body.clientHeight;
-                //console.log(this.caller);
-                //console.log(pos);
-                //console.log(screenScrollTop)
-                if(this.rightClick){
-                    var top = this.y;
-                    if((this.y + menuPos.height) > (screenScrollTop + viewHeight))
-                        top = this.y - menuPos.height;
-                    l = this.x;
-                    t = top;
-                }else{
-                    t = pos.top + pos.height + gap + screenScrollTop;
-                    switch (this.position){
-                        case 'left':
-                            l = pos.left;
-                            break;
-                        case 'center':
-                            l = (pos.left + (pos.width / 2)) - (menuPos.width / 2);
-                            break;
-                        case 'right':
-                            l = (pos.left + pos.width) - menuPos.width;
-                            break;
-                    }
-                }
+          }
 
                 /*
                 if(!this.regular) {
@@ -69,27 +68,31 @@
                 }
                 */
 
-                this.styleSheet.top = t + 'px';
-                this.styleSheet.left = l + 'px';
-            },
-            whole(e){
-                let that = this;
-                if(this.show){
-                    let idx = e.path.findIndex(val=>val.className && val.className.includes('v-dropdown-container'));
-                    if(idx === -1) this.show = false;
-                }
+          this.styleSheet.top = t + 'px'
+          this.styleSheet.left = l + 'px'
+        },
+        whole(e) {
+          const that = this
+          if (this.show) {
+            // 如果点击的区域不在组件内则关闭组件
+            const idx = e.path.findIndex(val => val.className && val.className.includes('v-dropdown-container'))
+            if (idx === -1) {
+              this.show = false
+              this.$emit('hidedropdown', true)
             }
-        },
-        mounted(){
-            //console.log(this.$el.style.display)
-            //console.log(this.caller)
-            this.$on('show', this.visible);
-            document.addEventListener('mousedown', this.whole);
-        },
-        destroyed(){
-            this.$off('show', this.visible);
-            document.removeEventListener('mousedown', this.whole);
+          }
         }
+      },
+      mounted() {
+            // console.log(this.$el.style.display)
+            // console.log(this.caller)
+        this.$on('show', this.visible)
+        document.addEventListener('mousedown', this.whole)
+      },
+      destroyed() {
+        this.$off('show', this.visible)
+        document.removeEventListener('mousedown', this.whole)
+      }
     }
 </script>
 

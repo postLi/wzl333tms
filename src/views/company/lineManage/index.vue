@@ -170,7 +170,10 @@ export default {
       }, {
         'label': '最低价格(元)',
         'prop': 'lowerPrice',
-        width: 130
+        width: 130,
+        slot: (scope) => {
+          return scope.row.lowerPrice === '' ? '面议' : scope.row.lowerPrice
+        }
       }, {
         'label': '创建时间',
         'prop': 'createTime',

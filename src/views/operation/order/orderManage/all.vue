@@ -367,7 +367,7 @@ export default {
         hidden: true,
         'width': '150'
       }, {
-        'label': '时效',
+        'label': '标准时效',
         'prop': 'shipEffectiveName',
         hidden: true,
         'width': '150'

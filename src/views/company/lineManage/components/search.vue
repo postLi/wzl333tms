@@ -4,7 +4,7 @@
         <el-form-item label="出发城市">
           <el-input
               v-model="searchForm.rangeFromCityName"
-              maxlength="15"
+              :maxlength="20"
               @change="onSubmit"
               clearable>
           </el-input>
@@ -12,7 +12,7 @@
         <el-form-item label="到达城市">
           <el-input
               v-model="searchForm.rangeToCityName"
-              maxlength="15"
+              :maxlength="20"
               @change="onSubmit"
               clearable>
           </el-input>

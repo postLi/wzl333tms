@@ -85,7 +85,7 @@
                             元/公斤
                         </li>
  
-                        <li class="buttons">
+                        <li class="buttons" v-if="!unable">
                             <span  @click="addItem('weight',keys,form)" class="addItem" v-if="keys == weigthPriceForms.length-1 && keys != 4">
                             </span>
                             <span  @click="reduceItem(keys,'weight')" class="reduceItem" v-if="keys == weigthPriceForms.length-1 && weigthPriceForms.length !=1 " >
@@ -115,7 +115,7 @@
                         v-number-only:point :disabled="unable" type="text">
                             元/立方
                         </li>
-                        <li class="buttons">
+                        <li class="buttons" v-if="!unable">
                             <span  @click="addItem('light',keys,form)" class="addItem" v-if="keys == ligthPriceForms.length-1 && keys != 4">
                             </span>
                             <span  @click="reduceItem(keys,'light')" class="reduceItem" v-if="keys == ligthPriceForms.length-1 && ligthPriceForms.length !=1">
@@ -172,7 +172,6 @@
 <script>
 import { newTransportRangeList, TransportRangeInfo, changeTransportRange } from '@/api/company/line'
 
-import { getUserInfo } from '@/utils/auth.js'
 import { REGEX } from '@/utils/validate.js'
 import upload from '@/components/Upload/singleImage2'
 // import tmsmap from '@/components/map/index'
@@ -283,10 +282,10 @@ export default {
       ],
       rules: {
         fromOrgid: [
-                    { required: true, message: '请选择出发网点', trigger: 'change' }
+                    { required: true, message: '请选择出发网点', trigger: 'blur' }
         ],
         toOrgid: [
-                    { required: true, message: '请选择到达网点', trigger: 'change' }
+                    { required: true, message: '请选择到达网点', trigger: 'blur' }
         ],
         startLocation: [
                     { required: true, message: '请输入出发城市', trigger: 'change' }
@@ -295,10 +294,10 @@ export default {
                     { required: true, message: '请输入到达城市', trigger: 'change' }
         ],
         rangeFromContacts: [
-                    { required: true, message: '请输入出发城市联系人信息', trigger: 'blur' }
+                    { message: '请输入出发城市联系人信息', trigger: 'blur' }
         ],
         rangeToContacts: [
-                    { required: true, message: '请输入到达城市联系人信息', trigger: 'blur' }
+                    { message: '请输入到达城市联系人信息', trigger: 'blur' }
         ],
         rangeFromMobile: [
                     { required: true, validator: checkrangeFromMobile, trigger: 'change' }
@@ -325,7 +324,27 @@ export default {
     }
   },
   watch: {
-
+    $route(to, from) {
+      const reg = /\/company\/lineManage\/(detail|create|modify)/
+        // a b 相同组件 c其它组件
+        // a <-> b 跳出时需要调用缓存数据；回来时重载缓存数据
+        // a -> c/b 跳出时需要调用缓存数据
+        // b -> c 保留数据
+        // ab(x) -> 清除缓存数据
+      // 从当前页面到其它页面
+      console.log('to path:', to.path, from.path)
+      if (reg.test(to.path) === false && reg.test(from.path)) {
+        // 如果是跳出去其它页面，缓存当前页面数据
+        // 如果是详情页跳出去，要不要缓存下数据呢？y
+        // 如果是修改页面，是缓存当前正在操作的吧？y
+        this.saveData(from.fullPath)
+      }
+      // 俩个相同组件之间跳转
+      if (reg.test(to.path) && reg.test(from.path)) {
+        this.saveData(from.fullPath)
+        this.getParams()
+      }
+    }
   },
   activated() {
     // 判断是修改/查看/新建
@@ -417,16 +436,48 @@ export default {
     getValue(obj) {
       return obj ? obj.value : ''
     },
+    saveData(thepath) {
+      const path = encodeURIComponent(thepath)
+      const data = {
+        unable: this.unable,
+        ifShowRangeType: this.ifShowRangeType,
+        ruleForm: this.ruleForm,
+        ligthPriceForms: this.ligthPriceForms,
+        weigthPriceForms: this.weigthPriceForms
+      }
+      sessionStorage.setItem(path, JSON.stringify(data))
+    },
+    reinputData(data) {
+      this.unable = data.unable
+      this.ifShowRangeType = data.ifShowRangeType
+      this.ruleForm = data.ruleForm
+      this.ligthPriceForms = data.ligthPriceForms
+      this.weigthPriceForms = data.weigthPriceForms
+    },
     getParams() {
+      // 判断有没有缓存的数据，有则填上去
+      const path = encodeURIComponent(this.$route.fullPath)
+      let data = sessionStorage.getItem(path)
+      if (data) {
+        data = JSON.parse(data)
+        if (data.ruleForm) {
+          this.reinputData(data)
+          return false
+        }
+      }
+
       if (this.$route.query.id) {
         this.ifShowRangeType = this.$route.path.indexOf('modify') !== -1 ? '1' : '2'// 1是修改，2是详情
 
         TransportRangeInfo(this.$route.query.id).then(res => {
           const data = res.data
-          if (res.data) {
+          if (data) {
+            for (const j in data) {
+              data[j] = data[j] === null ? '' : data[j]
+            }
           // 格式化数据
             for (const i in this.ruleForm) {
-              this.ruleForm[i] = res.data[i] || ''
+              this.ruleForm[i] = res.data[i]
             }
             this.ruleForm.id = res.data.id
           // 出发城市
@@ -469,16 +520,21 @@ export default {
         }).catch(err => {
           this._handlerCatchMsg(err, '获取失败，原因：')
         })
-        if (this.ifShowRangeType == '2') {
+        if (this.ifShowRangeType === '2') {
           this.unable = true
+        } else {
+          this.unable = false
         }
+      } else {
+        const adata = this.$options.data()
+        this.reinputData(adata)
       }
     },
         // 判断和限制
     handlerChoose() {
       const type = this.ruleForm.transportAgingUnit
       let transportAging = this.ruleForm.transportAging
-      if (type != '多天') {
+      if (type !== '多天') {
         transportAging = transportAging.replace(/[^\d.]/g, '') // 清除"数字"和"."以外的字符
         transportAging = transportAging.replace(/^\./g, '') // 验证第一个字符是数字
         transportAging = transportAging.replace(/\.{2,}/g, '.') // 只保留第一个, 清除多余的
@@ -556,13 +612,13 @@ export default {
       let messageInfo
 
       this.ligthPriceForms.forEach(item => {
-        if (item.primeryPrice == '') {
+        if (item.primeryPrice === '') {
           messageInfo = '请补充轻货原报价'
           ifNull = false
         }
       })
       this.weigthPriceForms.forEach(item => {
-        if (item.primeryPrice == '') {
+        if (item.primeryPrice === '') {
           messageInfo = '请补充重货原报价'
           ifNull = false
         }
