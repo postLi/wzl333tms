@@ -218,25 +218,25 @@ export default {
         },
         {
           label: '一级科目',
-          prop: 'subjectOne',
+          prop: 'subjectOneName',
           width: '110',
           fixed: false
         },
         {
           label: '二级科目',
-          prop: 'subjectTwo',
+          prop: 'subjectTwoName',
           width: '110',
           fixed: false
         },
         {
           label: '三级科目',
-          prop: 'subjectThree',
+          prop: 'subjectThreeName',
           width: '110',
           fixed: false
         },
         {
           label: '四级科目',
-          prop: 'subjectFour',
+          prop: 'subjectFourName',
           width: '110',
           fixed: false
         },
@@ -407,7 +407,7 @@ export default {
     },
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      if (this.selectedList[0].verifyStatusZh === '未审核') {
+      if (this.selectedList[0].verifyStatusZh === '已审核') {
         this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
         this.$refs.multipleTable.clearSelection()
       } else {

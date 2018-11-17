@@ -2,50 +2,6 @@
   <!-- 记支出 -->
   <div class="fee-steup" v-loading="loading">
     <div class="fee-steup-form">
-      <el-collapse v-model="feeInfo">
-        <el-collapse-item name="feeInfoOne">
-          <template slot="title">
-            费用信息
-          </template>
-          <div class="feeFrom clearfix">
-            <el-form :model="formModel" :size="btnsize" ref="formModel" label-width="110px" :rules="formModelRules">
-              <div class="feeFrom-type-baseInfo">
-                <el-form-item label="单据号" prop="settlementSn">
-                  <el-input v-model="formModel.settlementSn" search="shipSn" type="order" valuekey="shipSn" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="支出金额" prop="amount">
-                  <el-input :size="btnsize" v-model="formModel.amount" placeholder="支出金额" disabled v-number-only:point></el-input>
-                </el-form-item>
-                <el-form-item label="发生时间" prop="settlementTime">
-                  <el-date-picker size="mini" v-model="formModel.settlementTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="发生时间">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="经办人" prop="agent">
-                  <querySelect :size="btnsize" v-model="formModel.agent" valuekey="name" search="name" label="name" placeholder="选择经办人">
-                  </querySelect>
-                </el-form-item>
-              </div>
-              <div class="feeFrom-type-baseInfo">
-                <el-form-item label="收支方式" prop="financialWay">
-                  <selectType filterable allow-create default-first-option :size="btnsize" v-model="formModel.financialWay" type="financial_way_type" placeholder="选择收支方式" @change="setFinanceWay"></selectType>
-                </el-form-item>
-                <el-form-item label="银行卡号" prop="bankAccount">
-                  <el-input :size="btnsize" v-model="formModel.bankAccount" placeholder="银行卡号" clearable v-numberOnly></el-input>
-                </el-form-item>
-                <el-form-item label="微信号" prop="wechatAccount">
-                  <el-input :size="btnsize" v-model="formModel.wechatAccount" placeholder="微信号" clearable></el-input>
-                </el-form-item>
-                <el-form-item label="支付宝号" prop="alipayAccount">
-                  <el-input :size="btnsize" v-model="formModel.alipayAccount" placeholder="支付宝号" clearable></el-input>
-                </el-form-item>
-              </div>
-              <el-form-item label="说明">
-                <el-input :size="btnsize" v-model="formModel.remark" placeholder="说明" clearable></el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
       <!-- 穿梭框 -->
       <div class="fee_btn_transferTable">
         <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
@@ -57,7 +13,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" @feeName="getFeeName" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch"></dataTable>
+              <dataTable @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" @feeName="getFeeName" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch" :fiOrderType="fiOrderType"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
@@ -68,60 +24,45 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"  @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"  :fiOrderType="fiOrderType"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
       </div>
       <!-- 智能结算弹出框 -->
       <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch"></Count>
+      <!-- 核销凭证 -->
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
     </div>
   </div>
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import selectType from '@/components/selectType/index'
-import SelectTree from '@/components/selectTree/index'
-import querySelect from '@/components/querySelect/index'
-import { objectMerge2, parseTime } from '@/utils/index'
-import { getSystemTime } from '@/api/common'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
+import { postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/financeDaily'
 import dataTable from './components/dataTable'
 import dataTableOrder from './components/dataTableOrder'
-import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
 import Count from './components/count'
+import Voucher from '@/components/voucher'
 export default {
   name: 'settleLogExpandtiure',
   components: {
-    SelectTree,
-    selectType,
-    querySelect,
     dataTable,
     dataTableOrder,
-    Count
+    Count,
+    Voucher
   },
   data() {
     return {
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
-      loading: true,
+      loading: false,
       settlementId: '',
       // settlementId: 180, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       tableKey: 0,
-      formModel: {
-        bankAccount: '',
-        wechatAccount: '',
-        alipayAccount: '',
-        settlementTime: '',
-        financialWay: '',
-        financialWayId: '',
-        amount: 0,
-        settlementSn: '',
-        agent: '',
-        remark: ''
-      },
-      formModelRules: {},
+      formModel: {},
       countTitle: '',
       setLoadTableList: {},
       isEdit: false,
@@ -137,7 +78,14 @@ export default {
         arrNoPayName: [],
         arrPayNameActual: [],
         arrhadPayName: []
-      }
+      },
+      popVisibleDialog: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
+      btnLoading: false,
+      fiOrderType: 1  // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
     }
   },
   computed: {
@@ -153,37 +101,7 @@ export default {
       return newVal
     }
   },
-  mounted() {
-    this.getFeeInfo()
-  },
   methods: {
-    getSystemTime() {
-      getSystemTime().then(data => {
-        this.formModel.settlementTime = parseTime(data)
-      }).catch((err)=>{
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
-    },
-    getFeeInfo() {
-      this.getOrgFirstFinancialWay() // 获取收支方式信息
-      getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
-          this.loading = false
-          this.getSystemTime()
-          this.formModel.amount = data.amount
-          this.formModel.settlementSn = data.settlementSn
-          // this.formModel.agent = data.szDtoList[0].agent
-          this.formModel.agent = this.otherinfo.name
-          this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
-          this.formModel.bankAccount = data.szDtoList[0].bankAccount
-          this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
-          this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
-          this.formModel.remark = data.remark
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
     doAction(type) {
       switch (type) {
         case 'save': // 保存
@@ -194,13 +112,6 @@ export default {
           break
         case 'savePrint': // 保存并打印
           this.$message({ type: 'warning', message: '暂无打印功能！' })
-          // this.$confirm('暂无打印功能，确认保存吗？', '提示', {
-          //   confirmButtonText: '确定',
-          //   cancelButtonText: '取消',
-          //   type: 'warning'
-          // }).then(() => {
-          //   this.save()
-          // })
           break
         case 'countBatch':
           this.countTitle = '批次'
@@ -212,61 +123,59 @@ export default {
           break
       }
     },
-    setFinanceWay(obj) {
-      this.formModel.financialWayId = obj
-      this.formModel.financialWay = obj
-      this.getOrgFirstFinancialWay()
-    },
-    setData() { // 设置传给后台的数据结构
-      if (typeof this.formModel.financialWay === 'string') {
-        this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
-        this.formModel.financialWay = this.formModel.financialWay
-      } else {
-        this.formModel.financialWayId = this.formModel.financialWay
-        this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
-      }
-       this.loadTable.forEach(e => {
-        this.feeName.arrPayName.forEach((el, index) => {
-          e[el] = e[this.feeName.arrPayNameActual[index]]
-        })
-      })
-
-      const szDtoList = []
-      szDtoList.push(this.formModel)
-      this.addIncomeInfo = Object.assign({}, this.formModel)
-      this.$set(this.addIncomeInfo, 'orgId', this.getRouteInfo)
-      this.$set(this.addIncomeInfo, 'settlementId', this.setSettlementId)
-      this.$set(this.addIncomeInfo, 'paymentsType', this.paymentsType)
-      this.$set(this.addIncomeInfo, 'detailDtoList', this.loadTable)
-      this.$set(this.addIncomeInfo, 'szDtoList', szDtoList)
-      if (this.activeName === 'first') { // 批次支出
-
-      } else if (this.activeName === 'second') { // 运单支出
-        this.settlementId = 178
-      }
-      this.$set(this.addIncomeInfo, 'settlementId', this.settlementId)
-    },
     save() {
       if (this.loadTable.length < 1) {
         this.$message({ type: 'warning', message: '右边表格不能为空！' })
         return false
       }
-      this.setData()
+      this.popVisibleDialog = true
+    },
+    submitVoucher(value) {
+      let obj = Object.assign({}, value)
+      this.$set(obj, 'paymentsType', this.paymentsType)
+      this.$set(obj, 'orgId', this.$route.query.orgId)
+      // if (this.activeName === 'first') { // 批次支出
+      // } else if (this.activeName === 'second') { // 运单支出
+      //   this.settlementId = 178
+      // }
+      // this.$set(obj, 'settlementId', this.settlementId)
       this.loading = true
-      postAddIncome(this.addIncomeInfo).then(data => {
-        this.loading =false
-          this.$message({ type: 'success', message: '保存成功！' })
-          this.getFeeInfo()
+      this.btnLoading = true
+      console.log('submitVoucher', obj)
+      postAddIncome(obj).then(data => {
+          this.popVisibleDialog = false
+          this.$message.success('记支出成功！')
           this.tableKey = new Date().getTime()
-          this.$router.push({ path: './settleLog' , query:{ pageKey: new Date().getTime()  }})
+          this.loading = false
+          this.btnLoading = false
+          this.eventBus.$emit('closeCurrentView')
+          this.$router.push({ path: './financeDaily', query: { pageKey: new Date().getTime() } })
         })
         .catch(err => {
           this.loading = false
+          this.btnLoading = false
           this._handlerCatchMsg(err)
         })
     },
-    setSettlementId(val) {
+    setSettlementId(val) { 
+    //             178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+    // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
       this.settlementId = val
+      console.log('setSettlementId::::::', val)
+      switch(val) {
+        case 178:
+          this.fiOrderType = 0
+        break
+        case 179:
+          this.fiOrderType = 1
+        break
+        case 180:
+          this.fiOrderType = 2
+        break
+        case 181:
+          this.fiOrderType = 3
+        break
+      }
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -274,8 +183,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.eventBus.$emit('closeCurrentView')
         this.$router.push({
-          path: './settleLog',
+          path: './financeDaily',
           query: {
             pageKey: new Date().getTime()
           }
@@ -285,15 +195,19 @@ export default {
     handleClick() {},
     getLoadTable(obj) {
       let amount = 0
+      this.infoTable = this.$options.data().infoTable
       this.loadTable = Object.assign([], obj)
       this.loadTable.forEach((e, index) => {
         if (e.shipFeeTotalActual) {
-          amount += e.shipFeeTotalActual
+          amount = tmsMath._add(amount, e.shipFeeTotalActual)
         } else {
-          amount += e.loadFeeTotalActual
+          amount = tmsMath._add(amount, e.loadFeeTotalActual)
         }
       })
-      this.formModel.amount = amount
+      this.infoTable = {
+        amount: amount,
+        orderList: this.loadTable
+      }
     },
     getFeeName(obj) {
       this.feeName = Object.assign([], obj)
@@ -315,27 +229,30 @@ export default {
       this.settlementId = obj
       this.setSettlementId(obj)
     },
-    getOrgFirstFinancialWay() { // 获取收支方式
-      let obj = {
-        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
-        orgId: this.getRouteInfo
-      }
-      getOrgFirstFinancialWay(obj).then(data => {
-        this.financialWays = data
-        if (this.financialWays) {
-          this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
-          this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
-          this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
-        } else {
-          this.formModel.bankAccount = ''
-          this.formModel.wechatAccount = ''
-          this.formModel.alipayAccount = ''
-        }
-      }).catch((err)=>{
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
+    closeDialog() {
+      this.popVisibleDialog = false
     }
+    // getOrgFirstFinancialWay() { // 获取收支方式
+    //   let obj = {
+    //     financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
+    //     orgId: this.getRouteInfo
+    //   }
+    //   getOrgFirstFinancialWay(obj).then(data => {
+    //     this.financialWays = data
+    //     if (this.financialWays) {
+    //       this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
+    //       this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
+    //       this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
+    //     } else {
+    //       this.formModel.bankAccount = ''
+    //       this.formModel.wechatAccount = ''
+    //       this.formModel.alipayAccount = ''
+    //     }
+    //   }).catch((err)=>{
+    //     this.loading = false
+    //     this._handlerCatchMsg(err)
+    //   })
+    // }
   }
 }
 

@@ -12,11 +12,11 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :componentKey="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能结算弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
        <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
       </div>
     </div>
   </div>
@@ -27,10 +27,9 @@ import { mapGetters } from 'vuex'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
 import dataTable from './components/dataTable'
-import { getFeeInfo, postAddIncome, getOrgFirstFinancialWay } from '@/api/finance/settleLog'
-import { getOrderList } from '@/api/finance/financeDaily'
+import { getOrderList, postAddIncome } from '@/api/finance/financeDaily'
 import Count from './components/count'
-import Voucher from '@/views/finance/accountsLoad/components/voucher'
+import Voucher from '@/components/voucher'
 export default {
   name: 'settleLogIncome',
   components: {
@@ -61,7 +60,8 @@ export default {
         arrNoPayName: [],
         arrPayNameActual: [],
         arrhadPayName: []
-      }
+      },
+      btnLoading: false
     }
   },
   computed: {
@@ -73,14 +73,6 @@ export default {
     }
   },
   methods: {
-    getFeeInfo() {
-      getFeeInfo(this.getRouteInfo, this.paymentsType).then(data => {
-          this.loading = false
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
     doAction(type) {
       switch (type) {
         case 'save': // 保存
@@ -117,7 +109,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$router.push({
-          path: './settleLog',
+          path: './financeDaily',
           query: {
             pageKey: new Date().getTime()
           }
@@ -147,16 +139,24 @@ export default {
       this.popVisibleDialog = false
     },
     submitVoucher (value) {
+      let obj = Object.assign({}, value)
+      this.$set(obj, 'paymentsType', this.paymentsType)
+      this.$set(obj, 'orgId', this.$route.query.orgId)
+
       console.log('submitVoucher', value)
       this.loading = true
-      postAddIncome(value).then(data => {
-        if (data) {
+      this.btnLoading = true
+      postAddIncome(obj).then(data => {
+          this.popVisibleDialog = false
           this.$message.success('记收入成功！')
-        }
+          this.tableKey = new Date().getTime()
+          this.$router.push({ path: './financeDaily', query:{ pageKey: new Date().getTime()  } })
           this.loading = false
+          this.btnLoading = false
       })
       .catch(err => {
         this.loading = false
+        this.btnLoading = false
         this._handlerCatchMsg(err)
       })
     }

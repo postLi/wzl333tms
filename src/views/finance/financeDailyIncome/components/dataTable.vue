@@ -227,6 +227,9 @@ export default {
     },
     orgId: {
       type: [Number, String]
+    },
+    componentKey: {
+      type: [Number, String]
     }
   },
   computed: {
@@ -257,6 +260,14 @@ export default {
     countSuccessList: {
       handler(cval, oval) {
         this.initCount(cval, oval) // 智能结算返回的数据
+      },
+      deep: true
+    },
+    key: {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
       },
       deep: true
     }

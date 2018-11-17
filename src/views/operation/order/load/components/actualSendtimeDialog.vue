@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 实际发车时间 -->
-    <el-dialog :title="'请选择实际'+title+'时间'" :isShow="popVisible" append-to-body :visible.sync="popVisible" @close="closeMe" :before-close="closeMe" width="400px" :close-on-click-modal="false" center>
+    <el-dialog :title="'请选择实际'+title+'时间'" :isShow="popVisible" append-to-body :visible.sync="popVisible" @close="closeMe" :before-close="closeMe" width="430px" :close-on-click-modal="false" center>
       <el-form :model="searchForm" ref="searchForm">
         <el-form-item :label="'实际'+title+'时间'" :label-width="formLabelWidth" v-if="isArrival">
           <el-date-picker v-model.trim="searchForm.actualArrivetime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间">
@@ -41,7 +41,7 @@ export default {
     return {
       inited: true,
       loading: false,
-      formLabelWidth: '110px',
+      formLabelWidth: '120px',
       systemTime: '',
       currentTime: parseTime(+new Date(), '{y}-{m}-{d} {h}:{i}:{s}'),
       searchForm: {

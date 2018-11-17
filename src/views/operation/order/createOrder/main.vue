@@ -151,7 +151,7 @@
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
-                    <querySelect :maxlength="30" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                    <querySelect :maxlength="15" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
@@ -173,7 +173,7 @@
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="7"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="6"
                   :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>

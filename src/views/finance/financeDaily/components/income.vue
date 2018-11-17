@@ -32,19 +32,19 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select clearable v-model="formModel.subjectOne" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
+          <el-select clearable v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目">
-          <el-select clearable v-model="formModel.subjectTwo" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select clearable v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目">
-          <el-select clearable v-model="formModel.subjectThree" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select clearable v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -52,7 +52,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select clearable v-model="formModel.subjectFour" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select clearable v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -153,7 +153,6 @@ export default {
     info: {
       handler(cval, oval) {
         if (cval) {
-
         }
       }
     }
@@ -175,11 +174,6 @@ export default {
   },
   data() {
     return {
-      // 记账方向
-      paymentsType: {
-        0: '收入',
-        1: '支出'
-      },
       subjectOne: [],
       subjectTwo: [],
       subjectThree: [],
@@ -213,12 +207,14 @@ export default {
       this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
         this.formModel = Object.assign({}, this.info)
-        this.loading = false
+        this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType +'')
         this.getVeryficationList()
+        this.initSubject()
+        this.loading = false
       } else {
         this.getBaseInfo()
+        this.getFinanceSubjects()
       }
-      this.getFinanceSubjects()
       console.log('formModel', this.formModel)
     },
     getVeryficationList() { // 去向列表
@@ -230,6 +226,21 @@ export default {
         .catch(err => {
           this._handlerCatchMsg(err)
         })
+    },
+    initSubject() { // 修改时回填科目列表
+      this.getFinanceSubjects().then(() => {
+        if (this.formModel.subjectOneId) {
+          this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => {
+            if (this.formModel.subjectTwoId) {
+              this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => {
+                if (this.formModel.subjectThreeId) {
+                  this.getFinanceSubjects(4, this.formModel.subjectThreeId)
+                }
+              })
+            }
+          })
+        }
+      })
     },
     getBaseInfo() {
       return postVerificationBaseInfo(this.searchQuery).then(data => {
@@ -248,7 +259,7 @@ export default {
 
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      console.log(subjectLevel, parentId)
+      console.warn('getFinanceSubjects 科目', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
 
@@ -258,22 +269,25 @@ export default {
               this.subjectTwo = data
               this.subjectThree = []
               this.subjectFour = []
+              console.log('科目二: ', this.subjectTwo)
               break
             case 3:
               this.subjectThree = data
               this.subjectFour = []
+              console.log('科目三: ', this.subjectThree)
               break
             case 4:
               this.subjectFour = data
+              console.log('科目四: ', this.subjectFour)
               break
             default:
               this.subjectOne = data
               this.subjectTwo = []
               this.subjectThree = []
               this.subjectFour = []
+              console.log('科目一: ', this.subjectOne)
               break
           }
-          console.log('科目: ', subjectLevel, data)
         })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -282,15 +296,20 @@ export default {
     selectSubject(val, type) {
       console.log(val)
       let obj = {}
+
       switch (type) {
         case 1:
           obj = Object.assign({}, this.subjectOne.filter(e => {
             return e.id === val
           })[0])
           this.getFinanceSubjects(2, obj.id)
-          this.formModel.subjectTwo = ''
-          this.formModel.subjectThree = ''
-          this.formModel.subjectFour = ''
+          for (let item in this.formModel) {
+            if (/^subject/.test(item)) {
+              this.formModel[item] = ''
+            }
+          }
+          this.formModel.subjectOneName = obj.subjectName
+          this.formModel.subjectOneId = obj.id
           console.log('科目一 选中的值', obj)
           break
         case 2:
@@ -298,8 +317,12 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(3, obj.id)
-          this.formModel.subjectThree = ''
-          this.formModel.subjectFour = ''
+          for (let item in this.formModel) {
+            if (/(Four|Three)/.test(item)) {
+              this.formModel[item] = ''
+            }
+          }
+          this.formModel.subjectTwoName = obj.subjectName
           console.log('科目二 选中的值', obj)
           break
         case 3:
@@ -307,13 +330,20 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(4, obj.id)
-          this.formModel.subjectFour = ''
+          this.formModel.subjectThreeName = obj.subjectName
+          this.formModel.subjectFourName = ''
+          this.formModel.subjectFourId = ''
           console.log('科目三 选中的值', obj)
           break
         case 4:
+          obj = Object.assign({}, this.subjectFour.filter(e => {
+            return e.id === val
+          })[0])
+          this.formModel.subjectFourName = obj.subjectName
           break
       }
       obj = {}
+      console.log('formModel', this.formModel)
     },
     submitForm(formName, type) {
       if (!this.formModel.certNo) {
@@ -325,37 +355,38 @@ export default {
         if (valid) {
           this.loading = true
           let query = Object.assign({}, this.formModel)
-          this.$set(query, 'dataSrc', 1) // (数据)来源 ,0  核销产生, 1 手工录入
+          this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
           this.$set(query, 'orderList', [])
-          if (this.isModify) {
-            // 修改的时候 需要获取详情列表
-            let detailSearchQuery = {
-              currentPage: 1,
-              pageSize: 100,
-              vo: {
-                recordId: this.formModel.id,
-                orgId: this.formModel.orgId
-              }
-            }
-            postBillRecordDetailList(detailSearchQuery).then(data => {
-              if (data) {
-                query.orderList = data.list
-              } else { // 如果没有详情列表就创建一个空的详情列表
-                query.orderList.push({
-                  manualAmount: query.amount,
-                  subjectId: '',
-                  subjectName: ''
-                })
-              }
-            })
-          } else {
-            // 添加的时候 需要创建一个空的详情列表
-            query.orderList.push({
-              manualAmount: query.amount,
-              subjectName: '',
-              subjectId: ''
-            })
-          }
+          // if (this.isModify) {
+          //   // 修改的时候 需要获取详情列表
+          //   let detailSearchQuery = {
+          //     currentPage: 1,
+          //     pageSize: 100,
+          //     vo: {
+          //       recordId: this.formModel.id,
+          //       orgId: this.formModel.orgId
+          //     }
+          //   }
+          //   postBillRecordDetailList(detailSearchQuery).then(data => {
+          //     if (data) {
+          //       this.$set(query, 'orderList', data.list)
+          //     } else { // 如果没有详情列表就创建一个空的详情列表
+          //       query.orderList.push({
+          //         manualAmount: query.amount,
+          //         subjectId: '',
+          //         subjectName: ''
+          //       })
+          //     }
+          //   })
+          // } else {
+          // 添加的时候 需要创建一个空的详情列表
+          query.orderList.push({
+            shipLoadId: '',
+            manualAmount: query.amount,
+            subjectName: '',
+            subjectId: ''
+          })
+          // }
           if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }

@@ -77,7 +77,7 @@
         </div> -->
       </div>
     </transferTable>
-    <Voucher :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog" :orgId="searchQuery.vo.orgid"></Voucher>
+    <Voucher :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog" :orgId="searchQuery.vo.orgid" ></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
@@ -87,7 +87,7 @@ import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Voucher from './components/voucher'
+import Voucher from '@/components/voucher'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'

@@ -413,7 +413,7 @@ export default {
     },
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      if (this.selectedList[0].verifyStatusZh !== '未审核') {
+      if (this.selectedList[0].verifyStatusZh === '已审核') {
         this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
         this.$refs.multipleTable.clearSelection()
       } else {

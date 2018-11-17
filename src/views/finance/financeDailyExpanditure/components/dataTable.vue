@@ -216,7 +216,7 @@ import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import querySelect from '@/components/querySelect/index'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
-import { getOrderShipList } from '@/api/finance/settleLog'
+import { getOrderList } from '@/api/finance/financeDaily'
 import currentSearch from './currentSearch'
 import { getSummaries, tmsMath } from '@/utils/'
 export default {
@@ -277,6 +277,12 @@ export default {
     },
     orgId: {
       type: [Number, String]
+    },
+    componentKey: {
+      type: [Number, String]
+    },
+    fiOrderType: {
+      type: [Number, String]
     }
   },
   computed: {
@@ -310,7 +316,7 @@ export default {
       handler(cval, oval) {
         if (cval) {
           this.orgData = Object.assign({}, cval)
-          this.getList()
+          // this.getList()
         }
       },
       deep: true
@@ -327,6 +333,12 @@ export default {
           this.settlementId = cval
           this.getList()
         }
+      },
+      deep: true
+    },
+    fiOrderType: {
+      handler(cval, oval) {
+        
       },
       deep: true
     }
@@ -497,12 +509,15 @@ export default {
         this.$emit('loadTable', this.rightTable)
       } else {
         this.$set(obj, 'orgId', this.orgId)
-        this.$set(obj, 'incomePayType', this.incomePayType)
+        // this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
         this.$set(obj, 'settlementId', this.settlementId)
         this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
-        getOrderShipList(obj).then(data => {
+        this.$set(obj, 'autoTotalAmount', '')
+        this.$set(obj, 'feeId', '')
+        this.$set(obj, 'fiOrderType', this.fiOrderType) // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
+        getOrderList(obj).then(data => {
           this.loading = false
           this.leftTable = data
           this.orgLeftTable = data
