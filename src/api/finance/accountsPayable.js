@@ -134,6 +134,20 @@ export function postLoadSettlement(data) {
   })
 
 }
+
+/**
+ * 核销凭证
+ * （车费结算使用）
+ * v1.3
+ */
+export function loadVerification(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/loadVerification', data).then(res => {
+    return res.data
+  })
+
+}
+
+
 /** ************************************
  
  *             操作费核销

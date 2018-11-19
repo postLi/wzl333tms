@@ -35,12 +35,6 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalLeft }}</b>
-          <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
-          </div>
-        </div> -->
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -72,22 +66,18 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalRight }}</b>
-        </div> -->
       </div>
     </transferTable>
-    <Voucher :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog" :orgId="searchQuery.vo.orgid" ></Voucher>
-    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Voucher from '@/components/voucher'
+import Voucher from '@/components/voucher/batch'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
@@ -101,6 +91,12 @@ export default {
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        settlementTypeSign: 'HandlingFeePay', //  HandlingFeePay-配载应付操作费  HandlingFeeRec-配载应收操作费
+        orderList: []
+      },
       textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
@@ -110,8 +106,6 @@ export default {
       loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
-      // totalLeft: 0,
-      // totalRight: 0,
       tableReceiptInfo: [],
       orgLeftTable: [],
       selectedRight: [],
@@ -294,7 +288,7 @@ export default {
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+            //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
           },
           fixed: false
         },
@@ -511,13 +505,6 @@ export default {
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.batchNo !== e.batchNo
           })
-          // this.leftTable.push(e)
-          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          // let item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -583,20 +570,26 @@ export default {
         this.$message({ type: 'warning', message: '不能同时结算两个网点' })
         return false
       }
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
+          amount = tmsMath._add(amount, e.amount)
           let item = {
             id: e.id,
             amount: e.amount,
-            feeTypeId: e.loadTypeName=== '干线' ? 35: 34
+            feeTypeId: e.loadTypeName === '干线' ? 35 : 34 // feeTypeId 32短驳应收操作费 33干线应收操作费 34短驳应付操作费 35干线应付操作费
           }
+          console.log(item.feeTypeId)
           if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
+            this.infoTable.orderList.push(item)
           }
           item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })

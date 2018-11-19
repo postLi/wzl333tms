@@ -24,7 +24,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"  :fiOrderType="fiOrderType"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"  :fiOrderType="0"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -162,7 +162,7 @@ export default {
     // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
       this.settlementId = val
       console.log('setSettlementId::::::', val)
-      switch(val) {
+      switch(this.settlementId) {
         case 178:
           this.fiOrderType = 0
         break
@@ -176,6 +176,7 @@ export default {
           this.fiOrderType = 3
         break
       }
+      
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -192,7 +193,22 @@ export default {
         })
       })
     },
-    handleClick() {},
+    handleClick() {
+      switch(this.settlementId) {
+        case 178:
+          this.fiOrderType = 0
+        break
+        case 179:
+          this.fiOrderType = 1
+        break
+        case 180:
+          this.fiOrderType = 2
+        break
+        case 181:
+          this.fiOrderType = 3
+        break
+      }
+    },
     getLoadTable(obj) {
       let amount = 0
       this.infoTable = this.$options.data().infoTable

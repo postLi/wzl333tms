@@ -82,29 +82,38 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.transferOrgid" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postFindTransferList } from '@/api/finance/accountsPayable'
+import { postFindTransferList, postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptWaybill'
+// import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
+import Voucher from '@/components/voucher/waybill'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
+      btnLoading: false,
       textChangeDanger: [],
       tablekey: '',
       truckMessage: '',
@@ -420,6 +429,7 @@ export default {
     this.getList()
   },
   methods: {
+    
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
@@ -438,7 +448,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -633,26 +644,54 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+          let amount = 0
         this.rightTable.forEach((e, index) => {
-          let item = {
-            shipId: e.shipId,
-            amount: e.inputTotalCost,
-            inputTotalCost: e.inputTotalCost,
-            shipSn: e.shipSn,
-            dataName: '中转费'
+          console.log('右边列表', index, e)
+          if (e.inputTotalCost > 0 && e.inputTotalCost <= e.unpaidFee) { // 提交可结算项
+            let item = {
+              shipId: e.shipId,
+              shipSn: e.shipSn,
+              shipGoodsSn: e.shipGoodsSn,
+              createTime: e.createTime,
+              inputTotalCost: e.inputTotalCost,
+              shipFromCityName: e.shipFromCityName,
+              shipToCityName: e.shipToCityName,
+              shipReceiverName: e.shipReceiverName,
+              shipSenderName: e.shipSenderName
+            }
+            amount = tmsMath._add(amount, e.inputTotalCost)
+            this.infoTable.orderList.push(item)
+            item = {}
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          }
-          item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+          this.infoTable.amount = amount
+          amount = 0
+        if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
         }
+        // this.rightTable.forEach((e, index) => {
+        //   let item = {
+        //     shipId: e.shipId,
+        //     amount: e.inputTotalCost,
+        //     inputTotalCost: e.inputTotalCost,
+        //     shipSn: e.shipSn,
+        //     dataName: '中转费'
+        //   }
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+        //     this.tableReceiptInfo.push(item)
+        //   }
+        //   item = {}
+        // })
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        //   this.openDialog()
+        // } else {
+        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        // }
       }
       console.log('tableReceiptInfo', this.tableReceiptInfo)
     },

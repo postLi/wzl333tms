@@ -62,7 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input  @dblclick.stop.prevent.native @click.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input @dblclick.stop.prevent.native @click.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -77,29 +77,38 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { postPayListBySummary } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptAll'
+// import Receipt from './components/receiptAll'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
+import Voucher from '@/components/voucher/batch'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
@@ -612,7 +621,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -824,32 +834,42 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
+          amount = tmsMath.add(
+            amount,
+            e.amountArrivepayCarriage,
+            e.amountArrivepayOilCard,
+            e.amountArriveHandlingFee,
+            e.amountArriveOtherFee).result()
           let itemArrivepayCarriage = { id: e.id, amount: e.amountArrivepayCarriage, feeTypeId: 23, dataName: '到付运费' } // 实结到付运费
           let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实结到付油卡
           let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
           let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
 
           if (itemArrivepayCarriage.amount > 0 && itemArrivepayCarriage.amount <= e.unpaidArrivepayCarriage) {
-            this.tableReceiptInfo.push(itemArrivepayCarriage)
+            this.infoTable.orderList.push(itemArrivepayCarriage)
           }
           if (itemArrivepayOilCard.amount > 0 && itemArrivepayOilCard.amount <= e.unpaidArrivepayOilCard) {
-            this.tableReceiptInfo.push(itemArrivepayOilCard)
+            this.infoTable.orderList.push(itemArrivepayOilCard)
           }
           if (itemArriveHandlingFee.amount > 0 && itemArriveHandlingFee.amount <= e.unpaidArriveHandlingFee) {
-            this.tableReceiptInfo.push(itemArriveHandlingFee)
+            this.infoTable.orderList.push(itemArriveHandlingFee)
           }
           if (itemArriveOtherFee.amount > 0 && itemArriveOtherFee.amount <= e.unpaidArriveOtherFee) {
-            this.tableReceiptInfo.push(itemArriveOtherFee)
+            this.infoTable.orderList.push(itemArriveOtherFee)
           }
           itemArrivepayCarriage = {}
           itemArrivepayOilCard = {}
           itemArriveHandlingFee = {}
           itemArriveOtherFee = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })

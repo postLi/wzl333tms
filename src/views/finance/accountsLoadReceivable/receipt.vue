@@ -271,7 +271,7 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -289,7 +289,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
+      if (!this.$route.query) {
         this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
@@ -312,8 +312,8 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
-      const selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
-      if (this.$route.query.selectListShipSns) {
+      const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
+      if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
       } else {
         this.isModify = false
