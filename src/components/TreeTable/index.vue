@@ -114,6 +114,7 @@
             record._expanded = false
           })
         }
+        // console.log(this.formatData,'llll');
       },
       isParentId(nVal) {
 
@@ -212,7 +213,7 @@
     }
   }
 
-  @-webkit-keyframes treeTableShow {
+  @-webkit-keyframes c {
     from {
       opacity: 0;
     }
@@ -265,7 +266,14 @@
     width: $space-width;
     height: 14px;
     &::before {
-      content: ""
+      content: "";
+      /*position:absolute;
+      top: -1px;
+      left: 1px;
+      width: 10px;
+      height: 1px;
+      border-bottom: 1px dotted red;
+      background: #000;*/
     }
     &::after{
       position: absolute;

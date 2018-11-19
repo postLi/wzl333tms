@@ -348,11 +348,14 @@
         this.selected = selection
       },
       getDbClick(row, event) {
+        console.log(this.searchQuery, '00000')
+        const searchQuery = JSON.stringify(this.searchQuery)
         this.$router.push({
           path: '/finance/cashDetail',
           query: {
-            recordId: row.id,
-            orgId: row.orgId
+            recordId: row.billRecordId,
+            // orgId: row.orgId,
+            searchQuery: searchQuery
           }
         })
         this.$refs.multipleTable.clearSelection()
