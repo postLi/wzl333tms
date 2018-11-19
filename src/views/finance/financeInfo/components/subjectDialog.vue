@@ -9,30 +9,30 @@
     class="sub_dialog"
     v-loading="loading"
     :before-close="closeMe">
-    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isDoAddEnd" >
-        <el-form-item label="科目代码:" class="sub_el_form_item">
-          <span>{{currentForm.subjectCode}}</span>
-        </el-form-item>
-        <el-form-item label="上级科目:" class="sub_el_form_item">
-          <span>{{currentForm.subjectName }}</span>
-        </el-form-item>
-        <el-form-item label="科目代码" prop='subjectCode' class="sub_subjectCode">
-          <el-input v-model="form.subjectCode" :maxlength="2">
-            <template slot="prepend">{{currentForm.subjectCode}}</template>
-          </el-input>
-        </el-form-item>
-        <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item ">
-          <el-input v-model="form.subjectName" :maxlength="15" clearable></el-input>
-        </el-form-item>
+    <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="isDoAddEnd">
+      <el-form-item label="科目代码:" class="sub_el_form_item">
+        <span>{{currentForm.subjectCode}}</span>
+      </el-form-item>
+      <el-form-item label="上级科目:" class="sub_el_form_item">
+        <span>{{currentForm.subjectName }}</span>
+      </el-form-item>
+      <el-form-item label="科目代码" prop='subjectCode' class="sub_subjectCode">
+        <el-input v-model="form.subjectCode" :maxlength="2">
+          <template slot="prepend">{{currentForm.subjectCode}}</template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item ">
+        <el-input v-model="form.subjectName" :maxlength="15" clearable></el-input>
+      </el-form-item>
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
     </el-form>
 
     <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="doAddStair">
 
-      <div >
+      <div>
         <el-form-item label="科目代码" prop='newScubjectCode' label-width="98px" class="info_item">
           <el-input v-model="form.newScubjectCode" :maxlength="isFNum" class="info_input">
-            <template slot="prepend" v-if="isSubjectLevel > 1">{{currentForm.subjectCode}}</template>
+            <template slot="prepend" v-if="isSubjectLevelFn">{{currentForm.subjectCode}}</template>
 
           </el-input>
         </el-form-item>
@@ -54,14 +54,14 @@
     </el-form>
 
     <!--<el-form size="mini" ref="ruleForm" :model="form" class="direct"-->
-             <!--label-width="80px" v-if="false" width="100%">-->
-      <!--<el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">-->
-        <!--<el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"-->
-                  <!--:maxlength="35"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="备注">-->
-        <!--<el-input type="textarea" v-model="form.remark" placeholder="最多输入50个字符。" :maxlength='50'></el-input>-->
-      <!--</el-form-item>-->
+    <!--label-width="80px" v-if="false" width="100%">-->
+    <!--<el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">-->
+    <!--<el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"-->
+    <!--:maxlength="35"></el-input>-->
+    <!--</el-form-item>-->
+    <!--<el-form-item label="备注">-->
+    <!--<el-input type="textarea" v-model="form.remark" placeholder="最多输入50个字符。" :maxlength='50'></el-input>-->
+    <!--</el-form-item>-->
     <!--</el-form>-->
 
     <el-form size="mini" ref="ruleForm" :model="form" class="sub_close" :rules="rules" v-if="isSubClose">
@@ -282,7 +282,7 @@
       const validateSubjectCode = (rule, value, callback) => {
         if (REGEX.ONLY_NUMBER.test(value)) {
           // callback()
-
+          console.log(this.isSubjectLevel, 'this.isSubjectLevel');
           if (this.isSubjectLevel === 1) {
             if (/[0-9]{4}/.test(value)) {
               callback()
@@ -303,17 +303,18 @@
           callback(new Error('只能输入数字'))
         }
       }
-      const validateSubName = (rule, value, callback) => {
-        if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
-          // if (REGEX.CHINESE_AND_ENGLISH.test(value)) {
-          callback()
-        } else {
-          callback(new Error('只能输入中文和字母'))
-        }
-      }
+      // const validateSubName = (rule, value, callback) => {
+      //   if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+      //     // if (REGEX.CHINESE_AND_ENGLISH.test(value)) {
+      //     callback()
+      //   } else {
+      //     callback(new Error('只能输入中文和字母'))
+      //   }
+      // }
       return {
         labelWidth: '98px',
         isFNum: 4,
+        isSubjectLevelFn: false,
         checkShowMessage: false,
         isSubject: true,
         loading: false,
@@ -369,13 +370,12 @@
           subjectName: [
             {required: true, message: '科目名称不能为空~'},
             // {message: '只能输入中文加字母~', pattern: REGEX.CHINESE_AND_ENGLISH}
-            {validator: validateSubName}
+            // {validator: validateSubName}
           ],
           subjectType: [
             {required: true, message: '财务科目类型不能为空~'}
           ]
         },
-        isAddLE: false,
         isDirect: false,
         isFirst: false,
         // subjectDirection: false
@@ -390,28 +390,22 @@
         if (this.$refs['ruleForm']) {
           this.$refs['ruleForm'].resetFields()
         }
-        this.isAddLE = false
         this.isDirect = false
 
         if (this.isDoAddEnd) {
           this.isTitle = '增加下级'
-          this.isAddLE = true
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
-          this.isAddLE = true
-          if (item.parent) {
-            this.currentForm.subjectCode = item.parent.subjectCode
-          }
           this.isSubjectLevel = item.subjectLevel
-          if (this.isSubjectLevel > 1) {
-            this.isFNum = 2
+          if (item.parent && item.subjectLevel > 1) {
+            this.isSubjectLevelFn = true
+            this.currentForm.subjectCode = item.parent.subjectCode
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
           }
-          // console.log(item, 'item');
         }
         else if (this.isDoEdit) {
           this.isTitle = '修改'
@@ -588,6 +582,7 @@
             }).catch(err => {
               this.loading = false
               this._handlerCatchMsg(err)
+              return false
             })
           } else {
             return false

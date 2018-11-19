@@ -4,7 +4,6 @@
     tooltip-effect="light" class="lrl-kemu-table" :default-sort="{prop: 'id', order: 'ascending'}"
     style="width: 100%" :row-style="showRow" v-bind="$attrs" @row-click="clickDetails">
     <el-table-column
-      fixed
       sortable
       type="selection"
       width="100">
@@ -24,14 +23,15 @@
     <el-table-column v-else v-for="(column, index) in columns" :key="index" :prop="column.value" :label="column.text"
                      :width="column.width" class-name="col-class">
       <template slot-scope="scope">
-        <div class="scope-node" :class="(iconShow(index,scope.row) ? 'lrl-space-' + scope.row._level : '') + (!scope.row._expanded ? ' hide-space' : '')">
-          <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
+        <div class="scope-node"
+             :class="'lrl-space-' + scope.row._level + (!scope.row._expanded ? ' hide-space' : '') + (scope.row.islast ? ' lrl-space-last' : '') + (iconShow(index,scope.row) ? '' : ' lrl-none-child')">
+          <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space" ></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
           <i v-if="!scope.row._expanded" class="el-icon-circle-plus-outline
 " style="font-size: 25px;vertical-align: middle"></i>
           <i v-else class="el-icon-remove-outline min-scope" style="font-size: 25px;vertical-align: middle"></i>
         </span>
-          <span style="margin-left: 15px">{{scope.row[column.value]}}</span>
+          <span style="margin-left: 15px" >{{scope.row[column.value]}}</span>
         </div>
       </template>
     </el-table-column>
@@ -50,9 +50,9 @@
         </template>
       </el-table-column>
       <!--<el-table-column label="是否公共" :render-header="renderHeader" v-if="isParentId">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>-->
-        <!--</template>-->
+      <!--<template slot-scope="scope">-->
+      <!--<span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>-->
+      <!--</template>-->
       <!--</el-table-column>-->
       <el-table-column label="操作" width="200" v-if="isParentId">
         <template slot-scope="scope">
@@ -118,6 +118,11 @@
       },
       isParentId(nVal) {
 
+      },
+      data(n) {
+        if (n) {
+          // console.log(this.data, '1211111')
+        }
       }
     },
     mounted() {
@@ -194,7 +199,7 @@
       getSelection(selection) {
         this.selected = selection
         this.$emit('change', this.selected)
-        console.log(selection,'selection')
+        // console.log(selection, 'selection')
       },
       clickDetails(row) {
         this.$refs.multipleTable.toggleRowSelection(row)
@@ -221,34 +226,112 @@
       opacity: 1;
     }
   }
-  .lrl-kemu-table{
-    .cell{
+
+  .lrl-kemu-table {
+    .cell {
       overflow: visible;
       line-height: 32px;
       padding: 0;
     }
-    td,th {
+    td, th {
       /*line-height: 26px;*/
       padding: 0;
     }
-    .ms-tree-space:nth-child(1):after{
-      display: none;
+    .ms-tree-space:nth-child(1):after {
+      /*display: none;*/
     }
-    .lrl-space-1{
-      .ms-tree-space:nth-child(1):after{
-        top: 21px;
+    .el-icon-remove-outline{
+      border-radius: 50%;
+      background: #fff;
+    }
+    .lrl-space-1 {
+      .ms-tree-space:nth-child(1):before{
+        display: none;
+      }
+      .ms-tree-space:nth-child(1):after {
+        display: none;
       }
     }
-    .lrl-space-2{
-      .ms-tree-space:nth-child(2):after{
-        top: 21px;
+    .lrl-space-2 {
+      /*.ms-tree-space:nth-child(1):before, .ms-tree-space:nth-child(2):before{*/
+        /*display: none;*/
+        /*!*width: 0;*!*/
+      /*}*/
+      .ms-tree-space:nth-child(2):before{
+        display: none;
+      }
+      .ms-tree-space:nth-child(2):after {
+        display: none;
+      }
+      &.lrl-space-last .ms-tree-space:nth-child(1):after{
+        height: 19px;
+      }
+      &.lrl-none-child .ms-tree-space:nth-child(2):after {
+        display: none;
+      }
+      &.lrl-none-child .ms-tree-space:nth-child(2):before{
+        display: block;
+        margin-left: -1px;
       }
     }
-    .lrl-space-3{
-      .ms-tree-space:nth-child(3):after{
-        top: 21px;
+    .lrl-space-3 {
+      /*.ms-tree-space:nth-child(1):before, .ms-tree-space:nth-child(2):before,.ms-tree-space:nth-child(3):before{*/
+        /*display: none;*/
+      /*}*/
+      .ms-tree-space:nth-child(2n+1):before{
+        display: none;
+      }
+      .ms-tree-space:nth-child(3):after {
+        display: none;
+      }
+      &.lrl-space-last .ms-tree-space:nth-child(2):after{
+        height: 19px;
+      }
+      &.lrl-none-child .ms-tree-space:nth-child(3):after {
+        display: none;
+      }
+      &.lrl-none-child .ms-tree-space:nth-child(3):before{
+        display: block;
+        margin-left: -1px;
       }
     }
+    .lrl-space-4 {
+      .ms-tree-space:before{
+        display: none;
+      }
+      .ms-tree-space:nth-child(n+3):before{
+        display: block;
+      }
+      .ms-tree-space:nth-child(4){
+        margin-left: -1px;
+      }
+      .ms-tree-space:nth-child(4):after{
+        display: none;
+      }
+      &.lrl-space-last .ms-tree-space:nth-child(3):after{
+        height: 19px;
+
+      }
+      &.lrl-space-last {
+        &.lrl-none-child .ms-tree-space:nth-child(2):after{
+          display: none;
+        }
+      }
+    }
+   .hide-space.lrl-space-1{
+    .tree-ctrl{
+      i::after{
+        /*position: absolute;*/
+        /*content: " ";*/
+        /*top: 20px;*/
+        /*left: 12px;*/
+        /*width: 0;*/
+        /*border-left: 1px dotted rebeccapurple;*/
+        /*!*background: #000;*!*/
+        /*height: 15px;*/
+      }
+    }
+   }
 
   }
 </style>
@@ -267,45 +350,36 @@
     height: 14px;
     &::before {
       content: "";
-      /*position:absolute;
-      top: -1px;
-      left: 1px;
-      width: 10px;
+      position:absolute;
+      top:9px;
+      left: 15px;
+      width: 20px;
       height: 1px;
-      border-bottom: 1px dotted red;
-      background: #000;*/
+      border-bottom: 1px dotted #2196F3;
+      /*background: #000;*/
     }
-    &::after{
+    &::after {
       position: absolute;
       content: " ";
       top: -9px;
       left: 16px;
       width: 0;
       border-left: 1px dotted #2196F3;
-      background: #000;
+      /*background: #000;*/
       height: 34px;
     }
   }
-  .hide-space{
-    .ms-tree-space::after{
-      display: none;
-    }
-  }
 
-  .tree-ctrl{
-    i.el-icon-minus,i.el-icon-plus{
-      font-size: 22px;
-      font-weight: 600;
-    }
-  }
-
+  /*.hide-space {*/
+    /*.ms-tree-space::after,.ms-tree-space::before {*/
+      /*display: none;*/
+    /*}*/
+  /*}*/
 
   .processContainer {
     width: 100%;
     height: 100%;
   }
-
-
 
   .tree-ctrl {
     position: relative;

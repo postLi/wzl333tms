@@ -6,7 +6,7 @@
 import Vue from 'vue'
 export default function treeToArray(data, expandAll, parent = null, level = null) {
   let tmp = []
-  Array.from(data).forEach(function(record) {
+  Array.from(data).forEach(function(record, index) {
     if (record._expanded === undefined) {
       Vue.set(record, '_expanded', expandAll)
     }
@@ -21,9 +21,14 @@ export default function treeToArray(data, expandAll, parent = null, level = null
       Vue.set(record, 'parent', parent)
     }
     tmp.push(record)
+    if(index === (data.length-1)){
+      Vue.set(record, 'islast', true)
+    }
+    //
     if (record.children && record.children.length > 0) {
       const children = treeToArray(record.children, expandAll, record, _level)
       tmp = tmp.concat(children)
+
     }
   })
   return tmp
