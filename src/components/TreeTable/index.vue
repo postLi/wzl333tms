@@ -198,7 +198,7 @@
       clickDetails(row) {
         this.$refs.multipleTable.toggleRowSelection(row)
       }
-      
+
     }
   }
 </script>
