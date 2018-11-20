@@ -314,11 +314,8 @@
  }
 
  // 创建打印页面    【已保存】标签或运单
- export function CreatePrintPage(info, printer) {
+ export function CreatePrintPage(info) {
    try {
-     if (printer) {
-       LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
-     }
      LODOP = getLodop()
      // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
      // info.replace(/^\"|\"$/g,"")
@@ -336,8 +333,9 @@
  }
  // 创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info, printer) {
-   console.log('【未保存】标签或运单 info::', info)
+
    try {
+     const prxvalue = 0.264
      const str = ''
      console.log('print', info, printer)
      if (printer) {
@@ -356,25 +354,24 @@
      let pageHeight = 0
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
-         //  str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
-         LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
+         str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
+         LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '青春物流托运单打印')
          str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-         console.error('纸张宽高', e.width, e.height, typeof e.width, typeof e.height)
          // LODOP.SET_PRINT_PAGESIZE(0, 2100, 1400, "");
-         LODOP.SET_PRINT_PAGESIZE(0, e.width, e.height, "")
+         LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
          pageWidth = e.width
          pageHeight = e.height
        } else {
          if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-           //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-           //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
            LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
            LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
 
          } else {
-           //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-           //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-           //  str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
            LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
            LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
            LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
