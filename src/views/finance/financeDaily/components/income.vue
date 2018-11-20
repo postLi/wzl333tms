@@ -31,8 +31,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目">
-          <el-select clearable v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
+        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -63,7 +63,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="发生金额" prop="amount">
+        <el-form-item label="发生金额" prop="amount" class="formItemTextDanger">
           <el-input v-model.number="formModel.amount" placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
         </el-form-item>
       </div>
@@ -152,8 +152,7 @@ export default {
     },
     info: {
       handler(cval, oval) {
-        if (cval) {
-        }
+        if (cval) {}
       }
     }
   },
@@ -183,10 +182,12 @@ export default {
       dialogTitle: '记账凭证',
       loading: true,
       formModel: {
-        picsPath: ''
+        picsPath: '',
+        paymentsType: '1'
       },
       rules: {
-        amount: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
@@ -207,7 +208,7 @@ export default {
       this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
         this.formModel = Object.assign({}, this.info)
-        this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType +'')
+        this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType ? this.formModel.paymentsType + '' : '')
         this.getVeryficationList()
         this.initSubject()
         this.loading = false
@@ -247,6 +248,7 @@ export default {
           if (data) {
             this.formModel = data
             this.formModel.orgId = this.otherinfo.orgid
+            this.formModel.paymentsType = this.$options.data().formModel.paymentsType
             this.verificationWay = data.verificationList
             console.log('getBaseInfo', data)
             this.loading = false
@@ -418,3 +420,11 @@ export default {
 }
 
 </script>
+<style lang="scss">
+.formItemTextDanger {
+  .el-form-item__label {
+    color: #ef0000;
+  }
+}
+
+</style>

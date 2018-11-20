@@ -81,7 +81,9 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
   </div>
 </template>
@@ -90,21 +92,28 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receipt'
+// import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
+import Voucher from '@/components/voucher/receivable'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       currentSearch: '',
       tablekey: '',
@@ -316,7 +325,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -496,22 +506,25 @@ export default {
     },
     // 结算前整理数据
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
-          const item = {
-            shipId: e.shipId,
-            shipSn: e.shipSn
-            // feeTypeId: e.feeTypeId,
-
-          }
+          amount = tmsMath._add(amount, e.inputArrivepayFee)
+          // const item = {
+          //   shipId: e.shipId,
+          //   shipSn: e.shipSn
+          //   // feeTypeId: e.feeTypeId,
+          // }
 
           if (e.inputArrivepayFee && e.notArrivepayFee > 0 && e.inputArrivepayFee <= e.notArrivepayFee) {
-            this.tableReceiptInfo.push(Object.assign({
-              dataName: '到付',
-              amount: e.inputArrivepayFee,
-              inputArrivepayFee: e.inputArrivepayFee
-            }, item))
+            this.infoTable.orderList.push(e)
+            // this.tableReceiptInfo.push(Object.assign({
+            //   dataName: '到付',
+            //   amount: e.inputArrivepayFee,
+            //   inputArrivepayFee: e.inputArrivepayFee
+            // }, item))
           }
 
          /*  if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
@@ -521,7 +534,9 @@ export default {
             this.tableReceiptInfo.push(item)
           } */
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })

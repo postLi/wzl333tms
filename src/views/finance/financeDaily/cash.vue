@@ -438,9 +438,9 @@ export default {
     delCount() { // 删除 只有手工录入并且未审核的可以删除
       if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
         if (this.selectedList[0].dataSrcZh !== '手工录入') {
-          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可删除!')
         } else {
-          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可删除!')
         }
         this.$refs.multipleTable.clearSelection()
       } else {

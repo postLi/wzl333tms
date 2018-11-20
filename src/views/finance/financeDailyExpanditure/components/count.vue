@@ -95,7 +95,9 @@ export default {
       }, {
         id: 181,
         feeType: '送货'
-      }]
+      }],
+      paymentsType: 1, // 0-收入 1-支出
+      fiOrderType: 1 // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
     }
   },
   computed: {
@@ -113,6 +115,7 @@ export default {
             case '运单':
               this.getAllCustomer()
               this.settlementId = 178
+              this.fiOrderType = 0
               this.formModel.settlementId = ''
               this.$set(this.formModel, 'shipSenderName', '')
 
@@ -155,9 +158,9 @@ export default {
         }
       }
       getAllCustomer(searchQuery).then(data => {
-        this.senderOptions = data.list
-      })
-      .catch(err => {
+          this.senderOptions = data.list
+        })
+        .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
@@ -195,10 +198,12 @@ export default {
       this.formModel.shipSenderName = item.customerName
     },
     getFeeTypeDict() {
-      // this.settlementId = 178
-      getFeeTypeDict(this.settlementId).then(data => {
+      return getFeeTypeDict({
+        paymentsType: this.paymentsType,
+        fiOrderType: this.fiOrderType
+      }).then(data => {
         this.feeIds = data
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

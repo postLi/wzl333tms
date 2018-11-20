@@ -1,5 +1,5 @@
 <template>
-  <!-- 核销凭证 车费核销 -->
+  <!-- 核销凭证 运单核销-->
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
@@ -14,7 +14,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" disabled>
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -26,7 +26,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" disabled>
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +37,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" disabled>
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +48,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" disabled>
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -75,7 +75,8 @@
 <script>
 import { getSystemTime } from '@/api/common'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
-import { loadVerification } from '@/api/finance/accountsPayable'
+// import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import * as accountApi from '@/api/finance/accountsReceivable'
 export default {
   props: {
     popVisible: {
@@ -126,69 +127,32 @@ export default {
     },
     currentPage() {
       const currentPage = this.$route.query.currentPage
-      return currentPage.substr(5, currentPage.length)
+      return currentPage.substr(7, currentPage.length)
     },
-    dataName() {
-      const currentPage = this.$route.query.currentPage
-      switch (currentPage) {
-        case 'batchShort':
-          return '短驳费'
-        case 'batchDeliver':
-          return '送货费'
-        case 'batchInsurance':
-          return '整车保险费'
-        case 'batchStationLoad':
-          return '发站装卸费'
-        case 'batchStationOther':
-          return '发站其他费'
-        case 'batchArriveLoad':
-          return '到站装卸费'
-        case 'batchArrivalOther':
-          return '到站其他费'
-        case 'handleFee':
-          return '操作费'
-      }
-    },
+    // dataName() {
+    //   const currentPage = this.$route.query.currentPage
+    //   switch (currentPage) {
+    //     case 'cash':
+    //       return '现付'
+    //     case 'waybillTicket':
+    //       return '单票提货费'
+    //     case 'waybillOther':
+    //       return '其他费用支出'
+    //     case 'waybillTransfer':
+    //       return '中转费'
+    //     case 'waybillAbnormal':
+    //       return '异常理赔'
+    //     case 'waybillUnusual':
+    //       return '异动费用结算'
+    //   }
+    // },
     getRouteInfo() {
       return JSON.parse(this.$route.query.searchQuery)
     },
     feeId() {
-      const currentPage = this.$route.query.currentPage
-      if (currentPage === 'batchTruckAll' || currentPage === 'batchArrivalAll' || currentPage === 'handleFee') {
-        let feeIdsArr = []
-        this.info.orderList.forEach(e => {
-          feeIdsArr.push(e.feeTypeId)
-        })
-        feeIdsArr = this.uniqueArray(feeIdsArr)
-        return feeIdsArr.join(',')
-      } else {
-        return JSON.parse(this.$route.query.searchQuery).vo.feeTypeId
-
-      }
+      console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
+      return JSON.parse(this.$route.query.searchQuery).vo.feeType
     },
-    fiOrderType() { // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
-      const currentPage = this.$route.query.currentPage
-      switch (currentPage) {
-        case 'batchShort': // 短驳费
-          return 2
-        case 'batchDeliver': // 送货费
-          return 3
-        case 'batchInsurance': // 整车保险费
-          return 1
-        case 'batchStationLoad': // 发站装卸费
-          return 1
-        case 'batchStationOther': // 发站其他费
-          return 1
-        case 'batchArriveLoad': // 到站装卸费
-          return 1
-        case 'batchArrivalOther': // 到站其他费
-          return 1
-        case 'batchTruckAll': // 发车汇总
-          return 1
-        case 'batchArrivalAll': // 到车汇总
-          return 1
-      }
-    }
   },
   data() {
     return {
@@ -231,8 +195,7 @@ export default {
         orgId: '',
         parentId: '',
         subjectLevel: ''
-      },
-      paymentsType: 1 // 收支类型, 0 收入, 1 支出,
+      }
     }
   },
   methods: {
@@ -263,11 +226,15 @@ export default {
     },
     initSubject() {
       this.getFinanceSubjects().then(() => {
+        console.log('需要初始化科目一', this.formModel.subjectOneId, typeof subjectOneId)
         if (this.formModel.subjectOneId) {
+          console.log('需要初始化科目二')
           this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => {
             if (this.formModel.subjectTwoId) {
+              console.log('需要初始化科目三')
               this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => {
                 if (this.formModel.subjectThreeId) {
+                  console.log('需要初始化科目四')
                   this.getFinanceSubjects(4, this.formModel.subjectThreeId)
                 }
               })
@@ -280,32 +247,37 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let dataInfo = Object.assign({}, this.formModel)
-          if (this.info.settlementTypeSign) {
-            this.$set(dataInfo, 'settlementTypeSign', this.info.settlementTypeSign)
-          }
-          this.$set(dataInfo, 'tmsFinanceVerifiactionBillFees', this.info.orderList)
-          this.$set(dataInfo, 'orgId', this.orgId)
-          this.$set(dataInfo, 'paymentsType', this.paymentsType)
-          this.$set(dataInfo, 'fiOrderType', this.fiOrderType)
+          this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           delete dataInfo.verificationList
-
-          console.log('保存提交的参数dataInfo', dataInfo)
-          loadVerification(dataInfo).then(data => {
-              this.$message.success('保存成功！')
-              this.btnLoading = false
-              this.popVisibleDialog = false
-              if (this.dataName === '操作费') {
-                 this.$router.push({ path: './accountsPayable/handleFee' })
-              } else {
-                const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-                this.$router.push({ path: './accountsPayable/batch/' + currentPage })
-              }
-            })
+          let query = {
+            receivableFees: dataInfo.orderList,
+            tmsFinanceBillRecordDto: dataInfo
+          }
+          delete query.tmsFinanceBillRecordDto.orderList
+          accountApi.postCreateFee(this.orgId, query).then(data => {
+            this.$message({ type: 'success', message: '保存成功' })
+            this.btnLoading = false
+            this.closeMe()
+            this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+            // 当添加结算时更新列表
+            this.eventBus.$emit('updateAccountsReceivableList')
+          })
             .catch(err => {
               this._handlerCatchMsg(err)
               this.btnLoading = false
             })
+          // postCreateloadSettlement(orgid, query).then(data => {
+          //     this.$message.success('保存成功！')
+          //     this.btnLoading = false
+          //     this.popVisibleDialog = false
+          //     const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
+          //     this.$router.push({ path: './accountsPayable/waybill/' + currentPage })
+          //   })
+          //   .catch(err => {
+          //     this._handlerCatchMsg(err)
+          //     this.btnLoading = false
+          //   })
         }
       })
     },
@@ -409,15 +381,6 @@ export default {
       })[0]
       this.$set(this.formModel, 'verificationWay', obj.verificationWay)
       console.log('选中方向：：', obj, this.formModel)
-    },
-    uniqueArray(arr) { // 去重
-      var hash = []
-      for (var i = 0; i < arr.length; i++) {
-        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i]) {
-          hash.push(arr[i])
-        }
-      }
-      return hash
     },
     closeMe(done) {
       this.$emit('close')

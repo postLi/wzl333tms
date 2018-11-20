@@ -68,7 +68,9 @@ export default {
         shortcuts: pickerOptions2
       },
       feeIds: [],
-      senderOptions: []
+      senderOptions: [],
+      paymentsType: 0, // 0-收入 1-支出
+      fiOrderType: 0 // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
     }
   },
   computed: {
@@ -109,7 +111,10 @@ export default {
     },
     getFeeTypeDict() {
       this.settlementId = 178
-      getFeeTypeDict(this.settlementId).then(data => {
+      getFeeTypeDict({
+        paymentsType: this.paymentsType,
+        fiOrderType: this.fiOrderType
+      }).then(data => {
         this.feeIds = data
       }).catch((err)=>{
         this.loading = false

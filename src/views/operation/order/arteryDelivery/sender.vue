@@ -378,6 +378,7 @@ export default {
               this.isModify = false
               this.isAlFun = false
               this.openAddCustomer()
+              console.log('选中的数据1111111', this.selectInfo)
             } else {
               this.$message.warning('批次【 '+this.selected[0].batchNo+' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
               this.closeAddCustomer()

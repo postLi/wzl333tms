@@ -737,8 +737,7 @@ export default {
     }
   },
   watch: {
-    arrivalStatus() {
-    },
+    arrivalStatus() {},
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
@@ -749,19 +748,22 @@ export default {
       }
     },
     id(newVal) {},
-    info(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-      } else if (this.isAlFun) {
-        this.popTitle = '查看详情'
-      } else {
-        this.popTitle = '到车入库'
-      }
-      this.getBatchNo = this.info.batchNo
-      this.propsId = this.info.id
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
+    info: {
+      handler(cval, oval) {
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+        this.getBatchNo = this.info.batchNo
+        this.propsId = this.info.id
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+      },
+      deep: true
     },
     isAlFun(newVal) {
       this.tablekey = +new Date()
@@ -1059,8 +1061,8 @@ export default {
           break
           // 添加客户
         case 'sure':
-        console.log('批次状态：', this.arrivalStatus)
-          if (this.arrivalStatus === '在途中') {
+          console.log('批次状态：', this.arrivalStatus)
+          if (this.arrivalStatus === '在途中' || this.info.bathStatusName === '在途中') {
             this.timeInfoVisible = true
           } else {
             this.getActualTime()
@@ -1530,6 +1532,7 @@ export default {
     }
   }
 }
+
 
 
 

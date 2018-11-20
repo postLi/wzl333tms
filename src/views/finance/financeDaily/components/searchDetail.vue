@@ -20,7 +20,7 @@
        <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
       </el-select>
       </el-form-item>
-      <searchAll :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
+      <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -63,6 +63,7 @@ export default {
       }
     }
     return {
+      searchAll: '',
       searchObjs: {},
       searchForm: {
         orgId: '',
@@ -130,6 +131,10 @@ export default {
         Object.assign(this.$data, this.$options.data())
         this.searchForm.orgId = this.orgid
         this.$refs[formName].resetFields()
+        this.searchAll = '1'
+        setTimeout(() => {
+          this.searchAll = ''
+        }, 50)
       })
     }
   }
