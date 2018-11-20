@@ -14,6 +14,9 @@ var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
 var shouldmap = process.env.BUILD_ENV === 'test' ? false : '#source-map'
 console.log('process.env.BUILD_ENV',process.env.BUILD_ENV,shouldmap)
 
+// disabled the sourceMap
+shouldmap = false
+
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
 }
