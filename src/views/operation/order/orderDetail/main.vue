@@ -847,6 +847,10 @@ export default {
     this.eventBus.$on('printOrder', () => {
       this.doAction('printShipKey')
     })
+    if(window.TMS_printOrderInfo){
+      this.doAction('printShipKey')
+      // this.doAction('printLibkey')
+    }
     // this.initIndex()
   },
   methods: {
