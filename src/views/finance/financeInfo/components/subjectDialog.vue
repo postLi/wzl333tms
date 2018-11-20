@@ -456,6 +456,12 @@
       changeSelctListTwO(item) {
         getSelectList(item, 2).then((res, index) => {
           if (res === '数据库无对应记录' || '') {
+            this.form.twoId = ''
+            this.form.twoName = ''
+            this.form.threeId = ''
+            this.form.threeName = ''
+            this.form.fourId = ''
+            this.form.fourName = ''
             this.closeOptions.twoOptions = ''
             return false
           } else {
