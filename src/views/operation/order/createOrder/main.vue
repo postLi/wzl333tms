@@ -2886,6 +2886,7 @@ export default {
     },
     printSave() { // 打印保存的运单
       this.eventBus.$emit('printOrder')
+      window.TMS_printOrderInfo = true
       // this.print()
       // getPrintOrderItems(this.resOrderId).then(data => {
       //   CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
