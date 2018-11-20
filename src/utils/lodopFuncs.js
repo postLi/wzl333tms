@@ -338,13 +338,15 @@
  export function CreatePrintPageEnable(info, printer) {
    console.log('【未保存】标签或运单 info::', info)
    try {
+     const str = ''
+     console.log('print', info, printer)
      if (printer) {
        LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+       str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
      }
      LODOP = getLodop()
      let arr = new Array()
      arr = Object.assign([], info)
-     const str = ''
      for (const item in arr) { // 没有传值的项设置位空字符串
        if (arr[item].value === undefined || arr[item].value === null) {
          arr[item].value = ''
@@ -356,6 +358,10 @@
        if (e.filedValue === 'setting') {
          //  str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
          LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
+         str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
+         console.error('纸张宽高', e.width, e.height, typeof e.width, typeof e.height)
+         // LODOP.SET_PRINT_PAGESIZE(0, 2100, 1400, "");
+         LODOP.SET_PRINT_PAGESIZE(0, e.width, e.height, "")
          pageWidth = e.width
          pageHeight = e.height
        } else {
@@ -364,6 +370,7 @@
            //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
            LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
            LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+
          } else {
            //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
            //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
@@ -378,6 +385,7 @@
      // LODOP.PRINT_SETUP()
      //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
      LODOP.PREVIEW()
+     LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
    } catch (err) {
      getLodop()
    }
@@ -385,9 +393,9 @@
 
  // 格式化数据
  function formatTableData(obj) {
-  /*  obj.columns.sort((a, b) => {
-     return a.fixed ? -1 : 0
-   }) */
+   /*  obj.columns.sort((a, b) => {
+      return a.fixed ? -1 : 0
+    }) */
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
