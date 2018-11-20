@@ -57,7 +57,7 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
             <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput"@change="getLineInfo"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
             </el-form-item>
           </div>
         </el-col>
