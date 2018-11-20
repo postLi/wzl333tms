@@ -131,15 +131,15 @@
             </el-form-item>
             <el-form-item label="价格预警设置：" >
                 <ul>
-                  <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceNormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceNormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+                  <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceNormal" @blur="checkPrice" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceNormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
                             type="text" />
                   <div class="el-input-group__append">%</div>
                </div> 元 为正常</li>
-               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceAbnormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceAbnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceAbnormal" @blur="checkPrice" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceAbnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
                             type="text" />
                   <div class="el-input-group__append">%</div>
                </div> 元 为异常</li>
-               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" :disabled="unable" placeholder=""  :value="ruleForm.priceBigabnormal" @blur="()=>{checkPrice}" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceBigabnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable
+               <li>在参考价上下幅度 <div class="el-input-group"><input class="nativeinput nativeinput-border" placeholder=""  :value="ruleForm.priceBigabnormal" @blur="checkPrice" @change="(e)=>{setInputVal(e.target.value,ruleForm, 'priceBigabnormal')}" :maxlength="7" v-numberOnly auto-complete="off"  clearable disabled
                             type="text" />
                   <div class="el-input-group__append">%</div>
                </div> 元以上 严重异常</li>
@@ -344,6 +344,9 @@ export default {
         this.saveData(from.fullPath)
         this.getParams()
       }
+    },
+    'ruleForm.priceAbnormal'() {
+      this.ruleForm.priceBigabnormal = this.ruleForm.priceAbnormal
     }
   },
   activated() {
@@ -360,18 +363,17 @@ export default {
       this.$set(item, name, Number(val) || 0)
     },
     checkPrice() {
-      const a = this.ruleForm.priceNormal
-      const b = this.ruleForm.priceAbnormal
-      const c = this.ruleForm.priceBigabnormal
-
-      if (c) {
-
-      }
+      let a = this.ruleForm.priceNormal
+      let b = this.ruleForm.priceAbnormal
+      a = Number(a) || ''
+      b = Number(b) || ''
+      console.log('checkPrice:', a, b)
       if (b) {
-
-      }
-      if (a) {
-
+        if (!a || a >= b) {
+          this.ruleForm.priceNormal = ''
+          this.ruleForm.priceAbnormal = ''
+          this.$message.info('必须先填写正常幅度，且小于异常幅度')
+        }
       }
     },
     ifWrong(item, idx) {
