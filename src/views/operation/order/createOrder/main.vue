@@ -1951,6 +1951,23 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
+      // 修改保险费与声明价值
+      // 如果有设置
+      if (/(insuranceFee|productPrice)/.test(name)) {
+        const cfg = this.config.shipPageFunc
+        if (cfg.insurancePremiumIsDeclaredValue) {
+          const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 100)
+          const inx = this.theFeeConfig.filter(el => el.fieldProperty === 'insuranceFee').length
+          // 如果存在保险费
+          if (inx && per) {
+            if (name === 'insuranceFee') {
+              this.form.cargoList[index]['productPrice'] = (tmsMath._div(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            } else {
+              this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            }
+          }
+        }
+      }
     },
     // 其他表单
     getBatch(item) {
@@ -2926,39 +2943,39 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    selectShipUserid (val) { // 业务员
+    selectShipUserid(val) { // 业务员
       console.log('业务员', val)
       this.shipUserName = val.name || ''
     },
     setPrintData(type) { // 设置打印的字段
       // 标签数据
       let obj = new Object()
-        this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
-        this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
-        this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
-        this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
-        this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
-        this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
-        this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
-        this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
-        this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
-        this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
-        this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
-         for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
-          if (item === 'cargoName' || item === 'cargoPack') {
-            obj[item] = this.form.cargoList[0][item]
-          }else {
-            obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
-          }
+      this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
+      this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
+      this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
+      this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
+      this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
+      this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
+      this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
+      this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
+      this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
+      this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
+      this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
+      for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
+        if (item === 'cargoName' || item === 'cargoPack') {
+          obj[item] = this.form.cargoList[0][item]
+        } else {
+          obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
         }
-        console.log('货品信息及其费用项',this.form.cargoList[0])
-        this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
-        this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
-        this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
-        this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
-        this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
-        this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
-        
+      }
+      console.log('货品信息及其费用项', this.form.cargoList[0])
+      this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
+      this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
+      this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
+      this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
+      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
+      this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
+
       if (type === 'lib') {
         this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
         this.$set(obj, 'companyName', this.otherinfo.companyName)
@@ -2985,13 +3002,13 @@ export default {
         this.$set(obj, 'userName', this.shipUserName) // 制单员
         this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
         // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-         ////////////////////////////////////////////////////////////
-        ///年月日
+         // //////////////////////////////////////////////////////////
+        // /年月日
         this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
         this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
         this.$set(obj, 'createDate', parseTime(this.form.tmsOrderShip.createTime, '{d}'))
-        ////////////////////////////////////////////////////////////
-        ///特殊处理 中转费
+        // //////////////////////////////////////////////////////////
+        // /特殊处理 中转费
         let totalTransferFee = 0
         if (this.form.tmsOrderTransfer && this.form.tmsOrderTransfer.length > 0) {
           this.form.tmsOrderTransfer.forEach(e => {
@@ -3000,8 +3017,8 @@ export default {
         }
         this.$set(obj, 'transferFee', parseFloat(totalTransferFee)) // 中转费
         console.log('中转费', totalTransferFee)
-        ////////////////////////////////////////////////////////////
-        ///特殊处理 打勾
+        // //////////////////////////////////////////////////////////
+        // /特殊处理 打勾
         switch (this.form.tmsOrderShip.shipPayWay) { // 付款方式
           case 76:
             this.$set(obj, 'nowPay', '√') // 现付（√）
@@ -3028,21 +3045,21 @@ export default {
           this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
         }
         console.log('控货 贵重物品：：：：', this.shipOther)
-        if (this.shipOther.indexOf('168') !== -1 ) {
+        if (this.shipOther.indexOf('168') !== -1) {
           this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
-        } 
+        }
         if (this.shipOther.indexOf('169') !== -1) {
           this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
         }
-        ////////////////////////////////////////////////////////////
-        ///处理合计中文大写
-        let totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
+        // //////////////////////////////////////////////////////////
+        // /处理合计中文大写
+        const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
         this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
         this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
         this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
         this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
         this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
-        let upagencyFeeBig = this.setFeeToBig(this.form.cargoList[0].agencyFund)
+        const upagencyFeeBig = this.setFeeToBig(this.form.cargoList[0].agencyFund)
         this.$set(obj, 'upagencyFundW', totalFeeBig[4]) // 代收货款(万)
         this.$set(obj, 'upagencyFundQ', totalFeeBig[3]) // 代收货款(仟)
         this.$set(obj, 'upagencyFundB', totalFeeBig[2]) // 代收货款(佰)
@@ -3056,8 +3073,8 @@ export default {
     setFeeToBig(fee) { // 费用转成中文大写
       console.log('fee:::::::', fee, smalltoBIG(fee))
       let feezh = fee.toString().split('').reverse()
-      let pointIndex = feezh.indexOf('.') + 1
-      let feezhAll = smalltoBIG(fee)
+      const pointIndex = feezh.indexOf('.') + 1
+      const feezhAll = smalltoBIG(fee)
       feezh = feezh.slice(pointIndex).reverse()
       feezh.forEach((e, index) => {
         this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
