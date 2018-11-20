@@ -599,7 +599,8 @@ export default {
    * 根据运单信息匹配专线
    * @param {*} data 请求参数
     {
-
+      "fromOrgid": 0,
+      "toOrgid": 0,
       "rangeFromCityName": "string",
       "rangeToCityName": "string",
       "shipFeeList": [

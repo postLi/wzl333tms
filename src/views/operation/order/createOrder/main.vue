@@ -440,8 +440,25 @@
     </div>
     </el-form>
     <!-- 专线价格提示 -->
-    <div class="createOrder-line-info" v-if="lineinfo.loaded">
-      提示：参考价格 {{ lineinfo.totalPrice }}元<span v-if="parseInt(form.tmsOrderShip.shipPayWay,10) !== 103">，已超出参考价{{ lineinfo.pricePercent }}％（低于参考价30％)<span class="line-info-tip">{{ lineinfo.priceType }}</span></span>
+    <div class="createOrder-line-info">
+      提示：参考价格 
+      <template v-if="lineinfo.priceType">
+        {{ lineinfo.proposedPrice }}元，
+        <span v-if="parseInt(form.tmsOrderShip.shipPayWay,10) !== 103">
+        <span v-if="lineinfo.priceType === '正常'">
+          当前运费在正常范围。<span class="line-info-tip">{{ lineinfo.priceType }}</span>
+        </span>
+        <span v-if="lineinfo.priceType === '异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-abnormal">{{ lineinfo.priceType }}</span>
+        </span>
+        <span v-if="lineinfo.priceType === '超异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-bigabnormal">{{ lineinfo.priceType }}</span>
+        </span>
+        </span>
+      </template>
+      <template v-else>
+        面议
+      </template>
     </div>
     <!-- 底部按钮操作部分 -->
     <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
@@ -841,10 +858,11 @@ export default {
         // 专线信息
       lineinfo: {
         loaded: false,
-        lowerPrice: 0,
-        pricePercent: 0,
-        priceType: '',
-        totalPrice: 0
+        lowerPrice: 0, // 最低价格
+        pricePercent: 0, // 百分比
+        priceType: '', // 类型
+        highOrLow: '', // 超过 低于
+        proposedPrice: 0 // 总价
       }
     }
   },
@@ -1496,7 +1514,11 @@ export default {
       // 3.俩者都有数据才请求，没有就清空已有的数据
       const start = this.form.tmsOrderShip.shipFromCityName
       const end = this.form.tmsOrderShip.shipToCityName
-      const cargos = this.form.cargoList
+      const cargos = this.form.cargoList.filter(el => {
+        return (el.cargoVolume !== '' || el.cargoWeight !== '')
+      })
+      const orgData = this.$options.data()
+
       if (start && end && cargos.length) {
         const data = {}
         data.rangeFromCityName = start
@@ -1504,10 +1526,20 @@ export default {
         data.shipFeeList = []
         data.volumeList = []
         data.weighList = []
+        data.fromOrgid = this.form.tmsOrderShip.shipFromOrgid || this.otherinfo.orgid
+        data.toOrgid = this.form.tmsOrderShip.shipToOrgid || ''
         cargos.forEach(el => {
-          data.shipFeeList.push(el.shipFee)
-          data.volumeList.push(el.cargoVolume)
-          data.weighList.push(el.cargoWeight)
+          if (el.shipFee !== '') {
+            data.shipFeeList.push(el.shipFee)
+          }
+
+          if (el.cargoVolume !== '') {
+            data.volumeList.push(el.cargoVolume)
+          }
+
+          if (el.cargoWeight !== '') {
+            data.weighList.push(el.cargoWeight)
+          }
         })
         // 请求后端接口获取专线数据
         orderManage.postMatchLine(data).then(res => {
@@ -1516,12 +1548,21 @@ export default {
           priceType: "超异常"
           proposedPrice: 10
           transportAging: "1小时" */
+          const rdata = res.data
+          if (!rdata) {
+            this.lineinfo = orgData
+          } else {
+            this.lineinfo = rdata
+            // 当获取到后台数据时，标记以便后续根据最低价格去处理创建/修改的逻辑
+            this.lineinfo.loaded = true
+          }
         }).catch(err => {
+          this.lineinfo = orgData
           this._handlerCatchMsg(err)
         })
       } else {
         // 清除已有的专线数据
-
+        this.lineinfo = orgData
       }
     },
     // 从订单创建运单

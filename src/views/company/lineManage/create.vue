@@ -367,7 +367,6 @@ export default {
       let b = this.ruleForm.priceAbnormal
       a = Number(a) || ''
       b = Number(b) || ''
-      console.log('checkPrice:', a, b)
       if (b) {
         if (!a || a >= b) {
           this.ruleForm.priceNormal = ''
@@ -377,7 +376,7 @@ export default {
       }
     },
     ifWrong(item, idx) {
-      const flag = item[idx].endVolume < item[idx].startVolume
+      const flag = item[idx].endVolume <= item[idx].startVolume
       if (flag) {
         this.$message({
           type: 'info',
@@ -450,11 +449,12 @@ export default {
       sessionStorage.setItem(path, JSON.stringify(data))
     },
     reinputData(data) {
+      const orgData = this.$options.data()
       this.unable = data.unable
       this.ifShowRangeType = data.ifShowRangeType
-      this.ruleForm = data.ruleForm
-      this.ligthPriceForms = data.ligthPriceForms
-      this.weigthPriceForms = data.weigthPriceForms
+      this.ruleForm = data.ruleForm || data.ruleForm
+      this.ligthPriceForms = data.ligthPriceForms || orgData.ligthPriceForms
+      this.weigthPriceForms = data.weigthPriceForms || orgData.weigthPriceForms
     },
     getParams() {
       // 判断有没有缓存的数据，有则填上去
