@@ -718,7 +718,7 @@ export default {
             this.formModel.labelList.forEach(e => {
               e.topy = 0
               e.leftx = 0
-              e.isshow = 0
+              // e.isshow = 0
               e.width = Math.round(150 * this.prxvalue)
               e.height = Math.round(24 * this.prxvalue)
               e.fontsize = 10
