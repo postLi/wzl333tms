@@ -1,7 +1,10 @@
- import { getSummaries, objectMerge2 } from './index'
+ import {
+   getSummaries,
+   objectMerge2
+ } from './index'
  // import ExportJsonExcel from 'js-export-excel'
  //  const ExportJsonExcel = require('js-export-excel')
-//  const ExportJsonExcel = require('./excel')
+ //  const ExportJsonExcel = require('./excel')
  const ExportJsonExcel2 = require('./exceljs.min')
  const FileSaver = require('./fileSaver')
 
@@ -27,7 +30,9 @@
      var verOPR = ua.match(/OPR\D?\d+/i)
      var verFF = ua.match(/Firefox\D?\d+/i)
      var x64 = ua.match(/x64/i)
-     if ((verTrident == null) && (verIE == null) && (x64 !== null)) { return true } else
+     if ((verTrident == null) && (verIE == null) && (x64 !== null)) {
+       return true
+     } else
      if (verFF !== null) {
        verFF = verFF[0].match(/\d+/)
        if ((verFF[0] >= 41) || (x64 !== null)) return true
@@ -44,7 +49,9 @@
        }
      }
      return false
-   } catch (err) { return true }
+   } catch (err) {
+     return true
+   }
  }
 
  // ====页面引用CLodop云打印必须的JS文件：====
@@ -81,11 +88,18 @@
    try {
      var isIE = (navigator.userAgent.indexOf('MSIE') >= 0) || (navigator.userAgent.indexOf('Trident') >= 0)
      if (needCLodop()) {
-       try { LODOP = getCLodop() } catch (err) {}
-       if (!LODOP && document.readyState !== 'complete') { alert('C-Lodop没准备好，请稍后再试！'); return }
+       try {
+         LODOP = getCLodop()
+       } catch (err) {}
+       if (!LODOP && document.readyState !== 'complete') {
+         alert('C-Lodop没准备好，请稍后再试！');
+         return
+       }
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall)
-         else { var conf = confirm('没有安装LODOP云打印插件,确认下载？') }
+         else {
+           var conf = confirm('没有安装LODOP云打印插件,确认下载？')
+         }
          if (conf) {
            window.open(downloadPath)
          }
@@ -94,7 +108,9 @@
        } else {
          if (CLODOP.CVERSION < '3.0.4.3') {
            if (isIE) document.write(strCLodopUpdate)
-           else { document.body.innerHTML = strCLodopUpdate + document.body.innerHTML }
+           else {
+             document.body.innerHTML = strCLodopUpdate + document.body.innerHTML
+           }
          }
          if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED)
          if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT)
@@ -116,13 +132,19 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-         if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML }
-         if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML }
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+         if (navigator.userAgent.indexOf('Chrome') >= 0) {
+           document.body.innerHTML = strHtmChrome + document.body.innerHTML
+         }
+         if (navigator.userAgent.indexOf('Firefox') >= 0) {
+           document.body.innerHTML = strHtmFireFox + document.body.innerHTML
+         }
          if (is64IE) document.write(strHtm64_Install)
          else
          if (isIE) document.write(strHtmInstall)
-         else { document.body.innerHTML = strHtmInstall + document.body.innerHTML }
+         else {
+           document.body.innerHTML = strHtmInstall + document.body.innerHTML
+         }
          return LODOP
        }
      }
@@ -131,7 +153,9 @@
          if (is64IE) document.write(strHtm64_Update)
          else
          if (isIE) document.write(strHtmUpdate)
-         else { document.body.innerHTML = strHtmUpdate + document.body.innerHTML }
+         else {
+           document.body.innerHTML = strHtmUpdate + document.body.innerHTML
+         }
        }
        return LODOP
      }
@@ -139,7 +163,9 @@
 
      // ===========================================================
      return LODOP
-   } catch (err) { alert('getLodop出错:' + err) }
+   } catch (err) {
+     alert('getLodop出错:' + err)
+   }
  }
 
  // 全局常量
@@ -297,24 +323,28 @@
      // info = info.replace('PRINT_INITA', 'PRINT_INIT')
 
      eval(info)
-    //  LODOP.ADD_PRINT_SETUP_BKIMG('E:/工作资料/打印机驱动/20180921095700758_0003.jpg')
+     //  LODOP.ADD_PRINT_SETUP_BKIMG('E:/工作资料/打印机驱动/20180921095700758_0003.jpg')
      // LODOP.PRINT_SETUP()
      LODOP.PREVIEW()
-    //  LODOP.PRINT_DESIGN()
+     //  LODOP.PRINT_DESIGN()
    } catch (err) {
      getLodop()
    }
  }
  // 创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info, printer) {
+
    try {
+     const prxvalue = 0.264
+     const str = ''
+     console.log('print', info, printer)
      if (printer) {
        LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+       str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
      }
      LODOP = getLodop()
      let arr = new Array()
      arr = Object.assign([], info)
-     const str = ''
      for (const item in arr) { // 没有传值的项设置位空字符串
        if (arr[item].value === undefined || arr[item].value === null) {
          arr[item].value = ''
@@ -324,30 +354,35 @@
      let pageHeight = 0
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
-        //  str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
-         LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
+         str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
+         LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '青春物流托运单打印')
+         str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
+         // LODOP.SET_PRINT_PAGESIZE(0, 2100, 1400, "");
+         LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
          pageWidth = e.width
          pageHeight = e.height
        } else {
          if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
            LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
            LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+
          } else {
-          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+           str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
            LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
            LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
            LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
          }
        }
      })
-    //  eval(str)
+     //  eval(str)
      // LODOP.PRINT_SETUP()
-    //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
+     //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
      LODOP.PREVIEW()
+     LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
    } catch (err) {
      getLodop()
    }
@@ -355,9 +390,9 @@
 
  // 格式化数据
  function formatTableData(obj) {
-  /*  obj.columns.sort((a, b) => {
-     return a.fixed ? -1 : 0
-   }) */
+   /*  obj.columns.sort((a, b) => {
+      return a.fixed ? -1 : 0
+    }) */
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
@@ -379,9 +414,9 @@
  }
 
  function SaveExcelByOne(option) {
-  // 旧版代码
+   // 旧版代码
    var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
-  //  var toExcel = new ExportJsonExcel(option) // new
+   //  var toExcel = new ExportJsonExcel(option) // new
    toExcel.saveExcel() // 保存
  }
 
@@ -401,9 +436,11 @@
    // 表格名称
    var worksheet = workbook.addWorksheet('Sheet')
    // 冻结第一行
-   worksheet.views = [
-   { state: 'frozen', xSplit: 0, ySplit: 1 }
-   ]
+   worksheet.views = [{
+     state: 'frozen',
+     xSplit: 0,
+     ySplit: 1
+   }]
 
    // 添加过滤器
    /* worksheet.autoFilter = {
@@ -418,10 +455,30 @@
        vertical: 'middle'
      },
      border: {
-       top: { style: 'thin', color: { argb: 'FF999999' }},
-       left: { style: 'thin', color: { argb: 'FF999999' }},
-       bottom: { style: 'thin', color: { argb: 'FF999999' }},
-       right: { style: 'thin', color: { argb: 'FF999999' }}
+       top: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       left: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       bottom: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       right: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       }
      }
    }
    const columns = []
@@ -435,37 +492,70 @@
      })
    })
    worksheet.columns = columns
-/*    worksheet.columns = [
-   { header: 'Index', key: 'Index', width: 15 },
-   { header: 'Title', key: 'title', width: 25, style: { alignment: { wrapText: true }}},
-   { header: 'Authors', key: 'authors', width: 20, style: { alignment: { wrapText: true }}},
-   { header: 'Journal/Conference', key: 'jc', width: 25, style: { alignment: { wrapText: true }}},
-   { header: 'Type', key: 'type', width: 12, style: { alignment: { wrapText: true }}},
-   { header: 'Year', key: 'year', width: 12, style: { numFmt: '0000' }},
-   { header: 'Month', key: 'month', width: 12 },
-   { header: 'volume', key: 'volume', width: 12 },
-   { header: 'number', key: 'number', width: 12 },
-   { header: 'Pages', key: 'pages', width: 12 },
-   { header: 'Location', key: 'location', width: 20, style: { alignment: { wrapText: true }}},
-   { header: 'doi', key: 'doi', width: 22, style: { alignment: { wrapText: true }}},
-   { header: 'affiliation', key: 'affiliation', width: 20, style: { alignment: { wrapText: true }}}
-   ] */
+   /*    worksheet.columns = [
+      { header: 'Index', key: 'Index', width: 15 },
+      { header: 'Title', key: 'title', width: 25, style: { alignment: { wrapText: true }}},
+      { header: 'Authors', key: 'authors', width: 20, style: { alignment: { wrapText: true }}},
+      { header: 'Journal/Conference', key: 'jc', width: 25, style: { alignment: { wrapText: true }}},
+      { header: 'Type', key: 'type', width: 12, style: { alignment: { wrapText: true }}},
+      { header: 'Year', key: 'year', width: 12, style: { numFmt: '0000' }},
+      { header: 'Month', key: 'month', width: 12 },
+      { header: 'volume', key: 'volume', width: 12 },
+      { header: 'number', key: 'number', width: 12 },
+      { header: 'Pages', key: 'pages', width: 12 },
+      { header: 'Location', key: 'location', width: 20, style: { alignment: { wrapText: true }}},
+      { header: 'doi', key: 'doi', width: 22, style: { alignment: { wrapText: true }}},
+      { header: 'affiliation', key: 'affiliation', width: 20, style: { alignment: { wrapText: true }}}
+      ] */
 
    // 设置第一行标题样式
    var firstRow = worksheet.getRow(1)
-   firstRow.font = { name: 'MicrosoftYaHei', family: 1, size: 10, bold: true, color: { argb: '80333333' }}
-   firstRow.alignment = { vertical: 'middle', horizontal: 'center' }
+   firstRow.font = {
+     name: 'MicrosoftYaHei',
+     family: 1,
+     size: 10,
+     bold: true,
+     color: {
+       argb: '80333333'
+     }
+   }
+   firstRow.alignment = {
+     vertical: 'middle',
+     horizontal: 'center'
+   }
    firstRow.height = 20
    firstRow.border = {
-     top: { style: 'thin', color: { argb: 'FF999999' }},
-     left: { style: 'thin', color: { argb: 'FF999999' }},
-     bottom: { style: 'thin', color: { argb: 'FF999999' }},
-     right: { style: 'thin', color: { argb: 'FF999999' }}
+     top: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     left: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     bottom: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     right: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     }
    }
    firstRow.fill = {
      type: 'pattern',
      pattern: 'solid',
-     fgColor: { argb: 'FFCCCCCC' }
+     fgColor: {
+       argb: 'FFCCCCCC'
+     }
    }
 
    const datas = []
@@ -478,30 +568,36 @@
      datas.push(arr)
    })
 
-  //  csv.shift();
+   //  csv.shift();
    worksheet.addRows(datas)
-  // 添加数据
+   // 添加数据
 
-  // 设置间隔样式
-  // 除第一行外的奇数行设置背景色
-   worksheet.eachRow({ includeEmpty: true }, function(row, rowNumber) {
-    //  console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values))
+   // 设置间隔样式
+   // 除第一行外的奇数行设置背景色
+   worksheet.eachRow({
+     includeEmpty: true
+   }, function(row, rowNumber) {
+     //  console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values))
      if (rowNumber > 1 && rowNumber % 2) {
        row.fill = {
          type: 'pattern',
          pattern: 'solid',
-         fgColor: { argb: 'FFEEEEEE' }
+         fgColor: {
+           argb: 'FFEEEEEE'
+         }
        }
      }
    })
 
    var buff = workbook.xlsx.writeBuffer().then(function(data) {
-     var blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+     var blob = new Blob([data], {
+       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+     })
      saveAs(blob, (option.fileName || '报表') + '.xlsx')
    })
 
    console.log('option:::::', option)
-  //global .FileSaver
+   //global .FileSaver
  }
 
  // 保存为xls文件
@@ -545,7 +641,7 @@
      optionObj.sheetData.push(sumObj)
      option.datas = [optionObj]
 
-    //  SaveExcelByOne(option)
+     //  SaveExcelByOne(option)
      SaveExcelByTwo(option)
    } else {
      try {
@@ -604,7 +700,11 @@
    try {
      var LODOP = getLodop()
      if (LODOP.VERSION) {
-       if (LODOP.CVERSION) { alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')') } else { alert('本机已成功安装了Lodop控件！\n 版本号:' + LODOP.VERSION) }
+       if (LODOP.CVERSION) {
+         alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')')
+       } else {
+         alert('本机已成功安装了Lodop控件！\n 版本号:' + LODOP.VERSION)
+       }
      }
    } catch (err) {
      getLodop()
