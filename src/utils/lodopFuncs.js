@@ -369,6 +369,7 @@
          let title = ''
          if (e.filedName === '标签尺寸') {
            title = '标签打印'
+
          } else {
            title = '托运单打印'
          }

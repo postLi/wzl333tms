@@ -642,15 +642,17 @@ export default {
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
-          e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
-          e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
           if (e.filedValue === 'setting') {
             const obj = Object.assign({}, e)
             console.log('getSettingCompanyOrder', e, obj)
             obj.leftx = Math.round(obj.leftx * this.prxvalue)
             obj.topy = Math.round(obj.topy * this.prxvalue)
+            obj.width = Math.round((obj.width ? obj.width/10 : 150) * this.prxvalue)
+            obj.height = Math.round((obj.height ? obj.height/10 : 150) * this.prxvalue)
             this.formModel.paper = obj
           } else {
+            e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
+          e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
             if (e.isshow) { // 显示项要在预览处初始化
               this.labelListView.push(e)
             }
@@ -689,13 +691,20 @@ export default {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
             } else {
-              e.width = Math.round(e.width / this.prxvalue)
-              e.height = Math.round(e.height / this.prxvalue)
+              
               if (e.filedValue === 'setting') {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
+                e.width = e.width * 10
+                e.height = e.height * 10
+                console.log(e.width, e.height)
+              }else {
+
+              e.width = Math.round(e.width / this.prxvalue)
+              e.height = Math.round(e.height / this.prxvalue)
               }
+
 
               e.isshow = e.isshow ? 1 : 0
               e.bold = e.bold ? 1 : 0
