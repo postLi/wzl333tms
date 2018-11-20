@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { login, logout, getInfo } from '@/api/login'
 import { getAllSetting } from '@/api/company/systemSetup'
 import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo, removeUserInfo, removeUsername, removeOrgId } from '@/utils/auth'
+import { getOrgId as getOrgInfo } from '@/api/company/groupManage'
 
 const user = {
   state: {
@@ -85,21 +86,33 @@ const user = {
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
           // if (Vue.prototype.$_has_permission('SETTING')) {
           getAllSetting({
-              orgid: data.orgid,
-              type: '',
-              module: 'order'
-            }).then(res => {
-              data.systemSetup = res
+            orgid: data.orgid,
+            type: '',
+            module: 'order'
+          }).then(res => {
+            data.systemSetup = res
+            commit('SET_OTHERINFO', data)
+
+              // 补充公司信息
+            getOrgInfo(data.orgid).then(res => {
+              data.companyInfo = res.data || {}
               commit('SET_OTHERINFO', data)
               setUserInfo(data)
               resolve({ data })
             }).catch(error => {
-              data.systemSetup = {}
+              data.companyInfo = {}
               commit('SET_OTHERINFO', data)
               setUserInfo(data)
               resolve({ data })
-              // reject(error)
+                // reject(error)
             })
+          }).catch(error => {
+            data.systemSetup = {}
+            commit('SET_OTHERINFO', data)
+            setUserInfo(data)
+            resolve({ data })
+              // reject(error)
+          })
           // } else {
           //   data.systemSetup = {}
           //   commit('SET_OTHERINFO', data)
