@@ -1964,8 +1964,22 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
-      if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
-        this.getLineInfo()
+      // 修改保险费与声明价值
+      // 如果有设置
+      if (/(insuranceFee|productPrice)/.test(name)) {
+        const cfg = this.config.shipPageFunc
+        if (cfg.insurancePremiumIsDeclaredValue) {
+          const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 100)
+          const inx = this.theFeeConfig.filter(el => el.fieldProperty === 'insuranceFee').length
+          // 如果存在保险费
+          if (inx && per) {
+            if (name === 'insuranceFee') {
+              this.form.cargoList[index]['productPrice'] = (tmsMath._div(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            } else {
+              this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            }
+          }
+        }
       }
     },
     // 其他表单

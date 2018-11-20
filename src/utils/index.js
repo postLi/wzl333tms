@@ -357,7 +357,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
@@ -808,6 +808,7 @@ export function loadJs(src, callback) {
 export const tmsMath = {
   _result: 0,
   _isCalc: false,
+  // 加法
   _add(a, b) {
     var c, d, e
     try {
@@ -822,6 +823,11 @@ export const tmsMath = {
     }
     return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) + this._mul(b, e)) / e
   },
+  /**
+   * 减法
+   * @param {*} a 被减数
+   * @param {*} b 减数
+   */
   _sub(a, b) {
     var c, d, e
     try {
@@ -836,6 +842,9 @@ export const tmsMath = {
     }
     return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) - this._mul(b, e)) / e
   },
+  /**
+   * 乘法
+   */
   _mul(a, b) {
     // console.log(a, b)
     var c = 0,
@@ -850,6 +859,9 @@ export const tmsMath = {
     } catch (f) {}
     return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
   },
+  /**
+   * 除法
+   */
   _div(a, b) {
     var c, d, e = 0,
       f = 0
