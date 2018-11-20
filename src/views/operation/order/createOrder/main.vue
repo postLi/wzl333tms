@@ -863,7 +863,8 @@ export default {
         priceType: '', // 类型
         highOrLow: '', // 超过 低于
         proposedPrice: 0 // 总价
-      }
+      },
+      RECEIPT_TYPE: {} // 回单类型中文
     }
   },
   computed: {
@@ -2924,6 +2925,17 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
+    getShipPayWay() { // 获取回单类型中文
+      getSelectType('ship_receipt_require', this.otherinfo.orgid).then(data => {
+        console.log('ship_receipt_require', data, parseInt(this.form.tmsOrderShip.shipPayWay))
+        data.forEach(e => {
+          this.RECEIPT_TYPE[e.id] = e.dictName
+        })
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
     selectShipUserid(val) { // 业务员
       console.log('业务员', val)
       this.shipUserName = val.name || ''
@@ -2974,7 +2986,7 @@ export default {
         this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
         this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
         this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(this.form.cargoList[0].brokerageFee))) // 回扣标识
-        this.$set(obj, 'receiptRequire', this.form.tmsOrderShip.shipReceiptRequire) // 回单类型
+        this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
         this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型

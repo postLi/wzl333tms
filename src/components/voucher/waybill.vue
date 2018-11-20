@@ -14,7 +14,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" disabled>
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" >
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -26,7 +26,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" disabled>
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" >
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +37,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" disabled>
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" >
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +48,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" disabled>
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" >
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -114,6 +114,13 @@ export default {
       handler(cval, oval) {
 
       },
+      deep: true
+    },
+    orgId: {
+      handler (cval, oval) {
+        console.log('orgId',cval, oval)
+      },
+      immediate: true,
       deep: true
     }
   },
@@ -215,7 +222,6 @@ export default {
             this.veryficationType[el.id] = el.verificationWay
           })
           this.initSubject()
-          this.loading = false
         })
         .catch(err => {
           this.loading = false
@@ -224,6 +230,7 @@ export default {
     },
     initSubject() {
       this.getFinanceSubjects().then(() => {
+        this.loading = false
         console.log('需要初始化科目一', this.formModel.subjectOneId, typeof subjectOneId)
         if (this.formModel.subjectOneId) {
           console.log('需要初始化科目二')
@@ -283,6 +290,7 @@ export default {
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
+      this.searchQuerySub.orgId = this.orgId || this.otherinfo.orgid
 
       return getFinanceSubjects(this.searchQuerySub).then(data => {
           switch (subjectLevel) {
