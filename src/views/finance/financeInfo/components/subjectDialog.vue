@@ -480,6 +480,8 @@
           if (res === '数据库无对应记录' || '') {
             this.form.threeId = ''
             this.form.threeName = ''
+            this.form.fourId = ''
+            this.form.fourName = ''
             this.closeOptions.threeOptions = ''
             return false
           } else {
