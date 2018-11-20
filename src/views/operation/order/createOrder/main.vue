@@ -988,6 +988,7 @@ export default {
   mounted() {
     this.getSelectType()
     this.getShipPayWay()
+    this.getReceiptType()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
     if (this.ispop) {
@@ -2925,7 +2926,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    getShipPayWay() { // 获取回单类型中文
+    getReceiptType() { // 获取回单类型中文
       getSelectType('ship_receipt_require', this.otherinfo.orgid).then(data => {
         console.log('ship_receipt_require', data, parseInt(this.form.tmsOrderShip.shipPayWay))
         data.forEach(e => {
