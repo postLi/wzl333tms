@@ -851,7 +851,7 @@ export default {
     if(window.TMS_printOrderInfo){
       console.warn('TMS_printOrderInfo', window.TMS_printOrderInfo)
       this.doAction('printShipKey')
-      this.doAction('printLibkey')
+      // this.doAction('printLibkey')
     }
     // this.initIndex()
   },
@@ -1138,7 +1138,9 @@ export default {
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
         ////////////////////////////////////////////////////////////
         ///年月日
+        let year = parseTime(infoDetail.createTime, '{y}')
         this.$set(obj, 'createYear', parseTime(infoDetail.createTime, '{y}'))
+        this.$set(obj, 'createYear2', year.substr(2,2))
         this.$set(obj, 'createMonth', parseTime(infoDetail.createTime, '{m}'))
         this.$set(obj, 'createDate', parseTime(infoDetail.createTime, '{d}'))
         ////////////////////////////////////////////////////////////

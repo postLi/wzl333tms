@@ -335,6 +335,7 @@
  export function CreatePrintPageEnable(info, printer) {
 
    try {
+     const prxvalue = 0.264
      const str = ''
      console.log('print', info, printer)
      if (printer) {
@@ -354,11 +355,10 @@
      arr.forEach((e, index) => {
        if (e.filedValue === 'setting') {
          str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
-         LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
+         LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '青春物流托运单打印')
          str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-         console.error('纸张宽高', e.width, e.height, typeof e.width, typeof e.height)
          // LODOP.SET_PRINT_PAGESIZE(0, 2100, 1400, "");
-         LODOP.SET_PRINT_PAGESIZE(0, e.width, e.height, "")
+         LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
          pageWidth = e.width
          pageHeight = e.height
        } else {
@@ -378,7 +378,6 @@
          }
        }
      })
-     console.error('sdfsdfsdfsd', str)
      //  eval(str)
      // LODOP.PRINT_SETUP()
      //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')

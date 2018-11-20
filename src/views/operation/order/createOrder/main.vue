@@ -1956,7 +1956,7 @@ export default {
       if (/(insuranceFee|productPrice)/.test(name)) {
         const cfg = this.config.shipPageFunc
         if (cfg.insurancePremiumIsDeclaredValue) {
-          const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 100)
+          const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 1000)
           const inx = this.theFeeConfig.filter(el => el.fieldProperty === 'insuranceFee').length
           // 如果存在保险费
           if (inx && per) {
