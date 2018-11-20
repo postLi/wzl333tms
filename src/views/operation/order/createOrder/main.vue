@@ -2885,12 +2885,14 @@ export default {
       })
     },
     printSave() { // 打印保存的运单
-      getPrintOrderItems(this.resOrderId).then(data => {
-        CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+      this.eventBus.$emit('printOrder')
+      // this.print()
+      // getPrintOrderItems(this.resOrderId).then(data => {
+      //   CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
+      // })
+      // .catch(err => {
+      //   this._handlerCatchMsg(err)
+      // })
     },
     getSelectType() { // 获取提货方式中文
       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => {
