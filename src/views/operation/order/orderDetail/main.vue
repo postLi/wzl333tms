@@ -847,9 +847,11 @@ export default {
     this.eventBus.$on('printOrder', () => {
       this.doAction('printShipKey')
     })
+      console.warn('TMS_printOrderInfo', window.TMS_printOrderInfo)
     if(window.TMS_printOrderInfo){
+      console.warn('TMS_printOrderInfo', window.TMS_printOrderInfo)
       this.doAction('printShipKey')
-      // this.doAction('printLibkey')
+      this.doAction('printLibkey')
     }
     // this.initIndex()
   },
