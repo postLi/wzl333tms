@@ -629,6 +629,18 @@ export default {
         messageInfo = '出发网点跟到达网点不能一样'
         ifNull = false
       }
+      // 检查是否选了时效类别但没填数据时提示
+      if (this.ruleForm.transportAgingType !== '') {
+        if (this.ruleForm.transportAgingType === 2) {
+          if (!this.ruleForm.transportAging1 || !this.ruleForm.transportAging2) {
+            messageInfo = '请填写时效值'
+            ifNull = false
+          }
+        } else if (!this.ruleForm.transportAging) {
+          messageInfo = '请填写时效值'
+          ifNull = false
+        }
+      }
 
       if (ifNull) {
         this.$refs[formName].validate((valid) => {
@@ -674,7 +686,11 @@ export default {
                 this.$alert('操作成功', '提示', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    this.$router.push({ path: '/company/lineManage' })
+                    if (this.ifShowRangeType === '1') {
+                      this.eventBus.$emit('replaceCurrentView', '/company/lineManage')
+                    } else {
+                      this.eventBus.$emit('replaceCurrentView', '/company/lineManage')
+                    }
                   }
                 })
               } else {

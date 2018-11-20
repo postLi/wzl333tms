@@ -211,7 +211,7 @@
             <div class="order-form-item">
               <span class="order-form-label">付款方式</span>
               <el-form-item prop="tmsOrderShip.shipPayWay">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
+                <SelectType :filterable="false" size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
               </el-form-item>
             </div>
           </el-col>
@@ -2709,12 +2709,19 @@ export default {
             data.customerList[1].customerType = 2
             // 处理货物
             data.tmsOrderCargoList = this.form.cargoList.filter(el => {
-              // 没填写货品名称的丢弃
-              return !!el.cargoName
+              // 丢弃没有填写任何信息的行
+              let flag = false
+              for (const i in el) {
+                if (el[i]) {
+                  flag = true
+                }
+              }
+
+              return flag
             }).map(el => {
               const b = {}
               for (const i in el) {
-                if (el[i] === '') {
+                if (el[i] === '' && i !== 'cargoName') {
                   b[i] = 0
                 } else {
                   b[i] = el[i]
@@ -2730,6 +2737,25 @@ export default {
             data.tmsOrderShip.shipArrivepayFee = parseFloat(data.tmsOrderShip.shipArrivepayFee, 10).toFixed(2)
             data.tmsOrderShip.shipReceiptpayFee = parseFloat(data.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2)
             data.tmsOrderShip.shipMonthpayFee = parseFloat(data.tmsOrderShip.shipMonthpayFee, 10).toFixed(2)
+
+            // 判断总运费是否超过最低价格
+            if (this.lineinfo.loaded) {
+              // 有最低价格数据才进行判断
+              // 如果是免费则不进行判断
+              // proposedPrice lowerPrice
+              if (parseInt(data.tmsOrderShip.shipPayWay, 10) !== 103) {
+                let total = 0
+                data.tmsOrderCargoList.forEach(el => {
+                  total = tmsMath.add(total, el.shipFee || 0).result()
+                })
+                console.log('提交前判断：', total, this.lineinfo.lowerPrice, data.tmsOrderCargoList)
+                if (this.lineinfo.lowerPrice > total) {
+                  this.$message.info('基本运费不得低于最低价格。')
+                  this.loading = false
+                  return false
+                }
+              }
+            }
 
             if (this.output.ismodify) {
               /* this.$message.success('成功修改运单！')
