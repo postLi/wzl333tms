@@ -844,7 +844,9 @@ export default {
   },
   mounted() {
     this.loading = true
-
+    this.eventBus.$on('printOrder', () => {
+      this.doAction('printShipKey')
+    })
     // this.initIndex()
   },
   methods: {
