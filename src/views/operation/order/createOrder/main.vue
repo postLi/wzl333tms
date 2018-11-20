@@ -537,6 +537,7 @@ export default {
       batchSaveList: {},
       DELIVERY_METHODS: {}, // 提货方式
       PAY_WAY: {}, // 付款方式
+      RECEIPT_TYPE: {}, // 回单类型
       activeNames: ['1'],
       'shipFieldValueInfo': {
         // 当前页面控制
