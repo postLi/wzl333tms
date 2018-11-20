@@ -547,6 +547,7 @@ export default {
       batchSaveList: {},
       DELIVERY_METHODS: {}, // 提货方式
       PAY_WAY: {}, // 付款方式
+      RECEIPT_TYPE: {}, // 回单类型
       activeNames: ['1'],
       'shipFieldValueInfo': {
         // 当前页面控制
@@ -1019,6 +1020,7 @@ export default {
   mounted() {
     this.getSelectType()
     this.getShipPayWay()
+    this.getReceiptType()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
     if (this.ispop) {
@@ -2911,6 +2913,16 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
+    getReceiptType() { // 获取回单类型中文
+      getSelectType('ship_receipt_require', this.otherinfo.orgid).then(data => {
+        data.forEach(e => {
+          this.RECEIPT_TYPE[e.id] = e.dictName
+        })
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
     selectShipUserid (val) { // 业务员
       console.log('业务员', val)
       this.shipUserName = val.name || ''
@@ -2961,7 +2973,7 @@ export default {
         this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
         this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
         this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(this.form.cargoList[0].brokerageFee))) // 回扣标识
-        this.$set(obj, 'receiptRequire', this.form.tmsOrderShip.shipReceiptRequire) // 回单类型
+        this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
         this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型

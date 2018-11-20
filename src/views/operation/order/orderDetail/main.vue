@@ -1120,7 +1120,7 @@ export default {
         this.$set(obj, 'housingFee', parseFloat(infoDetail.housingFee)) // 入仓费
         this.$set(obj, 'stampTax', parseFloat(infoDetail.stampTax)) // 印花税
         this.$set(obj, 'housingFee', parseFloat(infoDetail.housingFee)) // 入仓费
-        this.$set(obj, 'receiptRequire', infoDetail.shipReceiptRequire) // 回单要求
+        this.$set(obj, 'receiptRequire', infoDetail.shipReceiptRequireName) // 回单要求
         this.$set(obj, 'customerNumber', infoDetail.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', infoDetail.shipShippingTypeName) // 运输方式
         this.$set(obj, 'businessType', infoDetail.shipBusinessTypeName) // 业务类型
@@ -1154,7 +1154,7 @@ export default {
             break
           case 77:
             this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
-            this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
+            // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
             // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
             break
           case 78:
