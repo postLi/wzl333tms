@@ -1946,6 +1946,8 @@ export default {
       setTimeout(() => {
         this.findAllInput()
       }, 100)
+      // 修改时计算总运费
+      this.getTotalFee()
     },
     detectCargoNumChange(index, name, event) {
       // if (name === 'cargoAmount') {

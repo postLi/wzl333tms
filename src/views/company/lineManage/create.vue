@@ -640,6 +640,11 @@ export default {
           messageInfo = '请填写时效值'
           ifNull = false
         }
+      } else {
+        if (this.ruleForm.transportAging) {
+          messageInfo = '请选择时效类型'
+          ifNull = false
+        }
       }
 
       if (ifNull) {
