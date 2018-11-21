@@ -207,14 +207,14 @@
           },
           {
             label: '反核销金额',
-            prop: 'amount',
+            prop: 'contrayAmount',
             width: '100',
             fixed: false
           },
           {
             label: '反核销经办人',
             prop: 'contraryVerifyMan',
-            width: '90',
+            width: '120',
             fixed: false
           },
           {

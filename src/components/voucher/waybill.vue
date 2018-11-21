@@ -296,17 +296,26 @@ export default {
           switch (subjectLevel) {
             case 2:
               this.subjectTwo = data
+               this.subjectTwo.forEach((e, index)=>{
+                console.log(index, e.id)
+              })
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目二: ', this.subjectTwo)
               break
             case 3:
               this.subjectThree = data
+              this.subjectThree.forEach((e, index)=>{
+                console.log(index, e.id)
+              })
               this.subjectFour = []
               console.log('科目三: ', this.subjectThree)
               break
             case 4:
               this.subjectFour = data
+               this.subjectFour.forEach((e, index)=>{
+                console.log(index, e.id)
+              })
               console.log('科目四: ', this.subjectFour)
               break
             default:
@@ -315,6 +324,9 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目一: ', this.subjectOne)
+              this.subjectOne.forEach((e, index)=>{
+                console.log(index, e.id)
+              })
               break
           }
           this.loading = false
