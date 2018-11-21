@@ -247,7 +247,6 @@
       doAction(type) {
         // 判断是否有选中项
         if (!this.selected.length && type !== 'export' && type !== 'print') {
-          this.closeAddCustomer()
           this.$message({
             message: '请选择要操作的项~',
             type: 'warning'
@@ -264,7 +263,7 @@
             })
             if (idLists.length) {
               this.$confirm('你已选择' + idLists.length + '条凭证？', '提示', {
-                confirmButtonText: '审核',
+                confirmButtonText: '反审核',
                 cancelButtonText: '取消',
                 type: 'warning'
               }).then(() => {
@@ -348,7 +347,7 @@
         this.selected = selection
       },
       getDbClick(row, event) {
-        console.log(this.searchQuery, '00000')
+        // console.log(this.searchQuery, '00000')
         const searchQuery = JSON.stringify(this.searchQuery)
         this.$router.push({
           path: '/finance/cashDetail',

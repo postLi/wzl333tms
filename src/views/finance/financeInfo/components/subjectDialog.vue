@@ -16,15 +16,15 @@
       <el-form-item label="上级科目:" class="sub_el_form_item">
         <span>{{currentForm.subjectName }}</span>
       </el-form-item>
-      <el-form-item label="科目代码" prop='subjectCode' class="sub_subjectCode">
-        <el-input v-model="form.subjectCode" :maxlength="2">
+      <el-form-item label="科目代码11" prop='subjectCode' class="sub_subjectCode">
+        <el-input v-model="form.subjectCode" :maxlength="isFNum">
           <template slot="prepend">{{currentForm.subjectCode}}</template>
         </el-input>
       </el-form-item>
       <el-form-item label="科目名称" prop='subjectName' label-width="72px" class="info_item ">
         <el-input v-model="form.subjectName" :maxlength="15" clearable></el-input>
       </el-form-item>
-      <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
+      <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级8位，四级10位。</span>
     </el-form>
 
     <el-form size="mini" ref="ruleForm" :model="form" class="" :rules="rules" v-if="doAddStair">
@@ -50,7 +50,7 @@
           <!--<el-input v-model="form.subjectName"></el-input>-->
         </el-form-item>
       </div>
-      <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级6位，四级8位。</span>
+      <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级8位，四级10位。</span>
     </el-form>
 
     <!--<el-form size="mini" ref="ruleForm" :model="form" class="direct"-->
@@ -250,23 +250,6 @@
       isDoAddSub: {
 
         handler(n) {
-          // if (n === true) {
-          //   // this.form.remark = ''
-          //   // this.form.verificationWay = ''
-          //   this.form = {}
-          //   console.log(n)
-          //   console.log(this.form, 'frommmm')
-          // }
-          // else {
-          //   this.form.remark = ''
-          //   this.form.verificationWay = ''
-          //   console.log(n, 'orllllll')
-          //   console.log(this.form, 'frommmm11111111')
-          //   // this.form.remark === ''
-          //   // this.form.verificationWay === ''
-          // }
-
-          //   this.comWatch()
         },
         immediate: true,
         deep: true
@@ -403,10 +386,27 @@
           if (item.parent && item.subjectLevel > 1) {
             this.isSubjectLevelFn = true
             this.currentForm.subjectCode = item.parent.subjectCode
+            this.isFNum = 2
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
+            console.log(this.isFNum, 'isFNum');
           }
         }
+
+        //
+        // this.isTitle = '增加一级'
+        // this.isAddLE = true
+        // if (item.parent) {
+        //   this.currentForm.subjectCode = item.parent.subjectCode
+        // }
+        // this.isSubjectLevel = item.subjectLevel
+        // if (this.isSubjectLevel > 1) {
+        //   this.isFNum = 2
+        // } else {
+        //   this.isFNum = item.subjectLevel * 2 + 2
+        // }
+
+
         else if (this.isDoEdit) {
           this.isTitle = '修改'
           this.isDirect = true
