@@ -1145,6 +1145,9 @@ export default {
         this.$set(obj, 'userName', infoDetail.userName) // 制单员
         this.$set(obj, 'remarks', infoDetail.shipRemarks) // 备注
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
+        /////////////////////////////////////////////////////////////
+        ///运单号-件数
+        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-'+infoDetail.cargoAmount)
         ////////////////////////////////////////////////////////////
         ///年月日
         let year = parseTime(infoDetail.createTime, '{y}')
