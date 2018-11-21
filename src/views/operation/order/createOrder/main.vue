@@ -2904,8 +2904,8 @@ export default {
       })
     },
     printSave() { // 打印保存的运单
-      this.eventBus.$emit('printOrder')
       window.TMS_printOrderInfo = true
+      this.eventBus.$emit('printOrder')
       // this.print()
       // getPrintOrderItems(this.resOrderId).then(data => {
       //   CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
@@ -2981,9 +2981,11 @@ export default {
       if (type === 'lib') {
         this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
         this.$set(obj, 'companyName', this.otherinfo.companyName)
-        this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
+        this.$set(obj, 'companyPhone', this.otherinfo.companyInfo.servicePhone)// 公司电话
         this.$set(obj, 'qrcode', '') // 二维码
-        this.$set(obj, 'companyAddr', '') // 公司地址
+        this.$set(obj, 'companyAddr', this.otherinfo.companyInfo.detailedAddr) // 公司地址
+        this.$set(obj, 'mobilephone',  this.otherinfo.mobilephone) // 业务员电话
+
       } else if (type === 'order') {
         console.log('this.form.cargoList[0]', this.form.cargoList[0])
         this.$set(obj, 'otherfeeOut', this.form.cargoList[0]['otherfeeOut'] ? this.form.cargoList[0]['otherfeeOut'] : '') // 其他费用支出
@@ -3004,6 +3006,9 @@ export default {
         this.$set(obj, 'userName', this.shipUserName) // 制单员
         this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
         // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
+         /////////////////////////////////////////////////////////////
+        ///运单号-件数
+        this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + this.form.cargoList[0].cargoAmount)
          // //////////////////////////////////////////////////////////
         // /年月日
         this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
@@ -3055,18 +3060,23 @@ export default {
         }
         // //////////////////////////////////////////////////////////
         // /处理合计中文大写
-        const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
+        if (this.form.tmsOrderShip.shipTotalFee) {
+          const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
         this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
         this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
         this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
         this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
         this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
+        }
+        if (this.form.cargoList[0].agencyFund) {
+
         const upagencyFeeBig = this.setFeeToBig(this.form.cargoList[0].agencyFund)
-        this.$set(obj, 'upagencyFundW', totalFeeBig[4]) // 代收货款(万)
-        this.$set(obj, 'upagencyFundQ', totalFeeBig[3]) // 代收货款(仟)
-        this.$set(obj, 'upagencyFundB', totalFeeBig[2]) // 代收货款(佰)
-        this.$set(obj, 'upagencyFundS', totalFeeBig[1]) // 代收货款(拾)
-        this.$set(obj, 'upagencyFundY', totalFeeBig[0]) // 代收货款(元)
+        this.$set(obj, 'upagencyFundW', upagencyFeeBig[4]) // 代收货款(万)
+        this.$set(obj, 'upagencyFundQ', upagencyFeeBig[3]) // 代收货款(仟)
+        this.$set(obj, 'upagencyFundB', upagencyFeeBig[2]) // 代收货款(佰)
+        this.$set(obj, 'upagencyFundS', upagencyFeeBig[1]) // 代收货款(拾)
+        this.$set(obj, 'upagencyFundY', upagencyFeeBig[0]) // 代收货款(元)
+        }
       }
       this.printDataObject = Object.assign({}, obj)
       obj = {}
