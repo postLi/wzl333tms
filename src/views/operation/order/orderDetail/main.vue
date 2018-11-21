@@ -845,9 +845,14 @@ export default {
   activated() {
     if (window.TMS_printOrderInfo) {
       this.doAction('printShipKey').then(r => {
-        this.doAction('printLibkey')
+        if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
+          this.doAction('printLibkey').then(r => {
+            window.TMS_printOrderInfo = false
+          })
+        } else {
+          window.TMS_printOrderInfo = false
+        }
       })
-      window.TMS_printOrderInfo = false
     }
   },
   mounted() {
@@ -1032,11 +1037,11 @@ export default {
                   }
                 })
               }
+              console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
               if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
                 return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.form.tmsOrderShipInfo.shipPrintLib) // 调打印接口
               } else {
                 return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
-
               }
             })
             .catch(err => {
@@ -1059,6 +1064,7 @@ export default {
                   }
                 })
               }
+              console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
               if (window.TMS_printOrderInfo) { // 不需要预览的打印
                 return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, true)
               } else {
@@ -1147,7 +1153,7 @@ export default {
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
         /////////////////////////////////////////////////////////////
         ///运单号-件数
-        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-'+infoDetail.cargoAmount)
+        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-' + infoDetail.cargoAmount)
         ////////////////////////////////////////////////////////////
         ///年月日
         let year = parseTime(infoDetail.createTime, '{y}')
