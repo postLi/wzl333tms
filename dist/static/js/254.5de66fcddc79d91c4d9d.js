@@ -1,1 +1,2 @@
 webpackJsonp([254],{"1/HM":function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var r=t("qpoI"),u=t("egAb");var c=function(e){t("kCYq")},a=t("VU/8")(r.a,u.a,c,null,null);n.default=a.exports},egAb:function(e,n,t){"use strict";var r={render:function(){var e=this,n=e.$createElement;return(e._self._c||n)("div",[e._v("\n  运单页面3\n")])},staticRenderFns:[]};n.a=r},kCYq:function(e,n){},qpoI:function(e,n,t){"use strict";n.a={}}});
+//# sourceMappingURL=254.5de66fcddc79d91c4d9d.js.map
