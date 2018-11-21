@@ -842,18 +842,17 @@ export default {
       }
     }
   },
+  activated() {
+    if (window.TMS_printOrderInfo) {
+      this.doAction('printShipKey').then(r => {
+        this.doAction('printLibkey')
+      })
+      window.TMS_printOrderInfo = false
+    }
+  },
   mounted() {
     this.loading = true
-    this.eventBus.$on('printOrder', () => {
-      this.doAction('printShipKey')
-    })
-      console.warn('TMS_printOrderInfo', window.TMS_printOrderInfo)
-    if(window.TMS_printOrderInfo){
-      console.warn('TMS_printOrderInfo', window.TMS_printOrderInfo)
-      this.doAction('printShipKey')
-      // this.doAction('printLibkey')
-    }
-    // this.initIndex()
+    this.initIndex()
   },
   methods: {
     // 各个接口
@@ -1017,12 +1016,12 @@ export default {
     // },
     doAction(type) {
       switch (type) {
-        case 'printLibkey':
+        case 'printLibkey': // 打印标签
           // console.log('运单详情 orderdata::', JSON.stringify(this.orderdata))
           // getSettingCompanyLi().then(data => {
           // console.log('系统所有打印可设置的数据 标签::', JSON.stringify(data))
           // })
-          getEnableLibSetting().then(data => {
+          return getEnableLibSetting().then(data => {
               // console.log('打印设置标签 libData::', JSON.stringify(libData))
               this.setPrintData('lib') // 设置数据
               const libData = Object.assign([], data)
@@ -1033,18 +1032,23 @@ export default {
                   }
                 })
               }
-              CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
+              if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
+                return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.form.tmsOrderShipInfo.shipPrintLib) // 调打印接口
+              } else {
+                return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
+
+              }
             })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
           break
-        case 'printShipKey':
+        case 'printShipKey': // 打印运单
           // console.log('运单详情 orderdata::', JSON.stringify(this.orderdata))
           // getSettingCompanyOrder().then(data => {
           // console.log('系统所有打印可设置的数据 运单::', data)
           // })
-          getEnableOrderSetting().then(data => {
+          return getEnableOrderSetting().then(data => {
               this.setPrintData('order') // 设置数据
               const libData = Object.assign([], data)
               // console.log('打印设置运单 libData::', libData)
@@ -1055,7 +1059,11 @@ export default {
                   }
                 })
               }
-              CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
+              if (window.TMS_printOrderInfo) { // 不需要预览的打印
+                return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, true)
+              } else {
+                return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
+              }
             })
             .catch(err => {
               this._handlerCatchMsg(err)
@@ -1098,7 +1106,8 @@ export default {
 
       if (type === 'lib') {
         this.$set(obj, 'companyName', this.otherinfo.companyName) // 公司名称
-        this.$set(obj, 'companyPhone', this.otherinfo.mobilephone) // 公司电话
+        this.$set(obj, 'companyPhone', this.otherinfo.companyInfo.servicePhone) // 公司电话
+        this.$set(obj, 'mobilephone', this.otherinfo.mobilephone) // 业务员电话
         this.$set(obj, 'qrcode', '') // 二维码
         this.$set(obj, 'companyAddr', '') // 公司地址
       } else if (type === 'order') {
@@ -1136,11 +1145,14 @@ export default {
         this.$set(obj, 'userName', infoDetail.userName) // 制单员
         this.$set(obj, 'remarks', infoDetail.shipRemarks) // 备注
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
+        /////////////////////////////////////////////////////////////
+        ///运单号-件数
+        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-'+infoDetail.cargoAmount)
         ////////////////////////////////////////////////////////////
         ///年月日
         let year = parseTime(infoDetail.createTime, '{y}')
         this.$set(obj, 'createYear', parseTime(infoDetail.createTime, '{y}'))
-        this.$set(obj, 'createYear2', year.substr(2,2))
+        this.$set(obj, 'createYear2', year.substr(2, 2))
         this.$set(obj, 'createMonth', parseTime(infoDetail.createTime, '{m}'))
         this.$set(obj, 'createDate', parseTime(infoDetail.createTime, '{d}'))
         ////////////////////////////////////////////////////////////
@@ -1181,10 +1193,10 @@ export default {
         } else if (infoDetail.shipDeliveryMethod === 69) {
           this.$set(obj, 'sendGood', '√') // 送货（√）
         }
-        if (infoDetail.shipOther.indexOf(168) !== -1) {
+        if (infoDetail.shipOther && infoDetail.shipOther.indexOf(168) !== -1) {
           this.$set(obj, 'controlGoods', infoDetail.shipOther) // 168-控货
         }
-        if (infoDetail.shipOther.indexOf(169) !== -1) {
+        if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
           this.$set(obj, 'valuables', infoDetail.shipOther) //  169-贵重物品
         }
         if (infoDetail.shipEffective === 95) {
@@ -1194,18 +1206,22 @@ export default {
         }
         ////////////////////////////////////////////////////////////
         ///处理合计中文大写
-        let totalFeeBig = this.setFeeToBig(infoDetail.shipTotalFee)
-        this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
-        this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
-        this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
-        this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
-        this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
-        let upagencyFeeBig = this.setFeeToBig(infoDetail.agencyFund)
-        this.$set(obj, 'upagencyFundW', totalFeeBig[4]) // 代收货款(万)
-        this.$set(obj, 'upagencyFundQ', totalFeeBig[3]) // 代收货款(仟)
-        this.$set(obj, 'upagencyFundB', totalFeeBig[2]) // 代收货款(佰)
-        this.$set(obj, 'upagencyFundS', totalFeeBig[1]) // 代收货款(拾)
-        this.$set(obj, 'upagencyFundY', totalFeeBig[0]) // 代收货款(元)
+        if (infoDetail.shipTotalFee) {
+          let totalFeeBig = this.setFeeToBig(infoDetail.shipTotalFee)
+          this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
+          this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
+          this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
+          this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
+          this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
+        }
+        if (infoDetail.agencyFund) {
+          let upagencyFeeBig = this.setFeeToBig(infoDetail.agencyFund)
+          this.$set(obj, 'upagencyFundW', upagencyFeeBig[4]) // 代收货款(万)
+          this.$set(obj, 'upagencyFundQ', upagencyFeeBig[3]) // 代收货款(仟)
+          this.$set(obj, 'upagencyFundB', upagencyFeeBig[2]) // 代收货款(佰)
+          this.$set(obj, 'upagencyFundS', upagencyFeeBig[1]) // 代收货款(拾)
+          this.$set(obj, 'upagencyFundY', upagencyFeeBig[0]) // 代收货款(元)
+        }
       }
       this.printDataObject = Object.assign({}, obj)
       obj = {}
@@ -1220,23 +1236,26 @@ export default {
     },
     setFeeToBig(fee) { // 费用转成中文大写
       console.log('fee:::::::', fee, smalltoBIG(fee))
-      let feezh = fee.toString().split('').reverse()
-      let pointIndex = feezh.indexOf('.') + 1
-      let feezhAll = smalltoBIG(fee)
-      feezh = feezh.slice(pointIndex).reverse()
-      feezh.forEach((e, index) => {
-        this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
-      })
-      feezh = feezh.reverse()
-      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
-        feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
-      } else if (feezh && feezh.length < 5) { // 补充零
-        for (let i = 0; i < 5; i++) {
-          feezh[i] = feezh[i] || '零'
+      if (fee) {
+        let feezh = fee.toString().split('').reverse()
+        let pointIndex = feezh.indexOf('.') + 1
+        let feezhAll = smalltoBIG(fee)
+        feezh = feezh.slice(pointIndex).reverse()
+        feezh.forEach((e, index) => {
+          this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
+        })
+        feezh = feezh.reverse()
+        if (feezh && feezh.length > 4) { // 过万的数字直接拼接
+          feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
+        } else if (feezh && feezh.length < 5) { // 补充零
+          for (let i = 0; i < 5; i++) {
+            feezh[i] = feezh[i] || '零'
+          }
         }
+        console.log('feezh:::::', feezh)
+        return feezh
       }
-      console.log('feezh:::::', feezh)
-      return feezh
+
     },
     getShipPayWay() { // 获取付款方式中文
       getSelectType('ship_pay_way', this.otherinfo.orgid).then(data => {

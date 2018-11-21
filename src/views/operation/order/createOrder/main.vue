@@ -2778,6 +2778,7 @@ export default {
                 } else {
                   this.batchSaveList[this.currentBatch].data = data
                 }
+                this.loading = false
               }).catch(err => {
                 this.loading = false
                 this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
@@ -2825,6 +2826,7 @@ export default {
                 if (this.isSavePrint) {
                   this.printSave() // 执行成功后打印运单
                 }
+                this.loading = false
               }).catch(err => {
                 this.loading = false
                 this.$message.error('创建失败，原因：' + err.text)

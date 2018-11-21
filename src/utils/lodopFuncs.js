@@ -15,7 +15,10 @@
  // var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
  // const downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
  const downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_cLodop_20180821.exe'
-
+ // 打印回调
+ var TaskID, TaskID1, TaskID2, P_ID = '',
+   loop = 0,
+   waiting = false
  // ====判断是否需要安装CLodop云打印服务器:====
  export function needCLodop() {
    try {
@@ -68,6 +71,7 @@
  }
  // ====获取LODOP对象的主过程：====
  export function getLodop(oOBJECT, oEMBED) {
+   console.log('getLodop:<=')
    // var strHtmInstall = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
    // var strHtmUpdate = "<br><p color='#FF00FF'>打印控件需要升级!点击这里<a href='"+ downloadPath+"' target='_self'>执行升级</a>,升级后请重新进入。</p>";
    // var strHtm64_Install = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
@@ -331,61 +335,131 @@
      getLodop()
    }
  }
+
+
  // 创建打印页面    【未保存】标签或运单
- export function CreatePrintPageEnable(info, printer) {
+ export function CreatePrintPageEnable(info, printer, preview = false, number) {
+   // info-打印数据
+   // printer-打印机
+   // number-打印份数
+   // preview-是否预览
+   return new Promise((resolve, reject) => {
 
-   try {
-     const prxvalue = 0.264
-     const str = ''
-     console.log('print', info, printer)
-     if (printer) {
-       LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
-       str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
-     }
-     LODOP = getLodop()
-     let arr = new Array()
-     arr = Object.assign([], info)
-     for (const item in arr) { // 没有传值的项设置位空字符串
-       if (arr[item].value === undefined || arr[item].value === null) {
-         arr[item].value = ''
+     try {
+       const prxvalue = 0.264
+       const str = ''
+       LODOP = getLodop()
+       console.log('print', info, printer, number)
+       if (printer) {
+         // LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+         // str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
+         console.log(str)
        }
-     }
-     let pageWidth = 0
-     let pageHeight = 0
-     arr.forEach((e, index) => {
-       if (e.filedValue === 'setting') {
-         str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
-         LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '青春物流托运单打印')
-         str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-         // LODOP.SET_PRINT_PAGESIZE(0, 2100, 1400, "");
-         LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
-         pageWidth = e.width
-         pageHeight = e.height
-       } else {
-         if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
-           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
 
-         } else {
-           str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-           str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
-           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-           LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+       let arr = new Array()
+       arr = Object.assign([], info)
+       for (const item in arr) { // 没有传值的项设置位空字符串
+         if (arr[item].value === undefined || arr[item].value === null) {
+           arr[item].value = ''
          }
        }
-     })
-     //  eval(str)
-     // LODOP.PRINT_SETUP()
-     //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
-     LODOP.PREVIEW()
-     LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
-   } catch (err) {
-     getLodop()
+       let pageWidth = 0
+       let pageHeight = 0
+       arr.forEach((e, index) => {
+         let title = ''
+         if (e.filedName === '标签尺寸') {
+           title = '标签打印'
+         } else {
+           title = '托运单打印'
+         }
+         if (e.filedValue === 'setting') {
+           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
+           LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
+           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
+           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
+           pageWidth = e.width
+           pageHeight = e.height
+         } else {
+           if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
+             // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
+             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+
+           } else {
+             // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+             LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+           }
+         }
+       })
+       LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
+
+       if (printer) {
+         LODOP.SET_PRINTER_INDEXA(printer)
+       }
+
+
+       window.LODOP_PRITERN_CODE = ''
+       LODOP.On_Return = function(TaskID, value) {
+         console.log('On_Return1::', TaskID, value)
+         window.LODOP_PRITERN_CODE = value
+       }
+
+       if (number) {
+         console.log('number', number)
+         LODOP.SET_PRINT_COPIES(number)
+       }
+       if (preview) { // 直接打印不预览
+         var code = LODOP.PRINT()
+       } else { // 打开打印设置弹框
+         // var code = LODOP.PRINTA()
+         var code = LODOP.PREVIEW()
+       }
+       console.log('code', code)
+       setTimeout(() => {
+         resolve()
+       }, 2000)
+       if (!code) {
+         reject()
+       }
+
+     } catch (err) {
+       reject('LODOP加载失败')
+       getLodop()
+     }
+   })
+ }
+
+ window.CreatePrintPageEnable = CreatePrintPageEnable
+
+ function checkLodopStatus(r, index) {
+   var code = window.LODOP_PRITERN_CODE
+   if (code) {
+     console.log("checkLodopStatus1:", code)
+     LODOP.On_Return = function(TaskID, value) {
+       var code = window.LODOP_PRITERN_CODE
+       console.log("checkLodopStatus2:", TaskID, value, code)
+
+       console.log("PRINT_STATUS_OK:", value)
+       r()
+
+     }
+     LODOP.GET_VALUE('PRINT_STATUS_OK', window.LODOP_PRITERN_CODE);
+   } else {
+     setTimeout(() => {
+       if (++index < 10) {
+         checkLodopStatus(r, index)
+       } else {
+         r()
+       }
+     }, 200)
    }
+
+
  }
 
  // 格式化数据
