@@ -96,7 +96,7 @@
          LODOP = getCLodop()
        } catch (err) {}
        if (!LODOP && document.readyState !== 'complete') {
-         alert('C-Lodop没准备好，请稍后再试！');
+         alert('C-Lodop没准备好，请稍后再试！')
          return
        }
        if (!LODOP) {
@@ -136,7 +136,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -336,7 +336,6 @@
    }
  }
 
-
  // 创建打印页面    【未保存】标签或运单
  export function CreatePrintPageEnable(info, printer, preview = false, number) {
    // info-打印数据
@@ -385,7 +384,7 @@
            // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
            LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
            // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', "")
+           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '')
            pageWidth = e.width
            pageHeight = e.height
          } else {
@@ -394,13 +393,18 @@
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
              LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-
            } else {
              if (islib) { // 打印标签的是否 特殊处理233和234两个公司  需要添加标题头
                if (e.companyid === 233 || e.companyid === 234) {
-                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName + ': ' + e.value)
-                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+                 if (e.filedValue !== 'companyName') {
+                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName + ': ' + e.value)
+                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+                 } else {
+                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+                 }
                } else {
                  LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
                  LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
@@ -420,12 +424,11 @@
            }
          }
        })
-       LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
+       LODOP.SET_PRINT_MODE('CATCH_PRINT_STATUS', true)
 
        if (printer) {
          LODOP.SET_PRINTER_INDEXA(printer)
        }
-
 
        window.LODOP_PRITERN_CODE = ''
        LODOP.On_Return = function(TaskID, value) {
@@ -450,7 +453,6 @@
        if (!code) {
          reject()
        }
-
      } catch (err) {
        reject('LODOP加载失败')
        getLodop()
@@ -463,16 +465,15 @@
  function checkLodopStatus(r, index) {
    var code = window.LODOP_PRITERN_CODE
    if (code) {
-     console.log("checkLodopStatus1:", code)
+     console.log('checkLodopStatus1:', code)
      LODOP.On_Return = function(TaskID, value) {
        var code = window.LODOP_PRITERN_CODE
-       console.log("checkLodopStatus2:", TaskID, value, code)
+       console.log('checkLodopStatus2:', TaskID, value, code)
 
-       console.log("PRINT_STATUS_OK:", value)
+       console.log('PRINT_STATUS_OK:', value)
        r()
-
      }
-     LODOP.GET_VALUE('PRINT_STATUS_OK', window.LODOP_PRITERN_CODE);
+     LODOP.GET_VALUE('PRINT_STATUS_OK', window.LODOP_PRITERN_CODE)
    } else {
      setTimeout(() => {
        if (++index < 10) {
@@ -482,8 +483,6 @@
        }
      }, 200)
    }
-
-
  }
 
  // 格式化数据
