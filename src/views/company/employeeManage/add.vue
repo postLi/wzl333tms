@@ -288,7 +288,7 @@ export default {
             if (!bool) {
               this.closeMe()
             }
-            this.$emit('success')
+            this.$emit('success', this.isModify)
           }).catch(err => {
             // console.log(err)
             this.$message.error('错误2：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
