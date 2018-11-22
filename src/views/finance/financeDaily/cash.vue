@@ -3,7 +3,7 @@
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
-    <div class="tab_count_lyy">
+   <!--  <div class="tab_count_lyy">
       <el-card shadow="never" class="box-card green">
         <p><span>期初余额</span><i>23452</i></p>
       </el-card>
@@ -19,7 +19,7 @@
       <el-card shadow="never" class="box-card blue">
         <p><span>期末余额</span><i>23452</i></p>
       </el-card>
-    </div>
+    </div> -->
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">

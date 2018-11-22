@@ -23,8 +23,8 @@
           <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="去向">
-          <el-select clearable v-model="formModel.verificationWay" filterable placeholder="请选择" :size="btnsize">
+        <el-form-item label="去向" prop="verificationId" class="formItemTextDanger">
+          <el-select clearable v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(wayItem, wayIndex) in verificationWay" :key="wayIndex" :label="wayItem.verificationWay" :value="wayItem.id">
             </el-option>
           </el-select>
@@ -187,6 +187,7 @@ export default {
       },
       rules: {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        verificationId: [{ required: true, message: '不能为空', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       formModelTitle: '现金记账凭证【出纳】',
@@ -229,13 +230,45 @@ export default {
         })
     },
     initSubject() { // 修改时回填科目列表
-      this.getFinanceSubjects().then(() => {
+      this.getFinanceSubjects().then(() => { // 获取一级科目
         if (this.formModel.subjectOneId) {
-          this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => {
+          if (!this.checkSubject(1)) {
+            for (let item in this.formModel) {
+              if (/^subject/.test(item)) {
+                this.formModel[item] = ''
+              }
+            }
+            return
+          }
+          this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => { // 获取二级科目
             if (this.formModel.subjectTwoId) {
-              this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => {
+              if (!this.checkSubject(2)) {
+                for (let item in this.formModel) {
+                  if (/(Four|Three|Two)/.test(item)) {
+                    this.formModel[item] = ''
+                  }
+                }
+                return
+              }
+              this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => { // 获取三级科目
                 if (this.formModel.subjectThreeId) {
-                  this.getFinanceSubjects(4, this.formModel.subjectThreeId)
+                  if (!this.checkSubject(3)) {
+                    for (let item in this.formModel) {
+                      if (/(Four|Three)/.test(item)) {
+                        this.formModel[item] = ''
+                      }
+                    }
+                    return
+                  }
+                  this.getFinanceSubjects(4, this.formModel.subjectThreeId).then(() => { // 获取四级科目
+                    if (this.formModel.subjectFourId) {
+                      if (!this.checkSubject(4)) {
+                        this.formModel.subjectFourId = ''
+                        this.formModel.subjectFourName = ''
+                        return
+                      }
+                    }
+                  })
                 }
               })
             }
@@ -260,11 +293,74 @@ export default {
         })
 
     },
+    checkSubject(type) { // 修改时 检查返回的凭证科目是否还存在科目库中 如果不存在 就清空下拉框不显示
+      switch (type) {
+        case 1:
+          let one = []
+          if (this.subjectOne.length > 0) {
+            one = this.subjectOne.filter(e => {
+              return e.id === this.formModel.subjectOneId
+            })
+            if (one.length === 0) {
+              this.formModel.subjectOneId = ''
+              this.formModel.subjectOneName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 2:
+          let two = []
+          if (this.subjectTwo.length > 0) {
+            two = this.subjectTwo.filter(e => {
+              return e.id === this.formModel.subjectTwoId
+            })
+            if (two.length === 0) {
+              this.formModel.subjectTwoId = ''
+              this.formModel.subjectTwoName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 3:
+          let three = []
+          if (this.subjectThree.length > 0) {
+            three = this.subjectThree.filter(e => {
+              return e.id === this.formModel.subjectThreeId
+            })
+            if (three.length === 0) {
+              this.formModel.subjectThreeId = ''
+              this.formModel.subjectThreeName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 4:
+          let four = []
+          if (this.subjectFour.length > 0) {
+            four = this.subjectFour.filter(e => {
+              return e.id === this.formModel.subjectFourId
+            })
+            if (four.length === 0) {
+              this.formModel.subjectFourId = ''
+              this.formModel.subjectFourName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+      }
+    },
     getFinanceSubjects(subjectLevel, parentId) {
       console.warn('getFinanceSubjects 科目', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
-
       return getFinanceSubjects(this.searchQuerySub).then(data => {
           switch (subjectLevel) {
             case 2:
@@ -347,6 +443,14 @@ export default {
       obj = {}
       console.log('formModel', this.formModel)
     },
+    selectVerificationWay(val) { // 选择去向
+      console.log('selectVerificationWay', val)
+      let obj = Object.assign({}, this.verificationWay.filter(e => {
+        return e.id === val
+      })[0])
+      this.formModel.verificationWay = obj.verificationWay
+      console.log(this.formModel)
+    },
     submitForm(formName, type) {
       if (!this.formModel.certNo) {
         this.$message.error('缺少凭证编号')
@@ -359,28 +463,6 @@ export default {
           let query = Object.assign({}, this.formModel)
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
           this.$set(query, 'orderList', [])
-          // if (this.isModify) {
-          //   // 修改的时候 需要获取详情列表
-          //   let detailSearchQuery = {
-          //     currentPage: 1,
-          //     pageSize: 100,
-          //     vo: {
-          //       recordId: this.formModel.id,
-          //       orgId: this.formModel.orgId
-          //     }
-          //   }
-          //   postBillRecordDetailList(detailSearchQuery).then(data => {
-          //     if (data) {
-          //       this.$set(query, 'orderList', data.list)
-          //     } else { // 如果没有详情列表就创建一个空的详情列表
-          //       query.orderList.push({
-          //         manualAmount: query.amount,
-          //         subjectId: '',
-          //         subjectName: ''
-          //       })
-          //     }
-          //   })
-          // } else {
           // 添加的时候 需要创建一个空的详情列表
           query.orderList.push({
             shipLoadId: '',
@@ -388,11 +470,11 @@ export default {
             subjectName: '',
             subjectId: ''
           })
-          // }
           if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }
           console.log('query:::', query)
+          delete query.verificationList
           postAddIncome(query).then(data => {
               query = {}
               this.closeMe()
