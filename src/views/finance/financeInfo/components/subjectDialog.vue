@@ -16,7 +16,7 @@
       <el-form-item label="上级科目:" class="sub_el_form_item">
         <span>{{currentForm.subjectName }}</span>
       </el-form-item>
-      <el-form-item label="科目代码11" prop='subjectCode' class="sub_subjectCode">
+      <el-form-item label="科目代码" prop='subjectCode' class="sub_subjectCode">
         <el-input v-model="form.subjectCode" :maxlength="isFNum">
           <template slot="prepend">{{currentForm.subjectCode}}</template>
         </el-input>
@@ -52,17 +52,6 @@
       </div>
       <span class="sub_span">注：科目代码规则：1.最多可创建4级科目，一级科目代码数值：4位，二级6位，三级8位，四级10位。</span>
     </el-form>
-
-    <!--<el-form size="mini" ref="ruleForm" :model="form" class="direct"-->
-    <!--label-width="80px" v-if="false" width="100%">-->
-    <!--<el-form-item label="核销方向" prop="verificationWay" :rules="[{ required: true, message: '核销方向不能为空'}]">-->
-    <!--<el-input v-model.trim="form.verificationWay" placeholder="请输入核销方向如：工商银行" :minlength="1"-->
-    <!--:maxlength="35"></el-input>-->
-    <!--</el-form-item>-->
-    <!--<el-form-item label="备注">-->
-    <!--<el-input type="textarea" v-model="form.remark" placeholder="最多输入50个字符。" :maxlength='50'></el-input>-->
-    <!--</el-form-item>-->
-    <!--</el-form>-->
 
     <el-form size="mini" ref="ruleForm" :model="form" class="sub_close" :rules="rules" v-if="isSubClose">
       <el-form-item label="核销科目">
@@ -264,8 +253,6 @@
     data() {
       const validateSubjectCode = (rule, value, callback) => {
         if (REGEX.ONLY_NUMBER.test(value)) {
-          // callback()
-          console.log(this.isSubjectLevel, 'this.isSubjectLevel');
           if (this.isSubjectLevel === 1) {
             if (/[0-9]{4}/.test(value)) {
               callback()
@@ -286,14 +273,6 @@
           callback(new Error('只能输入数字'))
         }
       }
-      // const validateSubName = (rule, value, callback) => {
-      //   if (/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
-      //     // if (REGEX.CHINESE_AND_ENGLISH.test(value)) {
-      //     callback()
-      //   } else {
-      //     callback(new Error('只能输入中文和字母'))
-      //   }
-      // }
       return {
         labelWidth: '98px',
         isFNum: 4,
@@ -302,7 +281,7 @@
         isSubject: true,
         loading: false,
         isTitle: '增加一级',
-        isSubjectLevel: '',
+        isSubjectLevel: 2,
         currentForm: {
           subjectCode: '',
           subjectName: '',
@@ -383,6 +362,7 @@
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
           this.isSubjectLevel = item.subjectLevel
+          console.log(this.isSubjectLevel, 'this.isSubjectLevel');
           if (item.parent && item.subjectLevel > 1) {
             this.isSubjectLevelFn = true
             this.currentForm.subjectCode = item.parent.subjectCode
@@ -392,21 +372,6 @@
             // console.log(this.isFNum, 'isFNum');
           }
         }
-
-        //
-        // this.isTitle = '增加一级'
-        // this.isAddLE = true
-        // if (item.parent) {
-        //   this.currentForm.subjectCode = item.parent.subjectCode
-        // }
-        // this.isSubjectLevel = item.subjectLevel
-        // if (this.isSubjectLevel > 1) {
-        //   this.isFNum = 2
-        // } else {
-        //   this.isFNum = item.subjectLevel * 2 + 2
-        // }
-
-
         else if (this.isDoEdit) {
           this.isTitle = '修改'
           this.isDirect = true
@@ -588,6 +553,17 @@
               // this.reset()
               this.loading = false
             }).catch(err => {
+              if (err.status !== 200) {
+                if (this.doAddStair) {
+                  if (this.info.subjectLevel > 1) {
+                    this.isFNum = 2
+                    this.isSubjectLevel = 2
+                  } else {
+                    this.isFNum = this.info.subjectLevel * 2 + 2
+                  }
+                }
+                // this.isSubjectLevel =
+              }
               this.loading = false
               this._handlerCatchMsg(err)
               return false
