@@ -344,27 +344,35 @@
    // number-打印份数
    // preview-是否预览
    return new Promise((resolve, reject) => {
-
      try {
        const prxvalue = 0.264
        const str = ''
+       let islib = false // 判断是否标签打印
        LODOP = getLodop()
        console.log('print', info, printer, number)
-       if (printer) {
-         // LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
-         // str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
-         console.log(str)
-       }
+       // if (printer) {
+       // LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+       // str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
+       // console.log(str)
+       // }
 
        let arr = new Array()
        arr = Object.assign([], info)
        for (const item in arr) { // 没有传值的项设置位空字符串
+         if (arr[item].filedValue === 'setting') { // 判断是否是标签打印 islib: true-标签打印 false-运单打印
+           if (arr[item].filedName === '标签尺寸') {
+             islib = true
+           } else {
+             islib = false
+           }
+         }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
          }
        }
        let pageWidth = 0
        let pageHeight = 0
+
        arr.forEach((e, index) => {
          let title = ''
          if (e.filedName === '标签尺寸') {
@@ -388,12 +396,27 @@
              LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
 
            } else {
+             if (islib) { // 打印标签的是否 特殊处理233和234两个公司  需要添加标题头
+               if (e.companyid === 233 || e.companyid === 234) {
+                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName + ': ' + e.value)
+                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+               } else {
+                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+               }
+             } else {
+               LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+               LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+               LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+             }
+             // LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+             // LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+             // LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
-             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-             LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
            }
          }
        })
