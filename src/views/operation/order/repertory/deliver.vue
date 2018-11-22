@@ -193,7 +193,7 @@ export default {
       },
       {
         label: '运费',
-        prop: 'shipTotalFee',
+        prop: 'shipFee',
         width: '90'
       },
       {

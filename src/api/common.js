@@ -1,7 +1,11 @@
 import fetch from '@/utils/fetch'
-import { getToken } from '@/utils/auth'
+import {
+  getToken
+} from '@/utils/auth'
 import CACHE from '@/utils/cache'
-import { handleErrorMsg } from '@/utils/'
+import {
+  handleErrorMsg
+} from '@/utils/'
 
 /**
  * 获取城市数据
@@ -14,6 +18,13 @@ export function getCityInfo(name = '') {
   }).then(res => {
     return res.data || []
   })
+}
+/**
+ * 根据code值查询其对应的城市及其下属行政区域
+ * @param {*} code 行政区code
+ */
+export function getCityByCode(code = 0) {
+  return fetch.get('/api-order/order/region/v1/' + code)
 }
 /**
  * 获取后台时间
@@ -119,10 +130,21 @@ export function postImportExcel(data) {
   return fetch.post('/api-system/system/excel/v1/importExcel/', data).then(res => {
     return res.data
   })
-    .catch(error => {
-      return error.data
-    })
 }
+export function postImportExcelThree(data) {
+  return fetch.post('/api-finance/finance/tmsfinancesubjects/v1.3/importExcel/', data).then(res => {
+    return res.data
+  })
+}
+
+// /finance/tmsfinancesubjects/v1.3/template
+// 获取默认模板
+export function getImportExcelInfo() {
+  return fetch.get('/api-finance/finance/tmsfinancesubjects/v1.3/template/').then(res => {
+    return res.data
+  })
+}
+
 /**
  * 自定义查询条件接口
  */
@@ -130,9 +152,6 @@ export function postQueryLogList(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/getQueryLogList', data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
 }
 /**
  * 自定义查询条件新增接口
@@ -141,9 +160,6 @@ export function postcreaterQueryCriteriaLog(data) {
   return fetch.post('/api-system/system/tmsuserquerycriterialog/v1.1/createrQueryCriteriaLog', data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
 }
 
 export function deleteQueryLogListById(id) {

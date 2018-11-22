@@ -1,5 +1,7 @@
 import fetch from '../../utils/fetch'
-import { handleErrorMsg } from '@/utils/'
+import {
+  handleErrorMsg
+} from '@/utils/'
 
 /** ************************************
  *             运单结算
@@ -13,11 +15,13 @@ import { handleErrorMsg } from '@/utils/'
  */
 export function postFindListByFeeType(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findListByFeeType/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    console.log('postFindListByFeeType22222222222222')
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  * 查询应付中转费列表
@@ -26,11 +30,12 @@ export function postFindListByFeeType(data) {
  */
 export function postFindTransferList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findTransferList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  * 查询异常理赔列表
@@ -39,11 +44,12 @@ export function postFindTransferList(data) {
  */
 export function postFindAbnormalList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findAbnormalList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  * 查询异动费用列表
@@ -52,11 +58,12 @@ export function postFindAbnormalList(data) {
  */
 export function postFindChangeList(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/findChangeList/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  * 结算保存
@@ -67,9 +74,7 @@ export function postCreateloadSettlement(orgId, data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/create/' + orgId, data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 
 /** ************************************
@@ -87,11 +92,12 @@ export function postCreateloadSettlement(orgId, data) {
  */
 export function postPayListBySummary(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/payListBySummary/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  * 结算页面列表-单个费用
@@ -104,11 +110,12 @@ export function postPayListBySummary(data) {
  */
 export function postPayListByOne(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/payListByOne/', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
 }
 /**
  *  获得结算单号
@@ -125,7 +132,38 @@ export function postLoadSettlement(data) {
   return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/loadSettlement/', data).then(res => {
     return res.data
   })
-    .catch(err => {
-      handleErrorMsg(err)
-    })
+
+}
+
+/**
+ * 核销凭证
+ * （车费结算使用）
+ * v1.3
+ */
+export function loadVerification(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/loadVerification', data).then(res => {
+    return res.data
+  })
+
+}
+
+
+/** ************************************
+ 
+ *             操作费核销
+ *             
+ **************************************/
+/**
+ * 应收应付操作费
+ * //必填：orgid(短驳网点、送货网点、发车网点)、ascriptionOrgid(所属结算网点,当前网点可帮下属网点结算,这里传的是帮谁结算就传谁的网点)、sign、status
+ * //sign： 3配载应收操作费 4配载应付操作费
+ * //配载应收操作费：短驳应收操作费32,干线应收操作费33
+ * //配载应付操作费：短驳应付操作费34,干线应付操作费35
+ * //status(NOSETTLEMENT:未结算,PARTSETTLEMENT:部分结算,ALLSETTLEMENT:已结算)
+ */
+export function payListByHandlingFee(data) {
+  return fetch.post('/api-finance/finance/tmsfinancefeepayable/v1/payListByHandlingFee', data).then(res => {
+    return res.data
+  })
+
 }

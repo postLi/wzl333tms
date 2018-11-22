@@ -98,7 +98,7 @@
         </el-table>
       </div>
     </div>
-    <TableSetup  :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
@@ -168,43 +168,43 @@ export default {
       },
       tableColumn: [],
       tableColumnArrival: [{
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      }, {
-        label: '运单号',
-        prop: 'shipSn',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '子运单号',
-        prop: 'childShipSn',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFee',
-        width: '100',
-        fixed: false
-      },
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '130',
+          fixed: true
+        },
+        {
+          label: '子运单号',
+          prop: 'childShipSn',
+          width: '130',
+          fixed: true
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        },
         // {
         //   label: "应到件数",
         //   prop: "loadAmount",
@@ -416,7 +416,11 @@ export default {
     doAction(type) {
       switch (type) {
         case 'add': // 短驳入库
-          this.timeInfoVisible = true
+          if (this.arrivalStatus === '短驳中') {
+            this.timeInfoVisible = true
+          } else {
+            this.getActualTime()
+          }
           break
         case 'print': // 打印
           PrintInFullPage({
@@ -563,7 +567,9 @@ export default {
         this.$message({ type: 'warning', message: '至少要有一条数据' })
         return false
       } else {
-        this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(50, this.newData).then(data => {
           if (data.status === 200) {
             this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})

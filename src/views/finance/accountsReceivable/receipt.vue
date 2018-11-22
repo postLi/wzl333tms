@@ -239,10 +239,11 @@ export default {
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: this.searchQuery,
+          tab: '回单付核销',
+          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'receipt',
          // id: row.map(el => el.shipId).join(','),
-          selectListShipSns: row.map(el => el.shipSn)
+          selectListShipSns:JSON.stringify( row.map(el => el.shipSn))
         }
       })
     },

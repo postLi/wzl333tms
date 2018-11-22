@@ -1150,8 +1150,8 @@
                 for (const i in this.messageInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                 }
-                this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0]
-                this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1]
+                this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0] ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+                this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1] ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
                 this.form.tmsFinanceBillCheckDto.feeTypeId = this.typeIdsSend
                 for (const i in this.messageButtonInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]

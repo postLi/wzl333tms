@@ -3,31 +3,19 @@
     <template class="addDriverPop-content" slot="content">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-width="formLabelWidth" :inline="true" label-position="right" size="mini">
         <el-form-item label="司机姓名" prop="driverName">
-          <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off" ></el-input>
+          <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
           <el-input v-numberOnly v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
-          <SelectTree v-model="form.orgid"  :orgid="otherinfo.orgid" />
+          <SelectTree v-model="form.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
         <el-form-item label="身份证号" prop="driverCardid">
           <el-input v-model="form.driverCardid" :maxlength="18" auto-complete="off"></el-input>
         </el-form-item>
-        
         <el-form-item label="驾驶证类型" prop="licenseType">
           <SelectType v-model="form.licenseType" type="driving_type" placeholder="驾驶证类型" />
-        </el-form-item>
-        <el-form-item label="驾驶证有效期" prop="validityDate">
-          <el-date-picker
-            v-model="form.validityDate"
-            align="right"
-            type="date"
-            :picker-options="pickOption2"
-            placeholder="选择日期"
-            value-format="timestamp"
-            >
-          </el-date-picker>
         </el-form-item>
         <el-form-item label="银行卡号" prop="bankCardNumber">
           <el-input v-model="form.bankCardNumber" v-numberOnly :maxlength="18" auto-complete="off"></el-input>
@@ -38,7 +26,20 @@
         <el-form-item label="开户行" prop="openBank">
           <el-input :maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="司机地址" prop="driverAddress">
+        <el-form-item label="驾驶证有效期" prop="validityDate" class="blockInput">
+          <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" end-placeholder="结束日期">
+          </el-date-picker>
+          <!-- <el-date-picker
+            v-model="form.validityDate"
+            align="right"
+            type="date"
+            :picker-options="pickOption2"
+            placeholder="选择日期"
+            value-format="timestamp"
+            >
+          </el-date-picker> -->
+        </el-form-item>
+        <el-form-item label="司机地址" prop="driverAddress" class="blockInput">
           <el-input v-model="form.driverAddress" :maxlength="50" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="driverRemarks" label="备注" prop="driverRemarks">
@@ -73,6 +74,7 @@ import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
+import { objectMerge2, parseTime } from '@/utils/index'
 
 export default {
   components: {
@@ -144,6 +146,7 @@ export default {
     //   }
     // }
     return {
+      searchTime: [],
       form: {
         'bankCardNumber': '', // 银行卡号 20
         'bankName': '', // 银行名称 20
@@ -159,7 +162,8 @@ export default {
         'licenseType': '', // 驾驶证类型 18
         'licenseTypeName': '',
         'openBank': '', // 开户行 20
-        'validityDate': '', // 驾驶证有效期
+        'validityDate': '', // 驾驶证有效期-end
+        validityStartdate: '', //  驾驶证有效期-start
         'orgid': 0 // 所属机构 11
       },
       formLabelWidth: '100px',
@@ -206,34 +210,40 @@ export default {
     }
   },
   watch: {
-    popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
-        this.initInfo()
-      }
+    popVisible: {
+      handler(cval,oval) {
+        if (!this.inited) {
+          this.inited = true
+          this.initInfo()
+        }
+      },
+      immediate: true
     },
     orgid(newVal) {
       this.form.orgid = newVal
     },
-    info() {
-      if (this.isModify) {
-        this.popTitle = '修改司机'
-        const data = Object.assign({}, this.info)
-        for (const i in this.form) {
-          this.form[i] = data[i]
+    info: {
+      handler(cval, oval) {
+        if (this.isModify) {
+          this.popTitle = '修改司机'
+          const data = Object.assign({}, cval)
+          for (const i in this.form) {
+            this.form[i] = data[i]
+          }
+          this.$set(this.searchTime, 0, cval.validityStartdate)
+          this.$set(this.searchTime, 1, cval.validityDate)
+          this.form.id = data.id
+        } else {
+          this.popTitle = '新增司机'
+          for (const i in this.form) {
+            this.form[i] = ''
+          }
+          this.searchTime = []
+          delete this.form.id
+          this.form.orgid = this.orgid
         }
-        if (this.form.validityDate) {
-          this.form.validityDate = +new Date(this.form.validityDate)
-        }
-        this.form.id = data.id
-      } else {
-        this.popTitle = '新增司机'
-        for (const i in this.form) {
-          this.form[i] = ''
-        }
-        delete this.form.id
-        this.form.orgid = this.orgid
-      }
+      },
+      deep: true
     }
   },
   methods: {
@@ -249,6 +259,11 @@ export default {
           this.loading = true
           const data = Object.assign({}, this.form)
           data.fixPhone = this.fixPhone
+          if (this.searchTime) {
+            data.validityStartdate = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
+            data.validityDate = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
+          }
+
           let promiseObj
           // 判断操作，调用对应的函数
           console.log(this.isModify)
@@ -275,7 +290,7 @@ export default {
       })
     },
     reset() {
-       // 缓存上一次选择的网点
+      // 缓存上一次选择的网点
       const orgid = this.form.orgid
       this.$refs['ruleForm'].resetFields()
       this.form.driverMobile = ''
@@ -293,74 +308,81 @@ export default {
     }
   }
 }
+
 </script>
 <style lang="scss">
-.addDriverPop{
+.addDriverPop {
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 560px;
-  max-width:  560px;
+  max-width: 560px;
 
-  .el-form--inline .el-form-item{
+  .el-form--inline .el-form-item {
     margin-right: 0;
     width: 50%;
     float: left;
     display: flex;
   }
+  .blockInput {
+    width: 100% !important;
+  }
 
-  .el-form--inline .uploadcard{
+  .el-form--inline .uploadcard {
     width: 100%;
   }
 
-  .el-form--inline .driverRemarks{
+  .el-form--inline .driverRemarks {
     width: 100%;
   }
 
-  .el-date-editor.el-input, .el-date-editor.el-input__inner{
+  .el-date-editor.el-input,
+  .el-date-editor.el-input__inner {
     width: 100%;
   }
 
-  .el-form-item__label{
+  .el-form-item__label {
     font-size: 12px;
   }
 
-  .el-form-item__content{
-    flex:1;
+  .el-form-item__content {
+    flex: 1;
   }
 
-  .select-tree{
+  .select-tree {
     width: 100%;
   }
 
-  .drviercard,.certcard,.idcard{
+  .drviercard,
+  .certcard,
+  .idcard {
     float: left;
     width: 254px;
     height: 136px;
     margin-bottom: 14px;
   }
 
-  .upload-container{
+  .upload-container {
     height: 100%;
   }
 
-  .drviercard{
+  .drviercard {
     float: right;
   }
 
-  .licensePicture{
+  .licensePicture {
     height: 116px;
     line-height: 1.2;
   }
 
-  .popRight-content{
+  .popRight-content {
     padding: 20px 10px 0;
     box-sizing: border-box;
   }
 
-  .el-select .el-input__inner{
+  .el-select .el-input__inner {
     padding-right: 15px;
   }
 }
-</style>
 
+</style>

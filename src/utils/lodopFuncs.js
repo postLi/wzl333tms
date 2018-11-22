@@ -338,7 +338,7 @@
 
 
  // 创建打印页面    【未保存】标签或运单
- export function CreatePrintPageEnable(info, printer, preview, number) {
+ export function CreatePrintPageEnable(info, printer, preview = false, number) {
    // info-打印数据
    // printer-打印机
    // number-打印份数
@@ -369,6 +369,7 @@
          let title = ''
          if (e.filedName === '标签尺寸') {
            title = '标签打印'
+
          } else {
            title = '托运单打印'
          }
@@ -413,7 +414,6 @@
          console.log('number', number)
          LODOP.SET_PRINT_COPIES(number)
        }
-       console.log('preview', preview)
        if (preview) { // 直接打印不预览
          var code = LODOP.PRINT()
        } else { // 打开打印设置弹框

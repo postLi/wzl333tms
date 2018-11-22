@@ -15,7 +15,7 @@
       </div>
       <div class="info_tab">
         <!-- <el-table
-          ref="multipleTable"
+         \ref="multipleTable"
           :data="dataset"
           stripe
           border

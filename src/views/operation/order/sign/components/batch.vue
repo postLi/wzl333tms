@@ -1,4 +1,4 @@
-<template> 
+<template>
    <el-dialog :title='popTitle' :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="wzl_addBatchPop" @close="closeMe">
     <el-form :model="form" :rules="rules" ref="ruleForm"  :label-width="formLabelWidth" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
       <div class="batch">
@@ -9,10 +9,12 @@
         <el-form-item label="到付合计:" prop="shipArrivepayFee">
           <!-- <p class="tp">{{this.form.shipArrivepayFee}}元</p> -->
           <el-input :maxlength="20" v-number-only:point :placeholder=" form.shipArrivepayFee +'元'" auto-complete="off" :disabled="true"></el-input>
+          <p style="color: red;font-size: 12px;margin-bottom: -10px">拆单的到付合计不统计在内</p>
         </el-form-item><br>
         <el-form-item label="代收款合计:" prop="agencyFund">
           <!-- <p class="tp">{{this.form.agencyFund}}元</p> -->
           <el-input :maxlength="20" :placeholder=" form.agencyFund +'元'" auto-complete="off" :disabled="true"></el-input>
+          <p style="color: red;font-size: 12px;margin-bottom: -10px">拆单的代收款合计不统计在内</p>
         </el-form-item><br>
         <el-form-item label="签收时间:" prop="signTime">
           <el-date-picker
@@ -24,7 +26,7 @@
             value-format="timestamp"
             >
           </el-date-picker>
-        </el-form-item> 
+        </el-form-item>
         <el-form-item label="签收类型:" prop="signTypeId" >
           <SelectType v-model="form.signTypeId" type="sign_type"/>
         </el-form-item>
@@ -40,7 +42,7 @@
         <el-form-item label="备注:" prop="remark">
           <el-input :maxlength="250" v-model.trim="form.remark" auto-complete="off" placeholder="最多可输入250个字符"></el-input>
         </el-form-item>
-      </div>      
+      </div>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
@@ -298,7 +300,7 @@ export default {
     font-size: 12px;
     padding: 10px 20px 8px;
   }
-  
+
   .el-dialog__header{
     padding: 9px 20px 6px;
     font-size:14px;
@@ -323,7 +325,7 @@ export default {
     outline: 0;
     cursor: pointer;
     font-size: 18px;
-    
+
   }
  .el-dialog__body{
    padding:8px 20px;
@@ -333,7 +335,7 @@ export default {
     border-top:1px solid #3e9ff1;
     padding: 10px 20px 9px;
   }
-  
+
   .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item{
     margin-bottom: 12px;
     .el-form-item__label{
@@ -354,7 +356,7 @@ export default {
       color: #3e9ff1;
     }
   }
-  
+
 }
-  
+
 </style>

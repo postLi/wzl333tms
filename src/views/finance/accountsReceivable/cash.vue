@@ -4,7 +4,6 @@
     <div class="tab_info">
       <div class="btns_box">
           <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET2>结算</el-button>
-          
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI2>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP2>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -228,14 +227,13 @@ export default {
   methods: {
     viewDetails(row) {
       row = row || []
-      console.log('row:', row.map(el => { console.log('11') }).join(','))
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: this.searchQuery,
+          tab: '现付核销',
+          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'cash',
-         // id: row.map(el => el.shipId).join(','),
-          selectListShipSns: row.map(el => el.shipSn)
+          selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }
       })
     },

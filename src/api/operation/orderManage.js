@@ -594,5 +594,28 @@ export default {
         batchNum
       }
     })
+  },
+  /**
+   * 根据运单信息匹配专线
+   * @param {*} data 请求参数
+    {
+      "fromOrgid": 0,
+      "toOrgid": 0,
+      "rangeFromCityName": "string",
+      "rangeToCityName": "string",
+      "shipFeeList": [
+        0
+      ],
+
+      "volumeList": [
+        0
+      ],
+      "weighList": [
+        0
+      ]
+    }
+   */
+  postMatchLine(data) {
+    return fetch.post('/api-system/system/tmssystemtransportrange/v1/matchRange', data)
   }
 }

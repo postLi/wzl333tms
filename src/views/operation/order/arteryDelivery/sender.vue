@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <AddCustomer :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
+    <AddCustomer :arrivalStatus="arrivalStatus" :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+      arrivalStatus: '',
       timeInfoVisible: false,
       // 控制显示提示消息
       isChecked: false,
@@ -377,7 +378,9 @@ export default {
               this.isModify = false
               this.isAlFun = false
               this.openAddCustomer()
+              console.log('选中的数据1111111', this.selectInfo)
             } else {
+              this.$message.warning('批次【 '+this.selected[0].batchNo+' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
               this.closeAddCustomer()
               this.$refs.multipleTable.clearSelection()
               return false
@@ -386,7 +389,23 @@ export default {
 
           break
         case 'sure':
-          this.timeInfoVisible = true
+          if (this.selected.length > 1) {
+            this.$message({
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
+            this.$refs.multipleTable.clearSelection()
+            return false
+          }
+          if (this.selected[0].bathStatusName === '在途中') {
+            this.timeInfoVisible = true
+          } else {
+             this.closeAddCustomer()
+            this.$message({
+              message: '批次状态为：' + this.selected[0].bathStatusName + '不允许做到车确定~',
+              type: 'warning'
+            })
+          }
           break
         case 'deselectCar':
           this.closeAddCustomer()
@@ -529,6 +548,7 @@ export default {
       this.selected = selection
     },
     getDbClick(row, event) {
+      this.arrivalStatus = row.bathStatusName
       if (row.bathStatusName === '在途中') {
         this.selectInfo = row
         this.openAddCustomer()

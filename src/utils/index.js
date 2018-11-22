@@ -939,6 +939,7 @@ export const uniqueArray = (array, key) => {
     const item = array[i]
     let repeat = false
     for (let j = 0; j < result.length; j++) {
+      console.log(result)
       if (item[key] === result[j][key]) {
         repeat = true
         break

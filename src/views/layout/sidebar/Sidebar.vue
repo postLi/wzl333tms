@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       token: '',
-      afwlurl: 'http://member.56lines.cn'
+      afwlurl: 'http://member.28china.cn'
     }
   },
   mounted() {

@@ -1,91 +1,91 @@
 <template>
   <div class="customer-manager tab-wrapper tab-wrapper-100">
     <div class="accountsLoad_table">
-    <!-- 搜索框 -->
-    <div class="transferTable_search clearfix">
-      <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
-    </div>
-    <transferTable style="height: calc(100% - 40px);padding:10px">
-      <!-- 左上角按钮区 -->
-      <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+      <!-- 搜索框 -->
+      <div class="transferTable_search clearfix">
+        <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
       </div>
-      <!-- 左边表格区 -->
-      <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-
-        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-          <el-table-column fixed width="50" label="序号">
-            <template slot-scope="scope">
-              {{scope.$index + 1}}
-            </template>
-          </el-table-column>
-          <el-table-column fixed :render-header="setHeader" width="50">
-            <template slot-scope="scope">
-              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
-            </template>
-          </el-table-column>
-          <template v-if="!column.expand" v-for="column in tableColumnLeft">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+      <transferTable style="height: calc(100% - 40px);padding:10px">
+        <!-- 左上角按钮区 -->
+        <div slot="btnsBox">
+          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+        </div>
+        <!-- 左边表格区 -->
+        <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+          <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+            <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
-                <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
-                </div>
-                <div v-else>
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </div>
+                {{scope.$index + 1}}
               </template>
             </el-table-column>
-          </template>
-        </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+            <el-table-column fixed :render-header="setHeader" width="50">
+              <template slot-scope="scope">
+                <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+            <template v-if="!column.expand" v-for="column in tableColumnLeft">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+                <template slot-scope="scope">
+                  <div v-if="column.expand">
+                    <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  </div>
+                  <div v-else>
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </div>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+          <!-- <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
             <Pager :total="totalLeft" @change="handlePageChangeLeft" />
           </div>
         </div> -->
-      </div>
-      <!-- 右边表格区 -->
-      <div slot="tableRight" class="tableHeadItemBtn">
-        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-          <el-table-column fixed width="50" label="序号">
-            <template slot-scope="scope">
-              {{scope.$index + 1}}
-            </template>
-          </el-table-column>
-          <el-table-column :render-header="setHeader2" fixed width="50">
-            <template slot-scope="scope">
-              <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
-            </template>
-          </el-table-column>
-          <template v-for="column in tableColumnLeft">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+        </div>
+        <!-- 右边表格区 -->
+        <div slot="tableRight" class="tableHeadItemBtn">
+          <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+            <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
-                <div v-if="column.expand">
-                  <!-- <template v-if="scope.row[column.prop.replace(/^input/i,'').replace(/fee$/i,'').toLocaleLowerCase()+'State'] === 'ALLSETTLEMENT'">已结算</template> -->
-                  <el-checkbox checked @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" >{{ scope.row[column.prop.replace(/^input/i,'not')] }}</el-checkbox>
-                  
-                  <!-- <el-checkbox checked v-model="rightTable[scope.$index][column.prop]" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-checkbox> -->
-                </div>
-                <div v-else>
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </div>
+                {{scope.$index + 1}}
               </template>
             </el-table-column>
-          </template>
-        </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+            <el-table-column :render-header="setHeader2" fixed width="50">
+              <template slot-scope="scope">
+                <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+            <template v-for="column in tableColumnLeft">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+                <template slot-scope="scope">
+                  <div v-if="column.expand">
+                    <!-- <template v-if="scope.row[column.prop.replace(/^input/i,'').replace(/fee$/i,'').toLocaleLowerCase()+'State'] === 'ALLSETTLEMENT'">已结算</template> -->
+                    <el-checkbox checked @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize">{{ scope.row[column.prop.replace(/^input/i,'not')] }}</el-checkbox>
+                    <!-- <el-checkbox checked v-model="rightTable[scope.$index][column.prop]" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-checkbox> -->
+                  </div>
+                  <div v-else>
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </div>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+          <!-- <div class="accountsLoad_table_pager">
           <b>共计:{{ totalRight }}</b>
         </div> -->
-      </div>
-    </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
-  </div>
+        </div>
+      </transferTable>
+      <!-- 核销凭证 -->
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+      <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
+    </div>
   </div>
 </template>
 <script>
@@ -93,21 +93,28 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receipt'
+// import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
+import Voucher from '@/components/voucher/receivable'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       currentSearch: '',
       tablekey: '',
       truckMessage: '',
@@ -136,268 +143,268 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '结算状态',
-        prop: 'totalStatusCn',
-        width: '100'
-      },{
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '结算状态',
+          prop: 'totalStatusCn',
+          width: '100'
+        }, {
           label: '签收状态',
           prop: 'signStatus',
           width: '100',
           fixed: false
         },
-      {
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '80',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '80',
-        fixed: false
-      },
-      {
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '80',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '80',
+          fixed: false
+        },
+        {
           label: '签收状态',
           prop: 'signStatus',
           width: '100',
           fixed: false
         },
-      {
-        'label': '现付',
-        'prop': 'nowPayFee'
-      }, {
-        'label': '现付结算状态',
-        width: '120',
-        'prop': 'nowPayStateCn'
-      }, {
+        {
+          'label': '现付',
+          'prop': 'nowPayFee'
+        }, {
+          'label': '现付结算状态',
+          width: '120',
+          'prop': 'nowPayStateCn'
+        }, {
           'label': '已结现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
-        }
+            const row = scope.row
+            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+          }
         }, {
-        'label': '未结现付',
-        'prop': 'notNowPayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
-        }
-      }, {
-        label: '实结现付',
-        prop: 'inputNowPayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputNowPayFee
-        }
-      }, {
-        'label': '到付',
-        'prop': 'arrivepayFee'
-      }, {
-        'label': '到付结算状态',
-        width: '120',
-        'prop': 'arrivepayStateCn'
-      },  {
-        'label': '已结到付',
-        'prop': 'finishArrivepayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
-        }
-      }, {
-        'label': '未结到付',
-        'prop': 'notArrivepayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-        }
-      },{
-        label: '实结到付',
-        prop: 'inputArrivepayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputArrivepayFee
-        }
-      }, {
-        'label': '回单付',
-        'prop': 'receiptpayFee'
-      }, {
-        'label': '回单付结算状态',
-        'prop': 'receiptpayStateCn'
-      },  {
-        'label': '已结回单付',
-        width: '100',
-        'prop': 'finishReceiptpayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
-        }
-      }, {
-        'label': '未结回单付',
-        width: '100',
-        'prop': 'notReceiptpayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
-        }
-      },
-      {
-        label: '实结回单付',
-        prop: 'inputReceiptpayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputReceiptpayFee
-        }
-      },
-      {
-        'label': '月结',
-        'prop': 'monthpayFee'
-      }, {
-        'label': '月结结算状态',
-        width: '110',
-        'prop': 'monthpayStateCn'
-      },  {
-        'label': '已结月结',
-        'prop': 'finishMonthpayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
-        }
-      }, {
-        'label': '未结月结',
-        'prop': 'notMonthpayFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
-        }
-      }, 
-      {
-        label: '实结月付',
-        prop: 'inputMonthpayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputMonthpayFee
-        }
-      },
+          'label': '未结现付',
+          'prop': 'notNowPayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+          }
+        }, {
+          label: '实结现付',
+          prop: 'inputNowPayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.inputNowPayFee
+          }
+        }, {
+          'label': '到付',
+          'prop': 'arrivepayFee'
+        }, {
+          'label': '到付结算状态',
+          width: '120',
+          'prop': 'arrivepayStateCn'
+        }, {
+          'label': '已结到付',
+          'prop': 'finishArrivepayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+          }
+        }, {
+          'label': '未结到付',
+          'prop': 'notArrivepayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+          }
+        }, {
+          label: '实结到付',
+          prop: 'inputArrivepayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.inputArrivepayFee
+          }
+        }, {
+          'label': '回单付',
+          'prop': 'receiptpayFee'
+        }, {
+          'label': '回单付结算状态',
+          'prop': 'receiptpayStateCn'
+        }, {
+          'label': '已结回单付',
+          width: '100',
+          'prop': 'finishReceiptpayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+          }
+        }, {
+          'label': '未结回单付',
+          width: '100',
+          'prop': 'notReceiptpayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+          }
+        },
+        {
+          label: '实结回单付',
+          prop: 'inputReceiptpayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.inputReceiptpayFee
+          }
+        },
+        {
+          'label': '月结',
+          'prop': 'monthpayFee'
+        }, {
+          'label': '月结结算状态',
+          width: '110',
+          'prop': 'monthpayStateCn'
+        }, {
+          'label': '已结月结',
+          'prop': 'finishMonthpayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
+          }
+        }, {
+          'label': '未结月结',
+          'prop': 'notMonthpayFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
+          }
+        },
+        {
+          label: '实结月付',
+          prop: 'inputMonthpayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.inputMonthpayFee
+          }
+        },
 
-      {
-        'label': '异动',
-        'prop': 'changeFee'
-      }, {
-        'label': '异动结算状态',
-        width: '100',
-        'prop': 'changeStateCn'
-      }, {
-        'label': '已结异动',
-        'prop': 'finishChangeFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
-        }
-      }, {
-        'label': '未结异动',
-        'prop': 'notChangeFee',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
-        }
-      }, {
-        label: '实结异动付',
-        prop: 'inputChangeFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          return scope.row.inputChangeFee
-        }
-      }, {
-        'label': '发货方',
-        'prop': 'senderCustomerUnit'
-      }, {
-        'label': '收货方',
-        'prop': 'receiverCustomerUnit'
-      },
+        {
+          'label': '异动',
+          'prop': 'changeFee'
+        }, {
+          'label': '异动结算状态',
+          width: '100',
+          'prop': 'changeStateCn'
+        }, {
+          'label': '已结异动',
+          'prop': 'finishChangeFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+          }
+        }, {
+          'label': '未结异动',
+          'prop': 'notChangeFee',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+          }
+        }, {
+          label: '实结异动付',
+          prop: 'inputChangeFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            return scope.row.inputChangeFee
+          }
+        }, {
+          'label': '发货方',
+          'prop': 'senderCustomerUnit'
+        }, {
+          'label': '收货方',
+          'prop': 'receiverCustomerUnit'
+        },
 
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '120',
-        fixed: false
-      },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '120',
+          fixed: false
+        },
 
-      {
-        label: '开单时间',
-        prop: 'createTime',
-        width: '150',
-        fixed: false,
-        slot: (scope) => {
-          return `${parseTime(scope.row.createTime)}`
+        {
+          label: '开单时间',
+          prop: 'createTime',
+          width: '150',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime)}`
+          }
+        },
+        {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
         }
-      },
-      {
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到达城市',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '件数',
-        prop: 'cargoAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '重量',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '体积',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }
       ]
     }
   },
   computed: {
     getRouteInfo() {
-      return this.$route.query.searchQuery
+      return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
@@ -415,7 +422,7 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      if (!this.$route.query.searchQuery.vo) {
+      if (!this.$route.query) {
         this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
@@ -438,15 +445,16 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
-      const selectListShipSns = objectMerge2([], this.$route.query.selectListShipSns)
-      if (this.$route.query.selectListShipSns) {
+      const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
+      if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
       } else {
         this.isModify = false
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -634,64 +642,110 @@ export default {
     },
     // 结算前整理数据
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
-          const item = {
-            shipId: e.shipId,
-            shipSn: e.shipSn
-            // feeTypeId: e.feeTypeId,
+          amount = tmsMath.add(
+            amount,
+            e.notNowPayFee,
+            e.notArrivepayFee,
+            e.notReceiptpayFee,
+            e.notMonthpayFee,
+            e.notChangeFee,
+            ).result()
 
-          }
+          let item = Object.assign({}, e)
           if (e.inputNowPayFee && e.notNowPayFee > 0) {
-            this.tableReceiptInfo.push(Object.assign({
+            this.infoTable.orderList.push(Object.assign({
               dataName: '现付',
               amount: e.notNowPayFee,
               inputNowPayFee: e.notNowPayFee
             }, item))
-            // item.inputNowPayFee = e.notNowPayFee
           }
           if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
-            this.tableReceiptInfo.push(Object.assign({
+            this.infoTable.orderList.push(Object.assign({
               dataName: '到付',
               amount: e.notArrivepayFee,
               inputArrivepayFee: e.notArrivepayFee
             }, item))
           }
           if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
-            this.tableReceiptInfo.push(Object.assign({
+            this.infoTable.orderList.push(Object.assign({
               dataName: '回单付',
               amount: e.notReceiptpayFee,
               inputReceiptpayFee: e.notReceiptpayFee
             }, item))
           }
           if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
-            this.tableReceiptInfo.push(Object.assign({
+            this.infoTable.orderList.push(Object.assign({
               dataName: '月结付',
               amount: e.notMonthpayFee,
               inputMonthpayFee: e.notMonthpayFee
             }, item))
           }
           if (e.inputChangeFee && e.notChangeFee > 0) {
-            this.tableReceiptInfo.push(Object.assign({
+            this.infoTable.orderList.push(Object.assign({
               dataName: '异动费用',
               amount: e.notChangeFee,
               inputChangeFee: e.notChangeFee
             }, item))
           }
-
-         /*  if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          } */
-          /* if (ischeck) {
-            this.tableReceiptInfo.push(item)
-          } */
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
         }
+        // this.rightTable.forEach((e, index) => {
+        //   const item = {
+        //     shipId: e.shipId,
+        //     shipSn: e.shipSn
+        //   }
+        //   if (e.inputNowPayFee && e.notNowPayFee > 0) {
+        //     this.tableReceiptInfo.push(Object.assign({
+        //       dataName: '现付',
+        //       amount: e.notNowPayFee,
+        //       inputNowPayFee: e.notNowPayFee
+        //     }, item))
+        //   }
+        //   if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
+        //     this.tableReceiptInfo.push(Object.assign({
+        //       dataName: '到付',
+        //       amount: e.notArrivepayFee,
+        //       inputArrivepayFee: e.notArrivepayFee
+        //     }, item))
+        //   }
+        //   if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
+        //     this.tableReceiptInfo.push(Object.assign({
+        //       dataName: '回单付',
+        //       amount: e.notReceiptpayFee,
+        //       inputReceiptpayFee: e.notReceiptpayFee
+        //     }, item))
+        //   }
+        //   if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
+        //     this.tableReceiptInfo.push(Object.assign({
+        //       dataName: '月结付',
+        //       amount: e.notMonthpayFee,
+        //       inputMonthpayFee: e.notMonthpayFee
+        //     }, item))
+        //   }
+        //   if (e.inputChangeFee && e.notChangeFee > 0) {
+        //     this.tableReceiptInfo.push(Object.assign({
+        //       dataName: '异动费用',
+        //       amount: e.notChangeFee,
+        //       inputChangeFee: e.notChangeFee
+        //     }, item))
+        //   }
+        // })
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        //   this.openDialog()
+        // } else {
+        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        // }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
@@ -733,9 +787,11 @@ export default {
   }
 }
 // settlementId 178
+
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader{
+.tableHeadItemBtn .setTableHeader {
   position: static;
 }
+
 </style>

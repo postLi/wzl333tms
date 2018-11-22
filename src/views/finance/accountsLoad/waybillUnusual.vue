@@ -1,6 +1,6 @@
 <template>
   <!-- 异动费用结算页面 -->
-  <div class="accountsLoad_table">
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -82,39 +82,42 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.shipFromOrgid" :btnLoading="btnLoading"></Voucher>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-// import { postFindTransferList } from '@/api/finance/accountsPayable'
 import { postFindChangeList } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
+import Voucher from '@/components/voucher/waybill'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
+      btnLoading: false,
       textChangeDanger: [],
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
-      // totalLeft: 0,
-      // totalRight: 0,
       tableReceiptInfo: [],
       selectedRight: [],
       selectedLeft: [],
@@ -434,16 +437,6 @@ export default {
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      // if (!this.$route.query.searchQuery.vo) {
-      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
-      //   this.isFresh = true
-      // } else {
-      //   // this.$set(this.searchQuery.vo, 'feeType', this.feeType)
-      //   this.searchQuery = Object.assign({} ,this.getRouteInfo)
-      //   console.log('this.searchQuery', this.searchQuery)
-      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      //   this.isFresh = false
-      // }
     },
     getList() {
       const sns = this.$route.query.selectListShipSns
@@ -455,11 +448,10 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      // if (!this.isFresh) {
       postFindChangeList(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)
         selectListShipSns.forEach(e => {
@@ -482,12 +474,11 @@ export default {
           e.inputChangeFee = e.unpaidFee
         })
         this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
-
-      // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
@@ -550,25 +541,6 @@ export default {
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
-          // this.rightTable.push(e)
-          // let item = -1
-          // this.leftTable.map((el, index) => {
-          //   if (el.shipSn === e.shipSn) {
-          //     item = index
-          //   }
-          // })
-          // if (item !== -1) {
-          //   this.leftTable.splice(item, 1)
-          //   this.orgLeftTable.splice(item, 1)
-          // }
-          // let item = this.leftTable.indexOf(e)
-          // if (item !== -1) { // 源数据减去被穿梭的数据
-          //   this.leftTable.splice(item, 1)
-          // }
-          // let orgItem = this.orgLeftTable.indexOf(e)
-          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
-          //   this.orgLeftTable.splice(item, 1)
-          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -594,13 +566,6 @@ export default {
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
-          // this.leftTable.push(e)
-          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          // let item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -651,22 +616,30 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
       if (!this.isGoReceipt) {
+          let amount = 0
         this.rightTable.forEach((e, index) => {
-          let item = {
-            shipId: e.shipId,
-            amount: e.inputChangeFee,
-            inputChangeFee: e.inputChangeFee,
-            shipSn: e.shipSn,
-            dataName: '异动费用'
+          if (e.inputChangeFee > 0 && e.inputChangeFee <= e.unpaidFee) { // 提交可结算项
+            let item = {
+              shipId: e.shipId,
+              shipSn: e.shipSn,
+              shipGoodsSn: e.shipGoodsSn,
+              createTime: e.createTime,
+              inputChangeFee: e.inputChangeFee,
+              shipFromCityName: e.shipFromCityName,
+              shipToCityName: e.shipToCityName,
+              shipReceiverName: e.shipReceiverName,
+              shipSenderName: e.shipSenderName
+            }
+            amount = tmsMath._add(amount, e.inputChangeFee)
+            this.infoTable.orderList.push(item)
+            item = {}
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          }
-          item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+          this.infoTable.amount = amount
+          amount = 0
+        if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })

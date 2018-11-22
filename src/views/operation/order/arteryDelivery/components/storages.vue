@@ -562,7 +562,6 @@ export default {
           expand: true,
           fixed: false,
           checkfn: (row) => {
-            console.log('row.warehouStatus:', row.warehouStatus)
             return row.warehouStatus === 1
           },
 
@@ -728,13 +727,17 @@ export default {
       type: Boolean,
       dafault: false
     },
-    //
+    arrivalStatus: {
+      type: String,
+      default: ''
+    },
     id: {
       type: [String, Number],
       dafault: false
     }
   },
   watch: {
+    arrivalStatus() {},
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
@@ -745,19 +748,22 @@ export default {
       }
     },
     id(newVal) {},
-    info(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-      } else if (this.isAlFun) {
-        this.popTitle = '查看详情'
-      } else {
-        this.popTitle = '到车入库'
-      }
-      this.getBatchNo = this.info.batchNo
-      this.propsId = this.info.id
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
+    info: {
+      handler(cval, oval) {
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+        this.getBatchNo = this.info.batchNo
+        this.propsId = this.info.id
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+      },
+      deep: true
     },
     isAlFun(newVal) {
       this.tablekey = +new Date()
@@ -892,7 +898,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    fetchAllCustomer() {
+    fetchAllCustomer() { // 获取运单列表
       this.loading = true
       const _id = this.propsId
       // console.log(_id);
@@ -904,7 +910,7 @@ export default {
           this.detailList.forEach(e => {
             // 入库前
             if (!this.isAlFun) {
-              if (e.warehouStatus === 0) {
+              if (e.warehouStatus !== 1) {
                 e.actualAmount = e.loadAmount
                 e.actualWeight = e.loadWeight
                 e.actualVolume = e.loadVolume
@@ -1055,8 +1061,12 @@ export default {
           break
           // 添加客户
         case 'sure':
-          this.timeInfoVisible = true
-          console.log('sure', this.timeInfoVisible)
+          console.log('批次状态：', this.arrivalStatus)
+          if (this.arrivalStatus === '在途中' || this.info.bathStatusName === '在途中') {
+            this.timeInfoVisible = true
+          } else {
+            this.getActualTime()
+          }
           break
       }
       if (type !== 'sure') {
@@ -1119,7 +1129,9 @@ export default {
           })
         })
         data = this.sendModel
-        this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(55, data).then(res => {
           this.$message({
             type: 'success',
@@ -1520,6 +1532,9 @@ export default {
     }
   }
 }
+
+
+
 
 
 
