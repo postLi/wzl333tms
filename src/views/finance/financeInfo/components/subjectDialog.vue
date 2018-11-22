@@ -389,7 +389,7 @@
             this.isFNum = 2
           } else {
             this.isFNum = item.subjectLevel * 2 + 2
-            console.log(this.isFNum, 'isFNum');
+            // console.log(this.isFNum, 'isFNum');
           }
         }
 
