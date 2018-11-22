@@ -175,11 +175,12 @@
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
     '<li><label>家庭住址</label><span></span></li>' +
     ' <li><label>家庭电话</label><span></span></li>' +
-    '<li><label>车架号</label><span></span></li>' +
+    // '<li><label>车架号</label><span></span></li>' +
     '<li><label>配载人员</label><span>' + data.userName + '</span></li></ul>' +
     '</div><div class="contract_form_item"><ul><li><label>身份证号</label><span>' + data.driverCardid + '</span></li>' +
     '<li><label>随车电话</label><span>' + data.dirverMobile + '</span></li>' +
-    '<li><label>发动机号</label><span></span></li></ul><div>'
+    '<li><label>发动机号</label><span>' + data.engineNum + '</span></li>' +
+    '<li><label>车架号</label><span>'+data.frameNum+'</span></li></ul><div>'
   contract_form.innerHTML = formItemStr
   // 货物信息
   goodsInfoStr += '五、本车货物总为<span>' + data.loadAmountall + '</span>件<span>' +
