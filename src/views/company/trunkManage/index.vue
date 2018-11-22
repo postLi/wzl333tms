@@ -169,6 +169,14 @@ export default {
           prop: 'truckHeight',
           fixed: false
         }, {
+          label: '车架号',
+          prop: 'frameNum',
+          fixed: false
+        }, {
+          label: '发动机号',
+          prop: 'engineNum',
+          fixed: false
+        }, {
           label: '车型',
           prop: 'truckTypeName',
           fixed: false

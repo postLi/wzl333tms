@@ -73,6 +73,12 @@
             >
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="车架号" prop="frameNum">
+          <el-input v-model="form.frameNum" :maxlength="30" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="发动机号" prop="engineNum">
+          <el-input v-model="form.engineNum" :maxlength="30" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
           <el-input type="textarea" :maxlength="300" v-model="form.truckRemarks"></el-input>
         </el-form-item>
@@ -206,7 +212,9 @@ export default {
         'truckWidth': '', // 车宽
         'drivingLicense': '', // 行驶证
         'operatingLicense': '', // 营运执照
-        'vehiclePic': '' // 车辆照片
+        'vehiclePic': '', // 车辆照片
+        frameNum: '', // 车架号
+        engineNum: ''// 发动机号
       },
       formLabelWidth: '100px',
       tooltip: false,

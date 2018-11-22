@@ -367,10 +367,13 @@
                     <el-form-item label="家庭电话:">
                       <el-input size="mini" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="车架号:">
+                   <!--  <el-form-item label="车架号:">
                       <el-input size="mini" disabled></el-input>
+                    </el-form-item> -->
+                    <el-form-item label="车架号:">
+                      <el-input size="mini" disabled v-model="formModel.frameNum"></el-input>
                     </el-form-item>
-                    <el-form-item label="配载人员:">
+                     <el-form-item label="配载人员:">
                       <el-input size="mini" disabled v-model="formModel.userName"></el-input>
                     </el-form-item>
                     <span>甲方签章:</span>
@@ -386,8 +389,9 @@
                       <el-input size="mini" disabled v-model="formModel.truckIdNumber"></el-input>
                     </el-form-item>
                     <el-form-item label="发动机号:">
-                      <el-input size="mini" disabled></el-input>
+                      <el-input size="mini" disabled v-model="formModel.engineNum"></el-input>
                     </el-form-item>
+                   
                     <span>乙方签章:</span>
                   </div>
                 </div>
