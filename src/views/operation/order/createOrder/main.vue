@@ -57,7 +57,7 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
             <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput"@change="getLineInfo"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="getLineInfo"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
             </el-form-item>
           </div>
         </el-col>
@@ -1964,6 +1964,9 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
+      if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
+        this.getLineInfo()
+      }
       // 修改保险费与声明价值
       // 如果有设置
       if (/(insuranceFee|productPrice)/.test(name)) {
