@@ -844,15 +844,18 @@ export default {
   },
   activated() {
     if (window.TMS_printOrderInfo) {
-      this.doAction('printShipKey').then(r => {
+      let fn = ()=>{
         if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
           this.doAction('printLibkey').then(r => {
+            window.TMS_printOrderInfo = false
+          }).catch(r=>{
             window.TMS_printOrderInfo = false
           })
         } else {
           window.TMS_printOrderInfo = false
         }
-      })
+      }
+      this.doAction('printShipKey').then(fn).catch(fn)
     }
   },
   mounted() {
