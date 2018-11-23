@@ -41,7 +41,7 @@
       </div>
       <div class="info_tab info_tab_media">
         <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"
-                    @success="fetchData" :isParentId="isParentId"/>
+                    @success="fetchData" :isParentId="isParentId" show-checkbox/>
       </div>
       <!--<div class="info_tab_footer">共计:{{ total }}-->
       <!--<div class="show_pager">-->
@@ -97,7 +97,7 @@
         showDialog: false,
         importDialogVisible: false,
         func: treeToArray,
-        expandAll: true,
+        expandAll: '',
 
         args: [null, null, 'timeLine'],
         mykey: '',
@@ -275,10 +275,19 @@
             })
             break;
           case 'doAll':
-            this.expandAll = true
+            // this.expandAll = "false2" 为第三者声明；
+            //第一次为引起变化，但是声明之后 子组件的判断条件为true 和false，之后则销毁
+            this.expandAll = "false2"
+            this.$nextTick(() => {//防止点击速度过快，使用$nextTick过渡缓冲
+              this.expandAll = "true"
+            })
+
             break
           case 'doUp':
-            this.expandAll = false
+            this.expandAll = "false2"
+            this.$nextTick(() => {
+              this.expandAll = "false"
+            })
             break
           case 'export':
             SaveAsFile({
