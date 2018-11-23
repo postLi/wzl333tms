@@ -136,7 +136,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -337,7 +337,9 @@
  }
 
  // 创建打印页面    【未保存】标签或运单
- export function CreatePrintPageEnable(info, printer, preview = false, number) {
+ export function CreatePrintPageEnable(info, printer, preview, number) {
+   console.log('是否预览', preview)
+
    // info-打印数据
    // printer-打印机
    // number-打印份数

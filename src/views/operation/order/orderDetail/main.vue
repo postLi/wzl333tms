@@ -1156,7 +1156,7 @@ export default {
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
         /////////////////////////////////////////////////////////////
         ///运单号-件数
-        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-'+infoDetail.cargoAmount)
+        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-' + infoDetail.cargoAmount)
         ////////////////////////////////////////////////////////////
         ///年月日
         let year = parseTime(infoDetail.createTime, '{y}')

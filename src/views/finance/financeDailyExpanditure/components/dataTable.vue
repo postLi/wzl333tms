@@ -338,7 +338,7 @@ export default {
     },
     fiOrderType: {
       handler(cval, oval) {
-        
+        console.log('fiOrderType', cval, oval)
       },
       deep: true
     }

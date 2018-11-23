@@ -129,7 +129,11 @@ export default {
           prop: 'paidFee',
           width: '110',
           slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+            const row = scope.row
+            let fee =  row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay :row.paidDbHandlingFeePay
+            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+            return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
           },
           fixed: false
         },
@@ -138,7 +142,12 @@ export default {
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+             const row = scope.row
+            let fee =  row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay :row.paidDbHandlingFeePay
+            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+            return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
+            // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
           },
           fixed: false
         },
