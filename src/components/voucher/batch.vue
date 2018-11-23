@@ -3,7 +3,7 @@
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
-        <el-form-item label="方向">
+        <el-form-item label="方向" prop="verificationId">
           <el-select v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
@@ -13,7 +13,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目">
+        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
           <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -25,7 +25,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="二级科目">
+        <el-form-item label="二级科目"  :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
           <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -36,7 +36,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="三级科目">
+        <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
           <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -47,7 +47,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="四级科目">
+        <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
           <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -219,7 +219,8 @@ export default {
         subjectFourId: ''
       },
       rules: {
-        verificationWay: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }]
+        verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
+        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -372,7 +373,38 @@ export default {
           break
       }
     },
+    checkSubjectIsNull() { // 判断下级科目列表有时 是否未选择
+      if (this.subjectTwo.length > 0) {
+        if (this.formModel.subjectTwoId) {
+          if (this.subjectThree.length > 0) {
+            if (this.formModel.subjectThreeId) {
+              if (this.subjectFour.length > 0) {
+                if (this.formModel.subjectFourId) {
+                  return true
+                }else {
+                  this.$message.warning('请填写四级科目')
+                  return false
+                }
+              }else {
+                return true
+              }
+            }else {
+              this.$message.warning('请填写三级科目')
+              return false
+            }
+          }else {
+            return true
+          }
+        } else {
+          this.$message.warning('请填写二级科目!')
+          return false
+        }
+      }else {
+        return true
+      }
+    },
     submitForm(formName) { // 保存
+      if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
           let dataInfo = Object.assign({}, this.formModel)

@@ -208,7 +208,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '/finance/accountsLoad',
+        path: '/finance/accountsLoadReceivable',
         query: {
           tab: '操作费核销',
           currentPage: 'handleFee', // 本页面标识符

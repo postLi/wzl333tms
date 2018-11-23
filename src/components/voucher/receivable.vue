@@ -3,7 +3,7 @@
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
-        <el-form-item label="方向">
+        <el-form-item label="方向"  prop="verificationId">
           <el-select v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
@@ -13,8 +13,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" >
+        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -25,8 +25,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="二级科目">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" >
+        <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -36,8 +36,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="三级科目">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" >
+        <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -47,8 +47,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="四级科目">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" >
+        <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -116,6 +116,10 @@ export default {
 
       },
       deep: true
+    },
+    orgId: {
+      handler(cval, oval) {},
+      deep: true
     }
   },
   computed: {
@@ -129,29 +133,25 @@ export default {
       const currentPage = this.$route.query.currentPage
       return currentPage.substr(7, currentPage.length)
     },
-    // dataName() {
-    //   const currentPage = this.$route.query.currentPage
-    //   switch (currentPage) {
-    //     case 'cash':
-    //       return '现付'
-    //     case 'waybillTicket':
-    //       return '单票提货费'
-    //     case 'waybillOther':
-    //       return '其他费用支出'
-    //     case 'waybillTransfer':
-    //       return '中转费'
-    //     case 'waybillAbnormal':
-    //       return '异常理赔'
-    //     case 'waybillUnusual':
-    //       return '异动费用结算'
-    //   }
-    // },
     getRouteInfo() {
       return JSON.parse(this.$route.query.searchQuery)
     },
     feeId() {
-      console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
-      return JSON.parse(this.$route.query.searchQuery).vo.feeType
+      if (this.$route.query.currentPage === 'handleFee') {
+        let ids = []
+        this.info.orderList.forEach(e => {
+          if (e.loadTypeName === '干线') {
+            ids.push(33)
+          } else if (e.loadTypeName === '短驳') {
+            ids.push(32)
+          }
+        })
+        return this.uniqueArray(ids).join(',')
+      } else {
+        console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
+        return JSON.parse(this.$route.query.searchQuery).vo.feeType
+      }
+
     },
   },
   data() {
@@ -183,7 +183,8 @@ export default {
         subjectFourId: ''
       },
       rules: {
-        verificationWay: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }]
+        verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
+        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -209,7 +210,8 @@ export default {
       this.baseQuery.orgId = this.orgId
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
-      this.baseQuery.feeIds = this.feeId + ''
+      this.baseQuery.feeIds = this.feeId + '' || ''
+      console.log('baseQuery', this.baseQuery, this.orgId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           this.veryficationList = data.verificationList
@@ -335,7 +337,38 @@ export default {
           break
       }
     },
+    checkSubjectIsNull() { // 判断下级科目列表有时 是否未选择
+      if (this.subjectTwo.length > 0) {
+        if (this.formModel.subjectTwoId) {
+          if (this.subjectThree.length > 0) {
+            if (this.formModel.subjectThreeId) {
+              if (this.subjectFour.length > 0) {
+                if (this.formModel.subjectFourId) {
+                  return true
+                } else {
+                  this.$message.warning('请填写四级科目')
+                  return false
+                }
+              } else {
+                return true
+              }
+            } else {
+              this.$message.warning('请填写三级科目')
+              return false
+            }
+          } else {
+            return true
+          }
+        } else {
+          this.$message.warning('请填写二级科目!')
+          return false
+        }
+      } else {
+        return true
+      }
+    },
     submitForm(formName) { // 保存
+      if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
           let dataInfo = Object.assign({}, this.formModel)
@@ -348,28 +381,17 @@ export default {
           }
           delete query.tmsFinanceBillRecordDto.orderList
           accountApi.postCreateFee(this.orgId, query).then(data => {
-            this.$message({ type: 'success', message: '保存成功' })
-            this.btnLoading = false
-            this.closeMe()
-            this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
-            // 当添加结算时更新列表
-            this.eventBus.$emit('updateAccountsReceivableList')
-          })
+              this.$message({ type: 'success', message: '保存成功' })
+              this.btnLoading = false
+              this.closeMe()
+              this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+              // 当添加结算时更新列表
+              this.eventBus.$emit('updateAccountsReceivableList')
+            })
             .catch(err => {
               this._handlerCatchMsg(err)
               this.btnLoading = false
             })
-          // postCreateloadSettlement(orgid, query).then(data => {
-          //     this.$message.success('保存成功！')
-          //     this.btnLoading = false
-          //     this.popVisibleDialog = false
-          //     const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-          //     this.$router.push({ path: './accountsPayable/waybill/' + currentPage })
-          //   })
-          //   .catch(err => {
-          //     this._handlerCatchMsg(err)
-          //     this.btnLoading = false
-          //   })
         }
       })
     },
@@ -381,6 +403,7 @@ export default {
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
+      this.searchQuerySub.orgId = this.orgId
 
       return getFinanceSubjects(this.searchQuerySub).then(data => {
           switch (subjectLevel) {
@@ -473,6 +496,15 @@ export default {
       })[0]
       this.$set(this.formModel, 'verificationWay', obj.verificationWay)
       console.log('选中方向：：', obj, this.formModel)
+    },
+    uniqueArray(arr) { // 去重
+      var hash = []
+      for (var i = 0; i < arr.length; i++) {
+        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i]) {
+          hash.push(arr[i])
+        }
+      }
+      return hash
     },
     closeMe(done) {
       this.$emit('close')

@@ -69,7 +69,7 @@ export default {
   data() {
     const _this = this
     return {
-      searchCreatTime: [+new Date(), +new Date() + 60 * 24 * 60 * 60 * 1000],
+      searchCreatTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         'orgId': '',
         verifyStatus: 0 ,

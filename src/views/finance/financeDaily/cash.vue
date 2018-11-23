@@ -418,8 +418,7 @@ export default {
           }).then(() => {
             this.loading = true
             cancelVerification({
-                id: this.selectedList[0].id,
-                recordDetailId: ''
+                id: this.selectedList[0].id
               }).then(data => {
                 this.loading = false
                 this.$message.success('反核销成功！')

@@ -432,8 +432,8 @@ export default {
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
-          e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
-          e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
+          e.width = Math.round((e.width ? e.width : 240) * this.prxvalue)
+          e.height = Math.round((e.height ? e.height : 140) * this.prxvalue)
           if (e.filedValue === 'setting') {
             this.formModel.paper = Object.assign({}, e)
           } else {

@@ -621,6 +621,11 @@ $dialogHeader_bgcolor: #e6e6e6;
         width: 100%;
       }
     }
+    .el-form-item__error{
+      padding-top: 0px;
+      margin-top: -5px;
+      z-index: 2;
+    }
   }
   .income_item_row {
     .uploadcard {

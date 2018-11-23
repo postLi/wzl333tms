@@ -15,7 +15,7 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select clearable v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
+          <el-select v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
             <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>
@@ -37,13 +37,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="二级科目">
+        <el-form-item label="二级科目" prop="subjectTwoId" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
           <el-select clearable v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="三级科目">
+        <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
           <el-select clearable v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -51,7 +51,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="四级科目">
+        <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
           <el-select clearable v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -113,6 +113,7 @@
 <script>
 import SelectTree from '@/components/selectTree/index'
 import Upload from '@/components/Upload/singleImage2'
+import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 export default {
   components: {
@@ -201,6 +202,22 @@ export default {
       }
     }
   },
+  // watch: {
+  //   subjectTwoRule() {
+  //     console.warn('subjectTwoRule', this.subjectTwo.length)
+  //     if (this.subjectTwo.length > 0) {
+  //       return [{
+  //         required: true,
+  //         trigger: 'blur',
+  //         message: '不能为空'
+  //       }]
+  //     } else {
+  //       return []
+  //     }
+  //     console.warn('subjectTwoRule2', this.subjectTwoRule)
+
+  //   }
+  // },
   methods: {
     init() {
       this.verificationWay = []
@@ -209,7 +226,8 @@ export default {
       this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
         this.formModel = Object.assign({}, this.info)
-        this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType ? this.formModel.paymentsType + '' : '')
+        console.log('paymentsType', this.formModel.paymentsType)
+        this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType + '')
         this.getVeryficationList()
         this.initSubject()
         this.loading = false
@@ -231,6 +249,7 @@ export default {
     },
     initSubject() { // 修改时回填科目列表
       this.getFinanceSubjects().then(() => { // 获取一级科目
+
         if (this.formModel.subjectOneId) {
           if (!this.checkSubject(1)) {
             for (let item in this.formModel) {
@@ -309,6 +328,7 @@ export default {
               return true
             }
           }
+          console.warn('subjectTwoRule3', this.subjectTwoRule)
           break
         case 2:
           let two = []
@@ -451,16 +471,50 @@ export default {
       this.formModel.verificationWay = obj.verificationWay
       console.log(this.formModel)
     },
+    checkSubjectIsNull() { // 判断下级科目列表有时 是否未选择
+      if (this.subjectTwo.length > 0) {
+        if (this.formModel.subjectTwoId) {
+          if (this.subjectThree.length > 0) {
+            if (this.formModel.subjectThreeId) {
+              if (this.subjectFour.length > 0) {
+                if (this.formModel.subjectFourId) {
+                  return true
+                }else {
+                  this.$message.warning('请填写四级科目')
+                  return false
+                }
+              }else {
+                return true
+              }
+            }else {
+              this.$message.warning('请填写三级科目')
+              return false
+            }
+          }else {
+            return true
+          }
+        } else {
+          this.$message.warning('请填写二级科目!')
+          return false
+        }
+      }else {
+        return true
+      }
+    },
     submitForm(formName, type) {
       if (!this.formModel.certNo) {
         this.$message.error('缺少凭证编号')
         this.postVerificationBaseInfo()
         return
       }
+      if (!this.checkSubjectIsNull()) {
+        return
+      }
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
           let query = Object.assign({}, this.formModel)
+          this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
           this.$set(query, 'orderList', [])
           // 添加的时候 需要创建一个空的详情列表
