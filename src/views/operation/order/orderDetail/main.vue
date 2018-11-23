@@ -845,9 +845,21 @@ export default {
   activated() {
     if (window.TMS_printOrderInfo) {
       this.doAction('printShipKey').then(r => {
-        this.doAction('printLibkey')
+        this.doAction('printLibkey').then(r => {
+          window.TMS_printOrderInfo = false
+        })
+        .catch(e => {
+          window.TMS_printOrderInfo = false
+        })
       })
-      window.TMS_printOrderInfo = false
+      .catch(e => {
+        this.doAction('printLibkey').then(r => {
+          window.TMS_printOrderInfo = false
+        })
+        .catch(e => {
+          window.TMS_printOrderInfo = false
+        })
+      })
     }
   },
   mounted() {
@@ -1147,7 +1159,7 @@ export default {
         this.$set(obj, 'effective', infoDetail.shipEffectiveName) // 时效
         /////////////////////////////////////////////////////////////
         ///运单号-件数
-        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-'+infoDetail.cargoAmount)
+        this.$set(obj, 'shipSnCargoAmount', infoDetail.shipSn + '-' + infoDetail.cargoAmount)
         ////////////////////////////////////////////////////////////
         ///年月日
         let year = parseTime(infoDetail.createTime, '{y}')

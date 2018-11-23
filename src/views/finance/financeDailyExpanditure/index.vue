@@ -30,7 +30,7 @@
         </el-tabs>
       </div>
       <!-- 智能结算弹出框 -->
-      <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch"></Count>
+      <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch" :fiOrderType="fiOrderType"></Count>
       <!-- 核销凭证 -->
       <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
     </div>
@@ -162,7 +162,7 @@ export default {
     // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
       this.settlementId = val
       console.log('setSettlementId::::::', val)
-      switch(this.settlementId) {
+      switch(val) {
         case 178:
           this.fiOrderType = 0
         break

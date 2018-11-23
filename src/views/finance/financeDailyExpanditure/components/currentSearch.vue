@@ -79,6 +79,7 @@ export default {
         if (cval) {
           this.isSender = true
           this.settlementId = cval // 弹出框选择后 就根据选择切换
+          this.senderSearch = cval === 179?'load' : cval === 180 ? 'short' : 'deliver'
         }
       },
       deep: true

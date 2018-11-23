@@ -120,7 +120,7 @@ export default {
           prop: 'fee',
           width: '110',
           slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeeRec : scope.row.dbHandlingFeeRec
           },
           fixed: false
         },
@@ -129,7 +129,7 @@ export default {
           prop: 'paidFee',
           width: '110',
           slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeeRec : scope.row.paidDbHandlingFeeRec
           },
           fixed: false
         },
@@ -138,7 +138,7 @@ export default {
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+            return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeeRec : scope.row.unpaidDbHandlingFeeRec
           },
           fixed: false
         },

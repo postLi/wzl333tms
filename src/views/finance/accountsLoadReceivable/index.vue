@@ -12,6 +12,7 @@ import abnormal from './abnormal' // 异动
 import cash from './cash' // 现付
 import receipt from './receipt' // 回单付
 import month from './month' // 月结
+import handleFee from './handleFee' // 操作费
 
 export default {
   name: 'accountsLoadReceivable',
@@ -21,7 +22,8 @@ export default {
     abnormal,
     cash,
     receipt,
-    month
+    month,
+    handleFee
   },
   props: {
     isShow: {
@@ -62,6 +64,9 @@ export default {
           break
         case 'arrive':
           name = '到付结算'
+          break
+        case 'handleFee':
+          name = '操作费核销'
           break
       }
       return name

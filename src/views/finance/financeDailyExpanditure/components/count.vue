@@ -45,7 +45,8 @@
 <script>
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import querySelect from '@/components/querySelect/index'
-import { getFeeTypeDict, getOrderShipList } from '@/api/finance/settleLog'
+import { getFeeTypeDict } from '@/api/finance/settleLog'
+import {  getOrderList } from '@/api/finance/financeDaily'
 import { getAllCustomer } from '@/api/company/customerManage'
 import { getTrucK } from '@/api/operation/load'
 export default {
@@ -67,6 +68,10 @@ export default {
     },
     setSettlementId: {
       type: [Number, String]
+    },
+    fiOrderType: {
+      type: [Number, String],
+      default: 1  // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
     }
   },
   data() {
@@ -96,8 +101,7 @@ export default {
         id: 181,
         feeType: '送货'
       }],
-      paymentsType: 1, // 0-收入 1-支出
-      fiOrderType: 1 // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
+      paymentsType: 1 // 0-收入 1-支出
     }
   },
   computed: {
@@ -138,6 +142,12 @@ export default {
         if (this.settlementId === 179) {
           this.formModel.settlementId = cval
         }
+      },
+      deep: true
+    },
+    fiOrderType: {
+      handler(cval, oval) {
+
       },
       deep: true
     }
@@ -214,14 +224,15 @@ export default {
           this.$set(this.formModel, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
           this.$set(this.formModel, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
           this.$set(this.formModel, 'orgId', this.$route.query.orgId)
-          this.$set(this.formModel, 'incomePayType', this.incomePayType)
+          // this.$set(this.formModel, 'incomePayType', this.incomePayType)
+          this.$set(this.formModel, 'fiOrderType', this.fiOrderType)
           if (this.settlementId === 178) {
             this.$set(this.formModel, 'settlementId', this.settlementId)
           }
 
           this.formModel.autoTotalAmount = Number(this.formModel.autoTotalAmount)
           let info = Object.assign({}, this.formModel)
-          getOrderShipList(info).then(data => {
+          getOrderList(info).then(data => {
               this.$emit('success', { info: data, count: info.autoTotalAmount, type: this.settlementId })
               this.closeMe()
               this.$message({ type: 'success', message: '智能结算搜索运单操作成功' })
