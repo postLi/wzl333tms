@@ -14,7 +14,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="一级科目">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" >
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -26,7 +26,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" >
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +37,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" >
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +48,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" >
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -117,8 +117,8 @@ export default {
       deep: true
     },
     orgId: {
-      handler (cval, oval) {
-        console.log('orgId',cval, oval)
+      handler(cval, oval) {
+        console.log('orgId', cval, oval)
       },
       immediate: true,
       deep: true
@@ -228,19 +228,46 @@ export default {
           this._handlerCatchMsg(err)
         })
     },
-    initSubject() {
-      this.getFinanceSubjects().then(() => {
-        this.loading = false
-        console.log('需要初始化科目一', this.formModel.subjectOneId, typeof subjectOneId)
+    initSubject() { // 修改时回填科目列表
+      this.getFinanceSubjects().then(() => { // 获取一级科目
         if (this.formModel.subjectOneId) {
-          console.log('需要初始化科目二')
-          this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => {
+          if (!this.checkSubject(1)) {
+            for (let item in this.formModel) {
+              if (/^subject/.test(item)) {
+                this.formModel[item] = ''
+              }
+            }
+            return
+          }
+          this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => { // 获取二级科目
             if (this.formModel.subjectTwoId) {
-              console.log('需要初始化科目三')
-              this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => {
+              if (!this.checkSubject(2)) {
+                for (let item in this.formModel) {
+                  if (/(Four|Three|Two)/.test(item)) {
+                    this.formModel[item] = ''
+                  }
+                }
+                return
+              }
+              this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => { // 获取三级科目
                 if (this.formModel.subjectThreeId) {
-                  console.log('需要初始化科目四')
-                  this.getFinanceSubjects(4, this.formModel.subjectThreeId)
+                  if (!this.checkSubject(3)) {
+                    for (let item in this.formModel) {
+                      if (/(Four|Three)/.test(item)) {
+                        this.formModel[item] = ''
+                      }
+                    }
+                    return
+                  }
+                  this.getFinanceSubjects(4, this.formModel.subjectThreeId).then(() => { // 获取四级科目
+                    if (this.formModel.subjectFourId) {
+                      if (!this.checkSubject(4)) {
+                        this.formModel.subjectFourId = ''
+                        this.formModel.subjectFourName = ''
+                        return
+                      }
+                    }
+                  })
                 }
               })
             }
@@ -285,6 +312,70 @@ export default {
     setting() {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
     },
+    checkSubject(type) { // 修改时 检查返回的凭证科目是否还存在科目库中 如果不存在 就清空下拉框不显示
+      switch (type) {
+        case 1:
+          let one = []
+          if (this.subjectOne.length > 0) {
+            one = this.subjectOne.filter(e => {
+              return e.id === this.formModel.subjectOneId
+            })
+            if (one.length === 0) {
+              this.formModel.subjectOneId = ''
+              this.formModel.subjectOneName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 2:
+          let two = []
+          if (this.subjectTwo.length > 0) {
+            two = this.subjectTwo.filter(e => {
+              return e.id === this.formModel.subjectTwoId
+            })
+            if (two.length === 0) {
+              this.formModel.subjectTwoId = ''
+              this.formModel.subjectTwoName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 3:
+          let three = []
+          if (this.subjectThree.length > 0) {
+            three = this.subjectThree.filter(e => {
+              return e.id === this.formModel.subjectThreeId
+            })
+            if (three.length === 0) {
+              this.formModel.subjectThreeId = ''
+              this.formModel.subjectThreeName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+        case 4:
+          let four = []
+          if (this.subjectFour.length > 0) {
+            four = this.subjectFour.filter(e => {
+              return e.id === this.formModel.subjectFourId
+            })
+            if (four.length === 0) {
+              this.formModel.subjectFourId = ''
+              this.formModel.subjectFourName = ''
+              return false
+            } else {
+              return true
+            }
+          }
+          break
+      }
+    },
     getFinanceSubjects(subjectLevel, parentId) {
       this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
@@ -296,7 +387,7 @@ export default {
           switch (subjectLevel) {
             case 2:
               this.subjectTwo = data
-               this.subjectTwo.forEach((e, index)=>{
+              this.subjectTwo.forEach((e, index) => {
                 console.log(index, e.id)
               })
               this.subjectThree = []
@@ -305,7 +396,7 @@ export default {
               break
             case 3:
               this.subjectThree = data
-              this.subjectThree.forEach((e, index)=>{
+              this.subjectThree.forEach((e, index) => {
                 console.log(index, e.id)
               })
               this.subjectFour = []
@@ -313,7 +404,7 @@ export default {
               break
             case 4:
               this.subjectFour = data
-               this.subjectFour.forEach((e, index)=>{
+              this.subjectFour.forEach((e, index) => {
                 console.log(index, e.id)
               })
               console.log('科目四: ', this.subjectFour)
@@ -324,7 +415,7 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目一: ', this.subjectOne)
-              this.subjectOne.forEach((e, index)=>{
+              this.subjectOne.forEach((e, index) => {
                 console.log(index, e.id)
               })
               break

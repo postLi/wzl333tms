@@ -60,6 +60,7 @@ export default {
   },
   data() {
     return {
+      feeType: 11,
       isCheck: false,
       isModify: false,
        isDbClick: false,
@@ -368,6 +369,7 @@ export default {
       }
     },
     count() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
         path: '../../accountsLoad',
         query: {
