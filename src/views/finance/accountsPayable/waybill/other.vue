@@ -317,6 +317,7 @@ export default {
       }
     },
     count() {
+      console.log('searchQuery', this.searchQuery)
       this.$router.push({
         path: '../../accountsLoad',
         query: {

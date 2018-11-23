@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      feeType: 9,
       btnsize: 'mini',
       selectListShipSns: [],
       searchQuery: {
@@ -356,6 +357,8 @@ export default {
       }
     },
     count() {
+      console.log('searchQuery', this.searchQuery)
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
         path: '../../accountsLoad',
         query: {

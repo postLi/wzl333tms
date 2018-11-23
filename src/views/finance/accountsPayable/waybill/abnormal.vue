@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      feeType: 12,
       btnsize: 'mini',
       searchQuery: {
         currentPage: 1,
@@ -349,6 +350,8 @@ export default {
       }
     },
     count() {
+      console.log('searchQuery', this.searchQuery)
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
         path: '../../accountsLoad',
         query: {
