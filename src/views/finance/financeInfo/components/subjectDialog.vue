@@ -358,11 +358,12 @@
           this.isTitle = '增加下级'
           this.currentForm.subjectCode = item.subjectCode
           this.currentForm.subjectName = item.subjectName
+          this.isFNum = 2
         }
         else if (this.doAddStair) {
           this.isTitle = '增加一级'
           this.isSubjectLevel = item.subjectLevel
-          console.log(this.isSubjectLevel, 'this.isSubjectLevel');
+          // console.log(this.isSubjectLevel, 'this.isSubjectLevel');
           if (item.parent && item.subjectLevel > 1) {
             this.isSubjectLevelFn = true
             this.currentForm.subjectCode = item.parent.subjectCode
@@ -413,6 +414,12 @@
           if (item.subjectName === obj) {
             this.form.oneId = item.id
             this.form.oneName = item.subjectName
+            this.form.twoId = ''
+            this.form.threeId = ''
+            this.form.twoName = ''
+            this.form.threeName = ''
+            this.form.fourId = ''
+            this.form.fourName = ''
             this.changeSelctListTwO(this.form.oneId)
 
           }
@@ -454,6 +461,7 @@
             this.form.fourId = ''
             this.form.fourName = ''
             this.closeOptions.threeOptions = ''
+            this.closeOptions.forthOptions = ''
             return false
           } else {
             this.closeOptions.threeOptions = res
@@ -479,6 +487,7 @@
             this.closeOptions.forthOptions = ''
             return false
           } else {
+            console.log(res,'resssss');
             this.closeOptions.forthOptions = res
           }
         })

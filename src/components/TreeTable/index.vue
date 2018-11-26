@@ -24,7 +24,7 @@
                      :width="column.width" class-name="col-class">
       <template slot-scope="scope">
         <div class="scope-node"
-             :class="'lrl-space-' + scope.row._level + (!scope.row._expanded ? ' hide-space' : '') + (scope.row.islast ? ' lrl-space-last' : '') + (iconShow(index,scope.row) ? '' : ' lrl-none-child')">
+             :class="'lrl-space-' + scope.row._level + (!scope.row._expanded ? ' hide-space' : '') + (scope.row.islast ? ' lrl-space-last' : '') + (scope.row.isservernt ? ' lrl-space-isservernt' : '') + (iconShow(index,scope.row) ? '' : ' lrl-none-child')">
           <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
           <i v-if="!scope.row._expanded" class="el-icon-circle-plus-outline
@@ -107,13 +107,14 @@
     },
     watch: {
       expandAll(nVal) {
+        console.log(nVal, 'nValnValnValnVal');
         //判断条件为true 和false
-        if (nVal==="true") {
+        if (nVal === "true") {
           this.formatData.forEach((record) => {
             record._expanded = true
           })
 
-        } else if(nVal === 'false') {
+        } else if (nVal === 'false') {
           this.formatData.forEach((record) => {
             record._expanded = false
           })
@@ -166,6 +167,7 @@
         ])
       },
       handleDelete(row) {
+        console.log(this.expandAll, 'expandAll');
         this.$confirm('确定删除科目名称 [' + row.subjectName + '] 吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
@@ -176,6 +178,9 @@
               type: 'success',
               message: '删除成功!'
             })
+            if (this.expandAll === 'false') {
+              this.$emit('getExpanAll', this.expandAll)
+            }
             this.$emit('success')
           }).catch(err => {
             this._handlerCatchMsg(err)

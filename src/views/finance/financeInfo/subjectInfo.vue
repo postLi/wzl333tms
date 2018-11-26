@@ -41,7 +41,7 @@
       </div>
       <div class="info_tab info_tab_media">
         <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" @change="getTreeTableParam"
-                    @success="fetchData" :isParentId="isParentId" show-checkbox/>
+                    @success="fetchData" :isParentId="isParentId" show-checkbox @getExpanAll="getExpanAll"/>
       </div>
       <!--<div class="info_tab_footer">共计:{{ total }}-->
       <!--<div class="show_pager">-->
@@ -97,7 +97,7 @@
         showDialog: false,
         importDialogVisible: false,
         func: treeToArray,
-        expandAll: '',
+        expandAll: 'false',
 
         args: [null, null, 'timeLine'],
         mykey: '',
@@ -156,6 +156,22 @@
       this.fetchData()
     },
     methods: {
+      getExpanAll(msg) {
+        console.log(msg);
+        // this.expandAll = "false2"
+        if (msg === 'true') {
+          this.$nextTick(() => {
+            this.expandAll = "false"
+
+          })
+        } else {
+          this.$nextTick(() => {
+            this.expandAll = "true"
+
+          })
+        }
+        console.log(this.expandAll, ' this.expandAll this.expandAll');
+      },
       searchOrgid(item) {
         this.searchQuery.vo.companyId = item
         this.fetchData()

@@ -32,9 +32,22 @@
     postAddFinFicationl,
     putExtFinFicationl
   } from '@/api/finance/finanInfo'
+  import {REGEX} from '@/utils/validate'
 
   export default {
     data() {
+      const validateNum = (rule, value, callback) => {
+        if (/\s+/g.test(value)) {
+          // this.$message.error('不能输入空格~')
+          console.log(value, 'value');
+          // value = value.replace('/\\s/g','')
+          callback(new Error('不能输入空格~'))
+
+        } else {
+          callback()
+          console.log(value, 'value2222');
+        }
+      }
       return {
         loading: true,
         isTitle: '新增',
@@ -44,7 +57,9 @@
         },
         rules: {
           verificationWay: [
-            {required: true, message: '请输入核销方向'}
+            {required: true, message: '请输入核销方向~'}
+            // {validator: validateNum}
+
           ]
         }
       };
@@ -108,6 +123,18 @@
             this.loading = true
             let promiseObj
             const data = objectMerge2({}, this.form)
+            if (/\s/.test(data.verificationWay)) {
+            // if (/\s+/g.test(data.verificationWay)) {
+              // console.log(/\s+/g.test(data.verificationWay), 'data.verificationWay');
+              this.$message.warning('不能输入空格~')
+              this.loading = false
+              return false
+            }
+            if (data.verificationWay === '') {
+              this.$message.warning('请输入核销方向~')
+              this.loading = false
+              return false
+            }
             if (this.isDoEdit) {
               promiseObj = putExtFinFicationl(this.info.id, data)
             } else {
