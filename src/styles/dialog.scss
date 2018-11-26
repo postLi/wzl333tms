@@ -666,3 +666,8 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
   }
 }
+.formItemTextDanger {
+  .el-form-item__label {
+    color: #ef0000;
+  }
+}

@@ -3,7 +3,7 @@
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
-        <el-form-item label="方向"  prop="verificationId">
+        <el-form-item label="方向"  prop="verificationId" class="formItemTextDanger">
           <el-select v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
@@ -74,6 +74,7 @@
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
+import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import * as accountApi from '@/api/finance/accountsReceivable'
@@ -375,6 +376,7 @@ export default {
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           delete dataInfo.verificationList
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           let query = {
             receivableFees: dataInfo.orderList,
             tmsFinanceBillRecordDto: dataInfo

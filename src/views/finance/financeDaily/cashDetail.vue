@@ -22,7 +22,7 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataListTop" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataListTop" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :cell-class-name="classLineRed">
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -56,7 +56,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordDetailList, cancelVerification, delBillRecordDetail } from '@/api/finance/financeDaily'
+import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
@@ -157,10 +157,10 @@ export default {
         },
         {
           label: '系统操作日期',
-          prop: 'verifyTime',
+          prop: 'createTime',
           width: '160',
           slot: (scope) => {
-            return `${parseTime(scope.row.verifyTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
           fixed: false
         },
@@ -335,12 +335,23 @@ export default {
     },
     recordId() {
       return this.$route.query.recordId
+    },
+    cashSearchQuery() {
+      console.log('cashSearchQuery', JSON.parse(this.$route.query.searchQuery))
+      return JSON.parse(this.$route.query.searchQuery)
     }
   },
   created() {
     this.setView()
   },
   methods: {
+    classLineRed(row, index) {
+      if (row.row.billRecordStatus === 0) {
+        return 'lineRed'
+      } else {
+        return ''
+      }
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -372,15 +383,15 @@ export default {
           this.dataListTop = data.list
           this.total = data.total
           this.loading = false
-          // setTimeout(() => {
-          //   if (this.dataListTop.length === 0) {
-          //     this.$message.info('已更新更新财务日记账数据！')
-          //     this.eventBus.$emit('closeCurrentView')
-          //     this.$router.push({
-          //       path: './financeDaily'
-          //     })
-          //   }
-          // }, 500)
+          setTimeout(() => {
+            if (this.dataListTop.length === 0) {
+              this.$message.info('已更新更新财务日记账数据！')
+              this.eventBus.$emit('closeCurrentView')
+              this.$router.push({
+                path: './financeDaily'
+              })
+            }
+          }, 500)
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -391,40 +402,26 @@ export default {
     setTable() {},
     doAction(type) {
       let isShow = false
-      if (this.selectedList.length === 0 && type !== 'export' && type !== 'print' && type !== 'income') {
+      if (this.selectedList.length === 0 && type !== 'export' && type !== 'print' && type !== 'income' && type !== 'edit') {
         isShow = false
         this.$message({ type: 'warning', message: '请选择一条数据' })
       } else {
         isShow = true
       }
       switch (type) {
-        case 'income':
+        case 'income': // 新增
           if (isShow) {
             this.income()
           }
           break
-        case 'edit':
+        case 'edit': // 修改
           if (isShow) {
-            if (this.selectedList.length !== 1) {
-              this.$message({ type: 'warning', message: '请选择一条数据' })
-            } else {
-              this.doEdit()
-            }
-          }
-          break
-        case 'delCount': // 删除
-          if (isShow) {
-            this.delCount()
+            this.doEdit()
           }
           break
         case 'backCount': // 反核销
           if (isShow) {
             this.backCount()
-          }
-          break
-        case 'showDetail':
-          if (isShow) {
-            this.showDetail()
           }
           break
         case 'export':
@@ -441,7 +438,24 @@ export default {
             name: '资金流水明细'
           })
           break
+          // case 'delCount': // 删除
+          //   if (isShow) {
+          //     this.delCount()
+          //   }
+          //   break
       }
+    },
+    doEdit() { // 修改
+      this.cashSearchQuery.currentPage = 1
+      this.cashSearchQuery.pageSize = 100
+      this.$set(this.cashSearchQuery, 'id', this.recordId)
+      postBillRecordList(this.cashSearchQuery).then(data => {
+        console.log('cashData', data)
+        this.currentInfo = Object.assign({}, data.list[0])
+        this.isModify = true
+        this.popVisibleIncome = true
+        this.$refs.multipleTable.clearSelection()
+      })
     },
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
@@ -490,63 +504,61 @@ export default {
           .catch(() => {})
       }
     },
-    delCount() { // 删除 只有手工录入并且未审核的可以删除
-      if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
-        if (this.selectedList[0].dataSrcZh !== '手工录入') {
-          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
-        } else {
-          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
-        }
-        this.$refs.multipleTable.clearSelection()
-      } else {
-        this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            delBillRecordDetail({
-                id: this.selectedList[0].id,
-                recordId: this.selectedList[0].recordId,
-                amount: this.selectedList[0].amount
-              }).then(data => {
-                this.loading = false
-                this.$message.success('删除成功！')
-                this.fetchList()
-              })
-              .catch(err => {
-                this._handlerCatchMsg(err)
-                this.loading = false
-              })
-          })
-          .catch(() => {})
-      }
-    },
+    // delCount() { // 删除 只有手工录入并且未审核的可以删除
+    //   if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
+    //     if (this.selectedList[0].dataSrcZh !== '手工录入') {
+    //       this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+    //     } else {
+    //       this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+    //     }
+    //     this.$refs.multipleTable.clearSelection()
+    //   } else {
+    //     this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+    //         confirmButtonText: '确定',
+    //         cancelButtonText: '取消',
+    //         type: 'warning'
+    //       }).then(() => {
+    //         this.loading = true
+    //         delBillRecordDetail({
+    //             id: this.selectedList[0].id,
+    //             recordId: this.selectedList[0].recordId,
+    //             amount: this.selectedList[0].amount
+    //           }).then(data => {
+    //             this.loading = false
+    //             this.$message.success('删除成功！')
+    //             this.fetchList()
+    //           })
+    //           .catch(err => {
+    //             this._handlerCatchMsg(err)
+    //             this.loading = false
+    //           })
+    //       })
+    //       .catch(() => {})
+    //   }
+    // },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
-      this.selectedList = list
+      let count = 0
+      this.selectedList = list.filter((e, index) => {
+        if (e.billRecordStatus === 0) { // 已经反核销的不可选中
+          count++
+          this.$refs.multipleTable.toggleRowSelection(e, false)
+        }
+        if (count > 0) {
+          this.$message.warning('已经反核销的数据不可操作！')
+        }
+        return e.billRecordStatus !== 0
+      })
       this.selectListShipSns = []
-      list.forEach((e, index) => {
+      this.selectedList.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })
-    },
-    showDetail(order) {
-      // this.eventBus.$emit('showOrderDetail', order.id)
-    },
-    showDetail() {
-
     },
     income() { // 新增
       this.isModify = false
       this.popVisibleIncome = true
-    },
-    doEdit() { // 修改
-      this.currentInfo = Object.assign({}, this.selectedList[0])
-      this.isModify = true
-      this.popVisibleIncome = true
-      this.$refs.multipleTable.clearSelection()
     },
     setAddSuccess() {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -574,6 +586,22 @@ export default {
 .info_tab_row {
   flex-grow: 1;
   height: 50%;
+}
+
+.lineRed {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    margin-top: 15px;
+    width: calc(100%);
+    height: 1px;
+    z-index: 2;
+    background-color: red !important;
+  }
 }
 
 </style>

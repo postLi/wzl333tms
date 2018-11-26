@@ -15,7 +15,7 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select v-model="formModel.paymentsType" filterable placeholder="请选择" :size="btnsize">
+          <el-select v-model="formModel.paymentsType" placeholder="请选择" :size="btnsize">
             <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>
@@ -64,7 +64,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount" class="formItemTextDanger">
-          <el-input v-model.number="formModel.amount" placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
         </el-form-item>
       </div>
       <div class="income_item_line"></div>
@@ -115,6 +115,7 @@ import SelectTree from '@/components/selectTree/index'
 import Upload from '@/components/Upload/singleImage2'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
+import { REGEX } from '@/utils/validate'
 export default {
   components: {
     SelectTree,
@@ -173,6 +174,13 @@ export default {
     }
   },
   data() {
+    const numberAndWordValid = function(rule, value, callback) {
+      if (REGEX.ENGLISH_AND_NUMBER.test(value)) {
+        callback()
+      } else {
+        callback(new Error('只可以输入阿拉伯数字和字母(不限制大小写), 最多可输入25位'))
+      }
+    }
     return {
       subjectOne: [],
       subjectTwo: [],
@@ -189,7 +197,8 @@ export default {
       rules: {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
         verificationId: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        receiptNo: [{validate: numberAndWordValid, trigger:'blur'}]
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
@@ -202,22 +211,6 @@ export default {
       }
     }
   },
-  // watch: {
-  //   subjectTwoRule() {
-  //     console.warn('subjectTwoRule', this.subjectTwo.length)
-  //     if (this.subjectTwo.length > 0) {
-  //       return [{
-  //         required: true,
-  //         trigger: 'blur',
-  //         message: '不能为空'
-  //       }]
-  //     } else {
-  //       return []
-  //     }
-  //     console.warn('subjectTwoRule2', this.subjectTwoRule)
-
-  //   }
-  // },
   methods: {
     init() {
       this.verificationWay = []

@@ -209,10 +209,10 @@ export default {
         },
         {
           label: '系统操作日期',
-          prop: 'verifyTime',
+          prop: 'createTime',
           width: '160',
           slot: (scope) => {
-            return `${parseTime(scope.row.verifyTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           },
           fixed: false
         },
@@ -506,7 +506,8 @@ export default {
           path: './cashDetail',
           query: {
             recordId: this.selectedList[0].id,
-            orgId: this.searchQuery.vo.orgId
+            orgId: this.searchQuery.vo.orgId,
+            searchQuery: JSON.stringify(this.searchQuery)
           }
         })
       }

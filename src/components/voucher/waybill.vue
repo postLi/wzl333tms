@@ -74,6 +74,7 @@
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
+import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
 export default {
@@ -313,6 +314,7 @@ export default {
           let dataInfo = Object.assign({}, this.formModel)
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           delete dataInfo.verificationList
           let query = {
             shipPayableFeeDtos: dataInfo.orderList,

@@ -170,7 +170,7 @@
                   <el-input :maxlength="3" v-number-only v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
                     <template slot="append">‰</template>
                   </el-input>
-                  <el-popover placement="right"  trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                  <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
                     <span>保险费为声明价值{{form.shipPageFunc.insurancePremiumIsDeclaredValue}}‰</span>
                     <i class="el-icon-question" slot="reference"></i>
                   </el-popover>
@@ -195,6 +195,19 @@
                 </el-form-item>
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.controlgoodsVisibleRule">其他网点可看控货信息</el-checkbox>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item name="setup7" title="财务设置">
+            <div class="clearfix setup-table">
+              <div class="setup-left">财务设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  财务凭证
+                  <el-select v-model="form.financeSetting.voucher">
+                    <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
             </div>
@@ -296,7 +309,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7'],
       shipField: [{
           key: 'shipFromCityName',
           value: '0',
@@ -414,7 +427,17 @@ export default {
           name: '业务员'
         }
       ],
+      vouchers: [{
+        value: '1',
+        label: '需要'
+      }, {
+        value: '2',
+        label: '不需要'
+      }],
       form: {
+        'financeSetting': {
+          'voucher': '2'
+        },
         'printSetting': {
           'ship': '0',
           'label': '0',
@@ -501,16 +524,37 @@ export default {
     }
   },
   mounted() {
-    this.getInfo('order').then(() => {
-      this.setShipNo()
-      this.setCargoNo()
-      this.initField()
-      this.initPrinter()
-      // 加载好后才可以提交数据
-      this.nochange = false
-    })
+    this.initOrder()
   },
   methods: {
+    infoFinance() { // 初始化财务设置
+      let params = {
+        orgid: this.otherinfo.orgid,
+        type: 'financeSetting',
+        module: 'finance'
+      }
+      return getAllSetting(params).then(data => {
+        if (data) {
+          console.log('financeData', data)
+          this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    initOrder() {
+      this.getInfo('order').then(() => {
+        this.setShipNo()
+        this.setCargoNo()
+        this.initField()
+        this.initPrinter()
+        this.infoFinance()
+        // 加载好后才可以提交数据
+        this.nochange = false
+      })
+    },
     initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
       for (const item in this.printers) {
@@ -554,6 +598,9 @@ export default {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
           console.log(this.form.printSetting[item])
         }
+        this.$set(this.form, 'financeSetting', {
+          voucher: ''
+        })
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -603,8 +650,22 @@ export default {
       }
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
-      console.log(form)
-      putSetting(form).then(res => {
+
+      let finance = {
+        orgid: form.orgid,
+        module: 'finance',
+        financeSetting: form.financeSetting
+      }
+      console.log('saveData', form, finance)
+      this.putSetting(form).then(() => {
+        this.putSetting(finance).then(() => {
+          this.initOrder()
+          this.infoFinance()
+        })
+      })
+    },
+    putSetting(query) {
+      return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
         this.$message({
           message: '保存成功',

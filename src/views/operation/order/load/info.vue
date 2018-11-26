@@ -427,7 +427,13 @@ export default {
         // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
-      apportionTypeDescript: ['(运单 - 回扣）/（总运费 - 总回扣）* 操作费', '操作费 / 票数', '该单重量 / 本车总重量 * 操作费', '该单体积 / 本车总体积 * 操作费', '该单件数 / 本车总件数 * 操作费']
+      apportionTypeDescript: [
+      '(运单 - 回扣）/（总运费 - 总回扣）* 操作费', 
+      '操作费 / 票数', 
+      '该单重量 / 本车总重量 * 操作费', 
+      '该单体积 / 本车总体积 * 操作费', 
+      '该单件数 / 本车总件数 * 操作费'
+      ]
     }
   },
   computed: {
