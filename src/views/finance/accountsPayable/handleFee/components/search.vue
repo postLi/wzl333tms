@@ -6,11 +6,12 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="发车网点" prop="orgid">
-        <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid"></SelectTree>
+        <SelectTree v-model="searchForm.orgid" v-if="isReceivable"></SelectTree>
+        <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" v-else></SelectTree>
       </el-form-item>
       <el-form-item label="到达网点" prop="arriveOrgid">
-        <SelectTree v-model="searchForm.arriveOrgid" >
-        </SelectTree>
+        <SelectTree v-model="searchForm.arriveOrgid"  :orgid="otherinfo.orgid" v-if="isReceivable"></SelectTree>
+        <SelectTree v-model="searchForm.arriveOrgid" v-else></SelectTree>
       </el-form-item>
       <el-form-item label="核销状态" prop="status">
         <el-select v-model="searchForm.status" placeholder="核销状态">
@@ -49,6 +50,10 @@ export default {
     },
     orgid: {
       type: [Number, String]
+    },
+    isReceivable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -100,6 +105,11 @@ export default {
         this.$set(this.searchObjs, 'departureEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
     },
+    isReceivable: {
+      handler (cval, oval) {
+      },
+      immediate: true
+    },
     // 传到子组件
     searchForm: {
       handler(cval, oval) {
@@ -114,6 +124,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.orgid
+    this.searchForm.arriveOrgid = this.orgid
     this.searchForm.ascriptionOrgid = this.orgid
     this.onSubmit()
   },

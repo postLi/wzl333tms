@@ -15,7 +15,8 @@
         <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
+        <el-table ref="multipleTable" :key="tableKey" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="editTruck">
+        <!-- <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark" :data="infoList" stripe border :key="tableKey"> -->
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -486,8 +487,9 @@ export default {
       }
     },
     setColumn(obj) { // 重绘表格列表
-      this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      // this.tableColumn = obj
+      this.tablekey = new Date().getTime() // 刷新表格视图
+      console.log('setColumn', obj, this.tablekey)
     }
   }
 }

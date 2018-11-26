@@ -2,7 +2,7 @@
   <!-- 回扣 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isReceivable="true"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">

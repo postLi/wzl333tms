@@ -599,7 +599,7 @@ export default {
             console.log('isNeedArrival', this.isNeedArrival)
             this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  if (e.warehouStatus === 0) { // 部分入库
+                  if (e.warehouStatus !== 1) { // 部分入库
                     e.actualAmount = e.loadAmount
                     e.actualWeight = e.loadWeight
                     e.actualVolume = e.loadVolume

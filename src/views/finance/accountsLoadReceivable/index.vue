@@ -33,6 +33,7 @@ export default {
   },
   data() {
     return {
+      // component: 'all',
       // pageName: ''
     }
   },

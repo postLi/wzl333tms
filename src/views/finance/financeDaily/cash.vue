@@ -3,7 +3,7 @@
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
-   <!--  <div class="tab_count_lyy">
+    <!--  <div class="tab_count_lyy">
       <el-card shadow="never" class="box-card green">
         <p><span>期初余额</span><i>23452</i></p>
       </el-card>
@@ -22,19 +22,19 @@
     </div> -->
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <div class="btns_box">
+      <div class="btns_box finance_btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
-        <button type="button" class="el-button nobutton">
-          <el-dropdown @command="handleCommand">
-            <el-button type="success" size="mini" plain>
-              <i class="el-icon-circle-plus"></i> 智能核销
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="income">记收入</el-dropdown-item>
-              <el-dropdown-item command="expand">记支出</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </button>
+        <!-- <button type="button" class="el-button "> -->
+        <el-dropdown @command="handleCommand" class="dropdownButton">
+          <el-button type="success" size="mini" plain>
+            <i class="el-icon-circle-plus"></i> 智能核销
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="income">记收入</el-dropdown-item>
+            <el-dropdown-item command="expand">记支出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- </button> -->
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
         <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
@@ -45,7 +45,7 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="showDetail">
+        <el-table ref="multipleTable" @row-dblclick="selectedItem" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail">
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -287,7 +287,7 @@ export default {
           prop: 'picsPath',
           width: '90',
           preview: true,
-          fixed: true
+          fixed: false
         }
       ]
     }
@@ -312,13 +312,13 @@ export default {
           })
           break
         case 'expand': // 支出
-         this.$router.push({
+          this.$router.push({
             path: './financeDailyExpanditure',
             query: {
               orgId: this.searchQuery.vo.orgId
             }
           })
-        // this.$message.warning('功能尚在开发中~')
+          // this.$message.warning('功能尚在开发中~')
           break
       }
     },
@@ -550,9 +550,16 @@ export default {
 
 </script>
 <style lang="scss">
-.nobutton {
-  padding: 0;
-  border: none;
+.finance_btns_box {
+  display: flex;
+  flex-direction: row;
+  .dropdownButton {
+    margin: 0 10px;
+  }
+  .table_setup{
+    float: right;
+    right: 10px;
+  }
 }
 
 .tab-content {
@@ -573,10 +580,6 @@ export default {
   }
 }
 
-.nobutton.el-button:focus,
-.nobutton.el-button:hover {
-  border: none;
-}
 
 .tab_count_lyy {
   display: flex;

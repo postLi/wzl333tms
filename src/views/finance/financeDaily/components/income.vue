@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="凭证日期" prop="certTime">
-          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期">
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="去向" prop="verificationId" class="formItemTextDanger">
@@ -175,10 +175,10 @@ export default {
   },
   data() {
     const numberAndWordValid = function(rule, value, callback) {
-      if (REGEX.ENGLISH_AND_NUMBER.test(value)) {
+      if (REGEX.ENGLISH_AND_NUMBER.test(value) || value === '') {
         callback()
       } else {
-        callback(new Error('只可以输入阿拉伯数字和字母(不限制大小写), 最多可输入25位'))
+        callback(new Error('只可以输入阿拉伯数字和字母, 最多可输入25位'))
       }
     }
     return {
@@ -198,7 +198,10 @@ export default {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
         verificationId: [{ required: true, message: '不能为空', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        receiptNo: [{validate: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
@@ -507,6 +510,9 @@ export default {
         if (valid) {
           this.loading = true
           let query = Object.assign({}, this.formModel)
+          if (!query.certTime) {
+           query.certTime = new Date()
+          }
           this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
           this.$set(query, 'orderList', [])

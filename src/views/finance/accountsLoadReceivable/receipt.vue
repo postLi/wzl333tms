@@ -13,7 +13,7 @@
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
 
-        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
@@ -30,7 +30,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)"  :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input  type="number" v-model.number="column.slot(scope)"  :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -49,7 +49,7 @@
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
-        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
           <el-table-column fixed width="50" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
@@ -66,7 +66,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input :value="scope.row.notReceiptpayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
+                  <el-input  v-numberOnly:point :value="scope.row.notReceiptpayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -501,6 +501,16 @@ export default {
     minusAllList() { // 减去全部
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
+    },
+    dclickMinusItem(row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
+    dclickAddItem(row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
     },
     closeDialog() {
       this.popVisibleDialog = false

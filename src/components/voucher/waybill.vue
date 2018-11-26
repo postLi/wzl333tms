@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount" placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount"  v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="凭证日期" prop="certTime">
-          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期">
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false">
           </el-date-picker>
         </el-form-item>
       </div>
@@ -77,6 +77,7 @@ import { getSystemTime } from '@/api/common'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import { REGEX } from '@/utils/validate'
 export default {
   props: {
     popVisible: {
@@ -161,6 +162,13 @@ export default {
     },
   },
   data() {
+    const numberAndWordValid = function(rule, value, callback) {
+      if (REGEX.ENGLISH_AND_NUMBER.test(value) || value === '') {
+        callback()
+      } else {
+        callback(new Error('只可以输入阿拉伯数字和字母, 最多可输入25位'))
+      }
+    }
     return {
       dialogTitle: '核销凭证',
       loading: true,
@@ -190,7 +198,11 @@ export default {
       },
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
-        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }]
+        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
+        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
+        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
       },
       veryficationType: {},
       veryficationList: [],
@@ -213,7 +225,7 @@ export default {
     },
     postVerificationBaseInfo() { // 新增时初始化数据
       this.loading = true
-      this.baseQuery.orgId = this.orgId
+      this.baseQuery.orgId = this.orgId || this.otherinfo.orgid
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
@@ -314,6 +326,9 @@ export default {
           let dataInfo = Object.assign({}, this.formModel)
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+          if (!dataInfo.certTime) {
+           dataInfo.certTime = new Date()
+          }
           this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           delete dataInfo.verificationList
           let query = {

@@ -23,6 +23,7 @@ import waybillAbnormal from './waybillAbnormal' // 异常理赔
 import waybillUnusual from './waybillUnusual' // 异动费用
 import handleFee from './handleFee' // 操作费核销
 export default {
+  name: 'accountsLoad',
   components: {
     batchShort,
     batchDeliver,
@@ -49,6 +50,7 @@ export default {
   },
   data() {
     return {
+      // component: 'batchShort',
       pageNameList: {
         batchShort: '短驳费结算',
         batchDeliver: '送货费结算',
@@ -80,7 +82,13 @@ export default {
       return this.pageNameList[this.$route.query.currentPage]
     }
   },
+  mounted () {
+    // this.init()
+  },
   methods: {
+    // init() {
+    //   this.component = this.$route.query.currentPage
+    // }
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100">
+  <div class="customer-manager tab-wrapper tab-wrapper-100" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -12,7 +12,7 @@
         </div>
         <!-- 左边表格区 -->
         <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-          <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
+          <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
             <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
@@ -48,7 +48,7 @@
         </div>
         <!-- 右边表格区 -->
         <div slot="tableRight" class="tableHeadItemBtn">
-          <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+          <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
             <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
@@ -65,7 +65,7 @@
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
                 <template slot-scope="scope">
                   <div v-if="column.expand">
-                    <el-input :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
+                    <el-input  v-numberOnly:point :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
                   </div>
                   <div v-else>
                     <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -118,7 +118,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -218,7 +218,6 @@ export default {
           width: '120',
           fixed: false
         },
-
         {
           label: '开单时间',
           prop: 'createTime',
@@ -270,14 +269,21 @@ export default {
           width: '120',
           fixed: false
         }
-      ]
+      ],
+      getRouteInfo: {
+        vo: {
+          ascriptionOrgId: ''
+        }
+      }
     }
   },
   computed: {
-    getRouteInfo() {
-      console.log(JSON.parse(this.$route.query.searchQuery))
-      return JSON.parse(this.$route.query.searchQuery)
-    },
+    // getRouteInfo() {
+    //   if (this.$route.query) {
+    //   return JSON.parse(this.$route.query.searchQuery)
+
+    //   }
+    // },
     totalLeft() {
       return this.leftTable.length
     },
@@ -286,22 +292,31 @@ export default {
     }
   },
   mounted() {
+    this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
+    this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+    // this.initRouteInfo()
     this.getList()
   },
   methods: {
+    initRouteInfo() {},
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
+      this.searchQuery.currentPage = 1
+      this.searchQuery.pageSize = 100
+      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+      this.$set(this.searchQuery.vo, 'status', '')
       if (!this.$route.query) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        // this.$router.push({ path: './accountsPayable/waybill' })
+        //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
+        //   // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
-        this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
-        this.$set(this.searchQuery.vo, 'status', '')
+        //   this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+        //   this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
+        //   this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
       }
     },
@@ -358,6 +373,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -498,6 +514,16 @@ export default {
       this.selectedLeft = Object.assign([], this.rightTable)
       this.doAction('goRight')
     },
+    dclickAddItem(row, event) { // 双击添加单行
+      this.selectedRight = []
+      this.selectedRight.push(row)
+      this.doAction('goLeft')
+    },
+    dclickMinusItem(row, event) { // 双击减去单行
+      this.selectedLeft = []
+      this.selectedLeft.push(row)
+      this.doAction('goRight')
+    },
     closeDialog() {
       this.popVisibleDialog = false
     },
@@ -513,17 +539,17 @@ export default {
         this.rightTable.forEach((e, index) => {
           amount = tmsMath._add(amount, e.inputNowPayFee)
           if (e.inputNowPayFee && e.notNowPayFee > 0 && e.inputNowPayFee <= e.notNowPayFee) {
-          //   const item = {
-          //   shipId: e.shipId,
-          //   shipSn: e.shipSn,
-          //   shipGoodsSn: e.shipGoodsSn,
-          //   createTime: e.createTime,
-          //   inputNowPayFee: e.inputNowPayFee,
-          //   shipFromCityName: e.shipFromCityName,
-          //   shipToCityName: e.shipToCityName,
-          //   shipReceiverName: e.shipReceiverName,
-          //   shipSenderName: e.shipSenderName
-          // }
+            //   const item = {
+            //   shipId: e.shipId,
+            //   shipSn: e.shipSn,
+            //   shipGoodsSn: e.shipGoodsSn,
+            //   createTime: e.createTime,
+            //   inputNowPayFee: e.inputNowPayFee,
+            //   shipFromCityName: e.shipFromCityName,
+            //   shipToCityName: e.shipToCityName,
+            //   shipReceiverName: e.shipReceiverName,
+            //   shipSenderName: e.shipSenderName
+            // }
             this.infoTable.orderList.push(e)
           }
         })

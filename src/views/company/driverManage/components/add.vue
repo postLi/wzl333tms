@@ -259,9 +259,9 @@ export default {
           this.loading = true
           const data = Object.assign({}, this.form)
           data.fixPhone = this.fixPhone
-          if (this.searchTime) {
-            data.validityStartdate = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
-            data.validityDate = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
+          if (this.searchTime && this.searchTime[0] && this.searchTime[1]) {
+            data.validityStartdate = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + ' 00:00:00'
+            data.validityDate = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + ' 23:59:59'
           }
 
           let promiseObj

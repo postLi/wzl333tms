@@ -119,26 +119,36 @@ $bodercolor: #d0d7e5;
   padding-bottom: 10px;
 }
 // 按钮样式
+.el-button--danger.is-plain:focus,
+.el-button--danger.is-plain:active,
 .el-button--danger.is-plain{
   color: #f56c6c;
   background: #fff;
   border-color: #f56c6c;
 }
+.el-button--primary.is-plain:focus,
+.el-button--primary.is-plain:active,
 .el-button--primary.is-plain{
   color: #3e9ff1;
   background: #fff;
   border-color: #3e9ff1;
 }
+.el-button--success.is-plain:focus,
+.el-button--success.is-plain:active,
 .el-button--success.is-plain{
   color:#67c23a;
   background:#fff;
   border-color:#67c23a;
 }
+.el-button--warning.is-plain:focus,
+.el-button--warning.is-plain:active,
 .el-button--warning.is-plain{
   color:#e6a23c;
   background:#fff;
   border-color:#e6a23c;
 }
+.el-button--info.is-plain:focus,
+.el-button--info.is-plain:active,
 .el-button--info.is-plain{
   color:#909399;
   background:#fff;

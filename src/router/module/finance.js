@@ -377,7 +377,7 @@ export default {
         path: '/finance/accountsLoad',
         icon: 'QQ',
         hidden: true,
-        name: '账款结算',
+        name: 'accountsLoad',
         component: _import('finance/accountsLoad/index'),
         meta: {
           role: ['admin'],

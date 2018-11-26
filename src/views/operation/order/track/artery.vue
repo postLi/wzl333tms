@@ -8,7 +8,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK1>在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-dblclick="setInfo" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable" :data="dataList" stripe border @row-dblclick="setInfo" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -32,6 +32,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe" :detailType="'detailArtery'"></editInfo>
       <!-- 表格设置弹出框 -->
+      <!-- <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup> -->
       <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
@@ -324,18 +325,18 @@ export default {
         this.searchQuery.vo.batchTypeId = undefined
       }
       return postTrackList(this.searchQuery).then(data => {
-        if (data) {
-          this.dataList = data.list
-          this.total = data.total
-          this.loading = false
-          this.searchQuery.vo = {}
-        } else {
-          this.loading = false
-        }
-      })
-      .catch(err => {
-         this._handlerCatchMsg(err)
-      })
+          if (data) {
+            this.dataList = data.list
+            this.total = data.total
+            this.loading = false
+            this.searchQuery.vo = {}
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj

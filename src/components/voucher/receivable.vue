@@ -3,13 +3,13 @@
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
-        <el-form-item label="方向"  prop="verificationId" class="formItemTextDanger">
+        <el-form-item label="方向" prop="verificationId" class="formItemTextDanger">
           <el-select v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount" placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="凭证日期" prop="certTime">
-          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期">
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false">
           </el-date-picker>
         </el-form-item>
       </div>
@@ -77,6 +77,7 @@ import { getSystemTime } from '@/api/common'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import { REGEX } from '@/utils/validate'
 import * as accountApi from '@/api/finance/accountsReceivable'
 export default {
   props: {
@@ -156,6 +157,13 @@ export default {
     },
   },
   data() {
+    const numberAndWordValid = function(rule, value, callback) {
+      if (REGEX.ENGLISH_AND_NUMBER.test(value) || value === '') {
+        callback()
+      } else {
+        callback(new Error('只可以输入阿拉伯数字和字母, 最多可输入25位'))
+      }
+    }
     return {
       dialogTitle: '核销凭证',
       loading: true,
@@ -185,7 +193,11 @@ export default {
       },
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
-        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }]
+        subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -376,6 +388,9 @@ export default {
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           delete dataInfo.verificationList
+          if (!dataInfo.certTime) {
+            dataInfo.certTime = new Date()
+          }
           this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           let query = {
             receivableFees: dataInfo.orderList,
@@ -386,9 +401,11 @@ export default {
               this.$message({ type: 'success', message: '保存成功' })
               this.btnLoading = false
               this.closeMe()
-              this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
-              // 当添加结算时更新列表
-              this.eventBus.$emit('updateAccountsReceivableList')
+              setTimeout(() => {
+                this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+                // 当添加结算时更新列表
+                this.eventBus.$emit('updateAccountsReceivableList')
+              }, 500)
             })
             .catch(err => {
               this._handlerCatchMsg(err)
