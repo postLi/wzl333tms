@@ -505,6 +505,15 @@ $dialogHeader_bgcolor: #e6e6e6;
       top: 3px;
     }
   }
+    .el-table.failinScroll{
+      //overflow-y: ;
+      .el-table__body-wrapper{
+        overflow-y: scroll;
+        height: 368px;
+        min-height: 368px;
+      }
+    }
+
 }
 
 .animated {

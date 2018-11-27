@@ -12,6 +12,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
                    v-has:PICK_EXP>导出
         </el-button>
+        <span style="font-size: 14px;line-height: 28px;padding-left: 10px;color: #ccc">双击查看明细</span>
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain-->
         <!--v-has:PICK_PRI>打印-->
         <!--</el-button>-->

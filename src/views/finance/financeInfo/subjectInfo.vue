@@ -17,7 +17,7 @@
                    v-has:PICK_FINASH class="table_setup fr_btn">下一步
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-upload" @click="doAction('doExport')" plain
-                   v-has:PICK_SEL class="table_setup fr_btn">导入摸板
+                   v-has:PICK_SEL class="table_setup fr_btn" v-if="isParentId">导入摸板
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-remove" @click="doAction('doAll')" plain
                    v-has:PICK_EXP class="table_setup fr_btn">全部展开
@@ -157,20 +157,21 @@
     },
     methods: {
       getExpanAll(msg) {
-        console.log(msg);
-        // this.expandAll = "false2"
+
         if (msg === 'true') {
+          this.expandAll = "isfalse"
           this.$nextTick(() => {
-            this.expandAll = "false"
 
           })
-        } else {
+          // console.log(typeof this.expandAll, this.expandAll, 'this.expandAll--true');
+        } else if (msg === 'false'){
+          this.expandAll = "isfalse"
           this.$nextTick(() => {
-            this.expandAll = "true"
-
+            this.expandAll = ''
           })
+          // console.log(typeof this.expandAll, this.expandAll, 'this.expandAll--false');
         }
-        console.log(this.expandAll, ' this.expandAll this.expandAll');
+
       },
       searchOrgid(item) {
         this.searchQuery.vo.companyId = item

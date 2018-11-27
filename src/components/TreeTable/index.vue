@@ -2,7 +2,7 @@
   <el-table
     ref="multipleTable" :data="formatData" stripe border @selection-change="getSelection" height="100%"
     tooltip-effect="light" class="lrl-kemu-table" :default-sort="{prop: 'id', order: 'ascending'}"
-    style="width: 100%" :row-style="showRow" v-bind="$attrs" @row-click="clickDetails">
+    style="width: 100%" :row-style="showRow" v-bind="$attrs" @row-click="clickDetails" @row-dblclick="getDbClick">
     <el-table-column
       sortable
       type="selection"
@@ -21,10 +21,10 @@
     </el-table-column>
 
     <el-table-column v-else v-for="(column, index) in columns" :key="index" :prop="column.value" :label="column.text"
-                     :width="column.width" class-name="col-class">
+                     :width="column.width" class-name="col-class" >
       <template slot-scope="scope">
         <div class="scope-node"
-             :class="'lrl-space-' + scope.row._level + (!scope.row._expanded ? ' hide-space' : '') + (scope.row.islast ? ' lrl-space-last' : '') + (scope.row.isservernt ? ' lrl-space-isservernt' : '') + (iconShow(index,scope.row) ? '' : ' lrl-none-child')">
+             :class="'lrl-space-' + scope.row._level + (!scope.row._expanded ? ' hide-space' : '') + (scope.row.islast ? ' lrl-space-last' : '')  + (scope.row.islastnochil ? ' lrl-space-islastnochil' : '') + (scope.row.isservernt ? ' lrl-space-isservernt' : '') + (iconShow(index,scope.row) ? '' : ' lrl-none-child')">
           <span v-if="index === 0" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
           <span class="tree-ctrl" v-if="iconShow(index,scope.row)" @click="toggleExpanded(scope.$index)">
           <i v-if="!scope.row._expanded" class="el-icon-circle-plus-outline
@@ -54,7 +54,7 @@
       <!--<span>{{ scope.row.isPublic==='1'?'共用':'不共用' }}</span>-->
       <!--</template>-->
       <!--</el-table-column>-->
-      <el-table-column label="操作" width="200" v-if="isParentId">
+        <el-table-column label="操作" width="200" v-if="isParentId">
         <template slot-scope="scope">
           <el-button
             style="color: #f56c6c"
@@ -107,17 +107,18 @@
     },
     watch: {
       expandAll(nVal) {
-        console.log(nVal, 'nValnValnValnVal');
         //判断条件为true 和false
+
         if (nVal === "true") {
           this.formatData.forEach((record) => {
             record._expanded = true
           })
-
+          console.log(nVal,'nValnValnValnVal');
         } else if (nVal === 'false') {
           this.formatData.forEach((record) => {
             record._expanded = false
           })
+          console.log(nVal,'nValnValnValnVal1111');
         }
       },
       isParentId(nVal) {
@@ -147,6 +148,9 @@
       }
     },
     methods: {
+      getDbClick(row) {
+        console.log(row, 'row')
+      },
       renderHeader(h, {column, $index}) {
         return h('span', {}, [
           h('span', {}, '是否公共'),
@@ -167,7 +171,7 @@
         ])
       },
       handleDelete(row) {
-        console.log(this.expandAll, 'expandAll');
+        console.log(this.expandAll, 'this.expandAll');
         this.$confirm('确定删除科目名称 [' + row.subjectName + '] 吗?', '提示', {
           confirmButtonText: '删除',
           cancelButtonText: '取消',
@@ -178,9 +182,7 @@
               type: 'success',
               message: '删除成功!'
             })
-            if (this.expandAll === 'false') {
-              this.$emit('getExpanAll', this.expandAll)
-            }
+            this.$emit('getExpanAll', this.expandAll)
             this.$emit('success')
           }).catch(err => {
             this._handlerCatchMsg(err)
@@ -247,98 +249,83 @@
       /*line-height: 26px;*/
       padding: 0;
     }
-    .ms-tree-space:nth-child(1):after {
-      /*display: none;*/
-    }
     .el-icon-remove-outline {
       border-radius: 50%;
       background: #fff;
     }
     .lrl-space-1 {
-      .ms-tree-space:nth-child(1):before {
+      .ms-tree-space:nth-of-type(1):before {
         display: none;
       }
-      .ms-tree-space:nth-child(1):after {
+      .ms-tree-space:nth-of-type(1):after {
         display: none;
       }
     }
     .lrl-space-2 {
-      /*.ms-tree-space:nth-child(1):before, .ms-tree-space:nth-child(2):before{*/
-      /*display: none;*/
-      /*!*width: 0;*!*/
-      /*}*/
-      .ms-tree-space:nth-child(2):before {
+      .ms-tree-space:nth-of-type(2):before {
         display: none;
       }
-      .ms-tree-space:nth-child(2):after {
+      .ms-tree-space:nth-of-type(2):after {
         display: none;
       }
-      &.lrl-space-last .ms-tree-space:nth-child(1):after {
+      &.lrl-space-last .ms-tree-space:nth-of-type(1):after {
         height: 19px;
       }
-      &.lrl-none-child .ms-tree-space:nth-child(2):after {
+      &.lrl-none-child .ms-tree-space:nth-of-type(2):after {
         display: none;
       }
-      &.lrl-none-child .ms-tree-space:nth-child(2):before {
+      &.lrl-none-child .ms-tree-space:nth-of-type(2):before {
         display: block;
         margin-left: -1px;
+      }
+      &.lrl-space-islastnochil .ms-tree-space:nth-of-type(1):after {
+        height: 19px; //
       }
     }
     .lrl-space-3 {
-      /*.ms-tree-space:nth-child(1):before, .ms-tree-space:nth-child(2):before,.ms-tree-space:nth-child(3):before{*/
-      /*display: none;*/
-      /*}*/
-      .ms-tree-space:nth-child(2n+1):before {
+      .ms-tree-space:nth-of-type(2n+1):before {
         display: none;
       }
-      .ms-tree-space:nth-child(3):after {
+      .ms-tree-space:nth-of-type(3):after {
         display: none;
       }
-      &.lrl-space-last .ms-tree-space:nth-child(2):after {
+      &.lrl-space-last .ms-tree-space:nth-of-type(2):after {
         height: 19px;
       }
-      &.lrl-none-child .ms-tree-space:nth-child(3):after {
+      &.lrl-none-child .ms-tree-space:nth-of-type(3):after {
         display: none;
       }
-      &.lrl-none-child .ms-tree-space:nth-child(3):before {
+      &.lrl-none-child .ms-tree-space:nth-of-type(3):before {
         display: block;
         margin-left: -1px;
+      }
+      &.lrl-space-islastnochil.lrl-none-child .ms-tree-space:nth-of-type(2):after{
+        height: 19px; //
       }
     }
     .lrl-space-4 {
       .ms-tree-space:before {
         display: none;
       }
-      .ms-tree-space:nth-child(n+3):before {
+      .ms-tree-space:nth-of-type(n+3):before {
         display: block;
       }
-      .ms-tree-space:nth-child(4) {
+      .ms-tree-space:nth-of-type(4) {
         margin-left: -1px;
       }
-      .ms-tree-space:nth-child(4):after {
+      .ms-tree-space:nth-of-type(4):after {
         display: none;
       }
-      &.lrl-space-last .ms-tree-space:nth-child(3):after {
+      &.lrl-space-last .ms-tree-space:nth-of-type(3):after {
         height: 19px;
 
       }
       &.lrl-space-last {
-        &.lrl-none-child .ms-tree-space:nth-child(2):after {
-          display: none;
+        &.lrl-none-child .ms-tree-space:nth-of-type(2):after {
+          /*display: none;*/ //111
         }
-      }
-    }
-    .hide-space.lrl-space-1 {
-      .tree-ctrl {
-        i::after {
-          /*position: absolute;*/
-          /*content: " ";*/
-          /*top: 20px;*/
-          /*left: 12px;*/
-          /*width: 0;*/
-          /*border-left: 1px dotted rebeccapurple;*/
-          /*!*background: #000;*!*/
-          /*height: 15px;*/
+        &.lrl-none-child .ms-tree-space:nth-of-type(1):after {
+          /*display: none; //iiii*/
         }
       }
     }
