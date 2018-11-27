@@ -98,7 +98,7 @@
         </el-table>
       </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup  :popVisible="setupTableVisible" :columns="tableColumnArrival" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
@@ -604,9 +604,9 @@ export default {
                     e.actualWeight = e.loadWeight
                     e.actualVolume = e.loadVolume
                   }
-                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
-                }
-              })
+              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+              }
+            })
           })
           this.detailTableLoading = false
         }
@@ -643,7 +643,9 @@ export default {
       }
     },
     setColumn(obj) { // 打开表格设置
-      this.tableColumn = obj
+      console.log('setColumnn short:', JSON.stringify(obj))
+      this.tableColumnArrival = obj
+      this.setTableColumn()
       this.tablekey = Math.random()
     }
   }
