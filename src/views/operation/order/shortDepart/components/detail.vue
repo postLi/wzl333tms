@@ -392,6 +392,7 @@ export default {
       case 'deliver':
         this.code = 'ORDER_SHORT'
         this.isEditActual = true // 短驳发车
+        this.code = 'ORDER_SHORT'
         break
       case 'arrival':
         this.code = ''
