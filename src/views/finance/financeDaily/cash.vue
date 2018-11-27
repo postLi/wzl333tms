@@ -391,16 +391,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedList.length > 0 ? this.selectedList : this.dataList,
             columns: this.tableColumn,
             name: '财务日记账-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+             data: this.selectedList.length > 0 ? this.selectedList : this.dataList,
             columns: this.tableColumn,
-            name: '财务日记账'
+            name: '财务日记账-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

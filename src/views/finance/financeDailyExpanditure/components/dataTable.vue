@@ -27,30 +27,54 @@
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
         <el-table-column prop="noShortPay" sortable label="未结短驳费" width="120" v-if="settlementId===180">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.noShortPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadShortPay" sortable label="已结短驳费" width="120" v-if="settlementId===180">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.hadShortPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-if="settlementId===181">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.noSendPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-if="settlementId===181">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.hadSendPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="departTotal" sortable label="发车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
         <!-- <el-table-column prop="departTotalActual" sortable label="发车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column> -->
         <el-table-column prop="noDepartTotal" sortable label="未结发车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.noDepartTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadDepartTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.hadDepartTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="arriveTotal" sortable label="到车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
         <!--  <el-table-column prop="arriveTotalActual" sortable label="到车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column> -->
         <el-table-column prop="noArriveTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.noArriveTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadArriveTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.hadArriveTotal)"></span>
+          </template>
         </el-table-column>
         <!-- <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
@@ -120,30 +144,54 @@
         <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
         <el-table-column prop="noShortPay" sortable label="未结短驳费" width="120" v-if="settlementId===180">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.noShortPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadShortPay" sortable label="已结短驳费" width="120" v-if="settlementId===180">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.hadShortPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
         </el-table-column>
         <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-if="settlementId===181">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.noSendPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-if="settlementId===181">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.hadSendPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="departTotal" sortable label="发车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="departTotalActual" sortable label="发车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="noDepartTotal" sortable label="未结发车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.noDepartTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadDepartTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.hadDepartTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="arriveTotal" sortable label="到车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="arriveTotalActual" sortable label="到车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noArriveTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
+       <el-table-column prop="noArriveTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.noArriveTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadArriveTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.hadArriveTotal)"></span>
+          </template>
         </el-table-column>
         <!-- 
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
@@ -224,7 +272,7 @@ export default {
     return {
       loading: true,
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
-      tablekey: '',
+      tablekey: 0,
       truckMessage: '',
       searchForm: {},
       incomePayType: 'PAYABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项

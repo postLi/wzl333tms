@@ -526,10 +526,12 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      return getSummaries(param)
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      return getSummaries(param)
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'amount', 'loadWeightall|', 'loadVolumeall|']
+      return getSummaries(param, propsArr)
     },
     setHeader(h, { column }) {
       return h('el-button', {

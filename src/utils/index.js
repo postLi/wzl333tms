@@ -24,9 +24,9 @@ export function getSummaries(param, propsArr) {
     data
   } = param
   const sums = []
+
   // 获取需要计算的属性值列表
   propsArr = propsArr || shouldCalcProperty
-
   // console.log(columns, data)
   columns.forEach((column, index) => {
     if (index === 0) {
@@ -357,7 +357,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number

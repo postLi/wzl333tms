@@ -284,7 +284,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
@@ -320,14 +321,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '运单结算-回扣-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '运单结算-回扣'
           })
@@ -344,13 +345,13 @@ export default {
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
         }
       })
-      console.log('router', this.$router)
     },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
       this.selectListShipSns = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })

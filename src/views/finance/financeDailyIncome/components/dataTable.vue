@@ -25,38 +25,74 @@
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
         <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.noShipFeeTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadShipFeeTotal" sortable label="已结运费合计" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.hadShipFeeTotal)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
         <el-table-column prop="noOnPay" sortable label="未结现付" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.noOnPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadOnPay" sortable label="已结现付" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.hadOnPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
         <el-table-column prop="noArrivalPay" sortable label="未结到付" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.noArrivalPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadArrivalPay" sortable label="已结到付" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.hadArrivalPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
         <el-table-column prop="noBackPay" sortable label="未结回单付" width="100">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.noBackPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadBackPay" sortable label="已结回单付" width="100">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.hadBackPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
         <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="110">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.noUnusualPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="110">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.hadUnusualPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
         <el-table-column prop="noMonthPay" sortable label="未结月结" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.noMonthPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
+          </template>
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
         </el-table-column>
@@ -98,7 +134,79 @@
         </el-table-column>
         <el-table-column prop="shipFeeTotalActual" sortable label="实际合计" width="90">
         </el-table-column>
-        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
+        <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
+        </el-table-column>
+        <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.noShipFeeTotal)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadShipFeeTotal" sortable label="已结运费合计" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.hadShipFeeTotal)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="onPay" sortable label="现付" width="90">
+        </el-table-column>
+        <el-table-column prop="noOnPay" sortable label="未结现付" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.noOnPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadOnPay" sortable label="已结现付" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.hadOnPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="arrivalPay" sortable label="到付" width="90">
+        </el-table-column>
+        <el-table-column prop="noArrivalPay" sortable label="未结到付" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.noArrivalPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadArrivalPay" sortable label="已结到付" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.hadArrivalPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="backPay" sortable label="回单付" width="90">
+        </el-table-column>
+        <el-table-column prop="noBackPay" sortable label="未结回单付" width="100">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.noBackPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadBackPay" sortable label="已结回单付" width="100">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.hadBackPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
+        </el-table-column>
+        <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="110">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.noUnusualPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="110">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.hadUnusualPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="monthPay" sortable label="月结" width="90">
+        </el-table-column>
+        <el-table-column prop="noMonthPay" sortable label="未结月结" width="90">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.noMonthPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
+           <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
         </el-table-column>
         <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
         </el-table-column>
@@ -145,7 +253,7 @@
         <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
         </el-table-column>
         <el-table-column prop="monthPayActual" sortable label="实结月结" width="90">
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">

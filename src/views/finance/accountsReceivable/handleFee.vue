@@ -156,7 +156,8 @@ export default {
           prop: 'remark',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
@@ -177,6 +178,12 @@ export default {
       return payListByHandlingFee(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
+          this.dataList.forEach((e,index) => {
+            e.fee = e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec
+            e.paidFee = e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec
+            e.unpaidFee = e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec
+            e.pandHandlingFeePay = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
+          })
           this.total = data.total
         }
         this.loading = false
@@ -192,14 +199,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '操作费核销'
           })
@@ -222,6 +229,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

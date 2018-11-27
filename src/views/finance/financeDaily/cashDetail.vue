@@ -426,14 +426,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataListTop,
+           data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
             columns: this.tableColumn,
             name: '资金流水明细-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
             columns: this.tableColumn,
             name: '资金流水明细'
           })

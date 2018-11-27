@@ -501,15 +501,17 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       let num = 0
-
       if (newVal) {
         num = this.rightTable[index][prop.replace('input', 'not')]
+      }else {
+        // this.rightTable[index][prop.replace('input', 'not')] = 0
       }
 
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: num
       }))
 
+      console.log(index, prop, newVal, this.rightTable[index])
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
@@ -657,13 +659,19 @@ export default {
       if (!this.isGoReceipt) {
         let amount = 0
         this.rightTable.forEach((e, index) => {
+          console.log(
+            e.inputNowPayFee,
+            e.inputArrivepayFee,
+            e.inputReceiptpayFee,
+            e.inputMonthpayFee,
+            e.inputChangeFee)
           amount = tmsMath.add(
             amount,
-            e.notNowPayFee,
-            e.notArrivepayFee,
-            e.notReceiptpayFee,
-            e.notMonthpayFee,
-            e.notChangeFee,
+            e.inputNowPayFee,
+            e.inputArrivepayFee,
+            e.inputReceiptpayFee,
+            e.inputMonthpayFee,
+            e.inputChangeFee,
             ).result()
 
           let item = Object.assign({}, e)

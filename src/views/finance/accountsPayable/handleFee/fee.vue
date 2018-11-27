@@ -130,8 +130,8 @@ export default {
           width: '110',
           slot: (scope) => {
             const row = scope.row
-            let fee =  row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay :row.paidDbHandlingFeePay
+            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
             let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
             return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
           },
@@ -142,9 +142,9 @@ export default {
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {
-             const row = scope.row
-            let fee =  row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay :row.paidDbHandlingFeePay
+            const row = scope.row
+            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
             let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
             return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
             // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
@@ -165,7 +165,8 @@ export default {
           prop: 'remark',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
@@ -186,6 +187,12 @@ export default {
       return payListByHandlingFee(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
+          this.dataList.forEach((e, index) => {
+            e.fee = e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay
+            e.paidFee = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
+            e.unpaidFee = e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay
+            e.pandHandlingFeePay = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
+          })
           this.total = data.total
         }
         this.loading = false
@@ -201,16 +208,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '应付账款-操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '操作费核销'
+            name: '应付账款-操作费核销'
           })
           break
       }
@@ -231,6 +238,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

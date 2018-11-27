@@ -211,7 +211,7 @@ export default {
   },
   watch: {
     popVisible: {
-      handler(cval,oval) {
+      handler(cval, oval) {
         if (!this.inited) {
           this.inited = true
           this.initInfo()
@@ -230,15 +230,20 @@ export default {
           for (const i in this.form) {
             this.form[i] = data[i]
           }
-          this.$set(this.searchTime, 0, cval.validityStartdate)
-          this.$set(this.searchTime, 1, cval.validityDate)
+          if (cval.validityStartdate) {
+            this.$set(this.searchTime, 0, cval.validityStartdate)
+          }
+          if (cval.validityDate) {
+            this.$set(this.searchTime, 1, cval.validityDate)
+          }
+          console.log(cval.validityStartdate, cval.validityDate)
           this.form.id = data.id
         } else {
           this.popTitle = '新增司机'
           for (const i in this.form) {
             this.form[i] = ''
           }
-          this.searchTime = []
+          this.searchTime = this.$options.data().searchTime
           delete this.form.id
           this.form.orgid = this.orgid
         }
