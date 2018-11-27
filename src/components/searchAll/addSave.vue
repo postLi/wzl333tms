@@ -54,6 +54,10 @@ export default {
     searchObj: {
       type: [Array, Object],
       default: () => {}
+    },
+    code: {
+      type: String,
+      default: ''
     }
   },
 
@@ -95,7 +99,7 @@ export default {
       if (n) {
         this.form.userId = this.otherinfo.userId
         this.form.orgId = this.otherinfo.orgid
-        this.form.menuCode = this.$route.meta.code
+        this.form.menuCode = this.code || this.$route.meta.code
       }
     }
   },

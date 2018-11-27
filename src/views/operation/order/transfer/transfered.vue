@@ -231,15 +231,15 @@ export default {
         'width': '150'
       }, {
         'label': '件数',
-        'prop': 'cargoAmount',
+        'prop': 'transferAmount',
         'width': '100'
       }, {
         'label': '重量(kg)',
-        'prop': 'cargoWeight',
+        'prop': 'transferWeight',
         'width': '100'
       }, {
         'label': '体积(m³)',
-        'prop': 'cargoVolume',
+        'prop': 'transferVolume',
         'width': '100'
       }, {
         'label': '包装',
@@ -449,6 +449,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = obj
       this.loading = false
       this.fetchData()

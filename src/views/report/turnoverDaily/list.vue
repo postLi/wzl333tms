@@ -3,7 +3,7 @@
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
-    <div class="tab_info">
+    <div class="tab_info" v-loading="loading">
       <div class="btns_box">
         <el-button type="primary" v-has:REPORT_PRINT_2 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
@@ -25,6 +25,7 @@
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
+          <colgroup width="120px"></colgroup>
           <colgroup width="98px"></colgroup>
         </table>
         <table ref="footTotalFee" class="footTotalFee">
@@ -40,6 +41,7 @@
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
           <colgroup width="98px"></colgroup>
+          <colgroup width="100px"></colgroup>
           <colgroup width="98px"></colgroup>
         </table>
       </div>
@@ -59,6 +61,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       chartIframe: '',
       hideiframe: 'hide',
       query: {
@@ -139,6 +142,11 @@ export default {
           textAlign: 'right'
         },
         {
+          label: '代收货款(元)',
+          prop: 'agencyFund',
+          textAlign: 'right'
+        },
+        {
           label: '实收金额(元)',
           prop: 'amountCollected',
           textAlign: 'right'
@@ -151,6 +159,7 @@ export default {
         'shipMonthpayFee',
         'totalFee',
         'brokerageFee',
+        'agencyFund',
         'amountCollected'
       ],
       countColVal: [] // 存储底部合计值
@@ -175,10 +184,12 @@ export default {
       this.scrollwidth = noScroll - scroll
     },
     report() {
+      this.loading = true
       reportTurnoverDaily(this.query).then(res => {
         let data = res.list
         let countColVal = []
-
+        this.loading = false
+        
         let table = document.getElementById('report_turnoverDaily_table')
         if (!table) {
           return
@@ -386,7 +397,7 @@ export default {
   /*设置边框的*/
   #report_turnoverDaily_table {
       width: 100%;
-      min-width: 1200px;
+      min-width: 1300px;
 
       tbody tr {
         background-color: #FFF;
@@ -451,7 +462,7 @@ export default {
 .footTotalFee {
   width: 100%;
   position: absolute;
-  min-width: 1200px;
+  min-width: 1300px;
   bottom: 0px;
   left: 0;
   z-index: 2;

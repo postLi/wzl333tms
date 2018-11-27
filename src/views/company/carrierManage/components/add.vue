@@ -159,7 +159,7 @@ export default {
           // { validator: validateFormNumber, trigger: 'change'}
         ],
         carrierSn: [
-          { required: true, message: '仅限字母或数字组合', pattern: REGEX.ONLY_NUMBER_AND_LETTER }
+          { message: '仅限字母或数字组合', pattern: REGEX.ONLY_NUMBER_AND_LETTER }
         ]
       },
       popTitle: '新增承运商',

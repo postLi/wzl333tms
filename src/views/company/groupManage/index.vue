@@ -241,7 +241,7 @@
 
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import { getUserInfo } from '../../../utils/auth'
+  import { getUserInfo, setUserInfo } from '../../../utils/auth'
   import { objectMerge2 } from '@/utils/index'
 
   export default {
@@ -350,7 +350,14 @@
       updateSuccess(isModify) {
         this.fetchOrg(this.getOrgId)
         if (isModify) {
-          this.getOrgInfo(this.getOrgId)
+          this.getOrgInfo(this.getOrgId).then(data => {
+            // 如果修改的是当前网点，则更新vuex信息
+            if (this.getOrgId === this.otherinfo.orgid) {
+              this.userinfo.companyInfo = data || this.userinfo.companyInfo
+              this.$store.commit('SET_OTHERINFO', this.userinfo)
+              setUserInfo(this.userinfo)
+            }
+          })
         }
       },
       fetchOrg() {
@@ -383,10 +390,11 @@
       },
       getOrgInfo(id) {
         this.loading = true
-        getOrgId(id).then(res => {
+        return getOrgId(id).then(res => {
           this.orgInfoCache[id] = res.data
           this.handleOrgInfo(res.data)
           this.loading = false
+          return res.data
         })
       },
       fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {

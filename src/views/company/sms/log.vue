@@ -28,6 +28,11 @@
         width="120">
       </el-table-column>
       <el-table-column
+        label="手机号码"
+        prop="phone"
+        width="110">
+      </el-table-column>
+      <el-table-column
         label="发送时间"
         prop="sendTime"
         width="160">
@@ -146,8 +151,11 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.postSmsSendLogList()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery, 'vo', obj)
       this.postSmsSendLogList()
     }

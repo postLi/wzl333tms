@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      feeType: 12,
       btnsize: 'mini',
       searchQuery: {
         currentPage: 1,
@@ -299,11 +300,14 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -332,14 +336,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '运单结算-异常理赔-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '运单结算-异常理赔'
           })
@@ -347,6 +351,7 @@ export default {
       }
     },
     count() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
         path: '../../accountsLoad',
         query: {
@@ -362,6 +367,7 @@ export default {
     },
     getSelection(list) {
       this.selectListShipSns = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })

@@ -23,7 +23,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="运单号" prop="shipSn">
-        <el-input v-model="searchForm.shipSn" :maxlength="maxlength"></el-input>
+        <el-input v-model="searchForm.shipSn" :maxlength="maxlength" clearable></el-input>
       </el-form-item>
       <el-form-item label="发货方" prop="senderUnit">
         <el-input v-model="searchForm.senderUnit" clearable :maxlength="maxlength"></el-input>

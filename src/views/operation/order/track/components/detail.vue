@@ -1,5 +1,5 @@
 <template>
-  <div class="detailTables">
+  <div class="detailTables" v-loading="loading">
     <el-form inline v-model="info" label-width="100" class="detailTables_info">
       <table>
         <tbody>
@@ -38,11 +38,11 @@
             </td>
             <th>短驳日期</th>
             <td>
-              <el-input :value="info.departureTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.loadTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
             <th>要求到达时间</th>
             <td>
-              <el-input :value="info.receivingTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
+              <el-input :value="info.requireArrivedTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :size="btnsize" disabled></el-input>
             </td>
           </tr>
           <tr>
@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       btnsize: 'mini',
       setupTableVisible: false,
       loadId: '',
@@ -242,10 +243,13 @@ export default {
     }
   },
   watch: {
-    isShow() {
-      if (this.isShow) {
-        this.fecthSelectLoadList()
-      }
+    isShow: {
+      handler(cval, oval) {
+        if (cval) {
+          this.fecthSelectLoadList()
+        }
+      },
+      immediate: true
     },
     info(newVal) {
       if (newVal) {
@@ -284,10 +288,12 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getLoadTrack() { // 获取运单详情列表
+      this.loading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
         this.detailList = data.data
-      }).catch((err)=>{
+        this.loading = false
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

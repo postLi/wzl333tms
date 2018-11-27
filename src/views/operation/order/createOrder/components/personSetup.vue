@@ -5,7 +5,8 @@
     :visible="dialogVisiblePerson"
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
-    :modal-append-to-body="false"
+    :modal-append-to-body="true"
+    append-to-body
     @open="getPersonalSetup"
     width="600px"
     :before-close="close">
@@ -32,6 +33,9 @@
         </el-form-item>
         <el-form-item label="保存运单">
           <el-input v-model="form.printKey.saveShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveShipKey', $event)"></el-input>
+        </el-form-item>
+        <el-form-item label="保存并新增">
+          <el-input v-model="form.printKey.saveInsertKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveInsertKey', $event)"></el-input>
         </el-form-item>
         <el-form-item label="保存并打印">
           <el-input v-model="form.printKey.savePrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('savePrintKey', $event)"></el-input>
@@ -74,7 +78,7 @@
   </el-dialog>
 </template>
 <script>
-import OrderApi from  '@/api/operation/orderManage'
+import OrderApi from '@/api/operation/orderManage'
 import SelectType from '@/components/selectType/index'
 import hotkeys from '@/utils/hotkeys'
 
@@ -88,49 +92,50 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       feeData: [],
       // 用来搜索项
-      query: "",
+      query: '',
       sortOption: {
-        group:'item',
+        group: 'item',
         sort: true,
         dataIdAttr: ''
       },
-      activeNames: ['setup1','setup2','setup3','setup4'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4'],
       form: {
-        "shipDefault": {
-            "openOrderAndTransferInfo": "0",
-            "aloneWindow": "0"
+        'shipDefault': {
+          'openOrderAndTransferInfo': '0',
+          'aloneWindow': '0'
         },
-        "printKey": {
-            "printLibkey": "",
-            "savePrintKey": "",
-            "saveShipKey": "",
-            "cleanKey": "",
-            "printShipKey": ""
+        'printKey': {
+          'printLibkey': '',
+          'savePrintKey': '',
+          'saveShipKey': '',
+          'cleanKey': '',
+          'printShipKey': '',
+          saveInsertKey: ''
         },
-        "shipSetKey": {
-            "receiptType": "",
-            "receiptNum": "",
-            "handoverMode": "",
-            "paymentMode": "",
-            "transportMode": "",
-            "businessType": ""
+        'shipSetKey': {
+          'receiptType': '',
+          'receiptNum': '',
+          'handoverMode': '',
+          'paymentMode': '',
+          'transportMode': '',
+          'businessType': ''
         }
       },
-      "userId": 1
+      'userId': 1
     }
   },
-  mounted () {
+  mounted() {
     this.userId = this.otherinfo.id
   },
   methods: {
-    close(done){
+    close(done) {
       this.$emit('update:dialogVisiblePerson', false)
       this.$emit('close')
-      if(typeof done === 'function'){
+      if (typeof done === 'function') {
         done()
       }
     },
@@ -138,41 +143,42 @@ export default {
     getPersonalSetup() {
       return OrderApi.getPersonalSetup(this.userId).then(res => {
         this.form = res
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
     // 重置
-    resetSetup () {
+    resetSetup() {
       return OrderApi.resetPersonalSetup(this.userId).then(res => {
         this.$message('重置成功！')
         this.getPersonalSetup(this.userId)
-        //this.close()
-      }).catch((err)=>{
+        // this.close()
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
     // 提交修改
     submitFeeSetup() {
-      let data = Object.assign({}, this.form)
+      const data = Object.assign({}, this.form)
       data.userId = this.userId
       return OrderApi.putPersonalSetup(data).then(res => {
-        this.$message("修改成功！")
+        this.$message('修改成功！')
         this.$emit('success', data)
         this.close()
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
     // 显示按键对应键名
-    showkeycode (type, e) {
+    showkeycode(type, e) {
       e.preventDefault()
       e.stopPropagation()
       console.log('showkeycode:', e)
       this.$set(this.form.printKey, type, hotkeys.getPressedKey(e))
+      // 需要判断是否与现有的快捷键冲突
       return false
     }
   }

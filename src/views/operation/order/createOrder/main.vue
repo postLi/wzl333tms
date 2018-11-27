@@ -57,7 +57,7 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
             <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="getLineInfo"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
             </el-form-item>
           </div>
         </el-col>
@@ -142,7 +142,12 @@
       <!-- 货物费用 -->
       <div class="order-cargo-form">
         <el-table ref="cargoListTable" :key="cargoKey" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
-          <el-table-column class="addButtonTh" fixed :render-header="setHeader" width="50">
+          <el-table-column class="addButtonTh" fixed width="50">
+            <template slot="header" slot-scope="scope">
+              <span class="addButton" @click="addCargoList">
+                <i class="el-icon-plus"></i>
+              </span>
+            </template>
             <template slot-scope="scope">
               <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
             </template>
@@ -151,35 +156,35 @@
             <template slot-scope="scope">
               <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
-                    <querySelect :maxlength="30" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                    <querySelect :maxlength="15" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoPack : ''">
-                    <querySelect :maxlength="20" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                    <querySelect :maxlength="10" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
                   <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
-                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" maxlength="20"
-                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" />
+                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" 
+                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="6" />
                   </el-form-item>
                 </template>
                 <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
                   <el-form-item >
-                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" maxlength="20"
+                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="11"
                   :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" maxlength="20"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="6"
                   :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
                   </el-form-item>
                 </template>
                 <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
                   <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="11" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
                     />
                   </el-form-item>
                 </template>
@@ -206,7 +211,7 @@
             <div class="order-form-item">
               <span class="order-form-label">付款方式</span>
               <el-form-item prop="tmsOrderShip.shipPayWay">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
+                <SelectType :filterable="false" size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
               </el-form-item>
             </div>
           </el-col>
@@ -330,7 +335,7 @@
             <div class="order-form-item">
               <span class="order-form-label" :class="{'required': shipFieldValue.shipUserid}">业务员</span>
               <el-form-item :error="shipFieldValueInfo.shipUserid">
-                <querySelect ref="tmsOrdershipUserid" show="select" filterable :orgid="otherinfo.orgid "  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" />
+                <querySelect ref="tmsOrdershipUserid" show="select" filterable :orgid="otherinfo.orgid "  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" @change="selectShipUserid" />
               </el-form-item>
             </div>
           </el-col>
@@ -434,12 +439,33 @@
 
     </div>
     </el-form>
+    <!-- 专线价格提示 -->
+    <div class="createOrder-line-info">
+      提示：参考价格 
+      <template v-if="lineinfo.priceType">
+        {{ lineinfo.proposedPrice }}元，
+        <span v-if="parseInt(form.tmsOrderShip.shipPayWay,10) !== 103">
+        <span v-if="lineinfo.priceType === '正常'">
+          当前运费在正常范围。<span class="line-info-tip">{{ lineinfo.priceType }}</span>
+        </span>
+        <span v-if="lineinfo.priceType === '异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-abnormal">{{ lineinfo.priceType }}</span>
+        </span>
+        <span v-if="lineinfo.priceType === '超异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-bigabnormal">{{ lineinfo.priceType }}</span>
+        </span>
+        </span>
+      </template>
+      <template v-else>
+        面议
+      </template>
+    </div>
     <!-- 底部按钮操作部分 -->
-    <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
+    <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
     <!-- 弹窗 -->
-    <FeeDialog @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
-    <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
-    <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" />
+    <FeeDialog v-if="dialogVisible" @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
+    <PersonDialog v-if="dialogVisiblePerson" @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
+    <ManageRemarks v-if="popVisible" @success="setRemark" :popVisible.sync="popVisible" />
     </div>
   </div>
 </template>
@@ -449,11 +475,14 @@ import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
 import { closest, getTotal, objectMerge2, parseTime, tmsMath } from '@/utils/'
+import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 请求接口
 import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
 import * as preOrderManage from '@/api/operation/manage'
+import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
+import { getOrgId } from '@/api/company/groupManage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
@@ -465,9 +494,8 @@ import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
-import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
-import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
-import { getOrgId } from '@/api/company/groupManage'
+// 阿拉伯数字转中文大写
+import { smalltoBIG } from '@/filters/'
 
 export default {
   components: {
@@ -492,44 +520,9 @@ export default {
   },
   data() {
     const _this = this
-    const validateOrderNum = (rule, value, callback) => {
-      if (this.output.ismodify) {
-        callback()
-      } else {
-        _this.detectOrderNum().then(isDulip => {
-          if (isDulip) {
-            this.showMessage('重复的订单号')
-            callback(new Error())
-          } else {
-            callback()
-          }
-        })
-      }
-    }
-
-    const validateMobile = (rule, value, callback) => {
-      if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        this.showMessage('请输入正确的联系号码~')
-
-        callback(new Error())
-      }
-    }
-
-    // REGEX.ONLY_NUMBER_AND_LETTER
-    const validateOnlyNumberAndLetter = (rule, value, callback) => {
-      console.log('rule:', rule)
-      if (REGEX.ONLY_NUMBER_AND_LETTER.test(value) || (rule.field === 'tmsOrderShip.shipCustomerNumber' && !value)) {
-        callback()
-      } else {
-        this.showMessage(rule.message || '只能输入数字或者字母')
-
-        callback(new Error())
-      }
-    }
 
     return {
+      shipUserName: '',
       // 用来更新收发货人信息
       customkey: '123',
       // 控制显示提示消息
@@ -544,6 +537,7 @@ export default {
       batchSaveList: {},
       DELIVERY_METHODS: {}, // 提货方式
       PAY_WAY: {}, // 付款方式
+      RECEIPT_TYPE: {}, // 回单类型
       activeNames: ['1'],
       'shipFieldValueInfo': {
         // 当前页面控制
@@ -626,37 +620,6 @@ export default {
         'volumeFee': false,
         'weightFee': false
       },
-      rules2: {},
-      rules3: {
-        'tmsOrderShip.shipCustomerNumber': [
-          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
-        ],
-        'tmsOrderShip.shipSn': [
-          { validator: this.validateIsEmpty('运单号不能为空！') },
-          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母' },
-          { validator: validateOrderNum }
-        ],
-        'tmsOrderShip.shipToCityName': [
-          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: 'blur' }
-        ],
-        'sender.customerName': [
-          { validator: this.validateIsEmpty('发货人不能为空') }
-        ],
-        'sender.customerMobile': [
-          { validator: this.validateIsEmpty('发货人联系电话不能为空') },
-          { validator: validateMobile, trigger: 'blur' }
-        ],
-        'receiver.customerName': [
-          { validator: this.validateIsEmpty('收货人不能为空') }
-        ],
-        'receiver.customerMobile': [
-          { validator: this.validateIsEmpty('收货人联系电话不能为空') },
-          { validator: validateMobile, trigger: 'blur' }
-        ]
-
-      },
-      // 用来判断是否有填体积或者重量
-      inputWOrV: {},
       // 付款方式禁用
       shipNowpayFeeDisabled: false,
       shipArrivepayFeeDisabled: false,
@@ -891,7 +854,18 @@ export default {
       isSavePrint: false, // false-不保存并打印 true-保存并打印,
       printDataObject: {},
       cargoKey: 'init',
-      resOrderId: '' // 开单成功后返回的运单id
+      resOrderId: '', // 开单成功后返回的运单id
+      hideSaveNew: false, // 判断是否隐藏“保存并新增按钮”
+        // 专线信息
+      lineinfo: {
+        loaded: false,
+        lowerPrice: 0, // 最低价格
+        pricePercent: 0, // 百分比
+        priceType: '', // 类型
+        highOrLow: '', // 超过 低于
+        proposedPrice: 0 // 总价
+      },
+      RECEIPT_TYPE: {} // 回单类型中文
     }
   },
   computed: {
@@ -899,8 +873,9 @@ export default {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
     'theFeeConfig'() {
+      let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
-      this.feeConfig = this.feeConfig.filter(el => {
+      fees = fees.filter(el => {
         // 如果是fixed元素，则给其较小的序号保证其排在前面
         el.fieldOrder = el.isfixed === 1 ? el.fieldOrder - 1000 : el.fieldOrder
         if (el.ischeck !== 0) {
@@ -910,10 +885,11 @@ export default {
           return false
         }
       })
-      this.feeConfig.sort((a, b) => {
+      fees.sort((a, b) => {
         return a.fieldOrder < b.fieldOrder ? -1 : 1
       })
-      return this.feeConfig
+      // this.feeConfig=fees
+      return fees
     }
   },
   watch: {
@@ -933,10 +909,9 @@ export default {
     },
     orderobj: {
       handler(newVal) {
-        console.log('3333333333333333333')
         // 如果是弹窗才响应这个变化
         if (this.ispop) {
-          this.initIndex()
+          // this.initIndex('orderobj')
         }
       },
       deep: true
@@ -964,7 +939,6 @@ export default {
     },
     'form.tmsOrderShip.shipReceiptRequire': {
       handler(newVal) {
-        console.log('form.tmsOrderShip.shipReceiptRequire', newVal)
         let num = 1
         if (newVal === 80 || newVal === '80' || newVal === null) {
           num = 0
@@ -990,30 +964,42 @@ export default {
     },
     '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
-        this.initIndex()
+        // this.initIndex()
+        // 这里处理缓存的数据等
       }
     },
+    // 弹窗时处理、如提货转运单，订单转运单
     'ispop'(newVal) {
       if (newVal) {
-        this.initIndex()
+        this.initIndex('ispop')
       }
     }
   },
+  // 新建订单、改单时会触发
+  // 当创建/修改切换时，不会触发，此时需要判断router变化来初始化数据
   activated() {
     // if (this.ispop) {
-    this.initIndex()
+    this.loading = true
+    this.initIndex('activated')
     // }
   },
   deactivated() {
 
   },
   mounted() {
-    this.loading = true
-
-    this.initIndex()
     this.getSelectType()
     this.getShipPayWay()
+    this.getReceiptType()
+    // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
+    if (this.ispop) {
+      this.loading = true
+
+      this.initIndex('mounted')
+
+      // 中转默认付款方式
+      this.form.tmsOrderTransfer.paymentId = 16
+    }
   },
   methods: {
     // 公共工具函数
@@ -1145,24 +1131,6 @@ export default {
         }
       }, false)
     },
-    setHeader(h, { column }) {
-      return h('span', {
-        props: {
-        },
-        'class': {
-          'addButton': true
-        },
-        on: {
-          click: this.addCargoList
-        }
-      }, [
-        h('i', {
-          'class': {
-            'el-icon-plus': true
-          }
-        })
-      ])
-    },
     // 各个接口
     // 为了方便缓存数据，重新包装各个接口
     // 获取预订单数据
@@ -1195,34 +1163,29 @@ export default {
       })
     },
     // 获取个人设置
-    getPersonSetting(nocache) {
-      /* if (!nocache && this.dataCache['personSeting']) {
-        return Promise.resolve(this.dataCache['personSeting'])
-      } else { */
+    getPersonSetting() {
       return orderManage.getPersonalSetup(this.otherinfo.id)
-      // }
     },
     // 获取货物设置
     getCargoSetting() {
-      /* if (this.dataCache['cargoSeting']) {
-        return Promise.resolve(this.dataCache['cargoSeting'])
-      } else { */
       return orderManage.getCargoSetting(this.otherinfo.orgid)
-      // }
     },
     // 获取基本设置信息
     getBaseSetting() {
+      console.log('getBaseSetting:::::')
+
       return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
+      // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
         // 获取全局设置
-        this.config = dataArr[0]
+        this.config = dataArr[0] || {}
         // 获取费用设置
-        this.feeConfig = dataArr[1]
+        this.feeConfig = dataArr[1] || []
         // 获取个人设置
-        this.personConfig = dataArr[2]
+        this.personConfig = dataArr[2] || {}
         // 获取后台时间
-        this.nowTime = dataArr[3]
+        this.nowTime = dataArr[3] || new Date()
         // 获取网点信息
-        this.orgInfo = dataArr[4]
+        this.orgInfo = dataArr[4] || {}
         console.log('get INIT Infomation::', dataArr)
       }).catch((err) => {
         this.loading = false
@@ -1308,13 +1271,14 @@ export default {
               "cargoAmount": 4
             }
           ] */
-        if (!this.output.isOrder &&　this.form.tmsOrderShip.shipSn) {
+        if (!this.output.isOrder && this.form.tmsOrderShip.shipSn) {
           orderManage.postGenerateGoodsSn({
             'tmsOrderShip': {
               'shipSn': this.form.tmsOrderShip.shipSn
             },
             'tmsOrderCargoList': this.form.cargoList.map(el => {
               const a = {}
+              // a.cargoAmount = el.cargoAmount1 || el.cargoAmount || 0
               a.cargoAmount = parseInt(el.cargoAmount1, 10) || parseInt(el.cargoAmount, 10) || 0
               return a
             })
@@ -1341,6 +1305,16 @@ export default {
       if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
+      // 只有在库中且没有结算状态的才能修改创建时间
+      // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
+      if (this.canChangeOrderDate && this.output.ismodify && !this.output.isbatch) {
+        if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
+
+        } else {
+          this.canChangeOrderDate = false
+        }
+        // shipStatus 59
+      }
     },
     // 选择出发城市
     selectFromCity(item, city) {
@@ -1351,12 +1325,14 @@ export default {
         this.form.tmsOrderShip.shipFromCityCode = city || ''
         this.form.tmsOrderShip.shipFromCityName = city || ''
       } */
+      this.getLineInfo()
     },
     // 选择到达城市
     selectToCity(item, city) {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
       }
+      this.getLineInfo()
     },
     // 设置费用列
     setOrderFee() {
@@ -1396,6 +1372,10 @@ export default {
     // 设置中转表单
     setOrderTransfer() {
       this.shouldInputTransfer = this.personConfig.shipDefault.openOrderAndTransferInfo === '1'
+      // 当为修改运单时，隐藏中转信息
+      if (this.output.ismodify) {
+        this.shouldInputTransfer = false
+      }
     },
     // 设置默认值
     setDefaultValue() {
@@ -1440,7 +1420,8 @@ export default {
     /**
      * 初始化各类情况
      */
-    initIndex() {
+    initIndex(whereAreYou) {
+      console.log('whereAreYou::', whereAreYou)
       // 1.判断有无运单id
       // 1.1 判断是否为修改
       // 1.1.1 判断是否已结算，设置可修改部分
@@ -1459,9 +1440,9 @@ export default {
       // 4.1 正常的创建运单
       // 5. 从弹窗过来
       this.loading = true
+
       this.reset()
       this.getBaseSetting().then(res => {
-        console.log('base setting info:', res, this.$route)
         let param
         if (this.ispop) {
           console.log('pop create order:', this.orderobj)
@@ -1486,6 +1467,7 @@ export default {
           this.output.ordernum = Math.min(parseInt(param.ordernum, 10) || 1, 10)
           this.output.isbatch = true
           this.output.batchinfo = param.batchobj
+          this.hideSaveNew = true
           this.initBatch()
         } else {
           this.output.iscreate = true
@@ -1504,6 +1486,7 @@ export default {
     // 初始化运单
     initOrder() {
       this.output.ismodify = true
+      console.log('initOrder=initOrder=initOrder')
 
       const errFn = () => {
         this.$confirm('查无此运单信息：' + this.output.orderid, '提示', {
@@ -1521,16 +1504,69 @@ export default {
         // 找到运单信息
         this.init()
         this.setOrderData(res.data)
-        this.modifyOrder()
         this.loading = false
       }).catch(err => {
         console.log('initOrder err:', err)
         errFn()
       })
     },
-    // 修改运单
-    modifyOrder() {
+    // 根据出发地/目的地、货物信息获取专线信息
+    getLineInfo() {
+      // 1.检查有没有填写出发地/到达地
+      // 2.检查有没有货物列表
+      // 3.俩者都有数据才请求，没有就清空已有的数据
+      const start = this.form.tmsOrderShip.shipFromCityName
+      const end = this.form.tmsOrderShip.shipToCityName
+      const cargos = this.form.cargoList.filter(el => {
+        return (el.cargoVolume !== '' || el.cargoWeight !== '')
+      })
+      const orgData = this.$options.data()
 
+      if (start && end && cargos.length) {
+        const data = {}
+        data.rangeFromCityName = start
+        data.rangeToCityName = end
+        data.shipFeeList = []
+        data.volumeList = []
+        data.weighList = []
+        data.fromOrgid = this.form.tmsOrderShip.shipFromOrgid || this.otherinfo.orgid
+        data.toOrgid = this.form.tmsOrderShip.shipToOrgid || ''
+        cargos.forEach(el => {
+          if (el.shipFee !== '') {
+            data.shipFeeList.push(el.shipFee)
+          }
+
+          if (el.cargoVolume !== '') {
+            data.volumeList.push(el.cargoVolume)
+          }
+
+          if (el.cargoWeight !== '') {
+            data.weighList.push(el.cargoWeight)
+          }
+        })
+        // 请求后端接口获取专线数据
+        orderManage.postMatchLine(data).then(res => {
+          /* lowerPrice: 10
+          pricePercent: 30
+          priceType: "超异常"
+          proposedPrice: 10
+          transportAging: "1小时" */
+          const rdata = res.data
+          if (!rdata) {
+            this.lineinfo = orgData
+          } else {
+            this.lineinfo = rdata
+            // 当获取到后台数据时，标记以便后续根据最低价格去处理创建/修改的逻辑
+            this.lineinfo.loaded = true
+          }
+        }).catch(err => {
+          this.lineinfo = orgData
+          this._handlerCatchMsg(err)
+        })
+      } else {
+        // 清除已有的专线数据
+        this.lineinfo = orgData
+      }
     },
     // 从订单创建运单
     initPreOrder() {
@@ -1631,6 +1667,7 @@ export default {
         // 收发货人信息
         this.form.sender.customerType = 1
         this.form.sender.customerName = data.customerName
+        this.form.sender.customerUnit = data.customerUnit
         this.form.sender.customerMobile = data.customerMobile
         this.form.sender.detailedAddress = data.detailedAddress
         this.form.sender.customerId = data.senderId
@@ -1757,6 +1794,10 @@ export default {
     // 将null值转为空值
     setOrderData(data) {
       data.tmsOrderShip = data.tmsOrderShipInfo || data.tmsOrderShip || {}
+      // 当为修改运单时，运费计算规则重新获取
+      if (this.output.ismodify && this.output.isOrder && !this.output.isbatch && data.orderShipSettingMap && data.orderShipSettingMap.shipFee) {
+        this.config.shipFee = data.orderShipSettingMap.shipFee
+      }
       // 设置运单信息
       for (const i in this.form.tmsOrderShip) {
         this.form.tmsOrderShip[i] = data.tmsOrderShip[i] === null ? '' : data.tmsOrderShip[i]
@@ -1786,7 +1827,6 @@ export default {
       }
       // 回显控货
       this.shipOther = this.form.tmsOrderShip.shipOther.split(',') || []
-      console.log('回显控货:', this.shipOther)
 
       this.form.customerList = data.customerList || []
       console.log('setOrderInfo:', data, this.form)
@@ -1907,9 +1947,16 @@ export default {
       setTimeout(() => {
         this.findAllInput()
       }, 100)
+      // 修改时计算总运费
+      this.getTotalFee()
     },
     detectCargoNumChange(index, name, event) {
+      // if (name === 'cargoAmount') {
+      //   this.form.cargoList[index][name] = event.target.value + ''
+      //   console.log('cargoAmount',this.form.cargoList[index][name])
+      // }else {
       this.form.cargoList[index][name] = event.target.value
+      // }
       this.setCargoNum()
     },
     // 修改货品列表
@@ -1917,6 +1964,26 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // 修改时计算总运费
       this.getTotalFee()
+      if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
+        this.getLineInfo()
+      }
+      // 修改保险费与声明价值
+      // 如果有设置
+      if (/(insuranceFee|productPrice)/.test(name)) {
+        const cfg = this.config.shipPageFunc
+        if (cfg.insurancePremiumIsDeclaredValue) {
+          const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 1000)
+          const inx = this.theFeeConfig.filter(el => el.fieldProperty === 'insuranceFee').length
+          // 如果存在保险费
+          if (inx && per) {
+            if (name === 'insuranceFee') {
+              this.form.cargoList[index]['productPrice'] = (tmsMath._div(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            } else {
+              this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
+            }
+          }
+        }
+      }
     },
     // 其他表单
     getBatch(item) {
@@ -2087,6 +2154,10 @@ export default {
       // this.setOrderDate()
 
       this.output = {}
+      // 所有操作变量都需要重置
+      this.isSaveAndNew = false
+      this.isSavePrint = false
+      this.hideSaveNew = false
     },
     /** * 提交表单 */
     checkshipSn() {
@@ -2658,12 +2729,19 @@ export default {
             data.customerList[1].customerType = 2
             // 处理货物
             data.tmsOrderCargoList = this.form.cargoList.filter(el => {
-              // 没填写货品名称的丢弃
-              return !!el.cargoName
+              // 丢弃没有填写任何信息的行
+              let flag = false
+              for (const i in el) {
+                if (el[i]) {
+                  flag = true
+                }
+              }
+
+              return flag
             }).map(el => {
               const b = {}
               for (const i in el) {
-                if (el[i] === '') {
+                if (el[i] === '' && i !== 'cargoName') {
                   b[i] = 0
                 } else {
                   b[i] = el[i]
@@ -2679,6 +2757,25 @@ export default {
             data.tmsOrderShip.shipArrivepayFee = parseFloat(data.tmsOrderShip.shipArrivepayFee, 10).toFixed(2)
             data.tmsOrderShip.shipReceiptpayFee = parseFloat(data.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2)
             data.tmsOrderShip.shipMonthpayFee = parseFloat(data.tmsOrderShip.shipMonthpayFee, 10).toFixed(2)
+
+            // 判断总运费是否超过最低价格
+            if (this.lineinfo.loaded) {
+              // 有最低价格数据才进行判断
+              // 如果是免费则不进行判断
+              // proposedPrice lowerPrice
+              if (parseInt(data.tmsOrderShip.shipPayWay, 10) !== 103) {
+                let total = 0
+                data.tmsOrderCargoList.forEach(el => {
+                  total = tmsMath.add(total, el.shipFee || 0).result()
+                })
+                console.log('提交前判断：', total, this.lineinfo.lowerPrice, data.tmsOrderCargoList)
+                if (this.lineinfo.lowerPrice > total) {
+                  this.$message.info('基本运费不得低于最低价格。')
+                  this.loading = false
+                  return false
+                }
+              }
+            }
 
             if (this.output.ismodify) {
               /* this.$message.success('成功修改运单！')
@@ -2711,7 +2808,9 @@ export default {
                 this.eventBus.$emit('saveOrderSuccess')
 
                 if (!this.output.isbatch) {
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex('isSaveAndNew')
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
                   } else {
@@ -2721,6 +2820,7 @@ export default {
                 } else {
                   this.batchSaveList[this.currentBatch].data = data
                 }
+                this.loading = false
               }).catch(err => {
                 this.loading = false
                 this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
@@ -2752,7 +2852,9 @@ export default {
                   if (this.output.isPreOrder) {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
-                  if (this.ispop) {
+                  if (this.isSaveAndNew) {
+                    this.initIndex('isSaveAndNew -> 2')
+                  } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)
                   } else {
@@ -2766,6 +2868,7 @@ export default {
                 if (this.isSavePrint) {
                   this.printSave() // 执行成功后打印运单
                 }
+                this.loading = false
               }).catch(err => {
                 this.loading = false
                 this.$message.error('创建失败，原因：' + err.text)
@@ -2792,6 +2895,10 @@ export default {
           break
         case 'saveShipKey':
           this.isSavePrint = false // false-不保存并打印，只保存
+          this.submitForm()
+          break
+        case 'saveInsertKey':
+          this.isSaveAndNew = true
           this.submitForm()
           break
         case 'savePrintKey':
@@ -2839,12 +2946,15 @@ export default {
       })
     },
     printSave() { // 打印保存的运单
-      getPrintOrderItems(this.resOrderId).then(data => {
-        CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
-      })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+      this.eventBus.$emit('printOrder')
+      window.TMS_printOrderInfo = true
+      // this.print()
+      // getPrintOrderItems(this.resOrderId).then(data => {
+      //   CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
+      // })
+      // .catch(err => {
+      //   this._handlerCatchMsg(err)
+      // })
     },
     getSelectType() { // 获取提货方式中文
       getSelectType('ship_delivery_method', this.otherinfo.orgid).then(data => {
@@ -2867,44 +2977,58 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
+    getReceiptType() { // 获取回单类型中文
+      getSelectType('ship_receipt_require', this.otherinfo.orgid).then(data => {
+        console.log('ship_receipt_require', data, parseInt(this.form.tmsOrderShip.shipPayWay))
+        data.forEach(e => {
+          this.RECEIPT_TYPE[e.id] = e.dictName
+        })
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    selectShipUserid(val) { // 业务员
+      console.log('业务员', val)
+      this.shipUserName = val.name || ''
+    },
     setPrintData(type) { // 设置打印的字段
       // 标签数据
       let obj = new Object()
+      this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
+      this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
+      this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
+      this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
+      this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
+      this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
+      this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
+      this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
+      this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
+      this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
+      this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
+      for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
+        if (item === 'cargoName' || item === 'cargoPack') {
+          obj[item] = this.form.cargoList[0][item]
+        } else {
+          obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
+        }
+      }
+      console.log('货品信息及其费用项', this.form.cargoList[0])
+      this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
+      this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
+      this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
+      this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
+      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
+      this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
+
       if (type === 'lib') {
-        this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn)
-        this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime)
-        this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName)
-        this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName)
-        this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName)
-        this.$set(obj, 'fromOrgName', this.otherinfo.name)
-        this.$set(obj, 'senderUnit', this.form.sender.customerUnit)
-        this.$set(obj, 'senderName', this.form.sender.customerName)
-        this.$set(obj, 'senderMobile', this.form.sender.customerMobile)
         this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
         this.$set(obj, 'companyName', this.otherinfo.companyName)
-        this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
+        this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
+        this.$set(obj, 'qrcode', '') // 二维码
+        this.$set(obj, 'companyAddr', '') // 公司地址
       } else if (type === 'order') {
-        this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
-        this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
-        this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
-        this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
-        this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
-        this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
-        this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
-        this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
-        this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
-        this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
-        this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
-        this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
-        this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
-        this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
-        this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号吗
-        this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
-        for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
-          obj[item] = this.form.cargoList[0][item]
-        }
         console.log('this.form.cargoList[0]', this.form.cargoList[0])
-        this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
         this.$set(obj, 'otherfeeOut', this.form.cargoList[0]['otherfeeOut'] ? this.form.cargoList[0]['otherfeeOut'] : '') // 其他费用支出
         this.$set(obj, 'otherfeeIn', this.form.cargoList[0]['otherfeeIn'] ? this.form.cargoList[0]['otherfeeIn'] : '') // 其他费用收入
         this.$set(obj, 'taxRate', this.form.cargoList[0]['taxRate'] ? this.form.cargoList[0]['taxRate'] : '') // 税率
@@ -2912,28 +3036,104 @@ export default {
         this.$set(obj, 'housingFee', this.form.cargoList[0]['housingFee'] ? this.form.cargoList[0]['housingFee'] : '') // 入仓费
         this.$set(obj, 'stampTax', this.form.cargoList[0]['stampTax'] ? this.form.cargoList[0]['stampTax'] : '') // 印花税
         this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
-        this.$set(obj, 'totalFee', this.form.tmsOrderShip.shipTotalFee) // 运费合计
-        this.$set(obj, 'receiptRequire', this.form.tmsOrderShip.shipReceiptRequire) // 回单类型
+        this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
+        this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(this.form.cargoList[0].brokerageFee))) // 回扣标识
+        this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
         this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
         this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
+        this.$set(obj, 'createrName', this.shipUserName) // 开单员
+        this.$set(obj, 'userName', this.shipUserName) // 制单员
+        this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
+        // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
+         // //////////////////////////////////////////////////////////
+        // /年月日
+        this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
+        this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
+        this.$set(obj, 'createDate', parseTime(this.form.tmsOrderShip.createTime, '{d}'))
+        // //////////////////////////////////////////////////////////
+        // /特殊处理 中转费
+        let totalTransferFee = 0
+        if (this.form.tmsOrderTransfer && this.form.tmsOrderTransfer.length > 0) {
+          this.form.tmsOrderTransfer.forEach(e => {
+            totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+          })
+        }
+        this.$set(obj, 'transferFee', parseFloat(totalTransferFee)) // 中转费
+        console.log('中转费', totalTransferFee)
+        // //////////////////////////////////////////////////////////
+        // /特殊处理 打勾
+        switch (this.form.tmsOrderShip.shipPayWay) { // 付款方式
+          case 76:
+            this.$set(obj, 'nowPay', '√') // 现付（√）
+            break
+          case 77:
+            this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
+            break
+          case 78:
+            this.$set(obj, 'monthPay', '√') // 月结（√）
+            break
+          case 79:
+            this.$set(obj, 'receiptPay', '√') // 回单付（√）
+            break
+        }
+        console.log('自提  送货：：交接方式：：：', this.form.tmsOrderShip.shipDeliveryMethod)
+        if (this.form.tmsOrderShip.shipDeliveryMethod.toString().indexOf('68') !== -1) {
+          this.$set(obj, 'deliveryGood', '√') // 自提（√）
+        } else if (this.form.tmsOrderShip.shipDeliveryMethod === 69) {
+          this.$set(obj, 'sendGood', '√') // 送货（√）
+        }
         if (this.form.tmsOrderShip.shipEffective === 95) {
           this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
         } else {
           this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
         }
-        this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-        if (this.shipOther === 168) {
+        console.log('控货 贵重物品：：：：', this.shipOther)
+        if (this.shipOther.indexOf('168') !== -1) {
           this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
-        } else {
+        }
+        if (this.shipOther.indexOf('169') !== -1) {
           this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
         }
-        this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
+        // //////////////////////////////////////////////////////////
+        // /处理合计中文大写
+        const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
+        this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
+        this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
+        this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
+        this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
+        this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
+        const upagencyFeeBig = this.setFeeToBig(this.form.cargoList[0].agencyFund)
+        this.$set(obj, 'upagencyFundW', totalFeeBig[4]) // 代收货款(万)
+        this.$set(obj, 'upagencyFundQ', totalFeeBig[3]) // 代收货款(仟)
+        this.$set(obj, 'upagencyFundB', totalFeeBig[2]) // 代收货款(佰)
+        this.$set(obj, 'upagencyFundS', totalFeeBig[1]) // 代收货款(拾)
+        this.$set(obj, 'upagencyFundY', totalFeeBig[0]) // 代收货款(元)
       }
       this.printDataObject = Object.assign({}, obj)
       obj = {}
       console.log('printDataObject', this.printDataObject)
+    },
+    setFeeToBig(fee) { // 费用转成中文大写
+      console.log('fee:::::::', fee, smalltoBIG(fee))
+      let feezh = fee.toString().split('').reverse()
+      const pointIndex = feezh.indexOf('.') + 1
+      const feezhAll = smalltoBIG(fee)
+      feezh = feezh.slice(pointIndex).reverse()
+      feezh.forEach((e, index) => {
+        this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
+      })
+      feezh = feezh.reverse()
+      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
+        feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
+      } else if (feezh && feezh.length < 5) { // 补充零
+        for (let i = 0; i < 5; i++) {
+          feezh[i] = feezh[i] || '零'
+        }
+      }
+      console.log('feezh:::::', feezh)
+      return feezh
     },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {
@@ -2965,494 +3165,6 @@ export default {
         this._handlerCatchMsg(err)
       })
     }
-  }, // 路由更新时触发，用来切换渲染数据
-  // 需要对应router-view的组件才能触发
-  beforeRouteUpdate(to, from, next) {
-    next()
-    console.log('beforeRouteUpdate:', to, from)
   }
 }
 </script>
-<style lang="scss">
-$bordercolor: #d4d4d4;
-$backgroundcolor: #cbe1f7;
-
-  .createOrder-main{
-    margin-left: 12px;
-    margin-right: 12px;
-    box-shadow: 0px 0px 10px 0px 
-    rgba(0, 0, 0, 0.47);
-    padding-top: 34px;
-    padding-left: 26px;
-    padding-right: 26px;
-    padding-bottom: 58px;
-    font-size: 12px;
-    // max-height: 100%;
-    min-width: 1316px;
-    display: flex;
-    position: relative;
-    flex-flow:row;
-
-    .el-dialog__wrapper,.v-modal{
-      position: absolute;
-    }
-
-    .el-date-editor.el-input{
-      width: 140px;
-    }
-
-    .el-form-item--mini.el-form-item{
-      margin: 0;
-    }
-
-    .el-input.is-disabled .el-input__inner{
-      color: #666;
-    }
-
-    .el-table th.required>div::before{
-      display: none;
-    }
-
-    .batchlist{
-      flex: 0 0 60px;
-      margin-right: 10px;
-      margin-top: 38px;
-      border-top: 1px solid #999;
-      span{
-        display: block;
-        border: 1px solid #999;
-        border-top: none;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        cursor: pointer;
-
-        &.on{
-          color: #333;
-          background: #cbe1f7;
-          cursor: default;
-        }
-      }
-    }
-
-    /* &.creatBatch-main{
-      .createOrderWrapper{
-        width:calc(100% - 60px - 10px);
-      }
-    } */
-
-    .createOrderWrapper{
-      max-height: 100%;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      overflow-x: hidden;
-      position: relative;
-      &>.el-form{
-        //height: calc( 100% - 100px);
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-    }
-    
-    .createOrder-title{
-      font-size: 24px;
-      font-weight: normal;
-      font-stretch: normal;
-      letter-spacing: 9px;
-      color: #000;
-      text-align: center;
-      height: 28px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-
-      span{
-        border-bottom:1px solid rgba(0, 0, 0, 0.43);
-      }
-    }
-    .order-num{
-      float: left;
-      padding-left: 8px;
-      color: #333;
-      line-height: 28px;
-
-      .order-num-info{
-        display: inline-block;
-        width: 120px;
-      }
-      .el-input__inner{
-        color: #f00;
-        font-weight: bold;
-        border: none;
-        border-radius: 0;
-        border-bottom: 1px solid #ccc;
-      }
-    }
-    .create-num{
-      float: right;
-      padding-right: 8px;
-      color: #777;
-
-      span{
-        color: #333;
-        font-weight: bold;
-      }
-    }
-    .order-main{
-      min-height: 366px;
-      border: solid 2px #000827;
-      margin-top: 8px;
-      // max-height: calc(100% - 38px);
-      flex: 1;
-      overflow-y: auto;
-
-      .required{
-        color: #f00;
-        font-weight: normal;
-      }
-    }
-    
-    .order-form-item{
-      float: none;
-    }
-    .createOrder-info{
-      height: 30px;
-      .required{
-        color: #f00;
-        font-weight: normal;
-      }
-    }
-
-    .el-select__caret::before{
-      content:"\E60C";
-    }
-    
-    .showFormInfo{
-      .el-input.is-disabled .el-input__inner{
-        color: #000;
-      }
-    }
-
-    .order-form-label{
-      color: #666;
-    }
-
-    .order-form-item{
-      display: flex;
-      line-height: 28px;
-      .order-form-label{
-        width: 66px;
-        text-align: justify;
-        border-right: 1px solid $bordercolor;
-        height: 28px;
-        overflow: hidden;
-        padding: 0 5px;
-
-        &:after{display: inline-block ; content: ''; padding-left: 100%;height: 0;width: 0;line-height: 0; }
-      }
-      
-      .el-form-item{
-        flex: 1;
-      }
-      .autocomplete-input,.el-form-item__content,.el-autocomplete,.el-select{
-        display: block;
-        width: 100%;
-      }
-      .el-input__suffix{
-        right: 0;
-      }
-      .el-form-item__content{
-        height: 28px;
-        overflow:hidden;
-      }
-      .el-input__inner{
-        vertical-align: 1px;
-      }
-      .el-form-item.is-error .el-input__inner{
-        border-color: #f56c6c;
-      }
-    }
-
-    .firstline-order{
-      border-bottom: 1px solid $bordercolor;
-      
-      .el-col:first-child .order-form-label{
-        border-left: none;
-      }
-      .order-form-label{
-        display: inline-block;
-        
-        border-left: 1px solid $bordercolor;
-        
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-      
-    }
-
-    .el-checkbox__label{
-      font-size: 12px;
-    }
-    
-    /* 收发货表单 */
-    .sender-form,.receiver-form{
-      float: left;
-      width: calc( (100% - 5px) / 2 );
-
-      .order-form-item{
-        border-bottom: 1px solid $bordercolor;
-
-        &:last-child{
-          border: none;
-        }
-      }
-
-      .form-title{
-        border-bottom: 1px solid $bordercolor;
-        line-height: 28px;
-        text-align: center;
-        font-size: 16px;
-        color: #5dabed;
-        background: $backgroundcolor;
-        font-weight: bold;
-        letter-spacing: 2px;
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-    }
-    .sender-form{
-      border-right: 1px solid $bordercolor;
-    }
-    .receiver-form{
-      float: right;
-      border-left: 1px solid $bordercolor;
-    }
-
-    /** 货品表单 **/
-    .order-cargo-form{
-      overflow: auto;
-      margin-bottom: 1px;
-      width: 100%;
-
-      th{
-        min-width: 110px;
-        background: #d5e7f9;
-        color: #666;
-        height: 28px;
-        vertical-align: middle;
-        border-left: 1px solid #88bef3;
-        text-align: center;
-        font-weight: normal;
-      }
-      .el-table .cell{
-        padding: 0;
-      }
-      .el-table td{
-        padding: 0;
-      }
-      .el-form-item,.el-form-item__content,.autocomplete-input,.el-autocomplete{
-        width: 100%;
-      }
-
-      /* table, td{
-        border: 1px solid $bordercolor;
-        text-align: center;
-      }
-      td, th{
-        padding: 0 0;
-        height: 28px;
-      }
-      th{
-        min-width: 110px;
-        background: #d5e7f9;
-        color: #666;
-        height: 28px;
-        vertical-align: middle;
-        border-left: 1px solid #88bef3;
-        text-align: center;
-      } */
-      .addButtonTh{
-        min-width: 50px;
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-      .el-form-item__content>input{
-        font-size: 12px;
-      }
-      .el-form-item.is-error .el-input__inner{
-        border-color: #f56c6c;
-      }
-      .addButton, .minusButton{
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        text-align: center;
-        border: 1px solid #3b95ee;
-        color: #3b95ee;
-        line-height: 14px;
-        border-radius: 4px;
-
-        cursor: pointer;
-
-        i{
-          font-weight: bold;
-          vertical-align: middle;
-        }
-      }
-      .minusButton{
-        border-color: #ee3b3b;
-        color: #ee3b3b;
-      }
-    }
-    /* 其他费用 */
-    .order-other-form{
-      border-top: 1px solid $bordercolor;
-      border-bottom: 1px solid $bordercolor;
-      margin-bottom: 1px;
-
-      .order-form-item{
-        border-bottom: 1px solid $bordercolor;
-      }
-
-      .fouth-order-other{
-        .order-form-item{
-          border-bottom: none;
-        }
-      }
-
-      .el-col:first-child .order-form-label{
-        border-left: none;
-      }
-      .order-form-label{
-        display: inline-block;
-        
-        border-left: 1px solid $bordercolor;
-        
-      }
-
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-
-      .el-input-group__append{
-        padding: 0 5px;
-        border-radius: 0;
-        border: none;
-      }
-      .el-checkbox{
-        margin-left: 10px;
-      }
-      .el-checkbox{
-        font-size: 0;
-      }
-      .el-checkbox__label{
-        vertical-align: middle;
-      }
-
-      .other-form-shipReceiptNum{
-        padding: 0;
-        .el-input__inner{
-          padding: 0;
-          text-align: center;
-        }
-      }
-
-      .remarks-btn{
-        position: absolute;
-        top: 0;
-        right: 1px;
-        color: #3189e2;
-        border-color: #3189e2;
-        z-index: 2;
-      }
-    }
-
-    /* 中转信息 */
-    .order-transfer-form{
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-
-      .el-collapse,.el-collapse-item__wrap{
-        border-bottom: none;
-      }
-      .el-collapse-item__content{
-        overflow-x: auto;
-        padding-bottom: 0;
-      }
-      th{
-        height: 30px;
-        line-height: 30px;
-        background: #eee;
-      }
-      table,td,th{
-        border: 1px solid $bordercolor;
-      }
-
-      .el-collapse-item:last-child{
-        margin-bottom: 0;
-      }
-      
-    }
-    
-
-    /* 底部按钮部分 */
-    .order-btns{
-      padding-top: 21px;
-      text-align: center;
-      position: relative;
-      height: 72px;
-
-      .el-button{
-        font-size: 16px;
-        //background: transparent;
-        i{
-          font-size: 1.5em;
-          vertical-align: middle;
-        }
-      }
-      .createOrder-setup{
-        
-        position: absolute;
-        top: 8px;
-        right: 8px;
-
-        .el-button{
-          font-size: 16px;
-          padding: 2px;
-        }
-      }
-    }
-  }
-</style>

@@ -147,7 +147,7 @@ export default {
             return this.getLabelName(scope.row.truckSource, this.truckSources)
           } */
         }, {
-          label: '可载重（吨）',
+          label: '可载重（千克）',
           prop: 'truckLoad',
           width: '120',
           fixed: false
@@ -167,6 +167,14 @@ export default {
         }, {
           label: '车高',
           prop: 'truckHeight',
+          fixed: false
+        }, {
+          label: '车架号',
+          prop: 'frameNum',
+          fixed: false
+        }, {
+          label: '发动机号',
+          prop: 'engineNum',
           fixed: false
         }, {
           label: '车型',
@@ -251,8 +259,11 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchAllCustomer()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo.orgid = obj.orgid
       this.searchQuery.vo.truckIdNumber = obj.truckIdNumber
       this.searchQuery.vo.truckSource = obj.truckSource

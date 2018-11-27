@@ -107,7 +107,7 @@
           </el-table-column>
           <el-table-column prop="agent" label="经办人" width="80">
             <template slot-scope="props">
-              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name"  show="select" search="name" label="name" :maxlength="maxlength" />
+              <querySelect v-model="props.row.agent" :size="btnsize" valuekey="name" show="select" search="name" label="name" :maxlength="maxlength" />
             </template>
           </el-table-column>
         </el-table>
@@ -157,7 +157,7 @@ export default {
       loading: true,
       rules: {},
       btnsize: 'mini',
-      dialogTitle: '结 算 收 款 单',
+      dialogTitle: '结 算 付 款 单',
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
@@ -243,12 +243,6 @@ export default {
         this.isShow = false
       }
     }
-    // info(newVal) {
-    //   if (newVal) {
-    //     console.log('sdfsdfsd',this.info)
-    //     return this.info
-    //   }
-    // }
   },
   mounted() {
     this.postTmsFfinancialwayList()
@@ -400,15 +394,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          console.log(this.dataName, this.submitData)
-          // return false ////////////////////////////////////////////
           postLoadSettlement(this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-            console.log(currentPage)
             this.$router.push({ path: './accountsPayable/batch/' + currentPage })
-            console.log('./accountsPayable/batch/' + currentPage)
           })
             .catch(err => {
               this._handlerCatchMsg(err)
@@ -471,7 +461,7 @@ export default {
           }, 0)
           sums[index] += ''
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ''
         }
       })
       return sums

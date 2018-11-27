@@ -19,9 +19,6 @@
           </el-table-column>
           <el-table-column sortable label="短信内容（双击编辑短信内容）" prop="templateContent" align="left">
             <template slot-scope="scope">
-              <!-- <el-tooltip popper-class="popcontent" effect="light" :content="scope.row.templateContent" placement="bottom">
-                 <span>{{scope.row.templateContent}}</span>
-              </el-tooltip> -->
               <el-popover placement="bottom" width="400" trigger="hover" :content="scope.row.templateContent">
                 <span slot="reference">{{scope.row.templateContent}}</span>
               </el-popover>

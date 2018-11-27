@@ -85,7 +85,7 @@ export default {
       total: 0,
       dataList: [],
       popVisibleDialog: false,
-      loading: false,
+      loading: true,
       setupTableVisible: false,
       tableColumn: [
       // {
@@ -199,6 +199,8 @@ export default {
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -208,9 +210,11 @@ export default {
       this.fetchList()
     },
     fetchList() {
+      this.loading = true
       return postFindLowList(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
+        this.loading = false
       }).catch((err)=>{
         this.loading = false
         this._handlerCatchMsg(err)

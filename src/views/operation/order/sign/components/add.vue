@@ -21,7 +21,7 @@
         <el-form-item label="发货人电话:" prop="sender_customer_mobile">
           <el-input :maxlength="20" v-model="form.sender_customer_mobile" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="收货人:" prop="receiver_customer_name"> 
+        <el-form-item label="收货人:" prop="receiver_customer_name">
           <el-input :maxlength="20" v-model="form.receiver_customer_name" auto-complete="off" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="收货人电话:" prop="receiver_customer_mobile">
@@ -37,7 +37,7 @@
               value-format="timestamp"
               :disabled="isDbclick"
               >
-              
+
           </el-date-picker>
         </el-form-item>
         <el-form-item label="交接方式:" prop="shipDeliveryMethodName" >
@@ -46,9 +46,11 @@
         </el-form-item>
         <el-form-item label="到付款:" prop="shipArrivepayFee">
           <el-input :maxlength="20" v-model="form.shipArrivepayFee" auto-complete="off" :disabled="true"></el-input>
+          <p style="color: red;font-size: 12px;margin-bottom: -25px">拆单的到付款不统计在内</p>
         </el-form-item>
         <el-form-item label="代收货款:" prop="agencyFund">
           <el-input :maxlength="20" v-model="form.agencyFund" auto-complete="off" :disabled="true"></el-input>
+          <p style="color: red;font-size: 12px;margin-bottom: -25px">拆单的代收货款不统计在内</p>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
           <el-input :maxlength="10" v-model="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
@@ -589,7 +591,7 @@ export default {
         margin-top:3px;
       }
     }
-          
+
   }
   .imgshow{
     .el-upload-list--picture .el-upload-list__item{
@@ -607,7 +609,7 @@ export default {
         float: left;
         margin:5px 10px;
     }
-  
+
   }
   // .uploadlist{
   //   margin-left: 20px;
@@ -621,9 +623,9 @@ export default {
   //   // margin-top: 20px;
   // }
   // .upload-container .uploadlist{
-    
+
   //   position:relative;
-    
+
   // }
   // .upload-container .el-upload{
   //   // background:red;

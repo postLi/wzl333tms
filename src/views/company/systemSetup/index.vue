@@ -2,130 +2,131 @@
   <div class="system-setup">
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
-      <el-collapse v-model="activeNames">
-        <el-collapse-item name="setup1" v-has:SETTINGS_SHIPNO>
-          <template slot="title">
-            单号规则
-          </template>
-          <!-- 运单号规则 -->
-          <div class="clearfix setup-table">
-            <div class="setup-left">运单号规则</div>
-            <div class="setup-right">
-              <el-form-item>
-                <el-radio label="1" v-model="shipNo">手工输入</el-radio>
-              </el-form-item>
-              <el-form-item>
-                <el-radio label="2" v-model="shipNo">2位年+2位月+2位日+按公司单号顺序自增</el-radio>
-                <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip1" tabindex="-1">
-                  <div slot="content">运单号至少4位，最多8位。</div>
-                  <el-input v-numberOnly :disabled="shipNo !== '2'" v-model.trim="form.shipNo.companyNumberAutoIncrementByTwoYMDValue" auto-complete="off" @focus="tooltip1 = true" placeholder="如：0001" @blur="tooltip1 = false"></el-input>
-                </el-tooltip>
-              </el-form-item>
-              <el-form-item>
-                <el-radio label="3" v-model="shipNo">2位年+2位月+按公司单号顺序自增</el-radio>
-                <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip2" tabindex="-1">
-                  <div slot="content">运单号至少4位，最多8位。</div>
-                  <el-input v-numberOnly :disabled="shipNo !== '3'" v-model.trim="form.shipNo.companyNumberAutoIncrementByTwoYMValue" auto-complete="off" @focus="tooltip2 = true" placeholder="如：0001" @blur="tooltip2 = false"></el-input>
-                </el-tooltip>
-              </el-form-item>
-              <el-form-item>
-                <el-radio label="4" v-model="shipNo">按公司单号顺序自增</el-radio>
-                <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip3" tabindex="-1">
-                  <div slot="content">运单号至少6位，最多7位。</div>
-                  <el-input v-numberOnly :disabled="shipNo !== '4'" v-model.trim="form.shipNo.companyNumberAutoIncrementValue" auto-complete="off" @focus="tooltip3 = true" placeholder="如：0001" @blur="tooltip3 = false"></el-input>
-                </el-tooltip>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipNo.systemNumberImmutable">不允许修改系统生成的单号</el-checkbox>
-              </el-form-item>
+        <el-collapse v-model="activeNames">
+          <el-collapse-item name="setup1" v-has:SETTINGS_SHIPNO>
+            <template slot="title">
+              单号规则
+            </template>
+            <!-- 运单号规则 -->
+            <div class="clearfix setup-table">
+              <div class="setup-left">运单号规则</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio label="1" v-model="shipNo">手工输入</el-radio>
+                </el-form-item>
+                <el-form-item>
+                  <el-radio label="2" v-model="shipNo">2位年+2位月+2位日+按公司单号顺序自增</el-radio>
+                  <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip1" tabindex="-1">
+                    <div slot="content">运单号至少4位，最多8位。</div>
+                    <el-input v-numberOnly :disabled="shipNo !== '2'" v-model.trim="form.shipNo.companyNumberAutoIncrementByTwoYMDValue" auto-complete="off" @focus="tooltip1 = true" placeholder="如：0001" @blur="tooltip1 = false"></el-input>
+                  </el-tooltip>
+                </el-form-item>
+                <el-form-item>
+                  <el-radio label="3" v-model="shipNo">2位年+2位月+按公司单号顺序自增</el-radio>
+                  <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip2" tabindex="-1">
+                    <div slot="content">运单号至少4位，最多8位。</div>
+                    <el-input v-numberOnly :disabled="shipNo !== '3'" v-model.trim="form.shipNo.companyNumberAutoIncrementByTwoYMValue" auto-complete="off" @focus="tooltip2 = true" placeholder="如：0001" @blur="tooltip2 = false"></el-input>
+                  </el-tooltip>
+                </el-form-item>
+                <el-form-item>
+                  <el-radio label="4" v-model="shipNo">按公司单号顺序自增</el-radio>
+                  <el-tooltip effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip3" tabindex="-1">
+                    <div slot="content">运单号至少6位，最多7位。</div>
+                    <el-input v-numberOnly :disabled="shipNo !== '4'" v-model.trim="form.shipNo.companyNumberAutoIncrementValue" auto-complete="off" @focus="tooltip3 = true" placeholder="如：0001" @blur="tooltip3 = false"></el-input>
+                  </el-tooltip>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipNo.systemNumberImmutable">不允许修改系统生成的单号</el-checkbox>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-          <!-- 货号规则 -->
-          <div class="clearfix setup-table">
-            <div class="setup-left">货号规则</div>
-            <div class="setup-right">
-              <el-form-item>
-                <el-radio label="1" v-model="cargoNo">手工输入</el-radio>
-              </el-form-item>
-              <el-form-item>
-                <el-radio label="2" v-model="cargoNo">运单号+件数</el-radio>
-              </el-form-item>
-              <el-form-item>
-                <el-radio label="3" v-model="cargoNo">网点代码+运单号后</el-radio>
-                <el-input :disabled="cargoNo !== '3'" v-model="form.cargoNo.orgIdAndShipNoAndNumberOfUnitsValue" placeholder=""></el-input>位+件数
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.cargoNo.systemNumberNotAllowUpdate">不允许修改系统生成的货号</el-checkbox>
-              </el-form-item>
+            <!-- 货号规则 -->
+            <div class="clearfix setup-table">
+              <div class="setup-left">货号规则</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio label="1" v-model="cargoNo">手工输入</el-radio>
+                </el-form-item>
+                <el-form-item>
+                  <el-radio label="2" v-model="cargoNo">运单号+件数</el-radio>
+                </el-form-item>
+                <el-form-item>
+                  <el-radio label="3" v-model="cargoNo">网点代码+运单号后</el-radio>
+                  <el-input :disabled="cargoNo !== '3'" v-model="form.cargoNo.orgIdAndShipNoAndNumberOfUnitsValue" placeholder=""></el-input>位+件数
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.cargoNo.systemNumberNotAllowUpdate">不允许修改系统生成的货号</el-checkbox>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="setup2" title="运费合计规则" v-has:SETTINGS_SHIPFEE>
-          <!-- 运费合计规则 -->
-          <div class="clearfix setup-table">
-            <div class="setup-left">运费合计</div>
-            <div class="setup-right">
-              <el-form-item>
-                <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipFee.shipFee">基本运费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.brokerageFee">回扣</el-checkbox>
-              </el-form-item>
-           <!--    <el-form-item>
+          </el-collapse-item>
+          <el-collapse-item name="setup2" title="运费合计规则" v-has:SETTINGS_SHIPFEE>
+            <!-- 运费合计规则 -->
+            <div class="clearfix setup-table">
+              <div class="setup-left">运费合计</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipFee.shipFee">基本运费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.brokerageFee">回扣</el-checkbox>
+                </el-form-item>
+                <!--    <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.productPrice">声明价值</el-checkbox>
               </el-form-item> -->
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.deliveryFee">送货费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.pickupFee">提货费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.goupstairsFee">上楼费</el-checkbox>
-              </el-form-item><el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.insuranceFee">保险费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.handlingFee">装卸费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.packageFee">包装费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.forkliftFee">叉车费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.customsFee">报关费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.commissionFee">代收款手续费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.taxes">税金</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.housingFee">入仓费</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.stampTax">印花税</el-checkbox>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherfeeIn">其他费用收入</el-checkbox>
-              </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.deliveryFee">送货费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.pickupFee">提货费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.goupstairsFee">上楼费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.insuranceFee">保险费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.handlingFee">装卸费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.packageFee">包装费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.forkliftFee">叉车费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.customsFee">报关费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.commissionFee">代收款手续费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.taxes">税金</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.housingFee">入仓费</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.stampTax">印花税</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.shipFee.otherfeeIn">其他费用收入</el-checkbox>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="setup3" title="运单功能设置" v-has:SETTINGS_SHIPFUNC>
-          <!-- 运单页面 -->
-          <div class="clearfix setup-table">
-            <div class="setup-left">运单页面</div>
-            <div class="setup-right">
-              <!-- <el-form-item>
+          </el-collapse-item>
+          <el-collapse-item name="setup3" title="运单功能设置" v-has:SETTINGS_SHIPFUNC>
+            <!-- 运单页面 -->
+            <div class="clearfix setup-table">
+              <div class="setup-left">运单页面</div>
+              <div class="setup-right">
+                <!-- <el-form-item>
                 <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.toCityByAdministrativeRegion">到达城市必须选择到行政区</el-checkbox>
               </el-form-item> -->
-              <el-form-item>
-                <!-- <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox> -->
-                <!-- <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" multiple placeholder="请选择">
+                <el-form-item>
+                  <!-- <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox> -->
+                  <!-- <el-select :disabled="form.shipPageFunc.shipFieldSign !== '1'" v-model="value" multiple placeholder="请选择">
                   <el-option
                     v-for="(item, index) in shipField"
                     :key="item.key"
@@ -140,42 +141,46 @@
                     </span>
                   </el-option>
                 </el-select> -->
-                运单字段设置
-                <el-select v-model="fieldSetup" collapse-tags multiple placeholder="请选择">
-                  <el-option
-                    v-for="(item, index) in shipField"
-                    :key="item.key"
-                    :label="item.name"
-                    :class="{theSelectfirst: index === 0}"
-                    :value="item.key">
-                    <div class="selectHeader" @click.prevent.stop v-if="index === 0"><span style="float: left">字典名称</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">必填</span></div>
-                    <span style="float: left">{{ item.name }}</span>
-                  </el-option>
-                </el-select>
-                <!-- shipField -->
-              </el-form-item>
-              <el-form-item>
-                开单时间规则
-                <SelectType type="ship_time_rule" v-model="form.shipPageFunc.shipTimeRule">
-                </SelectType>
-              </el-form-item>
-              <el-form-item>
-                通知放货规则
-                <SelectType type="notify_cargo_rule" v-model="form.shipPageFunc.notifyCargoRule" >
-                </SelectType>
-              </el-form-item>
-              <el-form-item>
-                运单名称
-                <el-input :maxlength="20" v-model="form.shipPageFunc.orderName" />
-              </el-form-item>
+                  运单字段设置
+                  <el-select v-model="fieldSetup" collapse-tags multiple placeholder="请选择">
+                    <el-option v-for="(item, index) in shipField" :key="item.key" :label="item.name" :class="{theSelectfirst: index === 0}" :value="item.key">
+                      <div class="selectHeader" @click.prevent.stop v-if="index === 0"><span style="float: left">字典名称</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">必填</span></div>
+                      <span style="float: left">{{ item.name }}</span>
+                    </el-option>
+                  </el-select>
+                  <!-- shipField -->
+                </el-form-item>
+                <el-form-item>
+                  开单时间规则
+                  <SelectType type="ship_time_rule" v-model="form.shipPageFunc.shipTimeRule">
+                  </SelectType>
+                </el-form-item>
+                <el-form-item>
+                  通知放货规则
+                  <SelectType type="notify_cargo_rule" v-model="form.shipPageFunc.notifyCargoRule">
+                  </SelectType>
+                </el-form-item>
+                <el-form-item>
+                  运单名称
+                  <el-input :maxlength="20" v-model="form.shipPageFunc.orderName" />
+                </el-form-item>
+                <el-form-item>
+                  保险费与声明价值比例
+                  <el-input :maxlength="3" v-number-only v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
+                    <template slot="append">‰</template>
+                  </el-input>
+                  <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                    <span>保险费为声明价值{{form.shipPageFunc.insurancePremiumIsDeclaredValue}}‰</span>
+                    <i class="el-icon-question" slot="reference"></i>
+                  </el-popover>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-          <!-- 运单权限 -->
-          <div class="clearfix setup-table">
-            <div class="setup-left">运单权限</div>
-            
-            <div class="setup-right">
+            <!-- 运单权限 -->
+            <div class="clearfix setup-table">
+              <div class="setup-left">运单权限</div>
+              <div class="setup-right">
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.onlyUpdateOwnShip">只能修改自己开的运单</el-checkbox>
                 </el-form-item>
@@ -191,61 +196,74 @@
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.shipPermission.controlgoodsVisibleRule">其他网点可看控货信息</el-checkbox>
                 </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="setup4" title="打印设置" v-has:SETTINGS_PRINT>
-          <div class="clearfix setup-table">
-            <div class="setup-left">打印机设置</div>
-            <div class="setup-right">
-              <el-form-item>
-                运单
-                <el-select  v-model="form.printSetting.ship">
-                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
-                </el-select >
-              </el-form-item>
-              <el-form-item>
-                标签
-                <el-select  v-model="form.printSetting.label">
-                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
-                </el-select >
-              </el-form-item>
-              <el-form-item>
-                清单
-                <el-select  v-model="form.printSetting.inventory">
-                  <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
-                </el-select >
-              </el-form-item>
+          </el-collapse-item>
+          <el-collapse-item name="setup7" title="财务设置">
+            <div class="clearfix setup-table">
+              <div class="setup-left">财务设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  财务凭证
+                  <el-select v-model="form.financeSetting.voucher">
+                    <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="setup5" title="打印模板设置" v-has:SETTINGS_TEMPLATE>
-          <div class="clearfix setup-table">
-            <div class="setup-left">运单标签设置</div>
-            <div class="setup-right">
-              <el-form-item>
-                <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
-              </el-form-item>
+          </el-collapse-item>
+          <el-collapse-item name="setup4" title="打印设置" v-has:SETTINGS_PRINT>
+            <div class="clearfix setup-table">
+              <div class="setup-left">打印机设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  运单
+                  <el-select v-model="form.printSetting.ship">
+                    <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  标签
+                  <el-select v-model="form.printSetting.label">
+                    <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  清单
+                  <el-select v-model="form.printSetting.inventory">
+                    <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item name="setup6" title="常用插件下载">
-          <div class="clearfix setup-table">
-            <div class="setup-left">下载地址</div>
-            <div class="setup-right">
-              <el-form-item>
-                <el-button @click="downloadFile('lodop')" icon="el-icon-download" type="primary" plain>LODOP云打印插件下载</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="primary" plain>硕正报表插件下载</el-button>
-              </el-form-item>
+          </el-collapse-item>
+          <el-collapse-item name="setup5" title="打印模板设置" v-has:SETTINGS_TEMPLATE>
+            <div class="clearfix setup-table">
+              <div class="setup-left">运单标签设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
+                </el-form-item>
+              </div>
             </div>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
+          </el-collapse-item>
+          <el-collapse-item name="setup6" title="常用插件下载">
+            <div class="clearfix setup-table">
+              <div class="setup-left">下载地址</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-button @click="downloadFile('lodop')" icon="el-icon-download" type="primary" plain>LODOP云打印插件下载</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="primary" plain>硕正报表插件下载</el-button>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </el-form>
     </div>
     <div class="system-setup-footer">
@@ -291,9 +309,8 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6'],
-      shipField: [
-        {
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7'],
+      shipField: [{
           key: 'shipFromCityName',
           value: '0',
           name: '出发城市'
@@ -354,11 +371,11 @@ export default {
           name: '送货费'
         },
 
-/*         {
-          key: 'productPrice',
-          value: '0',
-          name: '声明价值'
-        }, */
+        /*         {
+                  key: 'productPrice',
+                  value: '0',
+                  name: '声明价值'
+                }, */
         {
           key: 'insuranceFee',
           value: '0',
@@ -410,7 +427,17 @@ export default {
           name: '业务员'
         }
       ],
+      vouchers: [{
+        value: '1',
+        label: '需要'
+      }, {
+        value: '2',
+        label: '不需要'
+      }],
       form: {
+        'financeSetting': {
+          'voucher': '2'
+        },
         'printSetting': {
           'ship': '0',
           'label': '0',
@@ -485,6 +512,7 @@ export default {
             // 'productPrice': '0',
             'packageFee': '0'
           },
+          insurancePremiumIsDeclaredValue: 3,
           'toCityByAdministrativeRegion': '0',
           'notifyCargoRule': '',
           'shipTimeRule': '',
@@ -496,16 +524,37 @@ export default {
     }
   },
   mounted() {
-    this.getInfo('order').then(() => {
-      this.setShipNo()
-      this.setCargoNo()
-      this.initField()
-      this.initPrinter()
-      // 加载好后才可以提交数据
-      this.nochange = false
-    })
+    this.initOrder()
   },
   methods: {
+    infoFinance() { // 初始化财务设置
+      let params = {
+        orgid: this.otherinfo.orgid,
+        type: 'financeSetting',
+        module: 'finance'
+      }
+      return getAllSetting(params).then(data => {
+        if (data) {
+          console.log('financeData', data)
+          this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    initOrder() {
+      this.getInfo('order').then(() => {
+        this.setShipNo()
+        this.setCargoNo()
+        this.initField()
+        this.initPrinter()
+        this.infoFinance()
+        // 加载好后才可以提交数据
+        this.nochange = false
+      })
+    },
     initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
       for (const item in this.printers) {
@@ -549,6 +598,9 @@ export default {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
           console.log(this.form.printSetting[item])
         }
+        this.$set(this.form, 'financeSetting', {
+          voucher: ''
+        })
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -598,8 +650,22 @@ export default {
       }
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
-      console.log(form)
-      putSetting(form).then(res => {
+
+      let finance = {
+        orgid: form.orgid,
+        module: 'finance',
+        financeSetting: form.financeSetting
+      }
+      console.log('saveData', form, finance)
+      this.putSetting(form).then(() => {
+        this.putSetting(finance).then(() => {
+          this.initOrder()
+          this.infoFinance()
+        })
+      })
+    },
+    putSetting(query) {
+      return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
         this.$message({
           message: '保存成功',
@@ -669,95 +735,97 @@ export default {
     }
   }
 }
+
 </script>
-
 <style lang="scss">
-.system-setup{
-    display: flex;
-    flex-direction:column;
-    position: relative;
-    height: 100%;
+.system-setup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
 
-    .system-setup-table{
-      flex-grow: 1;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 10px 10px 0 10px;
+  .system-setup-table {
+    flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 10px 10px 0 10px;
 
-      .el-collapse{
-        border: 1px solid #E0E0E0;
-      }
-
-      .el-collapse-item__header{
-        background: #E9F3FA;
-        text-align: center;
-        height: 42px;
-        line-height: 42px;
-        font-size: 16px;
-        color: #333;
-        position: relative;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      .el-collapse-item__arrow{
-        position: absolute;
-        left: 32px;
-        top: 0;
-      }
-      .el-collapse-item__content{
-        padding-bottom: 0;
-      }
-
-      .el-form-item__content>.el-input{
-        width: 100px;
-      }
-
-      .el-form-item--mini.el-form-item{
-        margin-bottom: 5px;
-      }
-
-      .setup-table{
-        margin: 0 0 10px;
-        min-height: 58px;
-        display: flex;
-
-        .setup-left{
-          width: 144px;
-          text-align: center;
-          background: #EBEBEB;
-          padding-top: 20px;
-          font-size: 14px;
-          color: #333;
-          font-weight: bold;
-        }
-
-        .setup-right{
-          padding: 10px 16px; 
-          flex:1;
-        }
-      }
+    .el-collapse {
+      border: 1px solid #E0E0E0;
     }
 
-    .system-setup-footer{
-      height: 70px;
+    .el-collapse-item__header {
+      background: #E9F3FA;
       text-align: center;
+      height: 42px;
+      line-height: 42px;
+      font-size: 16px;
+      color: #333;
+      position: relative;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .el-collapse-item__arrow {
+      position: absolute;
+      left: 32px;
+      top: 0;
+    }
+    .el-collapse-item__content {
+      padding-bottom: 0;
     }
 
-    
+    .el-form-item__content>.el-input {
+      width: 100px;
+    }
+
+    .el-form-item--mini.el-form-item {
+      margin-bottom: 5px;
+    }
+
+    .setup-table {
+      margin: 0 0 10px;
+      min-height: 58px;
+      display: flex;
+
+      .setup-left {
+        width: 144px;
+        text-align: center;
+        background: #EBEBEB;
+        padding-top: 20px;
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .setup-right {
+        padding: 10px 16px;
+        flex: 1;
+      }
+    }
+  }
+
+  .system-setup-footer {
+    height: 70px;
+    text-align: center;
+  }
 }
-.theSelectfirst{
+
+.theSelectfirst {
   height: 70px;
 }
-.selectHeader{
+
+.selectHeader {
   color: #999;
   clear: both;
   border-bottom: 1px solid #999;
   margin-bottom: 10px;
   height: 34px;
 }
-.el-select-dropdown__item.selected{
-  .selectHeader{
+
+.el-select-dropdown__item.selected {
+  .selectHeader {
     font-weight: normal;
   }
 }
+
 </style>

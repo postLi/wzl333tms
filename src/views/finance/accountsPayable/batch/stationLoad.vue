@@ -207,11 +207,14 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
@@ -241,14 +244,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费结算-发站装卸费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费结算-发站装卸费'
           })
@@ -290,6 +293,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

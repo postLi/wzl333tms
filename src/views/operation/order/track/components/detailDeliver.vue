@@ -1,5 +1,5 @@
 <template>
-  <div class="detailTables">
+  <div class="detailTables" v-loading="loading">
     <el-form inline v-model="info" label-width="100" class="detailTables_info">
       <table>
         <tbody>
@@ -110,6 +110,7 @@ export default {
     return {
       btnsize: 'mini',
       setupTableVisible: false,
+      loading: true,
       loadId: '',
       detailList: [],
       selected: [],
@@ -245,10 +246,13 @@ export default {
     }
   },
   watch: {
-    isShow() {
-      if (this.isShow) {
-        this.fecthSelectLoadList()
-      }
+    isShow: {
+      handler(cval, oval) {
+        if (cval) {
+          this.fecthSelectLoadList()
+        }
+      },
+      immediate: true
     },
     info(newVal) {
       if (newVal) {
@@ -287,9 +291,11 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getLoadTrack() { // 获取运单详情列表
+      this.loading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
         this.detailList = data.data
+      this.loading = false
       }).catch((err)=>{
         this.loading = false
         this._handlerCatchMsg(err)

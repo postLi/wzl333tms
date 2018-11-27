@@ -7,7 +7,7 @@
         <el-table ref="multipleTable" :data="usersArr" stripe border height="66" tooltip-effect="dark" style="width: 650px" class="tableIntelligent">
           <el-table-column prop="nowpayCarriage" label="现付运费">
             <template slot-scope="scope">
-              <input v-model="scope.row.nowpayCarriage" class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayCarriage', val)" v-number-only:point></input>
+              <input v-model="scope.row.nowpayCarriage" class="nativeinput" @change="(val)=>changeFright(scope.$index, 'nowpayCarriage', val)" v-number-only:point :maxlength="10"></input>
               <!-- <el-input v-model.trim="scope.row.nowpayCarriage" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, scope.prop, val)" :maxlength="10"></el-input> -->
             </template>.
           </el-table-column>
@@ -167,7 +167,6 @@ export default {
     popVisible(newVal) {
       if (newVal) {
         this.$set(this.usersArr, 0, this.intFreightItem)
-        console.log(this.intFreightItem)
       }
     }
   },
@@ -182,7 +181,6 @@ export default {
   methods: {
     changeFright(index, prop, newVal) {
       // newVal = newVal.replace(REGEX.FLOAT2ING, '')
-      console.log(index, prop, newVal)
       newVal = newVal.target.value
 
       this.usersArr[index][prop] = Number(newVal)
@@ -235,7 +233,6 @@ export default {
         this.usersArr[0].backpayOilCard,
         this.usersArr[0].arrivepayCarriage,
         this.usersArr[0].arrivepayOilCard).result()
-      console.log(this.usersArr[0], '234234')
       this.$emit('getIntFreight', {
         obj: this.usersArr[0],
         val: this.total

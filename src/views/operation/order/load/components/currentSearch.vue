@@ -10,7 +10,7 @@
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
-    <el-form-item label="运单号">
+    <el-form-item label="运单号" >
       <el-autocomplete 
       v-model="searchForm.shipSn" 
       :size="btnsize" 
@@ -44,6 +44,10 @@ export default {
     info: {
       type: Array,
       default: []
+    },
+    showSearch: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -67,6 +71,7 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        console.log('sdfjisjdfisjdifjsdifjsidfjisdj')
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },

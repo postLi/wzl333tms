@@ -16,7 +16,16 @@ export default {
       userinfo: {}
     }
   },
+  watch: {
+    '$route'(to, from) {
+      // console.log('modifyOrder333---', to.fullPath, from.fullPath)
+    }
+  },
+  activated() {
+    // console.log('modifyOrder22----111111111')
+  },
   mounted() {
+    // console.log('modifyOrder22----1222222222')
   }
 }
 </script>

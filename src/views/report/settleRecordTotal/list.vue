@@ -3,7 +3,7 @@
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
-    <div class="tab_info">
+    <div class="tab_info" v-loading="loading">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:REPORT_PRINT_1 @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
@@ -45,10 +45,10 @@
                 <font color="white" size="2">应付合计</font>
               </th>
               <th bgcolor="dimGray" width="90px">
-                <font color="white" size="2">已收</font>
+                <font color="white" size="2">已付</font>
               </th>
               <th bgcolor="dimGray" width="90px">
-                <font color="white" size="2">未收</font>
+                <font color="white" size="2">未付</font>
               </th>
               <th bgcolor="dimGray" width="90px">
                 <font color="white" size="2">数量</font>
@@ -90,6 +90,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       chartIframe: '',
       hideiframe: 'hide',
       query: {
@@ -201,9 +202,11 @@ export default {
         this.scrollwidth = noScroll-scroll
       },
     reportSettleRecordTotal() {
+      this.loading = true
       reportSettleRecordTotal(this.query).then(res => {
         let data = res
         let countColVal = []
+        this.loading = false
 
         let table = document.getElementById('report_settleRecordTotal_table')
         if (!table) {

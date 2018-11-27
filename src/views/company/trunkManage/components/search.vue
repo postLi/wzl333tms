@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :rules="rules" :model="searchForm" class="staff_searchinfo clearfix">
       <div class="staff_searchinfo--input">
-        <el-form-item label="网点">
+        <el-form-item label-width="auto" label="网点">
             <SelectTree v-model="searchForm.orgid" />
         </el-form-item>
         <el-form-item label="车辆来源">

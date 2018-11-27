@@ -4,7 +4,7 @@
       <slot name="title">{{title}}</slot>
       <i class="el-icon-close" @click="close" title="关闭"></i>
     </div>
-    <div class="popRight-content arteryDelivery_lrl">
+    <div v-if="shouldRender" class="popRight-content arteryDelivery_lrl">
       <slot name="content">内容</slot>
     </div>
     <div class="popRight-footer">
@@ -39,7 +39,18 @@ export default {
   },
   data() {
     return {
-      zIndex: getPopZindex()
+      zIndex: getPopZindex(),
+      shouldRender: false
+    }
+  },
+  watch: {
+    isShow: {
+      handler() {
+        if (this.isShow) {
+          this.shouldRender = true
+        }
+      },
+      immediate: true
     }
   },
   methods: {

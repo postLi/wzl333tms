@@ -382,7 +382,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.setData()
-          accountApi.postCreateFee(this.$route.query.searchQuery.vo.ascriptionOrgId, this.submitData).then(data => {
+          accountApi.postCreateFee(JSON.parse(this.$route.query.searchQuery).vo.ascriptionOrgId, this.submitData).then(data => {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
@@ -457,7 +457,7 @@ export default {
           }, 0)
           sums[index] += ''
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ''
         }
       })
       return sums

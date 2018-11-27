@@ -452,6 +452,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.loading = false
       this.fetchData()
@@ -482,7 +484,7 @@ export default {
           var netdata = this.selected[0]
           this.selectInfo = {}
           this.$router.push({
-            path: '/operation/order/modifyOrder',
+            path: '/operation/order/createOrder',
             query: {
               orderid: netdata.id,
               type: 'modify',

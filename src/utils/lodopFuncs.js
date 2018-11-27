@@ -1,7 +1,13 @@
- import { getSummaries } from './index'
+ import {
+   getSummaries,
+   objectMerge2
+ } from './index'
  // import ExportJsonExcel from 'js-export-excel'
  //  const ExportJsonExcel = require('js-export-excel')
- const ExportJsonExcel = require('./excel')
+ //  const ExportJsonExcel = require('./excel')
+ const ExportJsonExcel2 = require('./exceljs.min')
+ const FileSaver = require('./fileSaver')
+
  //  console.log('ExportJsonExcel:', ExportJsonExcel)
 
  var CreatedOKLodop7766 = null
@@ -9,7 +15,10 @@
  // var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
  // const downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
  const downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/28tms_win32_cLodop_20180821.exe'
-
+ // 打印回调
+ var TaskID, TaskID1, TaskID2, P_ID = '',
+   loop = 0,
+   waiting = false
  // ====判断是否需要安装CLodop云打印服务器:====
  export function needCLodop() {
    try {
@@ -24,7 +33,9 @@
      var verOPR = ua.match(/OPR\D?\d+/i)
      var verFF = ua.match(/Firefox\D?\d+/i)
      var x64 = ua.match(/x64/i)
-     if ((verTrident == null) && (verIE == null) && (x64 !== null)) { return true } else
+     if ((verTrident == null) && (verIE == null) && (x64 !== null)) {
+       return true
+     } else
      if (verFF !== null) {
        verFF = verFF[0].match(/\d+/)
        if ((verFF[0] >= 41) || (x64 !== null)) return true
@@ -41,7 +52,9 @@
        }
      }
      return false
-   } catch (err) { return true }
+   } catch (err) {
+     return true
+   }
  }
 
  // ====页面引用CLodop云打印必须的JS文件：====
@@ -58,6 +71,7 @@
  }
  // ====获取LODOP对象的主过程：====
  export function getLodop(oOBJECT, oEMBED) {
+   console.log('getLodop:<=')
    // var strHtmInstall = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
    // var strHtmUpdate = "<br><p color='#FF00FF'>打印控件需要升级!点击这里<a href='"+ downloadPath+"' target='_self'>执行升级</a>,升级后请重新进入。</p>";
    // var strHtm64_Install = "<br><p color='#FF00FF'>打印控件未安装!点击这里<a href='"+ downloadPath+"' target='_self'>执行安装</a>,安装后请刷新页面或重新进入。</p>";
@@ -78,11 +92,18 @@
    try {
      var isIE = (navigator.userAgent.indexOf('MSIE') >= 0) || (navigator.userAgent.indexOf('Trident') >= 0)
      if (needCLodop()) {
-       try { LODOP = getCLodop() } catch (err) {}
-       if (!LODOP && document.readyState !== 'complete') { alert('C-Lodop没准备好，请稍后再试！'); return }
+       try {
+         LODOP = getCLodop()
+       } catch (err) {}
+       if (!LODOP && document.readyState !== 'complete') {
+         alert('C-Lodop没准备好，请稍后再试！')
+         return
+       }
        if (!LODOP) {
          if (isIE) document.write(strCLodopInstall)
-         else { var conf = confirm('没有安装LODOP云打印插件,确认下载？') }
+         else {
+           var conf = confirm('没有安装LODOP云打印插件,确认下载？')
+         }
          if (conf) {
            window.open(downloadPath)
          }
@@ -91,7 +112,9 @@
        } else {
          if (CLODOP.CVERSION < '3.0.4.3') {
            if (isIE) document.write(strCLodopUpdate)
-           else { document.body.innerHTML = strCLodopUpdate + document.body.innerHTML }
+           else {
+             document.body.innerHTML = strCLodopUpdate + document.body.innerHTML
+           }
          }
          if (oEMBED && oEMBED.parentNode) oEMBED.parentNode.removeChild(oEMBED)
          if (oOBJECT && oOBJECT.parentNode) oOBJECT.parentNode.removeChild(oOBJECT)
@@ -113,13 +136,19 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
-         if (navigator.userAgent.indexOf('Chrome') >= 0) { document.body.innerHTML = strHtmChrome + document.body.innerHTML }
-         if (navigator.userAgent.indexOf('Firefox') >= 0) { document.body.innerHTML = strHtmFireFox + document.body.innerHTML }
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+         if (navigator.userAgent.indexOf('Chrome') >= 0) {
+           document.body.innerHTML = strHtmChrome + document.body.innerHTML
+         }
+         if (navigator.userAgent.indexOf('Firefox') >= 0) {
+           document.body.innerHTML = strHtmFireFox + document.body.innerHTML
+         }
          if (is64IE) document.write(strHtm64_Install)
          else
          if (isIE) document.write(strHtmInstall)
-         else { document.body.innerHTML = strHtmInstall + document.body.innerHTML }
+         else {
+           document.body.innerHTML = strHtmInstall + document.body.innerHTML
+         }
          return LODOP
        }
      }
@@ -128,7 +157,9 @@
          if (is64IE) document.write(strHtm64_Update)
          else
          if (isIE) document.write(strHtmUpdate)
-         else { document.body.innerHTML = strHtmUpdate + document.body.innerHTML }
+         else {
+           document.body.innerHTML = strHtmUpdate + document.body.innerHTML
+         }
        }
        return LODOP
      }
@@ -136,7 +167,9 @@
 
      // ===========================================================
      return LODOP
-   } catch (err) { alert('getLodop出错:' + err) }
+   } catch (err) {
+     alert('getLodop出错:' + err)
+   }
  }
 
  // 全局常量
@@ -294,68 +327,181 @@
      // info = info.replace('PRINT_INITA', 'PRINT_INIT')
 
      eval(info)
-    //  LODOP.ADD_PRINT_SETUP_BKIMG('E:/工作资料/打印机驱动/20180921095700758_0003.jpg')
+     //  LODOP.ADD_PRINT_SETUP_BKIMG('E:/工作资料/打印机驱动/20180921095700758_0003.jpg')
      // LODOP.PRINT_SETUP()
      LODOP.PREVIEW()
-    //  LODOP.PRINT_DESIGN()
-   } catch (err) {
-     getLodop()
-   }
- }
- // 创建打印页面    【未保存】标签或运单
- export function CreatePrintPageEnable(info, printer) {
-   try {
-     if (printer) {
-       LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
-     }
-     LODOP = getLodop()
-     let arr = new Array()
-     arr = Object.assign([], info)
-     const str = ''
-     for (const item in arr) { // 没有传值的项设置位空字符串
-       if (arr[item].value === undefined || arr[item].value === null) {
-         arr[item].value = ''
-       }
-     }
-     let pageWidth = 0
-     let pageHeight = 0
-     arr.forEach((e, index) => {
-       if (e.filedValue === 'setting') {
-        //  str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"青春物流托运单打印");'
-         LODOP.PRINT_INITA(e.topy, e.leftx, e.width, e.height, '青春物流托运单打印')
-         pageWidth = e.width
-         pageHeight = e.height
-       } else {
-         if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
-          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
-           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-         } else {
-          //  str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
-          //  str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
-           LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-           LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-           LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-         }
-       }
-     })
-    //  eval(str)
-     // LODOP.PRINT_SETUP()
-    //  LODOP.SET_PREVIEW_WINDOW(0, 0, 0, pageWidth, pageHeight, '')
-     LODOP.PREVIEW()
+     //  LODOP.PRINT_DESIGN()
    } catch (err) {
      getLodop()
    }
  }
 
+ // 创建打印页面    【未保存】标签或运单
+ export function CreatePrintPageEnable(info, printer, preview, number) {
+   console.log('是否预览', preview)
+
+   // info-打印数据
+   // printer-打印机
+   // number-打印份数
+   // preview-是否预览
+   return new Promise((resolve, reject) => {
+     try {
+       const prxvalue = 0.264
+       const str = ''
+       let islib = false // 判断是否标签打印
+       LODOP = getLodop()
+       console.log('print', info, printer, number)
+       // if (printer) {
+       // LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', printer)
+       // str += "LODOP.SET_PRINT_MODE('WINDOW_DEFPRINTER', " + printer + ");"
+       // console.log(str)
+       // }
+
+       let arr = new Array()
+       arr = Object.assign([], info)
+       for (const item in arr) { // 没有传值的项设置位空字符串
+         if (arr[item].filedValue === 'setting') { // 判断是否是标签打印 islib: true-标签打印 false-运单打印
+           if (arr[item].filedName === '标签尺寸') {
+             islib = true
+           } else {
+             islib = false
+           }
+         }
+         if (arr[item].value === undefined || arr[item].value === null) {
+           arr[item].value = ''
+         }
+       }
+       let pageWidth = 0
+       let pageHeight = 0
+
+       arr.forEach((e, index) => {
+         let title = ''
+         if (e.filedName === '标签尺寸') {
+           title = '标签打印'
+
+         } else {
+           title = '托运单打印'
+         }
+         if (e.filedValue === 'setting') {
+           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
+           LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
+           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
+           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '')
+           pageWidth = e.width
+           pageHeight = e.height
+         } else {
+           if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
+             // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
+             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+           } else {
+             if (islib) { // 打印标签的是否 特殊处理233和234两个公司  需要添加标题头
+               if (e.companyid === 233 || e.companyid === 234) {
+                 if (e.filedValue !== 'companyName') {
+                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName + ': ' + e.value)
+                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+                 } else {
+                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+                 }
+               } else {
+                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+               }
+             } else {
+               LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+               LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+               LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+             }
+             // LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+             // LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+             // LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+             // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
+             // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
+           }
+         }
+       })
+       LODOP.SET_PRINT_MODE('CATCH_PRINT_STATUS', true)
+
+       if (printer) {
+         LODOP.SET_PRINTER_INDEXA(printer)
+       }
+
+       window.LODOP_PRITERN_CODE = ''
+       LODOP.On_Return = function(TaskID, value) {
+         console.log('On_Return1::', TaskID, value)
+         window.LODOP_PRITERN_CODE = value
+       }
+
+       if (number) {
+         console.log('number', number)
+         LODOP.SET_PRINT_COPIES(number)
+       }
+       if (preview) { // 直接打印不预览
+         var code = LODOP.PRINT()
+       } else { // 打开打印设置弹框
+         // var code = LODOP.PRINTA()
+         var code = LODOP.PREVIEW()
+       }
+       console.log('code', code)
+       setTimeout(() => {
+         resolve()
+       }, 2000)
+       if (!code) {
+         reject()
+       }
+     } catch (err) {
+       reject('LODOP加载失败')
+       getLodop()
+     }
+   })
+ }
+
+ window.CreatePrintPageEnable = CreatePrintPageEnable
+
+ function checkLodopStatus(r, index) {
+   var code = window.LODOP_PRITERN_CODE
+   if (code) {
+     console.log('checkLodopStatus1:', code)
+     LODOP.On_Return = function(TaskID, value) {
+       var code = window.LODOP_PRITERN_CODE
+       console.log('checkLodopStatus2:', TaskID, value, code)
+
+       console.log('PRINT_STATUS_OK:', value)
+       r()
+     }
+     LODOP.GET_VALUE('PRINT_STATUS_OK', window.LODOP_PRITERN_CODE)
+   } else {
+     setTimeout(() => {
+       if (++index < 10) {
+         checkLodopStatus(r, index)
+       } else {
+         r()
+       }
+     }, 200)
+   }
+ }
+
  // 格式化数据
  function formatTableData(obj) {
+   /*  obj.columns.sort((a, b) => {
+      return a.fixed ? -1 : 0
+    }) */
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
-         el[column.prop] = k + 1
+         el['index'] = k + 1
+         el['id'] = k + 1
+         /* if (column.label === '序号') {
+
+         } else {
+
+         } */
        }
        if (typeof el[column.prop] === 'undefined') {
          el[column.prop] = ''
@@ -366,8 +512,196 @@
    return obj
  }
 
+ function SaveExcelByOne(option) {
+   // 旧版代码
+   var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
+   //  var toExcel = new ExportJsonExcel(option) // new
+   toExcel.saveExcel() // 保存
+ }
+
+ function SaveExcelByTwo(option) {
+   // https://github.com/guyonroche/exceljs
+   var workbook = new ExcelJS.Workbook()
+   workbook.creator = '28TMS'
+   workbook.lastModifiedBy = '28TMS'
+   workbook.created = new Date()
+   workbook.modified = new Date()
+   workbook.lastPrinted = new Date()
+
+   // 暂时只处理第一个表格
+   // 如果需要，可以改成遍历表格
+   const data = option.datas[0]
+
+   // 表格名称
+   var worksheet = workbook.addWorksheet('Sheet')
+   // 冻结第一行
+   worksheet.views = [{
+     state: 'frozen',
+     xSplit: 0,
+     ySplit: 1
+   }]
+
+   // 添加过滤器
+   /* worksheet.autoFilter = {
+     from: 'A1',
+     to: 'M1'
+   } */
+   // 定义列样式
+   const columnsStyle = {
+     alignment: {
+       wrapText: true,
+       horizontal: 'center',
+       vertical: 'middle'
+     },
+     border: {
+       top: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       left: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       bottom: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       },
+       right: {
+         style: 'thin',
+         color: {
+           argb: 'FF999999'
+         }
+       }
+     }
+   }
+   const columns = []
+   data.sheetHeader.forEach((el, index) => {
+     columns.push({
+       header: el,
+       key: data.sheetFilter[index] || 'index',
+       width: 15,
+       height: 20,
+       style: columnsStyle
+     })
+   })
+   worksheet.columns = columns
+   /*    worksheet.columns = [
+      { header: 'Index', key: 'Index', width: 15 },
+      { header: 'Title', key: 'title', width: 25, style: { alignment: { wrapText: true }}},
+      { header: 'Authors', key: 'authors', width: 20, style: { alignment: { wrapText: true }}},
+      { header: 'Journal/Conference', key: 'jc', width: 25, style: { alignment: { wrapText: true }}},
+      { header: 'Type', key: 'type', width: 12, style: { alignment: { wrapText: true }}},
+      { header: 'Year', key: 'year', width: 12, style: { numFmt: '0000' }},
+      { header: 'Month', key: 'month', width: 12 },
+      { header: 'volume', key: 'volume', width: 12 },
+      { header: 'number', key: 'number', width: 12 },
+      { header: 'Pages', key: 'pages', width: 12 },
+      { header: 'Location', key: 'location', width: 20, style: { alignment: { wrapText: true }}},
+      { header: 'doi', key: 'doi', width: 22, style: { alignment: { wrapText: true }}},
+      { header: 'affiliation', key: 'affiliation', width: 20, style: { alignment: { wrapText: true }}}
+      ] */
+
+   // 设置第一行标题样式
+   var firstRow = worksheet.getRow(1)
+   firstRow.font = {
+     name: 'MicrosoftYaHei',
+     family: 1,
+     size: 10,
+     bold: true,
+     color: {
+       argb: '80333333'
+     }
+   }
+   firstRow.alignment = {
+     vertical: 'middle',
+     horizontal: 'center'
+   }
+   firstRow.height = 20
+   firstRow.border = {
+     top: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     left: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     bottom: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     },
+     right: {
+       style: 'thin',
+       color: {
+         argb: 'FF999999'
+       }
+     }
+   }
+   firstRow.fill = {
+     type: 'pattern',
+     pattern: 'solid',
+     fgColor: {
+       argb: 'FFCCCCCC'
+     }
+   }
+
+   const datas = []
+
+   data.sheetData.map((el, index) => {
+     const arr = []
+     data.sheetFilter.map(ee => {
+       arr.push(el[ee || 'index'])
+     })
+     datas.push(arr)
+   })
+
+   //  csv.shift();
+   worksheet.addRows(datas)
+   // 添加数据
+
+   // 设置间隔样式
+   // 除第一行外的奇数行设置背景色
+   worksheet.eachRow({
+     includeEmpty: true
+   }, function(row, rowNumber) {
+     //  console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values))
+     if (rowNumber > 1 && rowNumber % 2) {
+       row.fill = {
+         type: 'pattern',
+         pattern: 'solid',
+         fgColor: {
+           argb: 'FFEEEEEE'
+         }
+       }
+     }
+   })
+
+   var buff = workbook.xlsx.writeBuffer().then(function(data) {
+     var blob = new Blob([data], {
+       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+     })
+     saveAs(blob, (option.fileName || '报表') + '.xlsx')
+   })
+
+   console.log('option:::::', option)
+   //global .FileSaver
+ }
+
  // 保存为xls文件
  export function SaveAsFile(obj) {
+   console.log('SaveAsFile:::::', objectMerge2({}, obj))
    obj = formatTableData(obj)
    // 如果是ie10+则用js-export-excel
    // 否则用lodop
@@ -397,19 +731,20 @@
      obj.columns.forEach((column, index) => {
        optionObj.sheetHeader.push(column.label)
        // optionObj.columnWidths.push(column.width || 120)
-       optionObj.sheetFilter.push(column.prop)
-       sumObj[column.prop] = summaries[index]
+       optionObj.sheetFilter.push(column.prop || 'index')
+       sumObj[column.prop || 'index'] = summaries[index]
      })
      obj.data.forEach(el => {
        optionObj.sheetData.push(el)
      })
      optionObj.sheetData.push(sumObj)
      option.datas = [optionObj]
-     var toExcel = new ExportJsonExcel['js-export-excel'](option) // new
-     //  var toExcel = new ExportJsonExcel(option) // new
-     toExcel.saveExcel() // 保存
+
+     //  SaveExcelByOne(option)
+     SaveExcelByTwo(option)
    } else {
      try {
+       // by lyy
        // let tableId = createTable(data, columns) // 重新创建打印视图table
        const tableId = createTable(obj) // 重新创建打印视图table
        LODOP = getLodop()
@@ -464,7 +799,11 @@
    try {
      var LODOP = getLodop()
      if (LODOP.VERSION) {
-       if (LODOP.CVERSION) { alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')') } else { alert('本机已成功安装了Lodop控件！\n 版本号:' + LODOP.VERSION) }
+       if (LODOP.CVERSION) {
+         alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')')
+       } else {
+         alert('本机已成功安装了Lodop控件！\n 版本号:' + LODOP.VERSION)
+       }
      }
    } catch (err) {
      getLodop()

@@ -7,7 +7,7 @@
            <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(indexTag)"></span>
             首页
           </router-link>
-          <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{tag.title}}
+          <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :title="tag.title" :to="tag.fullPath" :key="tag.fullPath"> <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(tag)"></span> {{tag.title}}
             <span class='el-icon-close' title="关闭" @click.prevent.stop='closeSelectedTag(tag)'></span>
           </router-link>
         </div>
@@ -26,7 +26,7 @@
           <router-link tag="li" :class="isActive(indexTag)?'active-menu':''" to="/dashboard">
             <i class="el-icon-check"></i> 首页
           </router-link>
-          <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)" :to="tag.fullPath" :key="tag.fullPath">
+          <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)" :title="tag.title" :to="tag.fullPath" :key="tag.fullPath">
             <i class="el-icon-check"></i> {{tag.title}}
           </router-link>
         </ul>
@@ -53,13 +53,21 @@ export default {
       return this.$store.state.tagsView.visitedViews
     }
   },
+  created() {
+    // 保证直接进入设置了缓存的页面也被存储到
+    this.addViewTags()
+  },
   watch: {
-    $route(newpath, oldpath) {
-      // 如果新的路径是三级路径以上，则不进行加入
-      // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
-      this.addViewTags()
-      this.moveToCurrentTag()
-      // }
+    $route: {
+      handler(newpath, oldpath) {
+        // 如果新的路径是三级路径以上，则不进行加入
+        // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
+        this.addViewTags()
+        this.moveToCurrentTag()
+        // }
+      },
+
+      immediate: false
     },
     visible(value) {
       if (value) {
@@ -268,6 +276,10 @@ export default {
       position: relative;
       height: $tabsHeight;
       line-height: $tabsHeight;
+      max-width:12em;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      overflow: hidden;
       border-right: 2px solid #b8b8b8;
       color: #495060;
       background: #e6e6e6;
@@ -326,6 +338,10 @@ export default {
     li {
       margin: 0;
       padding: 7px 25px;
+      max-width:12em;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      overflow: hidden;
       cursor: pointer;
       position: relative;
       &:hover {

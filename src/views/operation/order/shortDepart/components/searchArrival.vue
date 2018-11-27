@@ -81,12 +81,12 @@ export default {
         // arriveOrgid: '',
         // batchNo: '',
         batchTypeId: 46,
-        // beginTime: '',
+        // beginDate: '',
         // contractNo: '',
         // createTime: '',
         // dirverMobile: '',
         dirverName: '',
-        // endTime: '',
+        // endDate: '',
         // loadTime: '',
         truckIdNumber: ''
         // truckLoad: '',
@@ -109,8 +109,8 @@ export default {
   methods: {
     onSubmit() {
       if (this.searchTime) {
-        this.$set(this.searchForm, 'beginTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
-        this.$set(this.searchForm, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+        this.$set(this.searchForm, 'beginDate', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(this.searchForm, 'endDate', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       // if (this.searchForm.batchTypeId === 46) {
       //   this.searchForm.batchTypeId = undefined

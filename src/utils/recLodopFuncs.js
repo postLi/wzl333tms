@@ -351,6 +351,33 @@ export function SaveAsFileCarrier(obj) {
     getLodop()
   }
 }
+
+export function SaveAsFileGroup(obj) {
+  try {
+    // let tableId = createTable(data, columns) // 重新创建打印视图table
+    const tableId = createGroup(obj.data) // 重新创建打印视图table
+    LODOP = getLodop()
+    LODOP.PRINT_INIT('数据表格')
+    // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
+    LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+    // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
+    LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
+    LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
+    LODOP.SET_SAVE_MODE('Zoom', 100) // Excel文件的页面设置：缩放比例
+    LODOP.SET_SAVE_MODE('CenterHorizontally', true) // Excel文件的页面设置：页面水平居中
+    LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
+    //      LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
+    if (obj.name) {
+      LODOP.SAVE_TO_FILE(obj.name + '_' + (new Date().getTime()) + '.xls')
+    } else {
+      LODOP.SAVE_TO_FILE('新文件名.xls')
+    }
+  } catch (err) {
+    console.log(err);
+    getLodop()
+  }
+}
+
 export function SaveAsFileCustomer(obj) {
   try {
     // let tableId = createTable(data, columns) // 重新创建打印视图table
@@ -719,7 +746,7 @@ function createCarrier(params) {
   for (let i = 0; i < dealInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1">${dealInfo[i].createTime ? dealInfo[i].createTime : ''}</td>
               <td colspan="1">${dealInfo[i].shipSn ? dealInfo[i].shipSn : ''}</td>
               <td colspan="1">${dealInfo[i].oddNumbers ? dealInfo[i].oddNumbers : ''} </td>
@@ -766,7 +793,7 @@ function createCarrier(params) {
   for (let i = 0; i < dealPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1">${dealPayInfo[i].createTime ? dealPayInfo[i].createTime : ''}</td>
               <td colspan="1">${dealPayInfo[i].shipSn ? dealPayInfo[i].shipSn : ''}</td>
               <td colspan="1">${dealPayInfo[i].oddNumbers ? dealPayInfo[i].oddNumbers : ''} </td>
@@ -809,10 +836,10 @@ function createCarrier(params) {
           <td colspan="1">小计</td>
           <td colspan="1">备注</td>
       </tr>`
-  for (let i = 0; i < alreadyInfo.length; i++){
+  for (let i = 0; i < alreadyInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1">${alreadyInfo[i].createTime ? alreadyInfo[i].createTime : ''}</td>
               <td colspan="1">${alreadyInfo[i].shipSn ? alreadyInfo[i].shipSn : ''}</td>
               <td colspan="1">${alreadyInfo[i].oddNumbers ? alreadyInfo[i].oddNumbers : ''} </td>
@@ -856,10 +883,10 @@ function createCarrier(params) {
           <td colspan="1">小计</td>
           <td colspan="1">备注</td>
       </tr>`
-  for (let i = 0; i < alreadyPayInfo.length; i++){
+  for (let i = 0; i < alreadyPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1">${alreadyPayInfo[i].createTime ? alreadyPayInfo[i].createTime : ''}</td>
               <td colspan="1">${alreadyPayInfo[i].shipSn ? alreadyPayInfo[i].shipSn : ''}</td>
               <td colspan="1">${alreadyPayInfo[i].oddNumbers ? alreadyPayInfo[i].oddNumbers : ''} </td>
@@ -922,10 +949,304 @@ function createCarrier(params) {
   return tableId
 }
 
+function createGroup(params) {
+  console.log(params, params)
+  // debugger
+  let dealInfo = []
+  let dealPayInfo = []
+  let alreadyInfo = []
+  let alreadyPayInfo = []
+  params.orgDetailQueryList.forEach(function (el, val) {
+    if (el.type === 1) {
+      dealInfo.push(el)
+    }
+    else if (el.type === 3) {
+      dealPayInfo.push(el)
+    }
+    else if (el.type === 2) {
+      alreadyInfo.push(el)
+    }
+    else {
+      alreadyPayInfo.push(el)
+    }
+  })
+
+  //初始化tmsFinanceBillCheckDto
+  for (var i in params.tmsFinanceBillCheckDto) {
+    params.tmsFinanceBillCheckDto[i] = params.tmsFinanceBillCheckDto[i] === null ? '' : params.tmsFinanceBillCheckDto[i]
+  }
+  //初始化dealInfo
+  const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
+  const div = document.createElement('div')
+  const infoDiv = document.createElement('font')
+  infoDiv.setAttribute('size', '2')
+  const table = document.createElement('table')
+  div.id = tableId
+  const thead = document.createElement('thead')
+  const tbody = document.createElement('tbody')
+  table.style.border = '1px solid #ff000';
+  table.setAttribute('border', '1')
+  table.setAttribute('font', '12px')
+  table.setAttribute('width', '1800')
+  table.setAttribute('table-layout', 'fixed')
+  tbody.setAttribute('style', "text-align:center;")
+  var theadStr = ''
+  // 标题
+  theadStr = `
+    <tr>
+      <td colspan="16" style="text-align: center;border:1px double red;margin-left: -1px;margin-top: -1px;height:60px;font-weight: 500;font-size: 14px" >${params.tmsFinanceBillCheckDto.checkBillName}</td>
+    </tr>
+   `
+  let tbodyStr = ` <tr>
+    <td>对账网点 </td>
+    <td>${params.tmsFinanceBillCheckDto.memberName}</td>
+    <td>负责人</td>
+    <td >${params.tmsFinanceBillCheckDto.memberPerson}</td>
+    <td>联系方式</td>
+    <td >${params.tmsFinanceBillCheckDto.memberPersonPhone}</td>
+    <td>对账单编号 </td>
+    <td >${params.tmsFinanceBillCheckDto.checkBillCode}</td>
+    <td>开始时间</td>
+    <td colspan="3">${params.tmsFinanceBillCheckDto.checkStartTime}</td>
+    <td>结束时间 </td>
+    <td colspan="3">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
+  </tr>
+  <tr>
+    <td>账户账号</td>
+    <td colspan="2">${params.tmsFinanceBillCheckDto.bankAccount}</td>
+    <td>账户开户行 </td>
+    <td colspan="2">${params.tmsFinanceBillCheckDto.bankName}</td>
+    <td>支付宝 </td>
+    <td colspan="2">${params.tmsFinanceBillCheckDto.alipayAccount}</td>
+    <td>微信</td>
+    <td colspan="6">${params.tmsFinanceBillCheckDto.wechatAccount}</td>
+  </tr>`
+  //dealInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="16" bgcolor="yellow" align="left">已收 (应收账款) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td>序号</td>
+          <td>发车时间</td>
+          <td>车牌号码</td>
+          <td>司机姓名</td>
+          <td>发车批次</td>
+          <td>合同编号</td>
+          <td>到达网点</td>
+          <td>到付款</td>
+          <td>代收货款</td>
+          <td>操作费</td>
+          <td>配载总件数</td>
+          <td>配载总体积</td>
+          <td>配载总重量</td>
+          <td>备注</td>
+      </tr>`
+
+  for (let i = 0; i < dealInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i + 1}</td>
+              <td colspan="1">${dealInfo[i].departureTime ? dealInfo[i].departureTime : ''}</td>
+              <td colspan="1">${dealInfo[i].truckIdNumber ? dealInfo[i].truckIdNumber : ''}</td>
+              <td colspan="1">${dealInfo[i].dirverName ? dealInfo[i].dirverName : ''} </td>
+              <td colspan="1">${dealInfo[i].batchNo ? dealInfo[i].batchNo : ''}</td>
+              <td colspan="1">${dealInfo[i].contractNo ? dealInfo[i].contractNo : ''}</td>
+              <td colspan="1">${dealInfo[i].arriveOrgName ? dealInfo[i].arriveOrgName : ''}</td>
+              <td colspan="1">${dealInfo[i].shipArrivepayFee ? dealInfo[i].shipArrivepayFee : ''}</td>
+              <td colspan="1">${dealInfo[i].agencyFund ? dealInfo[i].agencyFund : ''}</td>
+              <td colspan="1">${dealInfo[i].handlingFeeReceivable ? dealInfo[i].handlingFeeReceivable : ''}</td>
+              <td colspan="1">${dealInfo[i].loadAmountall ? dealInfo[i].loadAmountall : ''}</td>
+              <td colspan="1">${dealInfo[i].loadVolumeall ? dealInfo[i].loadVolumeall : ''}</td>
+              <td colspan="1">${dealInfo[i].loadWeightall ? dealInfo[i].loadWeightall : ''}</td>
+              <td colspan="1">${dealInfo[i].remark ? dealInfo[i].remark : ''}</td>
+            </tr>
+    `
+  }
+  //dealInfo
+  //dealPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">未收 (应收账款) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+          <td>序号</td>
+          <td>发车时间</td>
+          <td>车牌号码</td>
+          <td>司机姓名</td>
+          <td>发车批次</td>
+          <td>合同编号</td>
+          <td>到达网点</td>
+          <td>到付款</td>
+          <td>代收货款</td>
+          <td>操作费</td>
+          <td>配载总件数</td>
+          <td>配载总体积</td>
+          <td>配载总重量</td>
+          <td>备注</td>
+      </tr>`
+  // tbodyStr = tbodyStr
+  for (let i = 0; i < dealPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i + 1}</td>
+              <td colspan="1">${dealPayInfo[i].departureTime ? dealPayInfo[i].departureTime : ''}</td>
+              <td colspan="1">${dealPayInfo[i].truckIdNumber ? dealPayInfo[i].truckIdNumber : ''}</td>
+              <td colspan="1">${dealPayInfo[i].dirverName ? dealPayInfo[i].dirverName : ''} </td>
+              <td colspan="1">${dealPayInfo[i].batchNo ? dealPayInfo[i].batchNo : ''}</td>
+              <td colspan="1">${dealPayInfo[i].contractNo ? dealPayInfo[i].contractNo : ''}</td>
+              <td colspan="1">${dealPayInfo[i].arriveOrgName ? dealPayInfo[i].arriveOrgName : ''}</td>
+              <td colspan="1">${dealPayInfo[i].shipArrivepayFee ? dealPayInfo[i].shipArrivepayFee : ''}</td>
+              <td colspan="1">${dealPayInfo[i].agencyFund ? dealPayInfo[i].agencyFund : ''}</td>
+              <td colspan="1">${dealPayInfo[i].handlingFeeReceivable ? dealPayInfo[i].handlingFeeReceivable : ''}</td>
+              <td colspan="1">${dealPayInfo[i].loadAmountall ? dealPayInfo[i].loadAmountall : ''}</td>
+              <td colspan="1">${dealPayInfo[i].loadVolumeall ? dealPayInfo[i].loadVolumeall : ''}</td>
+              <td colspan="1">${dealPayInfo[i].loadWeightall ? dealPayInfo[i].loadWeightall : ''}</td>
+              <td colspan="1">${dealPayInfo[i].remark ? dealPayInfo[i].remark : ''}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="16" bgcolor="yellow" align="left">已付(应付账款) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1">序号</td>
+          <td colspan="1">发车时间</td>
+          <td colspan="1">车牌号码</td>
+          <td colspan="1">司机姓名</td>
+          <td colspan="1">发车批次</td>
+          <td colspan="1">合同编号</td>
+          <td colspan="1">到达网点</td>
+          <td colspan="1">操作费</td>
+          <td colspan="1">到站装卸费</td>
+          <td colspan="1">到站其他费</td>
+          <td colspan="1">到付运费</td>
+          <td colspan="1">到付油卡</td>
+          <td colspan="1">配载总件数</td>
+          <td colspan="1">配载总体积</td>
+          <td colspan="1">配载总重量</td>
+          <td colspan="1">备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i + 1}</td>
+              <td colspan="1">${alreadyInfo[i].departureTime ? alreadyInfo[i].departureTime : ''}</td>
+              <td colspan="1">${alreadyInfo[i].truckIdNumber ? alreadyInfo[i].truckIdNumber : ''}</td>
+              <td colspan="1">${alreadyInfo[i].dirverName ? alreadyInfo[i].dirverName : ''} </td>
+              <td colspan="1">${alreadyInfo[i].batchNo ? alreadyInfo[i].batchNo : ''}</td>
+              <td colspan="1">${alreadyInfo[i].contractNo ? alreadyInfo[i].contractNo : ''}</td>
+              <td colspan="1">${alreadyInfo[i].arriveOrgName ? alreadyInfo[i].arriveOrgName : ''}</td>
+              <td colspan="1">${alreadyInfo[i].handlingFeePayable ? alreadyInfo[i].handlingFeePayable : ''}</td>
+              <td colspan="1">${alreadyInfo[i].arriveHandlingFee ? alreadyInfo[i].arriveHandlingFee : ''}</td>
+              <td colspan="1">${alreadyInfo[i].arriveOtherFee ? alreadyInfo[i].arriveOtherFee : ''}</td>
+              <td colspan="1">${alreadyInfo[i].abnormalAmount ? alreadyInfo[i].abnormalAmount : ''}</td>
+              <td colspan="1">${alreadyInfo[i].registerFee ? alreadyInfo[i].registerFee : ''}</td>
+              <td colspan="1">${alreadyInfo[i].arrivepayCarriage ? alreadyInfo[i].arrivepayCarriage : ''}</td>
+              <td colspan="1">${alreadyInfo[i].arrivepayOilCard ? alreadyInfo[i].arrivepayOilCard : ''}</td>
+              <td colspan="1">${alreadyInfo[i].loadAmountall ? alreadyInfo[i].loadAmountall : ''}</td>
+              <td colspan="1">${alreadyInfo[i].loadVolumeall ? alreadyInfo[i].loadVolumeall : ''}</td>
+              <td colspan="1">${alreadyInfo[i].loadWeightall ? alreadyInfo[i].loadWeightall : ''}</td>
+              <td colspan="1">${alreadyInfo[i].remark ? alreadyInfo[i].remark : ''}</td>
+            </tr>
+    `
+  }
+  //dealPayInfo
+  //alreadyPayInfo
+  tbodyStr = tbodyStr + `
+    <tr>
+        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">未付 (应付账款) </td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `<tr>
+          <td colspan="1">序号</td>
+          <td colspan="1">发车时间</td>
+          <td colspan="1">车牌号码</td>
+          <td colspan="1">司机姓名</td>
+          <td colspan="1">发车批次</td>
+          <td colspan="1">合同编号</td>
+          <td colspan="1">到达网点</td>
+          <td colspan="1">操作费</td>
+          <td colspan="1">到站装卸费</td>
+          <td colspan="1">到站其他费</td>
+          <td colspan="1">到付运费</td>
+          <td colspan="1">到付油卡</td>
+          <td colspan="1">配载总件数</td>
+          <td colspan="1">配载总体积</td>
+          <td colspan="1">配载总重量</td>
+          <td colspan="1">备注</td>
+      </tr>`
+  for (let i = 0; i < alreadyPayInfo.length; i++) {
+    tbodyStr += `
+             <tr>
+              <td colspan="1">${i + 1}</td>
+              <td colspan="1">${alreadyPayInfo[i].departureTime ? alreadyPayInfo[i].departureTime : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].truckIdNumber ? alreadyPayInfo[i].truckIdNumber : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].dirverName ? alreadyPayInfo[i].dirverName : ''} </td>
+              <td colspan="1">${alreadyPayInfo[i].batchNo ? alreadyPayInfo[i].batchNo : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].contractNo ? alreadyPayInfo[i].contractNo : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].arriveOrgName ? alreadyPayInfo[i].arriveOrgName : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].handlingFeePayable ? alreadyPayInfo[i].handlingFeePayable : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].arriveHandlingFee ? alreadyPayInfo[i].arriveHandlingFee : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].arriveOtherFee ? alreadyPayInfo[i].arriveOtherFee : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].arrivepayCarriage ? alreadyPayInfo[i].arrivepayCarriage : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].arrivepayOilCard ? alreadyPayInfo[i].arrivepayOilCard : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].loadAmountall ? alreadyPayInfo[i].loadAmountall : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].loadVolumeall ? alreadyPayInfo[i].loadVolumeall : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].loadWeightall ? alreadyPayInfo[i].loadWeightall : ''}</td>
+              <td colspan="1">${alreadyPayInfo[i].remark ? alreadyPayInfo[i].remark : ''}</td>
+            </tr>
+    `
+  }
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >备注</td>
+      <td colspan="15">${params.tmsFinanceBillCheckDto.remark}</td>
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td colspan="16" bgcolor="yellow">若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</td>
+      
+    </tr>
+  `
+  tbodyStr = tbodyStr + `
+    <tr>
+      <td >网点</td>
+      <td colspan="2">${params.tmsFinanceBillCheckDto.orgName}</td>
+      <td >业务负责人</td>
+      <td colspan="2">${params.tmsFinanceBillCheckDto.orgBusinessOfficer}</td>
+      <td >联系方式</td>
+      <td>${params.tmsFinanceBillCheckDto.orgBusinessOfficerPhone}</td>
+      <td >财务负责人</td>
+      <td colspan="2">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
+      <td>财务联系电话</td>
+      <td>${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
+      <td>时间</td>
+      <td colspan="2">${params.tmsFinanceBillCheckDto.createTime}</td>
+     </tr>
+  `
+
+  tbody.innerHTML = tbodyStr
+  div.appendChild(infoDiv)
+  thead.innerHTML = theadStr
+  table.appendChild(thead)
+  table.appendChild(tbody)
+  infoDiv.appendChild(table)
+  div.appendChild(infoDiv)
+  document.body.appendChild(div)
+  return tableId
+}
 
 //客户
 function createCustomer(params) {
-  console.log(params,params.tmsFinanceBillCheckDto.companyName)
+  console.log(params, params.tmsFinanceBillCheckDto.companyName)
   let dealInfo = []
   let dealPayInfo = []
   let alreadyInfo = []
@@ -1037,7 +1358,7 @@ function createCustomer(params) {
   for (let i = 0; i < dealInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${dealInfo[i].createTime ? dealInfo[i].createTime : ''}</td>
               <td colspan="1" >${dealInfo[i].shipSn ? dealInfo[i].shipSn : ''}</td>
               <td colspan="1"  >${dealInfo[i].shipGoodsSn ? dealInfo[i].shipGoodsSn : ''} </td>
@@ -1047,14 +1368,14 @@ function createCustomer(params) {
               <td colspan="1" >${dealInfo[i].cargoAmount ? dealInfo[i].cargoAmount : ''}</td>
               <td colspan="1" >${dealInfo[i].cargoWeight ? dealInfo[i].cargoWeight : ''}</td>
               <td colspan="1" >${dealInfo[i].cargoVolume ? dealInfo[i].cargoVolume : ''}</td>
-              <td colspan="1" >${dealInfo[i].shipDeliveryMethod ? dealInfo[i].shipDeliveryMethod :''}</td>
+              <td colspan="1" >${dealInfo[i].shipDeliveryMethod ? dealInfo[i].shipDeliveryMethod : ''}</td>
               <td colspan="1" >${dealInfo[i].unusualRemark ? dealInfo[i].unusualRemark : ''}</td>
               <td colspan="1" >${dealInfo[i].shipPayWay ? dealInfo[i].shipPayWay : ''}</td>
               <td colspan="1" >${dealInfo[i].unusualFee ? dealInfo[i].unusualFee : ''}</td>
               <td colspan="1" >${dealInfo[i].shipReceiptpayFee ? dealInfo[i].shipReceiptpayFee : ''}</td>
               <td colspan="1" >${dealInfo[i].shipMonthpayFee ? dealInfo[i].shipMonthpayFee : ''}</td>
               <td colspan="1" >${dealInfo[i].totalFee ? dealInfo[i].totalFee : ''}</td>
-              <td colspan="1" >${dealInfo[i].remark ? dealInfo[i].remark :''}</td>
+              <td colspan="1" >${dealInfo[i].remark ? dealInfo[i].remark : ''}</td>
             </tr>
     `
   }
@@ -1089,7 +1410,7 @@ function createCustomer(params) {
   for (let i = 0; i < dealPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${dealPayInfo[i].createTime ? dealPayInfo[i].createTime : ''}</td>
               <td colspan="1" >${dealPayInfo[i].shipSn ? dealPayInfo[i].shipSn : ''}</td>
               <td colspan="1" >${dealPayInfo[i].shipGoodsSn ? dealPayInfo[i].shipGoodsSn : ''} </td>
@@ -1140,7 +1461,7 @@ function createCustomer(params) {
   for (let i = 0; i < alreadyInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${alreadyInfo[i].createTime ? alreadyInfo[i].createTime : ''}</td>
               <td colspan="1" >${alreadyInfo[i].shipSn ? alreadyInfo[i].shipSn : ''}</td>
               <td colspan="1" >${alreadyInfo[i].shipGoodsSn ? alreadyInfo[i].shipGoodsSn : ''} </td>
@@ -1191,7 +1512,7 @@ function createCustomer(params) {
   for (let i = 0; i < alreadyPayInfo.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${alreadyPayInfo[i].createTime ? alreadyPayInfo[i].createTime : ''}</td>
               <td colspan="1" >${alreadyPayInfo[i].shipSn ? alreadyPayInfo[i].shipSn : ''}</td>
               <td colspan="1" >${alreadyPayInfo[i].shipGoodsSn ? alreadyPayInfo[i].shipGoodsSn : ''} </td>
@@ -1256,10 +1577,9 @@ function createCustomer(params) {
 }
 
 
-
 //短驳
 function createCarfeefeeShort(params) {
-  console.log(params,params.payDetailList)
+  console.log(params, params.payDetailList)
 
   //初始化tmsFinanceBillCheckDto
   for (var i in params) {
@@ -1343,7 +1663,7 @@ function createCarfeefeeShort(params) {
 
     tbodyStr += `
              <tr>
-              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${i + 1}</td>
               <td colspan="1" >${params.payDetailList[i].departureTime ? params.payDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.payDetailList[i].batchNo ? params.payDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.payDetailList[i].orgName ? params.payDetailList[i].orgName : ''}</td>
@@ -1381,7 +1701,7 @@ function createCarfeefeeShort(params) {
   for (let i = 0; i < params.hadPayDetailList.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${params.hadPayDetailList[i].departureTime ? params.hadPayDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].batchNo ? params.hadPayDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].orgName ? params.hadPayDetailList[i].orgName : ''}</td>
@@ -1441,7 +1761,7 @@ function createCarfeefeeShort(params) {
 
 //干线
 function createCarfeefeeArt(params) {
-  console.log(params,params.payDetailList)
+  console.log(params, params.payDetailList)
 
   //初始化tmsFinanceBillCheckDto
   for (var i in params) {
@@ -1532,13 +1852,13 @@ function createCarfeefeeArt(params) {
 
     tbodyStr += `
              <tr>
-              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${i + 1}</td>
               <td colspan="1" >${params.payDetailList[i].departureTime ? params.payDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.payDetailList[i].batchNo ? params.payDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.payDetailList[i].contractNo ? params.payDetailList[i].contractNo : ''} </td>
               <td colspan="1" >${params.payDetailList[i].orgName ? params.payDetailList[i].orgName : ''}</td>
               <td colspan="1" >${params.payDetailList[i].arriveOrgName ? params.payDetailList[i].arriveOrgName : ''}</td>
-              <td colspan="1" >${params.payDetailList[i].driverName ? params.payDetailList[i].driverName: ''}</td>
+              <td colspan="1" >${params.payDetailList[i].driverName ? params.payDetailList[i].driverName : ''}</td>
               <td colspan="1" >${params.payDetailList[i].loadAmount ? params.payDetailList[i].loadAmount : ''}</td>
               <td colspan="1" >${params.payDetailList[i].loadWeight ? params.payDetailList[i].loadWeight : ''}</td>
               <td colspan="1" >${params.payDetailList[i].loadVolume ? params.payDetailList[i].loadVolume : ''}</td>
@@ -1584,7 +1904,7 @@ function createCarfeefeeArt(params) {
   for (let i = 0; i < params.hadPayDetailList.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${params.hadPayDetailList[i].departureTime ? params.hadPayDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].batchNo ? params.hadPayDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].contractNo ? params.hadPayDetailList[i].contractNo : ''} </td>
@@ -1600,7 +1920,7 @@ function createCarfeefeeArt(params) {
               <td colspan="1" >${params.hadPayDetailList[i].backCardPay ? params.hadPayDetailList[i].backCardPay : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].arrSendPay ? params.hadPayDetailList[i].arrSendPay : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].arrCardPay ? params.hadPayDetailList[i].arrCardPay : ''}</td>
-              <td colspan="1" >${params.hadPayDetailList[i].totalPay ? params.hadPayDetailList[i].totalPay: ''}</td>
+              <td colspan="1" >${params.hadPayDetailList[i].totalPay ? params.hadPayDetailList[i].totalPay : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].remark ? params.hadPayDetailList[i].remark : ''}</td>
             </tr>
     `
@@ -1651,7 +1971,7 @@ function createCarfeefeeArt(params) {
 
 //送货
 function createCarfeefeeDeliver(params) {
-  console.log(params,params.payDetailList)
+  console.log(params, params.payDetailList)
 
   //初始化tmsFinanceBillCheckDto
   for (var i in params) {
@@ -1734,7 +2054,7 @@ function createCarfeefeeDeliver(params) {
 
     tbodyStr += `
              <tr>
-              <td colspan="1" >${i+1}</td>
+              <td colspan="1" >${i + 1}</td>
               <td colspan="1" >${params.payDetailList[i].departureTime ? params.payDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.payDetailList[i].batchNo ? params.payDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.payDetailList[i].driverName ? params.payDetailList[i].driverName : ''}</td>
@@ -1770,7 +2090,7 @@ function createCarfeefeeDeliver(params) {
   for (let i = 0; i < params.hadPayDetailList.length; i++) {
     tbodyStr += `
              <tr>
-              <td colspan="1">${i+1}</td>
+              <td colspan="1">${i + 1}</td>
               <td colspan="1" >${params.hadPayDetailList[i].departureTime ? params.hadPayDetailList[i].departureTime : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].batchNo ? params.hadPayDetailList[i].batchNo : ''}</td>
               <td colspan="1" >${params.hadPayDetailList[i].driverName ? params.hadPayDetailList[i].driverName : ''}</td>

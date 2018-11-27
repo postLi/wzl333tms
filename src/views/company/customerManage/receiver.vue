@@ -209,6 +209,8 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo.orgid = obj.orgid
       this.searchQuery.vo.customerMobile = obj.mobile
       this.searchQuery.vo.customerName = obj.name

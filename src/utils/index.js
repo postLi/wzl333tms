@@ -1,9 +1,15 @@
 /**
- * Created by jiachenpan on 16/11/18.
+ * Created by lyy
  */
-import { Message, MessageBox } from 'element-ui'
+import {
+  getUsername
+} from '@/utils/auth'
+import {
+  Message,
+  MessageBox
+} from 'element-ui'
 
-const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
+const shouldCalcProperty = ['_index|1|单', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
 /**
  * 根据列表数据计算合计值
  * @param {*} param 列表数据
@@ -13,11 +19,14 @@ const shouldCalcProperty = ['_index|1|单', 'nowPayFee', 'finishNowPayFee', 'not
  * _index|索引（|单位）
  */
 export function getSummaries(param, propsArr) {
-  const { columns, data } = param
+  const {
+    columns,
+    data
+  } = param
   const sums = []
+
   // 获取需要计算的属性值列表
   propsArr = propsArr || shouldCalcProperty
-
   // console.log(columns, data)
   columns.forEach((column, index) => {
     if (index === 0) {
@@ -176,7 +185,9 @@ export function getByteLen(val) {
   for (let i = 0; i < val.length; i++) {
     if (val[i].match(/[^\x00-\xff]/ig) != null) {
       len += 1
-    } else { len += 0.5 }
+    } else {
+      len += 0.5
+    }
   }
   return Math.floor(len)
 }
@@ -200,7 +211,7 @@ export function param(json) {
   return cleanArray(Object.keys(json).map(key => {
     if (json[key] === undefined) return ''
     return encodeURIComponent(key) + '=' +
-            encodeURIComponent(json[key])
+      encodeURIComponent(json[key])
   })).join('&')
 }
 
@@ -246,27 +257,27 @@ export function objectMerge2() {
   var copy
   var copyIsArray
   var clone
-  var target = arguments[ 0 ] || {}
+  var target = arguments[0] || {}
   var i = 1
-  var	length = arguments.length
-  var	deep = true
+  var length = arguments.length
+  var deep = true
   var obj = {}
 
-	// 是否深层拷贝可以通过第一个参数控制
+  // 是否深层拷贝可以通过第一个参数控制
   if (typeof target === 'boolean') {
     deep = target
 
-		// 往前移，去获取要合并的对象信息
-    target = arguments[ i ] || {}
+    // 往前移，去获取要合并的对象信息
+    target = arguments[i] || {}
     i++
   }
 
-	// 当合并对象为其它类型的值时，则忽略
+  // 当合并对象为其它类型的值时，则忽略
   if (typeof target !== 'object' && !(typeof target === 'function')) {
     target = {}
   }
 
-	// 当只传了一个参数过来时
+  // 当只传了一个参数过来时
   if (i === length) {
     // 当仅传一个参数时
     target = Array.isArray(target) ? [] : {}
@@ -274,21 +285,21 @@ export function objectMerge2() {
   }
 
   for (; i < length; i++) {
-		// 合并对象必须为非null或者undefined值
-    if ((options = arguments[ i ]) != null) {
-			// Extend the base object
+    // 合并对象必须为非null或者undefined值
+    if ((options = arguments[i]) != null) {
+      // Extend the base object
       for (name in options) {
-        src = target[ name ]
-        copy = options[ name ]
+        src = target[name]
+        copy = options[name]
 
         // 避免循环引用的copy情况
         if (target === copy) {
           continue
         }
 
-          // 当为数组或者对象时处理深层拷贝
+        // 当为数组或者对象时处理深层拷贝
         if (deep && copy && (obj.toString.call(copy) === '[object Object]' ||
-              (copyIsArray = Array.isArray(copy)))) {
+            (copyIsArray = Array.isArray(copy)))) {
           if (copyIsArray) {
             copyIsArray = false
             clone = src && Array.isArray(src) ? src : []
@@ -296,18 +307,18 @@ export function objectMerge2() {
             clone = src && obj.toString.call(src) ? src : {}
           }
 
-                // 不要修改原有的数据
-          target[ name ] = objectMerge2(deep, clone, copy)
+          // 不要修改原有的数据
+          target[name] = objectMerge2(deep, clone, copy)
 
-            // undefined值不用传递过去
+          // undefined值不用传递过去
         } else if (copy !== undefined) {
-          target[ name ] = copy
+          target[name] = copy
         }
       }
     }
   }
 
-	// Return the modified object
+  // Return the modified object
   return target
 }
 
@@ -346,13 +357,13 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
       // for in循环会被跳过，不执行for in循环
       for (name in options) {
-          // src用于判断target对象是否存在name属性
+        // src用于判断target对象是否存在name属性
         src = target[name]
         // copy用于复制
         copy = options[name]
@@ -564,40 +575,39 @@ export const pickerOptions2 = [{
   }
 }]
 
-export const pickerOptions = [
-  {
-    text: '今天',
-    onClick(picker) {
-      const end = new Date()
-      const start = new Date(new Date().toDateString())
-      end.setTime(start.getTime())
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一周',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近三个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
-  }]
+export const pickerOptions = [{
+  text: '今天',
+  onClick(picker) {
+    const end = new Date()
+    const start = new Date(new Date().toDateString())
+    end.setTime(start.getTime())
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近一周',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近一个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+    picker.$emit('pick', [start, end])
+  }
+}, {
+  text: '最近三个月',
+  onClick(picker) {
+    const end = new Date(new Date().toDateString())
+    const start = new Date()
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+    picker.$emit('pick', [start, end])
+  }
+}]
 
 export function getTime(type) {
   if (type === 'start') {
@@ -766,18 +776,18 @@ export function loadJs(src, callback) {
 
     script.onload = script.onreadystatechange = function() {
       if (!script.readyState || /loaded|complete/.test(script.readyState)) {
-      // Handle memory leak in IE
+        // Handle memory leak in IE
         script.onload = script.onreadystatechange = null
 
-      // Remove the script
+        // Remove the script
         if (head && script.parentNode) {
           head.removeChild(script)
         }
 
-      // Dereference the script
+        // Dereference the script
         script = undefined
 
-      // Callback if not abort
+        // Callback if not abort
         if (callback) {
           callback()
         }
@@ -798,6 +808,7 @@ export function loadJs(src, callback) {
 export const tmsMath = {
   _result: 0,
   _isCalc: false,
+  // 加法
   _add(a, b) {
     var c, d, e
     try {
@@ -812,6 +823,11 @@ export const tmsMath = {
     }
     return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) + this._mul(b, e)) / e
   },
+  /**
+   * 减法
+   * @param {*} a 被减数
+   * @param {*} b 减数
+   */
   _sub(a, b) {
     var c, d, e
     try {
@@ -826,6 +842,9 @@ export const tmsMath = {
     }
     return e = Math.pow(10, Math.max(c, d)), (this._mul(a, e) - this._mul(b, e)) / e
   },
+  /**
+   * 乘法
+   */
   _mul(a, b) {
     // console.log(a, b)
     var c = 0,
@@ -840,6 +859,9 @@ export const tmsMath = {
     } catch (f) {}
     return Number(d.replace('.', '')) * Number(e.replace('.', '')) / Math.pow(10, c)
   },
+  /**
+   * 除法
+   */
   _div(a, b) {
     var c, d, e = 0,
       f = 0
@@ -917,6 +939,7 @@ export const uniqueArray = (array, key) => {
     const item = array[i]
     let repeat = false
     for (let j = 0; j < result.length; j++) {
+      console.log(result)
       if (item[key] === result[j][key]) {
         repeat = true
         break
@@ -932,6 +955,10 @@ export const uniqueArray = (array, key) => {
  * 缓存开发环境的一些操作数据
  * @param {*} pfix 缓存前缀
  * @param {*} data 缓存数据
+ * update:
+ * 增加用户名；
+ * 改进数据结构，改为栈结构，先进先出，方便浏览
+ * 修正浏览顺序，小于两位补0
  */
 export function cacheDEVInfo(pfix, data) {
   // 如果是非正式环境，缓存最近50条js报错信息
@@ -944,35 +971,41 @@ export function cacheDEVInfo(pfix, data) {
     var maxlen = 50
     var find = false
     var date1 = new Date()
+    var hadData = []
 
     // 第一遍查找空位，有就插进去
     for (var i = 0; i < maxlen; i++) {
-      if (!lc.getItem(pfix + i)) {
-        lc.setItem(pfix + i, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
+      var n = i < 10 ? '0' + i : i
+      if (!lc.getItem(pfix + n)) {
+        // lc.setItem(pfix + n, (+date1) + '||' + date1.toLocaleString() + ' || ' + getUsername() + ' || ' + data)
         find = true
         break
+      } else {
+        hadData.push(lc.getItem(pfix + n))
       }
     }
-    // 第二遍找旧值，有就插进去
+    // 插进去
+    hadData.unshift((+date1) + '||' + date1.toLocaleString() + ' || ' + getUsername() + ' || ' + data)
     if (!find) {
-      for (var j = 0; j < maxlen; j++) {
-        var fd = lc.getItem(pfix + j).split('||')
-        if (j < (maxlen - 1)) {
-          var fd2 = lc.getItem(pfix + (j + 1)).split('||')
-          if ((+fd2[0]) > (+fd[0])) {
-            lc.setItem(pfix + j, (+date1) + '||' + date1.toLocaleString() + ' || ' + data)
-            break
-          }
-        } else {
-          // 如果是最后一条，则直接替换更新
-          lc.setItem(pfix + j, (+date1) + ' || ' + date1.toLocaleString() + '||' + data)
-          break
-        }
-      }
+      // 如果已经填满，则删除最后一位
+      hadData = hadData.slice(0, maxlen)
     }
+    setCacheDEVInfo(hadData, pfix)
   } catch (err) {
     console.log('转换数据出错了：', err, data)
   }
+}
+
+function setCacheDEVInfo(data, pfix) {
+  // 如果是非正式环境，缓存最近50条js报错信息
+  // 正式环境下只用sessionStorage缓存
+  var is28tms = window.location.host.indexOf('28tms.cn') !== -1
+  var lc = is28tms ? window.sessionStorage : window.localStorage
+  data = data || []
+  data.map((el, i) => {
+    var n = i < 10 ? '0' + i : i
+    lc.setItem(pfix + n, el)
+  })
 }
 
 export function handleErrorMsg(err, premsg = '') {

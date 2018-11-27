@@ -361,7 +361,7 @@ export default {
       loading: true,
       searchQuery: {
         'currentPage': 1,
-        'pageSize': 10000,
+        'pageSize': 100,
         'vo': {
           'pageType': 3,
           'receiptIds': [],
@@ -581,8 +581,11 @@ export default {
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      this.fetchData()
     },
     getSearchParam(searchParam) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       objectMerge2(this.searchQuery.vo, searchParam)
       this.fetchAllreceipt()
     },

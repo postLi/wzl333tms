@@ -206,8 +206,11 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
       handlePageChange(obj) {
         this.searchQuery.currentPage = obj.pageNum
         this.searchQuery.pageSize = obj.pageSize
+        this.fetchData()
       },
       getSearchParam(obj) {
+        this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+        this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
         this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
         this.fetchAllCustomer()
       },
@@ -346,14 +349,14 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
             PrintInFullPage({
               data: this.usersArr, // 列表中的数据
               columns: this.tableColumn, // 表格设置好的列
-              name: '全部对账单' // 文件名称
+              name: '干线对账' // 文件名称
             })
             break
           case 'export': // 导出表格常用方法
             SaveAsFile({
               data: this.usersArr, // 列表中的数据
               columns: this.tableColumn, // 表格设置好的列
-              name: '全部对账单' // 文件名称
+              name: '干线对账' // 文件名称
             })
             break
         }

@@ -1,7 +1,7 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" v-loading="loading" class="trackInfoPop">
     <template slot="content">
-      <div class="info_box" v-loading="loading">
+      <div class="info_box_transfer" >
         <el-row class="stepItem_title">
           <el-col :span="5" class="tracktype">类型</el-col>
           <el-col :span="4">操作时间</el-col>
@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       popTitle: '在途跟踪',
-      loading: false,
+      loading: true,
       isModify: false,
       infoId: {},
       trackDetail: [],
@@ -177,6 +177,7 @@ export default {
       const shipId = this.shipId
       order.getShipTrackinfo(shipId).then(data => {
         this.trackDetail = data
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -251,6 +252,7 @@ export default {
         this.isModify = false
         this.$refs['formModel'].resetFields()
         this.formModel = this.$options.data().formModel
+        this.getSystemTime()
       })
     },
     // 取消高亮样式
@@ -282,17 +284,28 @@ export default {
 
 .trackInfoPop {
   width: 1000px !important;
+  .el-tabs{
+    height: 100%;
+    .el-tabs__content{
+      height: calc(100%);
+      .el-tab-pane{
+        height: calc(100% - 90px);
+      }
+    }
+  }
 }
 
 .editInfoPop_content {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
-.info_box {
-  margin: 10px 10px 0 10px;
+.info_box_transfer {
+  padding: 10px 10px 0 10px;
   display: flex;
   flex-direction: column;
+  height: 100%;
   /* 覆盖ele样式 */
   .el-form--inline .el-form-item {
     margin-bottom: 0;

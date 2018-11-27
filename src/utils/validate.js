@@ -127,10 +127,13 @@ export const REGEX = {
   NUM_POINT2: /^0\.\d\d?$/,
   // 支持百分比
   NUM_PERCENTAGE: /^([1-9]{1}[0-9]{0,1}|0|100)(.\d{1,2}){0,1}%$/,
+  FNumber: /^\d{4}$/,
+  // FNumber: /^[1-9]\d{5}$/,
+
   /**
    * 获取字符长度
    */
-  strlen: function(str) {
+  strlen: function (str) {
     var s = 0
     for (var i = 0; i < str.length; i++) {
       if (str.charAt(i).match(/[\u0391-\uFFE5]/)) {

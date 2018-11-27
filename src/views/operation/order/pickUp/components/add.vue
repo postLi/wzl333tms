@@ -30,8 +30,8 @@
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <el-input v-model="form.tmsOrderPickup.pickupAmount" v-numberOnly auto-complete="off" :disabled="isDbclick"
-                      :maxlength="8"></el-input>
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupAmount" @change="(e)=>{setInputVal(e.target.value, 'pickupAmount')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only type="text">
           </el-form-item>
           <el-form-item label="体积" prop="">
             <input class="nativeinput" :value="form.tmsOrderPickup.pickupVolume" @change="(e)=>{setInputVal(e.target.value, 'pickupVolume')}" :maxlength="8" auto-complete="off" clearable
@@ -52,7 +52,7 @@
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" class="pickup-way"
                         :disabled="isDbclick"/>
           </el-form-item>
-          <el-form-item label="到达城市" class="order_toCityCode">
+          <el-form-item required prop="tmsOrderPickup.toCityName" label="到达城市" class="order_toCityCode">
             <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
                          v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
@@ -224,6 +224,9 @@
             { validator: validatePickupNum, trigger: 'blur' },
             { required: true, validator: this.validateIsEmpty('件数不能为空') }
           ],
+          'tmsOrderPickup.toCityName': [
+            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
+          ],
           'tmsOrderPickup.pickupVolume': [
             { validator: validatetruckFee, trigger: 'blur' }
           ],
@@ -348,7 +351,9 @@
         }
       },
       info() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -363,7 +368,9 @@
         }
       },
       isModify() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'
@@ -378,7 +385,9 @@
         }
       },
       isDbclick() {
-        this.$refs['ruleForm'].resetFields()
+        if (this.$refs['ruleForm']) {
+          this.$refs['ruleForm'].resetFields()
+        }
         this.checkShowMessage = false
         if (this.isModify) {
           this.popTitle = '修改派车单'

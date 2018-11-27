@@ -5,8 +5,8 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:LOAD_GX_ADD>新增配载
         </el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="doAction('Intelligent')" v-has:LOAD_GX_SMART>智能配载
-        </el-button>
+        <!-- <el-button type="danger" :size="btnsize" icon="el-icon-circle-plus-outline" plain @click="doAction('Intelligent')" v-has:LOAD_GX_SMART>智能配载
+        </el-button> -->
         <el-button type="success" :size="btnsize" icon="el-icon-circle-check" plain @click="doAction('depart')" v-has:LOAD_GX_LOADDEPART>发车
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('deselectCar')" plain v-has:LOAD_GX_CANCELDEPART>取消发车
@@ -47,10 +47,13 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <AddLntelligent :popVisible.sync="lntelligentVisible" @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
+     <!-- 实际发车时间 弹出框 -->
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
   </div>
 </template>
 <script>
 import { getExportExcel } from '@/api/company/customerManage'
+import actualSendtime from '../load/components/actualSendtimeDialog'
 import {
   postSelectLoadMainInfoList,
   putLoadDepart,
@@ -66,7 +69,6 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
-// import AddLntelligent from './components/intelligentParameterSet'
 // import AddLntelligent from './components/intelligentFreight'
 // import AddLntelligent from './components/intelligentHint'
 // import AddLntelligent from './components/intelligentPayHint'
@@ -78,7 +80,8 @@ export default {
     Pager,
     TableSetup,
     AddCustomer,
-    AddLntelligent
+    AddLntelligent,
+    actualSendtime
   },
   computed: {
     ...mapGetters([
@@ -97,6 +100,7 @@ export default {
   },
   data() {
     return {
+      timeInfoVisible: false,
       checkBillName_child: '',
       watchKey: 'lll',
       tablekey: 0,
@@ -147,6 +151,11 @@ export default {
           width: '90',
           fixed: false
         }, {
+          label: '操作费(元)',
+          prop: 'handlingFeeAll',
+          width: '100',
+          fixed: false
+        },{
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '110',
@@ -172,11 +181,16 @@ export default {
           width: '160',
           fixed: false
         }, {
-          label: '发车时间',
+          label: '发车操作时间',
           prop: 'departureTime',
           width: '160',
           fixed: false
         }, {
+          label: '实际发车时间',
+          prop: 'actualSendtime',
+          width: '160',
+          fixed: false
+        },{
           label: '司机名称',
           prop: 'dirverName',
           width: '150',
@@ -300,7 +314,7 @@ export default {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
-
+        
         this.total = data.total
         this.loading = false
       }).catch(err => {
@@ -316,6 +330,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.pageNum = this.$options.data().searchQuery.pageNum
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.fetchAllCustomer()
     },
@@ -346,7 +362,8 @@ export default {
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name:'干线发车'
           })
           break
           // 打印
@@ -375,7 +392,8 @@ export default {
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '././load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载'}}) // 38-短驳 39-干线 40-送货
+          console.log(this.$router)
           break
           // 添加客户
         case 'storage':
@@ -409,48 +427,14 @@ export default {
               return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '././load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载' }})
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo }})
             }
           }
           break
           //    发车
         case 'depart':
-          let loadIds = this.selected.filter(el => {
-            return el.batchTypeName === '已装车'
-          }).map(el => {
-            return el.id
-          })
-          if (!loadIds.length) {
-            const batchTypeName = this.selected[0].batchTypeName
-            this.$message({
-              message: '批次状态为：' + batchTypeName + '不允许发车~',
-              type: 'warning'
-            })
-            return false
-          } else {
-            // =>todo 删除多个
-            loadIds = loadIds.join(',')
-            this.$confirm('确定要发车？', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-              putLoadDepart(loadIds, 39).then(res => {
-                this.$message({
-                  type: 'success',
-                  message: '发车成功!'
-                })
-                this.fetchData()
-              }).catch(err => {
-                this._handlerCatchMsg(err)
-              })
-            }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '已取消'
-              })
-            })
-          }
+
+          this.timeInfoVisible = true
 
           break
           //  取消配载发车(批量)
@@ -474,12 +458,17 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.loading = true
               putCancelLoadDepart(ids, 39).then(res => {
-                this.$message({
+                if (res) {
+                  this.loading = false
+                  this.$message({
                   type: 'success',
                   message: '取消发车成功!'
                 })
                 this.fetchData()
+                }
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
@@ -515,17 +504,23 @@ export default {
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
+              this.loading = true
               putCancelLoadTruck(_ids, 39).then(res => {
-                this.$message({
+                if (res) {
+                  this.loading = false
+                  this.$message({
                   type: 'success',
                   message: '取消装车成功!'
                 })
                 this.fetchData()
+                }
+
               }).catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
               })
             }).catch(() => {
+              this.loading = false
               this.$message({
                 type: 'info',
                 message: '已取消'
@@ -536,8 +531,45 @@ export default {
           break
 
       }
+      if (type !=='depart') {
       // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
+
+      }
+    },
+    getActualTime (obj) { // 发车
+      console.log(this.selected, obj)
+      let loadIds = this.selected.filter(el => {
+            return el.batchTypeName === '已装车'
+          }).map(el => {
+            return el.id
+          })
+          if (!loadIds.length) {
+            const batchTypeName = this.selected[0].batchTypeName
+            this.$message({
+              message: '批次状态为：' + batchTypeName + '不允许发车~',
+              type: 'warning'
+            })
+            return false
+          } else {
+            // =>todo 删除多个
+            loadIds = loadIds.join(',')
+            let timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+            this.loading = true
+            putLoadDepart(loadIds, 39, timer).then(res => {
+              if (res) {
+                this.loading = false
+                this.$message({
+                type: 'success',
+                message: '发车成功!'
+              })
+              this.fetchData()
+              }
+            }).catch(err => {
+              this.loading = false
+              this._handlerCatchMsg(err)
+            })
+          }
     },
     openlntelligent() {
       this.lntelligentVisible = true

@@ -19,8 +19,8 @@
         </el-form-item>
 
         <el-form-item label="可载重" prop="truckLoad">
-          <el-input v-model.number="form.truckLoad" v-numberOnly :maxlength="18" auto-complete="off">
-            <template slot="append">吨</template>
+          <el-input v-model.number="form.truckLoad" v-numberOnly :maxlength="6" auto-complete="off">
+            <template slot="append">千克</template>
           </el-input>
         </el-form-item>
 
@@ -72,6 +72,12 @@
             value-format="timestamp"
             >
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="车架号" prop="frameNum">
+          <el-input v-model="form.frameNum" :maxlength="30" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="发动机号" prop="engineNum">
+          <el-input v-model="form.engineNum" :maxlength="30" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item class="truckRemarks" label="备注" prop="truckRemarks">
           <el-input type="textarea" :maxlength="300" v-model="form.truckRemarks"></el-input>
@@ -206,7 +212,9 @@ export default {
         'truckWidth': '', // 车宽
         'drivingLicense': '', // 行驶证
         'operatingLicense': '', // 营运执照
-        'vehiclePic': '' // 车辆照片
+        'vehiclePic': '', // 车辆照片
+        frameNum: '', // 车架号
+        engineNum: ''// 发动机号
       },
       formLabelWidth: '100px',
       tooltip: false,
@@ -224,7 +232,7 @@ export default {
           { message: '请输入手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
         ],
         truckLoad: [
-          { validator: createValidate(1000, '吨数不能超过1000吨'), type: 'number' }
+          { validator: createValidate(100000, '不能超过100000千克'), type: 'number' }
         ],
         truckVolume: [
           { validator: createValidate(1000, '体积不能超过1000方'), type: 'number' }

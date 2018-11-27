@@ -1,6 +1,6 @@
 <template>
   <!-- 异常理赔结算页面 -->
-  <div class="accountsLoad_table">
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -67,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input  v-numberOnly:point type="number" @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -82,35 +82,45 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { postFindAbnormalList } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptWaybill'
+// import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
+import Voucher from '@/components/voucher/waybill'
 import { getSummaries } from '@/utils/'
 export default {
+  name: 'waybillAbnormal',
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       orgLeftTable: [],
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -450,7 +460,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -478,6 +489,7 @@ export default {
           }
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -646,26 +658,54 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
-          let item = {
-            shipId: e.shipId,
-            amount: e.inputAbnormalFee,
-            inputAbnormalFee: e.inputAbnormalFee,
-            shipSn: e.shipSn,
-            dataName: '异常理赔'
+          console.log('右边列表', index, e)
+          if (e.inputAbnormalFee > 0 && e.inputAbnormalFee <= e.unpaidFee) { // 提交可结算项
+            let item = {
+              shipId: e.shipId,
+              shipSn: e.shipSn,
+              shipGoodsSn: e.shipGoodsSn,
+              createTime: e.createTime,
+              inputAbnormalFee: e.inputAbnormalFee,
+              shipFromCityName: e.shipFromCityName,
+              shipToCityName: e.shipToCityName,
+              shipReceiverName: e.shipReceiverName,
+              shipSenderName: e.shipSenderName
+            }
+            amount = tmsMath._add(amount, e.inputAbnormalFee)
+            this.infoTable.orderList.push(item)
+            item = {}
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          }
-          item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
         }
+        // this.rightTable.forEach((e, index) => {
+        //   let item = {
+        //     shipId: e.shipId,
+        //     amount: e.inputAbnormalFee,
+        //     inputAbnormalFee: e.inputAbnormalFee,
+        //     shipSn: e.shipSn,
+        //     dataName: '异常理赔'
+        //   }
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+        //     this.tableReceiptInfo.push(item)
+        //   }
+        //   item = {}
+        // })
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        //   this.openDialog()
+        // } else {
+        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        // }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示

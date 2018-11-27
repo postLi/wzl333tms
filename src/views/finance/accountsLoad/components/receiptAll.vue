@@ -157,7 +157,7 @@ export default {
       loading: true,
       rules: {},
       btnsize: 'mini',
-      dialogTitle: '结 算 收 款 单',
+      dialogTitle: '结 算 付 款 单',
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
       // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
@@ -433,7 +433,7 @@ export default {
           }, 0)
           sums[index] += ''
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ''
         }
       })
       return sums

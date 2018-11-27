@@ -43,6 +43,8 @@
     <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 在途跟踪 -->
     <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'deliver'"></editInfo>
+    <!-- 实际发车时间 弹出框 -->
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
   </div>
 </template>
 <script>
@@ -54,16 +56,20 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import actualSendtime from '../load/components/actualSendtimeDialog'
 export default {
   components: {
     Pager,
     SearchForm,
     postAllshortDepartList,
     TableSetup,
-    editInfo
+    editInfo,
+    actualSendtime
   },
   data() {
     return {
+      searchForm: {},
+      timeInfoVisible: false,
       selectInfoList: [],
       total: 0,
       btnsize: 'mini',
@@ -125,6 +131,12 @@ export default {
           fixed: false
         },
         {
+          label: '操作费(元)',
+          prop: 'handlingFeeAll',
+          width: '100',
+          fixed: false
+        },
+        {
           label: '车牌号',
           prop: 'truckIdNumber',
           width: '100'
@@ -140,7 +152,15 @@ export default {
           width: '110'
         },
         {
-          label: '短驳时间',
+          label: '实际短驳时间',
+          prop: 'departureTime',
+          width: '160',  
+          slot: (scope) => {
+            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '短驳操作时间',
           prop: 'departureTime',
           width: '160',
           slot: (scope) => {
@@ -166,7 +186,7 @@ export default {
           width: '120'
         },
         {
-          label: '接收时间',
+          label: '到车操作时间',
           prop: 'receivingTime',
           width: '160',
           slot: (scope) => {
@@ -223,15 +243,17 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  activated() {
-    // this.searchQuery.orgId = this.otherinfo.orgid
-    // this.fetchAllShortDepartList()
+  watch: {
+    '$route' (to, from) {
+      console.log('========route========', to, from)
+    }
   },
   methods: {
     closeMe() { // 关闭弹出框
       this.editInfoVisible = false
     },
     getSearchParam(obj) {
+      this.searchQueryData = this.$options.data().searchQueryData
       this.searchQuery = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
       // if (!this.searchQuery.orgId) {
       //   this.searchQuery.orgId = this.otherinfo.orgid
@@ -251,11 +273,11 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' } })
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳'} })
           break
         case 'truck': // 发车
           if (isWork) {
-            this.truck()
+            this.timeInfoVisible = true
           }
           break
         case 'chanelTruck': // 取消发车
@@ -312,8 +334,9 @@ export default {
       this.isBatch = true
     },
     handlePageChange(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
+      this.searchQueryData.currentPage = obj.pageNum
+      this.searchQueryData.pageSize = obj.pageSize
+      this.getAllList()
     },
     fetchAllShortDepartList() {
       this.getAllList()
@@ -381,27 +404,26 @@ export default {
       this.commonTruck = Object.assign({}, data)
       data = {}
     },
-    truck() { // 发车
+    getActualTime(obj) {
       this.setData(47)
       if (this.isBatch) {
-        this.$confirm('此操作将发车, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          console.log('发车', this.commonTruck)
-          putTruckDepart(this.commonTruck).then(data => {
-              if (data) {
-                this.$message({ type: 'success', message: '发车成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
-            })
-            .catch(err => {
-              this._handlerCatchMsg(err)
+        console.log('发车', this.commonTruck)
+        let timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+        this.$set(this.commonTruck, 'actualSendtime', timer)
+        this.loading = true
+        putTruckDepart(this.commonTruck).then(data => {
+            if (data) {
+              this.loading =false
+              this.$message({ type: 'success', message: '发车成功！' })
+              this.fetchAllShortDepartList()
               this.clearData()
-            })
-        })
+            }
+          })
+          .catch(err => {
+              this.loading =false
+            this._handlerCatchMsg(err)
+            this.clearData()
+          })
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
         this.clearData()
@@ -415,15 +437,18 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loading = true
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
               if (data) {
+                this.loading =false
                 this.$message({ type: 'success', message: '取消发车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
             })
             .catch(err => {
+              this.loading =false
               this._handlerCatchMsg(err)
               this.clearData()
             })
@@ -442,14 +467,17 @@ export default {
           type: 'warning'
         }).then(() => {
           console.log('取消装车', this.commonTruck)
+          this.loading = true
           putTruckLoad(this.commonTruck).then(data => {
               if (data) {
+                this.loading =false
                 this.$message({ type: 'success', message: '取消装车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
             })
             .catch(err => {
+              this.loading =false
               this._handlerCatchMsg(err)
               this.clearData()
             })
@@ -462,7 +490,7 @@ export default {
     edit() { // 修改
       const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳' } })
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳', flag: this.selectedData.batchNo } })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

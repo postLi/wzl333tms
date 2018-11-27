@@ -240,7 +240,7 @@ export default {
           fixed: false,
           slot: (scope) => {
             const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.paidBackpayOilCard, row.paidBackpayOilCard)
+            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
           }
         },
         {
@@ -363,11 +363,14 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
@@ -398,14 +401,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费结算-发车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费结算-发车汇总'
           })
@@ -447,6 +450,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

@@ -44,6 +44,7 @@
             </el-table-column>
             <el-table-column
               :key="column.id"
+              :prop="column.prop"
               :fixed="column.fixed"
               sortable
               :label="column.label"
@@ -231,10 +232,10 @@ export default {
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: this.searchQuery,
+          tab: '到付核销',
+          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'arrive',
-         // id: row.map(el => el.shipId).join(','),
-          selectListShipSns: row.map(el => el.shipSn)
+          selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }
       })
     },
@@ -261,6 +262,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign(this.searchQuery.vo, obj)
       this.loading = false
       this.fetchData()

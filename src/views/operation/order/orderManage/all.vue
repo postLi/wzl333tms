@@ -367,9 +367,19 @@ export default {
         hidden: true,
         'width': '150'
       }, {
-        'label': '时效',
+        'label': '标准时效',
         'prop': 'shipEffectiveName',
         hidden: true,
+        'width': '150'
+      }, {
+        'label': '线路时效',
+        'prop': 'transportAging',
+        hidden: false,
+        'width': '150'
+      }, {
+        'label': '运单实际用时',
+        'prop': 'actualTime',
+        hidden: false,
         'width': '150'
       }, {
         'label': '提货批次',
@@ -522,6 +532,8 @@ export default {
       this.fetchData()
     },
     getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = obj
       this.loading = false
       this.fetchData()
@@ -571,7 +583,7 @@ export default {
             }
             if (canModify) {
               this.$router.push({
-                path: '/operation/order/modifyOrder',
+                path: '/operation/order/createOrder',
                 query: {
                   orderid: this.selectInfo.id,
                   type: 'modify',

@@ -5,7 +5,7 @@
     :visible="dialogVisible"
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
-    :modal-append-to-body="false"
+    :append-to-body="true"
     v-loading="loading"
     @open="getFeeSetup"
     width="300px"
@@ -115,7 +115,7 @@ export default {
           return el
         })
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -135,7 +135,7 @@ export default {
         } else {
 
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

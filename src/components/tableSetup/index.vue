@@ -95,7 +95,7 @@
                   <el-checkbox :label="column">
                     {{column.label}}
                   </el-checkbox>
-                  <el-switch v-model="column.fixed" :active-text="column.fixed?'固定':'活动'" @change="handleSwitch(column)"></el-switch>
+                  <el-switch :value="column.fixed" :active-text="column.fixed?'固定':'活动'" @change="handleSwitch(column, index)"></el-switch>
                 </div>
               </transition-group>
             </draggable>
@@ -312,17 +312,24 @@ export default {
         // 保存原有数据，用来在上传时格式化数据
         this.orgdata = data
         if (data && data.length) {
+          if (data.length === 1) {
+            data = data[0]
+          }
+          this.orgdata = data
           // 处理格式化本地数据
           // 如果本地存在不同的列，保留还是删除？
 
           // 1.先取服务器数据
           const copy = []
           const len = this.columns.length
+
           // 格式化数据
           data.sort(function(a, b) {
             return a.titleOrder > b.titleOrder ? 1 : -1
           })
+
           data.forEach(el => {
+            el.label = el.label || el.lable
             const _el = Object.assign({}, el)
             for (let i = 0; i < len; i++) {
               if (this.columns[i].prop === el.prop) {
@@ -345,6 +352,10 @@ export default {
               copy.push(el)
             }
           })
+
+          copy.sort(function(a, b) {
+            return a.fixed ? -1 : 0
+          })
           this.convertData(copy)
         } else {
           this.fetchFail()
@@ -352,7 +363,7 @@ export default {
       }).catch(err => {
         // 如果从服务器上拿取数据出错，则将其当做本地数据处理
         // this.$message.info('获取表格数据失败。')
-        console.log('获取表格数据失败：', this.thecode)
+        // console.log('获取表格数据失败：', this.thecode)
         this.fetchFail()
       })
     },
@@ -507,7 +518,7 @@ export default {
       if (queryString.label === undefined) {
         if (!this.searchLeft) { // 如果搜索框为空则恢复左边列表
           this.columnData = Object.assign([], this.orgColumnData)
-          console.log('querySearchLeft', queryString.label, this.orgColumnData)
+          // console.log('querySearchLeft', queryString.label, this.orgColumnData)
         }
       }
       const col = Object.assign([], this.orgColumnData)
@@ -565,10 +576,55 @@ export default {
     handleChange(value, direction, movedKeys) {
       this.rightList = Object.assign([], value)
     },
-    handleSwitch(obj) {},
+    handleSwitch(obj, index) {
+      console.log('handleSwitch', obj)
+      let find = 0
+      let unfind = false
+        // 找到最后一个fixed位置
+      this.showColumnData.forEach((el, inx) => {
+        if (el.fixed && !unfind) {
+          find = inx
+        } else {
+          unfind = true
+        }
+      })
+
+      if (obj.fixed) {
+        this.showColumnData.splice(index, 1)
+        this.showColumnData.splice(find, 0, obj)
+        obj.fixed = false
+      } else {
+        // obj.fixed = !obj.fixed
+
+        console.log('find:', find, index)
+        this.showColumnData.splice(find + 1, 0, obj)
+        this.showColumnData.splice(index + 1, 1)
+        obj.fixed = true
+      }
+
+      // this.showColumnData.sort(function(a, b) {
+      //   return a.fixed ? -1 : 0
+      // })
+
+      /* let fixNum = 0
+      this.showColumnData.forEach(e => {
+        if (e.fixed) {
+          console.log('sdfsdf', fixNum)
+          fixNum++
+        }
+      })
+      console.log('fixNum', fixNum)
+      this.showColumnData[index].titleOrder = fixNum + 1 */
+    },
     callback() {
       const data = Object.assign([], this.showColumnData)
-      console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
+      // 修正下数据
+      data.forEach(el => {
+        if (!el.label && el.lable) {
+          el.label = el.lable
+        }
+      })
+      // console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
       this.$emit('success', data)
       this.listKey = Math.random()
 

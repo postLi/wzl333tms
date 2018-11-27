@@ -1,5 +1,5 @@
 <template>
-  <div class="orderinfo-manager" v-loading="loading" >
+  <div class="orderinfo-manager" v-loading="loading">
     <el-tabs type="border-card" v-model="activeIndex" :before-leave="canViewOther" @tab-click="setTabShow">
       <el-tab-pane class="ordermaininfo" name="one" label="运单信息">
         <orderdetail :orderid="orderid" :orderdata="orderdata" />
@@ -14,15 +14,14 @@
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
-        <abnormal v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
+        <abnormal :orderinfo="orderdata" v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="five" label="改单日志">
         <log v-if="activeTab.five" :orderid="output.orderid" />
       </el-tab-pane>
-  </el-tabs>
+    </el-tabs>
   </div>
 </template>
-
 <script>
 // 请求接口
 import orderManage from '@/api/operation/orderManage'
@@ -61,7 +60,7 @@ export default {
         // this.init()
       }
     },
-    '$route'(to, from) {
+    '$route' (to, from) {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
         if (!this.orderid) {
@@ -76,11 +75,13 @@ export default {
     }
   },
   activated() {
-    this.init()
+    if (!this.isInit) {
+      this.init()
+    }
   },
   mounted() {
     // if (this.ispop) {
-    this.init()
+    // this.init()
     // }
   },
   data() {
@@ -100,7 +101,8 @@ export default {
       output: {
         orderid: '',
         shipsn: ''
-      }
+      },
+      isInit: false
     }
   },
   methods: {
@@ -112,6 +114,7 @@ export default {
       this.activeTab[tab.name] = true
     },
     init() {
+      this.isInit = true
       this.loading = true
 
       const route = this.$route
@@ -158,6 +161,7 @@ export default {
         this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
         this.loading = false
       }).catch(err => {
+        this.loading = false
         console.log('initOrderDetail err:', err)
         this.showError()
       })
@@ -170,28 +174,28 @@ export default {
     }
   }
 }
+
 </script>
 <style lang="scss">
-  .orderinfo-manager{
+.orderinfo-manager {
+  height: 100%;
+  padding-top: 12px;
+  .el-tabs {
     height: 100%;
-    padding-top: 12px;
-    .el-tabs{
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-      .el-tabs__content{
-        flex: 1;
-        overflow: auto;
-      }
-      .el-tab-pane{
+    .el-tabs__content {
+      flex: 1;
+      overflow: auto;
+    }
+    .el-tab-pane {
+      height: 100%;
+      &>div {
         height: 100%;
-        &>div{
-          height: 100%;
-        }
       }
     }
-    
   }
-</style>
+}
 
+</style>
