@@ -1,6 +1,6 @@
 <template>
   <!-- 回扣 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content finance-tab-content" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!--  <div class="tab_count_lyy">
@@ -22,25 +22,27 @@
     </div> -->
     <!-- 操作按钮 -->
     <div class="tab_info">
-      <div class="btns_box finance_btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
-        <!-- <button type="button" class="el-button "> -->
-        <el-dropdown @command="handleCommand" class="dropdownButton">
-          <el-button type="success" size="mini" plain>
-            <i class="el-icon-circle-plus"></i> 智能核销
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="income">记收入</el-dropdown-item>
-            <el-dropdown-item command="expand">记支出</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <!-- </button> -->
-        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:FLOW_FIND>反核销</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
+      <div class="btns_box">
+        <div class="finance_btns_box">
+          <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
+          <!-- <button type="button" class="el-button "> -->
+          <el-dropdown @command="handleCommand" class="dropdownButton">
+            <el-button type="success" size="mini" plain>
+              <i class="el-icon-circle-plus"></i> 智能核销
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="income">记收入</el-dropdown-item>
+              <el-dropdown-item command="expand">记支出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <!-- </button> -->
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:FLOW_FIND>反核销</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
+        </div>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -398,7 +400,7 @@ export default {
           break
         case 'print':
           PrintInFullPage({
-             data: this.selectedList.length > 0 ? this.selectedList : this.dataList,
+            data: this.selectedList.length > 0 ? this.selectedList : this.dataList,
             columns: this.tableColumn,
             name: '财务日记账-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
@@ -550,17 +552,24 @@ export default {
 
 </script>
 <style lang="scss">
-.finance_btns_box {
-  display: flex;
-  flex-direction: row;
-  .dropdownButton {
-    margin: 0 10px;
+.finance-tab-content {
+  .btns_box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
-  .table_setup{
-    float: right;
-    right: 10px;
+  .finance_btns_box {
+    display: flex;
+    flex-direction: row;
+    .dropdownButton {
+      margin: 0 10px;
+    }
+  }
+  .table_setup {
+    align-self: flex-end;
   }
 }
+
 
 .tab-content {
   .previewPicture {
