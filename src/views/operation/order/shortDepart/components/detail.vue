@@ -98,7 +98,8 @@
         </el-table>
       </div>
     </div>
-    <TableSetup  :popVisible="setupTableVisible" :columns="tableColumnArrival" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup v-if="isEditActual"  :popVisible="setupTableVisible" :columns="tableColumnArrival" :code="code" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup v-else  :popVisible="setupTableVisible" :columns="tableColumnArrival" :code="code" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
@@ -134,6 +135,7 @@ export default {
   },
   data() {
     return {
+      code: 'ORDER_SHORT',
       detailTableLoading: true,
       timeInfoVisible: false,
       textChangeDanger: [],
@@ -389,9 +391,12 @@ export default {
     switch (this.type) {
       case 'deliver':
         this.isEditActual = true // 短驳发车
+        this.code = 'ORDER_SHORT'
         break
       case 'arrival':
         this.isEditActual = false // 短驳到货
+        this.code = ''
+        this.tableColumn = this.$options.data().tableColumnArrival
         break
     }
     this.setTableColumn()
@@ -600,10 +605,10 @@ export default {
             this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
                   if (e.warehouStatus !== 1) { // 部分入库
-                    e.actualAmount = e.loadAmount
-                    e.actualWeight = e.loadWeight
-                    e.actualVolume = e.loadVolume
-                  }
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
+                }
               } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
               }
             })
@@ -644,7 +649,11 @@ export default {
     },
     setColumn(obj) { // 打开表格设置
       console.log('setColumnn short:', JSON.stringify(obj))
-      this.tableColumnArrival = obj
+      if (this.isEditActual) {
+        this.tableColumnDeiver = obj
+      } else {
+        this.tableColumnArrival = obj
+      }
       this.setTableColumn()
       this.tablekey = Math.random()
     }
