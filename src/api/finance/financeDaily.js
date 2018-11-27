@@ -113,3 +113,11 @@ export function getFinanceSubjects(params) {
 		return res.data
 	})
 }
+/**
+ * 根据ID查询财务日记账信息
+ */
+export function getBillRecordInfo(params) {
+	return fetch.post('/api-finance/finance/tmsfinancebillrecord/v1.3/getBillRecordInfo', params).then(res => {
+		return res.data
+	})
+}

@@ -198,10 +198,10 @@ export default {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
         verificationId: [{ required: true, message: '不能为空', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
@@ -221,11 +221,12 @@ export default {
       this.searchQuery.orgId = this.otherinfo.orgid
       this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
+        // 根据id获取当前日记账信息
         this.formModel = Object.assign({}, this.info)
         console.log('paymentsType', this.formModel.paymentsType)
         this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType + '')
         this.getVeryficationList()
-        this.initSubject()
+
         this.loading = false
       } else {
         this.getBaseInfo()
@@ -475,25 +476,25 @@ export default {
               if (this.subjectFour.length > 0) {
                 if (this.formModel.subjectFourId) {
                   return true
-                }else {
+                } else {
                   this.$message.warning('请填写四级科目')
                   return false
                 }
-              }else {
+              } else {
                 return true
               }
-            }else {
+            } else {
               this.$message.warning('请填写三级科目')
               return false
             }
-          }else {
+          } else {
             return true
           }
         } else {
           this.$message.warning('请填写二级科目!')
           return false
         }
-      }else {
+      } else {
         return true
       }
     },
@@ -511,18 +512,20 @@ export default {
           this.loading = true
           let query = Object.assign({}, this.formModel)
           if (!query.certTime) {
-           query.certTime = new Date()
+            query.certTime = new Date()
           }
           this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
-          this.$set(query, 'orderList', [])
-          // 添加的时候 需要创建一个空的详情列表
-          query.orderList.push({
-            shipLoadId: '',
-            manualAmount: query.amount,
-            subjectName: '',
-            subjectId: ''
-          })
+          if (!this.isModify) {
+            this.$set(query, 'orderList', [])
+            // 添加的时候 需要创建一个空的详情列表
+            query.orderList.push({
+              shipLoadId: '',
+              manualAmount: query.amount,
+              subjectName: '',
+              subjectId: ''
+            })
+          }
           if (type) { // 打印
             this.$message.warning('暂无此功能~')
           }

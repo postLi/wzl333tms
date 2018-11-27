@@ -94,6 +94,7 @@
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
           </template>
         </el-table-column>
+         
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">
@@ -206,6 +207,7 @@
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
           </template>
         </el-table-column>
+         
         <!-- <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="90">
         </el-table-column>
         <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">

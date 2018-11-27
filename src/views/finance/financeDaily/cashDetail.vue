@@ -56,7 +56,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList } from '@/api/finance/financeDaily'
+import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList, getBillRecordInfo } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
@@ -426,7 +426,7 @@ export default {
           break
         case 'export':
           SaveAsFile({
-           data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
             columns: this.tableColumn,
             name: '资金流水明细-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
@@ -446,14 +446,12 @@ export default {
       }
     },
     doEdit() { // 修改
-      this.cashSearchQuery.currentPage = 1
-      this.cashSearchQuery.pageSize = 100
-      this.$set(this.cashSearchQuery, 'id', this.recordId)
-      postBillRecordList(this.cashSearchQuery).then(data => {
-        console.log('cashData', data)
-        this.currentInfo = Object.assign({}, data.list[0])
-        this.isModify = true
-        this.popVisibleIncome = true
+      getBillRecordInfo({ id: this.recordId }).then(data => {
+        this.currentInfo = data
+        if (data.verifyStatusZh !== '已审核') {
+          this.isModify = true
+          this.popVisibleIncome = true
+        }
         this.$refs.multipleTable.clearSelection()
       })
     },

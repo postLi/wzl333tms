@@ -108,6 +108,18 @@
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
         </el-table-column>
+        <!--  <el-table-column prop="operationPay" sortable label="操作费" width="120">
+        </el-table-column>
+        <el-table-column prop="noOperationPay" sortable label="未结操作费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.noOperationPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadOperationPay" sortable label="已结操作费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
+          </template>
+        </el-table-column> -->
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
@@ -246,6 +258,20 @@
         </el-table-column>
         <el-table-column prop="othePayActual" sortable label="实结其他费用" width="120">
         </el-table-column>
+        <!-- <el-table-column prop="operationPay" sortable label="操作费" width="120">
+        </el-table-column>
+        <el-table-column prop="noOperationPay" sortable label="未结操作费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.noOperationPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadOperationPay" sortable label="已结操作费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="operationPayActual" sortable label="实结操作费" width="120">
+        </el-table-column> -->
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
