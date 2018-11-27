@@ -94,6 +94,7 @@ export default {
     initSettlementid() {
       let type = this.senderSearch
       this.settlementId = this.SETTLEMENT_TYPE[this.senderSearch]
+      console.log('选择批次类型后的settlementId', this.settlementId)
       // switch (type) {
       //   case 'short': // 短驳
       //     this.settlementId = 180
