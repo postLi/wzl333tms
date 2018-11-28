@@ -390,30 +390,31 @@ export default {
   created() {
     switch (this.type) {
       case 'deliver':
-        this.isEditActual = true // 短驳发车
         this.code = 'ORDER_SHORT'
+        this.isEditActual = true // 短驳发车
         break
       case 'arrival':
-        this.isEditActual = false // 短驳到货
         this.code = ''
+        this.isEditActual = false // 短驳到货
         this.tableColumn = this.$options.data().tableColumnArrival
         break
     }
+    const arrTableColumn = []
+    objectMerge2([], this.tableColumnArrival).forEach(e => {
+      if (!e.hide) {
+        if (e.expand) {
+          e.expand = false
+        }
+        arrTableColumn.push(e)
+      }
+    })
+    this.tableColumnDeiver = objectMerge2([], arrTableColumn)
     this.setTableColumn()
   },
   methods: {
     setTableColumn() { // 设置表格列
-      const arrTableColumn = []
-      objectMerge2([], this.tableColumnArrival).forEach(e => {
-        if (!e.hide) {
-          if (e.expand) {
-            e.expand = false
-          }
-          arrTableColumn.push(e)
-        }
-      })
-      this.tableColumnDeiver = objectMerge2([], arrTableColumn)
       this.tableColumn = this.isEditActual ? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
+      console.log('this.tableColumn:', this.tableColumn.length, this.tableColumn)
     },
     setTable() {
       this.setupTableVisible = true
@@ -435,6 +436,7 @@ export default {
           })
           break
         case 'export': // 导出
+          console.log('export column:', this.tableColumn)
           SaveAsFile({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
             columns: this.tableColumn,
@@ -648,7 +650,7 @@ export default {
       }
     },
     setColumn(obj) { // 打开表格设置
-      console.log('setColumnn short:', JSON.stringify(obj))
+      console.log('setColumnn short:', obj.length, JSON.stringify(obj))
       if (this.isEditActual) {
         this.tableColumnDeiver = obj
       } else {
