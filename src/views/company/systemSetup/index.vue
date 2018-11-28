@@ -199,6 +199,19 @@
               </div>
             </div>
           </el-collapse-item>
+          <el-collapse-item name="setup7" title="配载设置">
+            <div class="clearfix setup-table">
+              <div class="setup-left">配载设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  发车合同承运方
+                  <el-select v-model="form.loadSetting.carrier">
+                    <el-option v-for="(item, index) in deliverContacts" :key="index" :value="item.value" :label="item.label"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
           <el-collapse-item name="setup4" title="打印设置" v-has:SETTINGS_PRINT>
             <div class="clearfix setup-table">
               <div class="setup-left">打印机设置</div>
@@ -296,124 +309,131 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7'],
       shipField: [{
-          key: 'shipFromCityName',
-          value: '0',
-          name: '出发城市'
-        },
-        {
-          key: 'shipToOrgid',
-          value: '0',
-          name: '目的网点'
-        },
-        {
-          key: 'shipGoodsSn',
-          value: '0',
-          name: '货号'
-        },
-        {
-          key: 'shipSenderId',
-          value: '0',
-          name: '发货方'
-        },
-        {
-          key: 'shipSenderAddress',
-          value: '0',
-          name: '发货地址'
-        },
-        {
-          key: 'shipReceiverId',
-          value: '0',
-          name: '收货方'
-        },
-        {
-          key: 'shipReceiverAddress',
-          value: '0',
-          name: '收货地址'
-        },
-        {
-          key: 'cargoWeight',
-          value: '0',
-          name: '重量'
-        },
-        {
-          key: 'cargoVolume',
-          value: '0',
-          name: '体积'
-        },
-        {
-          key: 'cargoPack',
-          value: '0',
-          name: '包装'
-        },
-        {
-          key: 'brokerageFee',
-          value: '0',
-          name: '回扣'
-        },
-        {
-          key: 'deliveryFee',
-          value: '0',
-          name: '送货费'
-        },
+        key: 'shipFromCityName',
+        value: '0',
+        name: '出发城市'
+      },
+      {
+        key: 'shipToOrgid',
+        value: '0',
+        name: '目的网点'
+      },
+      {
+        key: 'shipGoodsSn',
+        value: '0',
+        name: '货号'
+      },
+      {
+        key: 'shipSenderId',
+        value: '0',
+        name: '发货方'
+      },
+      {
+        key: 'shipSenderAddress',
+        value: '0',
+        name: '发货地址'
+      },
+      {
+        key: 'shipReceiverId',
+        value: '0',
+        name: '收货方'
+      },
+      {
+        key: 'shipReceiverAddress',
+        value: '0',
+        name: '收货地址'
+      },
+      {
+        key: 'cargoWeight',
+        value: '0',
+        name: '重量'
+      },
+      {
+        key: 'cargoVolume',
+        value: '0',
+        name: '体积'
+      },
+      {
+        key: 'cargoPack',
+        value: '0',
+        name: '包装'
+      },
+      {
+        key: 'brokerageFee',
+        value: '0',
+        name: '回扣'
+      },
+      {
+        key: 'deliveryFee',
+        value: '0',
+        name: '送货费'
+      },
 
         /*         {
                   key: 'productPrice',
                   value: '0',
                   name: '声明价值'
                 }, */
-        {
-          key: 'insuranceFee',
-          value: '0',
-          name: '保险费'
-        },
-        {
-          key: 'handlingFee',
-          value: '0',
-          name: '装卸费'
-        },
-        {
-          key: 'packageFee',
-          value: '0',
-          name: '包装费'
-        },
-        {
-          key: 'pickupFee',
-          value: '0',
-          name: '提货费'
-        },
-        {
-          key: 'amountFee',
-          value: '0',
-          name: '件数单价'
-        },
-        {
-          key: 'weightFee',
-          value: '0',
-          name: '重量单价'
-        },
-        {
-          key: 'volumeFee',
-          value: '0',
-          name: '体积单价'
-        },
-        {
-          key: 'shipReceiptSn',
-          value: '0',
-          name: '回单号'
-        },
-        {
-          key: 'shipCustomerNumber',
-          value: '0',
-          name: '客户单号'
-        },
-        {
-          key: 'shipUserid',
-          value: '0',
-          name: '业务员'
-        }
+      {
+        key: 'insuranceFee',
+        value: '0',
+        name: '保险费'
+      },
+      {
+        key: 'handlingFee',
+        value: '0',
+        name: '装卸费'
+      },
+      {
+        key: 'packageFee',
+        value: '0',
+        name: '包装费'
+      },
+      {
+        key: 'pickupFee',
+        value: '0',
+        name: '提货费'
+      },
+      {
+        key: 'amountFee',
+        value: '0',
+        name: '件数单价'
+      },
+      {
+        key: 'weightFee',
+        value: '0',
+        name: '重量单价'
+      },
+      {
+        key: 'volumeFee',
+        value: '0',
+        name: '体积单价'
+      },
+      {
+        key: 'shipReceiptSn',
+        value: '0',
+        name: '回单号'
+      },
+      {
+        key: 'shipCustomerNumber',
+        value: '0',
+        name: '客户单号'
+      },
+      {
+        key: 'shipUserid',
+        value: '0',
+        name: '业务员'
+      }
       ],
+      deliverContacts: [{
+        value: 'driver',
+        label: '司机名称'
+      }, {
+        value: 'carno',
+        label: '车牌号'
+      }],
       form: {
         'printSetting': {
           'ship': '0',
@@ -496,6 +516,9 @@ export default {
           'shipFieldSign': '1',
           orderName: '收发货凭证' // 开单页面标题
         },
+        'loadSetting': {
+          'carrier': 'driver'
+        },
         'orgid': 1
       }
     }
@@ -554,6 +577,11 @@ export default {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
           console.log(this.form.printSetting[item])
         }
+        if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
+          this.$set(this.form, 'loadSetting', {
+            carrier: ''
+          })
+        }
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -604,6 +632,10 @@ export default {
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
       console.log(form)
+      if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
+        form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
+      }
+
       putSetting(form).then(res => {
         this.otherinfo.systemSetup = this.form
         this.$message({

@@ -170,7 +170,8 @@
   contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
   contract_title_number.innerHTML = 'NO.' + data.batchNo
   partA.innerHTML = data.orgName
-  partB.innerHTML = data.dirverName
+  partB.innerHTML = data.carrier
+  console.error(data)
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
     '<li><label>家庭住址</label><span></span></li>' +
