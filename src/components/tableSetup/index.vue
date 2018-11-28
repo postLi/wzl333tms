@@ -329,8 +329,8 @@ export default {
           })
 
           data.forEach(el => {
-            el.label = el.label || el.lable
             const _el = Object.assign({}, el)
+            _el.label = _el.label || _el.lable
             for (let i = 0; i < len; i++) {
               if (this.columns[i].prop === el.prop) {
                 for (const j in this.columns[i]) {
