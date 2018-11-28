@@ -212,6 +212,19 @@
               </div>
             </div>
           </el-collapse-item>
+          <el-collapse-item name="setup8" title="配载设置">
+            <div class="clearfix setup-table">
+              <div class="setup-left">配载设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  发车合同承运方
+                  <el-select v-model="form.loadSetting.carrier">
+                    <el-option v-for="(item, index) in deliverContacts" :key="index" :value="item.value" :label="item.label"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
           <el-collapse-item name="setup4" title="打印设置" v-has:SETTINGS_PRINT>
             <div class="clearfix setup-table">
               <div class="setup-left">打印机设置</div>
@@ -309,7 +322,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
       shipField: [{
           key: 'shipFromCityName',
           value: '0',
@@ -434,6 +447,13 @@ export default {
         value: '2',
         label: '不需要'
       }],
+      deliverContacts: [{
+        value: 'driver',
+        label: '司机名称'
+      }, {
+        value: 'carno',
+        label: '车牌号'
+      }],
       form: {
         'financeSetting': {
           'voucher': '2'
@@ -519,6 +539,9 @@ export default {
           'shipFieldSign': '1',
           orderName: '收发货凭证' // 开单页面标题
         },
+        'loadSetting': {
+          'carrier': 'driver'
+        },
         'orgid': 1
       }
     }
@@ -534,8 +557,8 @@ export default {
         module: 'finance'
       }
       return getAllSetting(params).then(data => {
-        if (data) {
-          console.log('financeData', data)
+        console.log('financeData', data)
+        if (data.financeSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
         }
         this.loading = false
@@ -601,6 +624,12 @@ export default {
         this.$set(this.form, 'financeSetting', {
           voucher: ''
         })
+
+        if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
+          this.$set(this.form, 'loadSetting', {
+            carrier: ''
+          })
+        }
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -656,7 +685,10 @@ export default {
         module: 'finance',
         financeSetting: form.financeSetting
       }
-      console.log('saveData', form, finance)
+      console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
+      if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
+        form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
+      }
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.initOrder()

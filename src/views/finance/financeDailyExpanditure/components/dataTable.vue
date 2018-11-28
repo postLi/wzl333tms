@@ -165,54 +165,54 @@
         </el-table-column>
         <el-table-column prop="loadFeeTotalActual" sortable label="实际合计" width="120">
         </el-table-column>
-        <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-show="settlementId===180">
+        <el-table-column prop="shortPay" sortable label="短驳费" width="120" v-if="settlementId===180">
         </el-table-column>
-        <el-table-column prop="noShortPay" sortable label="未结短驳费" width="120" v-show="settlementId===180">
+        <el-table-column prop="noShortPay" sortable label="未结短驳费" width="120" v-if="settlementId===180">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.noShortPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadShortPay" sortable label="已结短驳费" width="120" v-show="settlementId===180">
+        <el-table-column prop="hadShortPay" sortable label="已结短驳费" width="120" v-if="settlementId===180">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shortPay, scope.row.hadShortPay, scope.row.noShortPay, scope.row.hadShortPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-if="settlementId===181">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.noSendPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-if="settlementId===181">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.sendPay, scope.row.hadSendPay, scope.row.noSendPay, scope.row.hadSendPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="departTotal" sortable label="发车汇总" width="100" v-show="settlementId===179">
+        <el-table-column prop="departTotal" sortable label="发车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="departTotalActual" sortable label="发车汇总实际支出" width="140" v-show="settlementId===179">
+        <el-table-column prop="departTotalActual" sortable label="发车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noDepartTotal" sortable label="未结发车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="noDepartTotal" sortable label="未结发车汇总" width="120" v-if="settlementId===179">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.noDepartTotal)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadDepartTotal" sortable label="已结发车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadDepartTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.departTotal, scope.row.hadDepartTotal, scope.row.noDepartTotal, scope.row.hadDepartTotal)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="arriveTotal" sortable label="到车汇总" width="100" v-show="settlementId===179">
+        <el-table-column prop="arriveTotal" sortable label="到车汇总" width="100" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="arriveTotalActual" sortable label="到车汇总实际支出" width="140" v-show="settlementId===179">
+        <el-table-column prop="arriveTotalActual" sortable label="到车汇总实际支出" width="140" v-if="settlementId===179">
         </el-table-column>
-       <el-table-column prop="noArriveTotal" sortable label="未结到车汇总" width="120" v-show="settlementId===179">
+       <el-table-column prop="noArriveTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.noArriveTotal)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadArriveTotal" sortable label="已结到车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadArriveTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.hadArriveTotal)"></span>
           </template>
@@ -244,63 +244,63 @@
         <el-table-column prop="operationPayActual" sortable label="实结操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <!-- 
-        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="noSendPay" sortable label="未结送货费" width="120" v-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-show="settlementId===181">
+        <el-table-column prop="hadSendPay" sortable label="已结送货费" width="120" v-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="loadFeeTotal" sortable label="发车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="loadFeeTotal" sortable label="发车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noLoadFeeTotal" sortable label="未结发车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="noLoadFeeTotal" sortable label="未结发车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadLoadFeeTotal" sortable label="已结发车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadLoadFeeTotal" sortable label="已结发车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="loadFeeTotal" sortable label="到车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="loadFeeTotal" sortable label="到车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noLoadFeeTotal" sortable label="未结到车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="noLoadFeeTotal" sortable label="未结到车汇总" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadLoadFeeTotal" sortable label="已结到车汇总" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadLoadFeeTotal" sortable label="已结到车汇总" width="120" v-if="settlementId===179">
         </el-table-column> -->
-        <!--  <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-show="settlementId===179">
+        <!--  <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noStartLoadPay" sortable label="未结发站装卸费" width="120" v-show="settlementId===179">
+        <el-table-column prop="noStartLoadPay" sortable label="未结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadStartLoadPay" sortable label="已结发站装卸费" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadStartLoadPay" sortable label="已结发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="startOtherPay" sortable label="发站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="startOtherPay" sortable label="发站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noStartOtherPay" sortable label="未结发站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="noStartOtherPay" sortable label="未结发站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadStartOtherPay" sortable label="已结发站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadStartOtherPay" sortable label="已结发站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="endLoadPay" sortable label="到站装卸费" width="120" v-show="settlementId===179">
+        <el-table-column prop="endLoadPay" sortable label="到站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noEndLoadPay" sortable label="未结到站装卸费" width="120" v-show="settlementId===179">
+        <el-table-column prop="noEndLoadPay" sortable label="未结到站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadEndLoadPay" sortable label="已结到站装卸费" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadEndLoadPay" sortable label="已结到站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="endOtherPay" sortable label="到站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="endOtherPay" sortable label="到站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noEndOtherPay" sortable label="未结到站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="noEndOtherPay" sortable label="未结到站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadEndOtherPay" sortable label="已结到站其他费" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadEndOtherPay" sortable label="已结到站其他费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="wholeSurePay" sortable label="整车保险费" width="120" v-show="settlementId===179">
+        <el-table-column prop="wholeSurePay" sortable label="整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="noWholeSurePay" sortable label="未结整车保险费" width="120" v-show="settlementId===179">
+        <el-table-column prop="noWholeSurePay" sortable label="未结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="hadWholeSurePay" sortable label="已结整车保险费" width="120" v-show="settlementId===179">
+        <el-table-column prop="hadWholeSurePay" sortable label="已结整车保险费" width="120" v-if="settlementId===179">
         </el-table-column> -->
-        <el-table-column prop="departureTime" sortable label="送货时间" width="160" v-show="settlementId===181">
+        <el-table-column prop="departureTime" sortable label="送货时间" width="160" v-if="settlementId===181">
         </el-table-column>
-        <el-table-column prop="departureTime" sortable label="发车时间" width="160" v-show="settlementId===179">
+        <el-table-column prop="departureTime" sortable label="发车时间" width="160" v-if="settlementId===179">
         </el-table-column>
-        <el-table-column prop="receivingTime" sortable label="到车时间" width="160" v-show="settlementId!==181">
+        <el-table-column prop="receivingTime" sortable label="到车时间" width="160" v-if="settlementId!==181">
         </el-table-column>
-        <el-table-column prop="orgName" sortable label="发车网点" width="120" v-show="settlementId!==181">
+        <el-table-column prop="orgName" sortable label="发车网点" width="120" v-if="settlementId!==181">
         </el-table-column>
-        <el-table-column prop="arriveOrgName" sortable label="到车网点" width="120" v-show="settlementId!==181">
+        <el-table-column prop="arriveOrgName" sortable label="到车网点" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="remark" sortable label="备注">
         </el-table-column>
@@ -310,7 +310,6 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { getSelectAddLoadRepertoryList } from '@/api/operation/load'
 import querySelect from '@/components/querySelect/index'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime } from '@/utils/index'
@@ -610,7 +609,7 @@ export default {
         this.$set(obj, 'orgId', this.orgId)
         // this.$set(obj, 'incomePayType', this.incomePayType)
         this.$set(obj, 'paymentsType', this.paymentsType)
-        this.$set(obj, 'settlementId', this.settlementId)
+        // this.$set(obj, 'settlementId', this.settlementId)
         this.$set(obj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(obj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         this.$set(obj, 'autoTotalAmount', '')

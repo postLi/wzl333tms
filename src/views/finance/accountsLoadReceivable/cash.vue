@@ -332,7 +332,9 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
+      console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
       } else {

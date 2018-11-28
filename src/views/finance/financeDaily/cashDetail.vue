@@ -292,7 +292,7 @@ export default {
         },
         {
           label: '发车类型',
-          prop: 'loadTypeId',
+          prop: 'loadTypeIdZh',
           width: '100',
           fixed: false
         },

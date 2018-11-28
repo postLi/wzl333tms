@@ -10,7 +10,7 @@
         <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" v-else></SelectTree>
       </el-form-item>
       <el-form-item label="到达网点" prop="arriveOrgid">
-        <SelectTree v-model="searchForm.arriveOrgid"  :orgid="otherinfo.orgid" v-if="isReceivable"></SelectTree>
+        <SelectTree v-model="searchForm.arriveOrgid" :orgid="otherinfo.orgid" v-if="isReceivable"></SelectTree>
         <SelectTree v-model="searchForm.arriveOrgid" v-else></SelectTree>
       </el-form-item>
       <el-form-item label="核销状态" prop="status">
@@ -106,8 +106,7 @@ export default {
       }
     },
     isReceivable: {
-      handler (cval, oval) {
-      },
+      handler(cval, oval) {},
       immediate: true
     },
     // 传到子组件
@@ -123,8 +122,13 @@ export default {
     }
   },
   mounted() {
-    this.searchForm.orgid = this.orgid
-    this.searchForm.arriveOrgid = this.orgid
+    if (this.isReceivable) { // 应收操作费
+      this.searchForm.arriveOrgid = this.orgid
+      this.searchForm.orgid = this.orgid
+    } else { // 应付操作费
+      this.searchForm.arriveOrgid = ''
+      this.searchForm.orgid = this.orgid
+    }
     this.searchForm.ascriptionOrgid = this.orgid
     this.onSubmit()
   },
@@ -140,7 +144,7 @@ export default {
         this.$set(searchObj, 'departureStartTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'departureEndTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
-      if (searchObj.status==='') {
+      if (searchObj.status === '') {
         searchObj.status = 'NOSETTLEMENT,PARTSETTLEMENT,ALLSETTLEMENT'
       }
       console.log('searchObj', searchObj)

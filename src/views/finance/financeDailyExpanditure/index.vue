@@ -134,14 +134,8 @@ export default {
       let obj = Object.assign({}, value)
       this.$set(obj, 'paymentsType', this.paymentsType)
       this.$set(obj, 'orgId', this.$route.query.orgId)
-      // if (this.activeName === 'first') { // 批次支出
-      // } else if (this.activeName === 'second') { // 运单支出
-      //   this.settlementId = 178
-      // }
-      // this.$set(obj, 'settlementId', this.settlementId)
       this.loading = true
       this.btnLoading = true
-      console.log('submitVoucher', obj)
       postAddIncome(obj).then(data => {
           this.popVisibleDialog = false
           this.$message.success('记支出成功！')
@@ -248,27 +242,6 @@ export default {
     closeDialog() {
       this.popVisibleDialog = false
     }
-    // getOrgFirstFinancialWay() { // 获取收支方式
-    //   let obj = {
-    //     financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
-    //     orgId: this.getRouteInfo
-    //   }
-    //   getOrgFirstFinancialWay(obj).then(data => {
-    //     this.financialWays = data
-    //     if (this.financialWays) {
-    //       this.formModel.bankAccount = this.financialWays.bankAccount ? this.financialWays.bankAccount : ''
-    //       this.formModel.wechatAccount = this.financialWays.wechatAccount ? this.financialWays.wechatAccount : ''
-    //       this.formModel.alipayAccount = this.financialWays.alipayAccount ? this.financialWays.alipayAccount : ''
-    //     } else {
-    //       this.formModel.bankAccount = ''
-    //       this.formModel.wechatAccount = ''
-    //       this.formModel.alipayAccount = ''
-    //     }
-    //   }).catch((err)=>{
-    //     this.loading = false
-    //     this._handlerCatchMsg(err)
-    //   })
-    // }
   }
 }
 

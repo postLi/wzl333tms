@@ -417,6 +417,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
+      console.log('getRouteInfo', this.$route.query)
       return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
@@ -439,7 +440,7 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     getList() {
-      const sns = this.$route.query.selectListShipSns
+      const sns = JSON.parse(this.$route.query.selectListShipSns)
       const selectListShipSns = Object.assign([], sns)
       if (this.$route.query.selectListShipSns) {
         this.isModify = true
