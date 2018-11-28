@@ -270,7 +270,7 @@
                   </div>
                   <div class="pact_title">
                     <span>承运方:</span>
-                    <p style="">{{formModel.dirverName}}</p>
+                    <p style="">{{iscarrier}}</p>
                     <span>(以下简称乙方)</span>
                   </div>
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
@@ -398,6 +398,7 @@ import popRight from '@/components/PopRight/index'
 import selectType from '@/components/selectType/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
 import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+import {getLookContract} from '@/api/operation/arteryDepart'
 // import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
@@ -449,6 +450,7 @@ export default {
       isCancelFootEdit: false,
       isHiddenBtn: false,
       isEditActual: false,
+      iscarrier: '',
       propsId: '',
       formModel: {},
       textChangeDanger: [],
@@ -759,6 +761,7 @@ export default {
         }
         this.getBatchNo = this.info.batchNo
         this.propsId = this.info.id
+        this.fetchGetLookContracts()
         this.getDetail()
         this.fetchAllCustomer()
         this.fetchSelectLoadMainInfoList()
@@ -798,12 +801,16 @@ export default {
   mounted() {
     this.propsId = this.info.id
     if (this.popVisible) {
+      this.fetchGetLookContracts()
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
+
     }
+
   },
   methods: {
+
     changeData(index, prop, newVal) { // 判断当行
       this.detailList[index][prop] = Number(newVal)
       const curAmount = this.detailList[index].actualAmount // 实到件数
@@ -918,6 +925,16 @@ export default {
             }
           })
         })
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
+    fetchGetLookContracts() {
+      this.loading = true
+      const _isid = this.propsId
+      return getLookContract(_isid).then(data => {
+        this.iscarrier = data.data.carrier
+        this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
       })
