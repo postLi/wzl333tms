@@ -238,7 +238,7 @@
  export function PrintInFullPage(obj) {
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
-     obj = formatTableData(obj)
+     obj = formatTableData(objectMerge2({}, obj))
      const tableId = createTable(obj) // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('订货单')
@@ -700,7 +700,7 @@
  // 保存为xls文件
  export function SaveAsFile(obj) {
    console.log('SaveAsFile:::::', objectMerge2({}, obj))
-   obj = formatTableData(obj)
+   obj = formatTableData(objectMerge2({}, obj))
    // 如果是ie10+则用js-export-excel
    // 否则用lodop
    const isie = IEVersion()
