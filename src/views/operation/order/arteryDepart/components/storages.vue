@@ -484,6 +484,7 @@
   import {PrintContract} from '@/utils/lodopFuncs'
   import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
   import {getLookContract, getEditContract} from '@/api/operation/arteryDepart'
+  
 
   export default {
     data() {
@@ -1022,8 +1023,10 @@
       print() { // 打印合同
         let str = '?'
         this.formModel.checkBillName = this.sendContract.contractName
-        for (const item in this.formModel) {
-          str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
+        let formModel = Object.assign({}, this.formModel)
+        this.$set(formModel, 'carrier', this.sendContract.carrier)
+        for (const item in formModel) {
+          str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
         }
 
         // JSON.stringify(this.formModel)
