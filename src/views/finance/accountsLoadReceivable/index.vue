@@ -31,10 +31,20 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      // component: 'all',
-      // pageName: ''
+  mounted(){
+    console.log('mountedmountedmounted')
+  },
+  data () {
+    return{
+      pageNameList: {
+        all: '全部结算',
+        month: '月结结算',
+        abnormal: '异动费用结算',
+        receipt: '回单付将诶算',
+        cash: '现付结算',
+        arrive: '到付结算',
+        handleFee: '操作费核销'
+      }
     }
   },
   computed: {
@@ -43,49 +53,6 @@ export default {
     },
     component() {
       return this.$route.query.currentPage
-    },
-    pageName() {
-      const parentPage = this.$route.query.currentPage
-      let name = ''
-      switch (parentPage) {
-        case 'all':
-          name = '全部结算'
-          break
-        case 'month':
-          name = '月结结算'
-          break
-        case 'abnormal':
-          name = '异动费用结算'
-          break
-        case 'receipt':
-          name = '回单付将诶算'
-          break
-        case 'cash':
-          name = '现付结算'
-          break
-        case 'arrive':
-          name = '到付结算'
-          break
-        case 'handleFee':
-          name = '操作费核销'
-          break
-      }
-      return name
-    }
-  },
-  created() {
-    // this.getParentPage()
-  },
-  methods: {
-    getParentPage() {
-      this.$route.matched.forEach(e => {
-        const str = '/finance/accountsLoadReceivable'
-        if (e.path.indexOf(str) !== -1) {
-          e.meta.title = this.pageName
-          e.name = this.pageName
-          console.log(e.path)
-        }
-      })
     }
   }
 }

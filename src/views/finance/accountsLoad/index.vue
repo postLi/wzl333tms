@@ -48,26 +48,28 @@ export default {
       default: false
     }
   },
+  mounted(){
+    console.log('mountedmountedmounted2222222')
+  },
   data() {
     return {
-      // component: 'batchShort',
       pageNameList: {
-        batchShort: '短驳费结算',
-        batchDeliver: '送货费结算',
-        batchInsurance: '整车保险费结算',
-        batchStationLoad: '发站装卸费',
-        batchStationOther: '发站其他费',
-        batchArriveLoad: '到站装卸费',
-        batchArrivalOther: '到站其他费',
-        batchArrivalAll: '发车汇总',
-        batchTruckAll: '到车汇总',
-        waybillKickback: '回扣',
-        waybillTicket: '单票提货费',
-        waybillOther: '其他费用支出',
-        waybillTransfer: '中转费',
-        waybillAbnormal: '异常理赔',
-        waybillUnusual: '异动费用',
-        handleFee: '操作费核销'
+        'batchShort': '短驳费结算',
+        'batchDeliver': '送货费结算',
+        'batchInsurance': '整车保险费结算',
+        'batchStationLoad': '发站装卸费',
+        'batchStationOther': '发站其他费',
+        'batchArriveLoad': '到站装卸费',
+        'batchArrivalOther': '到站其他费',
+        'batchArrivalAll': '发车汇总',
+        'batchTruckAll': '到车汇总',
+        'waybillKickback': '回扣',
+        'waybillTicket': '单票提货费',
+        'waybillOther': '其他费用支出',
+        'waybillTransfer': '中转费',
+        'waybillAbnormal': '异常理赔',
+        'waybillUnusual': '异动费用',
+        'handleFee': '操作费核销'
       }
     }
   },
@@ -77,18 +79,7 @@ export default {
     },
     component() {
       return this.$route.query.currentPage
-    },
-    pageName() {
-      return this.pageNameList[this.$route.query.currentPage]
     }
-  },
-  mounted () {
-    // this.init()
-  },
-  methods: {
-    // init() {
-    //   this.component = this.$route.query.currentPage
-    // }
   }
 }
 

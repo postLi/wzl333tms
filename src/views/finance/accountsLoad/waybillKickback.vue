@@ -423,7 +423,7 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      console.log(JSON.parse(this.$route.query.searchQuery))
+      console.log('xxxxxxxxxxxxxxxxxx:',this.$route.query,JSON.parse(this.$route.query.searchQuery))
       return JSON.parse(this.$route.query.searchQuery)
     },
     totalLeft() {
@@ -434,6 +434,7 @@ export default {
     }
   },
   mounted() {
+    console.log('xxxxxxxxxxxxxxxxxx333:',this.$route.query,JSON.parse(this.$route.query.searchQuery))
     this.getList()
   },
   methods: {
@@ -443,6 +444,8 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      this.searchQuery.currentPage = 1
+      this.searchQuery.pageSize = 100
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {

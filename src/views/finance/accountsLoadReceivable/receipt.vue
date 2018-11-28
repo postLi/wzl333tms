@@ -289,6 +289,16 @@ export default {
       return this.rightTable.length
     }
   },
+   watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.getList()
   },
@@ -321,6 +331,7 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+      this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true

@@ -121,6 +121,7 @@ import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
 import Voucher from '@/components/voucher/batch'
 export default {
+  name: 'batchShort',
   components: {
     transferTable,
     querySelect,

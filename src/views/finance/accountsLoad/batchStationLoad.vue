@@ -386,22 +386,8 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-      // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      // this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      // if (!this.$route.query.searchQuery.vo) {
-      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
-      //   // this.$router.push({ path: './accountsPayable/batch' })
-      //   this.isFresh = true
-      // } else {
-      //   this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-      //   this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      //   this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
-      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      //   this.isFresh = false
-      // }
     },
     getList() {
       const selectListBatchNos = objectMerge2([], JSON.parse(this.$route.query.selectListBatchNos))
@@ -412,12 +398,10 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      // if (!this.isFresh) {
       postPayListByOne(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)
         selectListBatchNos.forEach(e => {
@@ -445,8 +429,6 @@ export default {
         this.loading = false
         this._handlerCatchMsg(err)
       })
-
-      // }
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)

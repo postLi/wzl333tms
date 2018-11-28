@@ -225,8 +225,8 @@ export default {
         this.formModel = Object.assign({}, this.info)
         console.log('paymentsType', this.formModel.paymentsType)
         this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType + '')
+        this.initSubject()
         this.getVeryficationList()
-
         this.loading = false
       } else {
         this.getBaseInfo()
@@ -246,7 +246,6 @@ export default {
     },
     initSubject() { // 修改时回填科目列表
       this.getFinanceSubjects().then(() => { // 获取一级科目
-
         if (this.formModel.subjectOneId) {
           if (!this.checkSubject(1)) {
             for (let item in this.formModel) {
@@ -376,6 +375,11 @@ export default {
     },
     getFinanceSubjects(subjectLevel, parentId) {
       console.warn('getFinanceSubjects 科目', subjectLevel, parentId)
+      for(let item in this.formModel) {
+        if (/^subject/.test(item)) {
+          console.log(item, this.formModel[item])
+        }
+      }
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
       return getFinanceSubjects(this.searchQuerySub).then(data => {
@@ -385,15 +389,24 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目二: ', this.subjectTwo)
+              this.subjectTwo.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             case 3:
               this.subjectThree = data
               this.subjectFour = []
               console.log('科目三: ', this.subjectThree)
+              this.subjectThree.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             case 4:
               this.subjectFour = data
               console.log('科目四: ', this.subjectFour)
+              this.subjectFour.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             default:
               this.subjectOne = data
@@ -401,6 +414,9 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目一: ', this.subjectOne)
+              this.subjectOne.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
           }
         })

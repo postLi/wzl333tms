@@ -65,7 +65,7 @@
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
                 <template slot-scope="scope">
                   <div v-if="column.expand">
-                    <el-input  v-numberOnly:point :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
+                    <el-input v-numberOnly:point :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
                   </div>
                   <div v-else>
                     <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -269,21 +269,19 @@ export default {
           width: '120',
           fixed: false
         }
-      ],
-      getRouteInfo: {
-        vo: {
-          ascriptionOrgId: ''
-        }
-      }
+      ]
+      // getRouteInfo: {
+      //   vo: {
+      //     ascriptionOrgId: ''
+      //   }
+      // }
     }
   },
   computed: {
-    // getRouteInfo() {
-    //   if (this.$route.query) {
-    //   return JSON.parse(this.$route.query.searchQuery)
-
-    //   }
-    // },
+    getRouteInfo() {
+      console.log('结算页面的接收到的数据:::', this.$route.query)
+      return JSON.parse(this.$route.query.searchQuery)
+    },
     totalLeft() {
       return this.leftTable.length
     },
@@ -291,14 +289,20 @@ export default {
       return this.rightTable.length
     }
   },
+  watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
-    this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
-    this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
-    // this.initRouteInfo()
     this.getList()
   },
   methods: {
-    initRouteInfo() {},
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
@@ -309,16 +313,16 @@ export default {
       this.searchQuery.pageSize = 100
       this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'status', '')
-      if (!this.$route.query) {
-        //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        //   // this.$router.push({ path: './accountsPayable/waybill' })
-        this.isFresh = true // 是否手动刷新页面
-      } else {
-        //   this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        //   this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
-        //   this.$set(this.searchQuery.vo, 'status', '')
-        this.isFresh = false
-      }
+      // if (!this.$route.query) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
+      //   // this.$router.push({ path: './accountsPayable/waybill' })
+      // this.isFresh = true // 是否手动刷新页面
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+      //   this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
+      //   this.$set(this.searchQuery.vo, 'status', '')
+      // this.isFresh = false
+      // }
     },
     setRight(item) {
       item.inputNowPayFee = item.notNowPayFee
@@ -332,7 +336,9 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
-
+      this.loading = true
+      // this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
+      this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
@@ -347,40 +353,40 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
-        accountApi.getReceivableList(this.searchQuery).then(data => {
-          // NOSETTLEMENT,PARTSETTLEMENT
-          // 过滤未完成结算的数据
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
-          }))
-          selectListShipSns.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.shipSn) {
-                this.setRight(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            e.inputBrokerageFee = e.unpaidFee
-            const item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      // if (!this.isFresh) {
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+        // NOSETTLEMENT,PARTSETTLEMENT
+        // 过滤未完成结算的数据
+        this.leftTable = Object.assign([], data.list.filter(el => {
+          return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
+        }))
+        selectListShipSns.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.shipSn) {
+              this.setRight(item)
             }
           })
-          // 保留原有数据的引用
-          this.orgLeftTable = objectMerge2([], this.leftTable)
-          this.loading = false
-        }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
         })
-      }
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          e.inputBrokerageFee = e.unpaidFee
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+        })
+        // 保留原有数据的引用
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+      // }
     },
     changLoadData(index, prop, newVal) {
       // this.rightTable[index][prop] = Number(newVal)

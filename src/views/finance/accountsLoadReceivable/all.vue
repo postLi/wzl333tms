@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100">
+  <div class="customer-manager tab-wrapper tab-wrapper-100" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -404,13 +404,27 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      return JSON.parse(this.$route.query.searchQuery)
+      if (this.$route.query.searchQuery) {
+        return JSON.parse(this.$route.query.searchQuery)
+      } else {
+
+      }
     },
     totalLeft() {
       return this.leftTable.length
     },
     totalRight() {
       return this.rightTable.length
+    }
+  },
+  watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -445,6 +459,7 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+      this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
@@ -493,6 +508,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -503,7 +519,7 @@ export default {
       let num = 0
       if (newVal) {
         num = this.rightTable[index][prop.replace('input', 'not')]
-      }else {
+      } else {
         // this.rightTable[index][prop.replace('input', 'not')] = 0
       }
 
@@ -672,7 +688,7 @@ export default {
             e.inputReceiptpayFee,
             e.inputMonthpayFee,
             e.inputChangeFee,
-            ).result()
+          ).result()
 
           let item = Object.assign({}, e)
           if (e.inputNowPayFee && e.notNowPayFee > 0) {

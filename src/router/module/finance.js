@@ -637,7 +637,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '账款结算',
-        noCache: false,
+        noCache: true,
         code: 'FINANCE_REC'
       }
     }, {

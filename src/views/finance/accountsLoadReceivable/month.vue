@@ -277,13 +277,25 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      return JSON.parse(this.$route.query.searchQuery)
+      console.log('xxxxxxxxxxxxxxxxxx222:',this.$route.query,JSON.parse(this.$route.query.searchQuery))
+      let obj = this.$route.query
+      return JSON.parse(obj.searchQuery)
     },
     totalLeft() {
       return this.leftTable.length
     },
     totalRight() {
       return this.rightTable.length
+    }
+  },
+   watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -318,6 +330,7 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+      this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
