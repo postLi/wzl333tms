@@ -270,7 +270,7 @@
                   </div>
                   <div class="pact_title">
                     <span>承运方:</span>
-                    <p style="">{{formModel.dirverName}}</p>
+                    <p style="">{{iscarrier}}</p>
                     <span>(以下简称乙方)</span>
                   </div>
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
@@ -398,6 +398,7 @@ import popRight from '@/components/PopRight/index'
 import selectType from '@/components/selectType/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
 import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
+import {getLookContract} from '@/api/operation/arteryDepart'
 // import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
@@ -449,6 +450,7 @@ export default {
       isCancelFootEdit: false,
       isHiddenBtn: false,
       isEditActual: false,
+      iscarrier: '',
       propsId: '',
       formModel: {},
       textChangeDanger: [],
@@ -562,7 +564,6 @@ export default {
           expand: true,
           fixed: false,
           checkfn: (row) => {
-            console.log('row.warehouStatus:', row.warehouStatus)
             return row.warehouStatus === 1
           },
 
@@ -728,13 +729,17 @@ export default {
       type: Boolean,
       dafault: false
     },
-    //
+    arrivalStatus: {
+      type: String,
+      default: ''
+    },
     id: {
       type: [String, Number],
       dafault: false
     }
   },
   watch: {
+    arrivalStatus() {},
     validateIsEmpty(msg = '不能为空！') {
       return (rule, value, callback) => {
         if (!value) {
@@ -745,19 +750,23 @@ export default {
       }
     },
     id(newVal) {},
-    info(newVal) {
-      if (this.isModify) {
-        this.popTitle = '到车确定'
-      } else if (this.isAlFun) {
-        this.popTitle = '查看详情'
-      } else {
-        this.popTitle = '到车入库'
-      }
-      this.getBatchNo = this.info.batchNo
-      this.propsId = this.info.id
-      this.getDetail()
-      this.fetchAllCustomer()
-      this.fetchSelectLoadMainInfoList()
+    info: {
+      handler(cval, oval) {
+        if (this.isModify) {
+          this.popTitle = '到车确定'
+        } else if (this.isAlFun) {
+          this.popTitle = '查看详情'
+        } else {
+          this.popTitle = '到车入库'
+        }
+        this.getBatchNo = this.info.batchNo
+        this.propsId = this.info.id
+        this.fetchGetLookContracts()
+        this.getDetail()
+        this.fetchAllCustomer()
+        this.fetchSelectLoadMainInfoList()
+      },
+      deep: true
     },
     isAlFun(newVal) {
       this.tablekey = +new Date()
@@ -792,12 +801,16 @@ export default {
   mounted() {
     this.propsId = this.info.id
     if (this.popVisible) {
+      this.fetchGetLookContracts()
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
+
     }
+
   },
   methods: {
+
     changeData(index, prop, newVal) { // 判断当行
       this.detailList[index][prop] = Number(newVal)
       const curAmount = this.detailList[index].actualAmount // 实到件数
@@ -892,7 +905,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    fetchAllCustomer() {
+    fetchAllCustomer() { // 获取运单列表
       this.loading = true
       const _id = this.propsId
       // console.log(_id);
@@ -904,7 +917,7 @@ export default {
           this.detailList.forEach(e => {
             // 入库前
             if (!this.isAlFun) {
-              if (e.warehouStatus === 0) {
+              if (e.warehouStatus !== 1) {
                 e.actualAmount = e.loadAmount
                 e.actualWeight = e.loadWeight
                 e.actualVolume = e.loadVolume
@@ -912,6 +925,16 @@ export default {
             }
           })
         })
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
+    fetchGetLookContracts() {
+      this.loading = true
+      const _isid = this.propsId
+      return getLookContract(_isid).then(data => {
+        this.iscarrier = data.data.carrier
+        this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
       })
@@ -1055,8 +1078,12 @@ export default {
           break
           // 添加客户
         case 'sure':
-          this.timeInfoVisible = true
-          console.log('sure', this.timeInfoVisible)
+          console.log('批次状态：', this.arrivalStatus)
+          if (this.arrivalStatus === '在途中' || this.info.bathStatusName === '在途中') {
+            this.timeInfoVisible = true
+          } else {
+            this.getActualTime()
+          }
           break
       }
       if (type !== 'sure') {
@@ -1119,7 +1146,9 @@ export default {
           })
         })
         data = this.sendModel
-        this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(data.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(55, data).then(res => {
           this.$message({
             type: 'success',
@@ -1520,6 +1549,9 @@ export default {
     }
   }
 }
+
+
+
 
 
 

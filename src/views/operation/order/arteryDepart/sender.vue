@@ -380,6 +380,8 @@ export default {
           getLookContract(selectObj.id).then(data => {
             contractObj = Object.assign({}, data.data)
             this.$set(selectObj, 'checkBillName', contractObj.contractName)
+            this.$set(selectObj, 'carrier',contractObj.carrier)
+            console.log(data, selectObj)
             let str = '?'
             for (const item in selectObj) {
               str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
