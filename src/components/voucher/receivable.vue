@@ -149,6 +149,12 @@ export default {
           }
         })
         return this.uniqueArray(ids).join(',')
+      }else if (this.$route.query.tab === '全部核销') {
+        let ids = []
+        this.info.orderList.forEach(e => {
+          ids.push(e.feeReceivableTypeId)
+        })
+        return this.uniqueArray(ids).join(',')
       } else {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
         return JSON.parse(this.$route.query.searchQuery).vo.feeType
@@ -223,7 +229,7 @@ export default {
       this.baseQuery.orgId = this.orgId
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
-      this.baseQuery.feeIds = this.feeId + '' || ''
+        this.baseQuery.feeIds = this.feeId + '' || ''
       console.log('baseQuery', this.baseQuery, this.orgId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data

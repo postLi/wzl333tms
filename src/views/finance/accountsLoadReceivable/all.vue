@@ -695,41 +695,47 @@ export default {
             this.infoTable.orderList.push(Object.assign({
               dataName: '现付',
               amount: e.notNowPayFee,
-              inputNowPayFee: e.notNowPayFee
+              inputNowPayFee: e.notNowPayFee,
+              feeReceivableTypeId: e.nowPayFeeId
             }, item))
           }
           if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
             this.infoTable.orderList.push(Object.assign({
               dataName: '到付',
               amount: e.notArrivepayFee,
-              inputArrivepayFee: e.notArrivepayFee
+              inputArrivepayFee: e.notArrivepayFee,
+              feeReceivableTypeId: e.arrivepayFeeId
             }, item))
           }
           if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
             this.infoTable.orderList.push(Object.assign({
               dataName: '回单付',
               amount: e.notReceiptpayFee,
-              inputReceiptpayFee: e.notReceiptpayFee
+              inputReceiptpayFee: e.notReceiptpayFee,
+              feeReceivableTypeId: e.receiptpayFeeId
             }, item))
           }
           if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
             this.infoTable.orderList.push(Object.assign({
               dataName: '月结付',
               amount: e.notMonthpayFee,
-              inputMonthpayFee: e.notMonthpayFee
+              inputMonthpayFee: e.notMonthpayFee,
+              feeReceivableTypeId: e.monthpayFeeId 
             }, item))
           }
           if (e.inputChangeFee && e.notChangeFee > 0) {
             this.infoTable.orderList.push(Object.assign({
               dataName: '异动费用',
               amount: e.notChangeFee,
-              inputChangeFee: e.notChangeFee
+              inputChangeFee: e.notChangeFee,
+              feeReceivableTypeId: e.changeFeeId
             }, item))
           }
         })
         this.infoTable.amount = amount
         amount = 0
         if (this.infoTable.orderList.length > 0) { // 判断是否要结算
+          console.log('this.infoTable', this.infoTable)
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })

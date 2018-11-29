@@ -76,7 +76,7 @@
             <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.hadArriveTotal)"></span>
           </template>
         </el-table-column>
-         <el-table-column prop="othePay" sortable label="其他费用" width="120">
+        <!--  <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
         <el-table-column prop="noOthePay" sortable label="未结其他费用" width="120">
           <template slot-scope="scope">
@@ -87,7 +87,7 @@
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
          <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="noOperationPay" sortable label="未结操作费" width="120" v-if="settlementId!==181">
@@ -217,7 +217,7 @@
             <span v-html="_setTextColor(scope.row.arriveTotal, scope.row.hadArriveTotal, scope.row.noArriveTotal, scope.row.hadArriveTotal)"></span>
           </template>
         </el-table-column>
-         <el-table-column prop="othePay" sortable label="其他费用" width="120">
+        <!--  <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
         <el-table-column prop="noOthePay" sortable label="未结其他费用" width="120">
           <template slot-scope="scope">
@@ -228,7 +228,7 @@
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
          <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="noOperationPay" sortable label="未结操作费" width="120" v-if="settlementId!==181">
