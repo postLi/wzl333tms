@@ -69,10 +69,13 @@
       </div>
     </div>
     <div class="previewPicture" v-if="isShowPre">
-      <el-button @click="isShowPre = false" icon="el-icon-close" size="mini">关闭预览</el-button>
+      <div class="previewPicture_info">
+        <el-tag type="info">{{currentCarousel + ' / ' + previews.length}}</el-tag>
+        <el-button type="info" plain @click="isShowPre = false" icon="el-icon-close" size="mini" class="previewPicture_close">关闭预览</el-button>
+      </div>
       <transition name="el-zoom-in-bottom">
-        <el-carousel :interval="3000" height="300px" arrow="always">
-          <el-carousel-item v-for="item in previews" :key="item">
+        <el-carousel ref="carousel" :interval="5000" :loop="false" height="300px" :arrow="arrowShow" :initial-index="0" @change="handleCarousel">
+          <el-carousel-item v-for="(item, index) in previews" :key="item" >
             <img :src="item" alt="" @click="prePic(item)">
           </el-carousel-item>
         </el-carousel>
@@ -114,6 +117,8 @@ export default {
   },
   data() {
     return {
+      arrowShow: 'always',
+      currentCarousel: 1,
       previews: [],
       isShowPre: false,
       currentInfo: {},
@@ -289,7 +294,7 @@ export default {
           prop: 'picsPath',
           width: '90',
           preview: true,
-          fixed: false
+          fixed: true
         }
       ]
     }
@@ -323,6 +328,10 @@ export default {
           // this.$message.warning('功能尚在开发中~')
           break
       }
+    },
+    handleCarousel (index) {
+      this.currentCarousel = index + 1
+      console.log(index)
     },
     setAddSuccess() {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -409,8 +418,11 @@ export default {
     },
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      if (this.selectedList[0].verifyStatusZh === '已审核') {
+      if (this.selectedList[0].verifyStatusZh === '已审核' ) {
         this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        this.$refs.multipleTable.clearSelection()
+      } else  if ( this.selectedList[0].dataSrcZh === '手工录入') {
+        this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
         this.$refs.multipleTable.clearSelection()
       } else {
         this.$confirm('确定要反核销【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
@@ -584,6 +596,13 @@ export default {
       img {
         width: auto;
         height: 100%;
+      }
+    }
+    .previewPicture_info {
+      height: 38px;
+      .previewPicture_close {
+        float: right;
+        clear: both;
       }
     }
   }

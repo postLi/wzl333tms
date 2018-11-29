@@ -124,7 +124,7 @@ export default {
   mounted() {
     if (this.isReceivable) { // 应收操作费
       this.searchForm.arriveOrgid = this.orgid
-      this.searchForm.orgid = this.orgid
+      this.searchForm.orgid = ''
     } else { // 应付操作费
       this.searchForm.arriveOrgid = ''
       this.searchForm.orgid = this.orgid
@@ -154,7 +154,13 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.$data, this.$options.data())
         this.$refs[formName].resetFields()
-        this.searchForm.orgid = this.orgid
+        if (this.isReceivable) {
+          this.searchForm.arriveOrgid = this.orgid
+          this.searchForm.orgid = ''
+        } else {
+          this.searchForm.arriveOrgid = ''
+          this.searchForm.orgid = this.orgid
+        }
         this.searchAll = '1'
         setTimeout(() => {
           this.searchAll = ''

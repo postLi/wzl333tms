@@ -1,5 +1,5 @@
 <template>
-  <div class="system-setup">
+  <div class="system-setup-page">
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
         <el-collapse v-model="activeNames">
@@ -770,7 +770,7 @@ export default {
 
 </script>
 <style lang="scss">
-.system-setup {
+.system-setup-page {
   display: flex;
   flex-direction: column;
   position: relative;

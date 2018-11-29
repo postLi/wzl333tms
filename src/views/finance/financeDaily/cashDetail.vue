@@ -460,11 +460,11 @@ export default {
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
       let selectedList = Object.assign([], this.selectedList).filter(e => {
-        return e.verifyStatusZh === '未审核'
+        return (e.verifyStatusZh === '未审核' && e.dataSrcZh === '核销产生')
       })
       let count = selectedList.length
       if (this.selectedList.length !== count) {
-        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        this.$message.warning('凭证【已审核】和【手工录入】不可反核销')
       }
       if (count === 0) {
         this.$refs.multipleTable.clearSelection()
