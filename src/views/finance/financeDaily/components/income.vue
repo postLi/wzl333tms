@@ -64,7 +64,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount" class="formItemTextDanger">
-          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" :disabled="formModel.dataSrcZh === '核销产生'"></el-input>
         </el-form-item>
       </div>
       <div class="income_item_line"></div>

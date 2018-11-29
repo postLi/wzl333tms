@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100" v-loading="loading">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -824,8 +824,10 @@ export default {
 
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader {
-  position: static;
+.receivableTable {
+  .tableHeadItemBtn .setTableHeader {
+    position: static;
+  }
 }
 
 </style>

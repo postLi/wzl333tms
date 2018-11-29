@@ -451,6 +451,8 @@ export default {
         if (data.verifyStatusZh !== '已审核') {
           this.isModify = true
           this.popVisibleIncome = true
+        }else {
+          this.$message.warning('凭证【 ' + data.verifyStatusZh + ' 】不可修改')
         }
         this.$refs.multipleTable.clearSelection()
       })

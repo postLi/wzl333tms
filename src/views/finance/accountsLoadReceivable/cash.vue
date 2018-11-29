@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100" v-loading="loading">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -19,7 +19,7 @@
               </template>
             </el-table-column>
             <el-table-column fixed :render-header="setHeader" width="50">
-              <template slot-scope="scope">
+              <template slot-scope="scope" >
                 <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -55,7 +55,7 @@
               </template>
             </el-table-column>
             <el-table-column :render-header="setHeader2" fixed width="50">
-              <template slot-scope="scope">
+              <template slot-scope="scope" >
                 <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -612,8 +612,9 @@ export default {
 
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader {
-  position: static;
+.receivableTable {
+  .tableHeadItemBtn .setTableHeader {
+    position: static;
+  }
 }
-
 </style>

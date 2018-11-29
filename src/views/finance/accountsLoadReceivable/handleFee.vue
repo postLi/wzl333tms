@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
     <div class="accountsLoad_table">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -579,7 +579,9 @@ export default {
 // settlementId 178
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader{
-  position: static;
+.receivableTable {
+  .tableHeadItemBtn .setTableHeader {
+    position: static;
+  }
 }
 </style>
