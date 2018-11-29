@@ -324,121 +324,121 @@ export default {
       fieldSetup: [],
       activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
       shipField: [{
-          key: 'shipFromCityName',
-          value: '0',
-          name: '出发城市'
-        },
-        {
-          key: 'shipToOrgid',
-          value: '0',
-          name: '目的网点'
-        },
-        {
-          key: 'shipGoodsSn',
-          value: '0',
-          name: '货号'
-        },
-        {
-          key: 'shipSenderId',
-          value: '0',
-          name: '发货方'
-        },
-        {
-          key: 'shipSenderAddress',
-          value: '0',
-          name: '发货地址'
-        },
-        {
-          key: 'shipReceiverId',
-          value: '0',
-          name: '收货方'
-        },
-        {
-          key: 'shipReceiverAddress',
-          value: '0',
-          name: '收货地址'
-        },
-        {
-          key: 'cargoWeight',
-          value: '0',
-          name: '重量'
-        },
-        {
-          key: 'cargoVolume',
-          value: '0',
-          name: '体积'
-        },
-        {
-          key: 'cargoPack',
-          value: '0',
-          name: '包装'
-        },
-        {
-          key: 'brokerageFee',
-          value: '0',
-          name: '回扣'
-        },
-        {
-          key: 'deliveryFee',
-          value: '0',
-          name: '送货费'
-        },
+        key: 'shipFromCityName',
+        value: '0',
+        name: '出发城市'
+      },
+      {
+        key: 'shipToOrgid',
+        value: '0',
+        name: '目的网点'
+      },
+      {
+        key: 'shipGoodsSn',
+        value: '0',
+        name: '货号'
+      },
+      {
+        key: 'shipSenderId',
+        value: '0',
+        name: '发货方'
+      },
+      {
+        key: 'shipSenderAddress',
+        value: '0',
+        name: '发货地址'
+      },
+      {
+        key: 'shipReceiverId',
+        value: '0',
+        name: '收货方'
+      },
+      {
+        key: 'shipReceiverAddress',
+        value: '0',
+        name: '收货地址'
+      },
+      {
+        key: 'cargoWeight',
+        value: '0',
+        name: '重量'
+      },
+      {
+        key: 'cargoVolume',
+        value: '0',
+        name: '体积'
+      },
+      {
+        key: 'cargoPack',
+        value: '0',
+        name: '包装'
+      },
+      {
+        key: 'brokerageFee',
+        value: '0',
+        name: '回扣'
+      },
+      {
+        key: 'deliveryFee',
+        value: '0',
+        name: '送货费'
+      },
 
         /*         {
                   key: 'productPrice',
                   value: '0',
                   name: '声明价值'
                 }, */
-        {
-          key: 'insuranceFee',
-          value: '0',
-          name: '保险费'
-        },
-        {
-          key: 'handlingFee',
-          value: '0',
-          name: '装卸费'
-        },
-        {
-          key: 'packageFee',
-          value: '0',
-          name: '包装费'
-        },
-        {
-          key: 'pickupFee',
-          value: '0',
-          name: '提货费'
-        },
-        {
-          key: 'amountFee',
-          value: '0',
-          name: '件数单价'
-        },
-        {
-          key: 'weightFee',
-          value: '0',
-          name: '重量单价'
-        },
-        {
-          key: 'volumeFee',
-          value: '0',
-          name: '体积单价'
-        },
-        {
-          key: 'shipReceiptSn',
-          value: '0',
-          name: '回单号'
-        },
-        {
-          key: 'shipCustomerNumber',
-          value: '0',
-          name: '客户单号'
-        },
-        {
-          key: 'shipUserid',
-          value: '0',
-          name: '业务员'
-        }
+      {
+        key: 'insuranceFee',
+        value: '0',
+        name: '保险费'
+      },
+      {
+        key: 'handlingFee',
+        value: '0',
+        name: '装卸费'
+      },
+      {
+        key: 'packageFee',
+        value: '0',
+        name: '包装费'
+      },
+      {
+        key: 'pickupFee',
+        value: '0',
+        name: '提货费'
+      },
+      {
+        key: 'amountFee',
+        value: '0',
+        name: '件数单价'
+      },
+      {
+        key: 'weightFee',
+        value: '0',
+        name: '重量单价'
+      },
+      {
+        key: 'volumeFee',
+        value: '0',
+        name: '体积单价'
+      },
+      {
+        key: 'shipReceiptSn',
+        value: '0',
+        name: '回单号'
+      },
+      {
+        key: 'shipCustomerNumber',
+        value: '0',
+        name: '客户单号'
+      },
+      {
+        key: 'shipUserid',
+        value: '0',
+        name: '业务员'
+      }
       ],
       vouchers: [{
         value: '1',
