@@ -60,7 +60,7 @@ export default {
         // this.init()
       }
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
         if (!this.orderid) {
@@ -137,6 +137,7 @@ export default {
         return false
       }
       console.log('initOrderDetail err:', route)
+      this.initindex = 0
       this.initOrder()
     },
     showError() {
@@ -156,15 +157,28 @@ export default {
     },
     initOrder() {
       this.activeIndex = 'one'
+      this.initindex++
+      // setTimeout(() => {
       this.getOrderInfo(this.output.orderid).then(res => {
-        this.orderdata = res.data
-        this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
-        this.loading = false
-      }).catch(err => {
-        this.loading = false
-        console.log('initOrderDetail err:', err)
-        this.showError()
-      })
+          if (!res.data) {
+            if (this.initindex > 3) {
+              this.$message.alert('获取信息失败，请尝试刷新页面。')
+            } else {
+              this.initOrder()
+            }
+          } else {
+            this.initindex = 0
+            this.orderdata = res.data
+            this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
+            this.loading = false
+            this.eventBus.$emit('startPrint')
+          }
+        }).catch(err => {
+          this.loading = false
+          console.log('initOrderDetail err:', err)
+          this.showError()
+        })
+      // }, 10000)
     },
     // 当前运单是否有效且含有信息
     // 当无效时，禁止浏览后面的tab
