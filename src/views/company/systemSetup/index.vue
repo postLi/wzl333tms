@@ -199,7 +199,7 @@
               </div>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="setup7" title="配载设置">
+          <el-collapse-item name="setup8" title="配载设置">
             <div class="clearfix setup-table">
               <div class="setup-left">配载设置</div>
               <div class="setup-right">
@@ -309,7 +309,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup8'],
       shipField: [{
         key: 'shipFromCityName',
         value: '0',
