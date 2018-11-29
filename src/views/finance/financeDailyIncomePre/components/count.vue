@@ -1,32 +1,26 @@
 <template>
   <!-- 智能结算弹出框 -->
-  <el-dialog :title="'智能结算-'+title" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
+  <el-dialog title="智能结算" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
     <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" label-width="70px">
-      <el-form-item label="发货人" prop="shipSenderName" v-if="settlementId===178">
+      <el-form-item label="发货人" prop="shipSenderName">
+        <!-- <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" /> -->
+        <!-- <el-select v-model="formModel.shipSenderName" filterable placeholder="搜索发货人" clearable>
+          <el-option v-for="item in senderOptions" :key="item.customerId" :label="item.customerName" :value="item.customerName">
+          </el-option>
+        </el-select> -->
         <el-autocomplete popper-class="my-autocomplete" v-model="formModel.shipSenderName" :fetch-suggestions="querySearchSender" placeholder="发货人搜索" size="mini" @select="handleSelectSender" auto-complete="off" :maxlength="8">
           <template slot-scope="{ item }">
             <div class="name">{{ item.customerName }}</div>
           </template>
         </el-autocomplete>
       </el-form-item>
-      <el-form-item label="车牌号" prop="truckIdNumber" v-else>
-        <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码搜索" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8">
-          <template slot-scope="{ item }">
-            <div class="name">{{ item.truckIdNumber }}</div>
-          </template>
-        </el-autocomplete>
-      </el-form-item>
-      <el-form-item label="支出金额" prop="autoTotalAmount">
+      <el-form-item label="收入金额" prop="autoTotalAmount">
         <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input>
       </el-form-item>
-      <el-form-item label="费用项">
-        <el-select v-model="formModel.feeId" v-if="settlementId === 178">
+      <el-form-item label="费用项" prop="feeId">
+        <el-select v-model="formModel.feeId">
           <el-option label="全部" value=""></el-option>
           <el-option v-for="item in feeIds" :label="item.feeType" :value="item.id" :key="item.id"></el-option>
-        </el-select>
-        <el-select v-model="formModel.settlementId" v-else @change="selectFeeIdBatch">
-          <el-option v-for="item in feeIdsBatch" :key="item.id" :label="item.feeType" :value="item.id">
-          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="开单日期">
@@ -48,7 +42,6 @@ import querySelect from '@/components/querySelect/index'
 import { getFeeTypeDict } from '@/api/finance/settleLog'
 import {  getOrderList } from '@/api/finance/financeDaily'
 import { getAllCustomer } from '@/api/company/customerManage'
-import { getTrucK } from '@/api/operation/load'
 export default {
   components: {
     querySelect
@@ -61,93 +54,40 @@ export default {
     info: {
       type: String,
       default: ''
-    },
-    title: {
-      type: String,
-      default: '智能结算'
-    },
-    setSettlementId: {
-      type: [Number, String]
-    },
-    fiOrderType: {
-      type: [Number, String],
-      default: ''  // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
     }
   },
   data() {
     return {
       formModel: {
         autoTotalAmount: 0,
-        paymentsType: 0, // 收支类型, 0 收入, 1 支出
+        settlementId: 178,
         feeId: ''
       },
-      senderOptions: [],
-      truckOptions: [],
-      settlementId: 179, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
-      incomePayType: 'PAYABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       rules: {},
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 30 * 1000), parseTime(new Date())],
       pickerOptions2: {
         shortcuts: pickerOptions2
       },
       feeIds: [],
-      feeIdsBatch: [{
-        id: 179,
-        feeType: '干线'
-      }, {
-        id: 180,
-        feeType: '短驳'
-      }],
-      paymentsType: 0 // 0-收入 1-支出
+      senderOptions: [],
+      paymentsType: 0, // 0-收入 1-支出
+      fiOrderType: 0 // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
     }
   },
   computed: {
     isShow: {
       get() {
         if (this.popVisible) {
+          this.getAllCustomer()
           this.formModel = this.$options.data().formModel
-          switch (this.title) {
-            case '批次':
-              this.getAllTrunk()
-              this.settlementId = 179
-              this.formModel.settlementId = this.setSettlementId
-              this.$set(this.formModel, 'truckIdNumber', '')
-              break
-            case '运单':
-              this.getAllCustomer()
-              this.settlementId = 178
-              // this.fiOrderType = 0
-              this.formModel.settlementId = ''
-              this.$set(this.formModel, 'shipSenderName', '')
-              break
-          }
           this.init()
         }
-        console.log('count fiOrderType', this.fiOrderType)
         return this.popVisible
       },
       set() {}
     }
   },
-  watch: {
-    title: {
-      handler(cval, oval) {},
-      deep: true
-    },
-    setSettlementId: {
-      handler(cval, oval) {
-        if (this.settlementId === 179) {
-          this.formModel.settlementId = cval
-        }
-      },
-      deep: true
-    },
-    fiOrderType: {
-      handler(cval, oval) {
-      },
-      deep: true
-    }
-  },
+
   methods: {
     init() {
       this.getFeeTypeDict()
@@ -164,25 +104,23 @@ export default {
         }
       }
       getAllCustomer(searchQuery).then(data => {
-          this.senderOptions = data.list
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
+        this.senderOptions = data.list
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
     },
-    getAllTrunk() { // 获取车牌号
-      getTrucK().then(data => {
-          this.truckOptions = data.data
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
-    querySearchTruck(queryString, cb) {
-      const truckList = this.truckOptions
-      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, "gi"), 'truckIdNumber')) : truckList
-      // 调用 callback 返回车辆列表的数据
-      cb(results)
+    getFeeTypeDict() {
+      this.settlementId = 178
+      getFeeTypeDict({
+        paymentsType: this.paymentsType,
+        fiOrderType: this.fiOrderType
+      }).then(data => {
+        this.feeIds = data
+      }).catch((err)=>{
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
     },
     querySearchSender(queryString, cb) {
       const senderList = this.senderOptions
@@ -197,22 +135,8 @@ export default {
         }
       }
     },
-    handleSelectTruck(item) {
-      this.formModel.truckIdNumber = item.truckIdNumber
-    },
     handleSelectSender(item) {
       this.formModel.shipSenderName = item.customerName
-    },
-    getFeeTypeDict() {
-      return getFeeTypeDict({
-        paymentsType: this.paymentsType,
-        fiOrderType: this.fiOrderType
-      }).then(data => {
-        this.feeIds = data
-      }).catch((err) => {
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
@@ -220,16 +144,13 @@ export default {
           this.$set(this.formModel, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
           this.$set(this.formModel, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
           this.$set(this.formModel, 'orgId', this.$route.query.orgId)
-          // this.$set(this.formModel, 'incomePayType', this.incomePayType)
+          // this.$set(this.formModel, 'incomePayType', 'RECEIVABLE')
           this.$set(this.formModel, 'fiOrderType', this.fiOrderType)
-          if (this.settlementId === 178) {
-            this.$set(this.formModel, 'settlementId', this.settlementId)
-          }
-
+          this.$set(this.formModel, 'paymentsType', 0)
           this.formModel.autoTotalAmount = Number(this.formModel.autoTotalAmount)
           let info = Object.assign({}, this.formModel)
           getOrderList(info).then(data => {
-              this.$emit('success', { info: data, count: info.autoTotalAmount, type: this.settlementId })
+              this.$emit('success', { info: data, count: this.formModel.autoTotalAmount })
               this.closeMe()
               this.$message({ type: 'success', message: '智能结算搜索运单操作成功' })
             })
@@ -238,9 +159,6 @@ export default {
             })
         }
       })
-    },
-    selectFeeIdBatch(obj) {
-      this.$emit('change', obj)
     },
     closeMe(done) {
       this.$emit('close')
