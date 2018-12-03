@@ -1291,9 +1291,9 @@
           })
           // this.$router.back(-1)
           if (this.$route.query.tab === '承运商对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.id)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.id)
           } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.urlId)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.urlId)
           }
         }).catch(() => {
           this.$message({

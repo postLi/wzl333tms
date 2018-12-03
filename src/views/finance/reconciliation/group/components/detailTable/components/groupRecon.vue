@@ -1231,7 +1231,7 @@
             type: 'success',
             message: '取消成功!'
           })
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.$route.query.arriveOrgid + '&orgid=' + this.$route.query.orgid + '&orgName=' + this.$route.query.orgName)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账明细&arriveOrgid=' + this.$route.query.arriveOrgid + '&orgid=' + this.$route.query.orgid + '&orgName=' + this.$route.query.orgName)
         }).catch(() => {
           this.$message({
             type: 'info',

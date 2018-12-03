@@ -8,9 +8,9 @@
         <el-button type="success" :size="btnsize" icon="el-icon-tickets" plain @click="doAction('completion')" v-has:FINANCE_CARFINISHI1 >对账完成</el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')" v-has:FINANCE_CARCANCEL1 >取消完成</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')" v-has:FINANCE_CARFIND1 >修改查看</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')" v-has:FINANCE_CARDEL >删除</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CAREXP >导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARPRI >打印</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')" v-has:FINANCE_CARDEL1 >删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FINANCE_CAREXP1 >导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FINANCE_CARPRI1 >打印</el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>

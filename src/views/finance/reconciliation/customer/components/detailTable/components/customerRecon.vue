@@ -1394,9 +1394,9 @@
           })
           // this.$router.back(-1)
           if (this.$route.query.tab === '客户对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.id)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.$route.query.id)
           } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.urlId)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.$route.query.urlId)
           }
         }).catch(() => {
           this.$message({

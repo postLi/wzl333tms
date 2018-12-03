@@ -94,7 +94,7 @@
         total: 0,
         trackId: '',
         // 加载状态
-        loading: true,
+        loading: false,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,

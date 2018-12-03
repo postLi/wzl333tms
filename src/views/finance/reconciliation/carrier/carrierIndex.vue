@@ -212,7 +212,7 @@
             this.$router.push({
               path: '/finance/reconciliation/carrier/detailTable',
               query: {
-                tab: '承运商对账-对账明细',
+                tab: '承运商对账明细',
                 id: this.selected[0].carrierId,
                 orgid: this.searchQuery.vo.orgid
               }
@@ -245,7 +245,7 @@
         this.$router.push({
           path: '/finance/reconciliation/carrier/detailTable',
           query: {
-            tab: '承运商对账-对账明细',
+            tab: '承运商对账明细',
             id: row.carrierId
           }
         })

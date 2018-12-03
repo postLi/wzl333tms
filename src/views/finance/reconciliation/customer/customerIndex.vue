@@ -186,7 +186,7 @@ export default {
           this.$router.push({
             path: '/finance/reconciliation/customer/detailTable',
             query: {
-              tab: '客户对账-对账明细',
+              tab: '客户对账明细',
               id: this.selected[0].shipSenderId,
               orgid: this.searchQuery.vo.orgid
             }
@@ -234,7 +234,7 @@ export default {
       this.$router.push({
         path: '/finance/reconciliation/customer/detailTable',
         query: {
-          tab: '客户对账-对账明细',
+          tab: '客户对账明细',
           id: row.shipSenderId
         }
       })

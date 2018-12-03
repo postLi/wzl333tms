@@ -244,7 +244,7 @@
             message: '添加成功~',
             type: 'success'
           })
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.query.arriveOrgid + '&orgid=' + this.query.orgid + '&orgName=' + this.query.orgName)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账明细&arriveOrgid=' + this.query.arriveOrgid + '&orgid=' + this.query.orgid + '&orgName=' + this.query.orgName)
           this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)

@@ -12,10 +12,10 @@
         <el-button type="info" :size="btnsize" icon="el-icon-error" plain @click="doAction('cancelCom')">取消完成
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('modify')">修改查看</el-button>
-        <!--<el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')">删除</el-button>-->
-        <!--<el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出-->
-        <!--</el-button>-->
-        <!--<el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>-->
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" plain @click="doAction('detele')">删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出
+        </el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
 
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
           表格设置
@@ -92,7 +92,7 @@
         total: 0,
         trackId: '',
         // 加载状态
-        loading: true,
+        loading: false,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,

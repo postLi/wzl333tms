@@ -82,7 +82,7 @@ export default {
       trackId: '',
       batchTypeId: '', // 批次状态
       // 加载状态
-      loading: true,
+      loading: false,
       setupTableVisible: false,
       AddCustomerVisible: false,
       isModify: false,
