@@ -32,6 +32,11 @@
       margin: 20px 0;
       font-size: 16px;
     }
+    .contract_title h1 {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 18px;
+    }
 
     .contract_title_number {
       position: absolute;
@@ -96,6 +101,7 @@
 
 <body>
 <div class="contract_title">
+  <h1 id="contract_companyname"></h1>
   <h2 id="contract_checkBillName">货物运输合同 </h2>
   <div class="contract_title_number" id="contract_title_number">No:23478237482378</div>
 </div>
@@ -158,6 +164,7 @@
   var contract_checkBillName = document.getElementById('contract_checkBillName')
   var contract_title_number = document.getElementById('contract_title_number')
   var partA = document.getElementById('partA')
+  var contract_companyname = document.getElementById('contract_companyname')
   var partB = document.getElementById('partB')
   var contract_form = document.getElementById('contract_form')
   var goods_info = document.getElementById('goods_info')
@@ -170,6 +177,7 @@
   contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
   contract_title_number.innerHTML = 'NO.' + data.batchNo
   partA.innerHTML = data.orgName
+  contract_companyname.innerHTML = data.orgName
   partB.innerHTML = data.carrier
   console.error(data)
   // 双方信息
