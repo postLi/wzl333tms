@@ -346,6 +346,12 @@ export default {
         fixed: false
       },
       {
+        label: '回扣',
+        prop: 'brokerageFee',
+        width: '120',
+        fixed: false
+      },
+      {
         label: '运单备注',
         prop: 'shipRemarks',
         width: '200',

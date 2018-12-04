@@ -17,8 +17,11 @@
         <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
-          <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" @cell-dblclick="deliverDetail" :data="infoList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+        :summary-method="getSumLeft"
+          show-summary
+         tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%" :key="tablekey">
+          <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -56,7 +59,7 @@ import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime, loadJs } from '@/utils/index'
+import { objectMerge2, parseTime, loadJs, getSummaries, operationPropertyCalc } from '@/utils/index'
 import SignFrom from './components/sign'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
@@ -97,7 +100,7 @@ export default {
       loadId: 0,
       tablekey: 0,
       dotInfo: {},
-      //加载状态
+      // 加载状态
       // loading: true,
       setupTableVisible: false,
       // AddCustomerVisible: false,
@@ -129,107 +132,110 @@ export default {
         }
       },
       tableColumn: [{
-          label: "序号",
-          width: "80",
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: "送货批次",
-          prop: "batchNo",
-          width: "110",
-          fixed: true
-        },
-        {
-          label: "批次状态",
-          prop: "batchTypeName",
-          width: "120"
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: "车牌号",
-          prop: "truckIdNumber",
-          width: "120"
-        },
-        {
-          label: "司机",
-          prop: "dirverName",
-          width: "120"
-        },
-        {
-          label: "司机电话",
-          prop: "dirverMobile",
-          width: "120"
-        },
-        {
-          label: "实际送货完成时间",
-          prop: "actualSendtime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "实际送货时间",
-          prop: "loadTime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "完成时间",
-          prop: "departureTime",
-          width: "180",
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: "送货费(元)",
-          prop: "deliveryFee",
-          width: "120"
-        },
-        {
-          label: "送货件数",
-          prop: "loadAmountall",
-          width: "120"
-        },
-        {
-          label: "送货重量(kg)",
-          prop: "loadWeightall",
-          width: "120"
-        },
-        {
-          label: "送货体积(m³)",
-          prop: "loadVolumeall",
-          width: "120"
-        },
-        {
-          label: "重量装载率",
-          prop: "weightLoadRate",
-          width: "120"
-        }, {
-          label: "体积装载率",
-          prop: "volumeLoadRate",
-          width: "120"
-        },
-        {
-          label: "备注",
-          prop: "remark",
-          width: "120"
+        label: '序号',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
+      },
+      {
+        label: '送货批次',
+        prop: 'batchNo',
+        width: '110',
+        fixed: true
+      },
+      {
+        label: '批次状态',
+        prop: 'batchTypeName',
+        width: '120'
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '120'
+      },
+      {
+        label: '司机',
+        prop: 'dirverName',
+        width: '120'
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '120'
+      },
+      {
+        label: '实际送货完成时间',
+        prop: 'actualSendtime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '实际送货时间',
+        prop: 'loadTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '完成时间',
+        prop: 'departureTime',
+        width: '180',
+        slot: (scope) => {
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '送货费(元)',
+        prop: 'deliveryFee',
+        width: '120'
+      },
+      {
+        label: '送货件数',
+        prop: 'loadAmountall',
+        width: '120'
+      },
+      {
+        label: '送货重量(kg)',
+        prop: 'loadWeightall',
+        width: '120'
+      },
+      {
+        label: '送货体积(m³)',
+        prop: 'loadVolumeall',
+        width: '120'
+      },
+      {
+        label: '重量装载率',
+        prop: 'weightLoadRate',
+        width: '120'
+      }, {
+        label: '体积装载率',
+        prop: 'volumeLoadRate',
+        width: '120'
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '120'
+      }
       ]
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     fetchAllData() {
       this.loading = true
       this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
@@ -237,10 +243,10 @@ export default {
         this.searchQuery.vo.batchTypeId = undefined
       }
       return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
-          this.infoList = data.list
-          this.total = data.total
-          this.loading = false
-        })
+        this.infoList = data.list
+        this.total = data.total
+        this.loading = false
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -334,7 +340,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货'} })
+      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' }})
     },
     edit() {
       if (this.selected.length !== 1) {
@@ -347,22 +353,22 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
-        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货',flag: this.selectInfo.batchNo } })
+        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货', flag: this.selectInfo.batchNo }})
       }
     },
     getActualTime(obj) { // 送货完成
-      this.setData(57) //57-送货中
+      this.setData(57) // 57-送货中
       if (this.isBatch) {
-        let timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+        const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
         this.$set(this.commonData, 'actualSendtime', timer)
         this.loading = true
         putCompleteDelivery(this.commonData).then(data => {
-            if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '操作成功' })
-              this.fetchData()
-            }
-          })
+          if (data) {
+            this.loading = false
+            this.$message({ type: 'success', message: '操作成功' })
+            this.fetchData()
+          }
+        })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
@@ -370,19 +376,18 @@ export default {
       } else {
         this.$message({ type: 'warning', message: '送货中状态才可以送货完成' })
       }
-
     },
     cancelDeliver() { // 取消送货
       this.setData(57)
       if (this.isBatch) {
         this.loading = true
         putDeliverLoad(this.commonData).then(data => {
-            if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '操作成功' })
-              this.fetchData()
-            }
-          })
+          if (data) {
+            this.loading = false
+            this.$message({ type: 'success', message: '操作成功' })
+            this.fetchData()
+          }
+        })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)

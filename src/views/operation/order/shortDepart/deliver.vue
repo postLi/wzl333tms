@@ -17,7 +17,10 @@
       <div class="info_tab">
         <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+        :summary-method="getSumLeft"
+          show-summary
+           tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -52,7 +55,7 @@ import { postAllshortDepartList, putTruckDepart, putTruckChanel, putTruckLoad } 
 import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -154,7 +157,7 @@ export default {
         {
           label: '实际短驳时间',
           prop: 'departureTime',
-          width: '160',  
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
@@ -244,11 +247,14 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
       console.log('========route========', to, from)
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     closeMe() { // 关闭弹出框
       this.editInfoVisible = false
     },
@@ -273,7 +279,7 @@ export default {
       }
       switch (type) {
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳'} })
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, tab: '新增短驳' }})
           break
         case 'truck': // 发车
           if (isWork) {
@@ -348,14 +354,14 @@ export default {
         this.searchQueryData.vo.batchTypeId = undefined
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
-          if (data) {
+        if (data) {
             this.dataList = data.list
             this.total = data.total
             this.loading = false
           } else {
             this.loading = false
           }
-        })
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -408,19 +414,19 @@ export default {
       this.setData(47)
       if (this.isBatch) {
         console.log('发车', this.commonTruck)
-        let timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+        const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
         this.$set(this.commonTruck, 'actualSendtime', timer)
         this.loading = true
         putTruckDepart(this.commonTruck).then(data => {
-            if (data) {
-              this.loading =false
+          if (data) {
+              this.loading = false
               this.$message({ type: 'success', message: '发车成功！' })
               this.fetchAllShortDepartList()
               this.clearData()
             }
-          })
+        })
           .catch(err => {
-              this.loading =false
+            this.loading = false
             this._handlerCatchMsg(err)
             this.clearData()
           })
@@ -440,15 +446,15 @@ export default {
           this.loading = true
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
-              if (data) {
-                this.loading =false
+            if (data) {
+                this.loading = false
                 this.$message({ type: 'success', message: '取消发车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
-            })
+          })
             .catch(err => {
-              this.loading =false
+              this.loading = false
               this._handlerCatchMsg(err)
               this.clearData()
             })
@@ -469,15 +475,15 @@ export default {
           console.log('取消装车', this.commonTruck)
           this.loading = true
           putTruckLoad(this.commonTruck).then(data => {
-              if (data) {
-                this.loading =false
+            if (data) {
+                this.loading = false
                 this.$message({ type: 'success', message: '取消装车操作成功！' })
                 this.fetchAllShortDepartList()
                 this.clearData()
               }
-            })
+          })
             .catch(err => {
-              this.loading =false
+              this.loading = false
               this._handlerCatchMsg(err)
               this.clearData()
             })
@@ -490,7 +496,7 @@ export default {
     edit() { // 修改
       const batchTypeId = this.selectedData.batchTypeId
       if (batchTypeId === 47 || batchTypeId === 48) {
-        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳', flag: this.selectedData.batchNo } })
+        this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 38, info: this.selectedData, tab: '修改短驳', flag: this.selectedData.batchNo }})
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.selectedData.batchNo + ' 】已【 ' + this.selectedData.batchTypeName + ' 】不可以修改' })
         this.clearData()

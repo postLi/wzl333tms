@@ -10,6 +10,10 @@ import {
 } from 'element-ui'
 
 const shouldCalcProperty = ['_index|1|单', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
+export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方', 'repertoryAmount|件', 'repertoryWeight|kg', 'repertoryVolume|方', 'pickupAmount|件', 'pickupWeight|kg', 'realVolume|方', 'realWeight|kg', 'pickupVolume|方', 'differWeight|kg', 'differVolume|方', 'pickupFee', 'carriage', 'collectionFee', 'truckFee', 'handlingFeeAll', 'shortFee', 'loadAmountall|件', 'loadWeightall|kg', 'loadVolumeall|方', 'actualAmount|件', 'actualWeight|kg', 'actualVolume|方', 'amountall|件', 'weightall|kg', 'volumeall|方', 'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage', 'backpayOilCard', 'shipFeeAmount', 'carloadInsuranceFee', 'leaveHandlingFee', 'leaveOtherFee', 'totalFee', 'arriveHandlingFee', 'arriveOtherFee', 'shipFee', 'shipAmount|件', 'shipWeightall|kg', 'shipVolumeall|方', 'truckLoad|kg', 'truckVolume|方', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'codService', 'registerFee', 'abnormalAmount|件',
+// 一些自定义的字段
+  'shipTotalProfit'
+]
 /**
  * 根据列表数据计算合计值
  * @param {*} param 列表数据

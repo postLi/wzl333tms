@@ -17,6 +17,9 @@
         <el-input v-model="searchForm.shipToCityName"  :maxlength="15"></el-input>
         <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
       </el-form-item>
+      <el-form-item label="发货人" prop="senderCustomerName">
+        <el-input v-model="searchForm.senderCustomerName"  :maxlength="15"></el-input>
+      </el-form-item>
     </div>
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -58,7 +61,8 @@ export default {
       searchForm: {
         shipSn: '',
         shipFromCityName: '',
-        shipToCityName: ''
+        shipToCityName: '',
+        senderCustomerName: ''
       },
       rules: {
         // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]

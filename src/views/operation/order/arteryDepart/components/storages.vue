@@ -276,6 +276,7 @@
           <el-tab-pane label="运输合同" name="third">
             <div class="pact" id="contract">
               <el-form :model="sendContract" :rules="rules" ref="formName">
+                <div class="sComName">{{ sendContract.nomineeCompany }}</div>
                 <div class="pact_top">
                   <!--<h3>货物运输合同</h3>-->
                   <div class="sTitle">
@@ -471,21 +472,20 @@
   </pop-right>
 </template>
 <script>
-  import {REGEX} from '@/utils/validate'
+  import { REGEX } from '@/utils/validate'
   import popRight from '@/components/PopRight/index'
   import selectType from '@/components/selectType/index'
-  import {getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList} from '@/api/operation/track'
-  import {postSelectLoadMainInfoList} from '@/api/operation/arteryDelivery'
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {mapGetters} from 'vuex'
+  import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
+  import { postSelectLoadMainInfoList } from '@/api/operation/arteryDelivery'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { mapGetters } from 'vuex'
   import SelectTree from '@/components/selectTree/index'
   import TableSetup from '@/components/tableSetup'
-  import {objectMerge2, parseTime, closest} from '@/utils/'
-  import {PrintContract} from '@/utils/lodopFuncs'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
-  import {getLookContract, getEditContract} from '@/api/operation/arteryDepart'
+  import { objectMerge2, parseTime, closest } from '@/utils/'
+  import { PrintContract } from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+  import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
   
-
   export default {
     data() {
       return {
@@ -616,67 +616,67 @@
           width: '100',
           fixed: false
         },
-          {
-            label: '操作费(元)',
-            prop: 'handlingFee',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载件数',
-            prop: 'loadAmount',
-            width: '100',
-            fixed: false
-          }, {
-            label: '配载重量(kg)',
-            prop: 'loadWeight',
-            width: '120',
-            fixed: false
-          }, {
-            label: '配载体积(m³)',
-            prop: 'loadVolume',
-            width: '120',
-            fixed: false
-          }, {
-            label: '运单件数',
-            prop: 'cargoAmount',
-            width: '100',
-            fixed: false
-          }, {
-            label: '运单重量(kg)',
-            prop: 'cargoWeight',
-            width: '120',
-            fixed: false
-          }, {
-            label: '运单体积(m³)',
-            prop: 'cargoVolume',
-            width: '120',
-            fixed: false
-          }, {
-            label: '出发城市',
-            prop: 'shipFromCityName',
-            width: '120',
-            fixed: false
-          }, {
-            label: '到达城市',
-            prop: 'shipToCityName',
-            width: '120',
-            fixed: false
-          }, {
-            label: '发货人',
-            prop: 'shipSenderName',
-            width: '100',
-            fixed: false
-          }, {
-            label: '发货人电话',
-            prop: 'shipSenderMobile',
-            width: '110',
-            fixed: false
-          }, {
-            label: '收货人',
-            prop: 'shipReceiverName',
-            width: '120',
-            fixed: false
-          }, {
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量(kg)',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载体积(m³)',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '运单重量(kg)',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '运单体积(m³)',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '出发城市',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '到达城市',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '110',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        }, {
             label: '收货人电话',
             prop: 'shipReceiverMobile',
             width: '120',
@@ -685,6 +685,11 @@
             label: '货品名',
             prop: 'cargoName',
             width: '100',
+            fixed: false
+          }, {
+            label: '回扣',
+            prop: 'brokerageFee',
+            width: '120',
             fixed: false
           }, {
             label: '货号',
@@ -699,14 +704,14 @@
           }],
         rules: {
           contractName: [
-            {required: true, message: '合同名称不能为空!', trigger: 'blur'}
+            { required: true, message: '合同名称不能为空!', trigger: 'blur' }
           ],
           contractNo: [
-            {required: true, message: '合同编号不能为空!', trigger: 'blur'},
-            {message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER}
+            { required: true, message: '合同编号不能为空!', trigger: 'blur' },
+            { message: '只能输入字母和数字', pattern: REGEX.ONLY_NUMBER_AND_LETTER }
           ],
           nomineeCompany: [
-            {required: true, message: '委托方不能为空!', trigger: 'blur'}
+            { required: true, message: '委托方不能为空!', trigger: 'blur' }
           ]
         },
         sendContract: {
@@ -719,7 +724,7 @@
         },
 
         carrierItem: [
-        ],
+        ]
       }
     },
     components: {
@@ -915,7 +920,7 @@
       deleteTrack(item) {
         console.log(item)
         return deleteTrack(item.id).then(data => {
-          this.$message({type: 'success', message: '删除成功'})
+          this.$message({ type: 'success', message: '删除成功' })
           this.getDetail()
         }).catch((err) => {
           this.loading = false
@@ -932,7 +937,7 @@
         this.formModelTrack.transferId = 0
         this.formModelTrack.operatorTime = parseTime(this.formModelTrack.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
         return putUpdateTrack(this.formModelTrack).then(data => {
-          this.$message({type: 'success', message: '修改成功'})
+          this.$message({ type: 'success', message: '修改成功' })
           this.getDetail()
           this.resetForm()
         }).catch((err) => {
@@ -947,7 +952,7 @@
         this.formModelTrack.operatorTime = parseTime(this.formModelTrack.operatorTime, '{y}-{m}-{d} {h}:{i}:{s}')
         return postAddTrack(this.formModelTrack).then(data => {
           if (data) {
-            this.$message({type: 'success', message: '添加成功'})
+            this.$message({ type: 'success', message: '添加成功' })
             this.getDetail()
             this.resetForm()
           }
@@ -974,7 +979,8 @@
           case 'export':
             PrintInFullPage({
               data: this.usersArr,
-              columns: this.tableColumn
+              columns: this.tableColumn,
+              appendTop: '<style>*{color:#f00;}</style>表格后面用<font color=blue>ADD_PRINT_HTM</font>附加其它备注'
             })
             break
           // 打印
@@ -1023,7 +1029,7 @@
       print() { // 打印合同
         let str = '?'
         this.formModel.checkBillName = this.sendContract.contractName
-        let formModel = Object.assign({}, this.formModel)
+        const formModel = Object.assign({}, this.formModel)
         this.$set(formModel, 'carrier', this.sendContract.carrier)
         for (const item in formModel) {
           str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
@@ -1470,6 +1476,13 @@
       padding-left: 20px;
       height: 100%;
       overflow: auto;
+      .sComName{
+          text-align: center;
+          font-size: 18px;
+          margin: 10px 0;
+          font-weight: bold;
+        }
+
       .pact_top {
         position: relative;
         height: 40px;
@@ -1479,6 +1492,8 @@
           color: rgba(0, 0, 0, 0.85);
           font-weight: 500;
         }
+
+        
 
         .sTitle {
           /*flex: 1;*/
