@@ -425,6 +425,9 @@ export default {
           }
           break
         case 'export':
+        let list = this.dataListTop.filter(e => {
+          return e.billRecordStatus !== 0
+        })
           SaveAsFile({
             data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
             columns: this.tableColumn,

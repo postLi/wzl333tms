@@ -193,10 +193,12 @@ export default {
       this.baseQuery.amount = this.info.amount
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
+          if (data.verificationList) {
           this.veryficationList = data.verificationList
           data.verificationList.forEach((el, index) => {
             this.veryficationType[el.id] = el.verificationWay
           })
+        }
           this.initSubject()
         })
         .catch(err => {

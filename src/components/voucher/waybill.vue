@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount"  v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
@@ -199,10 +199,10 @@ export default {
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -231,11 +231,13 @@ export default {
       this.baseQuery.feeIds = this.feeId + ''
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
-          this.veryficationList = data.verificationList
-          data.verificationList.forEach((el, index) => {
-            this.veryficationType[el.id] = el.verificationWay
-          })
-          this.initSubject()
+          if (data.verificationList) {
+            this.veryficationList = data.verificationList
+            data.verificationList.forEach((el, index) => {
+              this.veryficationType[el.id] = el.verificationWay
+            })
+          }
+            this.initSubject()
         })
         .catch(err => {
           this.loading = false
@@ -327,7 +329,7 @@ export default {
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           if (!dataInfo.certTime) {
-           dataInfo.certTime = new Date()
+            dataInfo.certTime = new Date()
           }
           this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           delete dataInfo.verificationList

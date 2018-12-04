@@ -3,13 +3,13 @@
   <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
-        <el-form-item label="方向" prop="verificationId"  class="formItemTextDanger">
+        <el-form-item label="方向" prop="verificationId" class="formItemTextDanger">
           <el-select v-model="formModel.verificationId" filterable placeholder="请选择" :size="btnsize" @change="selectVerificationWay">
             <el-option v-for="(value, key) in veryficationList" :value="value.id" :key="key" :label="value.verificationWay"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount"  v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
@@ -25,7 +25,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="二级科目"  :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
+        <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
           <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
@@ -230,10 +230,10 @@ export default {
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -263,10 +263,12 @@ export default {
       this.baseQuery.feeIds = this.feeId + ''
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
-          this.veryficationList = data.verificationList
-          data.verificationList.forEach((el, index) => {
-            this.veryficationType[el.id] = el.verificationWay
-          })
+          if (data.verificationList) {
+            this.veryficationList = data.verificationList
+            data.verificationList.forEach((el, index) => {
+              this.veryficationType[el.id] = el.verificationWay
+            })
+          }
           this.initSubject()
           this.loading = false
         })
@@ -394,25 +396,25 @@ export default {
               if (this.subjectFour.length > 0) {
                 if (this.formModel.subjectFourId) {
                   return true
-                }else {
+                } else {
                   this.$message.warning('请填写四级科目')
                   return false
                 }
-              }else {
+              } else {
                 return true
               }
-            }else {
+            } else {
               this.$message.warning('请填写三级科目')
               return false
             }
-          }else {
+          } else {
             return true
           }
         } else {
           this.$message.warning('请填写二级科目!')
           return false
         }
-      }else {
+      } else {
         return true
       }
     },
@@ -430,7 +432,7 @@ export default {
           this.$set(dataInfo, 'fiOrderType', this.fiOrderType)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           if (!dataInfo.certTime) {
-           dataInfo.certTime = new Date()
+            dataInfo.certTime = new Date()
           }
           this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
           delete dataInfo.verificationList
@@ -441,7 +443,7 @@ export default {
               this.btnLoading = false
               this.popVisibleDialog = false
               if (this.dataName === '操作费') {
-                 this.$router.push({ path: './accountsPayable/handleFee' })
+                this.$router.push({ path: './accountsPayable/handleFee' })
               } else {
                 const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
                 this.$router.push({ path: './accountsPayable/batch/' + currentPage })

@@ -40,12 +40,6 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalLeft }}</b>
-          <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
-          </div>
-        </div> -->
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -76,26 +70,19 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalRight }}</b>
-        </div> -->
       </div>
     </transferTable>
     <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
-    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgid" :btnLoading="btnLoading"></Voucher>
   </div>
   </div>
 </template>
 <script>
-// import * as accountApi from '@/api/finance/accountsReceivable'
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
-// import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-// import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import Voucher from '@/components/voucher/receivable'
@@ -123,8 +110,6 @@ export default {
       loading: false,
       popVisibleDialog: false,
       btnsize: 'mini',
-      // totalLeft: 0,
-      // totalRight: 0,
       tableReceiptInfo: [],
       orgLeftTable: [],
       selectedRight: [],
@@ -293,7 +278,6 @@ export default {
     initLeftParams() {
       if (!this.$route.query) {
         this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
         this.searchQuery.vo = Object.assign({}, this.getRouteInfo.vo)
@@ -319,7 +303,6 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
@@ -328,9 +311,6 @@ export default {
         payListByHandlingFee(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成结算的数据
-          // this.leftTable = Object.assign([], data.list.filter(el => {
-          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.monthpayState)
-          // }))
           this.leftTable = data.list
           this.leftTable.forEach((e, index) => {
              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
@@ -341,7 +321,7 @@ export default {
           })
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
-              if (e === item.shipSn) {
+              if (e === item.batchNo) {
                 this.setRight(item)
               }
             })
@@ -367,7 +347,6 @@ export default {
       }
     },
     changLoadData(index, prop, newVal) {
-      // this.rightTable[index][prop] = Number(newVal)
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: Number(newVal)
       }))
@@ -377,16 +356,6 @@ export default {
         this.textChangeDanger[index] = false
       }
       return false
-      /* this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
-      const paidVal = this.rightTable[index][prop]
-      if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
-      } else {
-        this.rightTable[index][prop] = Number(newVal)
-      }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -423,18 +392,13 @@ export default {
           this.setRight(e)
           let item = -1
           this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
+            if (el.batchNo === e.batchNo) {
               item = index
             }
           })
           if (item !== -1) { // 左边表格源数据减去被穿梭的数据
             this.leftTable.splice(item, 1)
             this.orgLeftTable.splice(item, 1)
-          }
-          // const orgItem = this.orgLeftTable.indexOf(e)
-
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
-
           }
         })
         this.selectedRight = [] // 清空选择列表
@@ -451,23 +415,16 @@ export default {
       } else {
         this.selectedLeft.forEach((e, index) => {
           this.leftTable = objectMerge2([], this.leftTable).filter(em => {
-            return em.shipSn !== e.shipSn
+            return em.batchNo !== e.batchNo
           })
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
-            return em.shipSn !== e.shipSn
+            return em.batchNo !== e.batchNo
           })
           this.leftTable.push(e)
           this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
-            return el.shipSn !== e.shipSn
+            return el.batchNo !== e.batchNo
           })
-          // this.leftTable.push(e)
-          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          // const item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 右边源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -479,7 +436,6 @@ export default {
     },
     // 选中的行
     selectCurrent(obj, index) {
-      // this.leftTable = Object.assign([], obj)
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行
@@ -519,7 +475,6 @@ export default {
     // 结算前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
-      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
         let amount = 0
         this.rightTable.forEach((e, index) => {
