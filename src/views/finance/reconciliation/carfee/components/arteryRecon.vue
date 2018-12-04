@@ -514,7 +514,7 @@
                 <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>
                 </el-form-item>
               </th>
-              <th>联系方式</th>
+              <th>财务联系电话</th>
               <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
                 <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
@@ -1026,6 +1026,10 @@
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
+            return
+          }
+          if (columns[index].label === '司机'||columns[index].label === '备注'){
+            sums[index] = ''
             return
           }
           if (index === 3 || index === 4 || index === 5) {

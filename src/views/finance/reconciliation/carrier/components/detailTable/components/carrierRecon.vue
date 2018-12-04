@@ -149,7 +149,7 @@
               </el-form-item>
             </th>
             <th>
-              联系方式
+              财务联系电话
             </th>
             <th>
               <el-form-item label="" prop="financialOfficerPhone">
@@ -178,86 +178,6 @@
             </th>
           </tr>
         </table>
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="承运商名称">-->
-        <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="业务负责人">-->
-        <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="联系方式" prop="memberPersonPhone">-->
-        <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="对账单编号">-->
-        <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-
-
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="承运商编号">-->
-        <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="开始时间">-->
-        <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="结束时间">-->
-        <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="结算方式">-->
-        <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="账户账号" prop="bankAccount">-->
-        <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="账户开户行">-->
-        <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="财务负责人">-->
-        <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="联系方式" prop="financialOfficerPhone">-->
-        <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="支付宝">-->
-        <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="微信" class="sWetPay">-->
-        <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
       </el-form>
 
 
@@ -1008,15 +928,15 @@
             {trigger: 'change', validator: validateMobile}
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ]
         },
         pickerOptions2: {
@@ -1322,7 +1242,7 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7) {
+          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 15 || index === 16) {
             sums[index] = ''
             return
           }

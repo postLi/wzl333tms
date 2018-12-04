@@ -11,9 +11,11 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true"
+                   @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}
+              </div>
               <el-input v-else v-model.trim="checkBillName"
-                         :disabled="disabledName"
+                        :disabled="disabledName"
                         auto-complete="off"
                         @blur="tooltip = false;disabledName = true"
 
@@ -25,12 +27,12 @@
         </div>
         <div class="sDate">
           <el-form-item label="车牌号" v-if="$route.query.id" :key="truckKey">
-            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled  size="mini"></el-input>
+            <el-input v-model="searchTitle.memberName" auto-complete="off" disabled size="mini"></el-input>
           </el-form-item>
 
 
           <el-form-item label="车牌号" prop="memberName" v-else>
-            <el-select v-model="searchTitle.memberName" clearable  size="mini">
+            <el-select v-model="searchTitle.memberName" clearable size="mini">
               <el-option v-for="(item, index) in memberNameType" :label="item.truckIdNumber"
                          :value="item.truckIdNumber" :key="index"></el-option>
             </el-select>
@@ -43,7 +45,7 @@
             :default-value="defaultTime"
             type="daterange"
             align="right"
-             size="mini"
+            size="mini"
             value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             :picker-options="pickerOptions2"
@@ -65,7 +67,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -73,7 +75,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -81,7 +83,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -89,7 +91,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
+                <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
               </el-form-item>
             </th>
           </tr>
@@ -97,7 +99,7 @@
             <th>开始时间</th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>结束时间</th>
@@ -109,13 +111,13 @@
             <th>账户账号</th>
             <th colspan="1">
               <el-form-item label="" prop="bankAccount">
-              <el-input v-model="messageInfo.bankAccount" auto-complete="off" clearable></el-input>
+                <el-input v-model="messageInfo.bankAccount" auto-complete="off" clearable></el-input>
               </el-form-item>
             </th>
             <th>账户开户行</th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.bankName" auto-complete="off" clearable></el-input>
+                <el-input v-model="messageInfo.bankName" auto-complete="off" clearable></el-input>
               </el-form-item>
             </th>
           </tr>
@@ -123,46 +125,48 @@
             <th>支付宝</th>
             <th colspan="3">
               <el-form-item label="">
-              <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable class="input-class-wx"></el-input>
+                <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable
+                          class="input-class-wx"></el-input>
               </el-form-item>
             </th>
             <th>微信</th>
             <th colspan="3">
               <el-form-item label="" class="sWetPay">
-              <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable class="input-class-wx"></el-input>
+                <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable
+                          class="input-class-wx"></el-input>
               </el-form-item>
             </th>
           </tr>
         </table>
         <!--<el-form-item label="车牌号">-->
-          <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="司机">-->
-          <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="联系方式">-->
-          <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="对账单编号">-->
-          <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="开始时间">-->
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="结束时间">-->
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="账户账号" prop="bankAccount">-->
-          <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="账户开户行">-->
-          <!--<el-input v-model="messageInfo.bankName" auto-complete="off" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.bankName" auto-complete="off" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="支付宝">-->
-          <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="微信" class="sWetPay">-->
-          <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
         <!--</el-form-item>-->
       </el-form>
     </div>
@@ -395,9 +399,10 @@
               <th colspan="1">
                 备注
               </th>
-              <th colspan="11" >
+              <th colspan="11">
                 <el-form-item label="">
-                  <el-input :maxlength="300" v-model="messageButtonInfo.remarkk" auto-complete="off" clearable class="input-class-width"></el-input>
+                  <el-input :maxlength="300" v-model="messageButtonInfo.remarkk" auto-complete="off" clearable
+                            class="input-class-width"></el-input>
                 </el-form-item>
               </th>
             </tr>
@@ -408,79 +413,80 @@
               <th>公司名称</th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
               <th>业务负责人</th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
               <th>联系方式</th>
               <th>
                 <el-form-item label="" prop="orgBusinessOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>财务负责人</th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
-                clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
+                            clearable></el-input>
                 </el-form-item>
               </th>
-              <th>联系方式</th>
+              <th>财务联系电话</th>
               <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
-                clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>时间</th>
               <th>
                 <el-form-item label="">
-                <el-date-picker
-                v-model="messageButtonInfo.createTime"
-                type="date"
-                placeholder="选择日期">
-                </el-date-picker>
+                  <el-date-picker
+                    v-model="messageButtonInfo.createTime"
+                    type="date"
+                    placeholder="选择日期">
+                  </el-date-picker>
                 </el-form-item>
               </th>
             </tr>
           </table>
           <!--<el-form-item label="备注">-->
-            <!--<el-input v-model="messageButtonInfo.remark" auto-complete="off" :maxlength="300"></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.remark" auto-complete="off" :maxlength="300"></el-input>-->
           <!--</el-form-item>-->
           <!--<div class="sMessageCont_info">-->
-            <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
+          <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
           <!--</div>-->
 
 
           <!--<el-form-item label="公司名称">-->
-            <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
           <!--</el-form-item>-->
           <!--<el-form-item label="业务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
           <!--</el-form-item>-->
           <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
           <!--</el-form-item>-->
           <!--<el-form-item label="财务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
-                      <!--clearable></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
+          <!--clearable></el-input>-->
           <!--</el-form-item>-->
           <!--<el-form-item label="联系方式" prop="orgFinancialOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-                      <!--clearable></el-input>-->
+          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
+          <!--clearable></el-input>-->
           <!--</el-form-item>-->
           <!--<el-form-item label="时间">-->
-            <!--<el-date-picker-->
-              <!--v-model="messageButtonInfo.createTime"-->
-              <!--type="date"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-            <!--&lt;!&ndash;<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>&ndash;&gt;-->
+          <!--<el-date-picker-->
+          <!--v-model="messageButtonInfo.createTime"-->
+          <!--type="date"-->
+          <!--placeholder="选择日期">-->
+          <!--</el-date-picker>-->
+          <!--&lt;!&ndash;<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>&ndash;&gt;-->
           <!--</el-form-item>-->
         </el-form>
       </div>
@@ -499,8 +505,8 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
-  import { REGEX } from '@/utils/validate'
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
+  import {REGEX} from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
@@ -508,10 +514,10 @@
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
-  import { getTrucK } from '@/api/operation/load'
-  import { SaveAsFileCarfeefeeShort } from '@/utils/recLodopFuncs'
+  import {getTrucK} from '@/api/operation/load'
+  import {SaveAsFileCarfeefeeShort} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -633,15 +639,15 @@
         },
         rules: {
           'bankAccount': [
-            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
+            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ]
         }
       }
@@ -966,11 +972,15 @@
         }
       },
       getSummaries(param) {
-        const { columns, data } = param
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
+            return
+          }
+          if (columns[index].label === '备注' || columns[index].label === '司机') {
+            sums[index] = ''
             return
           }
           if (index === 3 || index === 4 || index === 5) {
@@ -1100,8 +1110,8 @@
   .short_lll {
     margin: 0 9px;
 
-    .el-table__footer-wrapper{
-      td:nth-child(n+1){
+    .el-table__footer-wrapper {
+      td:nth-child(n+1) {
         color: #fe0000;
       }
     }
@@ -1136,7 +1146,7 @@
                   border: none;
                 }
               }
-              .el-form-item__error{
+              .el-form-item__error {
                 z-index: 1;
               }
               .input-class.el-input--suffix {
@@ -1144,14 +1154,14 @@
                   padding-right: 15px;
                 }
               }
-              .input-class-width{
-                .el-input__inner{
+              .input-class-width {
+                .el-input__inner {
                   max-width: 1600px;
                   width: 1600px;
                 }
               }
-              .input-class-wx{
-                .el-input__inner{
+              .input-class-wx {
+                .el-input__inner {
                   max-width: 700px;
                   width: 700px;
                 }
@@ -1171,7 +1181,7 @@
           flex: 1;
           text-align: center;
 
-          .showBg{
+          .showBg {
             border-left-color: transparent;
             border-right-color: transparent;
             border-top-color: transparent;
@@ -1260,8 +1270,6 @@
     }
 
     .sMessageTop {
-
-
 
     }
     .sMessageCont {

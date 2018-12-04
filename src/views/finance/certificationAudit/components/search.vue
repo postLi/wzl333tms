@@ -42,7 +42,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
-import { parseTime, pickerOptions2 } from '@/utils/'
+import { parseTime } from '@/utils/'
 export default {
   components: {
     SelectType,
@@ -83,12 +83,6 @@ export default {
 
         }]
       },
-      pickerOptions: {
-        shortcuts: pickerOptions2
-        /* disabledDate(time) {
-          return time.getTime() < Date.now() - 3600 * 1000 * 24
-        } */
-      }
     }
   },
   watch: {

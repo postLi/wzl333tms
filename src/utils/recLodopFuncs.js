@@ -709,7 +709,7 @@ function createCarrier(params) {
     <td colspan="3" >${params.tmsFinanceBillCheckDto.bankName}</td>
     <td width="5%" >财务负责人</td>
     <td colspan="3" >${params.tmsFinanceBillCheckDto.financialOfficer}</td>
-    <td width="5%">联系方式</td>
+    <td width="5%">财务联系电话</td>
     <td colspan="3" >${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
   </tr>
   <tr>
@@ -1559,7 +1559,7 @@ function createCustomer(params) {
        <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="13">${params.tmsFinanceBillCheckDto.createTime}</td>
@@ -1951,7 +1951,7 @@ function createCarfeefeeArt(params) {
        <td colspan="3">${params.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="3">${params.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="13">${params.createTime}</td>
@@ -2129,7 +2129,7 @@ function createCarfeefeeDeliver(params) {
        <td colspan="2">${params.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="2">${params.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="8">${params.createTime}</td>
