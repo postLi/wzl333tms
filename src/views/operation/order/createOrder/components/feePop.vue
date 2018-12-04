@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     :append-to-body="true"
     v-loading="loading"
-    @open="getFeeSetup"
+    @opened="getFeeSetup"
     width="300px"
     :before-close="close">
     <div class="setup-info-fee">
@@ -148,7 +148,7 @@ export default {
 </script>
 <style lang="scss">
 .feeSetupDialog{
-  margin-top: 20px !important;
+  
 }
 .feePopSetup{
   .el-dialog__header, .el-dialog__footer{

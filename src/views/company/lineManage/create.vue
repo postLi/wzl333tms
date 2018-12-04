@@ -246,9 +246,9 @@ export default {
 
         'fromOrgid': '',
         'lowerPrice': '', // 最低一票价
-        'priceAbnormal': '',
-        'priceBigabnormal': '',
-        'priceNormal': '',
+        'priceAbnormal': 30,
+        'priceBigabnormal': 30,
+        'priceNormal': 10,
         'rangeFromArea': '',
         'rangeFromCity': '',
         'rangeFromContacts': '',
@@ -261,7 +261,7 @@ export default {
         'rangeToProvince': '',
         'toOrgid': '',
         'transportAging': '', // 0-1 3-1
-        'transportAgingType': '', // 0 天 1 小时 2 多天
+        'transportAgingType': 0, // 0 天 1 小时 2 多天
         'transportRemark': ''
       },
       ligthPriceForms: [
@@ -360,7 +360,7 @@ export default {
   methods: {
     setInputVal(val, item, name) {
     //   this.$set(this.form.tmsOrderCargoList, name, val)
-      this.$set(item, name, Number(val) || 0)
+      this.$set(item, name, isNaN(parseFloat(val, 10)) ? '' : parseFloat(val, 10))
     },
     checkPrice() {
       let a = this.ruleForm.priceNormal
@@ -630,19 +630,11 @@ export default {
         ifNull = false
       }
       // 检查是否选了时效类别但没填数据时提示
-      if (this.ruleForm.transportAgingType !== '') {
-        if (this.ruleForm.transportAgingType === 2) {
-          if (!this.ruleForm.transportAging1 || !this.ruleForm.transportAging2) {
-            messageInfo = '请填写时效值'
-            ifNull = false
-          }
-        } else if (!this.ruleForm.transportAging) {
-          messageInfo = '请填写时效值'
-          ifNull = false
-        }
-      } else {
-        if (this.ruleForm.transportAging) {
-          messageInfo = '请选择时效类型'
+      if (this.ruleForm.transportAgingType === 2) {
+        const sa = Number(this.ruleForm.transportAging1) || 0
+        const sb = Number(this.ruleForm.transportAging2) || 0
+        if (((sa + sb) && !(sa * sb)) || (sa > sb)) {
+          messageInfo = '请填写正确的时效值'
           ifNull = false
         }
       }
@@ -728,6 +720,10 @@ export default {
 
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.ruleForm.transportAgingType = 0
+      this.ruleForm.priceAbnormal = 30
+      this.ruleForm.priceBigabnormal = 30
+      this.ruleForm.priceNormal = 10
       this.ligthPriceForms = [
         {
           startVolume: '0',

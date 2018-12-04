@@ -1,9 +1,8 @@
 <template>
-    <div class="box_container" :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
+    <div class="box_container_2" :class="{'hideuploadbtn': (filelist.length >= limit) || disabled}">
       <el-upload
         class="image-uploader"
         drag
-        v-if="uploadUrl"
         :data="upload"
         :action="uploadUrl"
         :multiple="false"
@@ -17,6 +16,7 @@
         :on-error="handleError"
         :on-exceed="onexceed"
         :on-success="handleImageScucess"
+        :http-request="handleUpload"
         :on-remove="handleRemove">
 
         <!-- <i class="el-icon-upload"></i> -->
@@ -39,9 +39,12 @@
 </template>
 
 <script>
+import '@/vendor/lrz.all.bundle.js'
+
 // 上传接口
 import { getUploadPolicy } from '@/api/common'
 import { parseTime } from '@/utils/'
+import fetch from '@/utils/fetch'
 
 export default {
   name: 'singleImageUpload',
@@ -135,8 +138,7 @@ export default {
     }
   },
   mounted() {
-    this.init()
-    console.log(this.disabled)
+    // this.init()
   },
   methods: {
     init() {
@@ -147,8 +149,9 @@ export default {
         this.upload.signature = data.signature
         this.uploadUrl = data.host
         this.dir = data.dir
-        this.upload.key = data.dir + this.random_string() + type
+        // this.upload.key = data.dir + this.random_string() + type
       }).catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     rmImage() {
@@ -164,13 +167,43 @@ export default {
       this.filelist = fileList
       this.emitInput()
     },
+    // 保存上传
+    handleUpload(options) {
+      return new Promise((resolve, reject) => {
+        lrz(options.file, {
+          width: 1024
+        }).then(rst => {
+          const form = new FormData()
+          const url = this.uploadUrl
+
+          form.append('key', this.upload.key)
+          form.append('success_action_status', '201')
+          form.append('OSSAccessKeyId', this.upload.OSSAccessKeyId)
+          form.append('policy', this.upload.policy)
+          form.append('signature', this.upload.signature)
+          form.append('file', rst.file)
+
+          fetch.post(url, form, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }).then(xml => {
+            resolve(xml)
+          }).catch(err => {
+            reject(err)
+            this._handlerCatchMsg(err, '上传失败:')
+          })
+        }).catch(err => {
+          reject(err)
+          this._handlerCatchMsg(err, '上传失败：')
+        })
+      })
+    },
     // 设置随机的文件名
     random_string(len) {
-      　　len = len || 32
-      　　var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
-      　　var maxPos = chars.length
-      　　var pwd = ''
-      　　for (var i = 0; i < len; i++) {
+      len = len || 32
+      var chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+      var maxPos = chars.length
+      var pwd = ''
+      for (var i = 0; i < len; i++) {
         pwd += chars.charAt(Math.floor(Math.random() * maxPos))
       }
       return pwd
@@ -199,7 +232,6 @@ export default {
       this.$emit('error', err)
     },
     beforeUpload(file) {
-      const _self = this
       const isJPG = /image\/\w+/.test(file.type) && /(jpe?g|png)/i.test(file.type)
       const isLt5M = file.size / 1024 / 1024 < 5
       let type = file.name.match(/([^\.]+)$/)
@@ -217,13 +249,14 @@ export default {
           this.init().then(res => {
             // 设置文件名
             this.upload.key = this.dir + parseTime(new Date(), '{y}{m}{d}') + '/' + this.random_string() + type
+            // setTimeout(() => {
             resolve(true)
+            // }, 10 * 1000)
           })
           .catch(err => {
             this._handlerCatchMsg(err)
             resolve(false)
           })
-           
         }
       })
     },
@@ -261,10 +294,14 @@ export default {
       margin-top: 10vh !important;
       width: 40% !important;
     }
-    .box_container {
+    .box_container_2 {
         width: 100%;
         position: relative;
         @include clearfix;
+
+        .el-upload-list__item{
+          transition: none;
+        }
 
         .el-upload .el-upload-dragger{
             height: 132px;

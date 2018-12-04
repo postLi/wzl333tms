@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     :modal-append-to-body="true"
     append-to-body
-    @open="getPersonalSetup"
+    @opened="getPersonalSetup"
     width="600px"
     :before-close="close">
     <el-form :model="form" label-width="100px" ref="ruleForm" :inline="true" label-position="right" size="mini">
@@ -52,7 +52,7 @@
           </SelectType>
         </el-form-item>
         <el-form-item label="回单份数">
-          <el-input v-model="form.shipSetKey.receiptNum" placeholder=""></el-input>
+          <el-input class="huidanfenshu" v-model="form.shipSetKey.receiptNum" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="付款方式">
           <SelectType type="ship_pay_way" v-model="form.shipSetKey.paymentMode">
@@ -222,6 +222,13 @@ export default {
   }
   .dragArea{
 
+  }
+  .huidanfenshu{
+    display: block;
+    width: 178px;
+    .el-input__inner{
+      padding-right: 30px;
+    }
   }
   .list-complete-item{
     clear: both;

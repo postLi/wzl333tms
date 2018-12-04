@@ -551,7 +551,7 @@ export default {
   },
   methods: {
     infoFinance() { // 初始化财务设置
-      let params = {
+      const params = {
         orgid: this.otherinfo.orgid,
         type: 'financeSetting',
         module: 'finance'
@@ -680,7 +680,7 @@ export default {
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
 
-      let finance = {
+      const finance = {
         orgid: form.orgid,
         module: 'finance',
         financeSetting: form.financeSetting
@@ -692,7 +692,7 @@ export default {
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.initOrder()
-          this.infoFinance()
+          // this.infoFinance()
         })
       })
     },
@@ -709,6 +709,7 @@ export default {
       })
     },
     initField() {
+      this.fieldSetup = []
       for (const i in this.form.shipPageFunc.shipFieldValue) {
         if (this.form.shipPageFunc.shipFieldValue[i] === '1') {
           this.fieldSetup.push(i)

@@ -5,10 +5,9 @@
     :visible="popVisible"
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
-    :modal-append-to-body="false"
     append-to-body
     v-loading="loading"
-    @open="getRemarkSetup"
+    @opened="getRemarkSetup"
     width="300px"
     :before-close="close">
     <div class="dialog-title" slot="title">
@@ -107,7 +106,7 @@ export default {
           value: this.newItem
         }).then(res => {
           this.newItem = ''
-          //this.$message.success('添加成功~')
+          // this.$message.success('添加成功~')
           this.isAdd = false
           this.getRemarkSetup()
         }).catch(err => {
@@ -122,13 +121,13 @@ export default {
       this.modifyObj[id] = val
     },
     modifyItem(item) {
-      let id = item.id
+      const id = item.id
       if (this.modifyObj[id]) {
         OrderApi.putRemark(id, {
           value: this.modifyObj[id]
         }).then(res => {
           item.isedit = false
-          //this.$message.success('修改成功')
+          // this.$message.success('修改成功')
         }).catch(err => {
           this.$message.error('修改失败：' + err.text)
         })
@@ -175,7 +174,7 @@ export default {
           this.modifyObj[el.id] = el.value
         })
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -184,14 +183,13 @@ export default {
       this.$emit('success', item.join(','))
       this.close()
     },
-    setEdit(item){
-      let isEdit = this.remarksData.some(el=>el.isedit)
-      if(isEdit){
+    setEdit(item) {
+      const isEdit = this.remarksData.some(el => el.isedit)
+      if (isEdit) {
         this.$message.info('只能同时编辑一条数据~')
       } else {
         item.isedit = true
       }
-      
     },
     canEdit() {
       this.isedit = true
@@ -200,9 +198,9 @@ export default {
     canAdd() {
       this.isAdd = true
       this.isedit = false
-      setTimeout(()=>{
+      setTimeout(() => {
         this.$refs['newItem'].focus()
-      },100)
+      }, 100)
     }
   }
 }
