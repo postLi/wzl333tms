@@ -136,7 +136,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -249,8 +249,8 @@
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
      if (obj.appendTop) {
-       LODOP.ADD_PRINT_HTM(2, 0, '50%', 200, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
-       LODOP.ADD_PRINT_TABLE('21%', '1%', '98%', '78%', document.getElementById(tableId).innerHTML)
+       LODOP.ADD_PRINT_HTM(1, '1%', '98%', '20%', "<body style='margin-top:0'>" + obj.appendTop + '</body>')
+       LODOP.ADD_PRINT_TABLE('15%', '1%', '98%', '78%', document.getElementById(tableId).innerHTML)
      } else {
        LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
      }
