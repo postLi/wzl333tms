@@ -239,6 +239,7 @@
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      obj = formatTableData(objectMerge2({}, obj))
+     console.log('print obj:', obj)
      const tableId = createTable(obj) // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('订货单')
