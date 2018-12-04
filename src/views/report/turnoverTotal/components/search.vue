@@ -2,7 +2,7 @@
   <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="开单时间">
-        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" :clearable="false" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="开单网点" prop="shipFromOrgid">
@@ -76,7 +76,10 @@ export default {
         this.$set(searchObj, 'createTimeStart', parseTime(this.searchTime[0], '{y}-{m}-{d}'))
         this.$set(searchObj, 'createTimeEnd', parseTime(this.searchTime[1], '{y}-{m}-{d}'))
       }
-      this.$emit('change', searchObj)
+      this.$emit('change', searchObj, {
+        createTimeStart: this.searchTime[0] || '',
+        createTimeEnd: this.searchTime[1] || ''
+      })
     },
     hideIframe(status) {
       this.$emit('hideIframe', status)

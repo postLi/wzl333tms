@@ -8,7 +8,10 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK3>在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
+        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+        :summary-method="getSumLeft"
+          show-summary
+         tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo">
           <el-table-column fixed sortable :key="tablekey" type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -43,7 +46,7 @@ import { postTrackList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfo from './components/editInfo'
 import TableSetup from '@/components/tableSetup'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -90,35 +93,35 @@ export default {
         }
       },
       tableColumn: [{
-          label: "送货批次",
-          prop: "batchNo",
-          width: "110",
-          fixed: true
-        },
-        {
-          label: "批次状态",
-          prop: "batchTypeName",
-          width: "100",
-          fixed: true
-        },
-        {
-          label: "送货时间",
-          prop: "loadTime",
-          width: "160",
-          slot: (scope) => {
+        label: '送货批次',
+        prop: 'batchNo',
+        width: '110',
+        fixed: true
+      },
+      {
+        label: '批次状态',
+        prop: 'batchTypeName',
+        width: '100',
+        fixed: true
+      },
+      {
+        label: '送货时间',
+        prop: 'loadTime',
+        width: '160',
+        slot: (scope) => {
             return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
-        },
-        {
-          label: "完成时间",
-          prop: "departureTime",
-          width: "160"
-        },
-        {
-          label: "车牌号",
-          prop: "truckIdNumber",
-          width: "100"
-        },
+      },
+      {
+        label: '完成时间',
+        prop: 'departureTime',
+        width: '160'
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '100'
+      },
         // {
         //   label: "发车时间",
         //   prop: "departureTime",
@@ -127,36 +130,36 @@ export default {
         //     return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         //   }
         // },
-        {
-          label: "司机",
-          prop: "dirverName",
-          width: "120"
-        },
-        {
-          label: "司机电话",
-          prop: "dirverMobile",
-          width: "120"
-        },
-        {
-          label: "送货件数",
-          prop: "loadAmountall",
-          width: "120"
-        },
-        {
-          label: "送货重量",
-          prop: "loadWeightall",
-          width: "120"
-        },
-        {
-          label: "送货体积",
-          prop: "loadVolumeall",
-          width: "120"
-        },
-        {
-          label: "要求到达时间",
-          prop: "requireArrivedTime",
-          width: "160"
-        },
+      {
+        label: '司机',
+        prop: 'dirverName',
+        width: '120'
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '120'
+      },
+      {
+        label: '送货件数',
+        prop: 'loadAmountall',
+        width: '120'
+      },
+      {
+        label: '送货重量',
+        prop: 'loadWeightall',
+        width: '120'
+      },
+      {
+        label: '送货体积',
+        prop: 'loadVolumeall',
+        width: '120'
+      },
+      {
+        label: '要求到达时间',
+        prop: 'requireArrivedTime',
+        width: '160'
+      },
         // {
         //   label: "运单总件数",
         //   prop: "shipAmount",
@@ -172,14 +175,14 @@ export default {
         //   prop: "shipVolumeall",
         //   width: "120"
         // },
-        {
-          label: "重量装载率",
-          prop: "weightLoadRate",
-          width: "120"
-        }, {
-          label: "体积装载率",
-          prop: "volumeLoadRate",
-          width: "120"
+      {
+        label: '重量装载率',
+        prop: 'weightLoadRate',
+        width: '120'
+      }, {
+          label: '体积装载率',
+          prop: 'volumeLoadRate',
+          width: '120'
         },
         // {
         //   label: "现付油卡",
@@ -254,26 +257,26 @@ export default {
         //   prop: "truckUsername",
         //   width: "120"
         // },
-        {
-          label: "分摊方式",
-          prop: "apportionType",
-          width: "120"
-        },
-        {
-          label: "可载重量",
-          prop: "truckLoad",
-          width: "120"
-        },
-        {
-          label: "可载体积",
-          prop: "truckVolume",
-          width: "120"
-        },
-        {
-          label: "备注",
-          prop: "remark",
-          width: "120"
-        }
+      {
+        label: '分摊方式',
+        prop: 'apportionType',
+        width: '120'
+      },
+      {
+        label: '可载重量',
+        prop: 'truckLoad',
+        width: '120'
+      },
+      {
+        label: '可载体积',
+        prop: 'truckVolume',
+        width: '120'
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '120'
+      }
       ]
     }
   },
@@ -282,6 +285,9 @@ export default {
     this.fetchList()
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -349,7 +355,7 @@ export default {
         }
       })
       .catch(err => {
-         this._handlerCatchMsg(err)
+        this._handlerCatchMsg(err)
       })
     },
     setColumn(obj) { // 重绘表格列表

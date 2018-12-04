@@ -136,7 +136,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -239,6 +239,7 @@
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      obj = formatTableData(objectMerge2({}, obj))
+     console.log('print obj:', obj)
      const tableId = createTable(obj) // 重新创建打印视图table
      LODOP = getLodop()
      LODOP.PRINT_INIT('订货单')
@@ -247,7 +248,14 @@
      // LODOP.SET_PRINT_STYLE("Bold", 1);
      LODOP.SET_PRINT_PAGESIZE(2, 0, 0, 'A4')
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
+
+     if (obj.appendTop) {
+       LODOP.ADD_PRINT_HTM(1, '1%', '98%', '20%', "<body style='margin-top:0'>" + obj.appendTop + '</body>')
+       LODOP.ADD_PRINT_TABLE('15%', '1%', '98%', '78%', document.getElementById(tableId).innerHTML)
+     } else {
+       LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
+     }
+
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()

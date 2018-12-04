@@ -191,6 +191,7 @@ export default {
 
     // 先不从链接上拿数据
     rcode = ''
+    this.thecode = ''
 
    // 1 如果显示声明不用请求服务器则不作处理
     if (code === 'NOSET') {
@@ -314,6 +315,10 @@ export default {
         if (data && data.length) {
           if (data.length === 1) {
             data = data[0]
+          }
+          if (data.length <= 1) {
+            this.fetchFail()
+            return false
           }
           this.orgdata = data
           // 处理格式化本地数据
