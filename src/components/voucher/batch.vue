@@ -13,8 +13,11 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
+        <el-form-item label="一级科目" 
+        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
+        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
+             :clearable="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>

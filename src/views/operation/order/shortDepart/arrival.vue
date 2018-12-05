@@ -18,7 +18,7 @@
         <el-table ref="multipleTable" :key="tableKey" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark"
         :summary-method="getSumLeft"
           show-summary
-         :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
+         :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
