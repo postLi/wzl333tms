@@ -508,7 +508,9 @@ export default {
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.isGoReceipt = true
       } else {
+        this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
         // this.$set(this.rightTable[index], prop, Number(newVal))
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
@@ -520,7 +522,7 @@ export default {
       } else {
         this.$set(this.textChangeDanger, index, false)
       }
-      console.log(index, paidVal, unpaidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index])
+      console.log(index, paidVal, unpaidVal, unpaidName, this.rightTable[index][unpaidName],this.rightTable[index][prop], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

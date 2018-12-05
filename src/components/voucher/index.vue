@@ -115,6 +115,10 @@ export default {
       handler(cval, oval) {
       },
       deep: true
+    },
+    fiOrderType: {
+      handler (cval, oval) {},
+      deep: true
     }
   },
   computed: {

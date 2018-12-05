@@ -209,18 +209,18 @@ export default {
           label: '凭证日期',
           prop: 'certTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
           label: '系统操作日期',
           prop: 'createTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -261,7 +261,7 @@ export default {
         },
         {
           label: '核销人',
-          prop: 'createBy',
+          prop: 'createName',
           width: '120',
           fixed: false
         },

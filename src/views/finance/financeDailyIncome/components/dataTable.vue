@@ -556,11 +556,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount', 'loadFeeTotalActual', 'wholeSurePay', 'noShortPay', 'hadShortPay', 'noSendPay', 'hadSendPay', 'noLoadFeeTotal', 'hadLoadFeeTotal', 'noStartLoadPay', 'hadStartLoadPay', 'noStartOtherPay', 'hadStartOtherPay', 'noEndLoadPay', 'hadEndLoadPay', 'noEndOtherPay', 'hadEndOtherPay', 'noWholeSurePay', 'hadWholeSurePay', 'departTotal', 'departTotalActual', 'noDepartTotal', 'hadDepartTotal', 'arriveTotal', 'arriveTotalActual', 'noArriveTotal', 'hadArriveTotal']
+      let propsArr = ['loadFeeTotalActual','operationPay', 'noOperationPay', 'hadOperationPay', 'operationPayActual']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let propsArr = ['shortPay', 'sendPay', 'loadFeeTotal', 'startLoadPay', 'startOtherPay', 'endLoadPay', 'endOtherPay', 'repertoryAmount', 'loadFeeTotalActual', 'wholeSurePay', 'noShortPay', 'hadShortPay', 'noSendPay', 'hadSendPay', 'noLoadFeeTotal', 'hadLoadFeeTotal', 'noStartLoadPay', 'hadStartLoadPay', 'noStartOtherPay', 'hadStartOtherPay', 'noEndLoadPay', 'hadEndLoadPay', 'noEndOtherPay', 'hadEndOtherPay', 'noWholeSurePay', 'hadWholeSurePay', 'departTotal', 'departTotalActual', 'noDepartTotal', 'hadDepartTotal', 'arriveTotal', 'arriveTotalActual', 'noArriveTotal', 'hadArriveTotal']
+      let propsArr = ['loadFeeTotalActual','operationPay', 'noOperationPay', 'hadOperationPay', 'operationPayActual']
       return getSummaries(param, propsArr)
     }
   }

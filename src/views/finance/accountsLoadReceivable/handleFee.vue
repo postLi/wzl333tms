@@ -1,80 +1,79 @@
 <template>
   <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
     <div class="accountsLoad_table">
-    <!-- 搜索框 -->
-    <div class="transferTable_search clearfix">
-      <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
-    </div>
-    <transferTable style="height: calc(100% - 40px);padding:10px">
-      <!-- 左上角按钮区 -->
-      <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+      <!-- 搜索框 -->
+      <div class="transferTable_search clearfix">
+        <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
       </div>
-      <!-- 左边表格区 -->
-      <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
-
-        <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed width="50" label="序号">
-            <template slot-scope="scope">
-              {{scope.$index + 1}}
-            </template>
-          </el-table-column>
-          <el-table-column fixed :render-header="setHeader" width="50">
-            <template slot-scope="scope">
-              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
-            </template>
-          </el-table-column>
-          <template v-if="!column.expand" v-for="column in tableColumnLeft">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+      <transferTable style="height: calc(100% - 40px);padding:10px">
+        <!-- 左上角按钮区 -->
+        <div slot="btnsBox">
+          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+        </div>
+        <!-- 左边表格区 -->
+        <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+          <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
+            <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
-                <div v-if="column.expand">
-                  <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
-                </div>
-                <div v-else>
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </div>
+                {{scope.$index + 1}}
               </template>
             </el-table-column>
-          </template>
-        </el-table>
-      </div>
-      <!-- 右边表格区 -->
-      <div slot="tableRight" class="tableHeadItemBtn">
-        <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;"  @row-dblclick="dclickMinusItem">
-          <el-table-column fixed width="50" label="序号">
-            <template slot-scope="scope">
-              {{scope.$index + 1}}
-            </template>
-          </el-table-column>
-          <el-table-column :render-header="setHeader2" fixed width="50">
-            <template slot-scope="scope">
-              <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
-            </template>
-          </el-table-column>
-          <template v-for="column in tableColumnLeft">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+            <el-table-column fixed :render-header="setHeader" width="50">
               <template slot-scope="scope">
-                <div v-if="column.expand">
-                  <el-input  v-numberOnly:point :value="scope.row.amount" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}"  @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize" ></el-input>
-                </div>
-                <div v-else>
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </div>
+                <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
-          </template>
-        </el-table>
-      </div>
-    </transferTable>
-    <!-- 核销凭证 -->
+            <template v-if="!column.expand" v-for="column in tableColumnLeft">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+                <template slot-scope="scope">
+                  <div v-if="column.expand">
+                    <el-input type="number" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  </div>
+                  <div v-else>
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </div>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </div>
+        <!-- 右边表格区 -->
+        <div slot="tableRight" class="tableHeadItemBtn">
+          <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
+            <el-table-column fixed width="50" label="序号">
+              <template slot-scope="scope">
+                {{scope.$index + 1}}
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="setHeader2" fixed width="50">
+              <template slot-scope="scope">
+                <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
+              </template>
+            </el-table-column>
+            <template v-for="column in tableColumnLeft">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+                <template slot-scope="scope">
+                  <div v-if="column.expand">
+                    <el-input v-numberOnly:point :value="scope.row.amount" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
+                  </div>
+                  <div v-else>
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </div>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </div>
+      </transferTable>
+      <!-- 核销凭证 -->
       <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgid" :btnLoading="btnLoading"></Voucher>
-  </div>
+    </div>
   </div>
 </template>
 <script>
@@ -97,10 +96,11 @@ export default {
   },
   data() {
     return {
-       btnLoading: false,
+      btnLoading: false,
       infoTable: {
         amount: 0,
-        orderList: []
+        orderList: [],
+        settlementTypeSign: 'HandlingFeeRec', //  HandlingFeeRec-配载应收操作费  
       },
       textChangeDanger: [],
       currentSearch: '',
@@ -257,7 +257,7 @@ export default {
       return this.rightTable.length
     }
   },
-   watch: {
+  watch: {
     '$route.query': {
       handler(cval, oval) {
         if (cval) {
@@ -281,7 +281,7 @@ export default {
         this.isFresh = true // 是否手动刷新页面
       } else {
         this.searchQuery.vo = Object.assign({}, this.getRouteInfo.vo)
-        this.$set(this.searchQuery.vo, 'status',  'NOSETTLEMENT,PARTSETTLEMENT')
+        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         this.isFresh = false
       }
     },
@@ -313,7 +313,7 @@ export default {
           // 过滤未完成结算的数据
           this.leftTable = data.list
           this.leftTable.forEach((e, index) => {
-             e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
+            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
             e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
             e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
             this.$set(e, 'amount', e.unpaidFee)
@@ -350,10 +350,16 @@ export default {
       this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
         [prop]: Number(newVal)
       }))
-      if (this.rightTable[index].notMonthpayFee !== newVal) {
+      if (this.rightTable[index].unpaidFee !== newVal) {
         this.textChangeDanger[index] = true
-      }else {
+      } else {
         this.textChangeDanger[index] = false
+      }
+      if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].unpaidFee) {
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+      }else {
+        this.isGoReceipt = false
       }
       return false
     },
@@ -390,16 +396,26 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.batchNo === e.batchNo) {
-              item = index
-            }
+           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.batchNo !== e.batchNo
           })
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.batchNo !== e.batchNo
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.batchNo !== e.batchNo
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.batchNo === e.batchNo) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -479,8 +495,13 @@ export default {
         let amount = 0
         this.rightTable.forEach((e, index) => {
           amount = tmsMath._add(amount, e.amount)
+          let item = {
+            id: e.id,
+            amount: e.amount,
+            feeTypeId: e.loadTypeName === '干线' ? 33 : 32
+          }
           if (e.amount && e.unpaidFee > 0 && e.amount <= e.unpaidFee) {
-            this.infoTable.orderList.push(e)
+            this.infoTable.orderList.push(item)
           }
         })
         this.infoTable.amount = amount
@@ -512,7 +533,7 @@ export default {
         on: {
           click: this.addALLList
         }
-      })  
+      })
     },
     setHeader2(h, { column }) {
       return h('el-button', {
@@ -532,6 +553,7 @@ export default {
   }
 }
 // settlementId 178
+
 </script>
 <style lang="scss">
 .receivableTable {
@@ -539,4 +561,5 @@ export default {
     position: static;
   }
 }
+
 </style>

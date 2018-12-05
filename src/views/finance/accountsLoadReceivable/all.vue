@@ -113,7 +113,8 @@ export default {
       btnLoading: false,
       infoTable: {
         amount: 0,
-        orderList: []
+        orderList: [],
+        feeIds: []
       },
       currentSearch: '',
       tablekey: '',
@@ -573,21 +574,31 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
-          // const orgItem = this.orgLeftTable.indexOf(e)
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
+          // // const orgItem = this.orgLeftTable.indexOf(e)
 
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
 
-          }
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -690,47 +701,109 @@ export default {
             e.inputChangeFee,
           ).result()
 
-          let item = Object.assign({}, e)
+          let item = objectMerge2({}, e)
+          let count = 0
           if (e.inputNowPayFee && e.notNowPayFee > 0) {
-            this.infoTable.orderList.push(Object.assign({
-              dataName: '现付',
-              amount: e.notNowPayFee,
-              inputNowPayFee: e.notNowPayFee,
-              feeReceivableTypeId: e.nowPayFeeId
-            }, item))
+            count++
+            this.$set(item, 'inputNowPayFee', item.notNowPayFee)
+            // arr.push(Object.assign({
+            //   dataName: '现付',
+            //   amount: e.notNowPayFee,
+            //   inputNowPayFee: e.notNowPayFee,
+            //   feeReceivableTypeId: e.nowPayFeeId
+            // }, item))
+            this.infoTable.feeIds.push(e.nowPayFeeId)
           }
           if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
-            this.infoTable.orderList.push(Object.assign({
-              dataName: '到付',
-              amount: e.notArrivepayFee,
-              inputArrivepayFee: e.notArrivepayFee,
-              feeReceivableTypeId: e.arrivepayFeeId
-            }, item))
+            count++
+            this.$set(item, 'inputArrivepayFee', item.notArrivepayFee)
+            // arr.push(Object.assign({
+            //   dataName: '到付',
+            //   amount: e.notArrivepayFee,
+            //   inputArrivepayFee: e.notArrivepayFee,
+            //   feeReceivableTypeId: e.arrivepayFeeId
+            // }, item))
+            this.infoTable.feeIds.push(e.arrivepayFeeId)
           }
           if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
-            this.infoTable.orderList.push(Object.assign({
-              dataName: '回单付',
-              amount: e.notReceiptpayFee,
-              inputReceiptpayFee: e.notReceiptpayFee,
-              feeReceivableTypeId: e.receiptpayFeeId
-            }, item))
+            count++
+            this.$set(item, 'inputReceiptpayFee', item.notReceiptpayFee)
+            // arr.push(Object.assign({
+            //   dataName: '回单付',
+            //   amount: e.notReceiptpayFee,
+            //   inputReceiptpayFee: e.notReceiptpayFee,
+            //   feeReceivableTypeId: e.receiptpayFeeId
+            // }, item))
+            this.infoTable.feeIds.push(e.receiptpayFeeId)
           }
           if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
-            this.infoTable.orderList.push(Object.assign({
-              dataName: '月结付',
-              amount: e.notMonthpayFee,
-              inputMonthpayFee: e.notMonthpayFee,
-              feeReceivableTypeId: e.monthpayFeeId 
-            }, item))
+            count++
+            this.$set(item, 'inputReceiptpayFee', item.notReceiptpayFee)
+            // arr.push(Object.assign({
+            //   dataName: '回单付',
+            //   amount: e.notReceiptpayFee,
+            //   inputReceiptpayFee: e.notReceiptpayFee,
+            //   feeReceivableTypeId: e.receiptpayFeeId
+            // }, item))
+            this.infoTable.feeIds.push(e.monthpayFeeId)
           }
           if (e.inputChangeFee && e.notChangeFee > 0) {
-            this.infoTable.orderList.push(Object.assign({
-              dataName: '异动费用',
-              amount: e.notChangeFee,
-              inputChangeFee: e.notChangeFee,
-              feeReceivableTypeId: e.changeFeeId
-            }, item))
+            count++
+            this.$set(item, 'inputChangeFee', item.notChangeFee)
+            // arr.push(Object.assign({
+            //   dataName: '异动费用',
+            //   amount: e.notChangeFee,
+            //   inputChangeFee: e.notChangeFee,
+            //   feeReceivableTypeId: e.changeFeeId
+            // }, item))
+            this.infoTable.feeIds.push(e.changeFeeId)
           }
+          if (count > 0) {
+            this.infoTable.orderList.push(item)
+          }
+
+
+          // let item = Object.assign({}, e)
+          // if (e.inputNowPayFee && e.notNowPayFee > 0) {
+          //   this.infoTable.orderList.push(Object.assign({
+          //     dataName: '现付',
+          //     amount: e.notNowPayFee,
+          //     inputNowPayFee: e.notNowPayFee,
+          //     feeReceivableTypeId: e.nowPayFeeId
+          //   }, item))
+          // }
+          // if (e.inputArrivepayFee && e.notArrivepayFee > 0) {
+          //   this.infoTable.orderList.push(Object.assign({
+          //     dataName: '到付',
+          //     amount: e.notArrivepayFee,
+          //     inputArrivepayFee: e.notArrivepayFee,
+          //     feeReceivableTypeId: e.arrivepayFeeId
+          //   }, item))
+          // }
+          // if (e.inputReceiptpayFee && e.notReceiptpayFee > 0) {
+          //   this.infoTable.orderList.push(Object.assign({
+          //     dataName: '回单付',
+          //     amount: e.notReceiptpayFee,
+          //     inputReceiptpayFee: e.notReceiptpayFee,
+          //     feeReceivableTypeId: e.receiptpayFeeId
+          //   }, item))
+          // }
+          // if (e.inputMonthpayFee && e.notMonthpayFee > 0) {
+          //   this.infoTable.orderList.push(Object.assign({
+          //     dataName: '月结付',
+          //     amount: e.notMonthpayFee,
+          //     inputMonthpayFee: e.notMonthpayFee,
+          //     feeReceivableTypeId: e.monthpayFeeId 
+          //   }, item))
+          // }
+          // if (e.inputChangeFee && e.notChangeFee > 0) {
+          //   this.infoTable.orderList.push(Object.assign({
+          //     dataName: '异动费用',
+          //     amount: e.notChangeFee,
+          //     inputChangeFee: e.notChangeFee,
+          //     feeReceivableTypeId: e.changeFeeId
+          //   }, item))
+          // }
         })
         this.infoTable.amount = amount
         amount = 0

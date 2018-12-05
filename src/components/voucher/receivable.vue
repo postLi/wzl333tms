@@ -77,6 +77,7 @@ import { getSystemTime } from '@/api/common'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import { loadVerification } from '@/api/finance/accountsPayable'
 import { REGEX } from '@/utils/validate'
 import * as accountApi from '@/api/finance/accountsReceivable'
 export default {
@@ -102,6 +103,7 @@ export default {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
+
           this.init()
         }
       },
@@ -150,11 +152,11 @@ export default {
         })
         return this.uniqueArray(ids).join(',')
       } else if (this.$route.query.tab === '全部核销') {
-        let ids = []
-        this.info.orderList.forEach(e => {
-          ids.push(e.feeReceivableTypeId)
-        })
-        return this.uniqueArray(ids).join(',')
+        // let ids = []
+        // // this.info.orderList.forEach(e => {
+        // //   ids.push(e.feeReceivableTypeId)
+        // // })
+        return this.uniqueArray(this.info.feeIds).join(',')
       } else {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
         return JSON.parse(this.$route.query.searchQuery).vo.feeType
@@ -215,14 +217,21 @@ export default {
         orgId: '',
         parentId: '',
         subjectLevel: ''
-      }
+      },
+      paymentsType: 0 // 收支类型, 0 收入, 1 支出,
     }
   },
   methods: {
+    // getVeryficationList () {
+    //   return getVeryficationList({orgId: this.orgId}).then(data => {
+    //     this.veryficationList = data
+    //   })
+    // },
     init() {
       this.baseQuery = this.$options.data().baseQuery
       this.postVerificationBaseInfo()
       this.formModel.amount = this.info.amount || 0
+      // this.getVeryficationList()
     },
     postVerificationBaseInfo() { // 新增时初始化数据
       this.loading = true
@@ -392,33 +401,65 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let dataInfo = Object.assign({}, this.formModel)
-          this.$set(dataInfo, 'orderList', this.info.orderList)
-          this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
-          delete dataInfo.verificationList
-          if (!dataInfo.certTime) {
-            dataInfo.certTime = new Date()
+          if (this.$route.query.currentPage === 'handleFee') { // 操作费调另一个接口
+            let handleFeeInfo = Object.assign({}, this.formModel)
+             if (this.info.settlementTypeSign) {
+            this.$set(handleFeeInfo, 'settlementTypeSign', this.info.settlementTypeSign)
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
-          let query = {
-            receivableFees: dataInfo.orderList,
-            tmsFinanceBillRecordDto: dataInfo
+          this.$set(handleFeeInfo, 'tmsFinanceVerifiactionBillFees', this.info.orderList)
+          this.$set(handleFeeInfo, 'orgId', this.orgId)
+          this.$set(handleFeeInfo, 'paymentsType', this.paymentsType)
+          this.$set(handleFeeInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+          if (!handleFeeInfo.certTime) {
+            handleFeeInfo.certTime = new Date()
           }
-          delete query.tmsFinanceBillRecordDto.orderList
-          accountApi.postCreateFee(this.orgId, query).then(data => {
-              this.$message({ type: 'success', message: '保存成功' })
-              this.btnLoading = false
-              this.closeMe()
-              setTimeout(() => {
-                this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
-                // 当添加结算时更新列表
-                this.eventBus.$emit('updateAccountsReceivableList')
-              }, 500)
-            })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-              this.btnLoading = false
-            })
+          this.$set(handleFeeInfo, 'certTime', parseTime(handleFeeInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          delete handleFeeInfo.verificationList
+
+          console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
+            loadVerification(handleFeeInfo).then(data => {
+                this.$message({ type: 'success', message: '保存成功' })
+                this.btnLoading = false
+                this.closeMe()
+                setTimeout(() => {
+                  this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+                  // 当添加结算时更新列表
+                  this.eventBus.$emit('updateAccountsReceivableList')
+                }, 500)
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.btnLoading = false
+              })
+          } else {
+            let dataInfo = Object.assign({}, this.formModel)
+            this.$set(dataInfo, 'orderList', this.info.orderList)
+            this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+            delete dataInfo.verificationList
+            if (!dataInfo.certTime) {
+              dataInfo.certTime = new Date()
+            }
+            this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+            let query = {
+              receivableFees: dataInfo.orderList,
+              tmsFinanceBillRecordDto: dataInfo
+            }
+            delete query.tmsFinanceBillRecordDto.orderList
+            accountApi.postCreateFee(this.orgId, query).then(data => {
+                this.$message({ type: 'success', message: '保存成功' })
+                this.btnLoading = false
+                this.closeMe()
+                setTimeout(() => {
+                  this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+                  // 当添加结算时更新列表
+                  this.eventBus.$emit('updateAccountsReceivableList')
+                }, 500)
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.btnLoading = false
+              })
+          }
         }
       })
     },

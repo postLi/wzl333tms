@@ -135,8 +135,12 @@ export default {
       let obj = Object.assign({}, value)
       this.$set(obj, 'paymentsType', this.paymentsType)
       this.$set(obj, 'orgId', this.$route.query.orgId)
+
       this.loading = true
       this.btnLoading = true
+      if (this.fiOrderType !== null || this.fiOrderType !== undefined) {
+        this.$set(obj, 'fiOrderType', this.fiOrderType)
+      }
       postAddIncome(obj).then(data => {
           this.popVisibleDialog = false
           this.$message.success('记支出成功！')

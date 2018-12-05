@@ -508,7 +508,9 @@ export default {
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+       this.isGoReceipt = true
       } else {
+        this.isGoReceipt = false
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
         }))

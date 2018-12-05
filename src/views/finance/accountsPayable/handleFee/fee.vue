@@ -217,7 +217,7 @@ export default {
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '应付账款-操作费核销'
+            name: '应付账款-操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

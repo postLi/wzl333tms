@@ -408,6 +408,9 @@ export default {
       } else {
         isShow = true
       }
+       let list = this.dataListTop.filter(e => { // 只能打印导出未反核销的数据
+          return e.billRecordStatus !== 0 // billRecordStatus : 0-已被反核销 1-未反核销
+        })
       switch (type) {
         case 'income': // 新增
           if (isShow) {
@@ -425,18 +428,15 @@ export default {
           }
           break
         case 'export':
-        let list = this.dataListTop.filter(e => {
-          return e.billRecordStatus !== 0
-        })
           SaveAsFile({
-            data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : list,
             columns: this.tableColumn,
             name: '资金流水明细-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : list,
             columns: this.tableColumn,
             name: '资金流水明细'
           })

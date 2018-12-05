@@ -385,6 +385,12 @@ export default {
       } else {
         this.textChangeDanger[index] = false
       }
+       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notChangeFee) {
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+      }else {
+        this.isGoReceipt = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未结费用名
@@ -430,21 +436,31 @@ export default {
           // 默认设置实结数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
-          // const orgItem = this.orgLeftTable.indexOf(e)
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
+          // // const orgItem = this.orgLeftTable.indexOf(e)
 
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
 
-          }
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }

@@ -78,7 +78,7 @@
       </div>
     </transferTable>
     <!-- 核销凭证 -->
-    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgid" :btnLoading="btnLoading"></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>

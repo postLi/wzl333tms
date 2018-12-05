@@ -530,7 +530,7 @@ export default {
           if (!query.certTime) {
             query.certTime = new Date()
           }
-          this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d}')+ ' 00:00:00')
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
           if (!this.isModify) {
             this.$set(query, 'orderList', [])

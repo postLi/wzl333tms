@@ -60,6 +60,7 @@ export default {
   },
   data() {
     return {
+      selectListShipSns: [],
       feeType: 11,
       isCheck: false,
       isModify: false,
