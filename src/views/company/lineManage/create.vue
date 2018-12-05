@@ -7,7 +7,7 @@
         <div class="searchInformation information">
             <h2>基本信息</h2>
             <el-form-item label="出发网点：" prop="fromOrgid" label-width="100px">
-                <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.orgid" />
+                <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
             <el-form-item label="出发城市：" label-width="100px" prop="startLocation">
                 <el-input :value="ruleForm.startLocation" v-if="unable" disabled></el-input>
@@ -24,7 +24,7 @@
                         v-number-only :disabled="unable" type="text"></div>
             </el-form-item><br>
             <el-form-item label="到达网点：" prop="toOrgid" label-width="100px">
-                <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.orgid" />
+                <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
             <el-form-item label="到达城市：" label-width="100px" prop="endLocation">
                 <el-input v-model="ruleForm.endLocation" v-if="unable" disabled></el-input>
