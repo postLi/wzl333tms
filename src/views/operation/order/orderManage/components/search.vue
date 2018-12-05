@@ -28,6 +28,9 @@
           <el-option slot="head" label="全部" value=""></el-option>
         </select-type>
       </el-form-item>
+      <el-form-item label="开单员" prop="userid">
+        <querySelect clearable :orgid="otherinfo.orgid" v-model="searchForm.userid" search="name" show="select" valuekey="id"  :maxlength="15"></querySelect>
+      </el-form-item>
       <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
     <el-form-item class="staff_searchinfo--btn">
@@ -41,12 +44,14 @@ import { pickerOptions2, parseTime } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import SelectType from '@/components/selectType/index'
 import searchAll from '@/components/searchAll/index'
+import querySelect from '@/components/querySelect/index'
 export default {
   name: 'order-manage-search',
   components: {
     SelectTree,
     SelectType,
-    searchAll
+    searchAll,
+    querySelect
   },
   props: {
     btnsize: {
@@ -69,7 +74,8 @@ export default {
         orgid: '',
         value: '',
         type: 'shipSn',
-        shipStatus: ''
+        shipStatus: '',
+        userid: ''
       },
       searchObjs: {},
       rules: {
@@ -137,7 +143,7 @@ export default {
       searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
       searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
       searchObj[this.searchForm.type] = this.searchForm.value
-
+      searchObj.userid = this.searchForm.userid
       this.$emit('change', searchObj)
     },
     clearForm() {
@@ -147,10 +153,10 @@ export default {
       this.searchForm.value = ''
       this.searchForm.type = 'shipSn'
       this.searchAll = '1'
+      this.searchForm.userid = ''
       setTimeout(() => {
         this.searchAll = ''
       }, 66)
-      
     }
   }
 }

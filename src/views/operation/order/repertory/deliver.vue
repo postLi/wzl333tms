@@ -10,7 +10,10 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="repertoryArr" :key="tablekey" border  @row-dblclick="showDetail" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+        <el-table ref="multipleTable" :data="repertoryArr" :key="tablekey" border  @row-dblclick="showDetail" @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark"
+        :summary-method="getSumLeft"
+          show-summary
+         :row-style="tableRowColor" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -45,7 +48,7 @@ import SearchForm from './components/search'
 import Colorpicker from './components/colorpicker'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc, tmsMath } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
@@ -100,8 +103,8 @@ export default {
         prop: 'repertoryCreateTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '库存时长',
@@ -118,8 +121,8 @@ export default {
         prop: 'createTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '货品名',
@@ -168,22 +171,22 @@ export default {
       },
       {
         label: '发货人',
-        prop: 'shipShippingTypeName',
+        prop: 'senderCustomerName',
         width: '100'
       },
       {
         label: '发货人电话',
-        prop: 'receiverCustomerMobile',
+        prop: 'senderCustomerMobile',
         width: '150'
       },
       {
         label: '收货人',
-        prop: 'shipReceiverId',
+        prop: 'receiverCustomerName',
         width: '100'
       },
       {
         label: '收货人电话',
-        prop: 'senderCustomerMobile',
+        prop: 'receiverCustomerMobile',
         width: '110'
       },
       {
@@ -234,6 +237,11 @@ export default {
       {
         label: '运费合计',
         prop: 'shipTotalFee',
+        width: '90'
+      },
+      {
+        label: '毛利',
+        prop: 'shipTotalProfit',
         width: '90'
       },
       {
@@ -412,6 +420,9 @@ export default {
     this.fetchAllOrderRepertory()
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     showDetail(order) {
       this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
       console.log(order.shipId)
@@ -494,14 +505,17 @@ export default {
       this.loading = true
       this.$set(this.searchQuery.vo, 'repertoryType', 1)
       return postAllOrderRepertory(this.searchQuery).then(data => {
-        this.repertoryArr = data.list
+        this.repertoryArr = data.list.map(el => {
+          el.shipTotalProfit = tmsMath._sub(el.shipTotalFee, el.brokerageFee)
+          return el
+        })
         this.total = data.total
         this.loading = false
       })
        .catch(err => {
-          this._handlerCatchMsg(err)
-          this.loading = false
-        })
+         this._handlerCatchMsg(err)
+         this.loading = false
+       })
     },
     setColumColor(obj) {
       this.selectionColorSetting = obj
