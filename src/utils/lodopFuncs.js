@@ -136,7 +136,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -239,6 +239,32 @@
    try {
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      obj = formatTableData(objectMerge2({}, obj))
+     const topStyle = objectMerge2({
+       top: 1,
+       left: '1%',
+       width: '98%',
+       height: '20%'
+     }, obj.topStyle || {})
+     const _topMainStyle = {
+       top: '15%',
+       left: '1%',
+       width: '98%',
+       height: '78%'
+     }
+     const _mainStyle = {
+       top: '1%',
+       left: '1%',
+       width: '98%',
+       height: '100%'
+     }
+     const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
+     const pageStyle = objectMerge2({
+       intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
+       intPageWidth: 0, // 单位为0.1mm
+       intPageHeight: 0,
+       strPageName: 'A4' // intPageWidth等于零时本参数才有效
+     }, obj.pageStyle || {})
+
      console.log('print obj:', obj)
      const tableId = createTable(obj) // 重新创建打印视图table
      LODOP = getLodop()
@@ -246,20 +272,21 @@
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
-     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, 'A4')
+     LODOP.SET_PRINT_PAGESIZE(pageStyle.intOrient, pageStyle.intPageWidth, pageStyle.intPageHeight, pageStyle.strPageName)
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
      if (obj.appendTop) {
-       LODOP.ADD_PRINT_HTM(1, '1%', '98%', '20%', "<body style='margin-top:0'>" + obj.appendTop + '</body>')
-       LODOP.ADD_PRINT_TABLE('15%', '1%', '98%', '78%', document.getElementById(tableId).innerHTML)
-     } else {
-       LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
+       LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
      }
+     LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, document.getElementById(tableId).innerHTML)
+
+     console.log('topStyle:', topStyle, mainStyle)
 
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
    } catch (err) {
+     console.log('lodop PrintInFullPage error:', err)
      getLodop()
    }
  }
@@ -512,7 +539,7 @@
        if (typeof el[column.prop] === 'undefined') {
          el[column.prop] = ''
        }
-       column.width = column.width || 120
+       column.width = column.width || ''
      })
    })
    return obj
@@ -908,7 +935,7 @@
 
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
 
-   table.setAttribute('width', '1200px')
+   table.setAttribute('width', '100%')
    table.setAttribute('border', '1px solid #999')
    table.style.borderCollapse = 'collapse'
    table.style.fontSize = '12px'
