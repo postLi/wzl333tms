@@ -151,7 +151,12 @@
                 </div>
                 <div class="infos_tab">
                   <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-                    <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+                    <el-table-column fixed type="selection" width="50"></el-table-column>
+                    <el-table-column fixed label="序号" prop="number" width="50">
+                    <template slot-scope="scope">
+                      {{scope.$index + 1}}
+                    </template>
+                  </el-table-column>
                     <template v-for="column in tableColumn">
                       <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
                       <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -562,7 +567,7 @@ export default {
           'loadId': 1
         }
       },
-      tableColumn: [{
+      tableColumn: [/* {
           label: '序号',
           prop: 'id',
           width: '100',
@@ -570,7 +575,7 @@ export default {
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, {
+        }, */ {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '150',
@@ -848,7 +853,15 @@ export default {
       this.loading = true
       const _id = this.propsId
       return getSelectLoadList(_id).then(data => {
-        this.usersArr = data
+        data = data || []
+        this.usersArr = data.map(el => {
+          const start = (el.shipFromCityName || '').split(',')
+          const end = (el.shipToCityName || '').split(',')
+          el.shipFromCityName = start[1] || start[0] || ''
+          el.shipToCityName = end[1] || end[0] || ''
+
+          return el
+        })
         this.loading = false
         this.toggleAllRows()
       })
@@ -946,33 +959,44 @@ export default {
     },
     doAction(type) {
       console.log('form', this.formModel, JSON.stringify(this.formModel))
-      let obj = {}
-          for (let item in this.info) {
-            obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
-          }
+      const obj = {}
+      for (const item in this.info) {
+        obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
+      }
       let appendTopStr = '<style>body{width: 100%;}</style>'
-      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">'
-                   +this.otherinfo.companyName
-                   +'公司交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' 
-                   + obj.orgName +'   →   '+obj.arriveOrgName 
-                   + '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">'
-                   + obj.loadTime
-                   + '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">'
-                   + obj.batchNo
-                   + '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">'
-                   + obj.truckIdNumber
-                   + '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">'
-                   + obj.dirverName
-                   +'</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">'
-                   + obj.dirverMobile
-                   +'</td></tr></table></body>'
+      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+                   this.otherinfo.companyName +
+                   '公司交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.orgName + '   →   ' + obj.arriveOrgName +
+                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.loadTime +
+                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.batchNo +
+                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.truckIdNumber +
+                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverName +
+                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverMobile +
+                   '</td></tr></table></body>'
+      const columnArr = objectMerge2([], this.tableColumn)
+      columnArr.unshift({
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      })
       switch (type) {
         // 导出数据table_import
         // 导出
         case 'export':
+
           PrintInFullPage({
             data: this.usersArr,
-            columns: this.tableColumn,
+            columns: columnArr,
             // appendTop: '<style>*{color:#f00;}</style>表格后面用<font color=blue>ADD_PRINT_HTM</font>附加其它备注'
             appendTop: appendTopStr
           })
@@ -981,7 +1005,7 @@ export default {
         case 'print':
           SaveAsFile({
             data: this.usersArr,
-            columns: this.tableColumn
+            columns: columnArr
           })
           break
       }

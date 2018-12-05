@@ -74,7 +74,12 @@
       </div>
       <div class="detailinfo_tab">
         <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed type="selection" width="50"></el-table-column>
+          <el-table-column fixed label="序号" prop="number" width="50">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
+          </el-table-column>
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" sortable>
@@ -169,15 +174,15 @@ export default {
         truckIdNumber: ''
       },
       tableColumn: [],
-      tableColumnArrival: [{
-          label: '序号',
-          prop: 'id',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
-        }, {
+      tableColumnArrival: [/* {
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+        }, */ {
           label: '运单号',
           prop: 'shipSn',
           width: '130',
@@ -420,20 +425,29 @@ export default {
   methods: {
     setTableColumn() { // 设置表格列
       this.tableColumn = this.isEditActual ? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
-      console.log('this.tableColumn:', this.tableColumn.length, this.tableColumn)
     },
     setTable() {
       this.setupTableVisible = true
     },
     doAction(type) {
+      const columnArr = objectMerge2([], this.tableColumn)
+      columnArr.unshift({
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      })
       switch (type) {
         case 'add': // 短驳入库
           this.timeInfoVisible = true
           break
         case 'print': // 打印
           console.log('form', this.info)
-          let obj = {}
-          for (let item in this.info) {
+          const obj = {}
+          for (const item in this.info) {
             obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
           }
           let appendTopStr = '<style>body{width: 100%;}</style>'
@@ -454,16 +468,16 @@ export default {
             '</td></tr></table></body>'
           PrintInFullPage({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
-            columns: this.tableColumn,
+            columns: columnArr,
             name: '送货管理',
             appendTop: appendTopStr
           })
           break
         case 'export': // 导出
-          console.log('export column:', this.tableColumn)
+          console.log('export column:', columnArr)
           SaveAsFile({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
-            columns: this.tableColumn,
+            columns: columnArr,
             name: '送货管理'
           })
           break
@@ -600,15 +614,15 @@ export default {
       } else {
         this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         postAddRepertory(50, this.newData).then(data => {
-            if (data.status === 200) {
-              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
-              this.$message({ type: 'success', message: '短驳入库操作成功' })
-              this.message = true
-            } else {
-              this.message = false
-            }
-            this.$emit('isSuccess', this.message)
-          })
+          if (data.status === 200) {
+            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
+            this.$message({ type: 'success', message: '短驳入库操作成功' })
+            this.message = true
+          } else {
+            this.message = false
+          }
+          this.$emit('isSuccess', this.message)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -620,26 +634,33 @@ export default {
       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-          if (data) {
-            this.detailList = data.data
-            this.setData()
-            this.toggleAllRows()
-            this.$nextTick(() => {
-              console.log('isNeedArrival', this.isNeedArrival)
-              this.detailList.forEach(e => {
-                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  if (e.warehouStatus === 0) { // 部分入库
-                    e.actualAmount = e.loadAmount
-                    e.actualWeight = e.loadWeight
-                    e.actualVolume = e.loadVolume
-                  }
-                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+        if (data) {
+          this.detailList = (data.data || []).map(el => {
+            const start = (el.shipFromCityName || '').split(',')
+            const end = (el.shipToCityName || '').split(',')
+            el.shipFromCityName = start[1] || start[0] || ''
+            el.shipToCityName = end[1] || end[0] || ''
+
+            return el
+          })
+          this.setData()
+          this.toggleAllRows()
+          this.$nextTick(() => {
+            console.log('isNeedArrival', this.isNeedArrival)
+            this.detailList.forEach(e => {
+              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                if (e.warehouStatus === 0) { // 部分入库
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
                 }
-              })
+              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+              }
             })
-            this.detailTableLoading = false
-          }
-        })
+          })
+          this.detailTableLoading = false
+        }
+      })
         .catch(error => {
           this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)
@@ -672,7 +693,6 @@ export default {
       }
     },
     setColumn(obj) { // 打开表格设置
-      console.log('setColumnn short:', obj.length, JSON.stringify(obj))
       if (this.isEditActual) {
         this.tableColumnDeiver = obj
       } else {

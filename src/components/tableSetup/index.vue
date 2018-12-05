@@ -89,7 +89,7 @@
         </div>
         <div class="tableSetup_content">
           <el-checkbox-group v-model="checkListRight" @change="handleCheckChangeRight">
-            <draggable :move="canDragStart" :list="showColumnData" class="dragArea">
+            <draggable :move="canDragStart" @change="setChangeData" :list="showColumnData" class="dragArea">
               <transition-group name="el-zoom-in-center">
                 <div class="tableSetup_item" v-for="(column, index) in showColumnData" :key="index" @dblclick="dbCheckItemRight(column, index, $event)">
                   <el-checkbox :label="column">
@@ -115,7 +115,7 @@
 </template>
 <script>
 /**
- * 整体逻辑
+ * ==== 整体逻辑 ====
  * 1. 进入页面，判断父组件是否有传code值，没有则从router上拿code值；
  * 1.1 通过code拿到数据后需要跟传过来的column进行合并，如果column中有的字段不在后台数据中，则考虑删除掉；
  * 1.2 如果通过code值拿不到数据，则只取column数据
@@ -125,6 +125,16 @@
  *
  * ====== 特殊情况 =====
  * 1.一个页面有2个以上的tablesetup组件；（通过传code值区分；如果没有对应的code区分，则传code值为 NOSET）
+ */
+/**
+ * ===== 排序逻辑 =====
+ * fixed的一直排在最上面
+ * 后面变更为fixed的排在原有的fixed后面
+ * 取消fixed的排在最后一个fixed元素后面
+ * 拖动fixed到其它位置，需重新排序，如果是排在非fixed元素后面，则将其排在最后一个fixed元素后面
+ * 拖动非fixed到fixed前面某位置，需重新排序，将其排在最后一个fixed元素后
+ * 从左到右边的元素，排在原有数据后面，相反操作同理
+ * 从右到左边的元素，取消fixed属性
  */
 import draggable from 'vuedraggable'
 import { objectMerge2 } from '@/utils/index'
@@ -316,7 +326,9 @@ export default {
           if (data.length === 1) {
             data = data[0]
           }
+          // 后台返回的字段数量必然大于1个的，小于时就是数据有异常，按照请求失败处理
           if (data.length <= 1) {
+            console.log('后台返回表格数据异常:', data)
             this.fetchFail()
             return false
           }
@@ -328,16 +340,18 @@ export default {
           const copy = []
           const len = this.columns.length
 
-          // 格式化数据
+          // 格式化数据顺序
           data.sort(function(a, b) {
             return a.titleOrder > b.titleOrder ? 1 : -1
           })
 
+          // 将服务器上的数据覆盖本地相应的数据
           data.forEach(el => {
             const _el = Object.assign({}, el)
             _el.label = _el.label || _el.lable
             for (let i = 0; i < len; i++) {
               if (this.columns[i].prop === el.prop) {
+                // 预处理每个项的数据
                 for (const j in this.columns[i]) {
                   if (typeof _el[j] === 'undefined' || _el[j] === null) {
                     _el[j] = this.columns[i][j]
@@ -352,14 +366,22 @@ export default {
 
           // 2.合并本地剩余的数据
           this.columns.forEach(el => {
+            // 将本地剩余的项塞到后面
             const find = copy.filter(_el => _el.prop === el.prop)
             if (find.length === 0) {
+              console.log('本地项，需要后台添加：', el)
               copy.push(el)
             }
           })
 
           copy.sort(function(a, b) {
-            return a.fixed ? -1 : 0
+            if (a.fixed && b.fixed) {
+              return 0
+            } else if (a.fixed) {
+              return -1
+            } else {
+              return 0
+            }
           })
           this.convertData(copy)
         } else {
@@ -431,6 +453,26 @@ export default {
       }
     },
     canDragStart(list) {},
+    setChangeData() {
+      // 拖拉后处理数据
+      this.reRenderData()
+    },
+    reRenderData() {
+      // 复制数组操作，减少渲染次数
+      const copy = objectMerge2([], this.showColumnData)
+      // 排序，将fixed逐个往前移动，非fixed往后移
+      copy.sort((a, b) => {
+        if (a.fixed && b.fixed) {
+          return 0
+        } else if (a.fixed) {
+          return -1
+        } else {
+          return 0
+        }
+        // return a.fixed ? -1 : 0
+      })
+      this.showColumnData = copy
+    },
     setColumnLen() { // 更新数据
       this.leftListLen = this.columnData.length
       this.rightListLen = this.showColumnData.length
@@ -459,6 +501,7 @@ export default {
         if (this.checkListLeft.indexOf(el) === -1) {
           return true
         } else {
+          el.fixed = false
           this.showColumnData.push(el)
           return false
         }
@@ -467,6 +510,7 @@ export default {
         if (this.checkListLeft.indexOf(el) === -1) {
           return true
         } else {
+          el.fixed = false
           this.orgShowColumnData.push(el)
           return false
         }
@@ -474,6 +518,7 @@ export default {
       this.checkListLeft = [] // 清空左边勾选列表
       this.setColumnLen()
       this.leftCheckLen = 0
+      this.reRenderData()
     },
     goLeft() { // 将显示列勾选的项转移到隐藏列（右边->左边）
       this.checkListRight.forEach((e, index) => {
@@ -488,21 +533,24 @@ export default {
           this.orgShowColumnData.splice(item, 1)
         }
       })
-      this.sort(this.columnData)
+      // this.sort(this.columnData)
       this.checkListRight = [] // 清空右边勾选列表
       this.setColumnLen()
       this.rightCheckLen = 0
+      this.reRenderData()
     },
     dbCheckItemLeft(row, index, event) { // 双击-左边列表选择项（左边->右边）
       if (this.rightListLen > this.maxLen - 1) {
         this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
+      row.fixed = false
       this.showColumnData.push(row)
       this.orgShowColumnData.push(row)
       this.columnData.splice(index, 1)
       this.orgColumnData.splice(index, 1)
       this.setColumnLen()
+      this.reRenderData()
     },
     dbCheckItemRight(row, index, event) { // 双击-右边列表选择项（右边->左边）
       this.columnData.push(row)
@@ -510,7 +558,8 @@ export default {
       this.showColumnData.splice(index, 1)
       this.orgShowColumnData.splice(index, 1)
       this.setColumnLen()
-      this.sort(this.columnData)
+      // this.sort(this.columnData)
+      this.reRenderData()
     },
     handleCheckChangeLeft(val) { // 勾选左边列表项
       this.leftCheckLen = val.length
@@ -582,6 +631,9 @@ export default {
       this.rightList = Object.assign([], value)
     },
     handleSwitch(obj, index) {
+      obj.fixed = !obj.fixed
+      this.reRenderData()
+      return
       console.log('handleSwitch', obj)
       let find = 0
       let unfind = false
@@ -606,20 +658,6 @@ export default {
         this.showColumnData.splice(index + 1, 1)
         obj.fixed = true
       }
-
-      // this.showColumnData.sort(function(a, b) {
-      //   return a.fixed ? -1 : 0
-      // })
-
-      /* let fixNum = 0
-      this.showColumnData.forEach(e => {
-        if (e.fixed) {
-          console.log('sdfsdf', fixNum)
-          fixNum++
-        }
-      })
-      console.log('fixNum', fixNum)
-      this.showColumnData[index].titleOrder = fixNum + 1 */
     },
     callback() {
       const data = Object.assign([], this.showColumnData)
