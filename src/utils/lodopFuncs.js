@@ -258,11 +258,16 @@
        height: '100%'
      }
      const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
-     const pageStyle = objectMerge2({
+     /* const pageStyle = objectMerge2({
        intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
        intPageWidth: 0, // 单位为0.1mm
        intPageHeight: 0,
        strPageName: 'A4' // intPageWidth等于零时本参数才有效
+     }, obj.pageStyle || {}) */
+     const pageStyle = objectMerge2({
+       intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
+       intPageWidth: 28, // 单位为0.1mm
+       intPageHeight: 21.8
      }, obj.pageStyle || {})
 
      console.log('print obj:', obj)
@@ -528,6 +533,7 @@
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
+         console.log('column.label:', column.label)
          el['index'] = k + 1
          el['id'] = k + 1
          /* if (column.label === '序号') {
