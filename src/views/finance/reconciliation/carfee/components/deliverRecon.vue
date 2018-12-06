@@ -404,37 +404,6 @@
               </th>
             </tr>
           </table>
-          <!--<el-form-item label="备注">-->
-          <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<div class="sMessageCont_info">-->
-          <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
-          <!--</div>-->
-          <!--<el-form-item label="公司名称">-->
-          <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off"-->
-          <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgFinancialOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off"-->
-          <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-          <!--<el-date-picker-->
-          <!--v-model="messageButtonInfo.createTime"-->
-          <!--type="date"-->
-          <!--placeholder="选择日期">-->
-          <!--</el-date-picker>-->
-
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>

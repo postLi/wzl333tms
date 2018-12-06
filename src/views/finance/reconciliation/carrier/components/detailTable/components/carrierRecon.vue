@@ -910,7 +910,7 @@
     },
     data() {
       const validateMobile = (rule, value, callback) => {
-        if (!REGEX.MOBILE.test(value) && value !== '') {
+        if (!REGEX.MOBILE.test(value)) {
           callback(new Error('请输入正确的联系号码~'))
         } else {
           callback()
@@ -922,10 +922,10 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
           ],
           'memberPersonPhone': [
-            {trigger: 'change', validator: validateMobile}
+            { validator: validateMobile,trigger: 'blur',}
           ],
           'financialOfficerPhone': [
             {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
@@ -1242,10 +1242,14 @@
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7 || index === 15 || index === 16) {
+          if (columns[index].label === '中转时间' || columns[index].label === '运单号' || columns[index].label === '中转单号' || columns[index].label === '出发城市' || columns[index].label === '到达城市' || columns[index].label === '货品名' || columns[index].label === '交接方式' || columns[index].label === '备注' || columns[index].label === '签收状态') {
             sums[index] = ''
             return
           }
+          // if (index === 3 || index === 4 || index === 5 || index === 7 || index === 15 || index === 16) {
+          //   sums[index] = ''
+          //   return
+          // }
           const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
