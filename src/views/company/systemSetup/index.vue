@@ -800,8 +800,8 @@ export default {
     }
     .el-collapse-item__arrow {
       position: absolute;
-      left: 32px;
-      top: 0;
+      left: 10px;
+      top: 5px;
     }
     .el-collapse-item__content {
       padding-bottom: 0;

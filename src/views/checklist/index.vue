@@ -244,6 +244,16 @@ export default {
         message2: '需要设置点击右边设置按钮',
         button1: '设置',
         button2: '设置'
+      },
+      {
+        value: 0,
+        label: 'fiSubjectCount',
+        title: '财务科目设置',
+        message: '已经有' + this.valueCount + '个财务科目',
+        message1: '你还没有维护财务科目，请点击右边设置按钮',
+        message2: '需要设置点击右边设置按钮',
+        button1: '设置',
+        button2: '设置'
       }],
       contTitleNull: false
     }
@@ -486,6 +496,10 @@ export default {
           // this.addDoTotVisible8 = true
           this.$router.push({ path: '../../company/smsManage/customized' })
           break
+        case 'fiSubjectCount':
+          // this.addDoTotVisible8 = true
+          this.$router.push({ path: '../../finance/financeInfo/subjectInfo' })
+          break
       }
     },
     changeTitle(item) {
@@ -511,6 +525,11 @@ export default {
           if (total !== 'roleCount' && data[total] === 0) {
             resuct++
           }
+        }
+        if (data.isNeededVoucher === '2') {
+          this.countList = this.countList.filter((e, index) => {
+            return e.label !== 'fiSubjectCount'
+          })
         }
 
         // for (var i = 0; i < this.countList.length; i++) {

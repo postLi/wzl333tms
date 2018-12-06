@@ -9,7 +9,6 @@
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
                 <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-date">智能核销</el-button>
-                <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
@@ -20,7 +19,6 @@
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
                 <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-date">智能核销</el-button>
-                <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
@@ -111,9 +109,6 @@ export default {
         case 'cancel': // 取消
           this.cancel()
           break
-        case 'savePrint': // 保存并打印
-          this.$message({ type: 'warning', message: '暂无打印功能！' })
-          break
         case 'countBatch':
           this.countTitle = '批次'
           this.countVisible = true
@@ -143,7 +138,7 @@ export default {
       }
       postAddIncome(obj).then(data => {
           this.popVisibleDialog = false
-          this.$message.success('记支出成功！')
+          this.$message.success('记收入成功！')
           this.tableKey = new Date().getTime()
           this.loading = false
           this.btnLoading = false
