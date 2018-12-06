@@ -4,35 +4,26 @@
     <div class="tab_info">
 
       <div class="btns_box">
-        <!--<el-form :inline="true" :size="btnsize" label-position="right" label-width="70px" :model="searchQuery"-->
-        <!--class=" clearfix" style="float: left">-->
-        <!--<div class="">-->
-        <!--<el-form-item label="网点">-->
-        <!--<SelectTree v-model="searchQuery.vo.companyId" :orgid="otherinfo.companyId" @change="searchOrgid" clearible/>-->
-        <!--</el-form-item>-->
-
-        <!--</div>-->
-        <!--</el-form>-->
         <el-button type="success" :size="btnsize" icon="el-icon-sort-down" @click="doAction('doNext')" plain
-                   v-has:PICK_FINASH class="table_setup fr_btn">下一步
+                    class="table_setup fr_btn">下一步
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-upload" @click="doAction('doExport')" plain
-                   v-has:PICK_SEL class="table_setup fr_btn" v-if="isParentId">导入摸板
+                   v-has:SUBJECT_DEFINE_IMPORTTEMPLATE class="table_setup fr_btn" v-if="isParentId">导入摸板
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-remove" @click="doAction('doAll')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn">全部展开
+                    class="table_setup fr_btn">全部展开
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-circle-plus" @click="doAction('doUp')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn">全部收起
+                    class="table_setup fr_btn">全部收起
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus-outline" @click="doAction('doAddEnd')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">增加下级
+                   v-has:SUBJECT_DEFINE_ADDSUB class="table_setup fr_btn" v-if="isParentId">增加下级
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('doAddStair')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">新增一级
+                   v-has:SUBJECT_DEFINE_ADDTOP class="table_setup fr_btn" v-if="isParentId">新增一级
         </el-button>
         <el-button :size="btnsize" icon="el-icon-tickets" @click="doAction('doDefaultTem')" plain
-                   v-has:PICK_EXP class="table_setup fr_btn" v-if="isParentId">获取默认模板
+                   v-has:SUBJECT_DEFINE_GETTEMPLATE class="table_setup fr_btn" v-if="isParentId">获取默认模板
         </el-button>
 
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">-->

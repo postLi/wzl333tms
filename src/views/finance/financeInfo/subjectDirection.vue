@@ -14,11 +14,11 @@
         <!--</el-form>-->
         <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')"
                    plain
-                   v-has:PICK_FINASH>上一步
+                   >上一步
         </el-button>
         <el-button class="table_setup" type="primary" :size="btnsize" icon="el-icon-circle-plus"
                    @click="doAction('doAdd')" plain
-                   v-has:PICK_SEL>新增
+                   v-has:INIT_VERIFY_DIRECTION_ADD>新增
         </el-button>
       </div>
       <div class="info_tab">

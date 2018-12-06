@@ -60,6 +60,7 @@
             style="color: #f56c6c"
             type="text" icon=""
             size="small"
+            v-has:SUBJECT_DEFINE_DELETE
             @click="handleDelete(scope.row)">
             <span style="border-bottom: 1px solid #f56c6c">删除</span>
           </el-button>

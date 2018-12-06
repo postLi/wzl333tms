@@ -677,7 +677,7 @@ export default {
     //     noCache: false,
     //     code: 'FLOW_IN'
     //   }
-    // }, 
+    // },
     // {
     //   path: '/finance/settleLogExpandtiure',
     //   icon: 'caiwugl5_zijinls',
@@ -690,7 +690,7 @@ export default {
     //     noCache: false,
     //     code: 'FLOW_OUT'
     //   }
-    // }, 
+    // },
     {
       path: '/finance/IOManage',
       icon: 'caiwugl3_shouzhifs',
@@ -712,7 +712,7 @@ export default {
         role: ['admin'],
         title: '财务初始化',
         stitle: '财务初始化',
-        'code': '',
+        'code': 'FINANCE_INIT',
         noCache: false
       },
       children: [{
@@ -724,7 +724,7 @@ export default {
           role: ['admin'],
           title: '科目定义',
           noCache: false,
-          code: ''
+          code: 'INIT_SUBJECT_DEFINE'
         }
       }, {
         path: '/finance/financeInfo/subjectClose',
@@ -735,7 +735,7 @@ export default {
           role: ['admin'],
           title: '核销科目',
           noCache: false,
-          code: ''
+          code: 'INIT_SUBJECT_VERIFY'
         }
       }, {
         path: '/finance/financeInfo/subjectDirection',
@@ -746,7 +746,7 @@ export default {
           role: ['admin'],
           title: '核销方向',
           noCache: false,
-          code: ''
+          code: 'INIT_VERIFY_DIRECTION'
         }
       }, ]
     }, {
@@ -758,7 +758,7 @@ export default {
         role: ['admin'],
         title: '凭证审核',
         stitle: '凭证审核',
-        'code': 'FINANCE_IOMANAGE',
+        'code': 'FINANCE_CERTVERFICATION',
         noCache: false
       }
     },

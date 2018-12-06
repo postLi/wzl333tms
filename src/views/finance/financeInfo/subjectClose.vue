@@ -87,7 +87,7 @@
             sortable
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" size="small" v-has:INIT_SUBJECT_VERIFY_UPDATE>修改</el-button>
             </template>
           </el-table-column>
         </el-table>
