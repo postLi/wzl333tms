@@ -760,6 +760,15 @@ export default {
           'shipEffective': 94, // 默认为普通
           'shipFromCityName': '',
           'shipFromCityCode': '',
+
+          // 新增字段
+          startProvince: '',
+          startCity: '',
+          startArea: '',
+          endProvince: '',
+          endCity: '',
+          endArea: '',
+
           'shipFromOrgid': '',
           'shipGoodsSn': '',
           'shipIsAbnormal': 0,
@@ -1304,17 +1313,24 @@ export default {
       console.log('selectFromCity:', item, city)
       if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
-      }
-      /*  else {
-              this.form.tmsOrderShip.shipFromCityCode = city || ''
-              this.form.tmsOrderShip.shipFromCityName = city || ''
-            } */
+        this.form.tmsOrderShip.shipFromCityCode = item.id || ''
+        this.form.tmsOrderShip.startProvince = item.province || ''
+        this.form.tmsOrderShip.startCity = item.city || ''
+        this.form.tmsOrderShip.startArea = item.area || ''
+      }/*  else {
+        this.form.tmsOrderShip.shipFromCityCode = city || ''
+        this.form.tmsOrderShip.shipFromCityName = city || ''
+      } */
       this.getLineInfo()
     },
     // 选择到达城市
     selectToCity(item, city) {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
+        this.form.tmsOrderShip.shipToCityCode = item.id || ''
+        this.form.tmsOrderShip.endProvince = item.province || ''
+        this.form.tmsOrderShip.endCity = item.city || ''
+        this.form.tmsOrderShip.endArea = item.area || ''
       }
       this.getLineInfo()
     },
@@ -1946,8 +1962,7 @@ export default {
     // 修改货品列表
     changeFee(index, name, event) {
       this.form.cargoList[index][name] = event.target.value
-      // 修改时计算总运费
-      this.getTotalFee()
+
       if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
         this.getLineInfo()
       }
@@ -1968,6 +1983,8 @@ export default {
           }
         }
       }
+      // 修改时计算总运费
+      this.getTotalFee()
     },
     // 其他表单
     getBatch(item) {

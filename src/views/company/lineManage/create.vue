@@ -377,6 +377,10 @@ export default {
     },
     ifWrong(item, idx) {
       const flag = item[idx].endVolume <= item[idx].startVolume
+      if (item[idx].endVolume === '' && idx >= 1 && idx === (item.length - 1)) {
+        // 不处理最后一栏终止运量
+        return false
+      }
       if (flag) {
         this.$message({
           type: 'info',
