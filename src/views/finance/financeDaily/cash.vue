@@ -75,7 +75,7 @@
       </div>
       <transition name="el-zoom-in-bottom">
         <el-carousel ref="carousel" :interval="5000" :loop="false" height="300px" :arrow="arrowShow" :initial-index="0" @change="handleCarousel">
-          <el-carousel-item v-for="(item, index) in previews" :key="item" >
+          <el-carousel-item v-for="(item, index) in previews" :key="item">
             <img :src="item" alt="" @click="prePic(item)">
           </el-carousel-item>
         </el-carousel>
@@ -329,7 +329,7 @@ export default {
           break
       }
     },
-    handleCarousel (index) {
+    handleCarousel(index) {
       this.currentCarousel = index + 1
       console.log(index)
     },
@@ -416,37 +416,48 @@ export default {
           break
       }
     },
-    backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
+    backCount() {
+      // 反核销 
+      // isNeededVoucher 2-不需要财务凭证的时候，可以直接反核销 
+      // isNeededVoucher 1-需要反核销的时候，只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      if (this.selectedList[0].verifyStatusZh === '已审核' ) {
-        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
-        this.$refs.multipleTable.clearSelection()
-      } else  if ( this.selectedList[0].dataSrcZh === '手工录入') {
-        this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
-        this.$refs.multipleTable.clearSelection()
+      if (this.selectedList[0].isNeededVoucher === '2') {
+        this.cancelVerification()
       } else {
-        this.$confirm('确定要反核销【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            cancelVerification({
-                id: this.selectedList[0].id
-              }).then(data => {
-                this.loading = false
-                this.$message.success('反核销成功！')
-                this.$refs.multipleTable.clearSelection()
-                this.fetchList()
-              })
-              .catch(err => {
-                this.loading = false
-                this.$refs.multipleTable.clearSelection()
-                this._handlerCatchMsg(err)
-              })
-          })
-          .catch(() => {})
+        if (this.selectedList[0].verifyStatusZh === '已审核') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+          this.$refs.multipleTable.clearSelection()
+        } else if (this.selectedList[0].dataSrcZh === '手工录入') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+          this.$refs.multipleTable.clearSelection()
+        } else {
+          this.cancelVerification()
+        }
       }
+    },
+    cancelVerification() {
+      let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】' : ''
+      this.$confirm('确定要反核销' + certNo + '吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          cancelVerification({
+              id: this.selectedList[0].id
+            }).then(data => {
+              this.loading = false
+              this.$message.success('反核销成功！')
+              this.$refs.multipleTable.clearSelection()
+              this.fetchList()
+            })
+            .catch(err => {
+              this.loading = false
+              this.$refs.multipleTable.clearSelection()
+              this._handlerCatchMsg(err)
+            })
+        })
+        .catch(() => {})
     },
     delCount() { // 删除 只有手工录入并且未审核的可以删除
       if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {

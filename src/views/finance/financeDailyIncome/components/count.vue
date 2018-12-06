@@ -17,7 +17,8 @@
         </el-autocomplete>
       </el-form-item>
       <el-form-item label="支出金额" prop="autoTotalAmount">
-        <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input>
+         <input type="text" class="nativeinput" v-number-only:point :value="formModel.autoTotalAmount" ref="autoTotalAmount" :maxlength="30"  placeholder="只能输入阿拉伯数字"  @keyup.enter.native="onSubmit('formModel')" @change="(e)=>changeAmount(e.target.value)"/>
+        <!-- <el-input placeholder="只能输入阿拉伯数字" v-numberOnly:point v-model="formModel.autoTotalAmount" @keyup.enter.native="onSubmit('formModel')"></el-input> -->
       </el-form-item>
       <el-form-item label="费用项">
         <el-select v-model="formModel.feeId" v-if="settlementId === 178">
@@ -213,6 +214,9 @@ export default {
         this.loading = false
         this._handlerCatchMsg(err)
       })
+    },
+    changeAmount (e) {
+      this.$set(this.formModel, 'autoTotalAmount', e)
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
