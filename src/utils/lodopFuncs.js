@@ -315,12 +315,16 @@
      getLodop()
    }
  }
- // 打印合同
- export function PrintContract(obj) {
+ // 打印合同或核销凭证
+ export function PrintContract(obj, type) {
    try {
      const tableId = obj
      LODOP = getLodop()
-     LODOP.PRINT_INIT('合同')
+     if (type === 'voucher') {
+       LODOP.PRINT_INIT('现金记账凭证【出纳】')
+     } else {
+       LODOP.PRINT_INIT('合同')
+     }
      LODOP.SET_PRINT_STYLE('FontSize', 14)
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      LODOP.SET_PRINT_STYLE('Bold', 1)

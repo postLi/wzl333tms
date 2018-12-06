@@ -119,6 +119,7 @@ import Upload from '@/components/Upload/singleImage2'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 import { REGEX } from '@/utils/validate'
+import { PrintContract } from '@/utils/lodopFuncs'
 export default {
   components: {
     SelectTree,
@@ -546,14 +547,16 @@ export default {
             })
           }
           if (type) { // 打印
-            this.$message.warning('暂无此功能~')
+            // this.$message.warning('暂无此功能~')
+            this.print()
+            this.loading = false
           }
           console.log('query:::', query)
           delete query.verificationList
           postAddIncome(query).then(data => {
               query = {}
               this.closeMe()
-              this.$message.success('记账成功！')
+              this.$message.success('保存成功！')
               this.$emit('success')
               this.loading = false
             })
@@ -563,6 +566,18 @@ export default {
             })
         }
       })
+    },
+    print() {
+      let str = '?'
+      let formModel = Object.assign({}, this.formModel)
+      this.$set(formModel, 'orgName', this.otherinfo.orgName)
+      this.$set(formModel, 'certTypeName', formModel.certType === '1' ? '冲销' : '正常')
+      formModel.paymentsTypeZh = formModel.paymentsType==='1' ? '支出' : '收入'
+      for (const item in formModel) {
+        str += item + '=' + (formModel[item] === null || formModel[item] === undefined || formModel[item] === '' ? '无' : formModel[item]) + '&'
+      }
+      const path = window.location.protocol + '//' + window.location.host + '/static/print/voucher.html' + str + new Date().getTime()
+      PrintContract(encodeURI(path), 'voucher')
     },
     setting() {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
@@ -575,6 +590,7 @@ export default {
     }
   }
 }
+
 
 </script>
 <style lang="scss">
