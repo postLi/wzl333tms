@@ -9,7 +9,7 @@
         <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
-      <!-- <el-form-item label="所属结算网点" prop="ascriptionOrgid">
+      <!-- <el-form-item label="所属核销网点" prop="ascriptionOrgid">
         <SelectTree v-model="searchForm.ascriptionOrgid"  :orgid="otherinfo.orgid"  clearable>
         </SelectTree>
       </el-form-item> -->
@@ -110,7 +110,7 @@ export default {
   },
   mounted() {
     this.searchForm.orgid = this.otherinfo.orgid
-    // this.searchForm.ascriptionOrgid = this.otherinfo.orgid // 结算网点
+    // this.searchForm.ascriptionOrgid = this.otherinfo.orgid // 核销网点
     this.onSubmit()
   },
   methods: {

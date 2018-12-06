@@ -745,7 +745,7 @@ export default {
           transferTotalFeeStatus: false
         }
       },
-      // 运单结算样式
+      // 运单核销样式
       shipStatus: 'ship-yunfeiweijie',
       shipHuidanStatus: '',
       shipHuokuanStatus: '',

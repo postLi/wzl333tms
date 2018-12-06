@@ -54,9 +54,9 @@ export default {
   data() {
     return {
       pageNameList: {
-        'batchShort': '短驳费结算',
-        'batchDeliver': '送货费结算',
-        'batchInsurance': '整车保险费结算',
+        'batchShort': '短驳费核销',
+        'batchDeliver': '送货费核销',
+        'batchInsurance': '整车保险费核销',
         'batchStationLoad': '发站装卸费',
         'batchStationOther': '发站其他费',
         'batchArriveLoad': '到站装卸费',

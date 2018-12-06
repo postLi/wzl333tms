@@ -160,7 +160,7 @@ export default {
       dialogTitle: '结 算 付 款 单',
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
-      // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
+      // settlementTypeId: 180, // 178：运单核销、179：干线批次核销、180：短驳批次核销、181：送货批次核销
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
   },
@@ -380,7 +380,7 @@ export default {
       if (this.dataName === '到站装卸费' || this.dataName === '到站其他费') {
         this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       } else {
-        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid) // 不是到付的进入结算页面,结算网点ascriptionOrgid默认为搜索的发车网点
+        this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.orgid) // 不是到付的进入核销页面,核销网点ascriptionOrgid默认为搜索的发车网点
       }
       this.$set(this.submitData, 'settlementTypeId', this.settlementTypeId)
       this.$set(this.submitData, 'settlementSn', this.formModel.settlementSn)

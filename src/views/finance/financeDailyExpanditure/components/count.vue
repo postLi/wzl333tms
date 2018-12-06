@@ -1,6 +1,6 @@
 <template>
-  <!-- 智能结算弹出框 -->
-  <el-dialog :title="'智能结算-'+title" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
+  <!-- 智能核销弹出框 -->
+  <el-dialog :title="'智能核销-'+title" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
     <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" label-width="70px">
       <el-form-item label="发货人" prop="shipSenderName" v-if="settlementId===178">
         <el-autocomplete popper-class="my-autocomplete" v-model="formModel.shipSenderName" :fetch-suggestions="querySearchSender" placeholder="发货人搜索" size="mini" @select="handleSelectSender" auto-complete="off" :maxlength="8">
@@ -34,7 +34,7 @@
         </el-date-picker>
       </el-form-item>
     </el-form>
-    <p>提示：智能结算可以按照发货人开单日期自动挑选运单结算，运用场景如:某某客户结算某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单结算。</p>
+    <p>提示：智能核销可以按照发货人开单日期自动挑选运单核销，运用场景如:某某客户核销某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单核销。</p>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onSubmit('formModel')">确 定</el-button>
     <el-button @click="closeMe">取 消</el-button>
@@ -64,7 +64,7 @@ export default {
     },
     title: {
       type: String,
-      default: '智能结算'
+      default: '智能核销'
     },
     setSettlementId: {
       type: [Number, String]
@@ -83,7 +83,7 @@ export default {
       },
       senderOptions: [],
       truckOptions: [],
-      settlementId: 179, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+      settlementId: 179, // 178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
       incomePayType: 'PAYABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       rules: {},
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 30 * 1000), parseTime(new Date())],
@@ -235,7 +235,7 @@ export default {
           getOrderList(info).then(data => {
               this.$emit('success', { info: data, count: info.autoTotalAmount, type: this.settlementId })
               this.closeMe()
-              this.$message({ type: 'success', message: '智能结算搜索运单操作成功' })
+              this.$message({ type: 'success', message: '智能核销搜索运单操作成功' })
             })
             .catch(err => {
               this._handlerCatchMsg(err)

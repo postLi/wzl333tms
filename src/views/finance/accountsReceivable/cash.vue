@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isShow="true" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails" plain v-has:REC_SET2>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails" plain v-has:REC_SET2>核销</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI2>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP2>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -146,7 +146,7 @@ export default {
         'label': '到达城市',
         'prop': 'shipToCityName'
       }, {
-        'label': '结算状态',
+        'label': '核销状态',
         'prop': 'nowPayStateCn'
       }, {
         'label': '现付',
@@ -230,7 +230,7 @@ export default {
       this.selected.forEach((e, index) => {
         list.push(e.shipSn)
       })
-      console.log('传给结算页面的数据:::query', this.searchQuery, list)
+      console.log('传给核销页面的数据:::query', this.searchQuery, list)
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {

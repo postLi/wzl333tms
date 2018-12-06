@@ -365,7 +365,7 @@ export default {
     },
     setView() {
       // 设置表格视图
-      // 【178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算】
+      // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
       if (this.$route.query.settlementId === 178) {
         this.tableColumn = this.columnOrder // 运单视图
       } else {

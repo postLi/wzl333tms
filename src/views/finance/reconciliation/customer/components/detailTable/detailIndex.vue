@@ -203,7 +203,7 @@ export default {
           width: '140',
           fixed: false
         }, {
-          label: '结算方式',
+          label: '核销方式',
           prop: 'settlementType',
           width: '120',
           fixed: false

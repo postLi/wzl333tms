@@ -1,5 +1,5 @@
 <template>
-  <!-- 发车汇总结算页面 -->
+  <!-- 发车汇总核销页面 -->
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">发车汇总结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">发车汇总核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -999,7 +999,7 @@ export default {
     },
     openDialog() {
       this.popVisibleDialog = true
-      console.log('结算信息',  this.infoTable)
+      console.log('核销信息',  this.infoTable)
     },
     goReceipt() {
       let count = 0
@@ -1014,7 +1014,7 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({ type: 'warning', message: '不能同时结算两个网点' })
+        this.$message({ type: 'warning', message: '不能同时核销两个网点' })
         return false
       }
       const data = Object.assign([], this.rightTable)
@@ -1039,7 +1039,7 @@ export default {
           let itemInsurance = { id: e.id, amount: e.amountCarloadInsuranceFee, feeTypeId: 25, dataName: '整车保险费' } // 实结整车保险费
           let itemHandling = { id: e.id, amount: e.amountLeaveHandlingFee, feeTypeId: 26, dataName: '发站装卸费' } // 实结发站装卸费
           let itemLeaveOtherFee = { id: e.id, amount: e.amountLeaveOtherFee, feeTypeId: 27, dataName: '发站其他费' } // 实结发站其他费
-          // 提交可结算项
+          // 提交可核销项
           if (itemCarriage.amount > 0 && itemCarriage.amount <= e.unpaidNowpayCarriage) {
              this.infoTable.orderList.push(itemCarriage)
           }
@@ -1071,10 +1071,10 @@ export default {
         })
         this.infoTable.amount = amount
         amount = 0
-        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
+        if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
         }
       }
     },

@@ -111,7 +111,7 @@ export default {
     },
     info: {
       handler(cval, oval) {
-        console.log('voucher info-table::', cval, oval)
+        console.log('voucher 接收到的数据::', cval)
       },
       deep: true
     },
@@ -154,7 +154,7 @@ export default {
         case 'waybillAbnormal':
           return '异常理赔'
         case 'waybillUnusual':
-          return '异动费用结算'
+          return '异动费用核销'
       }
     },
     getRouteInfo() {
@@ -232,6 +232,7 @@ export default {
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           if (data.verificationList) {
@@ -334,7 +335,7 @@ export default {
           if (!dataInfo.certTime) {
             dataInfo.certTime = new Date()
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList
           let query = {
             shipPayableFeeDtos: dataInfo.orderList,
@@ -342,7 +343,7 @@ export default {
           }
           delete query.tmsFinanceBillRecordDto.orderList
           let orgid = ''
-          if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+          if (this.dataName === '中转费') { // 中转核销的时候 传给后台中转网点
             orgid = this.getRouteInfo.vo.transferOrgid
           } else if (this.dataName === '异常理赔') {
             orgid = this.getRouteInfo.vo.orgid

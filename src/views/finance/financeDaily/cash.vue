@@ -492,7 +492,7 @@ export default {
       const data = {}
       this.$set(data, 'flowId', this.selectedList[0].flowId)
       // postCancelSettlement(data).then(data => {
-      //     this.$message({ type: 'success', message: '取消结算操作成功' })
+      //     this.$message({ type: 'success', message: '取消核销操作成功' })
       //     this.fetchList()
       //   })
       //   .catch(err => {

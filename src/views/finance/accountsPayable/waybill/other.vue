@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET6>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET6>核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI6>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP6>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -89,7 +89,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '100',
           fixed: false
@@ -181,7 +181,7 @@ export default {
           fixed: false
         },
         // {
-        //   label: '结算操作人',
+        //   label: '核销操作人',
         //   prop: 'settlementBy',
         //   width: '150',
         //   fixed: false
@@ -305,14 +305,14 @@ export default {
           SaveAsFile({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-其他费用支出-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-其他费用支出-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-其他费用支出'
+            name: '运单核销-其他费用支出'
           })
           break
       }
@@ -322,7 +322,7 @@ export default {
       this.$router.push({
         path: '../../accountsLoad',
         query: {
-          tab: '其他费用支出结算',
+          tab: '其他费用支出核销',
           currentPage: 'waybillOther', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

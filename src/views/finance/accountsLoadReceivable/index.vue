@@ -37,12 +37,12 @@ export default {
   data () {
     return{
       pageNameList: {
-        all: '全部结算',
-        month: '月结结算',
-        abnormal: '异动费用结算',
+        all: '全部核销',
+        month: '月结核销',
+        abnormal: '异动费用核销',
         receipt: '回单付将诶算',
-        cash: '现付结算',
-        arrive: '到付结算',
+        cash: '现付核销',
+        arrive: '到付核销',
         handleFee: '操作费核销'
       }
     }

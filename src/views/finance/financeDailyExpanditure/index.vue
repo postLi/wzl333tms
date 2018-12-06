@@ -8,7 +8,7 @@
           <el-tab-pane label="批次支出" name="first">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-date">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countBatch')" icon="el-icon-date">智能核销</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -19,7 +19,7 @@
           <el-tab-pane label="运单支出" name="second">
             <div class="animated fadeInRight tableItem">
               <div class="fee_btn_boxs">
-                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-date">智能结算</el-button>
+                <el-button :size="btnsize" plain type="success" @click="doAction('countShip')" icon="el-icon-date">智能核销</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
@@ -29,7 +29,7 @@
           </el-tab-pane>
         </el-tabs>
       </div>
-      <!-- 智能结算弹出框 -->
+      <!-- 智能核销弹出框 -->
       <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch" :fiOrderType="fiOrderType"></Count>
       <!-- 核销凭证 -->
       <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
@@ -58,7 +58,7 @@ export default {
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
       loading: false,
       settlementId: '',
-      // settlementId: 180, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+      // settlementId: 180, // 178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
       feeInfo: 'feeInfoOne',
       btnsize: 'mini',
       tableKey: 0,
@@ -152,7 +152,7 @@ export default {
         })
     },
     setSettlementId(val) { 
-    //             178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+    //             178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
     // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
       this.settlementId = val
       console.log('setSettlementId::::::', val)
@@ -188,6 +188,12 @@ export default {
       })
     },
     handleClick() {
+      if (this.activeName === 'second') {
+        this.settlementId = 178
+      }else {
+        this.settlementId = 179
+      }
+      console.log('handleClick settlementId', this.settlementId)
       switch(this.settlementId) {
         case 178:
           this.fiOrderType = 0

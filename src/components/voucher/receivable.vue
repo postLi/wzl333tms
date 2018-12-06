@@ -243,6 +243,7 @@ export default {
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + '' || ''
       console.log('baseQuery', this.baseQuery, this.orgId)
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           if (data.verificationList) {
@@ -442,7 +443,7 @@ export default {
             if (!dataInfo.certTime) {
               dataInfo.certTime = new Date()
             }
-            this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+            this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
             let query = {
               receivableFees: dataInfo.orderList,
               tmsFinanceBillRecordDto: dataInfo

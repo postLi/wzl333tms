@@ -156,11 +156,11 @@ export default {
         path: '/finance/accountsPayable/waybill',
         redirect: '/finance/accountsPayable/waybill/kickback',
         icon: 'QQ',
-        name: '运单结算',
+        name: '运单核销',
         component: _import('finance/accountsPayable/waybill/index'),
         meta: {
           role: ['admin'],
-          title: '运单结算',
+          title: '运单核销',
           noCache: false,
           code: 'PAY_SHIP'
         },
@@ -171,7 +171,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/kickback'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '回扣',
             noCache: true,
             istab: true,
@@ -184,7 +184,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/transfer'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '中转费',
             noCache: true,
             istab: true,
@@ -197,7 +197,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/ticket'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '实际提货费',
             noCache: true,
             istab: true,
@@ -210,7 +210,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/unusual'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '异动费用',
             noCache: true,
             istab: true,
@@ -223,7 +223,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/abnormal'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '异常理赔',
             noCache: true,
             istab: true,
@@ -236,7 +236,7 @@ export default {
           component: _import('finance/accountsPayable/waybill/other'),
           meta: {
             role: ['admin'],
-            ptitle: '运单结算',
+            ptitle: '运单核销',
             title: '其他费用支出',
             noCache: true,
             istab: true,
@@ -247,11 +247,11 @@ export default {
         path: '/finance/accountsPayable/batch',
         redirect: '/finance/accountsPayable/batch/short',
         icon: 'QQ',
-        name: '车费结算',
+        name: '车费核销',
         component: _import('finance/accountsPayable/batch/index'),
         meta: {
           role: ['admin'],
-          title: '车费结算',
+          title: '车费核销',
           noCache: false,
           'code': 'PAY_LOAD'
         },
@@ -262,7 +262,7 @@ export default {
           component: _import('finance/accountsPayable/batch/short'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '短驳费',
             noCache: true,
             istab: true,
@@ -275,7 +275,7 @@ export default {
           component: _import('finance/accountsPayable/batch/deliver'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '送货费',
             noCache: true,
             istab: true,
@@ -288,7 +288,7 @@ export default {
           component: _import('finance/accountsPayable/batch/truckAll'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '发车汇总',
             noCache: true,
             istab: true,
@@ -301,7 +301,7 @@ export default {
           component: _import('finance/accountsPayable/batch/arrivalAll'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '到车汇总',
             noCache: true,
             istab: true,
@@ -314,7 +314,7 @@ export default {
           component: _import('finance/accountsPayable/batch/insurance'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '整车保险费',
             noCache: true,
             istab: true,
@@ -327,7 +327,7 @@ export default {
           component: _import('finance/accountsPayable/batch/stationLoad'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '发站装卸费',
             noCache: true,
             istab: true,
@@ -340,7 +340,7 @@ export default {
           component: _import('finance/accountsPayable/batch/stationOther'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '发站其他费',
             noCache: true,
             istab: true,
@@ -353,7 +353,7 @@ export default {
           component: _import('finance/accountsPayable/batch/arriveLoad'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '到站装卸费',
             noCache: true,
             istab: true,
@@ -366,7 +366,7 @@ export default {
           component: _import('finance/accountsPayable/batch/arriveOther'),
           meta: {
             role: ['admin'],
-            ptitle: '车费结算',
+            ptitle: '车费核销',
             title: '到站其他费',
             noCache: true,
             istab: true,
@@ -381,7 +381,7 @@ export default {
         component: _import('finance/accountsLoad/index'),
         meta: {
           role: ['admin'],
-          title: '账款结算',
+          title: '账款核销',
           noCache: false,
           istab: true
         }
@@ -636,7 +636,7 @@ export default {
       component: _import('finance/accountsLoadReceivable/index'),
       meta: {
         role: ['admin'],
-        title: '账款结算',
+        title: '账款核销',
         noCache: true,
         code: 'FINANCE_REC'
       }

@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item label="来源">
         <el-select v-model="searchForm.dataSrc" clearable>
-          <el-option label="结算产生" :value="0"></el-option>
+          <el-option label="核销产生" :value="0"></el-option>
           <el-option label="手工录入" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
         </el-select>

@@ -8,7 +8,7 @@
       <transferTable style="height: calc(100% - 40px);padding:10px">
         <!-- 左上角按钮区 -->
         <div slot="btnsBox">
-          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
         </div>
         <!-- 左边表格区 -->
         <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -310,7 +310,7 @@ export default {
       if (!this.isFresh) {
         payListByHandlingFee(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
-          // 过滤未完成结算的数据
+          // 过滤未完成核销的数据
           this.leftTable = data.list
           this.leftTable.forEach((e, index) => {
             e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
@@ -488,7 +488,7 @@ export default {
     openDialog() {
       this.popVisibleDialog = true
     },
-    // 结算前整理数据
+    // 核销前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
       if (!this.isGoReceipt) {
@@ -505,10 +505,10 @@ export default {
           }
         })
         this.infoTable.amount = amount
-        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
+        if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
         }
       }
     },

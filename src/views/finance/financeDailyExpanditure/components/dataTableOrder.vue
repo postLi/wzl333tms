@@ -7,7 +7,7 @@
     <!-- 左边表格区  运单支出-->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
+      <el-table ref="multipleTableRight" :data="leftTable"  v-if="showtable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
         <el-table-column fixed width="50" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
@@ -143,7 +143,7 @@
     <!-- 右边表格区 -->
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
-      <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
+      <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tableRight"  v-if="showtable" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
         <el-table-column fixed width="50" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
@@ -306,14 +306,16 @@ import { getSummaries, tmsMath } from '@/utils/'
 export default {
   data() {
     return {
+      showtable: true,
       loading: true,
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
-      tablekey: '',
+      tablekey: 0,
+      tableRight: 0,
       truckMessage: '',
       searchForm: {},
       incomePayType: 'PAYABLE', // RECEIVABLE-运单收入费用项 PAYABLE-运单支出费用项
       paymentsType: 1, // 收支类型, 0 收入, 1 支出
-      settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+      settlementId: 178, // 178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
       loading: false,
       btnsize: 'mini',
       selectedRight: [],
@@ -328,7 +330,7 @@ export default {
       },
       arrLastPartActualFeeName: [],
       arrLastPartNoFeeName: [],
-      arrLastPartFeeName: [], // 左边添加一条数据的所有部分结算的费用字段名
+      arrLastPartFeeName: [], // 左边添加一条数据的所有部分核销的费用字段名
       arrNoPayName: [],
       arrPayName: [],
       arrPayNameActual: []
@@ -392,7 +394,7 @@ export default {
     },
     countSuccessList: {
       handler(cval, oval) {
-        this.initCount(cval, oval) // 智能结算返回的数据
+        this.initCount(cval, oval) // 智能核销返回的数据
       },
       deep: true
     },
@@ -405,7 +407,12 @@ export default {
     activeName: {
       handler(cval, oval) {
         if (cval === 'second') {
+          this.changeTableKey()
+          this.showtable = false
           this.getList()
+          this.$nextTick(() => {
+            this.showtable = true
+          })
         }
       },
       deep: true
@@ -461,7 +468,7 @@ export default {
         this.$emit('feeName', obj)
       }
     },
-    initCount(cval, oval) { // 对智能结算进行操作
+    initCount(cval, oval) { // 对智能核销进行操作
       console.log('============后台返回的智能运单=============\n', cval)
       this.arrLastPartActualFeeName = []
       this.arrLastPartNoFeeName = []
@@ -470,7 +477,7 @@ export default {
       this.rightTable = objectMerge2([], cval) // 被智能挑选到的数据 右边表格
       this.$emit('loadTable', this.rightTable)
       if (this.rightTable.length === 0) {
-        this.$message({ type: 'warning', message: '无符合智能结算条件的运单。' })
+        this.$message({ type: 'warning', message: '无符合智能核销条件的运单。' })
         this.leftTable = objectMerge2([], this.orgLeftTable)
         return false
       }
@@ -486,13 +493,13 @@ export default {
 
       this.$emit('loadTable', this.rightTable)
       this.getPayName()
-      // // 判断右边表格的数据 合计是否为智能结算中输入的值
+      // // 判断右边表格的数据 合计是否为智能核销中输入的值
       const listCount = 0
       const countDifference = 0
 
       // 判断返回的数据 实结支出费用等于 未结费用
       // 前者等于 | 小于后者 不用进行操作
-      // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示结算多余的数
+      // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 
       const nameFlag = '' // 右边最后一条的批次号或者运单号
       let isCopyLastData = false // 左边是否需要复制一条右边最后那条数据  true-要复制 false-不复制
@@ -503,7 +510,7 @@ export default {
         if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
           // this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
           isCopyLastData = true
-          this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分结算的字段，以便左边添加数据
+          this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分核销的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
           this.arrLastPartNoFeeName.push(this.arrNoPayName[actIndex])
         }
@@ -579,7 +586,8 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
+      this.tablekey = new Date().getTime()
+      this.tablekeyRight = new Date().getTime()
     },
     doAction(type) {
       switch (type) {

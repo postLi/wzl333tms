@@ -1305,7 +1305,7 @@ export default {
       if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
-      // 只有在库中且没有结算状态的才能修改创建时间
+      // 只有在库中且没有核销状态的才能修改创建时间
       // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
       if (this.canChangeOrderDate && this.output.ismodify && !this.output.isbatch) {
         if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
@@ -1424,7 +1424,7 @@ export default {
       console.log('whereAreYou::', whereAreYou)
       // 1.判断有无运单id
       // 1.1 判断是否为修改
-      // 1.1.1 判断是否已结算，设置可修改部分
+      // 1.1.1 判断是否已核销，设置可修改部分
       // 1.1.1 如果为完全不能修改，则限制可修改部分
       // 1.2 判断是否为查看
       // 1.2.1 如果有运单id，但无操作参数，则表示为查看运单

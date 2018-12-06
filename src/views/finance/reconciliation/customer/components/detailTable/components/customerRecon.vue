@@ -120,7 +120,7 @@
               </el-form-item>
             </th>
             <th>
-              结算方式
+              核销方式
             </th>
             <th colspan="1">
               <el-form-item label="">
@@ -207,7 +207,7 @@
         <!--<el-form-item label="结束时间">-->
         <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
-        <!--<el-form-item label="结算方式">-->
+        <!--<el-form-item label="核销方式">-->
         <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="账户账号" prop="bankAccount">-->
@@ -578,7 +578,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已收清单(本结算期内)</p>
+        <p>已收清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -762,7 +762,7 @@
       </div>
 
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>已付清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->

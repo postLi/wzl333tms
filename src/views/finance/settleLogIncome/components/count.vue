@@ -1,6 +1,6 @@
 <template>
-  <!-- 智能结算弹出框 -->
-  <el-dialog title="智能结算" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
+  <!-- 智能核销弹出框 -->
+  <el-dialog title="智能核销" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="tms_dialog tms_dialog_count" width="600px">
     <el-form ref="formModel" :inline="true" size="mini" label-position="right" :rules="rules" :model="formModel" label-width="70px">
       <el-form-item label="发货人" prop="shipSenderName">
         <!-- <querySelect search="customerName" type="sender" valuekey="customerName" label="customerName" v-model="formModel.shipSenderName" :remote="true" /> -->
@@ -28,7 +28,7 @@
         </el-date-picker>
       </el-form-item>
     </el-form>
-    <p>提示：智能结算可以按照发货人开单日期自动挑选运单结算，运用场景如:某某客户结算某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单结算。</p>
+    <p>提示：智能核销可以按照发货人开单日期自动挑选运单核销，运用场景如:某某客户核销某个月运费一万块，可以筛选客户，收入金额10000块，系统将自动挑选运单核销。</p>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="onSubmit('formModel')">确 定</el-button>
     <el-button @click="closeMe">取 消</el-button>
@@ -145,7 +145,7 @@ export default {
           getOrderShipList(info).then(data => {
               this.$emit('success', { info: data, count: this.formModel.autoTotalAmount })
               this.closeMe()
-              this.$message({ type: 'success', message: '智能结算搜索运单操作成功' })
+              this.$message({ type: 'success', message: '智能核销搜索运单操作成功' })
             })
             .catch(err => {
               this._handlerCatchMsg(err)

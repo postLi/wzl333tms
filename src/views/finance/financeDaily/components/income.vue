@@ -209,7 +209,8 @@ export default {
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
-        orgId: ''
+        orgId: '',
+        dataSrc: 1
       },
       searchQuerySub: {
         orgId: '',
@@ -296,6 +297,7 @@ export default {
       })
     },
     getBaseInfo() {
+      this.$set(this.searchQuery, 'dataSrc', 1)
       return postVerificationBaseInfo(this.searchQuery).then(data => {
           if (data) {
             this.formModel = data

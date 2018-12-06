@@ -264,6 +264,7 @@ export default {
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           if (data.verificationList) {
@@ -437,7 +438,7 @@ export default {
           if (!dataInfo.certTime) {
             dataInfo.certTime = new Date()
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList
 
           console.log('保存提交的参数dataInfo', dataInfo)

@@ -198,6 +198,7 @@ export default {
     postVerificationBaseInfo() { // 新增时初始化数据
       this.baseQuery.orgId = this.orgId
       this.baseQuery.amount = this.info.amount
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           if (data.verificationList) {
@@ -365,7 +366,7 @@ export default {
           if (!dataInfo.certTime) {
            dataInfo.certTime = new Date()
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList
           this.$emit('success', dataInfo)
         }

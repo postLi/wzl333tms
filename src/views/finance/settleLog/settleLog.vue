@@ -8,8 +8,8 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" @click="doAction('income')" plain v-has:FLOW_IN>记收入</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-sort-up" @click="doAction('expandtiure')" plain v-has:FLOW_OUT>记支出</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消结算</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>查看结算单</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消核销</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-tickets" @click="doAction('showCount')" plain v-has:FLOW_FIND>查看核销单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
@@ -42,7 +42,7 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
-    <!-- 结算单 -->
+    <!-- 核销单 -->
     <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
   </div>
 </template>
@@ -95,25 +95,25 @@ export default {
       //     fixed: true
       //   },
         {
-          label: '结算网点',
+          label: '核销网点',
           prop: 'orgName',
           width: '120',
           fixed: false
         },
         {
-          label: '结算单号',
+          label: '核销单号',
           prop: 'settlementSn',
           width: '140',
           fixed: true
         },
         {
-          label: '结算类型',
+          label: '核销类型',
           prop: 'settlementIdZh',
           width: '110',
           fixed: true
         },
         {
-          label: '结算人',
+          label: '核销人',
           prop: 'settlementBy',
           width: '90',
           fixed: false
@@ -125,7 +125,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算时间',
+          label: '核销时间',
           prop: 'settlementTime',
           width: '160',
           slot: (scope) => {
@@ -236,7 +236,7 @@ export default {
         case 'expandtiure': // 记支出
           this.expandtiure()
           break
-        case 'cancelCount': // 取消结算
+        case 'cancelCount': // 取消核销
           if (isShow) {
             this.$confirm('确定要取消【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
               confirmButtonText: '确定',
@@ -247,7 +247,7 @@ export default {
             })
           }
           break
-        case 'showCount': // 查看结算单
+        case 'showCount': // 查看核销单
           if (isShow) {
             this.showCount()
           }
@@ -294,7 +294,7 @@ export default {
       const data = {}
       this.$set(data, 'flowId', this.selectedList[0].flowId)
       postCancelSettlement(data).then(data => {
-        this.$message({ type: 'success', message: '取消结算操作成功' })
+        this.$message({ type: 'success', message: '取消核销操作成功' })
         this.fetchList()
       })
         .catch(err => {

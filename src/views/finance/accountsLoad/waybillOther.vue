@@ -1,5 +1,5 @@
 <template>
-  <!-- 其他费用支出结算页面 -->
+  <!-- 其他费用支出核销页面 -->
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">其他费用支出结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">其他费用支出核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -155,7 +155,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -287,7 +287,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -670,7 +670,7 @@ export default {
           let amount = 0
         this.rightTable.forEach((e, index) => {
           console.log('右边列表', index, e)
-          if (e.inputOtherFee > 0 && e.inputOtherFee <= e.unpaidFee) { // 提交可结算项
+          if (e.inputOtherFee > 0 && e.inputOtherFee <= e.unpaidFee) { // 提交可核销项
             let item = {
               shipId: e.shipId,
               shipSn: e.shipSn,
@@ -679,8 +679,8 @@ export default {
               inputOtherFee: e.inputOtherFee,
               shipFromCityName: e.shipFromCityName,
               shipToCityName: e.shipToCityName,
-              shipReceiverName: e.shipReceiverName,
-              shipSenderName: e.shipSenderName
+              shipReceiverName: e.receiverCustomerName,
+              shipSenderName: e.senderCustomerName
             }
             amount = tmsMath._add(amount, e.inputOtherFee)
             this.infoTable.orderList.push(item)
@@ -692,7 +692,7 @@ export default {
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   let item = {
@@ -702,15 +702,15 @@ export default {
         //     shipSn: e.shipSn,
         //     dataName: '其他费用支出'
         //   }
-        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
         //     this.tableReceiptInfo.push(item)
         //   }
         //   item = {}
         // })
-        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
         // }
       }
     },
