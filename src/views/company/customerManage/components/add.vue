@@ -46,7 +46,7 @@
         </el-form-item>
         <el-form-item label="手机" prop="customerMobile">
           <!-- <el-input v-numberOnly v-model.trim="form.customerMobile" :maxlength="11" auto-complete="off"></el-input> -->
-          <input type="text" v-numberOnly v-model.trim="form.customerMobile"  auto-complete="off" maxlength="11" class="nativeinput">
+          <input type="text" v-numberOnly v-model.trim="form.customerMobile"  auto-complete="off" maxlength="20" class="nativeinput">
           <!-- <div v-if="!customphoneisok" class="el-form-item__error">
             请输入手机号码
           </div> -->
@@ -219,8 +219,7 @@ export default {
           { required: true, message: '请选择所属机构' }
         ],
         customerMobile: [
-          { required: true, message: '请输入手机号码', trigger: 'change' },
-         { pattern: REGEX.MOBILE, trigger: 'change', message: '请输入有效的手机号码'}
+          { required: true, message: '请输入手机号码', trigger: 'change' }
         ],
         customerName: [
           { required: true, message: '请输入联系人' },
@@ -256,10 +255,9 @@ export default {
   },
   watch: {
     'form.customerMobile'(newVal) {
-     
       if (this.isSaveAndAdd) {
-         console.log('33333')
-      this.$refs.ruleForm.validateField('customerMobile')
+        console.log('33333')
+        this.$refs.ruleForm.validateField('customerMobile')
       }
     },
     popVisible(newVal, oldVal) {
@@ -346,7 +344,7 @@ export default {
           promiseObj.then(res => {
             this.loading = false
             this.$message.success('保存成功')
-            
+
             if (!bool) {
               this.closeMe()
             }

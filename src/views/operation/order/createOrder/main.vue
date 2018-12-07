@@ -99,7 +99,7 @@
           <div class="order-form-item">
             <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
-              <querySelect :key="customkey" :maxlength="11" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+              <querySelect :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
             </el-form-item>
           </div>
           <div class="order-form-item">
@@ -128,7 +128,7 @@
           <div class="order-form-item">
             <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
             <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
-              <querySelect :key="customkey" :maxlength="11" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+              <querySelect :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
             </el-form-item>
           </div>
           <div class="order-form-item">

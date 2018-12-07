@@ -240,7 +240,7 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      obj = formatTableData(objectMerge2({}, obj))
      const topStyle = objectMerge2({
-       top: 1,
+       top: '1%',
        left: '1%',
        width: '98%',
        height: '20%'
@@ -266,14 +266,17 @@
      }, obj.pageStyle || {}) */
      const pageStyle = objectMerge2({
        intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
-       intPageWidth: 28, // 单位为0.1mm
-       intPageHeight: 21.8
+       intPageWidth: '218mm', // 单位为0.1mm
+       intPageHeight: '280mm',
+       strPageName: ''
      }, obj.pageStyle || {})
 
      console.log('print obj:', obj)
-     const tableId = createTable(obj) // 重新创建打印视图table
+     const tableId = createTable(obj, true) // 重新创建打印视图table
      LODOP = getLodop()
-     LODOP.PRINT_INIT('订货单')
+     // PRINT_INITA(Top,Left,Width,Height,strPrintName)
+     LODOP.PRINT_INITA('-10px', 0, pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+    //  LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
@@ -282,8 +285,13 @@
 
      if (obj.appendTop) {
        LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
+
+      //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
      }
-     LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, document.getElementById(tableId).innerHTML)
+     LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
+     if (obj.appendTop) {
+       LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-13%')
+     }
 
      console.log('topStyle:', topStyle, mainStyle)
 
@@ -320,14 +328,19 @@
    try {
      const tableId = obj
      LODOP = getLodop()
-     LODOP.PRINT_INIT('合同')
+
+    //  LODOP.PRINT_INIT('合同')
+     LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '合同')
+     LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true)// 设置以纸张边缘为基点
      LODOP.SET_PRINT_STYLE('FontSize', 14)
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      LODOP.SET_PRINT_STYLE('Bold', 1)
-     LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
+    //  LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
+     LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
+
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
      console.log(obj)
-     LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '100%', 'URL:' + obj)
+     LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '98%', 'URL:' + obj)
      // LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
@@ -789,7 +802,7 @@
        LODOP = getLodop()
        LODOP.PRINT_INIT('数据表格')
        // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
-       LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+       LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', tableId.innerHTML)
        // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
        LODOP.SET_SAVE_MODE('Orientation', 2) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
        LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
@@ -891,7 +904,7 @@
    }
  }
 
- function createTable(obj) { // 打印导出创建表格视图
+ function createTable(obj, noUnit) { // 打印导出创建表格视图
    const data = obj.data // 数据表格
    const columns = obj.columns // 表格设置列
 
@@ -903,7 +916,7 @@
    const theadTr = document.createElement('tr')
    const tfootTr = document.createElement('tr')
    const colgroup = document.createElement('colgroup') // 设置列宽 无效果
-   const summaries = getSummaries(obj)
+   const summaries = getSummaries(obj, '', noUnit, '')
 
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
@@ -922,6 +935,11 @@
    table.appendChild(colgroup)
    table.appendChild(thead)
    thead.appendChild(theadTr)
+
+   // 底部备注
+   const theadTrRemark = document.createElement('tr')
+   theadTrRemark.innerHTML = '<td>备注</td><td colspan="' + (columns.length - 1) + '"></td>'
+   tfootTr.appendChild(theadTrRemark)
 
    table.appendChild(tbody) // 对应列数据填充
    for (let k = 0; k < data.length; k++) {
@@ -944,15 +962,16 @@
    table.setAttribute('width', '100%')
    table.setAttribute('border', '1px solid #999')
    table.style.borderCollapse = 'collapse'
-   table.style.fontSize = '12px'
+   table.style.fontSize = '16px'
    // table.style.wordBreak = 'break-all';
    // table.style.wordWrap = 'break'
    div.appendChild(table)
    div.setAttribute('id', tableId)
    div.setAttribute('width', '100%')
-   document.body.appendChild(div) // 创建table
+   return div
+  //  document.body.appendChild(div) // 创建table
    createTableComplate = true
-   return tableId
+  //  return tableId
  }
 
  function createSettlement(obj) { // 打印创建结算单视图

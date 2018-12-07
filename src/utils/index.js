@@ -9,8 +9,7 @@ import {
   MessageBox
 } from 'element-ui'
 
-const shouldCalcProperty = ['_index|1|单', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee']
-export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方', 'repertoryAmount|件', 'repertoryWeight|kg', 'repertoryVolume|方', 'pickupAmount|件', 'pickupWeight|kg', 'realVolume|方', 'realWeight|kg', 'pickupVolume|方', 'differWeight|kg', 'differVolume|方', 'pickupFee', 'carriage', 'collectionFee', 'truckFee', 'handlingFeeAll', 'shortFee', 'loadAmountall|件', 'loadWeightall|kg', 'loadVolumeall|方', 'actualAmount|件', 'actualWeight|kg', 'actualVolume|方', 'amountall|件', 'weightall|kg', 'volumeall|方', 'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage', 'backpayOilCard', 'shipFeeAmount', 'carloadInsuranceFee', 'leaveHandlingFee', 'leaveOtherFee', 'totalFee', 'arriveHandlingFee', 'arriveOtherFee', 'shipFee', 'shipAmount|件', 'shipWeightall|kg', 'shipVolumeall|方', 'truckLoad|kg', 'truckVolume|方', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'codService', 'registerFee', 'abnormalAmount|件',
+export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方', 'repertoryAmount|件', 'repertoryWeight|kg', 'repertoryVolume|方', 'pickupAmount|件', 'pickupWeight|kg', 'realVolume|方', 'realWeight|kg', 'pickupVolume|方', 'differWeight|kg', 'differVolume|方', 'pickupFee', 'carriage', 'collectionFee', 'truckFee', 'handlingFeeAll', 'shortFee', 'loadAmountall|件', 'loadWeightall|kg', 'loadVolumeall|方', 'actualAmount|件', 'actualWeight|kg', 'actualVolume|方', 'amountall|件', 'weightall|kg', 'volumeall|方', 'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage', 'backpayOilCard', 'shipFeeAmount', 'carloadInsuranceFee', 'leaveHandlingFee', 'leaveOtherFee', 'totalFee', 'arriveHandlingFee', 'arriveOtherFee', 'shipFee', 'shipAmount|件', 'shipWeightall|kg', 'shipVolumeall|方', 'truckLoad|kg', 'truckVolume|方', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'codService', 'registerFee', 'abnormalAmount|件', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee', 'loadAmount|件', 'loadWeight|kg', 'loadVolume|方',
 // 一些自定义的字段
   'shipTotalProfit'
 ]
@@ -22,14 +21,23 @@ export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'age
  * 属性名|单位
  * _index|索引（|单位）
  */
-export function getSummaries(param, propsArr) {
+export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ') {
   const {
     columns,
     data
   } = param
   const sums = []
   // 获取需要计算的属性值列表
-  propsArr = propsArr || shouldCalcProperty
+  propsArr = propsArr || operationPropertyCalc
+
+  if (noUnit) {
+    propsArr = propsArr.map(el => {
+      if (el.indexOf('_index') === -1) {
+        el = el.replace(/^([^\|]*)(.*)$/g, '$1|')
+      }
+      return el
+    })
+  }
 
   // console.log(columns, data)
   columns.forEach((column, index) => {
@@ -85,7 +93,7 @@ export function getSummaries(param, propsArr) {
         sums[index] += ' ' + unit
       }
     } else {
-      sums[index] = ' - '
+      sums[index] = defaultNoneString
     }
   })
   return sums
