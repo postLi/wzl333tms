@@ -26,9 +26,9 @@
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <el-table-column :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -90,8 +90,7 @@ export default {
       dataListTop: [],
       loading: true,
       setupTableVisible: false,
-      tableColumn: [],
-      columnOrder: [{
+      tableColumn: [{
           label: '序号',
           prop: 'id',
           width: '50',
@@ -150,18 +149,18 @@ export default {
           label: '凭证日期',
           prop: 'certTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
           label: '系统操作日期',
           prop: 'createTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -341,9 +340,9 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     }
   },
-  created() {
-    this.setView()
-  },
+  // created() {
+  //   this.setView()
+  // },
   methods: {
     classLineRed(row, index) {
       if (row.row.billRecordStatus === 0) {
@@ -363,15 +362,15 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
-    setView() {
-      // 设置表格视图
-      // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
-      if (this.$route.query.settlementId === 178) {
-        this.tableColumn = this.columnOrder // 运单视图
-      } else {
-        this.tableColumn = this.columnOrder // 没有数据上显示运单视图
-      }
-    },
+    // setView() {
+    //   // 设置表格视图
+    //   // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
+    //   if (this.$route.query.settlementId === 178) {
+    //     this.tableColumn = this.columnOrder // 运单视图
+    //   } else {
+    //     this.tableColumn = this.columnOrder // 没有数据上显示运单视图
+    //   }
+    // },
     fetchList() {
       if (this.$route.query) {
         if (this.$route.query.searchQuery) {
@@ -380,6 +379,7 @@ export default {
         this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
         console.log('searchQuery', this.searchQuery)
         postBillRecordDetailList(this.searchQuery).then(data => {
+          this.tablekey = new Date().getTime()
           this.dataListTop = data.list
           this.total = data.total
           this.loading = false
@@ -396,7 +396,7 @@ export default {
           this.loading = false
           this._handlerCatchMsg(err)
         })
-        this.setView() // 设置视图
+        // this.setView() // 设置视图
       }
     },
     setTable() {},
@@ -492,8 +492,8 @@ export default {
             cancelVerification(cancelQuery).then(data => {
                 this.loading = false
                 this.$message.success('反核销成功！')
-                this.$refs.multipleTable.clearSelection()
                 this.fetchList()
+                this.$refs.multipleTable.clearSelection()
                 console.warn('dataListTop', this.dataListTop.length)
 
               })

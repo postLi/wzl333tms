@@ -220,7 +220,6 @@
         this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay,this.dialogInfo[2].toPay,this.dialogInfo[3].toPay).result()
       },
       closeMe(done) {
-        this.reset()
         this.$emit('update:popVisible', false)
         if (typeof done === 'function') {
           done()
