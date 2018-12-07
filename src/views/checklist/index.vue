@@ -68,15 +68,15 @@
         <!-- 员工管理 -->
         <Newuser v-if="addDoTotShow2" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible2" @success="fetchData('addUser')" :checkSystem="true" />
         <!-- 发货客户 -->
-        <AddCustomer  v-if="addDoTotShow3" :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true" />
+        <AddCustomer v-if="addDoTotShow3" :issender="true" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible3" @success="fetchData('addReciveCustomer')" :checkSystem="true" />
         <!-- 收货客户 -->
-        <AddCustomer  v-if="addDoTotShow4" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" :checkSystem="true" />
+        <AddCustomer v-if="addDoTotShow4" :orgid="otherinfo.orgid" :info="info" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible4" @success="fetchData('addSendCustomer')" :checkSystem="true" />
         <!-- 司机管理 -->
-        <Newdriver  v-if="addDoTotShow5" :companyId="otherinfo.companyId" :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5" @success="fetchData('addDiver')" :checkSystem="true" />
+        <Newdriver v-if="addDoTotShow5" :companyId="otherinfo.companyId" :orgid="otherinfo.orgid" :popVisible.sync="addDoTotVisible5" @success="fetchData('addDiver')" :checkSystem="true" />
         <!-- 车辆管理 -->
-        <Newtruck  v-if="addDoTotShow6" :issender="true" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6" @success="fetchData('addTruck')" :checkSystem="true" />
+        <Newtruck v-if="addDoTotShow6" :issender="true" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible6" @success="fetchData('addTruck')" :checkSystem="true" />
         <!-- 承运商管理 -->
-        <Newcarrier  v-if="addDoTotShow7" :issender="true" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7" @success="fetchData('addCarrier')" :checkSystem="true" />
+        <Newcarrier v-if="addDoTotShow7" :issender="true" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :isModify="false" :popVisible.sync="addDoTotVisible7" @success="fetchData('addCarrier')" :checkSystem="true" />
         <!-- 开单页面创建运单 -->
         <!-- 底部按钮操作部分 -->
         <!-- <FooterBtns :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" /> -->
@@ -164,97 +164,98 @@ export default {
       flog: false,
       disabled: false,
       countList: [{
-        value: 0,
-        label: 'orgCount',
-        title: '网点管理',
-        message: '网点' + this.valueCount + '个',
-        message1: '你还没有添加网点，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'userCount',
-        title: '员工管理',
-        message: '已经有' + this.valueCount + '位员工',
-        message1: '你还没有添加员工，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'senderCustomerCount',
-        title: '发货客户',
-        message: '已经有' + this.valueCount + '位发货客户',
-        message1: '你还没有添加发货客户，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'receiverCustomerCount',
-        title: '收货客户',
-        message: '已经有' + this.valueCount + '位收货客户',
-        message1: '你还没有添加收货客户，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'driverCount',
-        title: '司机管理',
-        message: '已经有' + this.valueCount + '位司机',
-        message1: '你还没有添加司机，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'truckCount',
-        title: '车辆管理',
-        message: '已经有' + this.valueCount + '部车辆',
-        message1: '你还没有添加车辆，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'carrierCount',
-        title: '承运商管理',
-        message: '已经有' + this.valueCount + '个承运商',
-        message1: '你还没有添加承运商，请点击右边添加按钮',
-        message2: '需要增加点击右边增加按钮',
-        button1: '增加',
-        button2: '添加'
-      }, {
-        value: 0,
-        label: 'settingCount',
-        title: '系统设置',
-        message: '',
-        message2: '打印机连接已连接，需要设置点击右边设置按钮',
-        message1: '打印机连接还没连接，请点击右边设置按钮',
-        button1: '设置',
-        button2: '设置'
-      }, {
-        value: 0,
-        label: 'smsTemplateCount',
-        title: '短信设置',
-        message: '已经有' + this.valueCount + '个短信模板',
-        message1: '你还没有维护短信模板，请点击右边设置按钮',
-        message2: '需要设置点击右边设置按钮',
-        button1: '设置',
-        button2: '设置'
-      },
-      {
-        value: 0,
-        label: 'fiSubjectCount',
-        title: '财务科目设置',
-        message: '已经有' + this.valueCount + '个财务科目',
-        message1: '你还没有维护财务科目，请点击右边设置按钮',
-        message2: '需要设置点击右边设置按钮',
-        button1: '设置',
-        button2: '设置'
-      }],
+          value: 0,
+          label: 'orgCount',
+          title: '网点管理',
+          message: '网点' + this.valueCount + '个',
+          message1: '你还没有添加网点，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'userCount',
+          title: '员工管理',
+          message: '已经有' + this.valueCount + '位员工',
+          message1: '你还没有添加员工，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'senderCustomerCount',
+          title: '发货客户',
+          message: '已经有' + this.valueCount + '位发货客户',
+          message1: '你还没有添加发货客户，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'receiverCustomerCount',
+          title: '收货客户',
+          message: '已经有' + this.valueCount + '位收货客户',
+          message1: '你还没有添加收货客户，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'driverCount',
+          title: '司机管理',
+          message: '已经有' + this.valueCount + '位司机',
+          message1: '你还没有添加司机，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'truckCount',
+          title: '车辆管理',
+          message: '已经有' + this.valueCount + '部车辆',
+          message1: '你还没有添加车辆，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'carrierCount',
+          title: '承运商管理',
+          message: '已经有' + this.valueCount + '个承运商',
+          message1: '你还没有添加承运商，请点击右边添加按钮',
+          message2: '需要增加点击右边增加按钮',
+          button1: '增加',
+          button2: '添加'
+        }, {
+          value: 0,
+          label: 'settingCount',
+          title: '系统设置',
+          message: '',
+          message2: '打印机连接已连接，需要设置点击右边设置按钮',
+          message1: '打印机连接还没连接，请点击右边设置按钮',
+          button1: '设置',
+          button2: '设置'
+        }, {
+          value: 0,
+          label: 'smsTemplateCount',
+          title: '短信设置',
+          message: '已经有' + this.valueCount + '个短信模板',
+          message1: '你还没有维护短信模板，请点击右边设置按钮',
+          message2: '需要设置点击右边设置按钮',
+          button1: '设置',
+          button2: '设置'
+        },
+        {
+          value: 0,
+          label: 'fiSubjectCount',
+          title: '财务科目设置',
+          message: '已经有' + this.valueCount + '个财务科目',
+          message1: '你还没有维护财务科目，请点击右边设置按钮',
+          message2: '需要设置点击右边设置按钮',
+          button1: '设置',
+          button2: '设置'
+        }
+      ],
       contTitleNull: false
     }
   },
@@ -281,31 +282,33 @@ export default {
     this.isParentOrg()
 
     getInitializationCheck().then(data => {
-      this.dataset = data
-      var totals = 0
-      for (const total in data) {
-        if (total !== 'roleCount' && data[total] === 0 && total !== 'smsTemplateCount') {
-          if (this.iscompany) { // 如果是总公司那么就计算网点管理
-            totals++
-          } else {
-            if (total !== 'orgCount') {
-              totals++
+        if (data) {
+          this.dataset = data
+          var totals = 0
+          for (const total in data) {
+            if (total !== 'roleCount' && data[total] === 0 && total !== 'smsTemplateCount') {
+              if (this.iscompany) { // 如果是总公司那么就计算网点管理
+                totals++
+              } else {
+                if (total !== 'orgCount') {
+                  totals++
+                }
+              }
+              console.log('---total', totals, total, data[total])
             }
+            console.log(data[total], total, '数量')
           }
-          console.log('---total', totals, total, data[total])
+          if (totals > 0) {
+            this.flog = false
+          } else {
+            this.flog = true
+          }
+          this.$set(this.dataset, 'totals', totals)
         }
-        console.log(data[total], total, '数量')
-      }
-      // this.loading = false
-      // console.log(totals, 2222)
-      if (totals > 0) {
-        this.flog = false
-      } else {
-        this.flog = true
-      }
-
-      this.$set(this.dataset, 'totals', totals)
-    })
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
+      })
   },
   methods: {
     isParentOrg() {
@@ -414,78 +417,78 @@ export default {
             setTimeout(() => {
               this.addDoTotVisible = true
             })
-          }else {
-              this.addDoTotVisible = true
+          } else {
+            this.addDoTotVisible = true
           }
           break
         case 'roleCount':
-         if (!this.addDriverShow1) {
+          if (!this.addDriverShow1) {
             this.addDoTotShow1 = true
             setTimeout(() => {
               this.addDoTotVisible1 = true
             })
-          }else {
-              this.addDoTotVisible1 = true
+          } else {
+            this.addDoTotVisible1 = true
           }
           break
         case 'userCount':
-         if (!this.addDriverShow2) {
+          if (!this.addDriverShow2) {
             this.addDoTotShow2 = true
             setTimeout(() => {
               this.addDoTotVisible2 = true
             })
-          }else {
-              this.addDoTotVisible2 = true
+          } else {
+            this.addDoTotVisible2 = true
           }
           break
         case 'senderCustomerCount':
-         if (!this.addDriverShow3) {
+          if (!this.addDriverShow3) {
             this.addDoTotShow3 = true
             setTimeout(() => {
               this.addDoTotVisible3 = true
             })
-          }else {
-              this.addDoTotVisible3 = true
+          } else {
+            this.addDoTotVisible3 = true
           }
           break
         case 'receiverCustomerCount':
-         if (!this.addDriverShow4) {
+          if (!this.addDriverShow4) {
             this.addDoTotShow4 = true
             setTimeout(() => {
               this.addDoTotVisible4 = true
             })
-          }else {
-              this.addDoTotVisible4 = true
+          } else {
+            this.addDoTotVisible4 = true
           }
           break
         case 'driverCount':
-           if (!this.addDriverShow5) {
+          if (!this.addDriverShow5) {
             this.addDoTotShow5 = true
             setTimeout(() => {
               this.addDoTotVisible5 = true
             })
-          }else {
-              this.addDoTotVisible5 = true
+          } else {
+            this.addDoTotVisible5 = true
           }
           break
         case 'truckCount':
-           if (!this.addDriverShow6) {
+          if (!this.addDriverShow6) {
             this.addDoTotShow6 = true
             setTimeout(() => {
               this.addDoTotVisible6 = true
             })
-          }else {
-              this.addDoTotVisible6 = true
+          } else {
+            this.addDoTotVisible6 = true
           }
           break
         case 'carrierCount':
-           if (!this.addDriverShow7) {
+          if (!this.addDriverShow7) {
             this.addDoTotShow7 = true
             setTimeout(() => {
               this.addDoTotVisible7 = true
             })
-          }else {
-              this.addDoTotVisible7 = true
+          } else {
+            this.addDoTotVisible7 = true
           }
           break
         case 'settingCount':
@@ -561,6 +564,9 @@ export default {
         }
         slideDown()
         this.$set(this.dataset, 'totals', resuct)
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     /*  initSystem() {

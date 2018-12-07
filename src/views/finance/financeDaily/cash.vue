@@ -468,7 +468,8 @@ export default {
         }
         this.$refs.multipleTable.clearSelection()
       } else {
-        this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+        let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】': ''
+        this.$confirm('确定要删除' + certNo + '吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
