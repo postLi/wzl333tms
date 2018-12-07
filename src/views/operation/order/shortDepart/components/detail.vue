@@ -457,7 +457,7 @@ export default {
           let appendTopStr = '<style>body{width: 100%;}</style>'
           appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
             this.otherinfo.companyName +
-            '公司交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+            '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.orgName + '   →   ' + obj.arriveOrgName +
             '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.loadTime +
