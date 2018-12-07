@@ -3112,7 +3112,7 @@ export default {
         }
         // //////////////////////////////////////////////////////////
         // /处理合计中文大写
-        if (this.form.tmsOrderShip[0].shipTotalFee) {
+        if (this.form.tmsOrderShip.shipTotalFee) {
           const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
           this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
           this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)

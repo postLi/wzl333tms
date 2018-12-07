@@ -657,7 +657,7 @@ export default {
 
             // 针对数据进行格式化处理
             // 处理运输时效
-            if (data.transportAgingType === 2) {
+            if (data.transportAgingType === 2 && data.transportAging1 && data.transportAging2) {
               data.transportAging = data.transportAging1 + '-' + data.transportAging2
             }
             // 处理重货/轻货
