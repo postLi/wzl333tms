@@ -3016,9 +3016,15 @@ export default {
       }
       console.log('货品信息及其费用项', this.form.cargoList[0])
       this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
-      this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
+      const addrToCity = this.form.tmsOrderShip.shipToCityName || ''
+      const addrToCityArr = addrToCity.split(',')
+
+       const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
+      const addrFormCityArr = addrFormCity.split(',')
+        
+      this.$set(obj, 'toOrgName',  addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到达网点
+      this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 出发城市
       this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
-      this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
       this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
       this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
 
