@@ -495,6 +495,8 @@ export default {
               this.ruleForm.transportAging1 = data.transportAging.split('-')[0] || ''
               this.ruleForm.transportAging2 = data.transportAging.split('-')[1] || ''
             }
+            this.ruleForm.transportAgingType = parseInt(data.transportAgingType, 10) || 0
+
             // 重货、轻货
 
             if (data.heavePrice.length) {
