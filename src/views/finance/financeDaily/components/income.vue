@@ -35,7 +35,7 @@
         :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
         :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
           <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)"  
-            :disabled="formModel.isNeededVoucher !== '1'" >
+            :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -106,8 +106,8 @@
       <div class="income_item_line"></div>
     </el-form>
     <span slot="footer">
-          <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document">保存</el-button>
-          <el-button type="success" @click="submitForm('formModel', 'print')" plain icon="el-icon-printer">保存并打印</el-button>
+          <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
+          <el-button type="success" @click="submitForm('formModel', 'print')" plain icon="el-icon-printer" :loading="btnLoading">保存并打印</el-button>
           <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
@@ -186,6 +186,7 @@ export default {
       }
     }
     return {
+      btnLoading: false,
       subjectOne: [],
       subjectTwo: [],
       subjectThree: [],
@@ -532,6 +533,7 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           this.loading = true
           let query = Object.assign({}, this.formModel)
           if (!query.certTime) {
@@ -562,10 +564,12 @@ export default {
               this.$message.success('保存成功！')
               this.$emit('success')
               this.loading = false
+              this.btnLoading = false
             })
             .catch(err => {
               this._handlerCatchMsg(err)
               this.loading = false
+              this.btnLoading = false
             })
         }
       })

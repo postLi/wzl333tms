@@ -81,7 +81,7 @@
         </div>
       </transferTable>
       <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId"></Voucher>
       <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
     </div>
   </div>
@@ -108,7 +108,6 @@ export default {
   },
   data() {
     return {
-      btnLoading: false,
       infoTable: {
         amount: 0,
         orderList: []

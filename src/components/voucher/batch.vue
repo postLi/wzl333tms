@@ -94,10 +94,6 @@ export default {
     info: {
       type: [Object, Array],
       default: () => []
-    },
-    btnLoading: {
-      type: Boolean,
-      default: false
     }
   },
   watch: {
@@ -112,12 +108,6 @@ export default {
     info: {
       handler(cval, oval) {
         console.log('voucher info-table::', cval, oval)
-      },
-      deep: true
-    },
-    btnLoading: {
-      handler(cval, oval) {
-
       },
       deep: true
     }
@@ -168,7 +158,6 @@ export default {
         return feeIdsArr.join(',')
       } else {
         return JSON.parse(this.$route.query.searchQuery).vo.feeTypeId
-
       }
     },
     fiOrderType() { // 财务订单类型  0 运单， 1 干线， 2 短驳， 3 送货
@@ -204,6 +193,7 @@ export default {
       }
     }
     return {
+      btnLoading:  false,
       dialogTitle: '核销凭证',
       loading: true,
       btnsize: 'mini',
@@ -426,6 +416,7 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           let dataInfo = Object.assign({}, this.formModel)
           if (this.info.settlementTypeSign) {
             this.$set(dataInfo, 'settlementTypeSign', this.info.settlementTypeSign)
@@ -464,7 +455,7 @@ export default {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      this.loading = true
+      // this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''

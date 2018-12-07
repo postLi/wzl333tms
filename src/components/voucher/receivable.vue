@@ -96,10 +96,6 @@ export default {
     info: {
       type: [Object, Array],
       default: () => []
-    },
-    btnLoading: {
-      type: Boolean,
-      default: false
     }
   },
   watch: {
@@ -115,12 +111,6 @@ export default {
     info: {
       handler(cval, oval) {
         console.log('voucher info-table::', cval, oval)
-      },
-      deep: true
-    },
-    btnLoading: {
-      handler(cval, oval) {
-
       },
       deep: true
     },
@@ -178,6 +168,7 @@ export default {
     return {
       dialogTitle: '核销凭证',
       loading: true,
+      btnLoading: false,
       btnsize: 'mini',
       baseQuery: {
         orgId: '',
@@ -405,6 +396,7 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           if (this.$route.query.currentPage === 'handleFee') { // 操作费调另一个接口
             let handleFeeInfo = Object.assign({}, this.formModel)
              if (this.info.settlementTypeSign) {
@@ -423,13 +415,13 @@ export default {
           console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
             loadVerification(handleFeeInfo).then(data => {
                 this.$message({ type: 'success', message: '保存成功' })
-                this.btnLoading = false
-                this.closeMe()
                 setTimeout(() => {
+                this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
                 }, 500)
+                this.closeMe()
               })
               .catch(err => {
                 this._handlerCatchMsg(err)
@@ -451,9 +443,9 @@ export default {
             delete query.tmsFinanceBillRecordDto.orderList
             accountApi.postCreateFee(this.orgId, query).then(data => {
                 this.$message({ type: 'success', message: '保存成功' })
-                this.btnLoading = false
                 this.closeMe()
                 setTimeout(() => {
+                this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
@@ -471,7 +463,7 @@ export default {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      this.loading = true
+      // this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''

@@ -1,6 +1,6 @@
 <template>
   <!-- 核销凭证 运单核销-->
-  <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
+  <el-dialog :title="dialogTitle"  :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
         <el-form-item label="方向" prop="verificationId" class="formItemTextDanger">
@@ -17,7 +17,7 @@
         :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
         :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
           <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
-             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
+             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject" size="mini">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -29,7 +29,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'"  size="mini">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -95,10 +95,10 @@ export default {
       type: [Object, Array],
       default: () => []
     },
-    btnLoading: {
-      type: Boolean,
-      default: false
-    }
+    // btnLoading: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
   watch: {
     popVisible: {
@@ -115,12 +115,12 @@ export default {
       },
       deep: true
     },
-    btnLoading: {
-      handler(cval, oval) {
+    // btnLoading: {
+    //   handler(cval, oval) {
 
-      },
-      deep: true
-    },
+    //   },
+    //   deep: true
+    // },
     orgId: {
       handler(cval, oval) {
         console.log('orgId', cval, oval)
@@ -173,6 +173,7 @@ export default {
       }
     }
     return {
+      btnLoading: false,
       dialogTitle: '核销凭证',
       loading: true,
       btnsize: 'mini',
@@ -227,7 +228,7 @@ export default {
       this.formModel.amount = this.info.amount || 0
     },
     postVerificationBaseInfo() { // 新增时初始化数据
-      this.loading = true
+      // this.loading = true
       this.baseQuery.orgId = this.orgId || this.otherinfo.orgid
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
@@ -243,6 +244,7 @@ export default {
           }
             this.initSubject()
         })
+          this.loading = false
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -329,6 +331,7 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           let dataInfo = Object.assign({}, this.formModel)
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
@@ -432,7 +435,7 @@ export default {
       }
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      this.loading = true
+      // this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''

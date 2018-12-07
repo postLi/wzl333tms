@@ -13,6 +13,7 @@
         </el-form-item>
       </div>
       <div class="income_item">
+        <!-- isNeededVoucher 1-需要核销 2-不需要核销 (不可以修改科目信息)  -->
         <el-form-item label="一级科目" 
         :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
         :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
