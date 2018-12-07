@@ -386,6 +386,7 @@ export default {
             e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
             e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
             e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
+            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh: e.dbHandlingFeePayStatusZh)
             this.$set(e, 'amount', e.unpaidFee)
           })
           selectListBatchNos.forEach(e => {
