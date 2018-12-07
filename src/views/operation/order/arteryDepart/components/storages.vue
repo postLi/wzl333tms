@@ -1053,6 +1053,7 @@ export default {
       this.formModel.checkBillName = this.sendContract.contractName
       const formModel = Object.assign({}, this.formModel)
       this.$set(formModel, 'carrier', this.sendContract.carrier)
+      this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       for (const item in formModel) {
         str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }

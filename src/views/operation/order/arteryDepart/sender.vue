@@ -386,6 +386,7 @@ export default {
             contractObj = Object.assign({}, data.data)
             this.$set(selectObj, 'checkBillName', contractObj.contractName)
             this.$set(selectObj, 'carrier', contractObj.carrier)
+            this.$set(selectObj, 'orgName', contractObj.nomineeCompany)
             console.log(data, selectObj)
             let str = '?'
             for (const item in selectObj) {

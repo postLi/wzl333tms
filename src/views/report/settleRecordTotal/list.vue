@@ -78,7 +78,7 @@
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
+          <colgroup width="110px"></colgroup>
         </table>
       </div>
     </div>
