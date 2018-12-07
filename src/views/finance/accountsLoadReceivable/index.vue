@@ -12,6 +12,7 @@ import abnormal from './abnormal' // 异动
 import cash from './cash' // 现付
 import receipt from './receipt' // 回单付
 import month from './month' // 月结
+import handleFee from './handleFee' // 操作费
 
 export default {
   name: 'accountsLoadReceivable',
@@ -21,7 +22,8 @@ export default {
     abnormal,
     cash,
     receipt,
-    month
+    month,
+    handleFee
   },
   props: {
     isShow: {
@@ -29,9 +31,20 @@ export default {
       default: false
     }
   },
-  data() {
-    return {
-      // pageName: ''
+  mounted(){
+    console.log('mountedmountedmounted')
+  },
+  data () {
+    return{
+      pageNameList: {
+        all: '全部核销',
+        month: '月结核销',
+        abnormal: '异动费用核销',
+        receipt: '回单付将诶算',
+        cash: '现付核销',
+        arrive: '到付核销',
+        handleFee: '操作费核销'
+      }
     }
   },
   computed: {
@@ -40,46 +53,6 @@ export default {
     },
     component() {
       return this.$route.query.currentPage
-    },
-    pageName() {
-      const parentPage = this.$route.query.currentPage
-      let name = ''
-      switch (parentPage) {
-        case 'all':
-          name = '全部结算'
-          break
-        case 'month':
-          name = '月结结算'
-          break
-        case 'abnormal':
-          name = '异动费用结算'
-          break
-        case 'receipt':
-          name = '回单付将诶算'
-          break
-        case 'cash':
-          name = '现付结算'
-          break
-        case 'arrive':
-          name = '到付结算'
-          break
-      }
-      return name
-    }
-  },
-  created() {
-    // this.getParentPage()
-  },
-  methods: {
-    getParentPage() {
-      this.$route.matched.forEach(e => {
-        const str = '/finance/accountsLoadReceivable'
-        if (e.path.indexOf(str) !== -1) {
-          e.meta.title = this.pageName
-          e.name = this.pageName
-          console.log(e.path)
-        }
-      })
     }
   }
 }

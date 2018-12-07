@@ -1,6 +1,6 @@
 <template>
-  <!-- 短驳费结算页面 -->
-  <div class="accountsLoad_table">
+  <!-- 短驳费核销页面 -->
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -8,12 +8,39 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">短驳费结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">短驳费核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
+          <el-table-column fixed width="50" label="序号">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
+          </el-table-column>
+          <el-table-column fixed width="50">
+            <template slot-scope="scope">
+              <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
+            </template>
+          </el-table-column>
+          <template v-for="column in tableColumnLeft">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+              <template slot-scope="scope">
+                <div v-if="column.expand">
+                  <el-input type="number" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                </div>
+                <div v-else>
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </div>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+       <!--  <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
@@ -34,7 +61,7 @@
               </template>
             </el-table-column>
           </template>
-        </el-table>
+        </el-table> -->
         <!-- <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
@@ -62,7 +89,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number"  @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input type="number"  v-numberOnly:point @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -77,36 +104,45 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receipt'
+// import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
+import Voucher from '@/components/voucher/batch'
 export default {
+  name: 'batchShort',
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -151,7 +187,7 @@ export default {
           }
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -163,7 +199,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结短驳费',
+          label: '已核销短驳费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -173,7 +209,7 @@ export default {
           }
         },
         {
-          label: '未结短驳费',
+          label: '未核销短驳费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -247,7 +283,7 @@ export default {
           fixed: true
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -274,7 +310,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结短驳费',
+          label: '已核销短驳费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -284,7 +320,7 @@ export default {
           }
         },
         {
-          label: '未结短驳费',
+          label: '未核销短驳费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -386,10 +422,12 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
-      this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
+      console.log(this.getRouteInfo)
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      // this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
       //   // this.$router.push({ path: './accountsPayable/batch' })
@@ -411,7 +449,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -438,6 +477,7 @@ export default {
             e.amount = e.unpaidFee
           })
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -446,8 +486,8 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
@@ -456,7 +496,7 @@ export default {
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -471,7 +511,7 @@ export default {
     //   if (curpay > unpay || curpay < 0) {
     //     this.$notify({
     //       title: '提示',
-    //       message: '不能大于未结小于0',
+    //       message: '不能大于未核销小于0',
     //       type: 'warning'
     //     })
     //     this.rightTable[newVal].amount = unpay
@@ -545,6 +585,7 @@ export default {
       } else {
         this.isGoReceipt = false
       }
+      console.log(this.rightTable)
     },
     goRight() { // 数据从右边穿梭到左边
       if (this.selectedLeft.length === 0) {
@@ -631,31 +672,53 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({ type: 'warning', message: '不能同时结算两个网点' })
+        this.$message({ type: 'warning', message: '不能同时核销两个网点' })
         return false
       }
-      this.tableReceiptInfo = []
+      // this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
-          let item = {
-            id: e.id,
-            amount: e.amount,
-            feeTypeId: e.feeTypeId
+          if (e.amount > 0 && e.amount <= e.unpaidFee) { // 提交可核销项
+            let item = {
+              id: e.id,
+              amount: e.amount,
+              feeTypeId: e.feeTypeId
+            }
+            amount = tmsMath._add(amount, e.amount)
+            this.infoTable.orderList.push(item)
+            item = {}
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          }
-          item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
+        // this.rightTable.forEach((e, index) => {
+        //   let item = {
+        //     id: e.id,
+        //     amount: e.amount,
+        //     feeTypeId: e.feeTypeId
+        //   }
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
+        //     this.tableReceiptInfo.push(item)
+        //   }
+        //   item = {}
+        // })
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
+        //   this.openDialog()
+        // } else {
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+        // }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      // const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'loadWeightall|', 'loadVolumeall|']
+      const propsArr = ['_index|2|单', 'fee', 'unpaidFee', 'paidFee', 'loadAmountall|', 'amount', 'loadWeightall|', 'loadVolumeall|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示

@@ -1,5 +1,5 @@
 <template>
-  <div class="system-setup">
+  <div class="system-setup-page">
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
         <el-collapse v-model="activeNames">
@@ -170,7 +170,7 @@
                   <el-input :maxlength="3" v-number-only v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
                     <template slot="append">‰</template>
                   </el-input>
-                  <el-popover placement="right"  trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                  <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
                     <span>保险费为声明价值{{form.shipPageFunc.insurancePremiumIsDeclaredValue}}‰</span>
                     <i class="el-icon-question" slot="reference"></i>
                   </el-popover>
@@ -199,7 +199,20 @@
               </div>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="setup8" title="配载设置">
+          <el-collapse-item name="setup7" title="财务设置" v-has:SETTINGS_FINANCE>
+            <div class="clearfix setup-table">
+              <div class="setup-left">财务设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  财务凭证
+                  <el-select v-model="form.financeSetting.voucher">
+                    <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item name="setup8" title="配载设置" v-has:SETTINGS_LOAD>
             <div class="clearfix setup-table">
               <div class="setup-left">配载设置</div>
               <div class="setup-right">
@@ -309,7 +322,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup8'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
       shipField: [{
         key: 'shipFromCityName',
         value: '0',
@@ -427,6 +440,13 @@ export default {
         name: '业务员'
       }
       ],
+      vouchers: [{
+        value: '1',
+        label: '需要'
+      }, {
+        value: '2',
+        label: '不需要'
+      }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -435,6 +455,9 @@ export default {
         label: '车牌号'
       }],
       form: {
+        'financeSetting': {
+          'voucher': '2'
+        },
         'printSetting': {
           'ship': '0',
           'label': '0',
@@ -524,16 +547,37 @@ export default {
     }
   },
   mounted() {
-    this.getInfo('order').then(() => {
-      this.setShipNo()
-      this.setCargoNo()
-      this.initField()
-      this.initPrinter()
-      // 加载好后才可以提交数据
-      this.nochange = false
-    })
+    this.initOrder()
   },
   methods: {
+    infoFinance() { // 初始化财务设置
+      const params = {
+        orgid: this.otherinfo.orgid,
+        type: 'financeSetting',
+        module: 'finance'
+      }
+      return getAllSetting(params).then(data => {
+        console.log('financeData', data)
+        if (data.financeSetting) { // 老公司没有这个设置 所以要判断一下
+          this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    initOrder() {
+      this.getInfo('order').then(() => {
+        this.setShipNo()
+        this.setCargoNo()
+        this.initField()
+        this.initPrinter()
+        this.infoFinance()
+        // 加载好后才可以提交数据
+        this.nochange = false
+      })
+    },
     initPrinter() {
       this.printers = Object.assign([], CreatePrinterList())
       for (const item in this.printers) {
@@ -577,6 +621,10 @@ export default {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
           console.log(this.form.printSetting[item])
         }
+        this.$set(this.form, 'financeSetting', {
+          voucher: ''
+        })
+
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form, 'loadSetting', {
             carrier: ''
@@ -631,12 +679,25 @@ export default {
       }
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
-      console.log(form)
+
+      const finance = {
+        orgid: form.orgid,
+        module: 'finance',
+        financeSetting: form.financeSetting
+      }
+      console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
-
-      putSetting(form).then(res => {
+      this.putSetting(form).then(() => {
+        this.putSetting(finance).then(() => {
+          this.initOrder()
+          // this.infoFinance()
+        })
+      })
+    },
+    putSetting(query) {
+      return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
         this.$message({
           message: '保存成功',
@@ -648,6 +709,7 @@ export default {
       })
     },
     initField() {
+      this.fieldSetup = []
       for (const i in this.form.shipPageFunc.shipFieldValue) {
         if (this.form.shipPageFunc.shipFieldValue[i] === '1') {
           this.fieldSetup.push(i)
@@ -709,7 +771,7 @@ export default {
 
 </script>
 <style lang="scss">
-.system-setup {
+.system-setup-page {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -738,8 +800,8 @@ export default {
     }
     .el-collapse-item__arrow {
       position: absolute;
-      left: 32px;
-      top: 0;
+      left: 10px;
+      top: 5px;
     }
     .el-collapse-item__content {
       padding-bottom: 0;

@@ -213,7 +213,7 @@
             this.$router.push({
               path: '/finance/reconciliation/group/detailTable',
               query: {
-                tab: '网点对账-对账明细',
+                tab: '网点对账明细',
                 arriveOrgid: this.selected[0].arriveOrgid,
                 orgid: this.selected[0].orgid,
                 orgName: this.selected[0].arriveOrgName
@@ -248,7 +248,7 @@
         this.$router.push({
           path: '/finance/reconciliation/group/detailTable',
           query: {
-            tab: '网点对账-对账明细',
+            tab: '网点对账明细',
             arriveOrgid: row.arriveOrgid,
             orgid: row.orgid,
             orgName: row.arriveOrgName

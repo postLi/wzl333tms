@@ -92,11 +92,12 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="司机电话" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: '司机电话不能为空~', trigger: ['blur', 'change']}" class="formItemTextDanger">
-                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11"></el-input>
+                        <el-form-item label="司机电话"  :key="changeMobileKey" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: mobileError, trigger: ['blur', 'change']}" class="formItemTextDanger">
+                          <!-- <input type="text" class="nativeinput" v-numberOnly:point :value="item.dirverMobile" @change="(e)=>changeLoadNum(e.target.value, item._index, 'dirverMobile')" ref="dirverMobile" :maxlength="11" placeholder="司机电话" /> -->
+                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11" placeholder="司机电话"  @change="(e)=>changeLoadNum(e, item._index, 'dirverMobile')"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
-                          <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
+                          <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" prefix-icon="el-icon" placeholder="预计到达时间">
                           </el-date-picker>
                         </el-form-item>
                         <el-form-item>
@@ -230,6 +231,7 @@ export default {
   },
   data() {
     return {
+      mobileError: '司机电话不能为空~',
       apportionTypeList: [],
       lastSaveFormLoading: false,
       submitFormLoading: false,
@@ -305,6 +307,7 @@ export default {
       searchTable: {},
       changeDriverKey: '',
       changeTruckKey: '',
+      changeMobileKey: '',
       rules: {
         truckIdNumber: [
           { required: true, message: '请选择车牌号~' }
@@ -602,6 +605,7 @@ export default {
       this.loading = false
       this.changeDriverKey = Math.random()
       this.changeTruckKey = Math.random()
+      this.changeMobileKey = Math.random()
       this.Drivers = this.$options.data().Drivers
       this.Trucks = this.$options.data().Trucks
       this.cacheDriverList = this.$options.data().cacheDriverList
@@ -661,22 +665,21 @@ export default {
     },
     handleSelectName(item, index) { // 选择司机
       this.changeDriverKey = Math.random()
+      this.changeMobileKey = Math.random()
       if (this.intelligentData.dataList[index].truckIdNumber === '' || this.intelligentData.dataList[index].truckIdNumber === undefined) {
-        // this.intelligentData.dataList[index].truckIdNumber = item.truckIdNumber
         this.$set(this.intelligentData.dataList[index], 'truckIdNumber', item.truckIdNumber)
       }
       this.$set(this.intelligentData.dataList[index], 'dirverMobile', item.driverMobile)
       this.$set(this.intelligentData.dataList[index], 'dirverName', item.driverName)
       this.isDriverSelect = true
     },
-    handleSelectTruckNum(item, index) { // 选择车牌
+    handleSelectTruckNum(item, index) { // 选择车牌   
       this.changeTruckKey = Math.random()
+      this.changeDriverKey = Math.random()
+      this.changeMobileKey = Math.random()
       this.$set(this.intelligentData.dataList[index], 'truckIdNumber', item.truckIdNumber)
       this.$set(this.intelligentData.dataList[index], 'dirverMobile', item.driverMobile)
       this.$set(this.intelligentData.dataList[index], 'dirverName', item.driverName)
-
-      // this.$set(this.intelligentData.dataList[index], 'truckLoad', Number(item.truckLoad))
-      // this.$set(this.intelligentData.dataList[index], 'truckVolume', Number(item.truckVolume))
     },
     handleTuckOptions(val, item, index) {
       let obj = {}
@@ -1085,6 +1088,7 @@ export default {
     },
     submitForm() { // 存为配载单
       this.submitLoading = true
+      console.log('表单验证:::', this.$refs['ruleForm'][0])
       this.$refs['ruleForm'][0].validate((valid) => {
         if (valid) {
           // this.loading = true
@@ -1235,10 +1239,8 @@ export default {
       }
     },
     handleFeeAll(type, fee) { // 操作费
-      console.log('-----获取操作费 obj 0------', type, fee)
       if (!fee) {
         this.$set(this.intelligentLeftData, 'apportionTypeId', type)
-        console.log('-----获取操作费 obj 0.1------', type, fee, this.intelligentLeftData)
       }
       let feeAll = this.intelligentData.dataList[this.currentIndex].handlingFeeAll
       if (feeAll) {
@@ -1252,6 +1254,13 @@ export default {
     },
     changeLoadNum(val, index, type) {
       this.$set(this.intelligentData.dataList[index], type, val)
+      if (type === 'dirverMobile') {
+        this.mobileError= '手机号码不能为空~'
+        if (!REGEX.MOBILE.test(val)) {
+          this.$set(this.intelligentData.dataList[index], type, undefined)
+          this.mobileError = '请填写正确的手机号码格式~'
+        }
+      }
       if (type === 'price') {
         this.$set(this.intelligentData.dataList[index], 'tmsOrderLoadFee', this.$options.data().feeData)
         this.$set(this.intelligentData.dataList[index].tmsOrderLoadFee, 'nowpayCarriage', val)
@@ -1574,6 +1583,9 @@ export default {
                   .el-form-item__label {
                     color: #ef0000;
                   }
+                }
+                .el-form-item.is-error .el-form-item__content > input, .nativeinput.is-error, .nativeinput-border.is-error{
+                  border-color:#f56c6c;
                 }
                 .el-form-item {
                   width: 100%;

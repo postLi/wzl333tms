@@ -2,14 +2,14 @@
   <div>
     <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
-      <el-form-item label="结算时间">
+      <el-form-item label="核销时间">
         <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="结算网点" prop="orgId">
+      <el-form-item label="核销网点" prop="orgId">
         <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" @change="onSubmit"></SelectTree>
       </el-form-item>
-      <el-form-item label="结算类型" prop="settlementId">
+      <el-form-item label="核销类型" prop="settlementId">
         <selectType v-model="searchForm.settlementId" type="settlement_type" clearable>
           <el-option slot="head" label="全部" value=""></el-option>
         </selectType>

@@ -87,7 +87,7 @@ export default {
   },
   mounted() {
     // 方便测试
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' || window.location.href.indexOf('192.168.1') !== -1) {
       this.showapi = true
       this.apiurl = localStorage.tms_testapiurl || 'api'
       window.tms_testapiurl = this.apiurl

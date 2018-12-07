@@ -766,7 +766,7 @@
                   <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
-              <th>联系方式</th>
+              <th>业务联系方式</th>
               <th colspan="1">
                 <el-form-item label="" prop="orgBusinessOfficerPhone">
                   <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off"
@@ -818,7 +818,7 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath, getSummaries} from '@/utils/'
   import {REGEX} from '@/utils/validate'
   import {postGroupInitialize, getGroupOrgdetail} from '@/api/finance/fin_group'
   import querySelect from '@/components/querySelect/index'
@@ -854,15 +854,15 @@
             {trigger: 'change', validator: validateMobile}
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
           ]
         },
         pickerOptions2: {
@@ -1150,8 +1150,8 @@
                 for (const i in this.messageInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageInfo[i]
                 }
-                this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0]
-                this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1]
+                this.form.tmsFinanceBillCheckDto.checkStartTime = this.searchCreatTime[0] ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
+                this.form.tmsFinanceBillCheckDto.checkEndTime = this.searchCreatTime[1] ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
                 this.form.tmsFinanceBillCheckDto.feeTypeId = this.typeIdsSend
                 for (const i in this.messageButtonInfo) {
                   this.form.tmsFinanceBillCheckDto[i] = this.messageButtonInfo[i]
@@ -1231,7 +1231,7 @@
             type: 'success',
             message: '取消成功!'
           })
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账-对账明细&arriveOrgid=' + this.$route.query.arriveOrgid + '&orgid=' + this.$route.query.orgid + '&orgName=' + this.$route.query.orgName)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/group/detailTable?tab=网点对账明细&arriveOrgid=' + this.$route.query.arriveOrgid + '&orgid=' + this.$route.query.orgid + '&orgName=' + this.$route.query.orgName)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -1251,19 +1251,26 @@
       billNameOver() {
         this.delCont()
       },
+      // getSummaries(param){
+      //   return getSummaries(param)
+      // },
       getSummaries(param) {
         const {columns, data} = param
+
         const sums = []
+
         columns.forEach((column, index) => {
+          // let labels = '备注' || '发车时间' || '车牌号码' || '司机姓名' || '发车批次' || '合同编号' || '到达网点'
+          if (columns[index].label === '备注' || columns[index].label === '发车时间' || columns[index].label === '车牌号码' || columns[index].label === '司机姓名' || columns[index].label === '发车批次' || columns[index].label === '合同编号' || columns[index].label === '到达网点') {
+            sums[index] = ''
+            return
+          }
           if (index === 0) {
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7) {
-            sums[index] = ''
-            return
-          }
           const values = data.map(item => Number(item[column.property]))
+
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)

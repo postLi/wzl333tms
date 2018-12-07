@@ -23,6 +23,14 @@ Vue.mixin({
     }
   },
   methods: {
+    _processTableSlot(scope, prop) {
+      if (prop === 'shipFromCityName' || prop === 'shipToCityName') {
+        const addr = scope.row[prop] || ''
+        const addrArr = addr.split(',')
+        return addrArr[2] || addrArr[1] || addrArr[0] || ''
+      }
+      return scope.row[prop]
+    },
     _keepNumber(event) {
       return keepNumber.call(event.target, event)
     },

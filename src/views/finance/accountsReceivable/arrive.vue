@@ -3,7 +3,7 @@
     <SearchForm :filter="true" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET3>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET3>核销</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI3>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP3>导出</el-button>
@@ -148,20 +148,20 @@ export default {
         'label': '到达城市',
         'prop': 'shipToCityName'
       }, {
-        'label': '结算状态',
+        'label': '核销状态',
         'prop': 'arrivepayStateCn'
       }, {
         'label': '到付',
         'prop': 'arrivepayFee'
       }, {
-        'label': '已结到付',
+        'label': '已核销到付',
         'prop': 'finishArrivepayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
         }
       }, {
-        'label': '未结到付',
+        'label': '未核销到付',
         'prop': 'notArrivepayFee',
           slot: (scope) => {
           const row = scope.row
@@ -232,10 +232,10 @@ export default {
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: this.searchQuery,
+          tab: '到付核销',
+          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'arrive',
-         // id: row.map(el => el.shipId).join(','),
-          selectListShipSns: row.map(el => el.shipSn)
+          selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }
       })
     },

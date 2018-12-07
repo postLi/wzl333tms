@@ -163,7 +163,7 @@ export default {
       dialogTitle: '结 算 付 款 单',
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
-      // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
+      // settlementTypeId: 180, // 178：运单核销、179：干线批次核销、180：短驳批次核销、181：送货批次核销
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
   },
@@ -201,7 +201,7 @@ export default {
         case 'waybillAbnormal':
           return '异常理赔'
         case 'waybillUnusual':
-          return '异动费用结算'
+          return '异动费用核销'
       }
     },
     currentPage() {
@@ -374,7 +374,7 @@ export default {
       // this.$set(this.submitData, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       // this.$set(this.submitData, 'settlementId', this.settlementId)
 
-      if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+      if (this.dataName === '中转费') { // 中转核销的时候 传给后台中转网点
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.transferOrgid)
       } else if (this.dataName === '异常理赔') {
         this.$set(capitalFlow, 'orgId', this.getRouteInfo.vo.orgid)
@@ -402,7 +402,7 @@ export default {
           this.setData()
           console.log('submitData', this.submitData)
           let orgid = ''
-          if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+          if (this.dataName === '中转费') { // 中转核销的时候 传给后台中转网点
             orgid = this.getRouteInfo.vo.transferOrgid
           } else if (this.dataName === '异常理赔') {
             orgid = this.getRouteInfo.vo.orgid

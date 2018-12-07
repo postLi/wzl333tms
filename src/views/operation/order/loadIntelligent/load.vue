@@ -220,16 +220,12 @@ export default {
   activated () {
     let visitedViewsArr = this.visitedViews()
     let viewCount = 0
-    console.error('visitedViews : ', visitedViewsArr)
     visitedViewsArr.forEach((e, index) => {
       if (this.$route.fullPath === e.fullPath) {
-        console.log(this.$route.fullPath, '====',e.fullPath)
         viewCount++
       }
     })
-    console.error('viewCount : ', viewCount)
     if (viewCount !== 1) {
-      console.error('reinit : ', viewCount !== visitedViewsArr.length)
     }
   },
   methods: {

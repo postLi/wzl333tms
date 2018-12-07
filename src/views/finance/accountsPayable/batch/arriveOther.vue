@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" v-has:PAY_LOADSET9 :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" v-has:PAY_LOADSET9 :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>核销</el-button>
         <el-button type="primary" v-has:PAY_LOADPRI9 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" v-has:PAY_LOADEXP9 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -103,7 +103,7 @@ export default {
           fixed: true
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '90',
           fixed: false
@@ -145,7 +145,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站其他费',
+          label: '已核销到站其他费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未结到站其他费',
+          label: '未核销到站其他费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -206,7 +206,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
@@ -242,16 +243,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-到站其他费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '车费核销-到站其他费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-到站其他费'
+            name: '车费核销-到站其他费'
           })
           break
       }
@@ -260,7 +261,7 @@ export default {
       this.$router.push({
         path: '../../accountsLoad',
         query: {
-          tab: '到站其他费结算',
+          tab: '到站其他费核销',
           currentPage: 'batchArrivalOther', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
@@ -272,6 +273,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

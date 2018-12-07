@@ -108,6 +108,7 @@ export default {
       this.$refs[formName].resetFields()
       this.searchForm = Object.assign({}, this.$options.data().searchForm)
       this.searchTime = this.$options.data().searchTime
+      this.searchForm.orgId = this.orgid
     }
   }
 }

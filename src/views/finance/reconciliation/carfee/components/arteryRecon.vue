@@ -309,7 +309,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>已付清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -514,7 +514,7 @@
                 <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>
                 </el-form-item>
               </th>
-              <th>联系方式</th>
+              <th>财务联系电话</th>
               <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
                 <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
@@ -533,38 +533,7 @@
               </th>
             </tr>
           </table>
-          <!--<el-form-item label="备注">-->
-            <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<div class="sMessageCont_info">-->
-            <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
-          <!--</div>-->
 
-
-          <!--<el-form-item label="公司名称">-->
-            <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable-->
-                      <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgFinancialOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-                      <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-            <!--<el-date-picker-->
-              <!--v-model="messageButtonInfo.createTime"-->
-              <!--type="date"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>
@@ -588,12 +557,12 @@
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
     postCarfDtoById,
+    getLoadData,
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import { getTrucK } from '@/api/operation/load'
   import { SaveAsFileCarfeefeeArt } from '@/utils/recLodopFuncs'
 
   export default {
@@ -772,7 +741,7 @@
       },
       truckName() {
         this.loading = true
-        return getTrucK().then(data => {
+        return getLoadData().then(data => {
           this.memberNameType = data.data
           this.loading = false
         }).catch(err => {
@@ -1026,6 +995,10 @@
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
+            return
+          }
+          if (columns[index].label === '司机'||columns[index].label === '备注'){
+            sums[index] = ''
             return
           }
           if (index === 3 || index === 4 || index === 5) {

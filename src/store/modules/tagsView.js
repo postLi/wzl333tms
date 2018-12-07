@@ -13,10 +13,9 @@ const tagsView = {
         if (state.visitedViews.some(v => v.path === view.path)) return
       }
       // 列表里没有该记录，查找本地存储，如果有记录需要先清除
-      if (sessionStorage.getItem(decodeURIComponent(view.fullPath))) {
-        sessionStorage.setItem(decodeURIComponent(view.fullPath), '')
+      if (sessionStorage.getItem(encodeURIComponent(view.fullPath))) {
+        sessionStorage.setItem(encodeURIComponent(view.fullPath), '')
       }
-
 
       // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面

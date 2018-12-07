@@ -81,7 +81,7 @@
           </el-upload>
         </div>
         <div class="prinit_aside_info">
-          <el-button type="warning"  @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize">全部重置为默认值</el-button>
+          <el-button type="warning" @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize">全部重置为默认值</el-button>
         </div>
       </el-form>
     </div>
@@ -228,16 +228,22 @@ export default {
   },
   methods: {
     handleChange(file, list) {
-      this.imageUrl = file.url
+      try {
+        file.url = URL.createObjectURL(file.raw)
+        this.imageUrl = file.url
+        this.setBg('reset')
+      } catch (err) {
+        console.error('上传本地图片错误', err);
+        return
+      }
     },
-    uploadHandleFile(file) {
-    },
+    uploadHandleFile(file) {},
     conrigthStart(event, row, index, type) { // 向右拉伸-start
       this.isHiddenDragDetail = false
       row.x = event.pageX
       row.y = event.pageY
-      row.orgwidth = Math.round(row.width/this.prxvalue)
-      row.orgheight = Math.round(row.height/this.prxvalue)
+      row.orgwidth = Math.round(row.width / this.prxvalue)
+      row.orgheight = Math.round(row.height / this.prxvalue)
       row.mousetype = type
       this.isDrag = row // false-拉伸
     },
@@ -262,8 +268,8 @@ export default {
 
       w2 = w2 < 15 ? 15 : w2 > 1000 ? 1000 : w2
       h2 = h2 < 20 ? 20 : h2 > 1000 ? 1000 : h2
-      row.width = Math.round(w2* this.prxvalue)
-      row.height = Math.round(h2* this.prxvalue)
+      row.width = Math.round(w2 * this.prxvalue)
+      row.height = Math.round(h2 * this.prxvalue)
     },
     conrightEnd(event) { // 向右拉伸-end
       if (this.isDrag) { // false-拉伸
@@ -376,7 +382,7 @@ export default {
       })
       // 判断是否出纸张边界  如果是 则取消显示
       console.log(row.leftx, row.width)
-      if (Math.round(row.leftx*this.prxvalue) + row.width < 0 || Math.round(row.topy* this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+      if (Math.round(row.leftx * this.prxvalue) + row.width < 0 || Math.round(row.topy * this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
         this.dragCursor = 'not-allowed'
         row.isshow = false
         this.dragDetailInfo = {}
@@ -426,8 +432,8 @@ export default {
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
-          e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
-          e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
+          e.width = Math.round((e.width ? e.width : 240) * this.prxvalue)
+          e.height = Math.round((e.height ? e.height : 140) * this.prxvalue)
           if (e.filedValue === 'setting') {
             this.formModel.paper = Object.assign({}, e)
           } else {
@@ -494,24 +500,25 @@ export default {
               type: 'warning'
             }).then(() => {
               this.formModel.labelList.forEach(e => {
-                e.topy = 0
-                e.leftx = 0
-                e.width = Math.round(150 * this.prxvalue)
-                e.height = Math.round(24 * this.prxvalue)
-                e.fontsize = 14
-                e.bold = 0
-                e.alignment = 1
+                if (e.filedValue !== 'setting') {
+                  e.topy = 0
+                  e.leftx = 0
+                  e.isshow = 0
+                  e.width = Math.round(150 * this.prxvalue)
+                  e.height = Math.round(24 * this.prxvalue)
+                  e.fontsize = 14
+                  e.bold = 0
+                  e.alignment = 1
+                }
               })
+              this.labelListView = []
             })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-            })
+            .catch(() => {})
         }
       })
     },
     canDragStart(list) {},
     handleSwitch(newVal) { // 显示-隐藏字段 判断是否打印
-      this.showDragDetail = false
       this.dragDetailInfo.isshow != this.dragDetailInfo.isshow
       this.formModel.labelList.forEach((e, index) => {
         if (e.filedValue === this.dragDetailInfo.filedValue) {
@@ -520,6 +527,9 @@ export default {
       })
       this.labelListView = this.labelListView.filter(e => {
         return e.filedValue !== this.dragDetailInfo.filedValue
+      })
+      this.nextTick(() => {
+        this.showDragDetail = false
       })
     },
     changeValue(obj, item, index) {

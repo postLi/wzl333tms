@@ -4,15 +4,15 @@
       <span class="batchNum" :class="{'on': i === currentBatch}" v-for="i in output.ordernum" @click="changeBatch(i)" :key="i">第{{ i }}票</span>
     </div>
     <div class="createOrderWrapper">
-    <div class="createOrder-title"><span>{{ otherinfo.systemSetup.shipPageFunc.orderName || '收发货凭证'}}</span></div>
-    <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" :status-icon='false' inline label-position="right" size="mini">
-    <div class="createOrder-info clearfix">
-      <div class="order-num required">运单号： <span class="order-num-info">
+      <div class="createOrder-title"><span>{{ otherinfo.systemSetup.shipPageFunc.orderName || '收发货凭证'}}</span></div>
+      <el-form :model="form" label-width="100px" ref="ruleForm" :show-message="false" :status-icon='false' inline label-position="right" size="mini">
+        <div class="createOrder-info clearfix">
+          <div class="order-num required">运单号： <span class="order-num-info">
         <el-form-item  :error='shipFieldValueInfo.shipSn'>
           <el-input ref="tmsOrderShipshipSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
-      <div class="create-num required">开单日期： <span class="create-num-info">
+          <div class="create-num required">开单日期： <span class="create-num-info">
          <el-date-picker
             v-model="form.tmsOrderShip.createTime"
             type="date"
@@ -25,421 +25,430 @@
             placeholder="选择日期">
           </el-date-picker>
       </span></div>
-    </div>
-    <div class="order-main">
-      <!-- 网点信息 -->
-      <el-row class="firstline-order">
-        <el-col :span="4">
-          <div class="order-form-item showFormInfo">
-            <span class="order-form-label">开单网点</span>
-            <el-form-item prop="tmsOrderShip.shipFromOrgid">
-              <SelectTree disabled :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">出发城市</span>
-            <el-form-item :error='shipFieldValueInfo.shipFromCityName' >
-              <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity"  v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="order-form-item">
-            <span class="order-form-label required">到达城市</span>
-            <el-form-item :error='shipFieldValueInfo.shipToCityName'>
-              <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity"  v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
-            <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-              <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput"  size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="order-form-item">
-            <span class="order-form-label">交接方式</span>
-            <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
-              <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" />
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="4">
-          <div class="order-form-item showFormInfo">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipGoodsSn}">货号</span>
-            <el-form-item :error='shipFieldValueInfo.shipGoodsSn'>
-              <el-input ref="tmsOrderShipGoodsSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <!-- 收发货方 -->
-      <div class="customer-form clearfix">
-        <div class="sender-form">
-          <div class="form-title">
-            发货方
-          </div>
-          <div class="order-form-item">
-            <span :class="{'required': shipFieldValue.shipSenderId}" class="order-form-label">发货方</span>
-            <el-form-item :error='shipFieldValueInfo.shipSenderUnit' >
-              <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
-            </el-form-item>
-          </div>
-          <div class="order-form-item">
-            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderName}">发 货 人</span>
-            <el-form-item :error='shipFieldValueInfo.shipSenderName' >
-              <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
-            </el-form-item>
-          </div>
-          <div class="order-form-item">
-            <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
-            <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
-              <querySelect :key="customkey" :maxlength="11" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
-            </el-form-item>
-          </div>
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
-            <el-form-item :error='shipFieldValueInfo.shipSenderAddress'>
-              <querySelect :key="customkey" :maxlength="50" ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
-            </el-form-item>
-          </div>
         </div>
-        <div class="receiver-form">
-          <div class="form-title">
-            收货方
+        <div class="order-main">
+          <!-- 网点信息 -->
+          <el-row class="firstline-order">
+            <el-col :span="4">
+              <div class="order-form-item showFormInfo">
+                <span class="order-form-label">开单网点</span>
+                <el-form-item prop="tmsOrderShip.shipFromOrgid">
+                  <SelectTree disabled :filterable="false" size="mini" v-model="form.tmsOrderShip.shipFromOrgid" />
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">出发城市</span>
+                <el-form-item :error='shipFieldValueInfo.shipFromCityName'>
+                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity" v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="order-form-item">
+                <span class="order-form-label required">到达城市</span>
+                <el-form-item :error='shipFieldValueInfo.shipToCityName'>
+                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity" v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
+                <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
+                  <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="getLineInfo" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="order-form-item">
+                <span class="order-form-label">交接方式</span>
+                <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
+                  <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" />
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="order-form-item showFormInfo">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipGoodsSn}">货号</span>
+                <el-form-item :error='shipFieldValueInfo.shipGoodsSn'>
+                  <el-input ref="tmsOrderShipGoodsSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <!-- 收发货方 -->
+          <div class="customer-form clearfix">
+            <div class="sender-form">
+              <div class="form-title">
+                发货方
+              </div>
+              <div class="order-form-item">
+                <span :class="{'required': shipFieldValue.shipSenderId}" class="order-form-label">发货方</span>
+                <el-form-item :error='shipFieldValueInfo.shipSenderUnit'>
+                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderName}">发 货 人</span>
+                <el-form-item :error='shipFieldValueInfo.shipSenderName'>
+                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
+                <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
+                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
+                <el-form-item :error='shipFieldValueInfo.shipSenderAddress'>
+                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
+                </el-form-item>
+              </div>
+            </div>
+            <div class="receiver-form">
+              <div class="form-title">
+                收货方
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收货方</span>
+                <el-form-item :error='shipFieldValueInfo.shipReceiverUnit'>
+                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverName}">收 货 人</span>
+                <el-form-item :error='shipFieldValueInfo.shipReceiverName'>
+                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
+                <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
+                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+                </el-form-item>
+              </div>
+              <div class="order-form-item">
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
+                <el-form-item :error='shipFieldValueInfo.shipReceiverAddress'>
+                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
+                </el-form-item>
+              </div>
+            </div>
           </div>
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收货方</span>
-            <el-form-item :error='shipFieldValueInfo.shipReceiverUnit'>
-              <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
-            </el-form-item>
+          <!-- 货物费用 -->
+          <div class="order-cargo-form">
+            <el-table ref="cargoListTable" :key="cargoKey" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
+              <el-table-column class="addButtonTh" fixed width="50">
+                <template slot="header" slot-scope="scope">
+                  <span class="addButton" @click="addCargoList">
+                <i class="el-icon-plus"></i>
+              </span>
+                </template>
+                <template slot-scope="scope">
+                  <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" :label-class-name="(shipFieldValue[item.fieldProperty] || (/(cargoName|cargoAmount)/.test(item.fieldProperty))) ? 'required' : ''" :label="item.fieldName">
+                <template slot-scope="scope">
+                  <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
+                    <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
+                      <querySelect :maxlength="15" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+                    </el-form-item>
+                  </template>
+                  <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
+                    <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoPack : ''">
+                      <querySelect :maxlength="10" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                    </el-form-item>
+                  </template>
+                  <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
+                    <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
+                      <input ref="tmsOrdercargoAmount" v-number-only size="mini" :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="6" />
+                    </el-form-item>
+                  </template>
+                  <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
+                    <el-form-item>
+                      <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="11" :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                    </el-form-item>
+                  </template>
+                  <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
+                    <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
+                      <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="6" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                    </el-form-item>
+                  </template>
+                  <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
+                    <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
+                      <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="11" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                    </el-form-item>
+                  </template>
+                  <template v-else>
+                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" class="nativeinput" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                  </template>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverName}">收 货 人</span>
-            <el-form-item :error='shipFieldValueInfo.shipReceiverName'>
-              <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
-            </el-form-item>
-          </div>
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
-            <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
-              <querySelect :key="customkey" :maxlength="11" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
-            </el-form-item>
-          </div>
-          <div class="order-form-item">
-            <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
-            <el-form-item :error='shipFieldValueInfo.shipReceiverAddress'>
-              <querySelect :key="customkey" :maxlength="50" ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
-            </el-form-item>
-          </div>
-        </div>
-      </div>
-      <!-- 货物费用 -->
-      <div class="order-cargo-form">
-        <el-table ref="cargoListTable" :key="cargoKey" :data="form.cargoList" border tooltip-effect="dark" triped width="100%" style="width: 100%">
-          <el-table-column class="addButtonTh" fixed :render-header="setHeader" width="50">
-            <template slot-scope="scope">
-              <span class="minusButton" v-if="scope.$index !== 0" @click="deleteCargoList(scope.$index)"><i class="el-icon-minus"></i></span>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="(item, index) in theFeeConfig" :key="index" :width="item.fieldProperty.indexOf('cargoName')!==-1 ? 120 : 'auto'" :label-class-name="(shipFieldValue[item.fieldProperty] || (/(cargoName|cargoAmount)/.test(item.fieldProperty))) ? 'required' : ''" :label="item.fieldName">
-            <template slot-scope="scope">
-              <template v-if="item.fieldProperty.indexOf('cargoName')!==-1">
-                  <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo.cargoName : ''">
-                    <querySelect :maxlength="30" ref="tmsOrdercargoName" getinput size="mini" search="value" type="cargoName" valuekey="value" v-model="form.cargoList[scope.$index].cargoName" />
+          <!-- 其它项 -->
+          <div class="order-other-form clearfix">
+            <el-row class="firstline-order-other">
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">运费合计</span>
+                  <el-form-item prop="tmsOrderShip.shipTotalFee">
+                    <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTotalFee" />
                   </el-form-item>
-                </template>
-                <template v-else-if="item.fieldProperty.indexOf('cargoPack')!==-1">
-                  <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoPack : ''">
-                    <querySelect :maxlength="20" ref="tmsOrdercargoPack" size="mini" search="value" type="cargoPack" valuekey="value" v-model="form.cargoList[scope.$index].cargoPack" />
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">付款方式</span>
+                  <el-form-item prop="tmsOrderShip.shipPayWay">
+                    <SelectType :filterable="false" size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
                   </el-form-item>
-                </template>
-                <template v-else-if="item.fieldProperty.indexOf('cargoAmount')!==-1">
-                  <el-form-item :error="scope.$index === 0 ? shipFieldValueInfo.cargoAmount : ''">
-                    <input ref="tmsOrdercargoAmount" v-number-only size="mini" 
-                   :value="form.cargoList[scope.$index].cargoAmount" @change="(val) => detectCargoNumChange(scope.$index, item.fieldProperty, val)" :maxlength="6" />
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">现付</span>
+                  <el-form-item prop="tmsOrderShip.shipNowpayFee">
+                    <el-input @blur="formatShipFee" @focus="setOtherFee('shipNowpayFee')" size="mini" :maxlength="20" :disabled="shipNowpayFeeDisabled" v-model="form.tmsOrderShip.shipNowpayFee" />
                   </el-form-item>
-                </template>
-                <template v-else-if="item.fieldProperty.indexOf('shipFee')!==-1">
-                  <el-form-item >
-                  <input ref="tmsOrdershipFee" v-number-only:point size="mini" :maxlength="11"
-                  :value="form.cargoList[scope.$index].shipFee" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">到付</span>
+                  <el-form-item prop="tmsOrderShip.shipArrivepayFee">
+                    <el-input @blur="formatShipFee" @focus="setOtherFee('shipArrivepayFee')" size="mini" :maxlength="20" :disabled="shipArrivepayFeeDisabled" v-model="form.tmsOrderShip.shipArrivepayFee" />
                   </el-form-item>
-                </template>
-                <template v-else-if="/(cargoWeight|cargoVolume)/.test(item.fieldProperty)">
-                  <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" v-number-only:point size="mini" :maxlength="7"
-                  :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)" />
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">回单付</span>
+                  <el-form-item prop="tmsOrderShip.shipReceiptpayFee">
+                    <el-input @blur="formatShipFee" @focus="setOtherFee('shipReceiptpayFee')" size="mini" :maxlength="20" :disabled="shipReceiptpayFeeDisabled" v-model="form.tmsOrderShip.shipReceiptpayFee" />
                   </el-form-item>
-                </template>
-                <template v-else-if="/(fee|price|agency|tax)/i.test(item.fieldProperty)">
-                  <el-form-item  :error="scope.$index === 0 ? shipFieldValueInfo[item.fieldProperty] : ''">
-                    <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" v-number-only:point :maxlength="11" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
-                    />
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">月结</span>
+                  <el-form-item prop="tmsOrderShip.shipMonthpayFee">
+                    <el-input @blur="formatShipFee" @focus="setOtherFee('shipMonthpayFee')" size="mini" :maxlength="20" :disabled="shipMonthpayFeeDisabled" v-model="form.tmsOrderShip.shipMonthpayFee" />
                   </el-form-item>
-                </template>
-                <template v-else>
-                  <input :ref="`${'tmsOrder'+item.fieldProperty}`" size="mini" class="nativeinput" maxlength="20" :value="form.cargoList[scope.$index][item.fieldProperty]" @change="(val) => changeFee(scope.$index, item.fieldProperty, val)"
-                    />
-                </template>
-              </template>
-          </el-table-column>  
-        </el-table>
-      </div>
-      <!-- 其它项 -->
-      <div class="order-other-form clearfix">
-        <el-row class="firstline-order-other">
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">运费合计</span>
-              <el-form-item prop="tmsOrderShip.shipTotalFee">
-                <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTotalFee" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">付款方式</span>
-              <el-form-item prop="tmsOrderShip.shipPayWay">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">现付</span>
-              <el-form-item prop="tmsOrderShip.shipNowpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipNowpayFee')" size="mini" :maxlength="20" :disabled="shipNowpayFeeDisabled"  v-model="form.tmsOrderShip.shipNowpayFee" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">到付</span>
-              <el-form-item prop="tmsOrderShip.shipArrivepayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipArrivepayFee')" size="mini" :maxlength="20" :disabled="shipArrivepayFeeDisabled"  v-model="form.tmsOrderShip.shipArrivepayFee" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">回单付</span>
-              <el-form-item prop="tmsOrderShip.shipReceiptpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipReceiptpayFee')" size="mini" :maxlength="20" :disabled="shipReceiptpayFeeDisabled"  v-model="form.tmsOrderShip.shipReceiptpayFee" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">月结</span>
-              <el-form-item prop="tmsOrderShip.shipMonthpayFee">
-                <el-input @blur="formatShipFee" @focus="setOtherFee('shipMonthpayFee')" size="mini" :maxlength="20" :disabled="shipMonthpayFeeDisabled"  v-model="form.tmsOrderShip.shipMonthpayFee" />
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row class="second-order-other">
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">回单类型</span>
-              <el-form-item prop="tmsOrderShip.shipReceiptRequire">
-                <SelectType size="mini"  v-model="form.tmsOrderShip.shipReceiptRequire" type="ship_receipt_require" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label other-form-shipReceiptNum">
+                </div>
+              </el-col>
+            </el-row>
+            <el-row class="second-order-other">
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">回单类型</span>
+                  <el-form-item prop="tmsOrderShip.shipReceiptRequire">
+                    <SelectType size="mini" v-model="form.tmsOrderShip.shipReceiptRequire" type="ship_receipt_require" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label other-form-shipReceiptNum">
                 <el-form-item prop="tmsOrderShip.shipReceiptNum">
                   <el-input v-number-only size="mini" :maxlength="3"  v-model="form.tmsOrderShip.shipReceiptNum" >
                     <template slot="append">份</template>
                   </el-input>
                 </el-form-item>
               </span>
-              <el-form-item prop="tmsOrderShip.shipReceiptSn">
-                <el-input v-onlyNumberAndLetter size="mini" :maxlength="20"  placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">打印标签</span>
-              <el-form-item prop="tmsOrderShip.shipPrintLib">
-                <el-input v-number-only size="mini" :maxlength="3"  v-model="form.tmsOrderShip.shipPrintLib" >
-                  <template slot="append">份</template>
-                </el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label " :class="{'required': shipFieldValue.shipCustomerNumber}">客户单号</span>
-              <el-form-item :error="shipFieldValueInfo.shipCustomerNumber">
-                <el-input ref="tmsOrdershipCustomerNumber" v-onlyNumberAndLetter size="mini" :maxlength="20"  v-model="form.tmsOrderShip.shipCustomerNumber" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">运输方式</span>
-              <el-form-item prop="tmsOrderShip.shipShippingType">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipShippingType" type="ship_shipping_type" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">业务类型</span>
-              <el-form-item prop="tmsOrderShip.shipBusinessType">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipBusinessType" type="ship_business_type" />
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row class="third-order-other">
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">时效</span>
-              <el-form-item prop="tmsOrderShip.shipEffective">
-                <SelectType size="mini" v-model="form.tmsOrderShip.shipEffective" type="ship_effective" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">提货批次</span>
-              <el-form-item prop="tmsOrderShip.shipBatchId">
-                <querySelect :key="customkey"  size="mini" search="batchNumber" placeholder="请选择" type="batch" show="select" valuekey="bathId" @change="getBatch" v-model="form.tmsOrderShip.shipBatchId" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label">车牌号</span>
-              <el-form-item prop="tmsOrderShip.shipTruckIdNumber">
-                <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTruckIdNumber" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="order-form-item">
-              <span class="order-form-label" :class="{'required': shipFieldValue.shipUserid}">业务员</span>
-              <el-form-item :error="shipFieldValueInfo.shipUserid">
-                <querySelect  ref="tmsOrdershipUserid" show="select" filterable :orgid="otherinfo.orgid "  size="mini" :name="otherinfo.name" search="name"  v-model="form.tmsOrderShip.shipUserid" @change="selectShipUserid" />
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="order-form-item">
-              <span class="order-form-label">其他</span>
-              <el-checkbox-group v-model="shipOther">
-                <el-checkbox label="168">控货</el-checkbox>
-                <el-checkbox label="169">贵重物品</el-checkbox>
-                <el-checkbox label="170">现付尚欠</el-checkbox>
-                <el-checkbox label="171">回扣已返</el-checkbox>
-              </el-checkbox-group>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row class="fouth-order-other">
-          <el-col :span="24">
-            <div class="order-form-item">
-              <span class="order-form-label">备注</span>
-              <el-form-item prop="tmsOrderShip.shipRemarks">
-                <el-button class="remarks-btn" size="mini" icon="el-icon-date" @click="popVisible = true" plain>常用备注</el-button>
-                <querySelect :key="customkey" size="mini" search="value" type="remark" valuekey="value"  :maxlength="250"  v-model="form.tmsOrderShip.shipRemarks" />
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
+                  <el-form-item prop="tmsOrderShip.shipReceiptSn">
+                    <el-input v-onlyNumberAndLetter size="mini" :maxlength="20" placeholder="回单号" v-model="form.tmsOrderShip.shipReceiptSn" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">打印标签</span>
+                  <el-form-item prop="tmsOrderShip.shipPrintLib">
+                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib">
+                      <template slot="append">份</template>
+                    </el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label " :class="{'required': shipFieldValue.shipCustomerNumber}">客户单号</span>
+                  <el-form-item :error="shipFieldValueInfo.shipCustomerNumber">
+                    <el-input ref="tmsOrdershipCustomerNumber" v-onlyNumberAndLetter size="mini" :maxlength="20" v-model="form.tmsOrderShip.shipCustomerNumber" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">运输方式</span>
+                  <el-form-item prop="tmsOrderShip.shipShippingType">
+                    <SelectType size="mini" v-model="form.tmsOrderShip.shipShippingType" type="ship_shipping_type" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">业务类型</span>
+                  <el-form-item prop="tmsOrderShip.shipBusinessType">
+                    <SelectType size="mini" v-model="form.tmsOrderShip.shipBusinessType" type="ship_business_type" />
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row class="third-order-other">
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">时效</span>
+                  <el-form-item prop="tmsOrderShip.shipEffective">
+                    <SelectType size="mini" v-model="form.tmsOrderShip.shipEffective" type="ship_effective" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">提货批次</span>
+                  <el-form-item prop="tmsOrderShip.shipBatchId">
+                    <querySelect :key="customkey" size="mini" search="batchNumber" placeholder="请选择" type="batch" show="select" valuekey="bathId" @change="getBatch" v-model="form.tmsOrderShip.shipBatchId" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label">车牌号</span>
+                  <el-form-item prop="tmsOrderShip.shipTruckIdNumber">
+                    <el-input size="mini" :maxlength="20" disabled v-model="form.tmsOrderShip.shipTruckIdNumber" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="order-form-item">
+                  <span class="order-form-label" :class="{'required': shipFieldValue.shipUserid}">业务员</span>
+                  <el-form-item :error="shipFieldValueInfo.shipUserid">
+                    <querySelect ref="tmsOrdershipUserid" show="select" filterable :orgid="otherinfo.orgid " size="mini" :name="otherinfo.name" search="name" v-model="form.tmsOrderShip.shipUserid" @change="selectShipUserid" />
+                  </el-form-item>
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="order-form-item">
+                  <span class="order-form-label">其他</span>
+                  <el-checkbox-group v-model="shipOther">
+                    <el-checkbox label="168">控货</el-checkbox>
+                    <el-checkbox label="169">贵重物品</el-checkbox>
+                    <el-checkbox label="170">现付尚欠</el-checkbox>
+                    <el-checkbox label="171">回扣已返</el-checkbox>
+                  </el-checkbox-group>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row class="fouth-order-other">
+              <el-col :span="24">
+                <div class="order-form-item">
+                  <span class="order-form-label">备注</span>
+                  <el-form-item prop="tmsOrderShip.shipRemarks">
+                    <el-button class="remarks-btn" size="mini" icon="el-icon-date" @click="popVisible = true" plain>常用备注</el-button>
+                    <querySelect :key="customkey" size="mini" search="value" type="remark" valuekey="value" :maxlength="250" v-model="form.tmsOrderShip.shipRemarks" />
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+          <!-- 中转信息 -->
+          <div class="order-transfer-form" v-if="shouldInputTransfer">
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="中转信息" name="1">
+                <table class="order-transfer-table">
+                  <thead>
+                    <tr>
+                      <th style="min-width:100px">中转日期</th>
+                      <th style="min-width:100px">中转单号</th>
+                      <th style="min-width:100px">承运商</th>
+                      <th style="min-width:100px">承运商电话</th>
+                      <th style="min-width:100px">中转到站电话</th>
+                      <th style="min-width:100px">中转费</th>
+                      <th style="min-width:100px">中转送货费</th>
+                      <th style="min-width:100px">中转其它费</th>
+                      <th style="min-width:100px">中转费合计</th>
+                      <th style="min-width:100px">中转付款方式</th>
+                      <th style="min-width:100px">中转备注</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <el-date-picker v-model="form.tmsOrderTransfer.transferTime" type="date" value-format="yyyy-MM-dd hh:mm:ss" :picker-options="pickoption2" v-if="nowTime" size="mini" tabindex="-1" placeholder="选择日期">
+                        </el-date-picker>
+                      </td>
+                      <td>
+                        <el-input size="mini" v-onlyNumberAndLetter :maxlength="20" @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
+                      </td>
+                      <td>
+                        <querySelect size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier" :filterable="true" show="select" v-model="form.tmsOrderTransfer.carrierId" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="20" v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="13" v-numberOnly v-model="form.tmsOrderTransfer.arrivalMobile" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="8" v-numberOnly:point v-model.number="form.tmsOrderTransfer.transferCharge" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="8" v-numberOnly:point v-model.number="form.tmsOrderTransfer.deliveryExpense" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="20" v-numberOnly:point v-model="form.tmsOrderTransfer.transferOtherFee" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
+                      </td>
+                      <td>
+                        <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
+                      </td>
+                      <td>
+                        <el-input size="mini" :maxlength="250" v-model="form.tmsOrderTransfer.remark" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </el-form>
+      <!-- 专线价格提示 -->
+      <div class="createOrder-line-info">
+        提示：参考价格
+        <template v-if="lineinfo.priceType">
+          {{ lineinfo.proposedPrice }}元，
+          <span v-if="parseInt(form.tmsOrderShip.shipPayWay,10) !== 103">
+        <span v-if="lineinfo.priceType === '正常'">
+          当前运费在正常范围。<span class="line-info-tip">{{ lineinfo.priceType }}</span>
+          </span>
+          <span v-if="lineinfo.priceType === '异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-abnormal">{{ lineinfo.priceType }}</span>
+          </span>
+          <span v-if="lineinfo.priceType === '超异常'">
+          已{{ lineinfo.highOrLow }}参考价{{ lineinfo.pricePercent }}％<span class="line-info-tip line-tip-bigabnormal">{{ lineinfo.priceType }}</span>
+          </span>
+          </span>
+        </template>
+        <template v-else>
+          面议
+        </template>
       </div>
-      <!-- 中转信息 -->
-      <div class="order-transfer-form" v-if="shouldInputTransfer">
-        <el-collapse v-model="activeNames" >
-          <el-collapse-item title="中转信息" name="1">
-            <table class="order-transfer-table">
-              <thead>
-                <tr>
-                  <th style="min-width:100px">中转日期</th>
-                  <th style="min-width:100px">中转单号</th>
-                  <th style="min-width:100px">承运商</th>
-                  <th style="min-width:100px">承运商电话</th>
-                  <th style="min-width:100px">中转到站电话</th>
-                  <th style="min-width:100px">中转费</th>
-                  <th style="min-width:100px">中转送货费</th>
-                  <th style="min-width:100px">中转其它费</th>
-                  <th style="min-width:100px">中转费合计</th>
-                  <th style="min-width:100px">中转付款方式</th>
-                  <th style="min-width:100px">中转备注</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <el-date-picker
-                      v-model="form.tmsOrderTransfer.transferTime"
-                      type="date"
-                      value-format="yyyy-MM-dd hh:mm:ss"
-                      :picker-options="pickoption2"
-                      v-if="nowTime"
-                      size="mini"
-                      tabindex="-1"
-                      placeholder="选择日期">
-                    </el-date-picker>
-                  </td>
-                  <td>
-                    <el-input size="mini" v-onlyNumberAndLetter :maxlength="20"
-                    @change="setOddNumbers" v-model="form.tmsOrderTransfer.oddNumbers" />
-                  </td>
-                  <td>
-                    <querySelect  size="mini" search="carrierName" type="carrier" valuekey="carrierId" @change="getCarrier"
-                    :filterable="true" show="select" v-model="form.tmsOrderTransfer.carrierId" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="20"  v-numberOnly v-model="form.tmsOrderTransfer.carrierMobile" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="13"  v-numberOnly v-model="form.tmsOrderTransfer.arrivalMobile" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.transferCharge" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="8"  v-numberOnly:point v-model.number="form.tmsOrderTransfer.deliveryExpense" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="20"
-                    v-numberOnly:point   v-model="form.tmsOrderTransfer.transferOtherFee" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="8" disabled v-model="form.tmsOrderTransfer.totalCost" />
-                  </td>
-                  <td>
-                    <SelectType size="mini" v-model="form.tmsOrderTransfer.paymentId" type="payment_type" />
-                  </td>
-                  <td>
-                    <el-input size="mini" :maxlength="250"  v-model="form.tmsOrderTransfer.remark" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </el-collapse-item>
-        </el-collapse>
-      </div>
-
-    </div>
-    </el-form>
-    <!-- 底部按钮操作部分 -->
-    <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
-    <!-- 弹窗 -->
-    <FeeDialog @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
-    <PersonDialog @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
-    <ManageRemarks @success="setRemark" :popVisible.sync="popVisible" />
+      <!-- 底部按钮操作部分 -->
+      <FooterBtns :class="{hideSaveNew:hideSaveNew}" :isChange="changeFlag" @doAction="doAction" @doCommand="handleCommand" />
+      <!-- 弹窗 -->
+      <FeeDialog v-if="dialogVisible" @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
+      <PersonDialog v-if="dialogVisiblePerson" @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
+      <ManageRemarks v-if="popVisible" @success="setRemark" :popVisible.sync="popVisible" />
     </div>
   </div>
 </template>
@@ -494,42 +503,6 @@ export default {
   },
   data() {
     const _this = this
-    const validateOrderNum = (rule, value, callback) => {
-      if (this.output.ismodify) {
-        callback()
-      } else {
-        _this.detectOrderNum().then(isDulip => {
-          if (isDulip) {
-            this.showMessage('重复的订单号')
-            callback(new Error())
-          } else {
-            callback()
-          }
-        })
-      }
-    }
-
-    const validateMobile = (rule, value, callback) => {
-      if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        this.showMessage('请输入正确的联系号码~')
-
-        callback(new Error())
-      }
-    }
-
-    // REGEX.ONLY_NUMBER_AND_LETTER
-    const validateOnlyNumberAndLetter = (rule, value, callback) => {
-      console.log('rule:', rule)
-      if (REGEX.ONLY_NUMBER_AND_LETTER.test(value) || (rule.field === 'tmsOrderShip.shipCustomerNumber' && !value)) {
-        callback()
-      } else {
-        this.showMessage(rule.message || '只能输入数字或者字母')
-
-        callback(new Error())
-      }
-    }
 
     return {
       shipUserName: '',
@@ -630,37 +603,6 @@ export default {
         'volumeFee': false,
         'weightFee': false
       },
-      rules2: {},
-      rules3: {
-        'tmsOrderShip.shipCustomerNumber': [
-          { validator: validateOnlyNumberAndLetter, trigger: 'blur', message: '请输入客户单号' }
-        ],
-        'tmsOrderShip.shipSn': [
-          { validator: this.validateIsEmpty('运单号不能为空！') },
-          { validator: validateOnlyNumberAndLetter, message: '只能输入数字跟字母' },
-          { validator: validateOrderNum }
-        ],
-        'tmsOrderShip.shipToCityName': [
-          { validator: this.validateIsEmpty('到达城市不能为空'), trigger: 'blur' }
-        ],
-        'sender.customerName': [
-          { validator: this.validateIsEmpty('发货人不能为空') }
-        ],
-        'sender.customerMobile': [
-          { validator: this.validateIsEmpty('发货人联系电话不能为空') },
-          { validator: validateMobile, trigger: 'blur' }
-        ],
-        'receiver.customerName': [
-          { validator: this.validateIsEmpty('收货人不能为空') }
-        ],
-        'receiver.customerMobile': [
-          { validator: this.validateIsEmpty('收货人联系电话不能为空') },
-          { validator: validateMobile, trigger: 'blur' }
-        ]
-
-      },
-      // 用来判断是否有填体积或者重量
-      inputWOrV: {},
       // 付款方式禁用
       shipNowpayFeeDisabled: false,
       shipArrivepayFeeDisabled: false,
@@ -818,6 +760,15 @@ export default {
           'shipEffective': 94, // 默认为普通
           'shipFromCityName': '',
           'shipFromCityCode': '',
+
+          // 新增字段
+          startProvince: '',
+          startCity: '',
+          startArea: '',
+          endProvince: '',
+          endCity: '',
+          endArea: '',
+
           'shipFromOrgid': '',
           'shipGoodsSn': '',
           'shipIsAbnormal': 0,
@@ -896,7 +847,17 @@ export default {
       printDataObject: {},
       cargoKey: 'init',
       resOrderId: '', // 开单成功后返回的运单id
-      hideSaveNew: false // 判断是否隐藏“保存并新增按钮”
+      hideSaveNew: false, // 判断是否隐藏“保存并新增按钮”
+      // 专线信息
+      lineinfo: {
+        loaded: false,
+        lowerPrice: 0, // 最低价格
+        pricePercent: 0, // 百分比
+        priceType: '', // 类型
+        highOrLow: '', // 超过 低于
+        proposedPrice: 0 // 总价
+      },
+      RECEIPT_TYPE: {} // 回单类型中文
     }
   },
   computed: {
@@ -1162,24 +1123,6 @@ export default {
         }
       }, false)
     },
-    setHeader(h, { column }) {
-      return h('span', {
-        props: {
-        },
-        'class': {
-          'addButton': true
-        },
-        on: {
-          click: this.addCargoList
-        }
-      }, [
-        h('i', {
-          'class': {
-            'el-icon-plus': true
-          }
-        })
-      ])
-    },
     // 各个接口
     // 为了方便缓存数据，重新包装各个接口
     // 获取预订单数据
@@ -1224,7 +1167,7 @@ export default {
       console.log('getBaseSetting:::::')
 
       return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
-      // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
+        // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0] || {}
         // 获取费用设置
@@ -1354,7 +1297,7 @@ export default {
       if (!this.output.isOrder) {
         this.form.tmsOrderTransfer.transferTime = this.nowTime
       }
-      // 只有在库中且没有结算状态的才能修改创建时间
+      // 只有在库中且没有核销状态的才能修改创建时间
       // console.log('this.orderData.tmsOrderShipInfo.shipStatus::::', this.orderData, this.orderData.tmsOrderShipInfo.shipStatus, this.orderData.shipFeeStatusDto.shipReceivableFeeStatus, this.canChangeOrderDate, this.output.ismodify)
       if (this.canChangeOrderDate && this.output.ismodify && !this.output.isbatch) {
         if (this.orderData.tmsOrderShipInfo.shipStatus === 59 && (this.orderData.shipFeeStatusDto.shipReceivableFeeStatus === 'NOSETTLEMENT')) {
@@ -1370,16 +1313,26 @@ export default {
       console.log('selectFromCity:', item, city)
       if (item) {
         this.form.tmsOrderShip.shipFromCityName = item.longAddr
+        this.form.tmsOrderShip.shipFromCityCode = item.id || ''
+        this.form.tmsOrderShip.startProvince = item.province || ''
+        this.form.tmsOrderShip.startCity = item.city || ''
+        this.form.tmsOrderShip.startArea = item.area || ''
       }/*  else {
         this.form.tmsOrderShip.shipFromCityCode = city || ''
         this.form.tmsOrderShip.shipFromCityName = city || ''
       } */
+      this.getLineInfo()
     },
     // 选择到达城市
     selectToCity(item, city) {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
+        this.form.tmsOrderShip.shipToCityCode = item.id || ''
+        this.form.tmsOrderShip.endProvince = item.province || ''
+        this.form.tmsOrderShip.endCity = item.city || ''
+        this.form.tmsOrderShip.endArea = item.area || ''
       }
+      this.getLineInfo()
     },
     // 设置费用列
     setOrderFee() {
@@ -1471,7 +1424,7 @@ export default {
       console.log('whereAreYou::', whereAreYou)
       // 1.判断有无运单id
       // 1.1 判断是否为修改
-      // 1.1.1 判断是否已结算，设置可修改部分
+      // 1.1.1 判断是否已核销，设置可修改部分
       // 1.1.1 如果为完全不能修改，则限制可修改部分
       // 1.2 判断是否为查看
       // 1.2.1 如果有运单id，但无操作参数，则表示为查看运单
@@ -1557,6 +1510,64 @@ export default {
         errFn()
       })
     },
+    // 根据出发地/目的地、货物信息获取专线信息
+    getLineInfo() {
+      // 1.检查有没有填写出发地/到达地
+      // 2.检查有没有货物列表
+      // 3.俩者都有数据才请求，没有就清空已有的数据
+      const start = this.form.tmsOrderShip.shipFromCityName
+      const end = this.form.tmsOrderShip.shipToCityName
+      const cargos = this.form.cargoList.filter(el => {
+        return (el.cargoVolume !== '' || el.cargoWeight !== '')
+      })
+      const orgData = this.$options.data()
+
+      if (start && end && cargos.length) {
+        const data = {}
+        data.rangeFromCityName = start
+        data.rangeToCityName = end
+        data.shipFeeList = []
+        data.volumeList = []
+        data.weighList = []
+        data.fromOrgid = this.form.tmsOrderShip.shipFromOrgid || this.otherinfo.orgid
+        data.toOrgid = this.form.tmsOrderShip.shipToOrgid || ''
+        cargos.forEach(el => {
+          if (el.shipFee !== '') {
+            data.shipFeeList.push(el.shipFee)
+          }
+
+          if (el.cargoVolume !== '') {
+            data.volumeList.push(el.cargoVolume)
+          }
+
+          if (el.cargoWeight !== '') {
+            data.weighList.push(el.cargoWeight)
+          }
+        })
+        // 请求后端接口获取专线数据
+        orderManage.postMatchLine(data).then(res => {
+          /* lowerPrice: 10
+          pricePercent: 30
+          priceType: "超异常"
+          proposedPrice: 10
+          transportAging: "1小时" */
+          const rdata = res.data
+          if (!rdata) {
+            this.lineinfo = orgData
+          } else {
+            this.lineinfo = rdata
+            // 当获取到后台数据时，标记以便后续根据最低价格去处理创建/修改的逻辑
+            this.lineinfo.loaded = true
+          }
+        }).catch(err => {
+          this.lineinfo = orgData
+          this._handlerCatchMsg(err)
+        })
+      } else {
+        // 清除已有的专线数据
+        this.lineinfo = orgData
+      }
+    },
     // 从订单创建运单
     initPreOrder() {
       const errFn = () => {
@@ -1617,7 +1628,7 @@ export default {
           if (this.ispop) {
             this.eventBus.$emit('hideCreateOrder')
           } else {
-          // 关闭标签页
+            // 关闭标签页
             this.eventBus.$emit('closeCurrentView')
           }
         })
@@ -1767,7 +1778,7 @@ export default {
           if (this.ispop) {
             this.eventBus.$emit('hideCreateOrder')
           } else {
-          // 关闭标签页
+            // 关闭标签页
             this.eventBus.$emit('closeCurrentView')
           }
         })
@@ -1936,6 +1947,8 @@ export default {
       setTimeout(() => {
         this.findAllInput()
       }, 100)
+      // 修改时计算总运费
+      this.getTotalFee()
     },
     detectCargoNumChange(index, name, event) {
       // if (name === 'cargoAmount') {
@@ -1949,8 +1962,10 @@ export default {
     // 修改货品列表
     changeFee(index, name, event) {
       this.form.cargoList[index][name] = event.target.value
-      // 修改时计算总运费
-      this.getTotalFee()
+
+      if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
+        this.getLineInfo()
+      }
       // 修改保险费与声明价值
       // 如果有设置
       if (/(insuranceFee|productPrice)/.test(name)) {
@@ -1968,6 +1983,8 @@ export default {
           }
         }
       }
+      // 修改时计算总运费
+      this.getTotalFee()
     },
     // 其他表单
     getBatch(item) {
@@ -2030,27 +2047,27 @@ export default {
           this.form.tmsOrderShip.shipNowpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipNowpayFeeDisabled = false
           break
-        // 到付
+          // 到付
         case 77:
           this.form.tmsOrderShip.shipArrivepayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipArrivepayFeeDisabled = false
           break
-        // 月结
+          // 月结
         case 78:
           this.form.tmsOrderShip.shipMonthpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipMonthpayFeeDisabled = false
           break
-        // 回单付
+          // 回单付
         case 79:
           this.form.tmsOrderShip.shipReceiptpayFee = this.form.tmsOrderShip.shipTotalFee
           // this.shipReceiptpayFeeDisabled = false
           break
-        // 免费
+          // 免费
         case 103:
 
           this.form.tmsOrderShip.shipTotalFee = '0.00'
           break
-        // 多笔付
+          // 多笔付
         case 104:
           this.shipNowpayFeeDisabled = false
           this.shipArrivepayFeeDisabled = false
@@ -2427,11 +2444,11 @@ export default {
       let find = ''
       // 遍历货物选项
       this.theFeeConfig.forEach(el => {
-          // 遍历是否必填选项
-          // 重量或者体积只填其一即可，所以不作处理
+        // 遍历是否必填选项
+        // 重量或者体积只填其一即可，所以不作处理
         if (this.shipFieldValue[el.fieldProperty] && (/(cargoWeight|cargoVolume)/.test(el.fieldProperty) === false)) {
           if (!this.form.cargoList[0][el.fieldProperty]) {
-              // 如果找到则不再更改错误信息，但继续遍历标记错误状态
+            // 如果找到则不再更改错误信息，但继续遍历标记错误状态
             if (!find) {
               find = el
             }
@@ -2517,67 +2534,67 @@ export default {
         const transfer = this.form.tmsOrderTransfer
         const checklist = this.shipFieldValue
         let msg = ''
-      // 运单号
+        // 运单号
         if (checklist.shipSn) {
           msg = this.checkshipSn()
         }
-      // 出发城市
+        // 出发城市
         if (checklist.shipFromCityName) {
           msg = this.checkshipFromCityName(msg)
         }
-      // 到达城市
+        // 到达城市
         if (checklist.shipToCityName) {
           msg = this.checkshipToCityName(msg)
         }
-      // 目的网点
+        // 目的网点
         if (checklist.shipToOrgid) {
           msg = this.checkshipToOrgid(msg)
         }
-      // 货号
+        // 货号
         if (checklist.shipGoodsSn) {
           msg = this.checkshipGoodsSn(msg)
         }
-      // 发货方
+        // 发货方
         if (checklist.shipSenderId) {
           msg = this.checkshipSenderUnit(msg)
         }
-      // 发货人
+        // 发货人
         if (checklist.shipSenderName) {
           msg = this.checkshipSenderName(msg)
         }
-      // 发货人电话
+        // 发货人电话
         if (checklist.shipSenderMobile) {
           msg = this.checkshipSenderMobile(msg)
         }
-      // 发货地址
+        // 发货地址
         if (checklist.shipSenderAddress) {
           msg = this.checkshipSenderAddress(msg)
         }
-      // 收货方
+        // 收货方
         if (checklist.shipReceiverId) {
           msg = this.checkshipReceiverUnit(msg)
         }
-      // 收货人
+        // 收货人
         if (checklist.shipReceiverName) {
           msg = this.checkshipReceiverName(msg)
         }
-      // 收货人电话
+        // 收货人电话
         if (checklist.shipReceiverMobile) {
           msg = this.checkshipReceiverMobile(msg)
         }
-      // 收货地址
+        // 收货地址
         if (checklist.shipReceiverAddress) {
           msg = this.checkshipReceiverAddress(msg)
         }
-      // 货品名
+        // 货品名
         if (checklist.cargoName) {
           msg = this.checkcargoName(msg)
         }
-      // 件数
+        // 件数
         if (checklist.cargoAmount) {
           msg = this.checkcargoAmount(msg)
         }
-      // 重量
+        // 重量
         if (checklist.cargoWeight) {
           msg = this.checkcargoWeight(msg)
         }
@@ -2585,22 +2602,22 @@ export default {
         if (checklist.cargoVolume) {
           msg = this.checkcargoVolume(msg)
         }
-      // 其它费用项
+        // 其它费用项
         msg = this.checkcargoFee(msg)
-      // 回单号
+        // 回单号
         if (checklist.shipReceiptSn) {
           msg = this.checkshipReceiptSn(msg)
         }
-      // 客户单号
+        // 客户单号
         if (checklist.shipCustomerNumber) {
           msg = this.checkshipCustomerNumber(msg)
         }
-      // 业务员
+        // 业务员
         if (checklist.shipUserid) {
           msg = this.checkshipUserid(msg)
         }
 
-      // 检查运单号是否重复
+        // 检查运单号是否重复
         if (this.output.ismodify && !this.$route.query.isdash) {
           resolve(!msg)
         } else {
@@ -2611,13 +2628,13 @@ export default {
           } else {
             this.detectOrderNum().then(isDulip => {
               if (isDulip) {
-              /**
-               运单号重复
-                  ↓
-              是否允许手动输入 → 不允许，自动生成一个新的
-                  ↓
-              允许输入，聚焦到运单号框由用户修改
-              */
+                /**
+                 运单号重复
+                    ↓
+                是否允许手动输入 → 不允许，自动生成一个新的
+                    ↓
+                允许输入，聚焦到运单号框由用户修改
+                */
                 if (this.config.shipNo.manualInput !== '1') {
                   orderManage.getShipSn(this.otherinfo.orgid).then(res => {
                     this.form.tmsOrderShip.shipSn = res.data
@@ -2713,12 +2730,19 @@ export default {
             data.customerList[1].customerType = 2
             // 处理货物
             data.tmsOrderCargoList = this.form.cargoList.filter(el => {
-              // 没填写货品名称的丢弃
-              return !!el.cargoName
+              // 丢弃没有填写任何信息的行
+              let flag = false
+              for (const i in el) {
+                if (el[i]) {
+                  flag = true
+                }
+              }
+
+              return flag
             }).map(el => {
               const b = {}
               for (const i in el) {
-                if (el[i] === '') {
+                if (el[i] === '' && i !== 'cargoName') {
                   b[i] = 0
                 } else {
                   b[i] = el[i]
@@ -2734,6 +2758,25 @@ export default {
             data.tmsOrderShip.shipArrivepayFee = parseFloat(data.tmsOrderShip.shipArrivepayFee, 10).toFixed(2)
             data.tmsOrderShip.shipReceiptpayFee = parseFloat(data.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2)
             data.tmsOrderShip.shipMonthpayFee = parseFloat(data.tmsOrderShip.shipMonthpayFee, 10).toFixed(2)
+
+            // 判断总运费是否超过最低价格
+            if (this.lineinfo.loaded) {
+              // 有最低价格数据才进行判断
+              // 如果是免费则不进行判断
+              // proposedPrice lowerPrice
+              if (parseInt(data.tmsOrderShip.shipPayWay, 10) !== 103) {
+                let total = 0
+                data.tmsOrderCargoList.forEach(el => {
+                  total = tmsMath.add(total, el.shipFee || 0).result()
+                })
+                console.log('提交前判断：', total, this.lineinfo.lowerPrice, data.tmsOrderCargoList)
+                if (this.lineinfo.lowerPrice > total) {
+                  this.$message.info('基本运费不得低于最低价格。')
+                  this.loading = false
+                  return false
+                }
+              }
+            }
 
             if (this.output.ismodify) {
               /* this.$message.success('成功修改运单！')
@@ -2873,17 +2916,17 @@ export default {
         this.setPrintData('lib') // 设置数据
         const libData = Object.assign([], data)
         for (const item in this.printDataObject) {
-          libData.forEach((e, index) => {
-            if (e.filedValue === item) {
-              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-            }
-          })
-        }
+            libData.forEach((e, index) => {
+              if (e.filedValue === item) {
+                e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+              }
+            })
+          }
         CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
       })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     print() { // 打印运单
       getEnableOrderSetting().then(data => {
@@ -2891,21 +2934,21 @@ export default {
         this.setPrintData('order') // 设置数据
         const libData = Object.assign([], data)
         for (const item in this.printDataObject) {
-          libData.forEach((e, index) => {
-            if (e.filedValue === item) {
-              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-            }
-          })
-        }
+            libData.forEach((e, index) => {
+              if (e.filedValue === item) {
+                e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+              }
+            })
+          }
         CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
       })
-      .catch(err => {
-        this._handlerCatchMsg(err)
-      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     printSave() { // 打印保存的运单
-      window.TMS_printOrderInfo = true
       this.eventBus.$emit('printOrder')
+      window.TMS_printOrderInfo = true
       // this.print()
       // getPrintOrderItems(this.resOrderId).then(data => {
       //   CreatePrintPage(data, this.otherinfo.systemSetup.printSetting.ship)
@@ -2937,6 +2980,7 @@ export default {
     },
     getReceiptType() { // 获取回单类型中文
       getSelectType('ship_receipt_require', this.otherinfo.orgid).then(data => {
+        console.log('ship_receipt_require', data, parseInt(this.form.tmsOrderShip.shipPayWay))
         data.forEach(e => {
           this.RECEIPT_TYPE[e.id] = e.dictName
         })
@@ -2981,7 +3025,7 @@ export default {
       if (type === 'lib') {
         this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
         this.$set(obj, 'companyName', this.otherinfo.companyName)
-        this.$set(obj, 'companyPhone', this.otherinfo.companyInfo.servicePhone)// 公司电话
+        this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
         this.$set(obj, 'qrcode', '') // 二维码
         this.$set(obj, 'companyAddr', this.otherinfo.companyInfo.detailedAddr) // 公司地址
         this.$set(obj, 'mobilephone', this.otherinfo.mobilephone) // 业务员电话
@@ -3005,10 +3049,10 @@ export default {
         this.$set(obj, 'userName', this.shipUserName) // 制单员
         this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
         // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-         // ///////////////////////////////////////////////////////////
+        // ///////////////////////////////////////////////////////////
         // /运单号-件数
         this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + this.form.cargoList[0].cargoAmount)
-         // //////////////////////////////////////////////////////////
+        // //////////////////////////////////////////////////////////
         // /年月日
         this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
         this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
@@ -3038,6 +3082,15 @@ export default {
           case 79:
             this.$set(obj, 'receiptPay', '√') // 回单付（√）
             break
+          case 103:
+            // this.$set(obj, '', '√') // 免费（√）
+            break
+          case 104: // 多笔付
+            this.$set(obj, 'nowPay', '√') // 现付（√）
+            this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
+            this.$set(obj, 'monthPay', '√') // 月结（√）
+            this.$set(obj, 'receiptPay', '√') // 回单付（√）
+            break
         }
         console.log('自提  送货：：交接方式：：：', this.form.tmsOrderShip.shipDeliveryMethod)
         if (this.form.tmsOrderShip.shipDeliveryMethod.toString().indexOf('68') !== -1) {
@@ -3059,7 +3112,7 @@ export default {
         }
         // //////////////////////////////////////////////////////////
         // /处理合计中文大写
-        if (this.form.tmsOrderShip.shipTotalFee) {
+        if (this.form.tmsOrderShip[0].shipTotalFee) {
           const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
           this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
           this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
@@ -3100,74 +3153,6 @@ export default {
       console.log('feezh:::::', feezh)
       return feezh
     },
-    // setPrintData(type) { // 设置打印的字段
-    //   // 标签数据
-    //   let obj = new Object()
-    //   if (type === 'lib') {
-    //     this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn)
-    //     this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime)
-    //     this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName)
-    //     this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName)
-    //     this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName)
-    //     this.$set(obj, 'fromOrgName', this.otherinfo.name)
-    //     this.$set(obj, 'senderUnit', this.form.sender.customerUnit)
-    //     this.$set(obj, 'senderName', this.form.sender.customerName)
-    //     this.$set(obj, 'senderMobile', this.form.sender.customerMobile)
-    //     this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
-    //     this.$set(obj, 'companyName', this.otherinfo.companyName)
-    //     this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)])
-    //   } else if (type === 'order') {
-    //     this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
-    //     this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
-    //     this.$set(obj, 'fromCity', this.form.tmsOrderShip.shipFromCityName) // 出发城市
-    //     this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
-    //     this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
-    //     this.$set(obj, 'toOrgName', this.form.tmsOrderShip.shipToCityName) // 到达网点
-    //     this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
-    //     this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
-    //     this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
-    //     this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
-    //     this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
-    //     this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
-    //     this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
-    //     this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
-    //     this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号吗
-    //     this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
-    //     for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
-    //       obj[item] = this.form.cargoList[0][item]
-    //     }
-    //     console.log('this.form.cargoList[0]', this.form.cargoList[0])
-    //     this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
-    //     this.$set(obj, 'otherfeeOut', this.form.cargoList[0]['otherfeeOut'] ? this.form.cargoList[0]['otherfeeOut'] : '') // 其他费用支出
-    //     this.$set(obj, 'otherfeeIn', this.form.cargoList[0]['otherfeeIn'] ? this.form.cargoList[0]['otherfeeIn'] : '') // 其他费用收入
-    //     this.$set(obj, 'taxRate', this.form.cargoList[0]['taxRate'] ? this.form.cargoList[0]['taxRate'] : '') // 税率
-    //     this.$set(obj, 'taxes', this.form.cargoList[0]['taxes'] ? this.form.cargoList[0]['taxes'] : '') // 税金
-    //     this.$set(obj, 'housingFee', this.form.cargoList[0]['housingFee'] ? this.form.cargoList[0]['housingFee'] : '') // 入仓费
-    //     this.$set(obj, 'stampTax', this.form.cargoList[0]['stampTax'] ? this.form.cargoList[0]['stampTax'] : '') // 印花税
-    //     this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
-    //     this.$set(obj, 'totalFee', this.form.tmsOrderShip.shipTotalFee) // 运费合计
-    //     this.$set(obj, 'receiptRequire', this.form.tmsOrderShip.shipReceiptRequire) // 回单类型
-    //     this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
-    //     this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
-    //     this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
-    //     this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
-    //     if (this.form.tmsOrderShip.shipEffective === 95) {
-    //       this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
-    //     } else {
-    //       this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
-    //     }
-    //     this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
-    //     if (this.shipOther === 168) {
-    //       this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
-    //     } else {
-    //       this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
-    //     }
-    //     this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
-    //   }
-    //   this.printDataObject = Object.assign({}, obj)
-    //   obj = {}
-    //   console.log('printDataObject', this.printDataObject)
-    // },
     // 右下角设置按钮菜单点击操作
     handleCommand(command) {
       switch (command) {
@@ -3200,492 +3185,5 @@ export default {
     }
   }
 }
+
 </script>
-<style lang="scss">
-$bordercolor: #d4d4d4;
-$backgroundcolor: #cbe1f7;
-
-  .createOrder-main{
-    margin-left: 12px;
-    margin-right: 12px;
-    box-shadow: 0px 0px 10px 0px 
-    rgba(0, 0, 0, 0.47);
-    padding-top: 34px;
-    padding-left: 26px;
-    padding-right: 26px;
-    padding-bottom: 58px;
-    font-size: 12px;
-    // max-height: 100%;
-    min-width: 1316px;
-    display: flex;
-    position: relative;
-    flex-flow:row;
-
-    .el-dialog__wrapper,.v-modal{
-      position: absolute;
-    }
-
-    .el-date-editor.el-input{
-      width: 140px;
-    }
-
-    .el-form-item--mini.el-form-item{
-      margin: 0;
-    }
-
-    .el-input.is-disabled .el-input__inner{
-      color: #666;
-    }
-
-    .el-table th.required>div::before{
-      display: none;
-    }
-
-    .batchlist{
-      flex: 0 0 60px;
-      margin-right: 10px;
-      margin-top: 38px;
-      border-top: 1px solid #999;
-      span{
-        display: block;
-        border: 1px solid #999;
-        border-top: none;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        cursor: pointer;
-
-        &.on{
-          color: #333;
-          background: #cbe1f7;
-          cursor: default;
-        }
-      }
-    }
-
-    .hideSaveNew .saveInsertKey{
-      display: none;
-    }
-
-    /* &.creatBatch-main{
-      .createOrderWrapper{
-        width:calc(100% - 60px - 10px);
-      }
-    } */
-
-    .createOrderWrapper{
-      max-height: 100%;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      overflow-x: hidden;
-      position: relative;
-      &>.el-form{
-        //height: calc( 100% - 100px);
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-    }
-    
-    .createOrder-title{
-      font-size: 24px;
-      font-weight: normal;
-      font-stretch: normal;
-      letter-spacing: 9px;
-      color: #000;
-      text-align: center;
-      height: 28px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-
-      span{
-        border-bottom:1px solid rgba(0, 0, 0, 0.43);
-      }
-    }
-    .order-num{
-      float: left;
-      padding-left: 8px;
-      color: #333;
-      line-height: 28px;
-
-      .order-num-info{
-        display: inline-block;
-        width: 120px;
-      }
-      .el-input__inner{
-        color: #f00;
-        font-weight: bold;
-        border: none;
-        border-radius: 0;
-        border-bottom: 1px solid #ccc;
-      }
-    }
-    .create-num{
-      float: right;
-      padding-right: 8px;
-      color: #777;
-
-      span{
-        color: #333;
-        font-weight: bold;
-      }
-    }
-    .order-main{
-      min-height: 366px;
-      border: solid 2px #000827;
-      margin-top: 8px;
-      // max-height: calc(100% - 38px);
-      flex: 1;
-      overflow-y: auto;
-
-      .required{
-        color: #f00;
-        font-weight: normal;
-      }
-    }
-    
-    .order-form-item{
-      float: none;
-    }
-    .createOrder-info{
-      height: 30px;
-      .required{
-        color: #f00;
-        font-weight: normal;
-      }
-    }
-
-    .el-select__caret::before{
-      content:"\E60C";
-    }
-    
-    .showFormInfo{
-      .el-input.is-disabled .el-input__inner{
-        color: #000;
-      }
-    }
-
-    .order-form-label{
-      color: #666;
-    }
-
-    .order-form-item{
-      display: flex;
-      line-height: 28px;
-      .order-form-label{
-        width: 66px;
-        text-align: justify;
-        border-right: 1px solid $bordercolor;
-        height: 28px;
-        overflow: hidden;
-        padding: 0 5px;
-
-        &:after{display: inline-block ; content: ''; padding-left: 100%;height: 0;width: 0;line-height: 0; }
-      }
-      
-      .el-form-item{
-        flex: 1;
-      }
-      .autocomplete-input,.el-form-item__content,.el-autocomplete,.el-select{
-        display: block;
-        width: 100%;
-      }
-      .el-input__suffix{
-        right: 0;
-      }
-      .el-form-item__content{
-        height: 28px;
-        overflow:hidden;
-      }
-      .el-input__inner{
-        vertical-align: 1px;
-      }
-      .el-form-item.is-error .el-input__inner{
-        border-color: #f56c6c;
-      }
-    }
-
-    .firstline-order{
-      border-bottom: 1px solid $bordercolor;
-      
-      .el-col:first-child .order-form-label{
-        border-left: none;
-      }
-      .order-form-label{
-        display: inline-block;
-        
-        border-left: 1px solid $bordercolor;
-        
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-      
-    }
-
-    .el-checkbox__label{
-      font-size: 12px;
-    }
-    
-    /* 收发货表单 */
-    .sender-form,.receiver-form{
-      float: left;
-      width: calc( (100% - 5px) / 2 );
-
-      .order-form-item{
-        border-bottom: 1px solid $bordercolor;
-
-        &:last-child{
-          border: none;
-        }
-      }
-
-      .form-title{
-        border-bottom: 1px solid $bordercolor;
-        line-height: 28px;
-        text-align: center;
-        font-size: 16px;
-        color: #5dabed;
-        background: $backgroundcolor;
-        font-weight: bold;
-        letter-spacing: 2px;
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-    }
-    .sender-form{
-      border-right: 1px solid $bordercolor;
-    }
-    .receiver-form{
-      float: right;
-      border-left: 1px solid $bordercolor;
-    }
-
-    /** 货品表单 **/
-    .order-cargo-form{
-      overflow: auto;
-      margin-bottom: 1px;
-      width: 100%;
-
-      th{
-        min-width: 110px;
-        background: #d5e7f9;
-        color: #666;
-        height: 28px;
-        vertical-align: middle;
-        border-left: 1px solid #88bef3;
-        text-align: center;
-        font-weight: normal;
-      }
-      .el-table .cell{
-        padding: 0;
-      }
-      .el-table td{
-        padding: 0;
-      }
-      .el-form-item,.el-form-item__content,.autocomplete-input,.el-autocomplete{
-        width: 100%;
-      }
-
-      /* table, td{
-        border: 1px solid $bordercolor;
-        text-align: center;
-      }
-      td, th{
-        padding: 0 0;
-        height: 28px;
-      }
-      th{
-        min-width: 110px;
-        background: #d5e7f9;
-        color: #666;
-        height: 28px;
-        vertical-align: middle;
-        border-left: 1px solid #88bef3;
-        text-align: center;
-      } */
-      .addButtonTh{
-        min-width: 50px;
-      }
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-      .el-form-item__content>input{
-        font-size: 12px;
-      }
-      .el-form-item.is-error .el-input__inner{
-        border-color: #f56c6c;
-      }
-      .addButton, .minusButton{
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        text-align: center;
-        border: 1px solid #3b95ee;
-        color: #3b95ee;
-        line-height: 14px;
-        border-radius: 4px;
-
-        cursor: pointer;
-
-        i{
-          font-weight: bold;
-          vertical-align: middle;
-        }
-      }
-      .minusButton{
-        border-color: #ee3b3b;
-        color: #ee3b3b;
-      }
-    }
-    /* 其他费用 */
-    .order-other-form{
-      border-top: 1px solid $bordercolor;
-      border-bottom: 1px solid $bordercolor;
-      margin-bottom: 1px;
-
-      .order-form-item{
-        border-bottom: 1px solid $bordercolor;
-      }
-
-      .fouth-order-other{
-        .order-form-item{
-          border-bottom: none;
-        }
-      }
-
-      .el-col:first-child .order-form-label{
-        border-left: none;
-      }
-      .order-form-label{
-        display: inline-block;
-        
-        border-left: 1px solid $bordercolor;
-        
-      }
-
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-
-      .el-input-group__append{
-        padding: 0 5px;
-        border-radius: 0;
-        border: none;
-      }
-      .el-checkbox{
-        margin-left: 10px;
-      }
-      .el-checkbox{
-        font-size: 0;
-      }
-      .el-checkbox__label{
-        vertical-align: middle;
-      }
-
-      .other-form-shipReceiptNum{
-        padding: 0;
-        .el-input__inner{
-          padding: 0;
-          text-align: center;
-        }
-      }
-
-      .remarks-btn{
-        position: absolute;
-        top: 0;
-        right: 1px;
-        color: #3189e2;
-        border-color: #3189e2;
-        z-index: 2;
-      }
-    }
-
-    /* 中转信息 */
-    .order-transfer-form{
-      .el-input__inner{
-        border-color: transparent;
-        border-radius: 0;
-
-        &:focus{
-          background: rgba(0, 0, 0, 0.04);
-        }
-      }
-
-      .el-collapse,.el-collapse-item__wrap{
-        border-bottom: none;
-      }
-      .el-collapse-item__content{
-        overflow-x: auto;
-        padding-bottom: 0;
-      }
-      th{
-        height: 30px;
-        line-height: 30px;
-        background: #eee;
-      }
-      table,td,th{
-        border: 1px solid $bordercolor;
-      }
-
-      .el-collapse-item:last-child{
-        margin-bottom: 0;
-      }
-      
-    }
-    
-
-    /* 底部按钮部分 */
-    .order-btns{
-      padding-top: 21px;
-      text-align: center;
-      position: relative;
-      height: 72px;
-
-      .el-button{
-        font-size: 14px;
-        padding: 10px;
-        //background: transparent;
-        i{
-          font-size: 1.5em;
-          vertical-align: middle;
-        }
-      }
-      .createOrder-setup{
-        
-        position: absolute;
-        top: 8px;
-        right: 8px;
-
-        .el-button{
-          font-size: 16px;
-          padding: 2px;
-        }
-      }
-    }
-  }
-</style>

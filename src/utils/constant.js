@@ -12,6 +12,8 @@ export const CARRIER_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/t
 export const CUSTOMER_RECEIVER_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E6%94%B6%E8%B4%A7%E4%BA%BA%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
 // 5、车辆导入模板.xlsx
 export const TRUCK_EXCEL = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/export/tmstemp/%E8%BD%A6%E8%BE%86%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx'
+export const SUBINFO_EXCEL = 'http://aflc.oss-cn-shenzhen.aliyuncs.com//tms/uploadfile/财务标准科目.xlsx'
+
 // 运单状态 shipStatus
 export const SHIPSTATUS = {
   1: '已入库',
@@ -44,19 +46,32 @@ export const REPERTORY_TYPE = {
   2: '到货库存'
 }
 /**
- * 结算类型
+ * 结算（核销）类型
  */
 export const COUNT_STATUS = {
   '': '全部',
-  NOSETTLEMENT: '未结算',
-  PARTSETTLEMENT: '部分结算',
-  ALLSETTLEMENT: '已结算'
+  NOSETTLEMENT: '未核销',
+  PARTSETTLEMENT: '部分核销',
+  ALLSETTLEMENT: '已核销'
+}
+export const COUNT_STATUS2 = {
+  '': '全部',
+  NOSETTLEMENT: '未核销',
+  PARTSETTLEMENT: '部分核销',
+  ALLSETTLEMENT: '已核销'
+}
+/**
+ * 日记账来源
+ */
+export const VERIFICATION_SOURCE = {
+  '': '全部',
+  0: '核销产生',
+  1: '手工录入'
 }
 /**
  * 结算方向
  */
 export const SETTLEMENT_ID = {
-  '': '全部',
   0: '收入',
   1: '支出'
 }
@@ -67,6 +82,10 @@ export const TRADE_TYPE = {
   '': '全部',
   1: '收入',
   2: '支出'
+}
+export const CERT_TYPE = {
+  0: '正常',
+  1: '冲销'
 }
 /**
  * 交账状态
@@ -101,9 +120,13 @@ export const FINANCE_WAY = {
 
 export const cursorPosition = {
   get: function(textarea) { // 获取 Textarea 元素当前的光标位置
-    var rangeData = { text: "", start: 0, end: 0 };
+    var rangeData = {
+      text: "",
+      start: 0,
+      end: 0
+    };
 
-    if (textarea.setSelectionRange) { // W3C    
+    if (textarea.setSelectionRange) { // W3C
       textarea.focus();
       rangeData.start = textarea.selectionStart;
       rangeData.end = textarea.selectionEnd;
@@ -119,7 +142,7 @@ export const cursorPosition = {
       rangeData.text = oS.text;
       rangeData.bookmark = oS.getBookmark();
 
-      // object.moveStart(sUnit [, iCount]) 
+      // object.moveStart(sUnit [, iCount])
       // Return Value: Integer that returns the number of units moved.
       for (i = 0; oR.compareEndPoints('StartToStart', oS) < 0 && oS.moveStart("character", -1) !== 0; i++) {
         // Why? You can alert(textarea.value.length)

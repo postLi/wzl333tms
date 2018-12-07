@@ -1,8 +1,28 @@
 import Vue from 'vue'
-import { login, logout, getInfo } from '@/api/login'
-import { getAllSetting } from '@/api/company/systemSetup'
-import { getToken, setToken, removeToken, setUsername, setOrgId, getOrgId, getUsername, setUserInfo, removeUserInfo, removeUsername, removeOrgId } from '@/utils/auth'
-import { getOrgId as getOrgInfo } from '@/api/company/groupManage'
+import {
+  login,
+  logout,
+  getInfo
+} from '@/api/login'
+import {
+  getAllSetting
+} from '@/api/company/systemSetup'
+import {
+  getToken,
+  setToken,
+  removeToken,
+  setUsername,
+  setOrgId,
+  getOrgId,
+  getUsername,
+  setUserInfo,
+  removeUserInfo,
+  removeUsername,
+  removeOrgId
+} from '@/utils/auth'
+import {
+  getOrgId as getOrgInfo
+} from '@/api/company/groupManage'
 
 const user = {
   state: {
@@ -41,7 +61,9 @@ const user = {
 
   actions: {
     // 登录
-    Login({ commit }, userInfo) {
+    Login({
+      commit
+    }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.accNum).then(response => {
@@ -59,7 +81,9 @@ const user = {
     },
 
     // 前端设置token信息
-    FeLogin({ commit }, token) {
+    FeLogin({
+      commit
+    }, token) {
       return new Promise((resolve, reject) => {
         console.log('feLogin:', token)
         commit('SET_TOKEN', token)
@@ -69,7 +93,10 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetInfo({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
@@ -85,33 +112,48 @@ const user = {
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
           // if (Vue.prototype.$_has_permission('SETTING')) {
-          getAllSetting({
+          let pro1 = getAllSetting({
             orgid: data.orgid,
             type: '',
             module: 'order'
-          }).then(res => {
+          })
+          let pro2 = getAllSetting({
+            orgid: data.orgid,
+            type: 'financeSetting',
+            module: 'finance'
+          })
+          Promise.all([pro1, pro2]).then(resArr => {
+            let res = resArr[0]
+
             data.systemSetup = res
+            data.systemSetup.financeSetting = resArr[1].financeSetting
             commit('SET_OTHERINFO', data)
 
-              // 补充公司信息
+            // 补充公司信息
             getOrgInfo(data.orgid).then(res => {
               data.companyInfo = res.data || {}
               commit('SET_OTHERINFO', data)
               setUserInfo(data)
-              resolve({ data })
+              resolve({
+                data
+              })
             }).catch(error => {
               data.companyInfo = {}
               commit('SET_OTHERINFO', data)
               setUserInfo(data)
-              resolve({ data })
-                // reject(error)
+              resolve({
+                data
+              })
+              // reject(error)
             })
           }).catch(error => {
             data.systemSetup = {}
             commit('SET_OTHERINFO', data)
             setUserInfo(data)
-            resolve({ data })
-              // reject(error)
+            resolve({
+              data
+            })
+            // reject(error)
           })
           // } else {
           //   data.systemSetup = {}
@@ -144,7 +186,10 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -158,7 +203,9 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({ commit }) {
+    FedLogOut({
+      commit
+    }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()

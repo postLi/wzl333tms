@@ -12,7 +12,7 @@
             <DetailDeliver :info="info" :isShow="popVisible" class="animated fadeInRight" v-else></DetailDeliver>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
-            <div class="info_box" v-loading="loading">
+            <div class="info_box" >
               <el-row class="stepItem_title">
                 <el-col :span="5" class="tracktype">类型</el-col>
                 <el-col :span="4">操作时间</el-col>
@@ -127,7 +127,7 @@ export default {
   data() {
     return {
       popTitle: '在途跟踪',
-      loading: false,
+      loading: true,
       isModify: false,
       infoId: {},
       trackDetail: [],
@@ -207,6 +207,7 @@ export default {
       const id = this.id
       return getLoadDetail(id).then(data => {
         this.trackDetail = objectMerge2([], data)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)

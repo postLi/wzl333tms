@@ -12,7 +12,8 @@ $dialogHeader_bgcolor: #e6e6e6;
     .el-transfer {}
   }
 }
-.tms_dialog_alignleft{
+
+.tms_dialog_alignleft {
   .el-dialog__body {
     text-align: left;
     .el-transfer {}
@@ -48,7 +49,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     background-color: $dialogHeader_bgcolor;
   }
   .print_aside {
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     float: left;
     width: 350px;
     overflow: auto;
@@ -93,11 +94,11 @@ $dialogHeader_bgcolor: #e6e6e6;
       justify-content: space-around;
       width: 100%;
       padding: 20px 0 0px 10px;
-      .prinit_aside_detail_head{
+      .prinit_aside_detail_head {
         height: 40px;
-        line-height:55px;
+        line-height: 55px;
       }
-      
+
       .el-form-item {
         margin-bottom: 0;
         width: 48%;
@@ -128,16 +129,16 @@ $dialogHeader_bgcolor: #e6e6e6;
         width: 100%;
       }
     }
-    .prinit_aside_setpreview{
+    .prinit_aside_setpreview {
       background-color: #fbfbfb;
       position: flex;
       flex-direction: row;
       justify-content: space-around;
       width: 100%;
       padding: 0px 0 10px 10px;
-      .prinit_aside_setpreview_head{
+      .prinit_aside_setpreview_head {
         height: 40px;
-        line-height:55px;
+        line-height: 55px;
       }
       .el-upload-dragger {
         width: 320px;
@@ -157,7 +158,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       position: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      padding:10px 0;
+      padding: 10px 0;
       li {
         display: inline-block;
         cursor: pointer;
@@ -193,7 +194,6 @@ $dialogHeader_bgcolor: #e6e6e6;
       width: calc(100% - 640px);
       height: 48px;
       box-shadow: 1px 3px 10px #eee;
-
     }
     .print_main_content {
       margin: 20px auto 0;
@@ -222,20 +222,20 @@ $dialogHeader_bgcolor: #e6e6e6;
         border: 2px dotted #ccc;
         font-size: 14px;
         cursor: move;
-        .dragTips{
+        .dragTips {
           position: absolute;
-          background-color: rgba(0,0,0,0.3);
-          color:#fff;
-          top:-28px;
+          background-color: rgba(0, 0, 0, 0.3);
+          color: #fff;
+          top: -28px;
           left: -2px;
           font-size: 12px;
-          height:25px;
+          height: 25px;
           line-height: 25px;
           padding: 0 5px;
         }
       }
-      .isActiveDrag{
-        background-color: rgba(245,219,184, 0.8);
+      .isActiveDrag {
+        background-color: rgba(245, 219, 184, 0.8);
       }
     }
   }
@@ -257,7 +257,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     cursor: e-resize;
   }
   .conrigth:hover {
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
   }
   .conbottom {
     position: absolute;
@@ -267,8 +267,8 @@ $dialogHeader_bgcolor: #e6e6e6;
     height: 5px;
     cursor: n-resize;
   }
-  .conbottom:hover{
-    background-color: rgba(0,0,0,0.1);
+  .conbottom:hover {
+    background-color: rgba(0, 0, 0, 0.1);
   }
   .conbottomright {
     position: absolute;
@@ -278,8 +278,8 @@ $dialogHeader_bgcolor: #e6e6e6;
     height: 10px;
     cursor: se-resize;
   }
-  .conbottomright:hover{
-    background-color: rgba(0,0,0,0.1);
+  .conbottomright:hover {
+    background-color: rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -505,6 +505,15 @@ $dialogHeader_bgcolor: #e6e6e6;
       top: 3px;
     }
   }
+    .el-table.failinScroll{
+      //overflow-y: ;
+      .el-table__body-wrapper{
+        overflow-y: scroll;
+        height: 368px;
+        min-height: 368px;
+      }
+    }
+
 }
 
 .animated {
@@ -554,11 +563,126 @@ $dialogHeader_bgcolor: #e6e6e6;
   }
   .el-input__inner {
     width: 200px;
-  } // .el-range-editor--mini.el-input__inner{
-  //   width:200px;
-  // }
+  }
   p {
     margin-top: 20px;
     color: #999;
+  }
+  .nativeinput{
+    width: 200px;
+    border: 1px solid #dcdfe6;
+    border-radius: 3px;
+  }
+}
+
+
+/**
+ * 记账凭证 弹出框样式
+ */
+
+.incomeDialog {
+  .el-dialog {
+    width: 60%;
+    min-width: 680px;
+  }
+  .el-dialog__header {
+    text-align: center;
+    background-color: #e6e6e6;
+  }
+  .el-dialog__body {
+    padding: 20px 20px 10px;
+  }
+  .el-dialog__footer {
+    text-align: center;
+  }
+  .income_title {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .income_item_line {
+    border-bottom: 1px dashed #999;
+    padding: 10px 0 0 0;
+    margin-bottom: 10px;
+  }
+  .income_item {
+    display: flex;
+    flex-direction: row;
+  }
+  .income_item,
+  .income_item_row {
+    .el-form-item {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0px;
+      width: 100%;
+      .el-form-item__content {
+        width: 100%;
+      }
+      .el-select,
+      .el-input {
+        width: 100%;
+      }
+      .el-date-editor.el-input,
+      .el-date-editor.el-input__inner {
+        width: 100%;
+      }
+      .el-input.is-disabled .el-input__inner {
+        background-color: #fff;
+        color: #222;
+      }
+      .el-input__inner {
+        width: 100%;
+         height: 28px !important;
+      }
+    }
+    .el-form-item__error{
+      padding-top: 0px;
+      margin-top: -5px;
+      z-index: 2;
+    }
+  }
+  .income_item_row {
+    .uploadcard {
+      padding: 10px;
+      //上传图片
+      .el-upload-list--picture-card .el-upload-list__item {
+        width: 120px;
+        height: 120px;
+      }
+      .el-upload-dragger {
+        width: 120px;
+        height: 120px;
+      }
+      .el-upload--picture-card {
+        width: 122px;
+        height: 122px;
+        line-height: 20px;
+      }
+      .box_container .el-upload__text{
+        line-height: 20px;
+      }
+      .upload__tip {
+        line-height: 18px;
+      }
+      .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+        margin-top: 5px;
+      }
+      //上传图片end
+      .uploadlist {
+        width: 100%;
+        margin-left: 80px;
+        li {
+          float: left;
+          width: 100px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+.formItemTextDanger {
+  .el-form-item__label {
+    color: #ef0000;
   }
 }

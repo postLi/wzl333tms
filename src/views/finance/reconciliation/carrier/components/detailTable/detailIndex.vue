@@ -94,7 +94,7 @@
         total: 0,
         trackId: '',
         // 加载状态
-        loading: true,
+        loading: false,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,
@@ -213,7 +213,7 @@
             width: '140',
             fixed: false
           }, {
-            label: '结算方式',
+            label: '核销方式',
             prop: 'settlementType',
             width: '120',
             fixed: false

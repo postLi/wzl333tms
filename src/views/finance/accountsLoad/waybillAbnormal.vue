@@ -1,6 +1,6 @@
 <template>
-  <!-- 异常理赔结算页面 -->
-  <div class="accountsLoad_table">
+  <!-- 异常理赔核销页面 -->
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">异常理赔结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">异常理赔核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -67,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input type="number"  @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input  v-numberOnly:point type="number" @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -82,35 +82,45 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.orgid" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { postFindAbnormalList } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptWaybill'
+// import Receipt from './components/receiptWaybill'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
+import Voucher from '@/components/voucher/waybill'
 import { getSummaries } from '@/utils/'
 export default {
+  name: 'waybillAbnormal',
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       orgLeftTable: [],
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -144,7 +154,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -174,7 +184,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异常理赔',
+          label: '已核销异常理赔',
           prop: 'closeFee',
           width: '150',
           fixed: false,
@@ -184,7 +194,7 @@ export default {
           }
         },
         {
-          label: '未结异常理赔',
+          label: '未核销异常理赔',
           prop: 'unpaidFee',
           width: '150',
           fixed: false,
@@ -276,7 +286,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -306,7 +316,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异常理赔',
+          label: '已核销异常理赔',
           prop: 'closeFee',
           width: '150',
           fixed: false,
@@ -316,7 +326,7 @@ export default {
           }
         },
         {
-          label: '未结异常理赔',
+          label: '未核销异常理赔',
           prop: 'unpaidFee',
           width: '150',
           fixed: false,
@@ -436,7 +446,7 @@ export default {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
       //   this.isFresh = true
       // } else {
-      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT') // 未结算，部分结算
+      //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT') // 未核销，部分核销
       //   this.isFresh = false
       // }
     },
@@ -450,7 +460,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -478,6 +489,7 @@ export default {
           }
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -486,8 +498,8 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
@@ -495,8 +507,10 @@ export default {
         this.$set(this.textChangeDanger, index, false)
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
+       this.isGoReceipt = true
       } else {
+        this.isGoReceipt = false
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
         }))
@@ -646,26 +660,54 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = []
+      this.infoTable = this.$options.data().infoTable
+      // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
-          let item = {
-            shipId: e.shipId,
-            amount: e.inputAbnormalFee,
-            inputAbnormalFee: e.inputAbnormalFee,
-            shipSn: e.shipSn,
-            dataName: '异常理赔'
+          console.log('右边列表', index, e)
+          if (e.inputAbnormalFee > 0 && e.inputAbnormalFee <= e.unpaidFee) { // 提交可核销项
+            let item = {
+              shipId: e.shipId,
+              shipSn: e.shipSn,
+              shipGoodsSn: e.shipGoodsSn,
+              createTime: e.createTime,
+              inputAbnormalFee: e.inputAbnormalFee,
+              shipFromCityName: e.shipFromCityName,
+              shipToCityName: e.shipToCityName,
+              shipReceiverName: e.receiverCustomerName,
+              shipSenderName: e.senderCustomerName
+            }
+            amount = tmsMath._add(amount, e.inputAbnormalFee)
+            this.infoTable.orderList.push(item)
+            item = {}
           }
-          if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
-            this.tableReceiptInfo.push(item)
-          }
-          item = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
+        // this.rightTable.forEach((e, index) => {
+        //   let item = {
+        //     shipId: e.shipId,
+        //     amount: e.inputAbnormalFee,
+        //     inputAbnormalFee: e.inputAbnormalFee,
+        //     shipSn: e.shipSn,
+        //     dataName: '异常理赔'
+        //   }
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
+        //     this.tableReceiptInfo.push(item)
+        //   }
+        //   item = {}
+        // })
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
+        //   this.openDialog()
+        // } else {
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+        // }
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示

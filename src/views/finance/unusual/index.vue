@@ -81,7 +81,7 @@
          
           <el-table-column
             prop="statusValue"
-            label="结算状态"
+            label="核销状态"
             width="120"
             sortable
             >
@@ -374,7 +374,7 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '结算状态',
+        label: '核销状态',
         prop: 'statusValue',
         width: '120',
         fixed: false
@@ -600,9 +600,9 @@ export default {
               message: '每次只能修改一条数据',
               type: 'warning'
             })
-          } else if (this.selected[0].statusValue !== '未结算') {
+          } else if (this.selected[0].statusValue !== '未核销') {
             this.$message({
-              message: '订单已结算不能进行修改',
+              message: '订单已核销不能进行修改',
               type: 'warning'
             })
           } else {
@@ -623,7 +623,7 @@ export default {
           // ids = ids.join(',')
           console.log(ids + 'wzl')
           if (this.selected[0].status !== 'NOSETTLEMENT') {
-            this.$message.warning('已结算或者部分结算的单据不能删除')
+            this.$message.warning('已核销或者部分核销的单据不能删除')
             return false
           } else if (this.selected[0].status === 'NOSETTLEMENT') {
             this.$confirm('确定要删除 ' + deleteItem + ' 订单异动信息吗？', '提示', {

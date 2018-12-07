@@ -15,7 +15,7 @@
         </el-date-picker>
       </div>
     </el-form-item>
-    <el-form-item v-if="filter" label="结算网点">
+    <el-form-item v-if="filter" label="核销网点">
       <select-tree v-model="searchForm.ascriptionOrgId" :orgid="otherinfo.orgid" />
     </el-form-item>
     <el-form-item label="开单网点" v-if="isShow">
@@ -51,7 +51,7 @@
           clearable>
       </el-input>
     </el-form-item>
-    <el-form-item label="结算状态">
+    <el-form-item label="核销状态">
       <select-type v-model="searchForm.status" type="count_status" >
       </select-type>
     </el-form-item>
@@ -148,7 +148,7 @@ export default {
     this.searchForm.ascriptionOrgId = this.otherinfo.orgid
     // this.searchForm.status = 'NOSETTLEMENT'
     this.onSubmit()
-    // 当添加结算时更新列表
+    // 当添加核销时更新列表
     this.eventBus.$on('updateAccountsReceivableList', () => {
       this.onSubmit()
     })

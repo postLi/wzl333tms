@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET6>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET6>核销</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI6>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP6>导出</el-button>
@@ -157,20 +157,20 @@ export default {
         'label': '到达城市',
         'prop': 'shipToCityName'
       }, {
-        'label': '结算状态',
+        'label': '核销状态',
         'prop': 'changeStateCn'
       }, {
         'label': '异动',
         'prop': 'changeFee'
       }, {
-        'label': '未结异动',
+        'label': '未核销异动',
         'prop': 'notChangeFee',
         slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
         }
       }, {
-        'label': '已结异动',
+        'label': '已核销异动',
         'prop': 'finishChangeFee',
         slot: (scope) => {
           const row = scope.row
@@ -246,10 +246,11 @@ export default {
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
-          searchQuery: this.searchQuery,
+          tab: '异动费用核销',
+          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'abnormal',
          // id: row.map(el => el.shipId).join(','),
-          selectListShipSns: row.map(el => el.shipSn)
+          selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }
       })
     },

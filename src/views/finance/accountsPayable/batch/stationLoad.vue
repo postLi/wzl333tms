@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" v-has:PAY_LOADSET6 :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" v-has:PAY_LOADSET6 :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain>核销</el-button>
         <el-button type="primary" v-has:PAY_LOADPRI6 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" v-has:PAY_LOADEXP6 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -104,7 +104,7 @@ export default {
           fixed: true
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '90',
           fixed: false
@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站装卸费',
+          label: '已核销发站装卸费',
           prop: 'paidFee',
           width: '130',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结发站装卸费',
+          label: '未核销发站装卸费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -207,7 +207,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
@@ -243,16 +244,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-发站装卸费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '车费核销-发站装卸费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-发站装卸费'
+            name: '车费核销-发站装卸费'
           })
           break
       }
@@ -271,10 +272,10 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
+        this.$message({ type: 'warning', message: '不能同时核销两个不同的网点' })
         return false
       }
-      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
+      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的核销网点
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
@@ -292,6 +293,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

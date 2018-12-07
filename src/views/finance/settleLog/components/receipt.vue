@@ -109,7 +109,7 @@ export default {
       btnsize: 'mini',
       dialogTitle: '结 算 收 款 单',
       submitData: {},
-      // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
+      // settlementTypeId: 180, // 178：运单核销、179：干线批次核销、180：短驳批次核销、181：送货批次核销
       paymentsType: 1 // 收支类型, 0 收入, 1 支出,
     }
   },

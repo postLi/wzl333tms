@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET4>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET4>核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI4>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP4>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -60,6 +60,8 @@ export default {
   },
   data() {
     return {
+      selectListShipSns: [],
+      feeType: 11,
       isCheck: false,
       isModify: false,
        isDbClick: false,
@@ -117,7 +119,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '100',
           fixed: false
@@ -156,7 +158,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异动费用',
+          label: '已核销异动费用',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -166,7 +168,7 @@ export default {
           }
         },
         {
-          label: '未结异动费用',
+          label: '未核销异动费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -209,7 +211,7 @@ export default {
           fixed: false
         },
         // {
-        //   label: '结算操作人',
+        //   label: '核销操作人',
         //   prop: 'settlementBy',
         //   width: '150',
         //   fixed: false
@@ -310,7 +312,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   computed: {
@@ -353,25 +356,26 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-异动费用-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-异动费用-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-异动费用'
+            name: '运单核销-异动费用'
           })
           break
       }
     },
     count() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
         path: '../../accountsLoad',
         query: {
-          tab: '异动费用结算',
+          tab: '异动费用核销',
           currentPage: 'waybillUnusual', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
@@ -383,6 +387,7 @@ export default {
     },
     getSelection(list) {
       this.selectListShipSns = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })

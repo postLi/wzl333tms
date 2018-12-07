@@ -15,10 +15,10 @@
         <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark"
+        <el-table ref="multipleTable" :key="tableKey" @cell-dblclick="editTruck" @row-click="clickDetails" @selection-change="getSelection" height="100%" style="width:100%;" tooltip-effect="dark"
         :summary-method="getSumLeft"
           show-summary
-         :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}" :key="tableKey">
+         :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -301,8 +301,12 @@ export default {
       switch (type) {
         case 'truck': // 短驳到车
           if (isWork) {
-            this.timeInfoVisible = true
-            // this.truck()
+            if (this.loadInfo.bathStatusName === '短驳中') {
+              this.timeInfoVisible = true
+            } else {
+              this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
+              this.clearInfo()
+            }
           }
           break
         case 'repertory': // 短驳入库
@@ -374,11 +378,6 @@ export default {
       console.log(obj, data)
       this.$set(data, 'actualArrivetime', obj.actualArrivetime)
       if (this.loadInfo.bathStatusName === '短驳中') {
-        // this.$confirm('此操作将短驳到车, 是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
         this.loading = true
         postConfirmToCar(data).then(data => {
           if (data) {
@@ -393,7 +392,6 @@ export default {
             this._handlerCatchMsg(err)
             this.clearInfo()
           })
-        // })
       } else {
         this.$message({ type: 'warning', message: '【 ' + this.loadInfo.batchNo + ' 】已【 ' + this.loadInfo.bathStatusName + ' 】不允许短驳到车' })
         this.clearInfo()
@@ -493,8 +491,9 @@ export default {
       }
     },
     setColumn(obj) { // 重绘表格列表
-      this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      // this.tableColumn = obj
+      this.tablekey = new Date().getTime() // 刷新表格视图
+      console.log('setColumn', obj, this.tablekey)
     }
   }
 }

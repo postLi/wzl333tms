@@ -1,15 +1,25 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import {
+  Message,
+  MessageBox
+} from 'element-ui'
 import store from '@/store'
-import { getToken, removeToken } from '@/utils/auth'
+import {
+  getToken,
+  removeToken
+} from '@/utils/auth'
 // 引入事件对象
-import { eventBus } from '@/eventBus'
-import { cacheDEVInfo } from '@/utils/'
+import {
+  eventBus
+} from '@/eventBus'
+import {
+  cacheDEVInfo
+} from '@/utils/'
 
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_ur
-  timeout: 15000                  // 请求超时时间
+  timeout: 30 * 1000 // 请求超时时间
 })
 
 // request拦截器
@@ -36,7 +46,7 @@ service.interceptors.request.use(config => {
 
   if (config.url.indexOf('http://') === -1) {
     // 如果是生产环境，强制访问157
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' && window.location.href.indexOf('192.168.1') === -1) {
       // 这个值也要转为设定的值
       window.tms_testapiurl = 'api'
       localStorage.tms_testapiurl = 'api'
@@ -78,9 +88,9 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
-  /**
-  * status为非200是抛错 可结合自己业务进行修改
-  */
+    /**
+     * status为非200是抛错 可结合自己业务进行修改
+     */
     const res = response.data
 
     if (res.status !== 200 && response.config.url.indexOf('/api-uaa/oauth/token') === -1) {
@@ -158,7 +168,7 @@ service.interceptors.response.use(
           })
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
-            location.href = '/login'// 为了重新实例化vue-router对象 避免bug
+            location.href = '/login' // 为了重新实例化vue-router对象 避免bug
           })
         })
         return false
@@ -174,7 +184,7 @@ service.interceptors.response.use(
         }) */
       }
     } else {
-      console.log('response err:', error)// for debug
+      console.log('response err:', error) // for debug
       /* Message({
         message: error.message,
         type: 'error',
@@ -185,7 +195,7 @@ service.interceptors.response.use(
   }
 )
 
-export function checkStatus(res) {
+export function checkStatus(res, url = '', config) {
   if (res.status !== 100 && res.status !== -1 && res.status !== 40001 && res.status !== 0) {
     return res
   } else {
@@ -202,19 +212,29 @@ function ServiceWrapper(config) {
 
 ServiceWrapper.prototype = {
   get: (url, config = {}) => {
-    return service.get(url, config).then(checkStatus)
+    return service.get(url, config).then((res) => {
+      return checkStatus(res, url, config)
+    })
   },
   post: (url, data = {}, config = {}) => {
-    return service.post(url, data, config).then(checkStatus)
+    return service.post(url, data, config).then((res) => {
+      return checkStatus(res, url, config)
+    })
   },
   delete: (url, config = {}) => {
-    return service.delete(url, config).then(checkStatus)
+    return service.delete(url, config).then((res) => {
+      return checkStatus(res, url, config)
+    })
   },
   put: (url, data = {}, config = {}) => {
-    return service.put(url, data, config).then(checkStatus)
+    return service.put(url, data, config).then((res) => {
+      return checkStatus(res, url, config)
+    })
   },
   request: (config) => {
-    return service(config).then(checkStatus)
+    return service(config).then((res) => {
+      return checkStatus(res, '', config)
+    })
   },
   axios: service
 }

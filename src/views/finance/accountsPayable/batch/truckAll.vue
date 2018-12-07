@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADSET3 @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADSET3 @click="doAction('count')" plain>核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:PAY_LOADPRI3 @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" v-has:PAY_LOADEXP3 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结现付运费',
+          label: '已核销现付运费',
           prop: 'paidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结现付运费',
+          label: '未核销现付运费',
           prop: 'unpaidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -172,7 +172,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结现付油卡',
+          label: '已核销现付油卡',
           prop: 'paidNowpayOilCard',
           width: '120',
           fixed: false,
@@ -182,7 +182,7 @@ export default {
           }
         },
         {
-          label: '未结现付油卡',
+          label: '未核销现付油卡',
           prop: 'unpaidNowpayOilCard',
           width: '120',
           fixed: false,
@@ -198,7 +198,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回付运费',
+          label: '已核销回付运费',
           prop: 'paidBackpayCarriage',
           width: '120',
           fixed: false,
@@ -208,7 +208,7 @@ export default {
           }
         },
         {
-          label: '未结回付运费',
+          label: '未核销回付运费',
           prop: 'unpaidBackpayCarriage',
           width: '120',
           fixed: false,
@@ -224,7 +224,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回付油卡',
+          label: '已核销回付油卡',
           prop: 'paidBackpayOilCard',
           width: '120',
           fixed: false,
@@ -234,7 +234,7 @@ export default {
           }
         },
         {
-          label: '未结回付油卡',
+          label: '未核销回付油卡',
           prop: 'unpaidBackpayOilCard',
           width: '120',
           fixed: false,
@@ -250,7 +250,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结整车保险费',
+          label: '已核销整车保险费',
           prop: 'paidCarloadInsuranceFee',
           width: '120',
           fixed: false,
@@ -260,7 +260,7 @@ export default {
           }
         },
         {
-          label: '未结整车保险费',
+          label: '未核销整车保险费',
           prop: 'unpaidCarloadInsuranceFee',
           width: '120',
           fixed: false,
@@ -276,7 +276,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站装卸费',
+          label: '已核销发站装卸费',
           prop: 'paidLeaveHandlingFee',
           width: '120',
           fixed: false,
@@ -286,7 +286,7 @@ export default {
           }
         },
         {
-          label: '未结发站装卸费',
+          label: '未核销发站装卸费',
           prop: 'unpaidLeaveHandlingFee',
           width: '120',
           fixed: false,
@@ -302,7 +302,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站其他费',
+          label: '已核销发站其他费',
           prop: 'paidLeaveOtherFee',
           width: '120',
           fixed: false,
@@ -312,7 +312,7 @@ export default {
           }
         },
         {
-          label: '未结发站其他费',
+          label: '未核销发站其他费',
           prop: 'unpaidLeaveOtherFee',
           width: '120',
           fixed: false,
@@ -363,7 +363,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: []
     }
   },
   methods: {
@@ -400,16 +401,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-发车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '车费核销-发车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-发车汇总'
+            name: '车费核销-发车汇总'
           })
           break
       }
@@ -428,16 +429,16 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({ type: 'warning', message: '不能同时结算两个不同的网点' })
+        this.$message({ type: 'warning', message: '不能同时核销两个不同的网点' })
         return false
       }
-      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的结算网点
+      if (this.selectedList.length !== 0) { // 如果有选择项 就默认传记录里面的核销网点
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
        path: '../../accountsLoad',
        query: {
-          tab: '发车汇总结算',
+          tab: '发车汇总核销',
           currentPage: 'batchTruckAll', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
@@ -449,6 +450,7 @@ export default {
     },
     getSelection(list) {
       this.selectListBatchNos = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListBatchNos.push(e.batchNo)
       })

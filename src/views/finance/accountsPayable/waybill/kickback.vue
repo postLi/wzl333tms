@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:PAY_SHIPSET1>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:PAY_SHIPSET1>核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI1>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP1>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -109,7 +109,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '90',
           fixed: true
@@ -148,7 +148,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回扣',
+          label: '已核销回扣',
           prop: 'closeFee',
           width: '90',
           fixed: false,
@@ -158,7 +158,7 @@ export default {
           }
         },
         {
-          label: '未结回扣',
+          label: '未核销回扣',
           prop: 'unpaidFee',
           width: '90',
           fixed: false,
@@ -201,7 +201,7 @@ export default {
           fixed: false
         },
         // {
-        //   label: '结算操作人',
+        //   label: '核销操作人',
         //   prop: 'settlementBy',
         //   width: '150',
         //   fixed: false
@@ -284,7 +284,8 @@ export default {
           width: '150',
           fixed: false
         }
-      ]
+      ],
+      selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
@@ -320,16 +321,16 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-回扣-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-回扣-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-回扣'
+            name: '运单核销-回扣'
           })
           break
       }
@@ -338,7 +339,7 @@ export default {
       this.$router.push({
         path: '../../accountsLoad',
         query: {
-          tab: '回扣结算',
+          tab: '回扣核销',
           currentPage: 'waybillKickback', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
@@ -350,12 +351,12 @@ export default {
     },
     getSelection(list) {
       this.selectListShipSns = []
+      this.selectedDataList = list
       list.forEach((e, index) => {
         this.selectListShipSns.push(e.shipSn)
       })
     },
     showDetail(order) {
-      console.log('order', order)
       this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {

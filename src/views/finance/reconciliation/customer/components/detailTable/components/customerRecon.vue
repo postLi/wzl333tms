@@ -10,9 +10,11 @@
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">双击可修改对账单名称</div>
-              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true" @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}</div>
+              <div class="showBg" @dblclick="(disabledName = false) ; (tooltip = false)" @mouseover=" tooltip = true"
+                   @mouseenter=" tooltip = true" @mouseleave="tooltip = false" v-if="disabledName">{{checkBillName}}
+              </div>
               <el-input v-else v-model.trim="checkBillName"
-                         :disabled="disabledName"
+                        :disabled="disabledName"
                         auto-complete="off"
                         @blur="tooltip = false;disabledName = true"
 
@@ -24,13 +26,14 @@
         </div>
         <div class="sPayType">
           <el-form-item label="费用项" prop="">
-            <el-select popper-class="selectFeeTypePop" v-model="typeIds" multiple collapse-tags placeholder="可多选" @change="changeFeeType">
+            <el-select popper-class="selectFeeTypePop" v-model="typeIds" multiple collapse-tags placeholder="可多选"
+                       @change="changeFeeType">
               <el-option v-for="item in feeIdsArr" :key="item.id" :label="item.dictName" :value="item.dictValue">
-            </el-option>
-            <!-- <el-option class="selectFeeTypePop-btns">
-              <el-button type="primary">确定</el-button>
-            </el-option> -->
-        </el-select>
+              </el-option>
+              <!-- <el-option class="selectFeeTypePop-btns">
+                <el-button type="primary">确定</el-button>
+              </el-option> -->
+            </el-select>
           </el-form-item>
         </div>
         <div class="sDate">
@@ -61,7 +64,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -69,7 +72,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -77,8 +80,8 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly
-              disabled></el-input>
+                <el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly
+                          disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -86,7 +89,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
+                <el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>
               </el-form-item>
             </th>
 
@@ -97,7 +100,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -105,7 +108,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
@@ -113,15 +116,15 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
+                <el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>
               </el-form-item>
             </th>
             <th>
-              结算方式
+              核销方式
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
+                <el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>
               </el-form-item>
             </th>
           </tr>
@@ -131,7 +134,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="" prop="bankAccount">
-              <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
+                <el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>
               </el-form-item>
             </th>
             <th>
@@ -139,7 +142,7 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
+                <el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>
               </el-form-item>
             </th>
             <th>
@@ -147,7 +150,8 @@
             </th>
             <th colspan="1">
               <el-form-item label="">
-              <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>
+                <el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10"
+                          clearable></el-input>
               </el-form-item>
             </th>
             <th>
@@ -155,8 +159,8 @@
             </th>
             <th colspan="1">
               <el-form-item label="" prop="financialOfficerPhone">
-              <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"
-              clearable></el-input>
+                <el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"
+                          clearable></el-input>
               </el-form-item>
             </th>
           </tr>
@@ -166,7 +170,8 @@
             </th>
             <th colspan="3">
               <el-form-item label="">
-              <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable class="input-class-wx"></el-input>
+                <el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable
+                          class="input-class-wx"></el-input>
               </el-form-item>
             </th>
             <th>
@@ -174,54 +179,55 @@
             </th>
             <th colspan="3">
               <el-form-item label="" class="sWetPay">
-              <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable class="input-class-wx"></el-input>
+                <el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable
+                          class="input-class-wx"></el-input>
               </el-form-item>
             </th>
           </tr>
         </table>
         <!--<el-form-item label="发货方">-->
-          <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="发货人">-->
-          <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="联系方式">-->
-          <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly-->
-                    <!--disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" v-numberOnly-->
+        <!--disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="对账单编号">-->
-          <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="客户编号">-->
-          <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="开始时间">-->
-          <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="结束时间">-->
-          <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
+        <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
         <!--</el-form-item>-->
-        <!--<el-form-item label="结算方式">-->
-          <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
+        <!--<el-form-item label="核销方式">-->
+        <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="账户账号" prop="bankAccount">-->
-          <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="账户开户行">-->
-          <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="财务负责人">-->
-          <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="联系方式" prop="financialOfficerPhone">-->
-          <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"-->
-                    <!--clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"-->
+        <!--clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="支付宝">-->
-          <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="微信" class="sWetPay">-->
-          <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
+        <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
         <!--</el-form-item>-->
       </el-form>
     </div>
@@ -257,7 +263,8 @@
             label=""
             width="80">
             <template slot-scope="scope">
-              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll" fill="red"></icon-svg></span>
+              <span class="deletebtn" @click="iconDeleteDeal(scope.$index)"><icon-svg icon-class="delete_lll"
+                                                                                      fill="red"></icon-svg></span>
             </template>
           </el-table-column>
           <el-table-column
@@ -285,17 +292,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -372,7 +377,7 @@
             label="回单付"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('3')!==-1"
+            v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -380,7 +385,7 @@
             label="月结"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('4')!==-1"
+            v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -465,17 +470,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -530,7 +533,7 @@
             label="异动减款"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('11')!==-1"
+            v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -538,7 +541,7 @@
             label="异常金额"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('12')!==-1"
+            v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -546,7 +549,7 @@
             label="代收货款"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('20')!==-1"
+            v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -571,7 +574,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已收清单(本结算期内)</p>
+        <p>已收清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -635,17 +638,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -713,7 +714,7 @@
             label="异动增款"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('5')!==-1"
+            v-if="currentFeeTypeIds.indexOf('5')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -721,7 +722,7 @@
             label="回单付"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('3')!==-1"
+            v-if="currentFeeTypeIds.indexOf('3')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -729,7 +730,7 @@
             label="月结"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('4')!==-1"
+            v-if="currentFeeTypeIds.indexOf('4')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -755,7 +756,7 @@
       </div>
 
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>已付清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -814,17 +815,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -879,7 +878,7 @@
             label="异动减款"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('11')!==-1"
+            v-if="currentFeeTypeIds.indexOf('11')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -887,7 +886,7 @@
             label="异常金额"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('12')!==-1"
+            v-if="currentFeeTypeIds.indexOf('12')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -895,7 +894,7 @@
             label="代收货款"
             width="130"
             sortable
-             v-if="currentFeeTypeIds.indexOf('20')!==-1"
+            v-if="currentFeeTypeIds.indexOf('20')!==-1"
           >
           </el-table-column>
           <el-table-column
@@ -932,7 +931,8 @@
               </th>
               <th colspan="11">
                 <el-form-item label="">
-                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off" class="input-class-width"></el-input>
+                  <el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"
+                            class="input-class-width"></el-input>
                 </el-form-item>
               </th>
             </tr>
@@ -945,7 +945,7 @@
               </th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
               <th>
@@ -953,16 +953,16 @@
               </th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>
                 </el-form-item>
               </th>
               <th>
                 联系方式
               </th>
-              <th colspan="1" >
+              <th colspan="1">
                 <el-form-item label="" prop="orgBusinessOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable
-                :maxlength="11"></el-input>
+                  <el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable
+                            :maxlength="11"></el-input>
                 </el-form-item>
               </th>
               <th>
@@ -970,17 +970,17 @@
               </th>
               <th>
                 <el-form-item label="">
-                <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
-                clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>
-                联系方式
+                财务联系电话
               </th>
               <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
-                <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
-                clearable></el-input>
+                  <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"
+                            clearable></el-input>
                 </el-form-item>
               </th>
               <th>
@@ -988,50 +988,16 @@
               </th>
               <th>
                 <el-form-item label="">
-                <el-date-picker
-                v-model="messageButtonInfo.createTime"
-                type="date"
-                placeholder="选择日期">
-                </el-date-picker>
+                  <el-date-picker
+                    v-model="messageButtonInfo.createTime"
+                    type="date"
+                    placeholder="选择日期">
+                  </el-date-picker>
                 </el-form-item>
               </th>
             </tr>
 
           </table>
-          <!--<el-form-item label="备注">-->
-            <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<div class="sMessageCont_info">-->
-            <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
-          <!--</div>-->
-
-
-          <!--<el-form-item label="公司名称">-->
-            <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable-->
-                      <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
-                      <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgFinancialOfficerPhone">-->
-            <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-                      <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-            <!--<el-date-picker-->
-              <!--v-model="messageButtonInfo.createTime"-->
-              <!--type="date"-->
-              <!--placeholder="选择日期">-->
-            <!--</el-date-picker>-->
-            <!--&lt;!&ndash;<el-input v-model="messageButtonInfo.createTime" auto-complete="off" :maxlength="8"></el-input>&ndash;&gt;-->
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>
@@ -1189,7 +1155,7 @@
         const type = 'custoer_fee_type'
         getSelectType(type, this.otherinfo.orgid).then(data => {
           this.feeIdsArr = data
-          console.log(this.feeIdsArr,'ll-feeIdsArr');
+          console.log(this.feeIdsArr, 'll-feeIdsArr')
           data.forEach((e, index) => {
             this.orgFeeTypeIds[index] = e.dictValue
           })
@@ -1266,7 +1232,7 @@
               if (el.type === 1) {
                 this.dealInfo.push(el)
                 this.dealInfoData.push(el)
-              //
+                //
               } else if (el.type === 2) {
                 this.dealPayInfo.push(el)
                 this.dealPayInfoData.push(el)
@@ -1394,9 +1360,9 @@
           })
           // this.$router.back(-1)
           if (this.$route.query.tab === '客户对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.id)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.$route.query.id)
           } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.$route.query.urlId)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.$route.query.urlId)
           }
         }).catch(() => {
           this.$message({
@@ -1427,12 +1393,12 @@
         const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计'
+          if (columns[index].label === '备注' || columns[index].label === '开单时间' || columns[index].label === '运单号' || columns[index].label === '货号' || columns[index].label === '签收状态' || columns[index].label === '出发城市' || columns[index].label === '到达城市' || columns[index].label === '货品名' || columns[index].label === '运单号' || columns[index].label === '异动备注' || columns[index].label === '异常类型' || columns[index].label === '交接方式' || columns[index].label === '付款方式') {
+            sums[index] = ''
             return
           }
-          if (index === 3 || index === 4 || index === 5) {
-            sums[index] = ''
+          if (index === 0) {
+            sums[index] = '合计'
             return
           }
           const values = data.map(item => Number(item[column.property]))
@@ -1544,8 +1510,8 @@
   .costomerCreat_lll {
     margin: 0 9px;
 
-    .el-table__footer-wrapper{
-      td:nth-child(n+1){
+    .el-table__footer-wrapper {
+      td:nth-child(n+1) {
         color: #fe0000;
       }
     }
@@ -1580,7 +1546,7 @@
                   border: none;
                 }
               }
-              .el-form-item__error{
+              .el-form-item__error {
                 z-index: 20;
               }
               .input-class.el-input--suffix {
@@ -1588,14 +1554,14 @@
                   padding-right: 15px;
                 }
               }
-              .input-class-width{
-                .el-input__inner{
+              .input-class-width {
+                .el-input__inner {
                   max-width: 1600px;
                   width: 1600px;
                 }
               }
-              .input-class-wx{
-                .el-input__inner{
+              .input-class-wx {
+                .el-input__inner {
                   max-width: 700px;
                   width: 700px;
                 }
@@ -1614,7 +1580,7 @@
         .sTitle {
           flex: 1;
           text-align: center;
-          .showBg{
+          .showBg {
             border-left-color: transparent;
             border-right-color: transparent;
             border-top-color: transparent;
@@ -1772,12 +1738,13 @@
 
     }
   }
-  .selectFeeTypePop{
+
+  .selectFeeTypePop {
     // .el-scrollbar{
     //   padding-bottom: 40px;
     //   position: relative;
     // }
-    .selectFeeTypePop-btns{
+    .selectFeeTypePop-btns {
       position: absolute;
       width: 100%;
       bottom: 0;

@@ -1,4 +1,6 @@
-import fetch, { checkStatus } from '@/utils/fetch'
+import fetch, {
+  checkStatus
+} from '@/utils/fetch'
 import CACHE from '@/utils/cache'
 
 /**
@@ -15,16 +17,16 @@ module:模块	order:运单设置,base:基础设置
 type:	shipNo:运单号规则,cargoNo:货号规则,shipFee:运费合计规则,shipPageFunc:运单页面功能设置,shipPermission:运单权限设置
  */
 export function getAllSetting(params) {
-  if (!(CACHE.get('AllSetting' + '_update')) && CACHE.get('AllSetting')) {
+  if (!(CACHE.get('AllSetting' + params.module + '_update')) && CACHE.get('AllSetting' + params.module)) {
     return new Promise((resolve) => {
-      resolve(CACHE.get('AllSetting'))
+      resolve(CACHE.get('AllSetting' + params.module))
     })
   } else {
     return fetch.get('/api-system/system/setting/v1/', {
       params
     }).then(checkStatus).then(res => {
-      CACHE.set('AllSetting' + '_update', false)
-      CACHE.set('AllSetting', res.data)
+      CACHE.set('AllSetting' + params.module + '_update', false)
+      CACHE.set('AllSetting' + params.module, res.data)
       return res.data || {}
     })
   }
@@ -90,7 +92,7 @@ export function getAllSetting(params) {
 }
  */
 export function putSetting(info) {
-  CACHE.set('AllSetting' + '_update', true)
+  CACHE.set('AllSetting' + info.module + '_update', true)
   return fetch.put('/api-system/system/setting/v1/', info)
 }
 /**
@@ -99,5 +101,7 @@ export function putSetting(info) {
  */
 export function putResetSetting(orgid) {
   CACHE.set('AllSetting' + '_update', true)
-  return fetch.put('/api-system/system/setting/v1/resetSystemSetting', { orgid })
+  return fetch.put('/api-system/system/setting/v1/resetSystemSetting', {
+    orgid
+  })
 }

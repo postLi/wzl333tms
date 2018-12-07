@@ -1,6 +1,6 @@
 <template>
-  <!-- 到车汇总结算页面 -->
-  <div class="accountsLoad_table">
+  <!-- 到车汇总核销页面 -->
+  <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
       <currentSearch :info="orgLeftTable" @change="selectCurrent"></currentSearch>
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">到车汇总结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">到车汇总核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -27,7 +27,7 @@
           <template v-for="column in tableColumnLeft">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -62,7 +62,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input  @dblclick.stop.prevent.native @click.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input  v-numberOnly:point @dblclick.stop.prevent.native @click.stop.prevent.native type="number" :class="{'textChangeDanger': rightTable[scope.$index][column.prop + 'lyy']}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -77,36 +77,45 @@
         </div> -->
       </div>
     </transferTable>
-    <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
+    <!-- 核销凭证 -->
+    <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgid" :btnLoading="btnLoading"></Voucher>
+    <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import { postPayListBySummary } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
-import Receipt from './components/receiptAll'
+// import Receipt from './components/receiptAll'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
+import Voucher from '@/components/voucher/batch'
 export default {
   components: {
     transferTable,
     querySelect,
-    Receipt,
+    // Receipt,
     Pager,
-    currentSearch
+    currentSearch,
+    Voucher
   },
   data() {
     return {
+      btnLoading: false,
+      infoTable: {
+        amount: 0,
+        orderList: []
+      },
       textChangeDanger: [],
       tablekey: '',
       loadTruck: '',
       truckMessage: '',
       formModel: {},
       loadTruck: 'loadTruckOne',
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       // totalLeft: 0,
@@ -185,7 +194,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付运费',
+          label: '已核销到付运费',
           prop: 'paidArrivepayCarriage',
           width: '150',
           fixed: false,
@@ -195,7 +204,7 @@ export default {
           }
         },
         {
-          label: '未结到付运费',
+          label: '未核销到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '150',
           fixed: false,
@@ -211,7 +220,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付油卡',
+          label: '已核销到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '180',
           fixed: false,
@@ -221,7 +230,7 @@ export default {
           }
         },
         {
-          label: '未结到付油卡',
+          label: '未核销到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '150',
           fixed: false,
@@ -237,7 +246,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已核销到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '180',
           fixed: false,
@@ -247,7 +256,7 @@ export default {
           }
         },
         {
-          label: '未结到站装卸费',
+          label: '未核销到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '150',
           fixed: false,
@@ -263,7 +272,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站其他费',
+          label: '已核销到站其他费',
           prop: 'paidArriveOtherFee',
           width: '180',
           fixed: false,
@@ -273,7 +282,7 @@ export default {
           }
         },
         {
-          label: '未结到站其他运费',
+          label: '未核销到站其他运费',
           prop: 'unpaidArriveOtherFee',
           width: '150',
           fixed: false,
@@ -375,7 +384,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付运费',
+          label: '已核销到付运费',
           prop: 'paidArrivepayCarriage',
           width: '180',
           fixed: false,
@@ -385,7 +394,7 @@ export default {
           }
         },
         {
-          label: '未结到付运费',
+          label: '未核销到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '150',
           fixed: false,
@@ -411,7 +420,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付油卡',
+          label: '已核销到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '180',
           fixed: false,
@@ -421,7 +430,7 @@ export default {
           }
         },
         {
-          label: '未结到付油卡',
+          label: '未核销到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '150',
           fixed: false,
@@ -447,7 +456,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已核销到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '180',
           fixed: false,
@@ -457,7 +466,7 @@ export default {
           }
         },
         {
-          label: '未结到站装卸费',
+          label: '未核销到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '150',
           fixed: false,
@@ -483,7 +492,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站其他费',
+          label: '已核销到站其他费',
           prop: 'paidArriveOtherFee',
           width: '180',
           fixed: false,
@@ -493,7 +502,7 @@ export default {
           }
         },
         {
-          label: '未结到站其他运费',
+          label: '未核销到站其他运费',
           prop: 'unpaidArriveOtherFee',
           width: '150',
           fixed: false,
@@ -585,8 +594,9 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
     },
     initLeftParams() {
-      this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
-      this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
+      // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
+      this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
@@ -611,7 +621,8 @@ export default {
       }
       this.leftTable = this.$options.data().leftTable
       this.rightTable = this.$options.data().rightTable
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
@@ -642,6 +653,7 @@ export default {
           e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -651,9 +663,9 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      let unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
-      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
-      // 未结费用值
+      let unpaidName = 'unpaid' + prop.substring(6) // 未核销费用名
+      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
+      // 未核销费用值
       let paidVal = this.rightTable[index][prop]
 
       if (paidVal !== unpaidVal) {
@@ -667,7 +679,7 @@ export default {
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: unpaidVal
         }))
-        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 实结费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -822,35 +834,45 @@ export default {
       this.popVisibleDialog = true
     },
     goReceipt() {
-      this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
+      this.infoTable = this.$options.data().infoTable
       if (!this.isGoReceipt) {
+        let amount = 0
         this.rightTable.forEach((e, index) => {
+          amount = tmsMath.add(
+            amount,
+            e.amountArrivepayCarriage,
+            e.amountArrivepayOilCard,
+            e.amountArriveHandlingFee,
+            e.amountArriveOtherFee).result()
           let itemArrivepayCarriage = { id: e.id, amount: e.amountArrivepayCarriage, feeTypeId: 23, dataName: '到付运费' } // 实结到付运费
           let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实结到付油卡
           let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
           let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
 
           if (itemArrivepayCarriage.amount > 0 && itemArrivepayCarriage.amount <= e.unpaidArrivepayCarriage) {
-            this.tableReceiptInfo.push(itemArrivepayCarriage)
+            this.infoTable.orderList.push(itemArrivepayCarriage)
           }
           if (itemArrivepayOilCard.amount > 0 && itemArrivepayOilCard.amount <= e.unpaidArrivepayOilCard) {
-            this.tableReceiptInfo.push(itemArrivepayOilCard)
+            this.infoTable.orderList.push(itemArrivepayOilCard)
           }
           if (itemArriveHandlingFee.amount > 0 && itemArriveHandlingFee.amount <= e.unpaidArriveHandlingFee) {
-            this.tableReceiptInfo.push(itemArriveHandlingFee)
+            this.infoTable.orderList.push(itemArriveHandlingFee)
           }
           if (itemArriveOtherFee.amount > 0 && itemArriveOtherFee.amount <= e.unpaidArriveOtherFee) {
-            this.tableReceiptInfo.push(itemArriveOtherFee)
+            this.infoTable.orderList.push(itemArriveOtherFee)
           }
           itemArrivepayCarriage = {}
           itemArrivepayOilCard = {}
           itemArriveHandlingFee = {}
           itemArriveOtherFee = {}
         })
-        if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        this.infoTable.amount = amount
+        amount = 0
+        if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
       }
     },

@@ -862,6 +862,10 @@ export default {
 
           return el
         })
+        /* let mock = 20
+        while (mock--) {
+          this.usersArr.push(this.usersArr[0])
+        } */
         this.loading = false
         this.toggleAllRows()
       })

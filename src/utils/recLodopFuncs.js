@@ -2,7 +2,9 @@ var CreatedOKLodop7766 = null
 var createTableComplate = false
 // var downloadPath = 'http://www.lodop.net/download/CLodop_Setup_for_Win64NT_3.046Extend.zip'
 const downloadPath = 'https://aflc.oss-cn-shenzhen.aliyuncs.com/plugin/tms_web_plugin.rar'
-import {objectMerge2} from '@/utils/index'
+import {
+  objectMerge2
+} from '@/utils/index'
 
 // ====判断是否需要安装CLodop云打印服务器:====
 export function needCLodop() {
@@ -76,8 +78,7 @@ export function getLodop(oOBJECT, oEMBED) {
     if (needCLodop()) {
       try {
         LODOP = getCLodop()
-      } catch (err) {
-      }
+      } catch (err) {}
       if (!LODOP && document.readyState !== 'complete') {
         alert('C-Lodop没准备好，请稍后再试！');
         return
@@ -119,7 +120,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -263,7 +264,7 @@ export function PrintContract(obj) {
   }
 }
 
-// 打印结算单
+// 打印核销单
 export function PrintSettlement(obj) {
   try {
     const tableId = createSettlement(obj) // 重新创建打印视图table
@@ -575,11 +576,11 @@ function createTable(obj) { // 打印导出创建表格视图
   return tableId
 }
 
-function createSettlement(obj) { // 打印创建结算单视图
+function createSettlement(obj) { // 打印创建核销单视图
   console.log(obj)
   const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
   const div = document.createElement('div')
-  const h3 = document.createElement('b') // 标题【结算收款单】
+  const h3 = document.createElement('b') // 标题【核销收款单】
   const infoDiv = document.createElement('div')
   const table = document.createElement('table')
   const thead = document.createElement('thead')
@@ -607,7 +608,7 @@ function createSettlement(obj) { // 打印创建结算单视图
   // 添加表尾合计
   tbodyStr += '<tr style="height:36px;"><td>合计</td><td style="text-align:left;">大写：' + obj.amountMessage + '</td>' +
     '<td colspan="10" style="text-align:left;">小写：' + obj.amount + ' 元</td>'
-  // 结算单信息
+  // 核销单信息
   const infoStr = '<p style="margin:0;padding:0;">单据号<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
     obj.settlementSn + '</label></p><p style="margin:0;padding:0;">发生时间<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
     obj.settlementTime + '</label></p><p style="margin:0;padding:0;">经办人<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
@@ -641,17 +642,14 @@ function createCarrier(params) {
   let dealPayInfo = []
   let alreadyInfo = []
   let alreadyPayInfo = []
-  params.carrierDetailDtoList.forEach(function (el, val) {
+  params.carrierDetailDtoList.forEach(function(el, val) {
     if (el.type === 1) {
       dealInfo.push(el)
-    }
-    else if (el.type === 2) {
+    } else if (el.type === 2) {
       dealPayInfo.push(el)
-    }
-    else if (el.type === 3) {
+    } else if (el.type === 3) {
       alreadyInfo.push(el)
-    }
-    else {
+    } else {
       alreadyPayInfo.push(el)
     }
   })
@@ -699,7 +697,7 @@ function createCarrier(params) {
       <td colspan="3" width="20%" > ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
       <td width="5%" height="25px">结束时间 </td>
       <td colspan="3" width="20%" >${params.tmsFinanceBillCheckDto.checkEndTime}</td>
-      <td width="5%" height="25px">结算方式</td>
+      <td width="5%" height="25px">核销方式</td>
       <td colspan="3" width="20%" >${params.tmsFinanceBillCheckDto.settlementType}</td>
   </tr>
   <tr>
@@ -709,7 +707,7 @@ function createCarrier(params) {
     <td colspan="3" >${params.tmsFinanceBillCheckDto.bankName}</td>
     <td width="5%" >财务负责人</td>
     <td colspan="3" >${params.tmsFinanceBillCheckDto.financialOfficer}</td>
-    <td width="5%">联系方式</td>
+    <td width="5%">财务联系电话</td>
     <td colspan="3" >${params.tmsFinanceBillCheckDto.financialOfficerPhone}</td>
   </tr>
   <tr>
@@ -815,7 +813,7 @@ function createCarrier(params) {
   //alreadyInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="16" bgcolor="yellow" align="left">已收清单(本结算期内) </td>
+        <td colspan="16" bgcolor="yellow" align="left">已收清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -862,7 +860,7 @@ function createCarrier(params) {
   //alreadyPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+        <td colspan="16" bgcolor="rgb(255,193,0)" align="left">已付清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -956,17 +954,14 @@ function createGroup(params) {
   let dealPayInfo = []
   let alreadyInfo = []
   let alreadyPayInfo = []
-  params.orgDetailQueryList.forEach(function (el, val) {
+  params.orgDetailQueryList.forEach(function(el, val) {
     if (el.type === 1) {
       dealInfo.push(el)
-    }
-    else if (el.type === 3) {
+    } else if (el.type === 3) {
       dealPayInfo.push(el)
-    }
-    else if (el.type === 2) {
+    } else if (el.type === 2) {
       alreadyInfo.push(el)
-    }
-    else {
+    } else {
       alreadyPayInfo.push(el)
     }
   })
@@ -1251,17 +1246,14 @@ function createCustomer(params) {
   let dealPayInfo = []
   let alreadyInfo = []
   let alreadyPayInfo = []
-  params.customerDetailDtoList.forEach(function (el, val) {
+  params.customerDetailDtoList.forEach(function(el, val) {
     if (el.type === 1) {
       dealInfo.push(el)
-    }
-    else if (el.type === 2) {
+    } else if (el.type === 2) {
       dealPayInfo.push(el)
-    }
-    else if (el.type === 3) {
+    } else if (el.type === 3) {
       alreadyInfo.push(el)
-    }
-    else {
+    } else {
       alreadyPayInfo.push(el)
     }
   })
@@ -1309,7 +1301,7 @@ function createCustomer(params) {
       <td colspan="3" width="20%"> ${params.tmsFinanceBillCheckDto.checkStartTime}</td>
       <td width="5%" height="25px">结束时间 </td>
       <td colspan="5" width="20%">${params.tmsFinanceBillCheckDto.checkEndTime}</td>
-      <td width="5%" height="25px">结算方式</td>
+      <td width="5%" height="25px">核销方式</td>
       <td colspan="3" width="20%">${params.tmsFinanceBillCheckDto.settlementType}</td>
   </tr>
   <tr>
@@ -1435,7 +1427,7 @@ function createCustomer(params) {
   //alreadyInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="18" bgcolor="yellow" align="left">已收清单(本结算期内) </td>
+        <td colspan="18" bgcolor="yellow" align="left">已收清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -1486,7 +1478,7 @@ function createCustomer(params) {
   //alreadyPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -1559,7 +1551,7 @@ function createCustomer(params) {
        <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="3">${params.tmsFinanceBillCheckDto.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="13">${params.tmsFinanceBillCheckDto.createTime}</td>
@@ -1681,7 +1673,7 @@ function createCarfeefeeShort(params) {
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -1877,7 +1869,7 @@ function createCarfeefeeArt(params) {
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+        <td colspan="18" bgcolor="rgb(255,193,0)" align="left">已付清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -1951,7 +1943,7 @@ function createCarfeefeeArt(params) {
        <td colspan="3">${params.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="3">${params.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="13">${params.createTime}</td>
@@ -2071,7 +2063,7 @@ function createCarfeefeeDeliver(params) {
   //dealPayInfo
   tbodyStr = tbodyStr + `
     <tr>
-        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本结算期内) </td>
+        <td colspan="12" bgcolor="rgb(255,193,0)" align="left">已付清单(本核销期内) </td>
     </tr>
   `
   tbodyStr = tbodyStr + `<tr>
@@ -2129,7 +2121,7 @@ function createCarfeefeeDeliver(params) {
        <td colspan="2">${params.orgFinancialOfficer}</td>
        </tr>
        <tr>
-       <td width="5%" height="10px">联系方式</td>
+       <td width="5%" height="10px">财务联系电话</td>
        <td colspan="2">${params.orgFinancialOfficerPhone}</td>
        <td width="5%" height="10px">时间</td>
        <td colspan="8">${params.createTime}</td>

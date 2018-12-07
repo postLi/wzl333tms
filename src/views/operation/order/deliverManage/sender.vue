@@ -49,7 +49,7 @@
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
     <!-- 实际发车时间 弹出框 -->
-    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'送货'"></actualSendtime>
+    <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'送货完成'"></actualSendtime>
   </div>
 </template>
 <script>

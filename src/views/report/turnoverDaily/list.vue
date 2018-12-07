@@ -14,6 +14,38 @@
       <div @scroll="handleBottom" class="info_tab_report" id="report_turnoverDaily">
         <table id="report_turnoverDaily_table">
           <colgroup width="58px"></colgroup>
+          <colgroup width="130px"></colgroup>
+          <colgroup width="145px"></colgroup>
+          <colgroup width="165px"></colgroup>
+          <colgroup width="120px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="120px"></colgroup>
+          <colgroup width="98px"></colgroup>
+        </table>
+        <table ref="footTotalFee" class="footTotalFee">
+          <colgroup width="56px"></colgroup>
+          <colgroup width="130px"></colgroup>
+          <colgroup width="140px"></colgroup>
+          <colgroup width="155px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="98px"></colgroup>
+          <colgroup width="110px"></colgroup>
+          <colgroup width="100px"></colgroup>
+        </table>
+        <!-- <table id="report_turnoverDaily_table">
+          <colgroup width="58px"></colgroup>
           <colgroup width="155px"></colgroup>
           <colgroup width="145px"></colgroup>
           <colgroup width="165px"></colgroup>
@@ -43,7 +75,7 @@
           <colgroup width="98px"></colgroup>
           <colgroup width="100px"></colgroup>
           <colgroup width="98px"></colgroup>
-        </table>
+        </table> -->
       </div>
     </div>
   </div>
@@ -86,13 +118,13 @@ export default {
           label: '开单网点',
           prop: 'orgidName',
           textAlign: 'center',
-          width: '190'
+          width: '130'
         },
         {
           label: '签收网点',
           prop: 'signOrgidName',
           textAlign: 'center',
-          width: '180'
+          width: '130'
         },
         {
           label: '到达城市',
@@ -215,7 +247,7 @@ export default {
         table.style.border = '1px solid #d0d7e5';
         table.setAttribute('border', '1')
         table.setAttribute('font', '12px')
-        table.setAttribute('width', '780px')
+        // table.setAttribute('width', '780px')
 
         theadTr.setAttribute('height', '32px')
         theadTr.setAttribute('width', '100%')
@@ -349,7 +381,6 @@ export default {
       if (hasscroll) {
         calctop -= this.scrollwidth
       }
-
       if (!this.maxheight) {
         this.maxheight = el.scrollHeight
       }
@@ -394,6 +425,7 @@ export default {
   position: relative;
 
 
+
   /*设置边框的*/
   #report_turnoverDaily_table {
       width: 100%;
@@ -417,48 +449,20 @@ export default {
         font-size: 13px;
         td {
           font-size: 13px;
+          width: 7%;
+          word-break:break-all;
         }
       }
       tfoot {
         display: none;
       }
+      thead {
+        tr th:nth-child(1){
+          width: 30px !important;
+        }
+      }
   }
 }
-// .info_tab_report {
-//   height: calc( 100%);
-//   overflow: auto;
-//   border: 1px solid #d0d7e5;
-//   box-shadow: 1px 1px 20px #ddd;
-//   /*设置边框的*/
-//   #report_turnoverDaily_table {
-//     width: 100%;
-//     min-width: 1000px;
-//     tbody tr {
-//       background-color: #FFF;
-//       transition: 0.5s;
-//     }
-//     tbody tr:hover {
-//       background-color: #ccc;
-//       transition: 0.3s;
-//     }
-//     tbody tr td:hover {
-//       background-color: #cdcdcd;
-//       transition: 0.3s;
-//     }
-//     tbody {
-//       color: #222;
-//       line-height: 23px;
-//       font-size: 13px;
-//       td {
-//         font-size: 13px;
-//       }
-//     }
-//     tfoot {
-//       display: none;
-//     }
-//   }
-// }
-
 .footTotalFee {
   width: 100%;
   position: absolute;
@@ -471,8 +475,10 @@ export default {
     line-height: 24px;
     font-size: 13px;
     td {
+      width: 7%;
       font-size: 13px;
       border: 1px solid #bbb;
+      word-break:break-all;
     }
   }
 }

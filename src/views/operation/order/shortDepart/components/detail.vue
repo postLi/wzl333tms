@@ -442,7 +442,11 @@ export default {
       })
       switch (type) {
         case 'add': // 短驳入库
-          this.timeInfoVisible = true
+          if (this.arrivalStatus === '短驳中') {
+            this.timeInfoVisible = true
+          } else {
+            this.getActualTime()
+          }
           break
         case 'print': // 打印
           console.log('form', this.info)
@@ -612,7 +616,9 @@ export default {
         this.$message({ type: 'warning', message: '至少要有一条数据' })
         return false
       } else {
-        this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        if (obj) {
+          this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
+        }
         postAddRepertory(50, this.newData).then(data => {
           if (data.status === 200) {
             this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
@@ -648,8 +654,8 @@ export default {
           this.$nextTick(() => {
             console.log('isNeedArrival', this.isNeedArrival)
             this.detailList.forEach(e => {
-              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                if (e.warehouStatus === 0) { // 部分入库
+                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                  if (e.warehouStatus !== 1) { // 部分入库
                   e.actualAmount = e.loadAmount
                   e.actualWeight = e.loadWeight
                   e.actualVolume = e.loadVolume

@@ -1,5 +1,5 @@
 <template>
-<div class="searchAll_lyy">
+<div v-if="hasCode" class="searchAll_lyy">
   <el-form-item label="自定义查询" class="zdycx">
     <el-select
       v-model="datalist"
@@ -20,7 +20,7 @@
     </el-select>
     <el-button plain  @click="Custom">保存自定义</el-button>
   </el-form-item>
-  <addSave :searchObj="searchObj" :popVisible="popVisible"    @close="closeAddDot" @success="fetchAllloadAll" />
+  <addSave :code="hasCode" :searchObj="searchObj" :popVisible="popVisible"    @close="closeAddDot" @success="fetchAllloadAll" />
 </div>
 </template>
 <script>
@@ -34,7 +34,11 @@ export default {
     searchObj: {
       type: [Object, Array]
     },
-    value: [String, Number]
+    value: [String, Number],
+    code: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -55,6 +59,12 @@ export default {
           'menuCode': ''
         }
       }
+    }
+  },
+  computed: {
+    // 当前页面没有code值时，是不能与后台交互的，所以隐藏掉相关UI可以减少用户的使用认知
+    hasCode() {
+      return this.code || this.$route.meta.code || ''
     }
   },
   watch: {
@@ -104,7 +114,7 @@ export default {
     fetchAllloadAll() {
       this.querySearch.vo.orgId = this.otherinfo.orgid
       this.querySearch.vo.userId = this.otherinfo.userId
-      this.querySearch.vo.menuCode = this.$route.meta.code
+      this.querySearch.vo.menuCode = this.code || this.$route.meta.code
       return postQueryLogList(this.querySearch).then(data => {
         this.dataset = data.list
         this.options4 = data.list

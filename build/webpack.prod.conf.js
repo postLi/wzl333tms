@@ -14,6 +14,9 @@ var env = process.env.BUILD_ENV === 'test' ? config.test.env : config.build.env
 var shouldmap = process.env.BUILD_ENV === 'test' ? false : '#source-map'
 console.log('process.env.BUILD_ENV',process.env.BUILD_ENV,shouldmap)
 
+// disabled the sourceMap
+shouldmap = false
+
 function resolveApp(relativePath) {
     return path.resolve(relativePath);
 }
@@ -98,7 +101,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       chunks:['app'],
-      minChunks: function (module, count) {
+      minChunks: 3,
+      /* minChunks: function (module, count) {
 
         // any required modules inside node_modules are extracted to vendor
         return (
@@ -108,7 +112,7 @@ var webpackConfig = merge(baseWebpackConfig, {
             path.join(__dirname, '../node_modules')
           ) === 0
         )
-      }
+      } */
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'polyfills',

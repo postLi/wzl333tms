@@ -68,10 +68,13 @@ export default {
         }
       }
     },
-    orderid(newVal) {
-      if (newVal) {
-        this.init()
-      }
+    orderid: {
+      handler(newVal) {
+        if (newVal) {
+          this.init()
+        }
+      },
+      immediate: true
     }
   },
   activated() {
@@ -160,7 +163,7 @@ export default {
       this.initindex++
       // setTimeout(() => {
       this.getOrderInfo(this.output.orderid).then(res => {
-          if (!res.data) {
+        if (!res.data) {
             if (this.initindex > 3) {
               this.$message.alert('获取信息失败，请尝试刷新页面。')
             } else {
@@ -173,7 +176,7 @@ export default {
             this.loading = false
             this.eventBus.$emit('startPrint')
           }
-        }).catch(err => {
+      }).catch(err => {
           this.loading = false
           console.log('initOrderDetail err:', err)
           this.showError()

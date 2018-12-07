@@ -119,26 +119,36 @@ $bodercolor: #d0d7e5;
   padding-bottom: 10px;
 }
 // 按钮样式
+.el-button--danger.is-plain:focus,
+.el-button--danger.is-plain:active,
 .el-button--danger.is-plain{
   color: #f56c6c;
   background: #fff;
   border-color: #f56c6c;
 }
+.el-button--primary.is-plain:focus,
+.el-button--primary.is-plain:active,
 .el-button--primary.is-plain{
   color: #3e9ff1;
   background: #fff;
   border-color: #3e9ff1;
 }
+.el-button--success.is-plain:focus,
+.el-button--success.is-plain:active,
 .el-button--success.is-plain{
   color:#67c23a;
   background:#fff;
   border-color:#67c23a;
 }
+.el-button--warning.is-plain:focus,
+.el-button--warning.is-plain:active,
 .el-button--warning.is-plain{
   color:#e6a23c;
   background:#fff;
   border-color:#e6a23c;
 }
+.el-button--info.is-plain:focus,
+.el-button--info.is-plain:active,
 .el-button--info.is-plain{
   color:#909399;
   background:#fff;
@@ -162,7 +172,7 @@ $bodercolor: #d0d7e5;
   height: 40px;
   line-height: 40px;
   outline: 0;
-  padding: 0 15px;
+  padding: 0 10px;
   -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
@@ -203,6 +213,17 @@ $bodercolor: #d0d7e5;
 }
 .el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error,.nativeinput-border.is-error{
   border-color: #f56c6c;
+}
+.el-input-group .nativeinput{
+  border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.el-input-group__append, .el-input-group__prepend{
+  padding: 0 10px;
+}
+.el-input__inner{
+  padding: 0 10px;
 }
 
 /*修改全局绿色输入框*/
