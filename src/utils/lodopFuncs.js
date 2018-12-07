@@ -276,7 +276,7 @@
      LODOP = getLodop()
      // PRINT_INITA(Top,Left,Width,Height,strPrintName)
      LODOP.PRINT_INITA('-10px', 0, pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
-    //  LODOP.PRINT_INIT('订货单')
+     //  LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
@@ -286,7 +286,7 @@
      if (obj.appendTop) {
        LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
 
-      //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
+       //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
      }
      LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
      if (obj.appendTop) {
@@ -329,17 +329,17 @@
      const tableId = obj
      LODOP = getLodop()
      if (type === 'voucher') {
-        LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
+       LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
      } else {
-        LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '合同')
+       LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '合同')
      }
-    //  LODOP.PRINT_INIT('合同')
-     
-     LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true)// 设置以纸张边缘为基点
+     //  LODOP.PRINT_INIT('合同')
+
+     LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true) // 设置以纸张边缘为基点
      LODOP.SET_PRINT_STYLE('FontSize', 14)
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      LODOP.SET_PRINT_STYLE('Bold', 1)
-    //  LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
+     //  LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
      LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
 
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
@@ -928,14 +928,19 @@
      const th = document.createElement('td')
      const col = document.createElement('col')
      col.setAttribute('width', columns[i].width)
-     th.innerHTML = columns[i].label
+     // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
+     th.style.height = '25px'
+     th.innerHTML = '<div style="white-space:nowrap;">' + columns[i].label + '</div>'
+
 
      theadTr.appendChild(th)
      colgroup.appendChild(col)
 
      const tfoottd = document.createElement('td')
-     tfoottd.innerHTML = summaries[i]
+     console.warn(typeof summaries[i], summaries[i])
+     tfoottd.innerHTML = '<div style="white-space:nowrap;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
+     // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
      tfootTr.appendChild(tfoottd)
    }
    table.appendChild(colgroup)
@@ -954,8 +959,10 @@
        const td = tbodyTr.insertCell()
        // 处理当列没有值、宽度设置等信息时，做默认值处理
        // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
-       td.innerHTML = data[k][columns[j].prop]
+       // td.innerHTML = data[k][columns[j].prop] || ''
+       td.innerHTML = '<div style="white-space:nowrap;">' + (data[k][columns[j].prop] || '') + '</div>'
        td.style.width = data[k][columns[j].width] + 'px'
+       td.style.whitSpace = 'nowrap'
        // td.setAttribute('width', data[k][columns[j].width])
      }
    }
@@ -975,9 +982,9 @@
    div.setAttribute('id', tableId)
    div.setAttribute('width', '100%')
    return div
-  //  document.body.appendChild(div) // 创建table
+   //  document.body.appendChild(div) // 创建table
    createTableComplate = true
-  //  return tableId
+   //  return tableId
  }
 
  function createSettlement(obj) { // 打印创建结算单视图
