@@ -197,7 +197,7 @@ export default {
             return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
           }
         }, {
-          label: '实结到付',
+          label: '实际核销到付',
           prop: 'inputArrivepayFee',
           fixed: false,
           expand: true,
@@ -386,7 +386,7 @@ export default {
       }
       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notArrivepayFee) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
       }
@@ -423,7 +423,7 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
@@ -552,7 +552,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
       }
     },

@@ -205,7 +205,7 @@ export default {
             return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
           }
         }, {
-          label: '实结现付',
+          label: '实际核销现付',
           prop: 'inputNowPayFee',
           fixed: false,
           expand: true,
@@ -234,7 +234,7 @@ export default {
             return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
           }
         }, {
-          label: '实结到付',
+          label: '实际核销到付',
           prop: 'inputArrivepayFee',
           fixed: false,
           expand: true,
@@ -265,7 +265,7 @@ export default {
           }
         },
         {
-          label: '实结回单付',
+          label: '实际核销回单付',
           prop: 'inputReceiptpayFee',
           fixed: false,
           expand: true,
@@ -296,7 +296,7 @@ export default {
           }
         },
         {
-          label: '实结月付',
+          label: '实际核销月付',
           prop: 'inputMonthpayFee',
           fixed: false,
           expand: true,
@@ -327,7 +327,7 @@ export default {
             return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
           }
         }, {
-          label: '实结异动付',
+          label: '实际核销异动付',
           prop: 'inputChangeFee',
           fixed: false,
           expand: true,
@@ -535,7 +535,7 @@ export default {
       const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
@@ -571,7 +571,7 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
@@ -811,7 +811,7 @@ export default {
           console.log('this.infoTable', this.infoTable)
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   const item = {
@@ -857,7 +857,7 @@ export default {
         // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         // }
       }
     },

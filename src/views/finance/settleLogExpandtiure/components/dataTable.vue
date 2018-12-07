@@ -411,7 +411,7 @@ export default {
       let countDifference = 0
       // let feeName = this.FEE_TYPE[this.settlementId] // 当前列表费用名
 
-      // 判断返回的数据 实结支出费用等于 未核销费用
+      // 判断返回的数据 实际核销支出费用等于 未核销费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 

@@ -139,10 +139,10 @@ export default {
         vo: {}
       },
       FEE_TYPE: {
-        amountArrivepayCarriage: '实结到付运费',
-        amountArrivepayOilCard: '实结到付油卡',
-        amountArriveHandlingFee: '实结到站装卸费',
-        amountArriveOtherFee: '实结到站其他费'
+        amountArrivepayCarriage: '实际核销到付运费',
+        amountArrivepayOilCard: '实际核销到付油卡',
+        amountArriveHandlingFee: '实际核销到站装卸费',
+        amountArriveOtherFee: '实际核销到站其他费'
       },
       sign: 2, // 2-到车汇总
       tableColumnLeft: [{
@@ -404,7 +404,7 @@ export default {
           }
         },
         {
-          label: '实结到付运费',
+          label: '实际核销到付运费',
           prop: 'amountArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -440,7 +440,7 @@ export default {
           }
         },
         {
-          label: '实结到付油卡',
+          label: '实际核销到付油卡',
           prop: 'amountArrivepayOilCard',
           width: '120',
           fixed: false,
@@ -476,7 +476,7 @@ export default {
           }
         },
         {
-          label: '实结到站装卸费',
+          label: '实际核销到站装卸费',
           prop: 'amountArriveHandlingFee',
           width: '120',
           fixed: false,
@@ -512,7 +512,7 @@ export default {
           }
         },
         {
-          label: '实结到站其他费',
+          label: '实际核销到站其他费',
           prop: 'amountArriveOtherFee',
           width: '120',
           fixed: false,
@@ -646,11 +646,11 @@ export default {
           if (item !== -1) {
             this.leftTable.splice(item, 1)
           }
-          // 默认设置实结数量
-          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
-          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
-          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
-          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
+          // 默认设置实际核销数量
+          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实际核销到付运费
+          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实际核销到付油卡
+          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实际核销到站装卸费
+          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实际核销到站其他费
         })
         this.orgLeftTable = objectMerge2([], this.leftTable)
         this.loading = false
@@ -679,7 +679,7 @@ export default {
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: unpaidVal
         }))
-        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 实结费用不小于0，不大于未核销费用。' })
+        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -719,11 +719,11 @@ export default {
         // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
-          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实结到付运费
-          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实结到付油卡
-          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实结到站装卸费
-          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实结到站其他费
+          // 默认设置实际核销数量
+          e.amountArrivepayCarriage = e.unpaidArrivepayCarriage // 实际核销到付运费
+          e.amountArrivepayOilCard = e.unpaidArrivepayOilCard // 实际核销到付油卡
+          e.amountArriveHandlingFee = e.unpaidArriveHandlingFee // 实际核销到站装卸费
+          e.amountArriveOtherFee = e.unpaidArriveOtherFee // 实际核销到站其他费
 
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
             return em.batchNo !== e.batchNo
@@ -845,10 +845,10 @@ export default {
             e.amountArrivepayOilCard,
             e.amountArriveHandlingFee,
             e.amountArriveOtherFee).result()
-          let itemArrivepayCarriage = { id: e.id, amount: e.amountArrivepayCarriage, feeTypeId: 23, dataName: '到付运费' } // 实结到付运费
-          let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实结到付油卡
-          let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实结到站装卸费
-          let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实结到站其他费
+          let itemArrivepayCarriage = { id: e.id, amount: e.amountArrivepayCarriage, feeTypeId: 23, dataName: '到付运费' } // 实际核销到付运费
+          let itemArrivepayOilCard = { id: e.id, amount: e.amountArrivepayOilCard, feeTypeId: 24, dataName: '到付油卡' } // 实际核销到付油卡
+          let itemArriveHandlingFee = { id: e.id, amount: e.amountArriveHandlingFee, feeTypeId: 28, dataName: '到站装卸费' } // 实际核销到站装卸费
+          let itemArriveOtherFee = { id: e.id, amount: e.amountArriveOtherFee, feeTypeId: 29, dataName: '到站其他费' } // 实际核销到站其他费
 
           if (itemArrivepayCarriage.amount > 0 && itemArrivepayCarriage.amount <= e.unpaidArrivepayCarriage) {
             this.infoTable.orderList.push(itemArrivepayCarriage)
@@ -872,7 +872,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
       }
     },
