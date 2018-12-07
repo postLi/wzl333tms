@@ -136,7 +136,7 @@ export default {
         },
         {
           label: '核销状态',
-          prop: 'status',
+          prop: 'statusName',
           width: '120',
           fixed: false
         },

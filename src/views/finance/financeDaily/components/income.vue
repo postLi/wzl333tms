@@ -15,7 +15,7 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select v-model="formModel.paymentsType" placeholder="请选择" :size="btnsize">
+          <el-select v-model="formModel.paymentsType" placeholder="请选择" :size="btnsize" :disabled="formModel.dataSrc === 0">
             <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>

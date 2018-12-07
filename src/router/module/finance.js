@@ -124,7 +124,7 @@ export default {
           title: '操作费核销',
           noCache: true,
           istab: true,
-          code: ''
+          'code': 'PAY_HANDLING_REC'
         }
       }]
     }, {
@@ -150,7 +150,7 @@ export default {
           role: ['admin'],
           title: '操作费核销',
           noCache: false,
-          'code': ''
+          'code': 'PAY_HANDLING_PAY'
         }
       }, {
         path: '/finance/accountsPayable/waybill',

@@ -199,7 +199,7 @@
               </div>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="setup7" title="财务设置">
+          <el-collapse-item name="setup7" title="财务设置" v-has:SETTINGS_FINANCE>
             <div class="clearfix setup-table">
               <div class="setup-left">财务设置</div>
               <div class="setup-right">
@@ -212,7 +212,7 @@
               </div>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="setup8" title="配载设置">
+          <el-collapse-item name="setup8" title="配载设置" v-has:SETTINGS_LOAD>
             <div class="clearfix setup-table">
               <div class="setup-left">配载设置</div>
               <div class="setup-right">

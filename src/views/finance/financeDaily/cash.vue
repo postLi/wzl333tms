@@ -24,9 +24,9 @@
     <div class="tab_info">
       <div class="btns_box">
         <div class="finance_btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:BILLRECORD_ADD>新增</el-button>
           <!-- <button type="button" class="el-button "> -->
-          <el-dropdown @command="handleCommand" class="dropdownButton">
+          <el-dropdown @command="handleCommand" class="dropdownButton" v-has:BILLRECORD_SMART_VERIFY>
             <el-button type="success" size="mini" plain>
               <i class="el-icon-circle-plus"></i> 智能核销
             </el-button>
@@ -36,12 +36,12 @@
             </el-dropdown-menu>
           </el-dropdown>
           <!-- </button> -->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
-          <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:FLOW_FIND>反核销</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:BILLRECORD_UPDATE>修改</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:BILLRECORD_DELETE>删除</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:BILLRECORD_DETAIL>查看明细</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:BILLRECORD_CONTRARY_VERIFY>反核销</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:BILLRECORD_PRINT>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:BILLRECORD_EXPORT>导出</el-button>
         </div>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
