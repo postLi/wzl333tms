@@ -575,7 +575,6 @@
       ])
     },
     mounted() {
-      // this.searchCreatTime = this.defaultTime
       this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
@@ -599,7 +598,6 @@
       export1() {
         if (this.searchTitle.memberName) {
           this.sendData()
-          // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeeDeliver({
             data: objectMerge2({}, this.form),
             name: '送货对账'
@@ -616,7 +614,6 @@
         this.loading = true
         return getLoadData().then(data => {
           this.memberNameType = data.data
-          // console.log(this.memberNameType);
           this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
@@ -715,14 +712,12 @@
         }
       },
       // 查询
-
       onSubmit() {
         if (this.searchTitle.memberName) {
           if (!this.searchCreatTime[0]) {
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
@@ -757,7 +752,6 @@
                   a.totalPay = el.totalPay
                   return a
                 }) : []
-
                 if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
                   this.$message({
                     message: '各款项不能为空~',
@@ -931,7 +925,6 @@
               const value = Number(curr)
               if (!isNaN(value)) {
                 return tmsMath._add(prev, curr)
-                // return prev + curr
               } else {
                 return prev
               }
@@ -941,7 +934,6 @@
             sums[index] = ''
           }
         })
-
         return sums
       },
       iconDelete(index) {
