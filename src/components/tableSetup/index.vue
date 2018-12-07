@@ -240,6 +240,19 @@ export default {
       let fedata = objectMerge2([], this.columns)
       fedata = this.sort(fedata)
       _data = _data || fedata
+
+      // ================ 针对一些属性进行公共处理 =============
+      _data.forEach(el => {
+        // 1.处理出发城市、到达城市显示值的问题
+        if ((el.prop === 'shipFromCityName' || el.prop === 'shipToCityName') && !el.slot) {
+          el.slot = (scope) => {
+            const addr = scope.row[el.prop] || ''
+            const addrArr = addr.split(',')
+            return addrArr[2] || addrArr[1] || addrArr[0] || ''
+          }
+        }
+      })
+
       const MAXLENGTH = this.maxLen
       // 1.检查是否有默认隐藏项
       // 2.当显示项超过50的归类到隐藏项

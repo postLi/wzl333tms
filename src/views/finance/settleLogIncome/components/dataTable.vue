@@ -58,9 +58,15 @@
         </el-table-column>
         <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipFromCityName')}}
+          </template>
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipToCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="100">
         </el-table-column>
@@ -146,9 +152,15 @@
         </el-table-column>
         <el-table-column prop="monthPayActual" sortable label="实结月结" width="90">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="130">
+        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipFromCityName')}}
+          </template>
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="130">
+        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipToCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="100">
         </el-table-column>
@@ -323,9 +335,9 @@ export default {
       }
       console.log('orgLeftTable', this.orgLeftTable.length)
       this.leftTable = Object.assign([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
-        return -1 === this.rightTable.findIndex(e => {
+        return this.rightTable.findIndex(e => {
           return e.shipSn === el.shipSn
-        })
+        }) === -1
         // if (this.rightTable[index]) {
         //   return el.shipSn !== this.rightTable[index].shipSn
         // } else {

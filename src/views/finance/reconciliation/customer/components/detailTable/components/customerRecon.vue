@@ -292,17 +292,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -472,17 +470,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -642,17 +638,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -821,17 +815,15 @@
             width="100"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="160"
-            label="出发城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -1024,14 +1016,14 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCFinanceinitialize, getCustomerdetail} from '@/api/finance/fin_customer'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCFinanceinitialize, getCustomerdetail } from '@/api/finance/fin_customer'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCustomer} from '@/utils/recLodopFuncs'
-  import {getSelectType} from '@/api/common'
+  import { SaveAsFileCustomer } from '@/utils/recLodopFuncs'
+  import { getSelectType } from '@/api/common'
 
   export default {
     components: {
@@ -1123,19 +1115,19 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
 
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
           ]
         }
       }
@@ -1163,7 +1155,7 @@
         const type = 'custoer_fee_type'
         getSelectType(type, this.otherinfo.orgid).then(data => {
           this.feeIdsArr = data
-          console.log(this.feeIdsArr, 'll-feeIdsArr');
+          console.log(this.feeIdsArr, 'll-feeIdsArr')
           data.forEach((e, index) => {
             this.orgFeeTypeIds[index] = e.dictValue
           })
@@ -1398,7 +1390,7 @@
         }
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (columns[index].label === '备注' || columns[index].label === '开单时间' || columns[index].label === '运单号' || columns[index].label === '货号' || columns[index].label === '签收状态' || columns[index].label === '出发城市' || columns[index].label === '到达城市' || columns[index].label === '货品名' || columns[index].label === '运单号' || columns[index].label === '异动备注' || columns[index].label === '异常类型' || columns[index].label === '交接方式' || columns[index].label === '付款方式') {

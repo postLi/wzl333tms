@@ -67,8 +67,14 @@
         <el-table-column prop="hadOthePay" sortable label="已结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipFromCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipToCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
@@ -163,8 +169,14 @@
         <el-table-column prop="othePayActual" sortable label="实结其他费用" width="120">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipFromCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <template slot-scope="scope">
+            {{ _processTableSlot(scope, 'shipToCityName')}}
+          </template>
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
@@ -354,9 +366,9 @@ export default {
       }
 
       this.leftTable = objectMerge2([], this.orgLeftTable).filter((el, index) => { // 左边表格显示的数据
-        return -1 === this.rightTable.findIndex(e => {
+        return this.rightTable.findIndex(e => {
           return el.shipSn === e.shipSn
-        })
+        }) === -1
       })
       if (this.leftTable.length !== 0) {
         this.leftTable = this.uniqueArray(this.leftTable, 'shipSn') // 去重

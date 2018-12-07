@@ -236,23 +236,21 @@
             width="150"
             label="中转单号">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="120"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="signStatusName"
             sortable
             width="120"
             label="签收状态">
-          </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="130"
-            label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
@@ -385,17 +383,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="100"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -534,17 +530,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="120"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="130"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -692,17 +686,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -893,13 +885,13 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCarrierinitialize, getCarrierCarrierdetail } from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCarrier} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCarrier } from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
 
   export default {
@@ -922,21 +914,21 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ],
           'memberPersonPhone': [
-            { validator: validateMobile,trigger: 'blur',}
+            { validator: validateMobile, trigger: 'blur' }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ]
         },
         pickerOptions2: {
@@ -1235,7 +1227,7 @@
         this.delCont()
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
