@@ -399,7 +399,6 @@ export default {
     line-height: 24px;
     font-size: 13px;
     td {
-      width: 10%;
       font-size: 13px;
       border: 1px solid #bbb;
     }

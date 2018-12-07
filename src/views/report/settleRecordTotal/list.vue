@@ -56,9 +56,21 @@
             </tr>
           </thead>
         </table>
-        <table ref="footTotalFee" class="footTotalFee">
-          <colgroup width="53px"></colgroup>
-          <colgroup width="200px"></colgroup>
+        <table ref="footTotalFee" class="footTotalFee" width="780px">
+          <!-- <tr>
+            <td width="70px"></td>
+            <td width="270px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+            <td width="90px"></td>
+          </tr> -->
+          <colgroup width="70px"></colgroup>
+          <colgroup width="240px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
