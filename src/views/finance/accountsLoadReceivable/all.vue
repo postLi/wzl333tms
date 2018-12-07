@@ -191,14 +191,14 @@ export default {
           width: '120',
           'prop': 'nowPayStateCn'
         }, {
-          'label': '已结现付',
+          'label': '已核销现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
           }
         }, {
-          'label': '未结现付',
+          'label': '未核销现付',
           'prop': 'notNowPayFee',
           slot: (scope) => {
             const row = scope.row
@@ -220,14 +220,14 @@ export default {
           width: '120',
           'prop': 'arrivepayStateCn'
         }, {
-          'label': '已结到付',
+          'label': '已核销到付',
           'prop': 'finishArrivepayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
           }
         }, {
-          'label': '未结到付',
+          'label': '未核销到付',
           'prop': 'notArrivepayFee',
           slot: (scope) => {
             const row = scope.row
@@ -248,7 +248,7 @@ export default {
           'label': '回单付核销状态',
           'prop': 'receiptpayStateCn'
         }, {
-          'label': '已结回单付',
+          'label': '已核销回单付',
           width: '100',
           'prop': 'finishReceiptpayFee',
           slot: (scope) => {
@@ -256,7 +256,7 @@ export default {
             return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
           }
         }, {
-          'label': '未结回单付',
+          'label': '未核销回单付',
           width: '100',
           'prop': 'notReceiptpayFee',
           slot: (scope) => {
@@ -281,14 +281,14 @@ export default {
           width: '110',
           'prop': 'monthpayStateCn'
         }, {
-          'label': '已结月结',
+          'label': '已核销月结',
           'prop': 'finishMonthpayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
           }
         }, {
-          'label': '未结月结',
+          'label': '未核销月结',
           'prop': 'notMonthpayFee',
           slot: (scope) => {
             const row = scope.row
@@ -313,14 +313,14 @@ export default {
           width: '100',
           'prop': 'changeStateCn'
         }, {
-          'label': '已结异动',
+          'label': '已核销异动',
           'prop': 'finishChangeFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
           }
         }, {
-          'label': '未结异动',
+          'label': '未核销异动',
           'prop': 'notChangeFee',
           slot: (scope) => {
             const row = scope.row
@@ -531,11 +531,11 @@ export default {
       console.log(index, prop, newVal, this.rightTable[index])
       return false
       /* this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
@@ -811,7 +811,7 @@ export default {
           console.log('this.infoTable', this.infoTable)
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   const item = {
@@ -857,7 +857,7 @@ export default {
         // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         // }
       }
     },

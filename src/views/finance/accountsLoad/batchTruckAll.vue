@@ -198,7 +198,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结现付运费',
+        label: '已核销现付运费',
         prop: 'paidNowpayCarriage',
         width: '180',
         fixed: false,
@@ -208,7 +208,7 @@ export default {
           }
       },
       {
-        label: '未结现付运费',
+        label: '未核销现付运费',
         prop: 'unpaidNowpayCarriage',
         width: '150',
         fixed: false,
@@ -224,7 +224,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结现付油卡',
+        label: '已核销现付油卡',
         prop: 'paidNowpayOilCard',
         width: '180',
         fixed: false,
@@ -234,7 +234,7 @@ export default {
           }
       },
       {
-        label: '未结现付油卡',
+        label: '未核销现付油卡',
         prop: 'unpaidNowpayOilCard',
         width: '150',
         fixed: false,
@@ -250,7 +250,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结回付运费',
+        label: '已核销回付运费',
         prop: 'paidBackpayCarriage',
         width: '180',
         fixed: false,
@@ -260,7 +260,7 @@ export default {
           }
       },
       {
-        label: '未结回付运费',
+        label: '未核销回付运费',
         prop: 'unpaidBackpayCarriage',
         width: '150',
         fixed: false,
@@ -276,7 +276,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结回付油卡',
+        label: '已核销回付油卡',
         prop: 'paidBackpayOilCard',
         width: '180',
         fixed: false,
@@ -286,7 +286,7 @@ export default {
           }
       },
       {
-        label: '未结回付油卡',
+        label: '未核销回付油卡',
         prop: 'unpaidBackpayOilCard',
         width: '150',
         fixed: false,
@@ -302,7 +302,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结整车保险费',
+        label: '已核销整车保险费',
         prop: 'paidCarloadInsuranceFee',
         width: '180',
         fixed: false,
@@ -312,7 +312,7 @@ export default {
           }
       },
       {
-        label: '未结整车保险费',
+        label: '未核销整车保险费',
         prop: 'unpaidCarloadInsuranceFee',
         width: '150',
         fixed: false,
@@ -328,7 +328,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结发站装卸费',
+        label: '已核销发站装卸费',
         prop: 'paidLeaveHandlingFee',
         width: '180',
         fixed: false,
@@ -338,7 +338,7 @@ export default {
           }
       },
       {
-        label: '未结发站装卸费',
+        label: '未核销发站装卸费',
         prop: 'unpaidLeaveHandlingFee',
         width: '150',
         fixed: false,
@@ -354,7 +354,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结发站其他费',
+        label: '已核销发站其他费',
         prop: 'paidLeaveOtherFee',
         width: '180',
         fixed: false,
@@ -364,7 +364,7 @@ export default {
           }
       },
       {
-        label: '未结发站其他费',
+        label: '未核销发站其他费',
         prop: 'unpaidLeaveOtherFee',
         width: '150',
         fixed: false,
@@ -466,7 +466,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结现付运费',
+        label: '已核销现付运费',
         prop: 'paidNowpayCarriage',
         width: '180',
         fixed: false,
@@ -476,7 +476,7 @@ export default {
           }
       },
       {
-        label: '未结现付运费',
+        label: '未核销现付运费',
         prop: 'unpaidNowpayCarriage',
         width: '150',
         fixed: false,
@@ -502,7 +502,7 @@ export default {
         fixed: false
       },
      {
-        label: '已结现付油卡',
+        label: '已核销现付油卡',
         prop: 'paidNowpayOilCard',
         width: '180',
         fixed: false,
@@ -512,7 +512,7 @@ export default {
           }
       },
       {
-        label: '未结现付油卡',
+        label: '未核销现付油卡',
         prop: 'unpaidNowpayOilCard',
         width: '150',
         fixed: false,
@@ -538,7 +538,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结回付运费',
+        label: '已核销回付运费',
         prop: 'paidBackpayCarriage',
         width: '180',
         fixed: false,
@@ -548,7 +548,7 @@ export default {
           }
       },
       {
-        label: '未结回付运费',
+        label: '未核销回付运费',
         prop: 'unpaidBackpayCarriage',
         width: '150',
         fixed: false,
@@ -574,7 +574,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结回付油卡',
+        label: '已核销回付油卡',
         prop: 'paidBackpayOilCard',
         width: '180',
         fixed: false,
@@ -584,7 +584,7 @@ export default {
           }
       },
       {
-        label: '未结回付油卡',
+        label: '未核销回付油卡',
         prop: 'unpaidBackpayOilCard',
         width: '150',
         fixed: false,
@@ -610,7 +610,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结整车保险费',
+        label: '已核销整车保险费',
         prop: 'paidCarloadInsuranceFee',
         width: '180',
         fixed: false,
@@ -620,7 +620,7 @@ export default {
           }
       },
       {
-        label: '未结整车保险费',
+        label: '未核销整车保险费',
         prop: 'unpaidCarloadInsuranceFee',
         width: '150',
         fixed: false,
@@ -646,7 +646,7 @@ export default {
         fixed: false
       },
       {
-        label: '已结发站装卸费',
+        label: '已核销发站装卸费',
         prop: 'paidLeaveHandlingFee',
         width: '180',
         fixed: false,
@@ -656,7 +656,7 @@ export default {
           }
       },
       {
-        label: '未结发站装卸费',
+        label: '未核销发站装卸费',
         prop: 'unpaidLeaveHandlingFee',
         width: '150',
         fixed: false,
@@ -682,7 +682,7 @@ export default {
         fixed: false
       },
      {
-        label: '已结发站其他费',
+        label: '已核销发站其他费',
         prop: 'paidLeaveOtherFee',
         width: '180',
         fixed: false,
@@ -692,7 +692,7 @@ export default {
           }
       },
       {
-        label: '未结发站其他费',
+        label: '未核销发站其他费',
         prop: 'unpaidLeaveOtherFee',
         width: '150',
         fixed: false,
@@ -855,8 +855,8 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaid' + prop.substring(6) // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaid' + prop.substring(6) // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if(paidVal !== unpaidVal){
         this.$set(this.rightTable[index],prop + 'lyy', true)
@@ -867,7 +867,7 @@ export default {
         this.isGoReceipt = true
         this.$set(this.rightTable[index], prop, unpaidVal)
         // this.$set(this.rightTable, index, Object.assign(this.rightTable[index], { [prop]: Number(this.rightTable[index][unpaidName]) }))
-        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '【' + this.FEE_TYPE[prop] + '】 费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -1074,7 +1074,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
       }
     },

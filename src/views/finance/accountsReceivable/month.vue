@@ -154,14 +154,14 @@ export default {
         'label': '月结',
         'prop': 'monthpayFee'
       }, {
-        'label': '已结月结',
+        'label': '已核销月结',
         'prop': 'finishMonthpayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
         }
       }, {
-        'label': '未结月结',
+        'label': '未核销月结',
         'prop': 'notMonthpayFee',
           slot: (scope) => {
           const row = scope.row

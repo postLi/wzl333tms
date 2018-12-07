@@ -145,7 +145,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已核销到站装卸费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未结到站装卸费',
+          label: '未核销到站装卸费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,

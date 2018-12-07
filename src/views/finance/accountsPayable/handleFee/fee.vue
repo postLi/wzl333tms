@@ -125,7 +125,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结操作费',
+          label: '已核销操作费',
           prop: 'paidFee',
           width: '110',
           slot: (scope) => {
@@ -138,7 +138,7 @@ export default {
           fixed: false
         },
         {
-          label: '未结操作费',
+          label: '未核销操作费',
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {

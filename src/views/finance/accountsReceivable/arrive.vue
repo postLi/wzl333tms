@@ -154,14 +154,14 @@ export default {
         'label': '到付',
         'prop': 'arrivepayFee'
       }, {
-        'label': '已结到付',
+        'label': '已核销到付',
         'prop': 'finishArrivepayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
         }
       }, {
-        'label': '未结到付',
+        'label': '未核销到付',
         'prop': 'notArrivepayFee',
           slot: (scope) => {
           const row = scope.row

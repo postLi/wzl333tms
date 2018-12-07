@@ -158,7 +158,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异动费用',
+          label: '已核销异动费用',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -168,7 +168,7 @@ export default {
           }
         },
         {
-          label: '未结异动费用',
+          label: '未核销异动费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,

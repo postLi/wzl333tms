@@ -145,7 +145,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结短驳费',
+          label: '已核销短驳费',
           prop: 'paidFee',
           width: '100',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未结短驳费',
+          label: '未核销短驳费',
           prop: 'unpaidFee',
           width: '100',
           fixed: false,

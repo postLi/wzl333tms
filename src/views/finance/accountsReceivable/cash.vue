@@ -153,14 +153,14 @@ export default {
         width: '100',
         'prop': 'nowPayFee'
       }, {
-        'label': '已结现付',
+        'label': '已核销现付',
         'prop': 'finishNowPayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
         }
       }, {
-        'label': '未结现付',
+        'label': '未核销现付',
         'prop': 'notNowPayFee',
         slot: (scope) => {
           const row = scope.row

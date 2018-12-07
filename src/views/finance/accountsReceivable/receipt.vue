@@ -155,7 +155,7 @@ export default {
 
         'prop': 'receiptpayFee'
       }, {
-        'label': '已结回单付',
+        'label': '已核销回单付',
         width: '100',
         'prop': 'finishReceiptpayFee',
           slot: (scope) => {
@@ -164,7 +164,7 @@ export default {
         }
 
       }, {
-        'label': '未结回单付',
+        'label': '未核销回单付',
          width: '100',
         'prop': 'notReceiptpayFee',
           slot: (scope) => {

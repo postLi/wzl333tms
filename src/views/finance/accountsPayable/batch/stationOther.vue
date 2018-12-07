@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站其他费',
+          label: '已核销发站其他费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结发站其他费',
+          label: '未核销发站其他费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,

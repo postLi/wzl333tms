@@ -154,7 +154,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结中转费',
+          label: '已核销中转费',
           prop: 'closeFee',
           width: '100',
           fixed: false,
@@ -164,7 +164,7 @@ export default {
           }
         },
         {
-          label: '未结中转费',
+          label: '未核销中转费',
           prop: 'unpaidFee',
           width: '100',
           fixed: false,

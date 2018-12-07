@@ -184,14 +184,14 @@ export default {
         'label': '月结核销状态',
         'prop': 'monthpayStateCn'
       }, {
-        'label': '已结月结',
+        'label': '已核销月结',
         'prop': 'finishMonthpayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
         }
       }, {
-        'label': '未结月结',
+        'label': '未核销月结',
         'prop': 'notMonthpayFee',
           slot: (scope) => {
           const row = scope.row
@@ -390,17 +390,17 @@ export default {
       }
        if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notMonthpayFee) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       }else {
         this.isGoReceipt = false
       }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
@@ -578,7 +578,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
       }
     },

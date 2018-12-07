@@ -183,14 +183,14 @@ export default {
           'label': '到付核销状态',
           'prop': 'arrivepayStateCn'
         }, {
-          'label': '已结到付',
+          'label': '已核销到付',
           'prop': 'finishArrivepayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
           }
         }, {
-          'label': '未结到付',
+          'label': '未核销到付',
           'prop': 'notArrivepayFee',
           slot: (scope) => {
             const row = scope.row
@@ -386,7 +386,7 @@ export default {
       }
       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notArrivepayFee) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
       }
@@ -552,7 +552,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
       }
     },

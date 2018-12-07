@@ -148,7 +148,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结实际提货费',
+          label: '已核销实际提货费',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -158,7 +158,7 @@ export default {
           }
         },
         {
-          label: '未结实际提货费',
+          label: '未核销实际提货费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,

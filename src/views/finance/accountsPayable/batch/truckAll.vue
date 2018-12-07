@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结现付运费',
+          label: '已核销现付运费',
           prop: 'paidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结现付运费',
+          label: '未核销现付运费',
           prop: 'unpaidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -172,7 +172,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结现付油卡',
+          label: '已核销现付油卡',
           prop: 'paidNowpayOilCard',
           width: '120',
           fixed: false,
@@ -182,7 +182,7 @@ export default {
           }
         },
         {
-          label: '未结现付油卡',
+          label: '未核销现付油卡',
           prop: 'unpaidNowpayOilCard',
           width: '120',
           fixed: false,
@@ -198,7 +198,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回付运费',
+          label: '已核销回付运费',
           prop: 'paidBackpayCarriage',
           width: '120',
           fixed: false,
@@ -208,7 +208,7 @@ export default {
           }
         },
         {
-          label: '未结回付运费',
+          label: '未核销回付运费',
           prop: 'unpaidBackpayCarriage',
           width: '120',
           fixed: false,
@@ -224,7 +224,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回付油卡',
+          label: '已核销回付油卡',
           prop: 'paidBackpayOilCard',
           width: '120',
           fixed: false,
@@ -234,7 +234,7 @@ export default {
           }
         },
         {
-          label: '未结回付油卡',
+          label: '未核销回付油卡',
           prop: 'unpaidBackpayOilCard',
           width: '120',
           fixed: false,
@@ -250,7 +250,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结整车保险费',
+          label: '已核销整车保险费',
           prop: 'paidCarloadInsuranceFee',
           width: '120',
           fixed: false,
@@ -260,7 +260,7 @@ export default {
           }
         },
         {
-          label: '未结整车保险费',
+          label: '未核销整车保险费',
           prop: 'unpaidCarloadInsuranceFee',
           width: '120',
           fixed: false,
@@ -276,7 +276,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站装卸费',
+          label: '已核销发站装卸费',
           prop: 'paidLeaveHandlingFee',
           width: '120',
           fixed: false,
@@ -286,7 +286,7 @@ export default {
           }
         },
         {
-          label: '未结发站装卸费',
+          label: '未核销发站装卸费',
           prop: 'unpaidLeaveHandlingFee',
           width: '120',
           fixed: false,
@@ -302,7 +302,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结发站其他费',
+          label: '已核销发站其他费',
           prop: 'paidLeaveOtherFee',
           width: '120',
           fixed: false,
@@ -312,7 +312,7 @@ export default {
           }
         },
         {
-          label: '未结发站其他费',
+          label: '未核销发站其他费',
           prop: 'unpaidLeaveOtherFee',
           width: '120',
           fixed: false,

@@ -148,7 +148,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结回扣',
+          label: '已核销回扣',
           prop: 'closeFee',
           width: '90',
           fixed: false,
@@ -158,7 +158,7 @@ export default {
           }
         },
         {
-          label: '未结回扣',
+          label: '未核销回扣',
           prop: 'unpaidFee',
           width: '90',
           fixed: false,

@@ -163,14 +163,14 @@ export default {
         'label': '异动',
         'prop': 'changeFee'
       }, {
-        'label': '未结异动',
+        'label': '未核销异动',
         'prop': 'notChangeFee',
         slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
         }
       }, {
-        'label': '已结异动',
+        'label': '已核销异动',
         'prop': 'finishChangeFee',
         slot: (scope) => {
           const row = scope.row

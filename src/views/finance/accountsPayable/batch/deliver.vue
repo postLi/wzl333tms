@@ -131,7 +131,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结送货费',
+          label: '已核销送货费',
           prop: 'paidFee',
           width: '100',
           fixed: false,
@@ -141,7 +141,7 @@ export default {
           }
         },
         {
-          label: '未结送货费',
+          label: '未核销送货费',
           prop: 'unpaidFee',
           width: '100',
           fixed: false,

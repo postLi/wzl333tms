@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结整车保险费',
+          label: '已核销整车保险费',
           prop: 'paidFee',
           width: '125',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结整车保险费',
+          label: '未核销整车保险费',
           prop: 'unpaidFee',
           width: '125',
           fixed: false,

@@ -128,7 +128,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结其他费用支出',
+          label: '已核销其他费用支出',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -138,7 +138,7 @@ export default {
           }
         },
         {
-          label: '未结其他费用支出',
+          label: '未核销其他费用支出',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,

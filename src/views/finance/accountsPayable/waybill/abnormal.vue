@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异常理赔',
+          label: '已核销异常理赔',
           prop: 'closeFee',
           width: '110',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结异常理赔',
+          label: '未核销异常理赔',
           prop: 'unpaidFee',
           width: '110',
           fixed: false,

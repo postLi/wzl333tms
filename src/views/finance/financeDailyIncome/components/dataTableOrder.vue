@@ -26,72 +26,72 @@
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
-        <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
+        <el-table-column prop="noShipFeeTotal" sortable label="未核销运费合计" width="120">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.noShipFeeTotal)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadShipFeeTotal" sortable label="已结运费合计" width="120">
+        <el-table-column prop="hadShipFeeTotal" sortable label="已核销运费合计" width="120">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.hadShipFeeTotal)"></span>
           </template>
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
-        <el-table-column prop="noOnPay" sortable label="未结现付" width="90">
+        <el-table-column prop="noOnPay" sortable label="未核销现付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.noOnPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadOnPay" sortable label="已结现付" width="90">
+        <el-table-column prop="hadOnPay" sortable label="已核销现付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.hadOnPay)"></span>
           </template>
         </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
-        <el-table-column prop="noArrivalPay" sortable label="未结到付" width="90">
+        <el-table-column prop="noArrivalPay" sortable label="未核销到付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.noArrivalPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadArrivalPay" sortable label="已结到付" width="90">
+        <el-table-column prop="hadArrivalPay" sortable label="已核销到付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.hadArrivalPay)"></span>
           </template>
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
-        <el-table-column prop="noBackPay" sortable label="未结回单付" width="100">
+        <el-table-column prop="noBackPay" sortable label="未核销回单付" width="100">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.noBackPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadBackPay" sortable label="已结回单付" width="100">
+        <el-table-column prop="hadBackPay" sortable label="已核销回单付" width="100">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.hadBackPay)"></span>
           </template>
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
-        <el-table-column prop="noMonthPay" sortable label="未结月结" width="90">
+        <el-table-column prop="noMonthPay" sortable label="未核销月结" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.noMonthPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
+        <el-table-column prop="hadMonthPay" sortable label="已核销月结" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
           </template>
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
-        <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="110">
+        <el-table-column prop="noUnusualPay" sortable label="未核销异动费用" width="110">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.noUnusualPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="110">
+        <el-table-column prop="hadUnusualPay" sortable label="已核销异动费用" width="110">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.hadUnusualPay)"></span>
           </template>
@@ -144,12 +144,12 @@
         </el-table-column>
         <el-table-column prop="shipFeeTotal" sortable label="运费合计" width="120">
         </el-table-column>
-        <el-table-column prop="noShipFeeTotal" sortable label="未结运费合计" width="120">
+        <el-table-column prop="noShipFeeTotal" sortable label="未核销运费合计" width="120">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.noShipFeeTotal)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadShipFeeTotal" sortable label="已结运费合计" width="120">
+        <el-table-column prop="hadShipFeeTotal" sortable label="已核销运费合计" width="120">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.shipFeeTotal, scope.row.hadShipFeeTotal, scope.row.noShipFeeTotal, scope.row.hadShipFeeTotal)"></span>
           </template>
@@ -158,12 +158,12 @@
         </el-table-column>
         <el-table-column prop="onPay" sortable label="现付" width="90">
         </el-table-column>
-        <el-table-column prop="noOnPay" sortable label="未结现付" width="90">
+        <el-table-column prop="noOnPay" sortable label="未核销现付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.noOnPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadOnPay" sortable label="已结现付" width="90">
+        <el-table-column prop="hadOnPay" sortable label="已核销现付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.onPay, scope.row.hadOnPay, scope.row.noOnPay, scope.row.hadOnPay)"></span>
           </template>
@@ -172,12 +172,12 @@
         </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
-        <el-table-column prop="noArrivalPay" sortable label="未结到付" width="90">
+        <el-table-column prop="noArrivalPay" sortable label="未核销到付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.noArrivalPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadArrivalPay" sortable label="已结到付" width="90">
+        <el-table-column prop="hadArrivalPay" sortable label="已核销到付" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.arrivalPay, scope.row.hadArrivalPay, scope.row.noArrivalPay, scope.row.hadArrivalPay)"></span>
           </template>
@@ -186,12 +186,12 @@
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
-        <el-table-column prop="noBackPay" sortable label="未结回单付" width="100">
+        <el-table-column prop="noBackPay" sortable label="未核销回单付" width="100">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.noBackPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadBackPay" sortable label="已结回单付" width="100">
+        <el-table-column prop="hadBackPay" sortable label="已核销回单付" width="100">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.backPay, scope.row.hadBackPay, scope.row.noBackPay, scope.row.hadBackPay)"></span>
           </template>
@@ -200,12 +200,12 @@
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
-        <el-table-column prop="noMonthPay" sortable label="未结月结" width="90">
+        <el-table-column prop="noMonthPay" sortable label="未核销月结" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.noMonthPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadMonthPay" sortable label="已结月结" width="90">
+        <el-table-column prop="hadMonthPay" sortable label="已核销月结" width="90">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.monthPay, scope.row.hadMonthPay, scope.row.noMonthPay, scope.row.hadMonthPay)"></span>
           </template>
@@ -214,12 +214,12 @@
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
-        <el-table-column prop="noUnusualPay" sortable label="未结异动费用" width="110">
+        <el-table-column prop="noUnusualPay" sortable label="未核销异动费用" width="110">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.noUnusualPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="hadUnusualPay" sortable label="已结异动费用" width="110">
+        <el-table-column prop="hadUnusualPay" sortable label="已核销异动费用" width="110">
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.hadUnusualPay)"></span>
           </template>
@@ -384,13 +384,13 @@ export default {
   methods: {
     getPayName() {
       if (this.rightTable.length !== 0) {
-        this.arrNoPayName = [] // 未结费用项字段名
+        this.arrNoPayName = [] // 未核销费用项字段名
         for (const item in this.rightTable[0]) {
           if (item.indexOf('no') === 0) { // 获取开头为no的字符串字段名
             this.arrNoPayName.push(item)
           }
         }
-        // console.log('=====未结费用项字段名', this.arrNoPayName)
+        // console.log('=====未核销费用项字段名', this.arrNoPayName)
 
         this.arrPayName = [] // 费用项字段名
         for (const item in this.arrNoPayName) {
@@ -399,12 +399,12 @@ export default {
         }
         // console.log('=====费用项字段名', this.arrPayName)
 
-        this.arrhadPayName = [] // 已结费用项字段名
+        this.arrhadPayName = [] // 已核销费用项字段名
         for (const item in this.arrNoPayName) {
           const str = 'had' + this.arrNoPayName[item].substring(2) // 截取no后面的字符串，并在前面拼接had
           this.arrhadPayName.push(str)
         }
-        // console.log('=====已结费用项字段名', this.arrhadPayName)
+        // console.log('=====已核销费用项字段名', this.arrhadPayName)
 
         this.arrPayNameActual = [] // 费用实际支出项字段名
         for (const item in this.arrPayName) {
@@ -450,7 +450,7 @@ export default {
       const listCount = 0
       const countDifference = 0
 
-      // 判断返回的数据 实结支出费用等于 未结费用
+      // 判断返回的数据 实结支出费用等于 未核销费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 
@@ -458,10 +458,10 @@ export default {
       let isCopyLastData = false // 左边是否需要复制一条右边最后那条数据  true-要复制 false-不复制
       this.arrPayNameActual.forEach((el, actIndex) => {
         const feeActual = this.rightTable[this.rightTable.length - 1][el] // 实际费用
-        const feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未结费用
+        const feeNo = this.rightTable[this.rightTable.length - 1][this.arrNoPayName[actIndex]] // 未核销费用
 
-        if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未结费用
-          // this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
+        if (feeNo !== feeActual && feeNo !== '' && feeNo !== null && feeActual !== '' && feeActual !== null && typeof feeNo === typeof feeActual) { // 判断实际费用是否等于未核销费用
+          // this.$message({ type: 'warning', message: '最后一条数据实际只需支付部分未核销费用，多余的需要返回到左边列表！' })
           isCopyLastData = true
           this.arrLastPartFeeName.push(this.arrPayName[actIndex]) // 保存部分核销的字段，以便左边添加数据
           this.arrLastPartActualFeeName.push(el)
@@ -475,11 +475,11 @@ export default {
         isCopyLastData = false
       }
 
-      if (isCopyLastData) { // true-给左边添加一条数据，并修改相关未结费用
-        this.$notify.info({ title: '提示', message: '最后一条数据实际只需支付部分未结费用，多余的需要返回到左边列表！' })
+      if (isCopyLastData) { // true-给左边添加一条数据，并修改相关未核销费用
+        this.$notify.info({ title: '提示', message: '最后一条数据实际只需支付部分未核销费用，多余的需要返回到左边列表！' })
         this.leftTable.push(objectMerge2([], this.rightTable[this.rightTable.length - 1]))
-        this.arrLastPartFeeName.forEach(e => { // 左边最后一条 未结=未结-实际
-          const noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未结费用名
+        this.arrLastPartFeeName.forEach(e => { // 左边最后一条 未核销=未核销-实际
+          const noFeeName = 'no' + e.substring(0, 1).toUpperCase() + e.substring(1) // 未核销费用名
           const feeNameActual = e + 'Actual' // 实际费用名
           this.leftTable[this.leftTable.length - 1][feeNameActual] = this.rightTable[this.rightTable.length - 1][noFeeName] - this.rightTable[this.rightTable.length - 1][feeNameActual]
         })

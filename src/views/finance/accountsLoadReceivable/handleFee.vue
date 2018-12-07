@@ -174,7 +174,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结操作费',
+          label: '已核销操作费',
           prop: 'paidFee',
           width: '110',
           slot: (scope) => {
@@ -184,7 +184,7 @@ export default {
           fixed: false
         },
         {
-          label: '未结操作费',
+          label: '未核销操作费',
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {
@@ -358,7 +358,7 @@ export default {
       }
       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].unpaidFee) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
       }else {
         this.isGoReceipt = false
       }
@@ -509,7 +509,7 @@ export default {
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
         }
       }
     },

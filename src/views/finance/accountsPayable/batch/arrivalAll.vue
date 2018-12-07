@@ -145,7 +145,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付运费',
+          label: '已核销到付运费',
           prop: 'paidArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未结到付运费',
+          label: '未核销到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -171,7 +171,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付油卡',
+          label: '已核销到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '120',
           fixed: false,
@@ -181,7 +181,7 @@ export default {
           }
         },
         {
-          label: '未结到付油卡',
+          label: '未核销到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '120',
           fixed: false,
@@ -197,7 +197,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已核销到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '120',
           fixed: false,
@@ -207,7 +207,7 @@ export default {
           }
         },
         {
-          label: '未结到站装卸费',
+          label: '未核销到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '120',
           fixed: false,
@@ -223,7 +223,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站其他费',
+          label: '已核销到站其他费',
           prop: 'paidArriveOtherFee',
           width: '120',
           fixed: false,
@@ -233,7 +233,7 @@ export default {
           }
         },
         {
-          label: '未结到站其他费',
+          label: '未核销到站其他费',
           prop: 'unpaidArriveOtherFee',
           width: '120',
           fixed: false,
