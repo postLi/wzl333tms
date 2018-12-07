@@ -280,6 +280,9 @@
           case 'doNext':
             this.$router.push({
               path: '/finance/financeInfo/subjectClose',
+              query:{
+                isSubjectClose:1
+              }
             })
             break;
           case 'doAll':

@@ -557,12 +557,12 @@
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
     postCarfDtoById,
+    getLoadData,
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
   import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import { getTrucK } from '@/api/operation/load'
   import { SaveAsFileCarfeefeeArt } from '@/utils/recLodopFuncs'
 
   export default {
@@ -741,7 +741,7 @@
       },
       truckName() {
         this.loading = true
-        return getTrucK().then(data => {
+        return getLoadData().then(data => {
           this.memberNameType = data.data
           this.loading = false
         }).catch(err => {
