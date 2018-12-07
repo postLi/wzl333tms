@@ -81,7 +81,7 @@
             <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="operationPayActual" sortable label="实结操作费" width="120" v-if="settlementId!==181">
+        <el-table-column prop="operationPayActual" sortable label="实际核销操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="departureTime" sortable label="送货时间" width="160" v-if="settlementId===181">
         </el-table-column>
@@ -312,7 +312,7 @@ export default {
       let countDifference = 0
       // let feeName = this.FEE_TYPE[this.settlementId] // 当前列表费用名
 
-      // 判断返回的数据 实结支出费用等于 未核销费用
+      // 判断返回的数据 实际核销支出费用等于 未核销费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 

@@ -274,7 +274,7 @@
                 postFinCerFicationcert(data).then(res => {
                   this.$message({
                     type: 'success',
-                    message: '审核成功!'
+                    message: '反核销成功!'
                   })
                   this.fetchData()
                 }).catch(err => {

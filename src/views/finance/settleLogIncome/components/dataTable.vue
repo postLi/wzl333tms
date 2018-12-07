@@ -118,7 +118,7 @@
         </el-table-column>
         <el-table-column prop="hadOnPay" sortable label="已核销现付" width="90">
         </el-table-column>
-        <el-table-column prop="onPayActual" sortable label="实结现付" width="90">
+        <el-table-column prop="onPayActual" sortable label="实际核销现付" width="90">
         </el-table-column>
         <el-table-column prop="arrivalPay" sortable label="到付" width="90">
         </el-table-column>
@@ -126,7 +126,7 @@
         </el-table-column>
         <el-table-column prop="hadArrivalPay" sortable label="已核销到付" width="90">
         </el-table-column>
-        <el-table-column prop="arrivalPayActual" sortable label="实结到付" width="90">
+        <el-table-column prop="arrivalPayActual" sortable label="实际核销到付" width="90">
         </el-table-column>
         <el-table-column prop="backPay" sortable label="回单付" width="90">
         </el-table-column>
@@ -134,7 +134,7 @@
         </el-table-column>
         <el-table-column prop="hadBackPay" sortable label="已核销回单付" width="100">
         </el-table-column>
-        <el-table-column prop="backPayActual" sortable label="实结回单付" width="100">
+        <el-table-column prop="backPayActual" sortable label="实际核销回单付" width="100">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="90">
         </el-table-column>
@@ -142,7 +142,7 @@
         </el-table-column>
         <el-table-column prop="hadUnusualPay" sortable label="已核销异动费用" width="110">
         </el-table-column>
-        <el-table-column prop="unusualPayActual" sortable label="实结异动费用" width="110">
+        <el-table-column prop="unusualPayActual" sortable label="实际核销异动费用" width="110">
         </el-table-column>
         <el-table-column prop="monthPay" sortable label="月结" width="90">
         </el-table-column>
@@ -150,7 +150,7 @@
         </el-table-column>
         <el-table-column prop="hadMonthPay" sortable label="已核销月结" width="90">
         </el-table-column>
-        <el-table-column prop="monthPayActual" sortable label="实结月结" width="90">
+        <el-table-column prop="monthPayActual" sortable label="实际核销月结" width="90">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
           <template slot-scope="scope">
@@ -354,7 +354,7 @@ export default {
       const listCount = 0
       const countDifference = 0
 
-      // 判断返回的数据 实结支出费用等于 未核销费用
+      // 判断返回的数据 实际核销支出费用等于 未核销费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 

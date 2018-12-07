@@ -294,7 +294,7 @@ export default {
           }
         },
         {
-          label: '实结送货费',
+          label: '实际核销送货费',
           prop: 'amount',
           width: '120',
           fixed: false,
@@ -445,7 +445,7 @@ export default {
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未核销费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -485,7 +485,7 @@ export default {
         // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.amount = e.unpaidFee
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
             return em.batchNo !== e.batchNo
@@ -632,7 +632,7 @@ export default {
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   let item = {
@@ -648,7 +648,7 @@ export default {
         // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可核销项！实结费用不小于0，不大于未核销费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         // }
       }
     },

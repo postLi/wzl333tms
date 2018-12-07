@@ -889,7 +889,7 @@
             sums[index] = '合计'
             return
           }
-          if (columns[index].label === '备注' || columns[index].label === '司机') {
+          if (columns[index].label === '备注' || columns[index].driverName === '司机') {
             sums[index] = ''
             return
           }

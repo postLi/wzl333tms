@@ -192,7 +192,7 @@
             <span v-html="_setTextColor(scope.row.kickBackPay, scope.row.hadKickBackPay, scope.row.noKickBackPay, scope.row.hadKickBackPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="kickBackPayActual" sortable label="实结回扣" width="120">
+        <el-table-column prop="kickBackPayActual" sortable label="实际核销回扣" width="120">
         </el-table-column>
         <el-table-column prop="transferPay" sortable label="中转费" width="120">
         </el-table-column>
@@ -206,7 +206,7 @@
             <span v-html="_setTextColor(scope.row.transferPay, scope.row.hadTransferPay, scope.row.noTransferPay, scope.row.hadTransferPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="transferPayActual" sortable label="实结中转费" width="120">
+        <el-table-column prop="transferPayActual" sortable label="实际核销中转费" width="120">
         </el-table-column>
         <el-table-column prop="unusualPay" sortable label="异动费用" width="120">
         </el-table-column>
@@ -220,7 +220,7 @@
             <span v-html="_setTextColor(scope.row.unusualPay, scope.row.hadUnusualPay, scope.row.noUnusualPay, scope.row.hadUnusualPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="unusualPayActual" sortable label="实结异动费用" width="120">
+        <el-table-column prop="unusualPayActual" sortable label="实际核销异动费用" width="120">
         </el-table-column>
         <el-table-column prop="exceptionPay" sortable label="异常理赔" width="120">
         </el-table-column>
@@ -248,7 +248,7 @@
             <span v-html="_setTextColor(scope.row.pickPuPay, scope.row.hadPickPuPay, scope.row.noPickPuPay, scope.row.hadPickPuPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="pickPuPayActual" sortable label="实结实际提货费" width="120">
+        <el-table-column prop="pickPuPayActual" sortable label="实际核销实际提货费" width="120">
         </el-table-column>
         <el-table-column prop="othePay" sortable label="其他费用" width="120">
         </el-table-column>
@@ -262,7 +262,7 @@
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="othePayActual" sortable label="实结其他费用" width="120">
+        <el-table-column prop="othePayActual" sortable label="实际核销其他费用" width="120">
         </el-table-column>
         <!-- <el-table-column prop="operationPay" sortable label="操作费" width="120">
         </el-table-column>
@@ -276,7 +276,7 @@
             <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="operationPayActual" sortable label="实结操作费" width="120">
+        <el-table-column prop="operationPayActual" sortable label="实际核销操作费" width="120">
         </el-table-column> -->
         <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
           <template slot-scope="scope">
@@ -509,7 +509,7 @@ export default {
       const listCount = 0
       const countDifference = 0
 
-      // 判断返回的数据 实结支出费用等于 未核销费用
+      // 判断返回的数据 实际核销支出费用等于 未核销费用
       // 前者等于 | 小于后者 不用进行操作
       // 前者大于否则 的时候 左边要添加右边的最后一条数据并且显示核销多余的数
 
