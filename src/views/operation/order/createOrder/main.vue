@@ -99,7 +99,7 @@
               <div class="order-form-item">
                 <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
                 <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
-                  <querySelect :key="customkey" :maxlength="11" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
@@ -128,7 +128,7 @@
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
                 <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
-                  <querySelect :key="customkey" :maxlength="11" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
@@ -861,10 +861,10 @@ export default {
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -954,14 +954,14 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -2912,36 +2912,36 @@ export default {
     },
     printLibkey() { // 打印标签
       getEnableLibSetting().then(data => {
-          console.log('getEnableLibSetting', data)
-          this.setPrintData('lib') // 设置数据
-          const libData = Object.assign([], data)
-          for (const item in this.printDataObject) {
+        console.log('getEnableLibSetting', data)
+        this.setPrintData('lib') // 设置数据
+        const libData = Object.assign([], data)
+        for (const item in this.printDataObject) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
-        })
+        CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
     print() { // 打印运单
       getEnableOrderSetting().then(data => {
-          console.log('getEnableOrderSetting', data)
-          this.setPrintData('order') // 设置数据
-          const libData = Object.assign([], data)
-          for (const item in this.printDataObject) {
+        console.log('getEnableOrderSetting', data)
+        this.setPrintData('order') // 设置数据
+        const libData = Object.assign([], data)
+        for (const item in this.printDataObject) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
-        })
+        CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
