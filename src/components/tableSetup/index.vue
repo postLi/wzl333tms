@@ -236,7 +236,10 @@ export default {
       this.callback()
     },
     initData(_data) {
-      _data = _data || this.columns
+      // 针对前端写的表格配置数据也进行简单的排序处理
+      let fedata = objectMerge2([], this.columns)
+      fedata = this.sort(fedata)
+      _data = _data || fedata
       const MAXLENGTH = this.maxLen
       // 1.检查是否有默认隐藏项
       // 2.当显示项超过50的归类到隐藏项
@@ -298,9 +301,21 @@ export default {
       this.columnListLen = getColumnListLen()
     },
     sort(array) { // 从小到大排序
-      return array.sort((a, b) => {
-        return a.key - b.key
+     // 1.只需要遍历一遍，分别处理fixed跟非fixed元素即可
+     // 2.将俩个数组合并返回即可
+     // 3.注意事项：array必须是已经经过titleOrder排序处理后的数组
+
+      const copy = []
+      const copy_unfixed = []
+      array.forEach(el => {
+        if (el.fixed) {
+          copy.push(el)
+        } else {
+          copy_unfixed.push(el)
+        }
       })
+
+      return copy.concat(copy_unfixed)
     },
     doAction(type) {
       switch (type) {
@@ -337,7 +352,7 @@ export default {
           // 如果本地存在不同的列，保留还是删除？
 
           // 1.先取服务器数据
-          const copy = []
+          let copy = []
           const len = this.columns.length
 
           // 格式化数据顺序
@@ -374,15 +389,8 @@ export default {
             }
           })
 
-          copy.sort(function(a, b) {
-            if (a.fixed && b.fixed) {
-              return 0
-            } else if (a.fixed) {
-              return -1
-            } else {
-              return 0
-            }
-          })
+          copy = this.sort(copy)
+
           this.convertData(copy)
         } else {
           this.fetchFail()
@@ -461,17 +469,7 @@ export default {
       // 复制数组操作，减少渲染次数
       const copy = objectMerge2([], this.showColumnData)
       // 排序，将fixed逐个往前移动，非fixed往后移
-      copy.sort((a, b) => {
-        if (a.fixed && b.fixed) {
-          return 0
-        } else if (a.fixed) {
-          return -1
-        } else {
-          return 0
-        }
-        // return a.fixed ? -1 : 0
-      })
-      this.showColumnData = copy
+      this.showColumnData = this.sort(copy)
     },
     setColumnLen() { // 更新数据
       this.leftListLen = this.columnData.length
