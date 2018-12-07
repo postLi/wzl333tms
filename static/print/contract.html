@@ -37,13 +37,12 @@
     }
     .contract_title h1 {
       text-align: center;
-      margin: 0 0 10px;
+      /*margin: 0 0 10px;*/
       font-size: 18px;
 
     }
     .contract_title h1 i {
       font-style: normal;
-      margin-right: 10px;
       font-size: 24px;
     }
 
@@ -91,7 +90,7 @@
       margin-left: 15px;
       display: inline-block;
       min-width: 120px;
-      border-bottom: 1px solid #999;
+      border-bottom: 1px solid black;
     }
 
     #contract_time span,
@@ -110,14 +109,14 @@
 
 <body>
 <div class="contract_title">
-  <h1><i id="contract_companyname"></i>  <i id="contract_checkBillName">货物运输合同</i></h1>
+  <h1><i id="contract_companyname"></i><i id="contract_checkBillName">货物运输合同</i></h1>
   <!-- <h2 > </h2> -->
   <div class="contract_title_number" id="contract_title_number">No:23478237482378</div>
 </div>
 <div class="contract_info">
   <p>委托方: <span id="partA"></span> (以下简称甲方)</p>
   <p>承运方: <span id="partB"></span> (以下简称乙方)</p>
-  <p>为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
+  <p style="margin-top: 10px;">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
 </div>
 <div class="contract_atricle">
   <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
