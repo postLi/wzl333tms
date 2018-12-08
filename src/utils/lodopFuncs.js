@@ -931,7 +931,7 @@
      // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
      th.style.height = '25px'
-     th.innerHTML = '<div style="white-space:nowrap;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
+     th.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
 
 
      theadTr.appendChild(th)
