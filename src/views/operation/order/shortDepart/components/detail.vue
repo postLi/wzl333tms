@@ -68,12 +68,26 @@
     <div class="tab_infos">
       <div class="btns_box">
         <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-popover
+          @mouseenter.native="showSaveBox"
+          @mouseout.native="hideSaveBox"
+          placement="top"
+          trigger="manual"
+          width="160"
+          :value="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        </el-popover>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
+        
       </div>
       <div class="detailinfo_tab">
-        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="selection" width="50"></el-table-column>
           <el-table-column fixed label="序号" prop="number" width="50">
             <template slot-scope="scope">
@@ -82,10 +96,10 @@
           </el-table-column>
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" sortable>
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" >
             </el-table-column>
             <!-- 有返回值的列 -->
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
+            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else >
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
@@ -141,6 +155,17 @@ export default {
   data() {
     return {
       code: 'ORDER_SHORT',
+      thecode:'ORDER_SHORT',
+      visible2: false,
+      xuhaodata: {
+        label: '序号',
+        prop: 'number',
+        width: '40',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      },
       detailTableLoading: true,
       timeInfoVisible: false,
       textChangeDanger: [],
@@ -431,15 +456,7 @@ export default {
     },
     doAction(type) {
       const columnArr = objectMerge2([], this.tableColumn)
-      columnArr.unshift({
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      })
+      columnArr.unshift(this.xuhaodata)
       switch (type) {
         case 'add': // 短驳入库
           if (this.arrivalStatus === '短驳中') {
@@ -706,6 +723,46 @@ export default {
       }
       this.setTableColumn()
       this.tablekey = Math.random()
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      console.log('set table:', newWidth, oldWidth, column)
+      // column.property
+      // column.label
+      // 不处理序号跟选择列
+      if(column.label!=='序号'){
+        
+        /* this.columnWidthData = {
+          prop: column.property,
+          label: column.label,
+          width: newWidth
+        } */
+        const find = this.tableColumn.filter(el => el.prop === column.property)
+        if (find.length) {
+          find[0].width = newWidth
+
+          console.log('应该要显示保存框了')
+          this.visible2 = true
+          clearTimeout(this.tabletimer)
+          this.tabletimer = setTimeout(() => {
+            this.visible2 = false
+          }, 10000)
+        }
+        
+      }
+      
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
 }
@@ -719,6 +776,8 @@ export default {
   height: 100%;
   padding: 0 10px;
   position: relative;
+
+
 
   .detailTable_info {
     border-bottom: 2px dotted #ddd;
@@ -766,6 +825,16 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
+      .el-table th>.cell,.el-table th{
+        overflow: visible;
+        text-overflow: clip;
+        font-weight: bold;
+        color: #000;
+      }
+      .el-table th div{
+        padding: 0;
+        text-align: center;
+      }
       .el-input.is-disabled .el-input__inner {
         background-color: #fff;
         color: #222;

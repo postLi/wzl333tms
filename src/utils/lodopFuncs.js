@@ -267,7 +267,7 @@
      const pageStyle = objectMerge2({
        intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
        intPageWidth: '218mm', // 单位为0.1mm
-       intPageHeight: '280mm',
+       intPageHeight: '272mm',
        strPageName: ''
      }, obj.pageStyle || {})
 
@@ -276,7 +276,7 @@
      console.log('tableId.innerHTML:',tableId.innerHTML)
      LODOP = getLodop()
      // PRINT_INITA(Top,Left,Width,Height,strPrintName)
-     LODOP.PRINT_INITA('-10px', 0, pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+     LODOP.PRINT_INITA('-10px', '-3px', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
      //  LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
@@ -927,24 +927,23 @@
 
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
-    //  const col = document.createElement('col')
-    //  col.setAttribute('width', columns[i].width)
+     const col = document.createElement('col')
+     col.setAttribute('width', columns[i].width)
      // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
      th.style.height = '25px'
-     th.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
-
+     th.innerHTML = '<div style="white-space:nowrap;width:'+columns[i].width+'px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
 
      theadTr.appendChild(th)
-    //  colgroup.appendChild(col)
+     colgroup.appendChild(col)
 
      const tfoottd = document.createElement('td')
      console.warn(typeof summaries[i], summaries[i])
-     tfoottd.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
+     tfoottd.innerHTML = '<div style="white-space:nowrap;width:'+columns[i].width+'px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
      // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
      tfootTr.appendChild(tfoottd)
    }
-  //  table.appendChild(colgroup)
+   table.appendChild(colgroup)
    table.appendChild(thead)
    thead.appendChild(theadTr)
 
@@ -961,8 +960,8 @@
        // 处理当列没有值、宽度设置等信息时，做默认值处理
        // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
        // td.innerHTML = data[k][columns[j].prop] || ''
-       td.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
-      //  td.style.width = data[k][columns[j].width] + 'px'
+       td.innerHTML = '<div style="white-space:nowrap;width:'+columns[j].width+'px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
+       td.style.width = columns[j].width
        td.style.whitSpace = 'nowrap'
        // td.setAttribute('width', data[k][columns[j].width])
      }
