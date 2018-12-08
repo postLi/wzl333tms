@@ -96,10 +96,10 @@
           </el-table-column>
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" >
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" >
             </el-table-column>
             <!-- 有返回值的列 -->
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else >
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else >
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
@@ -155,7 +155,7 @@ export default {
   data() {
     return {
       code: 'ORDER_SHORT',
-      thecode:'ORDER_SHORT',
+      thecode: 'ORDER_SHORT',
       visible2: false,
       xuhaodata: {
         label: '序号',
@@ -671,8 +671,8 @@ export default {
           this.$nextTick(() => {
             console.log('isNeedArrival', this.isNeedArrival)
             this.detailList.forEach(e => {
-                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  if (e.warehouStatus !== 1) { // 部分入库
+              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                if (e.warehouStatus !== 1) { // 部分入库
                   e.actualAmount = e.loadAmount
                   e.actualWeight = e.loadWeight
                   e.actualVolume = e.loadVolume
@@ -729,8 +729,7 @@ export default {
       // column.property
       // column.label
       // 不处理序号跟选择列
-      if(column.label!=='序号'){
-        
+      if (column.label !== '序号') {
         /* this.columnWidthData = {
           prop: column.property,
           label: column.label,
@@ -747,9 +746,7 @@ export default {
             this.visible2 = false
           }, 10000)
         }
-        
       }
-      
     },
     saveToTableSetup() {
       this.visible2 = false
@@ -825,13 +822,18 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
-      .el-table th>.cell,.el-table th{
+      .el-table .cell,.el-table th,.el-table td{
         overflow: visible;
         text-overflow: clip;
-        font-weight: bold;
         color: #000;
       }
-      .el-table th div{
+      .el-table th{
+        font-weight: bold;
+      }
+      .el-table td{
+        overflow: hidden;
+      }
+      .el-table th div,.el-table .cell{
         padding: 0;
         text-align: center;
       }

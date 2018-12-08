@@ -170,8 +170,8 @@
                     </template>
                   </el-table-column>
                     <template v-for="column in tableColumn">
-                      <el-table-column :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -481,7 +481,7 @@ import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
 export default {
   data() {
     return {
-      thecode:'ORDER_ARTER',
+      thecode: 'ORDER_ARTER',
       visible2: false,
       formModelTrack: {
         loadStatus: '',
@@ -1086,7 +1086,7 @@ export default {
       console.log('set table:', newWidth, oldWidth, column)
       // column.property
       // column.label
-      
+
       /* this.columnWidthData = {
         prop: column.property,
         label: column.label,
@@ -1102,7 +1102,6 @@ export default {
           this.visible2 = false
         }, 10000)
       }
-      
     },
     saveToTableSetup() {
       this.visible2 = false
@@ -1183,13 +1182,19 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
-      .el-table th>.cell,.el-table th{
+      .el-table .cell,.el-table th,.el-table td{
         overflow: visible;
         text-overflow: clip;
-        font-weight: bold;
         color: #000;
       }
-      .el-table th div{
+      .el-table td{
+        overflow: hidden;
+      }
+      
+      .el-table th{
+        font-weight: bold;
+      }
+      .el-table th div,.el-table .cell{
         padding: 0;
         text-align: center;
       }
