@@ -221,11 +221,23 @@ export default {
       this.fetchTableSetup()
       this.eventBus.$on('tablesetup.change', (code, data) => {
         if (code && code === this.thecode) {
-          const find = this.showColumnData.filter(el => el.prop === data.prop)
-          if (find.length) {
-            find[0].width = data.width
+          if(data.prop){
+            const find = this.showColumnData.filter(el => el.prop === data.prop)
+            if (find.length) {
+              find[0].width = data.width
+              this.changeTbaleSetup()
+            }
+          } else {
+            data.forEach(dat=>{
+              const find = this.showColumnData.filter(el => el.prop === dat.prop)
+              if (find.length) {
+                find[0].width = dat.width
+                
+              }
+            })
             this.changeTbaleSetup()
           }
+          
         }
       })
     }
@@ -351,7 +363,7 @@ export default {
         // 保存原有数据，用来在上传时格式化数据
         this.orgdata = data
         if (data && data.length) {
-          if (data.length === 1) {
+          if (Array.isArray(data[0])) {
             data = data[0]
           }
           // 后台返回的字段数量必然大于1个的，小于时就是数据有异常，按照请求失败处理

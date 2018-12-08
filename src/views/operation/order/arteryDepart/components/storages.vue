@@ -146,11 +146,23 @@
                   </el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
-                  </el-button>
+                  <el-popover
+                    @mouseenter.native="showSaveBox"
+                    @mouseout.native="hideSaveBox"
+                    placement="top"
+                    width="160"
+                    trigger="manual"
+                    v-model="visible2">
+                    <p>表格宽度修改了，是否要保存？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+                      <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+                    </div>
+                    <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+                  </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed type="selection" width="50"></el-table-column>
                     <el-table-column fixed label="序号" prop="number" width="50">
                     <template slot-scope="scope">
@@ -158,8 +170,8 @@
                     </template>
                   </el-table-column>
                     <template v-for="column in tableColumn">
-                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                      <el-table-column :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -447,7 +459,7 @@
         <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_ARTER" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </div>
   </pop-right>
 </template>
@@ -469,6 +481,8 @@ import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
 export default {
   data() {
     return {
+      thecode:'ORDER_ARTER',
+      visible2: false,
       formModelTrack: {
         loadStatus: '',
         operatorTime: +new Date(),
@@ -987,7 +1001,7 @@ export default {
       columnArr.unshift({
         label: '序号',
         prop: 'id',
-        width: '100',
+        width: '40',
         fixed: true,
         slot: (scope) => {
           return scope.$index + 1
@@ -1067,6 +1081,41 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      console.log('set table:', newWidth, oldWidth, column)
+      // column.property
+      // column.label
+      
+      /* this.columnWidthData = {
+        prop: column.property,
+        label: column.label,
+        width: newWidth
+      } */
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+      
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
   // }
@@ -1133,6 +1182,16 @@ export default {
       .el-table td,
       .el-table th {
         padding: 5px 0;
+      }
+      .el-table th>.cell,.el-table th{
+        overflow: visible;
+        text-overflow: clip;
+        font-weight: bold;
+        color: #000;
+      }
+      .el-table th div{
+        padding: 0;
+        text-align: center;
       }
     }
   }

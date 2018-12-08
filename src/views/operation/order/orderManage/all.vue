@@ -17,6 +17,7 @@
             @mouseout.native="hideSaveBox"
             placement="top"
             width="160"
+            trigger="manual"
             v-model="visible2">
             <p>表格宽度修改了，是否要保存？</p>
             <div style="text-align: right; margin: 0">
