@@ -273,6 +273,7 @@
 
      console.log('print obj:', obj)
      const tableId = createTable(obj, true) // 重新创建打印视图table
+     console.log('tableId.innerHTML:',tableId.innerHTML)
      LODOP = getLodop()
      // PRINT_INITA(Top,Left,Width,Height,strPrintName)
      LODOP.PRINT_INITA('-10px', 0, pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
@@ -939,7 +940,7 @@
 
      const tfoottd = document.createElement('td')
      console.warn(typeof summaries[i], summaries[i])
-     tfoottd.innerHTML = '<div style="white-space:nowrap;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
+     tfoottd.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
      // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
      tfootTr.appendChild(tfoottd)
    }
@@ -960,8 +961,8 @@
        // 处理当列没有值、宽度设置等信息时，做默认值处理
        // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
        // td.innerHTML = data[k][columns[j].prop] || ''
-       td.innerHTML = '<div style="white-space:nowrap;">' + (data[k][columns[j].prop] || '') + '</div>'
-       td.style.width = data[k][columns[j].width] + 'px'
+       td.innerHTML = '<div style="white-space:nowrap;max-width:150px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
+      //  td.style.width = data[k][columns[j].width] + 'px'
        td.style.whitSpace = 'nowrap'
        // td.setAttribute('width', data[k][columns[j].width])
      }
