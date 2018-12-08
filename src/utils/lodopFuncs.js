@@ -927,7 +927,7 @@
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
      const col = document.createElement('col')
-     col.setAttribute('width', columns[i].width)
+    //  col.setAttribute('width', columns[i].width)
      // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
      th.style.height = '25px'
