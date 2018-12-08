@@ -927,7 +927,7 @@
 
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
-     const col = document.createElement('col')
+    //  const col = document.createElement('col')
     //  col.setAttribute('width', columns[i].width)
      // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
@@ -936,7 +936,7 @@
 
 
      theadTr.appendChild(th)
-     colgroup.appendChild(col)
+    //  colgroup.appendChild(col)
 
      const tfoottd = document.createElement('td')
      console.warn(typeof summaries[i], summaries[i])
@@ -944,7 +944,7 @@
      // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
      tfootTr.appendChild(tfoottd)
    }
-   table.appendChild(colgroup)
+  //  table.appendChild(colgroup)
    table.appendChild(thead)
    thead.appendChild(theadTr)
 
