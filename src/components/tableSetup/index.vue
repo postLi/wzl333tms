@@ -221,23 +221,21 @@ export default {
       this.fetchTableSetup()
       this.eventBus.$on('tablesetup.change', (code, data) => {
         if (code && code === this.thecode) {
-          if(data.prop){
+          if (data.prop) {
             const find = this.showColumnData.filter(el => el.prop === data.prop)
             if (find.length) {
               find[0].width = data.width
               this.changeTbaleSetup()
             }
           } else {
-            data.forEach(dat=>{
+            data.forEach(dat => {
               const find = this.showColumnData.filter(el => el.prop === dat.prop)
               if (find.length) {
                 find[0].width = dat.width
-                
               }
             })
             this.changeTbaleSetup()
           }
-          
         }
       })
     }
@@ -255,7 +253,7 @@ export default {
 
       // ================ 针对一些属性进行公共处理 =============
       _data.forEach(el => {
-        // 1.处理出发城市、到达城市显示值的问题
+        // 1.处理出发城市、到站显示值的问题
         if ((el.prop === 'shipFromCityName' || el.prop === 'shipToCityName') && !el.slot) {
           el.slot = (scope) => {
             const addr = scope.row[el.prop] || ''

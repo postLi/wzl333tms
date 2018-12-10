@@ -180,7 +180,7 @@
           </el-table-column>
           <el-table-column
             prop="orderToCityCode"
-            label="目的城市"
+            label="到站"
             sortable
             width="110"
           >
@@ -268,11 +268,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'otherinfo'
-      ]),
+      'otherinfo'
+    ]),
     orgid() {
-        return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
-      }
+      return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
@@ -362,11 +362,11 @@ export default {
       if (!this.selected.length && type !== 'accept' && type !== 'import') {
         this.closeAddCustomer()
         this.$message({
-            message: '请选择要操作的项~',
-            type: 'warning'
-          })
+          message: '请选择要操作的项~',
+          type: 'warning'
+        })
         return false
-      }      else if (!this.selected.length && type === 'accept') {
+      } else if (!this.selected.length && type === 'accept') {
         this.closeAddCustomer()
         this.$message({
           message: '请选择要受理的订单~',
@@ -384,62 +384,62 @@ export default {
           this.openAddCustomer()
           break
           // 修改客户信息
-          case 'accept':
+        case 'accept':
               // this.isModify = true
           if (this.selected.length > 1) {
-                this.$message({
-                    message: '每次只能修改单条数据~',
-                    type: 'warning'
-                  })
-              }
+            this.$message({
+                  message: '每次只能修改单条数据~',
+                  type: 'warning'
+                })
+          }
           this.selectInfo = this.selected[0]
-              if (this.selectInfo.orderStatus == 1) {
+          if (this.selectInfo.orderStatus == 1) {
 
               }
           console.log(this.selectInfo)
             // this.openAddCustomer()
-              break;
+          break
           // 删除客户
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
                   // =>todo 删除多个
           let ids = this.selected.map(item => {
-                    return item.customerId
-                  })
+            return item.customerId
+          })
           ids = ids.join(',')
 
           this.$confirm('确定要删除 ' + deleteItem + ' 客户吗？', '提示', {
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                  }).then(() => {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
                     deleteSomeCustomerInfo(ids).then(res => {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                          })
-                        this.fetchData()
-                      }).catch(err => {
+                      this.$message({
+                          type: 'success',
+                          message: '删除成功!'
+                        })
+                      this.fetchData()
+                    }).catch(err => {
                         this._handlerCatchMsg(err)
                       })
                   }).catch(() => {
                     this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                      })
+                      type: 'info',
+                      message: '已取消删除'
+                    })
                   })
           break
           // 导出数据
-          case 'export':
+        case 'export':
           const ids2 = this.selected.map(el => {
-                return el.customerId
-              })
+            return el.customerId
+          })
           getExportExcel(ids2.join(',')).then(res => {
-                this.$message({
+            this.$message({
                   type: 'success',
                   message: '即将自动下载!'
                 })
-              })
+          })
           break
       }
       // 清除选中状态，避免影响下个操作

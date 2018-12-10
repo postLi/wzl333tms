@@ -211,7 +211,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '目的城市',
+          label: '到站',
           prop: 'orderToCityName',
           width: '110',
           fixed: false

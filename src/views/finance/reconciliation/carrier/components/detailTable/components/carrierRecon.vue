@@ -236,12 +236,12 @@
             width="150"
             label="中转单号">
           </el-table-column>
-          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipFromCityName')}}
             </template>
           </el-table-column>
-          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipToCityName')}}
             </template>
@@ -383,12 +383,12 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipFromCityName')}}
             </template>
           </el-table-column>
-          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipToCityName')}}
             </template>
@@ -530,12 +530,12 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipFromCityName')}}
             </template>
           </el-table-column>
-          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipToCityName')}}
             </template>
@@ -686,12 +686,12 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipFromCityName')}}
             </template>
           </el-table-column>
-          <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
             <template slot-scope="scope">
               {{ _processTableSlot(scope, 'shipToCityName')}}
             </template>
@@ -1201,7 +1201,7 @@
             sums[index] = '合计'
             return
           }
-          if (columns[index].label === '中转时间' || columns[index].label === '运单号' || columns[index].label === '中转单号' || columns[index].label === '出发城市' || columns[index].label === '到达城市' || columns[index].label === '货品名' || columns[index].label === '交接方式' || columns[index].label === '备注' || columns[index].label === '签收状态') {
+          if (columns[index].label === '中转时间' || columns[index].label === '运单号' || columns[index].label === '中转单号' || columns[index].label === '发站' || columns[index].label === '到站' || columns[index].label === '货品名' || columns[index].label === '交接方式' || columns[index].label === '备注' || columns[index].label === '签收状态') {
             sums[index] = ''
             return
           }

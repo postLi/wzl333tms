@@ -31,10 +31,10 @@
       <el-form-item label="发货人" prop="senderName">
         <el-input v-model="searchForm.senderName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="出发城市">
+      <el-form-item label="发站">
         <el-input v-model="searchForm.shipFromCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="到达城市">
+      <el-form-item label="到站">
         <el-input v-model="searchForm.shipToCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
       <el-form-item label="签收状态" prop="signStatus">

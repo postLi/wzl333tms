@@ -142,10 +142,10 @@ export default {
           width: '100',
           fixed: false
         }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName'
       }, {
         'label': '核销状态',

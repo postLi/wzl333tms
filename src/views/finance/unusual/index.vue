@@ -67,7 +67,7 @@
           </el-table-column>
           <el-table-column
             prop="shipFromCityName"
-            label="出发城市"
+            label="发站"
             width="120"
             sortable
             >
@@ -76,7 +76,7 @@
             sortable
             prop="shipToCityName"
             width="120"
-            label="到达城市">
+            label="到站">
           </el-table-column>
          
           <el-table-column
@@ -364,12 +364,12 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '120',
         fixed: false
       }, {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '120',
         fixed: false
@@ -523,7 +523,7 @@ export default {
 
         this.loading = false
         // console.log(data.list, data.list[0].statusValue)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

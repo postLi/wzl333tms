@@ -9,11 +9,11 @@
             <el-form-item label="出发网点：" prop="fromOrgid" label-width="100px">
                 <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
-            <el-form-item label="出发城市：" label-width="100px" prop="startLocation">
+            <el-form-item label="发站：" label-width="100px" prop="startLocation">
                 <el-input :value="ruleForm.startLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeStart" :ifAera = 'true' class="form-control" @testCity="ifProvice('startLocation')" v-else>
-                    <el-input v-model="ruleForm.startLocation" placeholder="请选择出发城市" ></el-input>
+                    <el-input v-model="ruleForm.startLocation" placeholder="请选择发站" ></el-input>
                 </vregion>
             </el-form-item>
             <el-form-item label="联系人：" prop="rangeFromContacts" label-width="100px">
@@ -26,11 +26,11 @@
             <el-form-item label="到达网点：" prop="toOrgid" label-width="100px">
                 <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
-            <el-form-item label="到达城市：" label-width="100px" prop="endLocation">
+            <el-form-item label="到站：" label-width="100px" prop="endLocation">
                 <el-input v-model="ruleForm.endLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeEnd" :ifAera = 'true' class="form-control"  @testCity="ifProvice('endLocation')" v-else>
-                    <el-input v-model="ruleForm.endLocation"  placeholder="请选择到达城市"></el-input>
+                    <el-input v-model="ruleForm.endLocation"  placeholder="请选择到站"></el-input>
                 </vregion>
             </el-form-item>
             <el-form-item label="联系人：" prop="rangeToContacts" label-width="100px">
@@ -288,16 +288,16 @@ export default {
                     { required: true, message: '请选择到达网点', trigger: 'blur' }
         ],
         startLocation: [
-                    { required: true, message: '请输入出发城市', trigger: 'change' }
+                    { required: true, message: '请输入发站', trigger: 'change' }
         ],
         endLocation: [
-                    { required: true, message: '请输入到达城市', trigger: 'change' }
+                    { required: true, message: '请输入到站', trigger: 'change' }
         ],
         rangeFromContacts: [
-                    { message: '请输入出发城市联系人信息', trigger: 'blur' }
+                    { message: '请输入发站联系人信息', trigger: 'blur' }
         ],
         rangeToContacts: [
-                    { message: '请输入到达城市联系人信息', trigger: 'blur' }
+                    { message: '请输入到站联系人信息', trigger: 'blur' }
         ],
         rangeFromMobile: [
                     { required: true, validator: checkrangeFromMobile, trigger: 'change' }
@@ -415,7 +415,7 @@ export default {
       if (this.ruleForm.endLocation == this.ruleForm.startLocation) {
         this.$message({
           type: 'info',
-          message: '出发城市不可与到达城市重复！'
+          message: '发站不可与到站重复！'
         })
         this.ruleForm.endLocation = ''
         return
@@ -486,7 +486,7 @@ export default {
               this.ruleForm[i] = res.data[i]
             }
             this.ruleForm.id = res.data.id
-          // 出发城市
+          // 发站
             this.ruleForm.startLocation = data.rangeFromProvince + (this.isSpecialCity(data.rangeFromProvince) ? '' : data.rangeFromCity) + data.rangeFromArea
             this.ruleForm.endLocation = data.rangeToProvince + (this.isSpecialCity(data.rangeToProvince) ? '' : data.rangeToCity) + data.rangeToArea
             // 价格时效

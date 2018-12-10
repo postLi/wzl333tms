@@ -33,13 +33,13 @@
           clearable>
       </el-input>
     </el-form-item>
-    <el-form-item label="出发城市">
+    <el-form-item label="发站">
       <el-input
           v-model="searchForm.shipFromCityCode"
           clearable>
       </el-input>
     </el-form-item>
-    <el-form-item label="到达城市">
+    <el-form-item label="到站">
       <el-input
           v-model="searchForm.shipToCityCode"
           clearable>

@@ -125,7 +125,7 @@ export default {
           return scope.$index + 1
         }
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'rangeFromCity',
         width: 200,
         slot: (scope) => {
@@ -136,7 +136,7 @@ export default {
         'prop': 'fromOrgName',
         width: 100
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'rangeToCity',
         width: 200,
         slot: (scope) => {

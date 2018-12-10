@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :size="btnsize" label-position="right"  :model="searchForm" label-width="70px"  class="staff_searchinfo clearfix">
       <div class="staff_searchinfo--input">
-        <el-form-item label="出发城市">
+        <el-form-item label="发站">
           <el-input
               v-model="searchForm.rangeFromCityName"
               :maxlength="20"
@@ -9,7 +9,7 @@
               clearable>
           </el-input>
         </el-form-item>
-        <el-form-item label="到达城市">
+        <el-form-item label="到站">
           <el-input
               v-model="searchForm.rangeToCityName"
               :maxlength="20"

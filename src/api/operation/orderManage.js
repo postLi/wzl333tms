@@ -89,7 +89,7 @@ export default {
     "shipSn": "string", 运单号
     "shipStatus": 0, 运单状态
     "shipStatusName": "string", 运单状态名称
-    "shipToCityCode": "string", 到达城市code
+    "shipToCityCode": "string", 到站code
     "shipToOrgid": 0, 目的网点
     "shipTotalFee": 0, 运费合计
     "shipTruckIdNumber": "string", 提货车号

@@ -127,7 +127,7 @@ export default {
           width: '130'
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           textAlign: 'center',
           width: '200'

@@ -122,7 +122,7 @@
               <div class="setup-left">运单页面</div>
               <div class="setup-right">
                 <!-- <el-form-item>
-                <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.toCityByAdministrativeRegion">到达城市必须选择到行政区</el-checkbox>
+                <el-checkbox true-label="1" false-label="0" v-model="form.shipPageFunc.toCityByAdministrativeRegion">到站必须选择到行政区</el-checkbox>
               </el-form-item> -->
                 <el-form-item>
                   <!-- <el-checkbox true-label="1" disabled false-label="0" v-model="form.shipPageFunc.shipFieldSign">运单字段设置</el-checkbox> -->
@@ -326,7 +326,7 @@ export default {
       shipField: [{
         key: 'shipFromCityName',
         value: '0',
-        name: '出发城市'
+        name: '发站'
       },
       {
         key: 'shipToOrgid',
