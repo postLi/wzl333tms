@@ -1,11 +1,13 @@
 <template>
   <div class="order-btns">
-    <el-button size="medium" @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
-    <el-button size="medium" @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
-    <el-button size="medium" @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
-    <el-button size="medium" @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
-    <el-button class="saveInsertKey" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button>
-    <el-button size="medium" @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
+    <el-button v-if="keys.cleanKeyVisible" size="medium" @click="doAction('cleanKey')" icon="el-icon-circle-close-outline" type="danger" plain>清空（{{keys.cleanKey}}）</el-button>
+    <el-button v-if="keys.printLibkeyVisible" size="medium" @click="doAction('printLibkey')" icon="el-icon-printer" type="primary" plain>打印标签（{{keys.printLibkey}}）</el-button>
+    <el-button v-if="keys.printShipKeyVisible" size="medium" @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
+    <el-button v-if="keys.printLibShipKeyVisible" size="medium" @click="doAction('printLibShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单和标签（{{keys.printLibShipKey}}）</el-button>
+    <el-button v-if="keys.saveShipKeyVisible" size="medium" @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
+    <el-button class="saveInsertKey" v-if="keys.saveInsertKeyVisible" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button>
+    <el-button v-if="keys.savePrintKeyVisible" size="medium" @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
+    <el-button v-if="keys.saveInsertPrintKeyVisible" size="medium" @click="doAction('saveInsertPrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存新增并打印（{{keys.saveInsertPrintKey}}）</el-button>
     
     <el-dropdown type="primary" trigger="click" class="createOrder-setup"  @command="handleCommand">
       <span class="el-dropdown-link">
@@ -40,7 +42,19 @@ export default {
         'savePrintKey': '',
         'saveShipKey': '',
         'cleanKey': '',
-        'printShipKey': ''
+        'printShipKey': '',
+        saveInsertPrintKey: '',
+        printLibShipKey: '',
+        saveInsertKey: '',
+
+        'printLibkeyVisible': 0,
+        'savePrintKeyVisible': 0,
+        'saveShipKeyVisible': 1,
+        'cleanKeyVisible': 1,
+        'printShipKeyVisible': 0,
+        'saveInsertKeyVisible': 0,
+        'printLibShipKeyVisible': 1,
+        'saveInsertPrintKeyVisible': 1
       }
     }
   },
@@ -86,22 +100,27 @@ export default {
     // 绑定快捷键
     bindKey() {
       for (const i in this.keys) {
-        hotkeys(this.keys[i], (e) => {
+        if (i.indexOf('Visible') === -1) {
+          hotkeys(this.keys[i], (e) => {
           // 需要判断是否为开单页面才触发
-          const elem = document.querySelector('.createOrder-main')
-          if (elem) {
-            if (elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length) {
-              e.preventDefault()
-              this.doAction(i)
+            const elem = document.querySelector('.createOrder-main')
+            if (elem) {
+            // 因为有可能打开了其它标签页，所以需要判断当前标签页是否为开单页面
+              if (elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length) {
+                e.preventDefault()
+                this.doAction(i)
+              }
             }
-          }
-        })
+          })
+        }
       }
     },
     // 取消绑定快捷键
     unbindKey() {
       for (const i in this.keys) {
-        hotkeys.unbind(this.keys[i])
+        if (i.indexOf('Visible') === -1) {
+          hotkeys.unbind(this.keys[i])
+        }
       }
     }
   }

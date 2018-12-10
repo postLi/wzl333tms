@@ -22,7 +22,7 @@
             </li>
             <li>
               <el-form-item label="联系号码:" prop="customSend.customerMobile">
-                <querySelect search="customerMobile" type="sender" valuekey="customerMobile"
+                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" :maxlength="20"
                              v-model="form.customSend.customerMobile" @change="setSender" :disabled="isDbclick"/>
               </el-form-item>
             </li>
@@ -46,7 +46,7 @@
             </li>
             <li class="marginTop_10">
               <el-form-item label="收货人:" prop="customRece.customerName">
-                <querySelect search="customerName" type="receiver" valuekey="customerName"
+                <querySelect search="customerName" type="receiver" valuekey="customerName" :maxlength="20"
                              v-model="form.customRece.customerName" @change="setReceiver" :disabled="isDbclick"/>
               </el-form-item>
             </li>
@@ -322,15 +322,13 @@
             { required: true, validator: validcustomerName }
           ],
           'customSend.customerMobile': [
-            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
-            { validator: validateMobile }
+            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') }
           ],
           'customRece.customerName': [
             { required: true, validator: this.validateIsEmpty('收货人不能为空') }
           ],
           'customRece.customerMobile': [
-            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
-            { validator: validateMobile }
+            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') }
           ],
           'tmsOrderCargoList.cargoName': [
             { validator: this.validateIsEmpty('货品名不能为空') }

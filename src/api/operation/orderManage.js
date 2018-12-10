@@ -617,5 +617,9 @@ export default {
    */
   postMatchLine(data) {
     return fetch.post('/api-system/system/tmssystemtransportrange/v1/matchRange', data)
+  },
+  // 获取上一次开单信息
+  getLastOrderInfo() {
+    return fetch.get('/api-order/order/v1/selectOrderByCreateTime')
   }
 }

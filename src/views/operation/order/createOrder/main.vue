@@ -65,7 +65,13 @@
               <div class="order-form-item">
                 <span class="order-form-label">交接方式</span>
                 <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
-                  <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" />
+                  <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" >
+                    <template slot-scope="{item}">
+                      <el-option v-if="!personConfig.shipSetKey.handoverMode[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
+                        {{item.dictName}}
+                      </el-option>
+                    </template>
+                  </SelectType>
                 </el-form-item>
               </div>
             </el-col>
@@ -822,7 +828,11 @@ export default {
       // 费用设置
       feeConfig: [],
       // 个人设置
-      personConfig: {},
+      personConfig: {
+        shipSetKey: {
+          handoverMode: {}
+        }
+      },
       // 组织信息
       orgInfo: {},
       loading: false,
@@ -1166,7 +1176,7 @@ export default {
     getBaseSetting() {
       console.log('getBaseSetting:::::')
 
-      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId()]).then(dataArr => {
+      return Promise.all([this.getAllSetting(), this.getCargoSetting(), this.getPersonSetting(), orderManage.getCreateOrderDate(), this.getOrgId(), orderManage.getLastOrderInfo()]).then(dataArr => {
         // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0] || {}
@@ -1178,6 +1188,8 @@ export default {
         this.nowTime = dataArr[3] || new Date()
         // 获取网点信息
         this.orgInfo = dataArr[4] || {}
+        // 获取上一次的开单信息
+        this.lastOrderInfo = dataArr[5] ? dataArr[5].data : {}
         console.log('get INIT Infomation::', dataArr)
       }).catch((err) => {
         this.loading = false
@@ -1207,6 +1219,7 @@ export default {
       // 当为修改运单时，不设置默认值
       if (!this.output.isOrder) {
         this.setDefaultValue()
+        this.setLastOrderInfo()
       }
       const _this = this
       setTimeout(() => {
@@ -1215,6 +1228,14 @@ export default {
           _this.bindTabWithArrow()
         }
       }, 1000)
+    },
+    // 设置上一次的运单信息
+    setLastOrderInfo() {
+      if (this.lastOrderInfo) {
+        this.form.tmsOrderShip.shipToCityName = this.lastOrderInfo.shipToCityName
+        this.form.tmsOrderShip.shipToOrgid = this.lastOrderInfo.shipToOrgid
+        console.log('this.lastOrderInfo', this.lastOrderInfo)
+      }
     },
     // 设置运单号规则
     setOrderNum() {
@@ -1394,7 +1415,7 @@ export default {
       // 业务类型
       this.form.tmsOrderShip.shipBusinessType = this.personConfig.shipSetKey.businessType
       // 交接方式
-      this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverMode
+      this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverModeDefualt
     },
     // 检查运单号是否唯一
     detectOrderNum() {
@@ -2902,6 +2923,16 @@ export default {
           this.isSaveAndNew = true
           this.submitForm()
           break
+        // 打印运单和标签
+        case 'printLibShipKey':
+          this.isSaveAndNew = true
+          this.submitForm()
+          break
+        // 保存新增并打印
+        case 'saveInsertPrintKey':
+          this.isSaveAndNew = true
+          this.submitForm()
+          break
         case 'savePrintKey':
           this.isSavePrint = true // true-保存并打印
           this.submitForm()
@@ -2916,12 +2947,12 @@ export default {
         this.setPrintData('lib') // 设置数据
         const libData = Object.assign([], data)
         for (const item in this.printDataObject) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
         CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
       })
         .catch(err => {
@@ -2934,12 +2965,12 @@ export default {
         this.setPrintData('order') // 设置数据
         const libData = Object.assign([], data)
         for (const item in this.printDataObject) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
         CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
       })
         .catch(err => {
@@ -3019,10 +3050,10 @@ export default {
       const addrToCity = this.form.tmsOrderShip.shipToCityName || ''
       const addrToCityArr = addrToCity.split(',')
 
-       const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
+      const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
       const addrFormCityArr = addrFormCity.split(',')
-        
-      this.$set(obj, 'toOrgName',  addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到达网点
+
+      this.$set(obj, 'toOrgName', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到达网点
       this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
       this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
       this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到站
