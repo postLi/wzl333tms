@@ -579,10 +579,10 @@ export default {
         cargoAmount: true,
         cargoWeight: false,
         cargoVolume: false,
-        shipReceiverName: true,
-        shipReceiverMobile: true,
-        shipSenderName: true,
-        shipSenderMobile: true,
+        shipReceiverName: false,
+        shipReceiverMobile: false,
+        shipSenderName: false,
+        shipSenderMobile: false,
 
         // 系统设置页面控制
         'amountFee': false,
