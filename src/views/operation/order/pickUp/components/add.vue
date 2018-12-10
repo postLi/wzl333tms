@@ -52,7 +52,7 @@
             <SelectType v-model="form.tmsOrderPickup.payMethod" type="ship_pay_way" class="pickup-way"
                         :disabled="isDbclick"/>
           </el-form-item>
-          <el-form-item required prop="tmsOrderPickup.toCityName" label="到达城市" class="order_toCityCode">
+          <el-form-item required prop="tmsOrderPickup.toCityName" label="到站" class="order_toCityCode">
             <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
                          v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
@@ -225,7 +225,7 @@
             { required: true, validator: this.validateIsEmpty('件数不能为空') }
           ],
           'tmsOrderPickup.toCityName': [
-            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
+            { required: true, validator: this.validateIsEmpty('到站不能为空') }
           ],
           'tmsOrderPickup.pickupVolume': [
             { validator: validatetruckFee, trigger: 'blur' }
@@ -312,8 +312,8 @@
             pickupWeight: '', // 重量
             carriage: '', // 运费
             payMethod: 76, // 付款方式
-            toCityCode: '', // 到达城市
-            toCityName: '', // 到达城市
+            toCityCode: '', // 到站
+            toCityName: '', // 到站
             remark: '',
             truckFee: '', // 车费
             pickupStatus: 236, // 提货状态
@@ -621,8 +621,8 @@
             pickupWeight: '', // 重量
             carriage: '', // 运费
             payMethod: 76, // 付款方式
-            toCityCode: '', // 到达城市
-            toCityName: '', // 到达城市
+            toCityCode: '', // 到站
+            toCityName: '', // 到站
             remark: '',
             truckFee: '', // 车费
             pickupStatus: 236, // 提货状态

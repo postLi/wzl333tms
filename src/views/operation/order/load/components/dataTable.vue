@@ -29,12 +29,12 @@
         </el-table-column>
         <el-table-column prop="brokerageFee" sortable label="回扣(元)" width="90">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipFromCityName')}}
           </template>
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipToCityName')}}
           </template>
@@ -123,12 +123,12 @@
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
         </el-table-column>
-        <el-table-column prop="shipFromCityName" sortable label="出发城市" width="120">
+        <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipFromCityName')}}
           </template>
         </el-table-column>
-        <el-table-column prop="shipToCityName" sortable label="到达城市" width="120">
+        <el-table-column prop="shipToCityName" sortable label="到站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipToCityName')}}
           </template>

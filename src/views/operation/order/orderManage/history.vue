@@ -223,7 +223,7 @@ export default {
         'prop': 'volumeFee',
         'width': '150'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'
       }, {

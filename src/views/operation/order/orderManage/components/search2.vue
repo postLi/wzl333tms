@@ -27,7 +27,7 @@
               clearable>
           </el-input>
         </el-form-item>
-      <el-form-item label="出发城市" class="searchinfo--order">
+      <el-form-item label="发站" class="searchinfo--order">
         <el-input
             v-model="searchForm.shipFormCityName"
             maxlength="15"

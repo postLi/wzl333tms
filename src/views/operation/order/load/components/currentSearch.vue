@@ -1,12 +1,12 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm">
-    <el-form-item label="到达城市">
+    <el-form-item label="到站">
       <el-autocomplete 
       v-model="searchForm.shipToCityName" 
       :size="btnsize" 
       popper-class="popperHide"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
-      placeholder="到达城市搜索" 
+      placeholder="到站搜索" 
       @keyup.enter.native="handleSelectAll"
       @select="handleSelect">
       </el-autocomplete>

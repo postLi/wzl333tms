@@ -206,7 +206,7 @@ export default {
           width: '120',
           fixed: false
         }, {
-          label: '出发城市',
+          label: '发站',
           prop: 'orderFromCityName',
           width: '110',
           fixed: false

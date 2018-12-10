@@ -34,10 +34,10 @@
           <el-form-item label="运单号" prop="shipSn">
               <el-input v-model="searchForm.shipSn" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
-          <el-form-item label="出发城市">
+          <el-form-item label="发站">
             <el-input v-model="searchForm.shipFromCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
-          <el-form-item label="到达城市">
+          <el-form-item label="到站">
               <el-input v-model="searchForm.shipToCityName" :maxlength="20" auto-complete="off" clearable @keyup.enter.native="onSubmit"></el-input>
           </el-form-item>
       </div>

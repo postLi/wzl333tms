@@ -228,7 +228,7 @@
             width: '120',
             fixed: false
           }, {
-            label: '到达城市',
+            label: '到站',
             prop: 'toCityName',
             width: '150',
             fixed: false

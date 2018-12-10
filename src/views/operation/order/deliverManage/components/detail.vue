@@ -89,8 +89,8 @@
           <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
           <el-table-column sortable width="120" prop="cargoWeight" label="运单重量"></el-table-column>
           <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column>
-          <el-table-column sortable width="160" prop="shipFromCityName" label="出发城市"></el-table-column>
-          <el-table-column sortable width="160" prop="shipToCityName" label="到达城市"></el-table-column>
+          <el-table-column sortable width="160" prop="shipFromCityName" label="发站"></el-table-column>
+          <el-table-column sortable width="160" prop="shipToCityName" label="到站"></el-table-column>
           <el-table-column sortable width="120" prop="shipSenderName" label="发货人"></el-table-column>
           <el-table-column sortable width="120" prop="shipSenderMobile" label="发货人电话"></el-table-column>
           <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
@@ -209,13 +209,13 @@ export default {
           fixed: false
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '160',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '160',
           fixed: false

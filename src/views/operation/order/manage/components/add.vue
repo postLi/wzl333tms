@@ -117,7 +117,7 @@
             <tbody>
             <tr>
               <td>
-                <el-form-item label="出发城市">
+                <el-form-item label="发站">
 
                   <querySelect search="longAddr" @change="selectFromCity" type="city"
                                v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"
@@ -125,7 +125,7 @@
                 </el-form-item>
               </td>
               <td>
-                <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
+                <el-form-item label="到站" prop="tmsOrderPre.orderToCityName">
                   <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
                                v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
                 </el-form-item>
@@ -315,7 +315,7 @@
         ke1yVal: '',
         rules: {
           'tmsOrderPre.orderToCityName': [
-            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
+            { required: true, validator: this.validateIsEmpty('到站不能为空') }
           ],
           'customSend.customerName': [
             // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
@@ -584,7 +584,7 @@
           this.checkShowMessage = false
         }
       },
-      // 选择出发城市
+      // 选择发站
       selectFromCity(item, city) {
         if (item) {
           this.form.tmsOrderPre.orderFromCityCode = item.id
@@ -593,7 +593,7 @@
           // this.form.tmsOrderPre.orderFromCityCode = city || ''
         }
       },
-      // 选择到达城市
+      // 选择到站
       selectToCity(item, city) {
         if (item) {
           this.form.tmsOrderPre.orderToCityCode = item.id

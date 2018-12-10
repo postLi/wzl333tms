@@ -161,12 +161,12 @@ export default {
         width: '90'
       },
       {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '150'
       },
       {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '150'
       },

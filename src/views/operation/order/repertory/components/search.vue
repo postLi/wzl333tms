@@ -9,11 +9,11 @@
       <el-form-item label="运单号" prop="shipSn">
         <querySelect v-model="searchForm.shipSn" search="shipSn" type="order" valuekey="shipSn"  :maxlength="15"></querySelect>
       </el-form-item>
-      <el-form-item label="出发城市">
+      <el-form-item label="发站">
         <el-input v-model="searchForm.shipFromCityName" :maxlength="15"></el-input>
         <!-- <querySelect v-model="searchForm.shipFromCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
       </el-form-item>
-      <el-form-item label="到达城市">
+      <el-form-item label="到站">
         <el-input v-model="searchForm.shipToCityName"  :maxlength="15"></el-input>
         <!-- <querySelect v-model="searchForm.shipToCityName" search="name" valuekey="longAddr" type="city" label="longAddr" :remote="true" /> -->
       </el-form-item>

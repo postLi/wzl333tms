@@ -66,10 +66,10 @@
               sortable
               prop="shipFromCityName"
               width="200"
-              label="出发城市">
+              label="发站">
             </el-table-column>
             <el-table-column
-              label="到达城市"
+              label="到站"
               width="200"
               prop="shipToCityName"
               sortable
@@ -381,12 +381,12 @@ export default {
         },
         fixed: false
       }, {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '120',
         fixed: false
       }, {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '120',
         fixed: false

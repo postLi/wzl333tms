@@ -39,7 +39,7 @@
             </el-col>
             <el-col :span="4">
               <div class="order-form-item">
-                <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">出发城市</span>
+                <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">发站</span>
                 <el-form-item :error='shipFieldValueInfo.shipFromCityName'>
                   <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity" v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
                 </el-form-item>
@@ -47,7 +47,7 @@
             </el-col>
             <el-col :span="4">
               <div class="order-form-item">
-                <span class="order-form-label required">到达城市</span>
+                <span class="order-form-label required">到站</span>
                 <el-form-item :error='shipFieldValueInfo.shipToCityName'>
                   <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity" v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
                 </el-form-item>
@@ -526,7 +526,7 @@ export default {
         // 当前页面控制
         shipSn: '', // 运单号
         shipCreateTime: '',
-        shipToCityName: '', // 到达城市
+        shipToCityName: '', // 到站
 
         shipReceiverName: '',
         shipReceiverUnit: '',
@@ -890,7 +890,7 @@ export default {
       handler(newVal) {
         /* console.log("this.$refs['tmsOrderShipshipSn'].focus()",this.config.shipNo.manualInput)
         if(this.config.shipNo.manualInput !== '1'){
-          // 否则在到达城市位置
+          // 否则在到站位置
           this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
         } else {
            // 允许修改单号，则在运单号位置
@@ -1184,7 +1184,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
-    // 设置出发城市
+    // 设置发站
     setOrgCity() {
       this.form.tmsOrderShip.shipFromCityName = this.orgInfo.city
     },
@@ -1308,7 +1308,7 @@ export default {
         // shipStatus 59
       }
     },
-    // 选择出发城市
+    // 选择发站
     selectFromCity(item, city) {
       console.log('selectFromCity:', item, city)
       if (item) {
@@ -1323,7 +1323,7 @@ export default {
       } */
       this.getLineInfo()
     },
-    // 选择到达城市
+    // 选择到站
     selectToCity(item, city) {
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
@@ -2181,7 +2181,7 @@ export default {
       const value = this.form.tmsOrderShip.shipFromCityName
       let msg = ''
       if (!value) {
-        msg = '出发城市不能为空'
+        msg = '发站不能为空'
       }
       this.shipFieldValueInfo.shipFromCityName = msg
       if (msg && !m) {
@@ -2196,7 +2196,7 @@ export default {
       const value = this.form.tmsOrderShip.shipToCityName
       let msg = ''
       if (!value) {
-        msg = '到达城市不能为空'
+        msg = '到站不能为空'
       }
       this.shipFieldValueInfo.shipToCityName = msg
       if (msg && !m) {
@@ -2481,7 +2481,7 @@ export default {
       /* const value = this.form.tmsOrderShip.shipToCityName
       let msg = ''
       if (!value) {
-        msg = '出发城市不能为空'
+        msg = '发站不能为空'
       }
       this.shipFieldValueInfo.shipToCityName = msg
       if (msg && !m) {
@@ -2538,11 +2538,11 @@ export default {
         if (checklist.shipSn) {
           msg = this.checkshipSn()
         }
-        // 出发城市
+        // 发站
         if (checklist.shipFromCityName) {
           msg = this.checkshipFromCityName(msg)
         }
-        // 到达城市
+        // 到站
         if (checklist.shipToCityName) {
           msg = this.checkshipToCityName(msg)
         }
@@ -3023,9 +3023,9 @@ export default {
       const addrFormCityArr = addrFormCity.split(',')
         
       this.$set(obj, 'toOrgName',  addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到达网点
-      this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 出发城市
+      this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
       this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
-      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到达城市
+      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到站
       this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
 
       if (type === 'lib') {

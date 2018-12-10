@@ -30,7 +30,7 @@
           </el-col>
           <el-col :span="4">
             <div class="order-form-item">
-              <span class="order-form-label required">出发城市</span>
+              <span class="order-form-label required">发站</span>
               <el-form-item>
                 <el-input :value="form.tmsOrderShipInfo.shipFromCityName" disabled size="mini" />
               </el-form-item>
@@ -38,7 +38,7 @@
           </el-col>
           <el-col :span="4">
             <div class="order-form-item">
-              <span class="order-form-label required">到达城市</span>
+              <span class="order-form-label required">到站</span>
               <el-form-item>
                 <el-input :value="form.tmsOrderShipInfo.shipToCityName" disabled size="mini" />
               </el-form-item>
@@ -1128,8 +1128,8 @@ export default {
       this.$set(obj, 'fromOrgName', infoDetail.fromOrgName) // 开单网点
       this.$set(obj, 'toOrgName', infoDetail.toOrgName) // 目的网点 || 到达网点
       this.$set(obj, 'description', infoDetail.description) // 品种规格
-      this.$set(obj, 'fromCity', infoDetail.shipFromCityName) // 出发城市
-      this.$set(obj, 'toCity', infoDetail.shipToCityName) // 到达城市
+      this.$set(obj, 'fromCity', infoDetail.shipFromCityName) // 发站
+      this.$set(obj, 'toCity', infoDetail.shipToCityName) // 到站
       this.$set(obj, 'deliveryMethod', infoDetail.shipDeliveryMethodName) // 交接方式
 
       if (type === 'lib') {

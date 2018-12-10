@@ -173,7 +173,7 @@
           </el-table-column>
           <el-table-column
             prop="orderFromCityCode"
-            label="出发城市"
+            label="发站"
             sortable
             width="110"
           >
