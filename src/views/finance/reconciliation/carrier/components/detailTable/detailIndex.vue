@@ -40,8 +40,6 @@
             </el-table-column>
           </template>
         </el-table>
-
-
       </div>
       <div class="info_tab_footer">共计:{{ total }}
         <div class="show_pager">
@@ -371,7 +369,6 @@
                 })
               }
             }
-
             break
           // 删除
           case 'detele':

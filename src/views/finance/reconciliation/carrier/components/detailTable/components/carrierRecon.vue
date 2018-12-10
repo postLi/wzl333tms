@@ -1205,10 +1205,6 @@
             sums[index] = ''
             return
           }
-          // if (index === 3 || index === 4 || index === 5 || index === 7 || index === 15 || index === 16) {
-          //   sums[index] = ''
-          //   return
-          // }
           const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr) => {

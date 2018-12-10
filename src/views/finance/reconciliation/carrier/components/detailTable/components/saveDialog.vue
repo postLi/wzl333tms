@@ -167,25 +167,6 @@
     methods: {
       watchData() {
 
-        // console.log(this.tota)
-        // this.dialogData = Object.assign(this.tota)
-        // let count = []
-        // for (let item in this.dialogData) {
-        //    let data = 0
-        //     this.dialogData[item].forEach(el => {
-        //       data += Number(el.totalFee)
-        //       console.log(data)
-        //   })
-        //     count.push(data)
-        //     data = 0
-        // }
-        //
-        // count.forEach((e, index) => {
-        //   this.dialogInfo[index].toPay = e
-        //
-        // })
-
-
         this.dialogData = this.tota
         // console.log(this.dialogData);
         this.dialogInfo[0].toPay = 0
