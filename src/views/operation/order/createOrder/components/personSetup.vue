@@ -114,12 +114,33 @@ export default {
           'saveShipKey': '',
           'cleanKey': '',
           'printShipKey': '',
-          saveInsertKey: ''
+          'saveInsertKey': '',
+          'printLibShipKey': '',
+          'saveInsertPrintKey': '',
+          'printLibkeyVisible': 1,
+          'savePrintKeyVisible': 1,
+          'saveShipKeyVisible': 1,
+          'cleanKeyVisible': 1,
+          'printShipKeyVisible': 1,
+          'saveInsertKeyVisible': 1,
+          'printLibShipKeyVisible': 1,
+          'saveInsertPrintKeyVisible': 1
         },
         'shipSetKey': {
+          // 0 show
+          // 1 hidden
+          handoverMode: [{
+            '68': 0,
+            '69': 0,
+            '70': 0,
+            '71': 0,
+            '72': 0,
+            '73': 0,
+            '74': 0,
+            '75': 0
+          }],
           'receiptType': '',
           'receiptNum': '',
-          'handoverMode': '',
           'paymentMode': '',
           'transportMode': '',
           'businessType': ''

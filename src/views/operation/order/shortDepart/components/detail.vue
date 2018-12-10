@@ -661,8 +661,8 @@ export default {
           this.detailList = (data.data || []).map(el => {
             const start = (el.shipFromCityName || '').split(',')
             const end = (el.shipToCityName || '').split(',')
-            el.shipFromCityName = start[1] || start[0] || ''
-            el.shipToCityName = end[1] || end[0] || ''
+            el.shipFromCityName = start[2] || start[1] || start[0] || ''
+            el.shipToCityName = end[2] || end[1] || end[0] || ''
 
             return el
           })
