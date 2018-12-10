@@ -92,7 +92,7 @@
         total: 0,
         trackId: '',
         // 加载状态
-        loading: false,
+        loading: true,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,
@@ -355,7 +355,7 @@
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '取消完成成功~'
                   })
                   this.fetchData()
                 }).catch(err => {
@@ -386,7 +386,7 @@
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '删除成功~'
                   })
                   this.fetchData()
                 }).catch(err => {
