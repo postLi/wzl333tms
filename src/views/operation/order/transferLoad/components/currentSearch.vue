@@ -1,16 +1,5 @@
 <template>
-  <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm">
-    <el-form-item label="到达城市">
-      <el-autocomplete 
-      v-model="searchForm.shipToCityName" 
-      :size="btnsize" 
-      popper-class="popperHide"
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
-      placeholder="到达城市搜索" 
-      @keyup.enter.native="handleSelectAll"
-      @select="handleSelect">
-      </el-autocomplete>
-    </el-form-item>
+  <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm" @submit.native.prevent>
     <el-form-item label="运单号" >
       <el-autocomplete 
       v-model="searchForm.shipSn" 
@@ -19,7 +8,8 @@
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       @keyup.enter.native="handleSelectAll"
-      @select="handleSelect">
+      @select="handleSelect"
+      >
       </el-autocomplete>
     </el-form-item>
   </el-form>
@@ -35,12 +25,10 @@ export default {
     return {
       senderSearch: '',
       searchForm: {
-        shipToCityName: '',
         shipSn: ''
       },
       btnsize: 'mini',
-      selectVal: '',
-      resultList: []
+      selectVal: 'shipSn'
     }
   },
   props: {
@@ -70,12 +58,10 @@ export default {
       results.forEach(e => {
         array.push(e)
       })
-      this.resultList = Object.assign({}, array)
       this.$emit('change', array)
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        console.log('sdfjisjdfisjdifjsdifjsidfjisdj')
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
@@ -89,7 +75,7 @@ export default {
     clearSender(event) {
       this.searchForm = this.$options.data().searchForm
     },
-    handleSelectAll () {
+    handleSelectAll() {
       this.$emit('keyupEneter')
       this.searchForm = this.$options.data().searchForm
     }

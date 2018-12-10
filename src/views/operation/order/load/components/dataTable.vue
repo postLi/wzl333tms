@@ -3,7 +3,7 @@
     <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="regetList"></el-button>
     <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
-      <currentSearch :info="orgLeftTable" @change="getSearch"></currentSearch>
+      <currentSearch :info="orgLeftTable" @change="getSearch" @keyupEneter="getSearchEnter"></currentSearch>
     </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -371,6 +371,12 @@ export default {
     },
     getSearch(obj) { // 搜索
       this.leftTable = obj
+    },
+    getSearchEnter () {
+      if (this.leftTable.length) {
+        this.addALLList()
+      }
+      this.leftTable = Object.assign([], this.orgLeftTable)
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

@@ -1,9 +1,13 @@
 <template>
   <transferTable>
     <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="getList"></el-button>
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
+      <!-- 搜索左边表格 -->
+      <currentSearch :info="orgLeftTable" @change="getSearch" @keyupEneter="getSearchEnter"></currentSearch>
+    </div>
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
+      <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
@@ -60,7 +64,7 @@
     </div>
     <!-- 右边表格区 -->
     <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn2">
-      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%"  @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
+      <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
         <el-table-column fixed type="index" width="50">
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
@@ -75,40 +79,33 @@
         </el-table-column>
         <el-table-column prop="oddNumbers" sortable label="中转单号" width="120">
           <template slot-scope="scope">
-            <el-input size="mini"  :value="scope.row.oddNumbers" @change="(val) => changeRow('oddNumbers', scope, val)" required></el-input>
+            <el-input size="mini" :value="scope.row.oddNumbers" @change="(val) => changeRow('oddNumbers', scope, val)" required></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="transferCharge" sortable label="中转运费" width="120">
           <template slot-scope="scope">
-            <el-input size="mini"
-            v-number-only:point  :value="scope.row.transferCharge" @change="(val) => changeRow('transferCharge', scope, val)"  ></el-input>
+            <el-input size="mini" v-number-only:point :value="scope.row.transferCharge" @change="(val) => changeRow('transferCharge', scope, val)"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="deliveryExpense" sortable label="中转送货费" width="120">
           <template slot-scope="scope">
-            <el-input size="mini"
-            v-number-only:point 
-             @change="(val) => changeRow('deliveryExpense', scope, val)"
-             :value="scope.row.deliveryExpense" ></el-input>
+            <el-input size="mini" v-number-only:point @change="(val) => changeRow('deliveryExpense', scope, val)" :value="scope.row.deliveryExpense"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="transferOtherFee" sortable label="中转其他费" width="120">
           <template slot-scope="scope">
-            <el-input size="mini"
-            v-number-only:point 
-            @change="(val) => changeRow('transferOtherFee', scope, val)"  :value="scope.row.transferOtherFee" ></el-input>
+            <el-input size="mini" v-number-only:point @change="(val) => changeRow('transferOtherFee', scope, val)" :value="scope.row.transferOtherFee"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="totalCost" sortable label="中转费合计" width="120">
           <template slot-scope="scope">
             <!-- <el-input size="mini" disabled v-model="rightTable[scope.$index].totalCost" ></el-input> -->
-            <el-input size="mini" disabled v-model="scope.row.totalCost" ></el-input>
+            <el-input size="mini" disabled v-model="scope.row.totalCost"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="paymentId" sortable label="中转费付款方式" width="120">
           <template slot-scope="scope">
-            <selectType type="payment_type" size="mini"
-            @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
+            <selectType type="payment_type" size="mini" @change="(val) => changeRow('paymentId', scope, val)" :value="scope.row.paymentId" :name="scope.row.paymentName" />
           </template>
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
@@ -150,6 +147,7 @@
 <script>
 import transferTable from '@/components/transferTable'
 import selectType from '@/components/selectType/index'
+import currentSearch from './currentSearch'
 import { getTotal, getSummaries } from '@/utils/'
 
 export default {
@@ -163,6 +161,7 @@ export default {
   },
   data() {
     return {
+      orgLeftTable: [],
       tablekey: '',
       truckMessage: '',
       formModel: {},
@@ -176,24 +175,25 @@ export default {
   },
   components: {
     transferTable,
-    selectType
+    selectType,
+    currentSearch
   },
   watch: {
     leftData(newVal) {
       this.leftTable = newVal
+      this.orgLeftTable = newVal
     },
     rightData(newVal) {
       this.rightTable = newVal
     }
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     getList() {
       this.$emit('regetList')
     },
     getSum(param, type) {
-      const propsArr = ['_index|1|单', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
+      const propsArr = [ '_index|2|单', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
       return getSummaries(param, propsArr)
     },
     getSumRight(param) { // 右边表格合计-自定义显示
@@ -216,6 +216,15 @@ export default {
     },
     changeTableKey() { // 刷新表格
       // this.tablekey = Math.random()
+    },
+    getSearchEnter() {
+       if (this.leftTable.length) {
+        this.addALLList()
+      }
+      this.leftTable = Object.assign([], this.orgLeftTable)
+    },
+    getSearch(arr) {
+      this.leftTable = arr
     },
     doAction(type) {
       switch (type) {
@@ -261,6 +270,9 @@ export default {
           this.leftTable = this.leftTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
+          this.orgLeftTable = this.orgLeftTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
         })
         // this.changeTableKey() // 刷新表格视图
         this.selectedRight = [] // 清空选择列表
@@ -275,7 +287,11 @@ export default {
           this.leftTable = this.leftTable.filter(em => {
             return em.repertoryId !== e.repertoryId
           })
+          this.orgLeftTable = this.orgLeftTable.filter(el => {
+            return el.repertoryId !== e.repertoryId
+          })
           this.leftTable.push(e)
+          this.orgLeftTable.push(e)
           this.rightTable = this.rightTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
@@ -346,7 +362,6 @@ export default {
 
 </script>
 <style lang="scss">
-
 .tableHeadItemBtn2 {
   height: 100%;
   position: relative;
@@ -391,8 +406,7 @@ export default {
   .tableAllBtnMinus:hover,
   .tableItemBtnMinus:hover {
     background-image: url('../../../../../assets/png/04shanqu.png');
-  }
-  // position: relative;
+  } // position: relative;
   // .tableItemBtn {
   //   width: 30px;
   //   padding-left: 8px;
