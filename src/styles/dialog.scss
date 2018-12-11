@@ -152,29 +152,53 @@ $dialogHeader_bgcolor: #e6e6e6;
     .prinit_aside_info {
       padding: 10px; // background-color: #fbfbfb;
     }
-    ul.print_aside_content {
-      background-color: #fbfbfb;
-      width: 100%;
-      position: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      padding: 10px 0;
-      li {
-        display: inline-block;
-        cursor: pointer;
-        flex-grow: 1; // float: left;
-        padding: 0 10px; // background-color:#fff;
-        height: 28px;
-        line-height: 28px;
-        b {
-          font-weight: 400;
-          font-style: normal;
+    .print_aside_content_form {
+      label {
+        padding: 0 10px;
+        display: block;
+        width: 100%;
+        line-height: 36px;
+        height: 36px;
+        background-color: #eee;
+        color: #409eff;
+        font-weight: 900;
+        position: relative;
+      }
+      label:before {
+        content: '';
+        display: block;
+        width: 5px;
+        height: 36px;
+        background-color: #409eff;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+     
+    }
+     ul.print_aside_content {
+        background-color: #fbfbfb;
+        width: 100%;
+        position: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 10px 0;
+        li {
+          display: inline-block;
+          cursor: pointer;
+          flex-grow: 1; // float: left;
+          padding: 0 10px; // background-color:#fff;
+          height: 28px;
+          line-height: 28px;
+          b {
+            font-weight: 400;
+            font-style: normal;
+          }
         }
       }
-    }
-    li:hover b {
-      border-bottom: 1px solid #999;
-    }
+      li:hover b {
+        border-bottom: 1px solid #999;
+      }
   }
   .print_main {
     padding: 48px 10px 10px 10px;
@@ -505,15 +529,14 @@ $dialogHeader_bgcolor: #e6e6e6;
       top: 3px;
     }
   }
-    .el-table.failinScroll{
-      //overflow-y: ;
-      .el-table__body-wrapper{
-        overflow-y: scroll;
-        height: 368px;
-        min-height: 368px;
-      }
+  .el-table.failinScroll {
+    //overflow-y: ;
+    .el-table__body-wrapper {
+      overflow-y: scroll;
+      height: 368px;
+      min-height: 368px;
     }
-
+  }
 }
 
 .animated {
@@ -568,12 +591,13 @@ $dialogHeader_bgcolor: #e6e6e6;
     margin-top: 20px;
     color: #999;
   }
-  .nativeinput{
+  .nativeinput {
     width: 200px;
     border: 1px solid #dcdfe6;
     border-radius: 3px;
   }
 }
+
 
 
 /**
@@ -633,10 +657,10 @@ $dialogHeader_bgcolor: #e6e6e6;
       }
       .el-input__inner {
         width: 100%;
-         height: 28px !important;
+        height: 28px !important;
       }
     }
-    .el-form-item__error{
+    .el-form-item__error {
       padding-top: 0px;
       margin-top: -5px;
       z-index: 2;
@@ -644,8 +668,7 @@ $dialogHeader_bgcolor: #e6e6e6;
   }
   .income_item_row {
     .uploadcard {
-      padding: 10px;
-      //上传图片
+      padding: 10px; //上传图片
       .el-upload-list--picture-card .el-upload-list__item {
         width: 120px;
         height: 120px;
@@ -659,16 +682,16 @@ $dialogHeader_bgcolor: #e6e6e6;
         height: 122px;
         line-height: 20px;
       }
-      .box_container .el-upload__text{
+      .box_container .el-upload__text {
         line-height: 20px;
       }
       .upload__tip {
         line-height: 18px;
       }
-      .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+      .el-form-item--mini.el-form-item,
+      .el-form-item--small.el-form-item {
         margin-top: 5px;
-      }
-      //上传图片end
+      } //上传图片end
       .uploadlist {
         width: 100%;
         margin-left: 80px;
@@ -681,6 +704,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
   }
 }
+
 .formItemTextDanger {
   .el-form-item__label {
     color: #ef0000;
