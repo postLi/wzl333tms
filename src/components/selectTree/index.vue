@@ -108,7 +108,7 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    this.init(true)
     var agnt = navigator.userAgent.toLowerCase()
     // <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
     if (agnt.indexOf('msie') > 0 || agnt.indexOf('trident') > 0) {
@@ -144,10 +144,12 @@ export default {
     }
   },
   methods: {
-    init() {
+    init(shoulChange) {
       this.aid = parseInt(this.value, 10) || ''
       if (this.multiple) {
         this.aid = this.value
+      } else if (this.aid && shoulChange) {
+        this.change(this.aid)
       }
 
       if (!this.inited) {

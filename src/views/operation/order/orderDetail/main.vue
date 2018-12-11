@@ -1128,8 +1128,15 @@ export default {
       this.$set(obj, 'fromOrgName', infoDetail.fromOrgName) // 开单网点
       this.$set(obj, 'toOrgName', infoDetail.toOrgName) // 目的网点 || 到达网点
       this.$set(obj, 'description', infoDetail.description) // 品种规格
-      this.$set(obj, 'fromCity', infoDetail.shipFromCityName) // 发站
-      this.$set(obj, 'toCity', infoDetail.shipToCityName) // 到站
+
+      const addrToCity = infoDetail.shipToCityName || ''
+      const addrToCityArr = addrToCity.split(',')
+
+      const addrFormCity = infoDetail.shipFromCityName || ''
+      const addrFormCityArr = addrFormCity.split(',')
+
+      this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
+      this.$set(obj, 'toCity', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到站
       this.$set(obj, 'deliveryMethod', infoDetail.shipDeliveryMethodName) // 交接方式
 
       if (type === 'lib') {

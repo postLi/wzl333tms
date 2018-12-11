@@ -3,6 +3,7 @@ import { mapGetters } from 'vuex'
 import { eventBus } from '@/eventBus'
 import { keepNumber, keepNumberAndPoint, cacheDEVInfo, handleErrorMsg } from '@/utils/'
 import { getToken } from '@/utils/auth'
+import { getOrgName } from '@/api/company/employeeManage'
 
 Vue.mixin({
   data() {
@@ -23,6 +24,9 @@ Vue.mixin({
     }
   },
   methods: {
+    _getOrgName(id) {
+      return getOrgName(id)
+    },
     _processTableSlot(scope, prop) {
       if (prop === 'shipFromCityName' || prop === 'shipToCityName') {
         const addr = scope.row[prop] || ''
