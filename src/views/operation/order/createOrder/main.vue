@@ -2760,20 +2760,20 @@ export default {
                 let flag = false
                 for (const i in el) {
                   if (el[i]) {
-                  flag = true
-                }
+                    flag = true
+                  }
                 }
 
                 return flag
               }).map(el => {
                 const b = {}
                 for (const i in el) {
-                if (el[i] === '' && i !== 'cargoName') {
+                  if (el[i] === '' && i !== 'cargoName') {
                   b[i] = 0
                 } else {
                   b[i] = el[i]
                 }
-              }
+                }
                 return b
               })
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
@@ -2793,15 +2793,15 @@ export default {
                 if (parseInt(data.tmsOrderShip.shipPayWay, 10) !== 103) {
                   let total = 0
                   data.tmsOrderCargoList.forEach(el => {
-                  total = tmsMath.add(total, el.shipFee || 0).result()
-                })
+                    total = tmsMath.add(total, el.shipFee || 0).result()
+                  })
                   console.log('提交前判断：', total, this.lineinfo.lowerPrice, data.tmsOrderCargoList)
                   if (this.lineinfo.lowerPrice > total) {
-                  this.$message.info('基本运费不得低于最低价格' + this.lineinfo.lowerPrice + '元。')
-                  this.loading = false
-                  reject(3)
-                  return false
-                }
+                    this.$message.info('基本运费不得低于最低价格' + this.lineinfo.lowerPrice + '元。')
+                    this.loading = false
+                    reject(3)
+                    return false
+                  }
                 }
               }
 
@@ -2837,7 +2837,7 @@ export default {
                   this.eventBus.$emit('saveOrderSuccess')
 
                   if (!this.output.isbatch) {
-                  if (this.isSaveAndNew) {
+                    if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
@@ -2846,15 +2846,15 @@ export default {
                     // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
                     this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
                   }
-                } else {
-                  this.batchSaveList[this.currentBatch].data = data
-                }
+                  } else {
+                    this.batchSaveList[this.currentBatch].data = data
+                  }
                   this.loading = false
                 }).catch(err => {
-                this.loading = false
-                this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
-                reject(4)
-              })
+                  this.loading = false
+                  this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
+                  reject(4)
+                })
               } else {
               /* this.$message.success('成功创建运单！')
                 this.batchSaveList[this.currentBatch].data = data
@@ -2880,10 +2880,10 @@ export default {
                   resolve()
                 // 当为批次列表过来的，不作处理
                   if (!this.output.isbatch) {
-                  if (this.output.isPreOrder) {
+                    if (this.output.isPreOrder) {
                     this.eventBus.$emit('putAcceptOrder', this.output.preId)
                   }
-                  if (this.isSaveAndNew) {
+                    if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew -> 2')
                   } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
@@ -2891,19 +2891,19 @@ export default {
                   } else {
                     this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
                   }
-                } else {
-                  this.batchSaveList[this.currentBatch].data = data
-                  this.batchSaveList[this.currentBatch].issave = true
-                  this.goNextEditBatch()
-                }
+                  } else {
+                    this.batchSaveList[this.currentBatch].data = data
+                    this.batchSaveList[this.currentBatch].issave = true
+                    this.goNextEditBatch()
+                  }
                   if (this.isSavePrint) {
-                  this.printSave() // 执行成功后打印运单
-                }
+                    this.printSave() // 执行成功后打印运单
+                  }
                 }).catch(err => {
-                this.loading = false
-                reject(5)
-                this.$message.error('创建失败，原因：' + err.text)
-              })
+                  this.loading = false
+                  reject(5)
+                  this.$message.error('创建失败，原因：' + err.text)
+                })
               }
             }
           } else {
@@ -2973,10 +2973,10 @@ export default {
       })
     },
     printLibkey() { // 打印标签
-      const printData = objectMerge2({}, this.printDataObject)
       return getEnableLibSetting().then(data => {
-        console.log('getEnableLibSetting', data, printData)
         this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getEnableLibSetting', data, printData)
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
@@ -2992,10 +2992,10 @@ export default {
         })
     },
     print() { // 打印运单
-      const printData = objectMerge2({}, this.printDataObject)
       return getEnableOrderSetting().then(data => {
-        console.log('getEnableOrderSetting', data)
         this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getEnableOrderSetting', data)
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
