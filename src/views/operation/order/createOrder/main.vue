@@ -2840,12 +2840,12 @@ export default {
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew')
                     } else if (this.ispop) {
-                      this.eventBus.$emit('hideCreateOrder')
-                      this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
-                    } else {
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
+                  } else {
                     // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
-                      this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
-                    }
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+                  }
                   } else {
                     this.batchSaveList[this.currentBatch].data = data
                   }
@@ -2886,11 +2886,11 @@ export default {
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew -> 2')
                     } else if (this.ispop) {
-                      this.eventBus.$emit('hideCreateOrder')
-                      this.eventBus.$emit('showOrderDetail', res.data)
-                    } else {
-                      this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
-                    }
+                    this.eventBus.$emit('hideCreateOrder')
+                    this.eventBus.$emit('showOrderDetail', res.data)
+                  } else {
+                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
+                  }
                   } else {
                     this.batchSaveList[this.currentBatch].data = data
                     this.batchSaveList[this.currentBatch].issave = true
