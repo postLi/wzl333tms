@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Stict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=gb2312">
+  <meta http-equiv="MSThemeCompatible" content="yes">
+  <link rel="stylesheet" type="text/css" href="untils/common.css" />
+  <script src="binary/dynaload.js"></script>
+  <script src="untils/common.js"></script>
+  <script>
+  var query = getToken()
+  // var path = window.location.protocol + '//' + window.location.host
+  var path = window.location.protocol + '//' + window.location.host
+
+  function OnReady(id) {
+    AF.func("Build", "report/reportOrder2.xml");
+    //AF.func("callfunc", "301 \r\n 6"); //交叉图表快捷工具栏
+    //AF.func("SelectCell", "0\r\n0");
+    //指定ds1数据源取数的URL地址 
+    // var access_token = "46d1db49-5c53-41ec-8220-42e1e25dccd3";
+    //真正数据源url ，数据源自真实查询表而来
+    //AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-order/order/view/v1/cargoView?orgid=44&searchSign=3&access_token="+access_token);
+    //模板数据源url，数据源自手工生成  
+    // AF.func("SetSource", "ds1 \r\n http://192.168.1.157:7010/api-order/order/view/v1/cargoView2?idNum=10&access_token=" + access_token);
+    AF.func("SetSource", "ds1 \r\n "+ path  +"/api/api-order/order/view/v1/cargoView2?idNum=5000&access_token=" + query);
+    console.log(path  +"/api/api-order/order/view/v1/cargoView2?idNum=5000&access_token=" + query)
+
+    //需要重新计算， 因为SetSource仅仅是相当于更改一个属性 
+    AF.func("Calc", "");
+
+  }
+
+  </script>
+</head>
+
+<!-- <body topmargin=4 leftmargin=0 rightmargin=0 bottommargin=0 scroll=no style="overflow:hidden;border:none">
+  <script>
+  insertReport('AF', 'FullScreen;PagesTabPercent=0;Border=none;LeftRulerWidthPercent=0;Rebar=none')
+  </script>
+</body> -->
+<body>
+	<div id="main" style="position:relative;width:100%;height:380px">
+    <script>
+    insertReport('AF', 'FullScreen;PagesTabPercent=0;Border=none;LeftRulerWidthPercent=0;Rebar=none;Ruler=Vert;')
+    </script>
+  </div>
+</body>
+<script type='text/javascript' src='res/nstd.js'></script>
+
+</html>

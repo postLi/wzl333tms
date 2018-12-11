@@ -1,0 +1,448 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="apple-touch-fullscreen" content="YES" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta http-equiv="Expires" content="-1" />
+<meta http-equiv="pragram" content="no-cache" />
+<meta name="viewport" content="width=640, user-scalable=no, target-densitydpi=device-dpi">
+<meta name="screen-orientation" content="portrait">
+<meta name="x5-orientation" content="portrait">
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<title>上传图片 - 安发中国</title>
+<script>
+  //https://github.com/amfe/lib-flexible/blob/2.0/index.js
+!function(e,t){function n(){t.body?t.body.style.fontSize=12*o+"px":t.addEventListener("DOMContentLoaded",n)}function d(){var e=i.clientWidth/10;i.style.fontSize=e+"px"}var i=t.documentElement,o=e.devicePixelRatio||1;if(n(),d(),e.addEventListener("resize",d),e.addEventListener("pageshow",function(e){e.persisted&&d()}),o>=2){var a=t.createElement("body"),s=t.createElement("div");s.style.border=".5px solid transparent",a.appendChild(s),i.appendChild(a),1===s.offsetHeight&&i.classList.add("hairlines"),i.removeChild(a)}}(window,document);
+</script>
+<style>
+html{color:#000;background:#fff;overflow-y:scroll;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+html *{outline:0;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+html,body{font-family:sans-serif;height: 100%;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{margin:0;padding:0}
+input,select,textarea{font-size:100%}
+table{border-collapse:collapse;border-spacing:0}
+fieldset,img{border:0}
+abbr,acronym{border:0;font-variant:normal}
+del{text-decoration:line-through}address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:500}
+ol,ul{list-style:none}
+caption,th{text-align:left}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:500}
+q:before,q:after{content:''}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+a:hover{text-decoration:underline}
+ins,a{text-decoration:none}
+</style>
+<style>
+#preview{
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.uploadbox{
+  display: none;
+  height: 100%;
+}
+#loginfo{
+  position: fixed;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0,.4);
+  color: #fff;
+  pointer-events: none;
+  display: none;
+}
+.loadinginfo{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+h1{
+  text-align: center;
+  font-size: 32px;
+  padding: 10px 0;
+}
+.upload-tip{
+  height: 2rem;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+.upload-tip p{
+  font-size: 24px;
+  line-height: 1.5;
+  padding-left: 10%;
+}
+.big-upload-box{
+  width: 80%;
+  margin-left: 10%;
+  position: relative;
+  height: calc(100% - 4rem);
+  box-sizing: border-box;
+  padding: 20px;
+  background: #eee;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
+}
+.big-upload-box span{
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+}
+.big-upload-box input{
+  position: absolute;
+  width: 100%;
+  height: 100%; 
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.big-upload-box .upload-ico{
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  font-size: 3rem;
+  top: 50%;
+  margin-left: -1.5rem;
+  margin-top: -1.5rem;
+  left: 50%;
+  color: #999;
+  text-align: center;
+  line-height: 2.5rem;
+  pointer-events: none;
+}
+.lt,.rt,.lb,.rb{
+  z-index: 2;
+}
+.lt{
+  left: 0;
+  top: 0;
+  border-left: 5px solid #999;
+  border-top: 5px solid #999;
+}
+.rt{
+  right: 0;
+  top: 0;
+  border-right: 5px solid #999;
+  border-top: 5px solid #999;
+}
+.lb{
+  left: 0;
+  bottom: 0;
+  border-left: 5px solid #999;
+  border-bottom: 5px solid #999;
+}
+.rb{
+  right: 0;
+  bottom: 0;
+  border-right: 5px solid #999;
+  border-bottom: 5px solid #999;
+}
+.imgbox{
+  background: #aaa;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 20px solid #eee;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  display: none;
+}
+
+.upload-btns{
+  height: 1rem;
+  text-align: center;
+  display: none;
+}
+.upload-btns div{
+  display: inline-block;
+  margin-right: 20px;
+  width: 2rem;
+  height: 1rem;
+  line-height: 1rem;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 4px;
+  font-size: 24px;
+}
+
+.rechoice{
+  color: #409eff;
+  background: #ecf5ff;
+  border: 1px solid #b3d8ff;
+}
+.rechoice input{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+}
+.submitbtn{
+  color: #fff;
+  background-color: #409eff;
+  border: 1px solid #409eff;
+}
+</style>
+</head>
+<body>
+  <div class="loadinginfo">正在初始化中...</div>
+  <div class="uploadbox">
+    <div class="upload-tip">
+      <h1>上传图片</h1>
+      <p>1.点击[+]选择图片;<br>2.点击“确认”按钮上传;</p>
+    </div>
+    <div class="big-upload-box">
+      <span class="lt"></span>
+      <span class="rt"></span>
+      <span class="lb"></span>
+      <span class="rb"></span>
+      <span class="upload-ico">+</span>
+      <input type="file" id="getimg3"  accept="image/*" >
+      <div class="imgbox">
+          <img src="http://img2.dzwww.com:8888/tupian/20171202/201712021705f71a7f65519974.jpg" id="preview" alt="">
+      </div>
+    </div>
+    <div class="upload-btns">
+      <div class="rechoice">
+        换一张
+        <input type="file" id="getimg2"  accept="image/*" >
+      </div>
+      <div class="submitbtn">确认</div>
+    </div>
+  </div>
+  
+  <div id="loginfo"></div>
+  <script src="js/lrz.all.bundle.js"></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <script>
+/**
+ *
+ * 　　 ┏┓　 ┏┓
+ * 　　┏┛┻━━━┛┻┓
+ * 　　┃　　　　　┃
+ * 　　┃　　　━　 ┃
+ * 　　┃　┳┛　┗┳　┃
+ * 　　┃　　　　　 ┃
+ * 　　┃　　　┻　　┃
+ * 　　┃　　　　　 ┃
+ * 　　┗━┓　　　┏━┛Code is far away from bug
+* 　　　　┃　　　┃    神兽保佑,代码无bug
+* 　　　　┃　　　┃
+* 　　　　┃　　　┗━━━┓
+* 　　　　┃　　　　　 ┣┓
+* 　　　　┃　　　　 ┏┛
+* 　　　　┗┓┓┏━┳┓┏┛
+* 　　　　　┃┫┫　┃┫┫
+* 　　　　　┗┻┛　┗┻┛
+ *
+ */
+
+  var getParams = function(_keystr,url) {
+    var keystr = _keystr || '';
+    var args = url || location.search;
+    args = args.replace(/&amp;/ig,"&");
+    if(!args){return "";}
+    var reg = new RegExp('[\?&]' + keystr + '=([^&]*)[&$]?', 'i');
+    var chk = args.match(reg);
+    return chk ? chk[1] : "";
+  };
+
+  function loginfo(str){
+    $('#loginfo').append(str + '<br>');
+  }
+  
+ /*  function $(selector){
+    return document.querySelectorAll(selector);
+  } */
+  function getImageFile(e){
+    //e.dataTransfer 为拖拉文件时候触发
+    var files = e.target.files || e.dataTransfer.files;
+    if (!files.length) return;
+
+    // 1024 你懂的^.^
+    lrz(files[0],{
+      width: 1024
+    }).then(function(rst){
+      loginfo('=====文件信息=====')
+      for(var i in rst.file){
+        loginfo(i +' : '+ rst.file[i])
+      }
+      // 拍照后的文件没有名称，默认为jpg格式即可
+      var name = rst.file.name;
+      name = !name ? Math.random()+'.jpg' : name;
+      // 表单域 file 必须为最后一个表单域；
+      var form = new FormData();
+      var url = PAGE.data.policydata.host;
+      var type = name.match(/([^\.]+)$/);
+      type = type ? '.' + type[1] : ''
+      
+      var updata = {
+        key: PAGE.data.policydata.dir + ( +new Date()) + type,
+        success_action_status: '201',
+        'OSSAccessKeyId': PAGE.data.policydata.accessid,
+        'policy': PAGE.data.policydata.policy,
+        'signature': PAGE.data.policydata.signature
+      }
+      form.append('key',updata.key);
+      form.append('success_action_status', '201');
+      form.append('OSSAccessKeyId', PAGE.data.policydata.accessid);
+      form.append('policy', PAGE.data.policydata.policy);
+      form.append('signature', PAGE.data.policydata.signature);
+      form.append('file', rst.file);
+      // form.append('dir', PAGE.data.policydata.dir);
+      loginfo('====准备上传，上传信息====')
+      for(var j in updata){
+        loginfo(j +' : '+ updata[j])
+      }
+      loginfo('=====发起上传请求====')
+      $.ajax({
+        url: url,
+        method: 'POST',
+        // 如果用jq，必须设置以下三项，避免jq 的中间处理
+        processData:false,
+        cache: false,
+        contentType: false,
+
+        headers: {
+          // 主动设置Content-Type为multipart/form-data时，会丢掉boundary值，导致后台无法解析数据。
+          // 'Content-Type': 'multipart/form-data',
+        },
+        data: form
+      }).done(function(res){
+        var url = $(res).find('Location').text();
+        if(url){
+          loginfo('======上传完成===')
+          loginfo('链接：' + url)
+          $("#preview").attr('src', url);
+          PAGE.data.upurl = url;
+          $('.upload-btns').show();
+          $('.imgbox').show().css('display', 'flex');
+        } else {
+          loginfo('4444')
+        }
+        
+      }).fail(function(err){
+        showFailPage(JSON.stringify(err))
+      });
+      
+    }).always(function () {
+      // 清空文件上传控件的值
+      e.target.value = null;
+    });
+  }
+
+  $('#getimg2')[0].onchange = getImageFile;
+  $('#getimg3')[0].onchange = getImageFile;
+  var apiurl = '/api';
+
+  $('.submitbtn').on('click', function(){
+    $.post(apiurl + '/api-plugin/common/qrcode/v1/SaveByID?access_token='+PAGE.data.token+'&k=' + PAGE.data.id + '&v=' + encodeURIComponent(PAGE.data.upurl)).done(function(res){
+      if(res.status === 200){
+        showSuccessPage();
+      } else {
+        loginfo('=======提交信息失败====')
+        loginfo(JSON.stringify(res));
+      }
+      
+    }).fail(function(err){
+      alert('提交信息出错了')
+      showFailPage(JSON.stringify(err))
+    })
+  });
+
+  var PAGE = {
+    data:{}
+  };
+
+  function showSuccessPage(){
+    $('body').html('<h1>已上传成功。</h1>');
+  }
+
+  function showFailPage(str){
+    str = str||''
+    $('body').html(str + '<h1>请重新扫描二维码上传。</h1>');
+  }
+
+  window.onerror = function(){
+    showFailPage(JSON.stringify(arguments))
+  }
+
+ // 尝试读取3次，如果3次后都没拿到数据，则提示失败
+ var requestTime = 0
+  function getPolicy(){
+    if(requestTime<3){
+      requestTime++;
+    } else {
+      return false;
+    }
+    $.get(apiurl + '/api-common/common/oss/v1/policy?access_token='+PAGE.data.token).done(function(res){
+      var data = res.data;
+      if(res.status === 200){
+        PAGE.data.policydata = data
+        $('.loadinginfo').hide();
+        $('.uploadbox').show();
+      } else {
+        if(requestTime<3){
+          getPolicy();
+        } else {
+          showFailPage(JSON.stringify(res.errorInfo))
+        }
+      }
+    }).fail(function(err){
+      if(requestTime<3){
+          getPolicy();
+        } else {
+          alert('token信息出错了')
+          showFailPage(JSON.stringify(err))
+        }
+    })
+  }
+
+  function initPage(){
+    // 1.拿取token
+    // 2.拿取上传id
+    // 3.拿取上传图片张数的按钮，不传则为1
+    PAGE.data = {
+      token: getParams('access_token'),
+      id: getParams('id'),
+      len: parseInt(getParams('len'),10) || 1
+    }
+    if(getParams('url')){
+      apiurl = '/' + getParams('url')
+    }
+    if(getParams('page') && getParams('page')==='success'){
+      showSuccessPage();
+    }else if(!PAGE.data.token || !PAGE.data.id){
+      alert('缺少必要参数！');
+      showFailPage()
+    } else {
+      getPolicy()
+    }
+  }
+
+  initPage();
+
+  </script>
+</body>
+</html>
