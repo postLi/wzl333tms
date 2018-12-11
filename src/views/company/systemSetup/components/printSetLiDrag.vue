@@ -1,6 +1,6 @@
 <template>
   <!-- 打印标签设置 -->
-  <el-dialog title="打印标签设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag">
+  <el-dialog title="打印标签设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -116,6 +116,7 @@
 // lodop 打印单位换算 1in(英寸)=2.54cm(厘米)=25.4mm(毫米)=72pt(磅)=96px 1px约等于0.3mm
 let dom = ''
 import draggable from 'vuedraggable'
+import { objectMerge2 } from '@/utils/index'
 import { getSettingCompanyLi, putSettingCompanyLi } from '@/api/operation/print'
 export default {
   components: {
@@ -129,6 +130,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       imageUrl: '',
       btnsize: 'mini',
       formModel: {
@@ -196,8 +198,8 @@ export default {
       set() {}
     },
     printPreviewContent() {
-      let viewWidth = 600
-      let viewHeight = 400
+      let viewWidth = 80
+      let viewHeight = 80
       let bgurl = this.imageUrl
       if (this.formModel) {
         this.formModel.labelList.forEach(e => {
@@ -426,9 +428,11 @@ export default {
       event.preventDefault() //preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
     getSettingCompanyLi() {
+      this.loading = true
       this.labelListView = []
       this.viewKey = new Date().getTime()
       getSettingCompanyLi().then(data => {
+       
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
@@ -446,6 +450,11 @@ export default {
             e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
           }
         })
+         this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -464,7 +473,9 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.formModel.labelList.forEach(e => {
+          this.loading = true
+          let labelList = objectMerge2([], this.formModel.labelList)
+          labelList.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
@@ -483,10 +494,15 @@ export default {
             }
           })
 
-          putSettingCompanyLi(this.formModel.labelList).then(data => {
+          putSettingCompanyLi(labelList).then(data => {
             this.$message({ type: 'success', message: '标签打印设置成功！' })
             this.getSettingCompanyLi()
             this.viewKey = new Date().getTime()
+            this.loading = false
+          })
+          .catch(err => {
+            this.loading = false
+            this._handlerCatchMsg(err)
           })
         }
       })

@@ -1,6 +1,6 @@
 <template>
   <!-- 打印运单设置 -->
-  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag">
+  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -161,6 +161,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       imageUrl: '',
       btnsize: 'mini',
       // 保存背景图的相关属性，用来操控
@@ -636,6 +637,7 @@ export default {
     },
     getSettingCompanyOrder() {
       // 清空右边栏
+      this.loading = true
       this.labelListView = []
       this.viewKey = new Date().getTime()
       getSettingCompanyOrder().then(data => {
@@ -664,6 +666,11 @@ export default {
             e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
           }
         })
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -683,6 +690,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true
           const obj = objectMerge2([], this.formModel.labelList)
           obj.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
@@ -703,9 +711,14 @@ export default {
           })
 
           putSettingCompanyOrder(obj).then(data => {
+            this.loading = false
             this.$message({ type: 'success', message: '运单打印设置成功！' })
             this.getSettingCompanyOrder()
             this.viewKey = new Date().getTime()
+          })
+          .catch(err => {
+            this.loading = false
+            this._handlerCatchMsg(err)
           })
         }
       })

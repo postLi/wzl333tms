@@ -1,6 +1,6 @@
 <template>
   <!-- 打印运单设置 -->
-  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag">
+  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -12,13 +12,48 @@
         <el-button @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">刷新</el-button>
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
-        <ul class="print_aside_content">
-          <transition-group>
-            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.fieldValue !== 'setting'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-              <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
-            </li>
-          </transition-group>
-        </ul>
+        <div class="print_aside_content_form">
+          <label>发货人信息</label>
+          <ul class="print_aside_content">
+            <transition-group>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===1" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              </li>
+            </transition-group>
+          </ul>
+          <label>收货人信息</label>
+          <ul class="print_aside_content">
+            <transition-group>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===2" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              </li>
+            </transition-group>
+          </ul>
+          <label>运单主要信息</label>
+          <ul class="print_aside_content">
+            <transition-group>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===3" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              </li>
+            </transition-group>
+          </ul>
+          <label>货物主要信息</label>
+          <ul class="print_aside_content">
+            <transition-group>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              </li>
+            </transition-group>
+          </ul>
+          <label>自定义信息</label>
+          <ul class="print_aside_content">
+            <transition-group>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              </li>
+            </transition-group>
+          </ul>
+        </div>
         <div class="prinit_aside_paper">
           <span><i class="el-icon-document"></i> 纸张设置</span>
           <br>
@@ -109,7 +144,7 @@
     <div class="print_main">
       <div class="print_main_head"><b>预览展示:</b><span> 纸张大小(宽×高)：{{this.formModel.paper.width+' (毫米mm) × '+this.formModel.paper.height + ' (毫米mm)'}}</span></div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
-        <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
+        <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' :data-index="item._index" @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
           cursor: dragCursor,
           transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
           width:item.width/prxvalue +'px', 
@@ -162,6 +197,8 @@ export default {
   },
   data() {
     return {
+      labelIndex: 0,
+      loading: false,
       imageUrl: '',
       btnsize: 'mini',
       // 保存背景图的相关属性，用来操控
@@ -181,6 +218,8 @@ export default {
       },
       prxvalue: 0.264,
       mm2px: 3.779,
+      maxLabel: 3, // 固有字段最多显示数量
+      maxLabelSelf: 20, // 自定义字段最多显示数量
       classItem: [],
       orgLabelList: [],
       labelListView: [],
@@ -210,8 +249,8 @@ export default {
           label: '文字靠右'
         }
       ],
-      dialogVisible: false
-
+      dialogVisible: false,
+      commonLabelList: []
     }
   },
   watch: {
@@ -219,7 +258,7 @@ export default {
       if (this.popVisible) {
         this.dialogVisible = true
         this.getCommonSetting()
-        this.getSettingCompanyOrder()
+        // this.getSettingCompanyOrder()
         this.bindKey()
       } else {
         this.dialogVisible = false
@@ -235,6 +274,7 @@ export default {
       if (this.formModel) {
         this.formModel.labelList.forEach(e => {
           if (e.filedValue === 'setting') {
+            console.log('printPreviewContent', e.width, e.height)
             viewWidth = e.width
             viewHeight = e.height
           }
@@ -375,26 +415,32 @@ export default {
         this.isDrag = null
       }
     },
-    addItemDrag(row, index) { // 点击显示并且添加到预览区域
-      if (!row.isshow) {
-        console.log('row::::', row)
-        let item = this.orgLabelList.filter(e => {
-          if (e.filedValue === row.filedValue) {
-            e.leftx = event.offsetX
-            e.topy = event.offsetY
-            e.isshow = true
-            return true
-          }
-        })[0]
-        // const item = Object.assign({}, row)
-        item.isshow = true
+    addItemDrag(row, index) { // 点击显示并且添加到预览区域\
+      console.warn('row size', index, row.size, row)
+      let arr = this.labelListView.filter(e => {
+        return e.filedValue === row.filedValue
+      }).length
+      if (arr < this.maxLabel) { // 第一次添加这个字段到预览区域
         row.isshow = true
-        this.labelListView.push(item)
-      } else {
+        console.log('row::::', row)
+        let currentRow = objectMerge2({}, row)
+        currentRow._index = ++this.labelIndex
+        //  let item = this.orgLabelList.filter(e => {
+        //   if (e.filedValue === row.filedValue) {
+        //     e.leftx = event.offsetX
+        //     e.topy = event.offsetY
+        //     e.isshow = true
+        //     return true
+        //   }
+        // })[0]
+        // const item = Object.assign({}, row)
+        this.labelListView.push(objectMerge2({}, currentRow))
+      } else { // 多次添加这个字段到预览区域
         this.$notify.info({
           title: '消息',
-          message: '【 ' + row.filedName + ' 】已设置显示打印'
+          message: '【 ' + row.filedName + ' 】最多添加' + this.maxLabel + '次'
         })
+
       }
       this.editDragItem(row, index)
     },
@@ -436,7 +482,7 @@ export default {
       this.formModel.labelList = []
       this.labelListView = []
       this.getCommonSetting()
-      this.getSettingCompanyOrder()
+      // this.getSettingCompanyOrder()
       this.showDragDetail = false
       this.dragDetailInfo = {}
       this.isDrag = null
@@ -449,10 +495,12 @@ export default {
       }
       this.isDragView = true
       dom = event.currentTarget
+
       const strName = dom.getAttribute('data-fileName')
+      const strIndex = Number(dom.getAttribute('data-index'))
       this.isMove = true
       this.labelListView.forEach((e, index) => {
-        if (e.filedValue === strName) {
+        if (e._index === strIndex) {
           e.x = event.pageX
           e.y = event.pageY
         }
@@ -468,9 +516,10 @@ export default {
       this.isDragView = true
       dom = event.currentTarget
       const strName = dom.getAttribute('data-fileName')
+      const strIndex = Number(dom.getAttribute('data-index'))
       this.isMove = true
       this.labelListView.forEach(e => {
-        if (e.filedValue === strName) {
+        if (e._index === strIndex) {
           e.leftx += event.pageX - e.x
           e.topy += event.pageY - e.y
         }
@@ -495,9 +544,21 @@ export default {
       this.classItem = []
       this.showDragTips = []
       this.showDragDetail = false
-      this.labelListView = this.labelListView.filter((le, lindex) => {
+      this.labelListView = objectMerge2([], this.labelListView).filter((le, lindex) => {
         return lindex !== index
       })
+      let arr = this.labelListView.filter(e => {
+        return e.filedValue === row.filedValue
+      }).length
+      console.log('删除的' + row.filedValue + '还有' + arr + '个')
+      if (arr === 0) {
+        this.formModel.labelList.forEach((e, index) => {
+          if (e.filedValue === row.filedValue) {
+            this.$set(e, 'isshow', false)
+            console.log('labelList上的row', e.filedValue, e.isshow)
+          }
+        })
+      }
     },
     // 处理绑定按钮的回调
     handleKeyEvent(e, keys, cb) {
@@ -616,112 +677,130 @@ export default {
     drop(event) {
       event.preventDefault()
       const strName = dom.getAttribute('data-fileName')
-      let isAddItem = false
       if (!this.isMove) {
-        if (this.labelListView.filter(e => e.filedValue === strName).length) {
-          isAddItem = false
-        } else {
-          isAddItem = true
-        }
-      }
-      if (isAddItem && !this.isDragView) {
-        this.labelListView.push(this.orgLabelList.filter(e => {
-          if (e.filedValue === strName) {
-            e.leftx = event.offsetX
-            e.topy = event.offsetY
-            e.isshow = true
-            return true
+        this.orgLabelList.filter(e => {
+          if (e.filedValue === strName && !this.isDragView) {
+            this.addItemDrag(e)
           }
-        })[0])
+        })
       }
+      // if (isAddItem && !this.isDragView) {
+      //   this.labelListView.push(this.orgLabelList.filter(e => {
+      //     if (e.filedValue === strName) {
+      //       e.leftx = event.offsetX
+      //       e.topy = event.offsetY
+      //       e.isshow = true
+      //       return true
+      //     }
+      //   })[0])
+      // }
     },
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
     getCommonSetting() {
+      this.loading = true
+      this.commonLabelList = []
       getCommonSetting().then(data => {
-        if (data) {
-          data.forEach((el, index) => {
-            this.formModel.labelList.push({
-              id: el.id,
-              filedValue: el.fieldValue,
-              filedName: el.fieldName,
-              topy: 0,
-              leftx: 0,
-              width: 152,
-              height: 27,
-              companyId: this.otherinfo.companyId,
-              isshow: 0,
-              fontsize: 10,
-              alignment: 1,
-              bold: 0
+          if (data) {
+            data.forEach((el, index) => {
+              let obj = {
+                id: el.id,
+                filedValue: el.fieldValue,
+                filedName: el.fieldName,
+                topy: 0,
+                leftx: 0,
+                width: 0,
+                height: 0,
+                companyId: this.otherinfo.companyId,
+                isshow: 0,
+                fontsize: 10,
+                alignment: 1,
+                bold: 0,
+                type: el.type,
+                size: 0 // 打印拖拽次数
+              }
+              // type
+              // 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息
+              this.commonLabelList.push(obj)
             })
-            this.orgLabelList = objectMerge2([], this.formModel.labelList)
-          })
-        }
-      })
+            this.getSettingCompanyOrder()
+          }
+        })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
     },
     getSettingCompanyOrder() {
       // 清空右边栏
       this.labelListView = []
+      // this.formModel.labelList = []
+      this.orgLabelList = []
       this.viewKey = new Date().getTime()
       getSettingCompanyOrder().then(data => {
-        if (data) {
-          let array = Object.assign([], data)
-          let commonArr = [] // 相同字段
-          let expandArr = [] // 差异字段
-          let labelList = objectMerge2([], this.formModel.labelList)
-          array.forEach(e => {
-            e.width = Math.round((e.width ? e.width : 210) * this.prxvalue)
-            e.height = Math.round((e.height ? e.height : 150) * this.prxvalue)
-            if (e.filedValue === 'setting') {
-              const obj = Object.assign({}, e)
-              obj.leftx = Math.round(obj.leftx * this.prxvalue)
-              obj.topy = Math.round(obj.topy * this.prxvalue)
-              this.formModel.paper = obj
-            } else {
-              if (e.isshow) { // 显示项要在预览处初始化
-                this.labelListView.push(e)
-              }
-              // 单位是pt，缺省值是9，可以含小数，如13.5
-              e.fontsize = e.fontsize ? e.fontsize : 10
+          if (data) {
+            this.loading = false
+            let array = Object.assign([], data)
+            let commonArr = [] // 相同字段
+            let expandArr = [] // 差异字段
+            let labelList = objectMerge2([], this.commonLabelList)
+            array.forEach(e => {
+              labelList.forEach((el, index) => {
+                if (el.filedValue === e.filedValue) {
+                  if (!e.isshow && el.filedValue !== 'setting') {
+                    e.width = 150
+                    e.height = 24
+                  }
+                  if (el.filedValue === 'setting') {
+                    console.log('纸张设置', this.formModel.labelList[index], e)
+                    this.$set(this.formModel.labelList, index, e)
+                    this.formModel.labelList[index] = e
+                  }
 
-              e.isshow = e.isshow === 1 // 1-true 显示
-              // 1代表粗体，0代表非粗体，缺省值是0
-              e.bold = e.bold === 2 // 2-true 加粗
+                  this.$set(e, 'type', el.type) // 给旧数据设置类型
+                  labelList.splice(index, 1)
+                  commonArr.push(e)
+                }
+              })
+            })
+            console.log('相同字段', commonArr.length, commonArr)
+            console.log('差异字段', labelList.length, labelList)
+            this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
+            this.orgLabelList = objectMerge2([], this.formModel.labelList)
 
-              e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
-            }
+            this.formModel.labelList.forEach((e, index) => {
+              e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
+              e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
+              if (e.filedValue === 'setting') {
+                const obj = Object.assign({}, e)
+                obj.leftx = Math.round(obj.leftx * this.prxvalue)
+                obj.topy = Math.round(obj.topy * this.prxvalue)
+                this.formModel.paper = obj
 
-            labelList.forEach((el, index) => {
-              if (el.filedValue === e.filedValue) {
-                console.log(el.filedValue, e.filedValue, true)
-                labelList.splice(index, 1)
-                commonArr.push(el)
+              } else {
+                if (e.isshow) { // 显示项要在预览处初始化
+                  /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
+                  e._index = ++this.labelIndex
+                  this.labelListView.push(e)
+                }
+                // 单位是pt，缺省值是9，可以含小数，如13.5
+                e.fontsize = e.fontsize ? e.fontsize : 10
+
+                e.isshow = e.isshow === 1 // 1-true 显示
+                // 1代表粗体，0代表非粗体，缺省值是0
+                e.bold = e.bold === 2 // 2-true 加粗
+
+                e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
               }
             })
-            if (commonArr.length) {
+            console.log('相同+差异', this.formModel.labelList)
+          }
 
-            }
-
-            // this.formModel.labelList.forEach((el, index) => {
-            //   if (e.filedValue === el.filedValue) {
-            //     this.$set(el, 'isshow', e.isshow)
-            //     this.$set(el, 'bold', e.bold)
-            //     this.$set(el, 'leftx', e.leftx)
-            //     this.$set(el, 'topy', e.topy)
-            //     this.$set(el, 'alignment', e.alignment)
-            //     this.$set(el, 'companyId', e.companyId)
-            //     this.$set(el, 'fontsize', e.fontsize)
-            //     this.$set(el, 'width', e.width)
-            //     this.$set(el, 'height', e.height)
-            //   }
-            // })
-          })
-          console.log('相同字段', commonArr.length, commonArr)
-          console.log('差异字段', labelList.length, labelList)
-        }
-      })
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     closeMe(done) {
       this.$emit('close')
@@ -740,6 +819,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true
           const obj = objectMerge2([], this.formModel.labelList)
           obj.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
@@ -757,12 +837,16 @@ export default {
               e.bold = e.bold ? 1 : 0
             }
           })
-
           putSettingCompanyOrder(obj).then(data => {
-            this.$message({ type: 'success', message: '运单打印设置成功！' })
-            this.getSettingCompanyOrder()
-            this.viewKey = new Date().getTime()
-          })
+              this.loading = false
+              this.$message({ type: 'success', message: '运单打印设置成功！' })
+              this.getSettingCompanyOrder()
+              this.viewKey = new Date().getTime()
+            })
+            .catch(err => {
+              this.loading = false
+              this._handlerCatchMsg(err)
+            })
         }
       })
     },
@@ -784,6 +868,7 @@ export default {
                   e.fontsize = 10
                   e.bold = 0
                   e.alignment = 1
+                  e.size = 0
                 }
               })
               this.labelListView = []
@@ -796,14 +881,35 @@ export default {
     handleSwitch(newVal) { // 显示-隐藏字段 判断是否打印
       // ....取反操作符号放错位置了吧
       // this.dragDetailInfo.isshow = !this.dragDetailInfo.isshow
-      this.formModel.labelList.forEach((e, index) => {
+      console.log('this.dragDetailInfo', this.dragDetailInfo)
+     
+      let len = 0
+      this.labelListView.forEach((e, index) => {
+        if (e._index === this.dragDetailInfo._index) {
+          this.labelListView.splice(index, 1)
+        }
         if (e.filedValue === this.dragDetailInfo.filedValue) {
-          this.$set(this.formModel.labelList, index, this.dragDetailInfo)
+          len++
         }
       })
-      this.labelListView = this.labelListView.filter(e => {
-        return e.filedValue !== this.dragDetailInfo.filedValue
-      })
+      console.log('len', len)
+      if (len === 0) {
+        this.formModel.labelList.forEach((e, index) => {
+          if (e.filedValue === this.dragDetailInfo.filedValue) {
+            this.$set(this.formModel.labelList[index], 'isshow', false)
+          }
+        })
+      }
+
+
+      // this.formModel.labelList.forEach((e, index) => {
+      //   if (e.filedValue === this.dragDetailInfo.filedValue) {
+      //     this.$set(this.formModel.labelList, index, this.dragDetailInfo)
+      //   }
+      // })
+      // this.labelListView = this.labelListView.filter(e => {
+      //   return e.filedValue !== this.dragDetailInfo.filedValue
+      // })
       this.$nextTick(() => {
         this.showDragDetail = false
       })
