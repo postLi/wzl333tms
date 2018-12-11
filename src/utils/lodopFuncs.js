@@ -407,13 +407,13 @@
      const feezhAll = smalltoBIG(fee)
      feezh = feezh.slice(pointIndex).reverse()
      feezh.forEach((e, index) => {
-      feezh[index] = smalltoBIG(e).slice(0, 1)
+       feezh[index] = smalltoBIG(e).slice(0, 1)
       // this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
-    })
+     })
      feezh = feezh.reverse()
      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
-      feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
-    } else if (feezh && feezh.length < 5) { // 补充零
+       feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
+     } else if (feezh && feezh.length < 5) { // 补充零
       for (let i = 0; i < 5; i++) {
         feezh[i] = feezh[i] || '零'
       }
@@ -451,8 +451,8 @@
 
    for (const item in cargoOne) {
      if (item !== 'id' && item !== 'orgid' && item !== 'createTime') {
-      infoDetail[item] = cargoOne[item]
-    }
+       infoDetail[item] = cargoOne[item]
+     }
    }
   // 公用
    obj.shipSn = infoDetail.shipSn // 运单号
@@ -486,66 +486,66 @@
      obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
      obj.qrcode = '' // 二维码
    } else if (type === 'order') {
-    obj.totalFee = parseFloat(infoDetail.shipTotalFee) // 运费合计
-    obj.shipFee = parseFloat(infoDetail.shipFee) // 运费
-    obj.deliveryFee = parseFloat(infoDetail.deliveryFee) // 送货费
-    obj.productPrice = parseFloat(infoDetail.productPrice) // 声明价值
-    obj.brokerageFee = parseFloat(infoDetail.brokerageFee) // 回扣
-    obj.brokerageFeeSign = 'R:' + parseFloat(infoDetail.brokerageFee) // 回扣标识
-    obj.agencyFund = parseFloat(infoDetail.agencyFund) // 代收货款
-    obj.commissionFee = parseFloat(infoDetail.commissionFee) // 代收货款手续费
-    obj.insuranceFee = parseFloat(infoDetail.insuranceFee) // 保险费
-    obj.handlingFee = parseFloat(infoDetail.handlingFee) // 装卸费
-    obj.packageFee = parseFloat(infoDetail.packageFee) // 包装费
-    obj.pickupFee = parseFloat(infoDetail.pickupFee) // 提货费
-    obj.upStairsFee = parseFloat(infoDetail.goupstairsFee) // 上楼费
-    obj.realityhandlingFee = parseFloat(infoDetail.realityhandlingFee) // 实际提货费
-    obj.forkliftFee = parseFloat(infoDetail.forkliftFee) // 叉车费
-    obj.customsFee = parseFloat(infoDetail.customsFee) // 报关费
-    obj.weightFee = parseFloat(infoDetail.weightFee) // 重量单价
-    obj.volumeFee = parseFloat(infoDetail.volumeFee) // 体积单价
-    obj.amountFee = parseFloat(infoDetail.amountFee) // 件数单价
-    obj.otherfeeOut = parseFloat(infoDetail.otherfeeOut) // 其他费用支出
-    obj.otherfeeIn = parseFloat(infoDetail.otherfeeIn) // 其他费用收入
-    obj.taxRate = parseFloat(infoDetail.taxRate) // 税率
-    obj.taxes = parseFloat(infoDetail.taxes) // 税金
-    obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
-    obj.stampTax = parseFloat(infoDetail.stampTax) // 印花税
-    obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
-    obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
-    obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
-    obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
-    obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
-    obj.createrName = infoDetail.userName // 开单员
-    obj.userName = infoDetail.userName // 制单员
-    obj.remarks = infoDetail.shipRemarks // 备注
-    obj.effective = infoDetail.shipEffectiveName // 时效
+     obj.totalFee = parseFloat(infoDetail.shipTotalFee) // 运费合计
+     obj.shipFee = parseFloat(infoDetail.shipFee) // 运费
+     obj.deliveryFee = parseFloat(infoDetail.deliveryFee) // 送货费
+     obj.productPrice = parseFloat(infoDetail.productPrice) // 声明价值
+     obj.brokerageFee = parseFloat(infoDetail.brokerageFee) // 回扣
+     obj.brokerageFeeSign = 'R:' + parseFloat(infoDetail.brokerageFee) // 回扣标识
+     obj.agencyFund = parseFloat(infoDetail.agencyFund) // 代收货款
+     obj.commissionFee = parseFloat(infoDetail.commissionFee) // 代收货款手续费
+     obj.insuranceFee = parseFloat(infoDetail.insuranceFee) // 保险费
+     obj.handlingFee = parseFloat(infoDetail.handlingFee) // 装卸费
+     obj.packageFee = parseFloat(infoDetail.packageFee) // 包装费
+     obj.pickupFee = parseFloat(infoDetail.pickupFee) // 提货费
+     obj.upStairsFee = parseFloat(infoDetail.goupstairsFee) // 上楼费
+     obj.realityhandlingFee = parseFloat(infoDetail.realityhandlingFee) // 实际提货费
+     obj.forkliftFee = parseFloat(infoDetail.forkliftFee) // 叉车费
+     obj.customsFee = parseFloat(infoDetail.customsFee) // 报关费
+     obj.weightFee = parseFloat(infoDetail.weightFee) // 重量单价
+     obj.volumeFee = parseFloat(infoDetail.volumeFee) // 体积单价
+     obj.amountFee = parseFloat(infoDetail.amountFee) // 件数单价
+     obj.otherfeeOut = parseFloat(infoDetail.otherfeeOut) // 其他费用支出
+     obj.otherfeeIn = parseFloat(infoDetail.otherfeeIn) // 其他费用收入
+     obj.taxRate = parseFloat(infoDetail.taxRate) // 税率
+     obj.taxes = parseFloat(infoDetail.taxes) // 税金
+     obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
+     obj.stampTax = parseFloat(infoDetail.stampTax) // 印花税
+     obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
+     obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
+     obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
+     obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
+     obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
+     obj.createrName = infoDetail.userName // 开单员
+     obj.userName = infoDetail.userName // 制单员
+     obj.remarks = infoDetail.shipRemarks // 备注
+     obj.effective = infoDetail.shipEffectiveName // 时效
     // ///////////////////////////////////////////////////////////
     // /运单号-件数
-    obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmount
+     obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmount
     // //////////////////////////////////////////////////////////
     // /年月日
-    const year = parseTime(infoDetail.createTime, '{y}')
-    obj.createYear = parseTime(infoDetail.createTime, '{y}')
-    obj.createYear2 = year.substr(2, 2)
-    obj.createMonth = parseTime(infoDetail.createTime, '{m}')
-    obj.createDate = parseTime(infoDetail.createTime, '{d}')
+     const year = parseTime(infoDetail.createTime, '{y}')
+     obj.createYear = parseTime(infoDetail.createTime, '{y}')
+     obj.createYear2 = year.substr(2, 2)
+     obj.createMonth = parseTime(infoDetail.createTime, '{m}')
+     obj.createDate = parseTime(infoDetail.createTime, '{d}')
     // //////////////////////////////////////////////////////////
     // /特殊处理 中转费
-    let totalTransferFee = 0
-    if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
+     let totalTransferFee = 0
+     if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
       tmsOrderTransferList.forEach(e => {
         totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
       })
     }
-    obj.transferFee = parseFloat(totalTransferFee) // 中转费
-    console.log('中转费', totalTransferFee)
+     obj.transferFee = parseFloat(totalTransferFee) // 中转费
+     console.log('中转费', totalTransferFee)
 
     // //////////////////////////////////////////////////////////
     // /特殊处理 打勾
-    obj.payWay = infoDetail.shipPayWayName
+     obj.payWay = infoDetail.shipPayWayName
     // 付款方式
-    switch (infoDetail.shipPayWay) { // 付款方式
+     switch (infoDetail.shipPayWay) { // 付款方式
       case 76:
         obj.nowPay = '√'  // 现付（√）
         // this.$set(obj, 'payWay', infoDetail.shipNowpayFee) // 付款方式
@@ -564,25 +564,25 @@
         // this.$set(obj, 'payWay', infoDetail.shipReceiptpayFee) // 付款方式
         break
     }
-    if (infoDetail.shipDeliveryMethod === 68) {
+     if (infoDetail.shipDeliveryMethod === 68) {
       obj.deliveryGood = '√' // 自提（√）
     } else if (infoDetail.shipDeliveryMethod === 69) {
       obj.sendGood = '√' // 送货（√）
     }
-    if (infoDetail.shipOther && infoDetail.shipOther.indexOf(168) !== -1) {
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf(168) !== -1) {
       obj.controlGoods = infoDetail.shipOther // 168-控货
     }
-    if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
       obj.valuables = infoDetail.shipOther  //  169-贵重物品
     }
-    if (infoDetail.shipEffective === 95) {
+     if (infoDetail.shipEffective === 95) {
       obj.urgent = infoDetail.shipEffective // 95-时效-加急
     } else {
       obj.common = infoDetail.shipEffective // 94-时效-普通
     }
     // //////////////////////////////////////////////////////////
     // /处理合计中文大写
-    if (infoDetail.shipTotalFee) {
+     if (infoDetail.shipTotalFee) {
       const totalFeeBig = setFeeToBig(infoDetail.shipTotalFee)
       obj.uptotalFeeW = totalFeeBig[4] // 运费合计(万)
       obj.uptotalFeeQ = totalFeeBig[3] // 运费合计(仟)
@@ -590,7 +590,7 @@
       obj.uptotalFeeS = totalFeeBig[1] // 运费合计(拾)
       obj.uptotalFeeY = totalFeeBig[0] // 运费合计(元)
     }
-    if (infoDetail.agencyFund) {
+     if (infoDetail.agencyFund) {
       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFund)
       obj.upagencyFundW = upagencyFeeBig[4] // 代收货款(万)
       obj.upagencyFundQ = upagencyFeeBig[3] // 代收货款(仟)
@@ -598,11 +598,20 @@
       obj.upagencyFundS = upagencyFeeBig[1] // 代收货款(拾)
       obj.upagencyFundY = upagencyFeeBig[0] // 代收货款(元)
     }
-  }
+   }
    return obj
  }
 
  // 创建打印页面    【未保存】标签或运单
+ /**
+  * info{
+  * orderdata, // 运单数据
+  * number, // 打印份数
+  * printer, // 打印机
+  * printSetup // 打印设置
+  * type // 打印类型
+  * }
+  */
  export function CreatePrintPageEnable(info, printer, preview, number) {
    console.log('是否预览', preview)
 
