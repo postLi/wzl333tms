@@ -57,7 +57,7 @@
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
                 <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-                  <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="getLineInfo" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+                  <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="changeToOrg" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
                 </el-form-item>
               </div>
             </el-col>
@@ -1531,6 +1531,9 @@ export default {
         errFn()
       })
     },
+    changeToOrg(org, orginfo) {
+      this.getLineInfo()
+    },
     // 根据出发地/目的地、货物信息获取专线信息
     getLineInfo() {
       // 1.检查有没有填写出发地/到达地
@@ -2965,7 +2968,7 @@ export default {
             }
           })
         }
-        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview) // 调打印接口
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, this.printDataObject.shipPrintLib) // 调打印接口
       })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -3065,10 +3068,10 @@ export default {
       const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
       const addrFormCityArr = addrFormCity.split(',')
 
-      this.$set(obj, 'toOrgName', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到达网点
+      this.$set(obj, 'toOrgName', this._getOrgName(this.form.tmsOrderShip.shipToOrgid)) // 到达网点
       this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
       this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
-      this.$set(obj, 'toCity', this.form.tmsOrderShip.shipToCityName) // 到站
+      this.$set(obj, 'toCity', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到站
       this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
 
       if (type === 'lib') {
@@ -3090,6 +3093,7 @@ export default {
         this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
         this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(this.form.cargoList[0].brokerageFee))) // 回扣标识
         this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
+        obj.shipPrintLib = this.form.tmsOrderShip.shipPrintLib
         this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型

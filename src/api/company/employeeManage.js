@@ -46,6 +46,18 @@ function getOrgChild(data, id) {
     }
   }
 }
+export function getOrgName(id) {
+  const data = CACHE.get('orgtree')
+  if (data) {
+    let find = getOrgChild(data, id)
+    if (find.length) {
+      find = find[0]
+      return find.name
+    }
+  } else {
+    return id
+  }
+}
 /**
  * 获取所有网点的信息，树形结构
  * 过滤掉无效的网点
