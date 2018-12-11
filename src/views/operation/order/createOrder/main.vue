@@ -67,7 +67,7 @@
                 <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
                   <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" >
                     <template slot-scope="{item}">
-                      <el-option v-if="!personConfig.shipSetKey.handoverMode[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
+                      <el-option v-if="!personConfig.shipSetKey.handoverModeDict[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
                         {{item.dictName}}
                       </el-option>
                     </template>
@@ -830,7 +830,7 @@ export default {
       // 个人设置
       personConfig: {
         shipSetKey: {
-          handoverMode: {}
+          handoverModeDict: {}
         }
       },
       // 组织信息
@@ -1415,7 +1415,7 @@ export default {
       // 业务类型
       this.form.tmsOrderShip.shipBusinessType = this.personConfig.shipSetKey.businessType
       // 交接方式
-      this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverModeDefualt
+      this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverMode
     },
     // 检查运单号是否唯一
     detectOrderNum() {
@@ -2925,12 +2925,12 @@ export default {
           break
         // 打印运单和标签
         case 'printLibShipKey':
-          this.isSaveAndNew = true
-          this.submitForm()
+          this.printLibAndShip()
           break
         // 保存新增并打印
         case 'saveInsertPrintKey':
           this.isSaveAndNew = true
+          this.printLibAndShip()
           this.submitForm()
           break
         case 'savePrintKey':
@@ -2941,8 +2941,20 @@ export default {
           break
       }
     },
+    printLibAndShip() {
+      this.isPrintWithNoPreview = true
+      return this.print().then(r => {
+        return this.printLibkey().then(f => {
+          this.isPrintWithNoPreview = false
+        }).catch(e => {
+          this.isPrintWithNoPreview = false
+        })
+      }).catch(e => {
+        this.isPrintWithNoPreview = false
+      })
+    },
     printLibkey() { // 打印标签
-      getEnableLibSetting().then(data => {
+      return getEnableLibSetting().then(data => {
         console.log('getEnableLibSetting', data)
         this.setPrintData('lib') // 设置数据
         const libData = Object.assign([], data)
@@ -2953,14 +2965,14 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview) // 调打印接口
       })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
     print() { // 打印运单
-      getEnableOrderSetting().then(data => {
+      return getEnableOrderSetting().then(data => {
         console.log('getEnableOrderSetting', data)
         this.setPrintData('order') // 设置数据
         const libData = Object.assign([], data)
@@ -2971,7 +2983,7 @@ export default {
             }
           })
         }
-        CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
       })
         .catch(err => {
           this._handlerCatchMsg(err)

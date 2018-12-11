@@ -50,10 +50,10 @@
       </el-collapse-item>
       <el-collapse-item name="setup3" title="运单默认值设置">
         <el-form-item label="交接方式">
-          <SelectType type="ship_delivery_method" v-model="form.shipSetKey.handoverModeDefualt">
+          <SelectType type="ship_delivery_method" v-model="form.shipSetKey.handoverMode">
             <template slot-scope="{item}">
-              <el-option class="checkSelectLabel" :disabled="!!form.shipSetKey.handoverMode[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
-                {{item.dictName}}<el-checkbox @click.stop.prevent.native="setSelectItem(form.shipSetKey.handoverMode,item.id)"  v-model="form.shipSetKey.handoverMode[item.id]" :true-label="0" :false-label="1" title="是否显示"></el-checkbox>
+              <el-option class="checkSelectLabel" :disabled="!!form.shipSetKey.handoverModeDict[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
+                {{item.dictName}}<el-checkbox @click.stop.prevent.native="setSelectItem(form.shipSetKey.handoverModeDict,item.id)"  v-model="form.shipSetKey.handoverModeDict[item.id]" :true-label="0" :false-label="1" title="是否显示"></el-checkbox>
               </el-option>
             </template>
           </SelectType>
@@ -140,7 +140,7 @@ export default {
         'shipSetKey': {
           // 0 show
           // 1 hidden
-          handoverMode: {
+          handoverModeDict: {
             '68': 0,
             '69': 0,
             '70': 0,
@@ -150,7 +150,7 @@ export default {
             '74': 0,
             '75': 0
           },
-          handoverModeDefualt: '68',
+          handoverMode: '68',
           'receiptType': '',
           'receiptNum': '',
           'paymentMode': '',

@@ -344,6 +344,16 @@ export default {
         name: '发货方'
       },
       {
+        key: 'shipSenderName',
+        value: '0',
+        name: '发货人'
+      },
+      {
+        key: 'shipSenderMobile',
+        value: '0',
+        name: '发货人电话'
+      },
+      {
         key: 'shipSenderAddress',
         value: '0',
         name: '发货地址'
@@ -352,6 +362,16 @@ export default {
         key: 'shipReceiverId',
         value: '0',
         name: '收货方'
+      },
+      {
+        key: 'shipReceiverName',
+        value: '0',
+        name: '收货人'
+      },
+      {
+        key: 'shipReceiverMobile',
+        value: '0',
+        name: '收货人电话'
       },
       {
         key: 'shipReceiverAddress',
@@ -526,6 +546,10 @@ export default {
             'deliveryFee': '0',
             'insuranceFee': '0',
             'shipReceiverId': '0',
+            'shipReceiverName': '0',
+            'shipReceiverMobile': '0',
+            'shipSenderName': '0',
+            'shipSenderMobile': '0',
             'cargoWeight': '0',
             'pickupFee': '0',
             'shipReceiverAddress': '0',
