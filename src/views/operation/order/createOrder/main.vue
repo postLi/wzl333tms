@@ -3041,7 +3041,8 @@ export default {
     },
     setPrintData(type) { // 设置打印的字段
       // 标签数据
-      let obj = new Object()
+      let obj = {}
+      const cargoInfo = this.form.cargoList[0] || {}
       this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
       this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
       this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
@@ -3053,14 +3054,14 @@ export default {
       this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
       this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
       this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
-      for (const item in this.form.cargoList[0]) { // 货品信息及其费用项
+      for (const item in cargoInfo) { // 货品信息及其费用项
         if (item === 'cargoName' || item === 'cargoPack') {
-          obj[item] = this.form.cargoList[0][item]
+          obj[item] = cargoInfo[item]
         } else {
-          obj[item] = parseFloat(Number(this.form.cargoList[0][item]))
+          obj[item] = parseFloat(Number(cargoInfo[item]))
         }
       }
-      console.log('货品信息及其费用项', this.form.cargoList[0])
+      console.log('货品信息及其费用项', cargoInfo)
       this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
       const addrToCity = this.form.tmsOrderShip.shipToCityName || ''
       const addrToCityArr = addrToCity.split(',')
@@ -3070,30 +3071,31 @@ export default {
 
       this.$set(obj, 'toOrgName', this._getOrgName(this.form.tmsOrderShip.shipToOrgid)) // 到达网点
       this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
-      this.$set(obj, 'description', this.form.cargoList[0]['description'] ? this.form.cargoList[0]['description'] : '') // 品种规格
+      this.$set(obj, 'description', cargoInfo['description'] ? cargoInfo['description'] : '') // 品种规格
       this.$set(obj, 'toCity', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到站
       this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
 
       if (type === 'lib') {
-        this.$set(obj, 'cargoPack', this.form.cargoList[0].cargoPack)
+        this.$set(obj, 'cargoPack', cargoInfo.cargoPack)
         this.$set(obj, 'companyName', this.otherinfo.companyName)
         this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
         this.$set(obj, 'qrcode', '') // 二维码
         this.$set(obj, 'companyAddr', this.otherinfo.companyInfo.detailedAddr) // 公司地址
         this.$set(obj, 'mobilephone', this.otherinfo.mobilephone) // 业务员电话
+        obj.shipPrintLib = this.form.tmsOrderShip.shipPrintLib
       } else if (type === 'order') {
-        console.log('this.form.cargoList[0]', this.form.cargoList[0])
-        this.$set(obj, 'otherfeeOut', this.form.cargoList[0]['otherfeeOut'] ? this.form.cargoList[0]['otherfeeOut'] : '') // 其他费用支出
-        this.$set(obj, 'otherfeeIn', this.form.cargoList[0]['otherfeeIn'] ? this.form.cargoList[0]['otherfeeIn'] : '') // 其他费用收入
-        this.$set(obj, 'taxRate', this.form.cargoList[0]['taxRate'] ? this.form.cargoList[0]['taxRate'] : '') // 税率
-        this.$set(obj, 'taxes', this.form.cargoList[0]['taxes'] ? this.form.cargoList[0]['taxes'] : '') // 税金
-        this.$set(obj, 'housingFee', this.form.cargoList[0]['housingFee'] ? this.form.cargoList[0]['housingFee'] : '') // 入仓费
-        this.$set(obj, 'stampTax', this.form.cargoList[0]['stampTax'] ? this.form.cargoList[0]['stampTax'] : '') // 印花税
+        console.log('cargoInfo', cargoInfo)
+        this.$set(obj, 'otherfeeOut', cargoInfo['otherfeeOut'] ? cargoInfo['otherfeeOut'] : '') // 其他费用支出
+        this.$set(obj, 'otherfeeIn', cargoInfo['otherfeeIn'] ? cargoInfo['otherfeeIn'] : '') // 其他费用收入
+        this.$set(obj, 'taxRate', cargoInfo['taxRate'] ? cargoInfo['taxRate'] : '') // 税率
+        this.$set(obj, 'taxes', cargoInfo['taxes'] ? cargoInfo['taxes'] : '') // 税金
+        this.$set(obj, 'housingFee', cargoInfo['housingFee'] ? cargoInfo['housingFee'] : '') // 入仓费
+        this.$set(obj, 'stampTax', cargoInfo['stampTax'] ? cargoInfo['stampTax'] : '') // 印花税
         this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
         this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
-        this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(this.form.cargoList[0].brokerageFee))) // 回扣标识
+        this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(cargoInfo.brokerageFee))) // 回扣标识
         this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
-        obj.shipPrintLib = this.form.tmsOrderShip.shipPrintLib
+
         this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
         this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
         this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
@@ -3104,7 +3106,7 @@ export default {
         // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
         // ///////////////////////////////////////////////////////////
         // /运单号-件数
-        this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + this.form.cargoList[0].cargoAmount)
+        this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + cargoInfo.cargoAmount)
         // //////////////////////////////////////////////////////////
         // /年月日
         this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
@@ -3173,8 +3175,8 @@ export default {
           this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
           this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
         }
-        if (this.form.cargoList[0].agencyFund) {
-          const upagencyFeeBig = this.setFeeToBig(this.form.cargoList[0].agencyFund)
+        if (cargoInfo.agencyFund) {
+          const upagencyFeeBig = this.setFeeToBig(cargoInfo.agencyFund)
           this.$set(obj, 'upagencyFundW', upagencyFeeBig[4]) // 代收货款(万)
           this.$set(obj, 'upagencyFundQ', upagencyFeeBig[3]) // 代收货款(仟)
           this.$set(obj, 'upagencyFundB', upagencyFeeBig[2]) // 代收货款(佰)
