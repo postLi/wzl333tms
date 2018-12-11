@@ -2769,10 +2769,10 @@ export default {
                 const b = {}
                 for (const i in el) {
                   if (el[i] === '' && i !== 'cargoName') {
-                  b[i] = 0
-                } else {
-                  b[i] = el[i]
-                }
+                    b[i] = 0
+                  } else {
+                    b[i] = el[i]
+                  }
                 }
                 return b
               })
@@ -2839,7 +2839,7 @@ export default {
                   if (!this.output.isbatch) {
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew')
-                  } else if (this.ispop) {
+                    } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
                   } else {
@@ -2881,11 +2881,11 @@ export default {
                 // 当为批次列表过来的，不作处理
                   if (!this.output.isbatch) {
                     if (this.output.isPreOrder) {
-                    this.eventBus.$emit('putAcceptOrder', this.output.preId)
-                  }
+                      this.eventBus.$emit('putAcceptOrder', this.output.preId)
+                    }
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew -> 2')
-                  } else if (this.ispop) {
+                    } else if (this.ispop) {
                     this.eventBus.$emit('hideCreateOrder')
                     this.eventBus.$emit('showOrderDetail', res.data)
                   } else {
@@ -3128,7 +3128,9 @@ export default {
         this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + cargoInfo.cargoAmount)
         // //////////////////////////////////////////////////////////
         // /年月日
+        const year = parseTime(this.form.tmsOrderShip.createTime, '{y}')
         this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
+        this.$set(obj, 'createYear2', year.substr(2, 2))
         this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
         this.$set(obj, 'createDate', parseTime(this.form.tmsOrderShip.createTime, '{d}'))
         // //////////////////////////////////////////////////////////
