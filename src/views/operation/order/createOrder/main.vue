@@ -65,7 +65,8 @@
               <div class="order-form-item">
                 <span class="order-form-label">交接方式</span>
                 <el-form-item prop="tmsOrderShip.shipDeliveryMethod">
-                  <SelectType @keydown.enter.native="goNextInput" size="mini" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" >
+                  <SelectType @keydown.enter.native="goNextInput" size="mini"
+                  @change="selectShipMethod" v-model="form.tmsOrderShip.shipDeliveryMethod" type="ship_delivery_method" >
                     <template slot-scope="{item}">
                       <el-option v-if="!personConfig.shipSetKey.handoverModeDict[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
                         {{item.dictName}}
@@ -212,7 +213,7 @@
                 <div class="order-form-item">
                   <span class="order-form-label">付款方式</span>
                   <el-form-item prop="tmsOrderShip.shipPayWay">
-                    <SelectType :filterable="false" size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
+                    <SelectType @change="selectShipPayway" :filterable="false" size="mini" v-model="form.tmsOrderShip.shipPayWay" type="ship_pay_way" />
                   </el-form-item>
                 </div>
               </el-col>
@@ -254,7 +255,8 @@
                 <div class="order-form-item">
                   <span class="order-form-label">回单类型</span>
                   <el-form-item prop="tmsOrderShip.shipReceiptRequire">
-                    <SelectType size="mini" v-model="form.tmsOrderShip.shipReceiptRequire" type="ship_receipt_require" />
+                    <SelectType size="mini" v-model="form.tmsOrderShip.shipReceiptRequire"
+                    @change="selectShipRequire" type="ship_receipt_require" />
                   </el-form-item>
                 </div>
               </el-col>
@@ -294,7 +296,9 @@
                 <div class="order-form-item">
                   <span class="order-form-label">运输方式</span>
                   <el-form-item prop="tmsOrderShip.shipShippingType">
-                    <SelectType size="mini" v-model="form.tmsOrderShip.shipShippingType" type="ship_shipping_type" />
+                    <SelectType size="mini"
+                    @change="selectShipShip"
+                     v-model="form.tmsOrderShip.shipShippingType" type="ship_shipping_type" />
                   </el-form-item>
                 </div>
               </el-col>
@@ -302,7 +306,9 @@
                 <div class="order-form-item">
                   <span class="order-form-label">业务类型</span>
                   <el-form-item prop="tmsOrderShip.shipBusinessType">
-                    <SelectType size="mini" v-model="form.tmsOrderShip.shipBusinessType" type="ship_business_type" />
+                    <SelectType size="mini"
+                     @change="selectShipBusiness"
+                     v-model="form.tmsOrderShip.shipBusinessType" type="ship_business_type" />
                   </el-form-item>
                 </div>
               </el-col>
@@ -312,7 +318,9 @@
                 <div class="order-form-item">
                   <span class="order-form-label">时效</span>
                   <el-form-item prop="tmsOrderShip.shipEffective">
-                    <SelectType size="mini" v-model="form.tmsOrderShip.shipEffective" type="ship_effective" />
+                    <SelectType size="mini"
+                    @change="selectShipEffect"
+                     v-model="form.tmsOrderShip.shipEffective" type="ship_effective" />
                   </el-form-item>
                 </div>
               </el-col>
@@ -989,9 +997,9 @@ export default {
 
   },
   mounted() {
-    this.getSelectType()
-    this.getShipPayWay()
-    this.getReceiptType()
+    // this.getSelectType()
+    // this.getShipPayWay()
+    // this.getReceiptType()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
     if (this.ispop) {
@@ -2012,7 +2020,11 @@ export default {
     },
     // 其他表单
     getBatch(item) {
-      this.form.tmsOrderShip.shipTruckIdNumber = item.truckIdNumber || ''
+      console.log('batch:', item)
+      if (item) {
+        this.form.tmsOrderShip.pickupBatchNumber = item.batchNumber
+        this.form.tmsOrderShip.shipTruckIdNumber = item.truckIdNumber || ''
+      }
     },
     // 获取总运费
     getTotalFee() {
@@ -2840,12 +2852,12 @@ export default {
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew')
                     } else if (this.ispop) {
-                    this.eventBus.$emit('hideCreateOrder')
-                    this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
-                  } else {
+                      this.eventBus.$emit('hideCreateOrder')
+                      this.eventBus.$emit('showOrderDetail', data.tmsOrderShip.id)
+                    } else {
                     // this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + data.tmsOrderShip.id + '&tab=查看' + data.tmsOrderShip.shipSn)
-                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
-                  }
+                      this.eventBus.$emit('replaceCurrentView', '/operation/order/orderManage')
+                    }
                   } else {
                     this.batchSaveList[this.currentBatch].data = data
                   }
@@ -2886,11 +2898,11 @@ export default {
                     if (this.isSaveAndNew) {
                     // this.initIndex('isSaveAndNew -> 2')
                     } else if (this.ispop) {
-                    this.eventBus.$emit('hideCreateOrder')
-                    this.eventBus.$emit('showOrderDetail', res.data)
-                  } else {
-                    this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
-                  }
+                      this.eventBus.$emit('hideCreateOrder')
+                      this.eventBus.$emit('showOrderDetail', res.data)
+                    } else {
+                      this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + res.data + '&tab=查看' + data.tmsOrderShip.shipSn)
+                    }
                   } else {
                     this.batchSaveList[this.currentBatch].data = data
                     this.batchSaveList[this.currentBatch].issave = true
@@ -2973,7 +2985,21 @@ export default {
       })
     },
     printLibkey() { // 打印标签
+      this.setPrintData('lib')
+      const printObj = {
+        orderdata: this.printDataObject,
+        number: parseInt(this.printDataObject.tmsOrderShipInfo.shipPrintLib, 10) || 1,
+        printer: '',
+        printSetup: [],
+        type: 'lib',
+        preview: !this.isPrintWithNoPreview
+      }
       return getEnableLibSetting().then(data => {
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
+
+        CreatePrintPageEnable(printObj)
+        return data
         this.setPrintData('lib') // 设置数据
         const printData = objectMerge2({}, this.printDataObject)
         console.log('getEnableLibSetting', data, printData)
@@ -2992,7 +3018,21 @@ export default {
         })
     },
     print() { // 打印运单
+      this.setPrintData('order')
+      const printObj = {
+        orderdata: this.printDataObject,
+        number: 1,
+        printer: '',
+        printSetup: [],
+        type: 'order',
+        preview: !this.isPrintWithNoPreview
+      }
       return getEnableOrderSetting().then(data => {
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+
+        CreatePrintPageEnable(printObj)
+        return
         this.setPrintData('order') // 设置数据
         const printData = objectMerge2({}, this.printDataObject)
         console.log('getEnableOrderSetting', data)
@@ -3055,154 +3095,226 @@ export default {
     },
     selectShipUserid(val) { // 业务员
       console.log('业务员', val)
+      val = val || {}
       this.shipUserName = val.name || ''
+      this.form.tmsOrderShip.userName = val.name || ''
+    },
+    selectShipMethod(val, item) {
+      // console.log('交接方式： ', val, item)
+      this.form.tmsOrderShip.shipDeliveryMethodName = item.dictName || ''
+    },
+    selectShipPayway(val, item) {
+      // console.log('付款方式： ', val, item)
+      this.form.tmsOrderShip.shipPayWayName = item.dictName || ''
+    },
+    selectShipRequire(val, item) {
+      // console.log('回单类型： ', val, item)
+      this.form.tmsOrderShip.shipReceiptRequireName = item.dictName || ''
+    },
+    selectShipShip(val, item) {
+      // console.log('运输方式： ', val, item)
+      this.form.tmsOrderShip.shipShippingTypeName = item.dictName || ''
+    },
+    selectShipBusiness(val, item) {
+      // console.log('业务类型： ', val, item)
+      this.form.tmsOrderShip.shipBusinessTypeName = item.dictName || ''
+    },
+    selectShipEffect(val, item) {
+      // console.log('时效： ', val, item)
+      this.form.tmsOrderShip.shipEffectiveName = item.dictName || ''
     },
     setPrintData(type) { // 设置打印的字段
-      // 标签数据
+      this.useNew = true
       let obj = {}
-      const cargoInfo = this.form.cargoList[0] || {}
-      this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
-      this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
-      this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
-      this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
-      this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
-      this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
-      this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
-      this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
-      this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
-      this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
-      this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
-      for (const item in cargoInfo) { // 货品信息及其费用项
-        if (item === 'cargoName' || item === 'cargoPack') {
-          obj[item] = cargoInfo[item]
-        } else {
-          obj[item] = parseFloat(Number(cargoInfo[item]))
+      if (this.useNew) {
+        const shipinfo = objectMerge2({}, this.form.tmsOrderShip)
+        // 将开单页面缺失的字段补上
+        shipinfo.shipSenderUnit = this.form.sender.customerUnit
+        shipinfo.shipSenderName = this.form.sender.customerName
+        shipinfo.shipSenderMobile = this.form.sender.customerMobile
+        shipinfo.shipSenderAddress = this.form.sender.detailedAddress
+
+        shipinfo.shipReceiverUnit = this.form.receiver.customerUnit
+        shipinfo.shipReceiverName = this.form.receiver.customerName
+        shipinfo.shipReceiverMobile = this.form.receiver.customerMobile
+        shipinfo.shipReceiverAddress = this.form.receiver.detailedAddress
+
+        shipinfo.fromOrgName = shipinfo.fromOrgName || this.otherinfo.orgName
+        shipinfo.toOrgName = shipinfo.toOrgName || this._getOrgName(shipinfo.shipToOrgid)
+        shipinfo.shipPrintLib = shipinfo.shipPrintLib
+        // 根据运单详情返回的字段补上缺少的
+        // shipinfo.backStatus = shipinfo.backStatus || ''
+        // shipinfo.fundsGoodsStatus = shipinfo.fundsGoodsStatus || ''
+        // shipinfo.driverName = shipinfo.driverName || ''
+        // shipinfo.shipIdentifying = ''
+        // shipinfo.shipOrgid = ''
+        // shipinfo.shipOrgidCityName = ''
+        // shipinfo.shipOrgidName = ''
+
+        // shipinfo.pickupBatchNumber = shipinfo.shipBatchId
+        // shipinfo.userName = this.shipUserName
+        // shipinfo.shipBusinessTypeName = shipinfo.shipBusinessType
+        // shipinfo.shipDeliveryMethodName = shipinfo.shipDeliveryMethod
+        // shipinfo.shipPayWayName = shipinfo.shipPayWay
+        // shipinfo.shipReceiptRequireName = shipinfo.shipReceiptRequire
+        // shipinfo.shipEffectiveName = shipinfo.shipEffective
+
+        // shipinfo.shipShippingTypeName = shipinfo.shipShippingType
+
+        // 运单状态
+        shipinfo.shipStatusName = shipinfo.shipStatusName || '已入库'
+        shipinfo.shipStatus = shipinfo.shipStatus || 59
+
+        obj.tmsOrderShipInfo = shipinfo
+        obj.tmsOrderCargoList = this.form.cargoList || [{}]
+        obj.tmsOrderTransferList = [this.form.tmsOrderTransfer]
+      } else {
+      // 标签数据
+
+        const cargoInfo = this.form.cargoList[0] || {}
+        this.$set(obj, 'shipSn', this.form.tmsOrderShip.shipSn) // 运单号
+        this.$set(obj, 'createTime', this.form.tmsOrderShip.createTime) // 开单时间
+        this.$set(obj, 'goodsSn', this.form.tmsOrderShip.shipGoodsSn) // 货号
+        this.$set(obj, 'senderUnit', this.form.sender.customerUnit) // 发货单位
+        this.$set(obj, 'senderName', this.form.sender.customerName) // 发货人
+        this.$set(obj, 'senderMobile', this.form.sender.customerMobile) // 发货人手机
+        this.$set(obj, 'senderAddress', this.form.sender.detailedAddress) // 发货地址
+        this.$set(obj, 'receiverUnit', this.form.receiver.customerUnit) // 收货方
+        this.$set(obj, 'receiverName', this.form.receiver.customerName) // 收货人
+        this.$set(obj, 'receiverAddress', this.form.receiver.detailedAddress) // 收货地址
+        this.$set(obj, 'receiverMobile', this.form.receiver.customerMobile) // 收货人手机号
+        for (const item in cargoInfo) { // 货品信息及其费用项
+          if (item === 'cargoName' || item === 'cargoPack') {
+            obj[item] = cargoInfo[item]
+          } else {
+            obj[item] = parseFloat(Number(cargoInfo[item]))
+          }
         }
-      }
-      console.log('货品信息及其费用项', cargoInfo)
-      this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
-      const addrToCity = this.form.tmsOrderShip.shipToCityName || ''
-      const addrToCityArr = addrToCity.split(',')
+        console.log('货品信息及其费用项', cargoInfo)
+        this.$set(obj, 'fromOrgName', this.otherinfo.name) // 开单网点
+        const addrToCity = this.form.tmsOrderShip.shipToCityName || ''
+        const addrToCityArr = addrToCity.split(',')
 
-      const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
-      const addrFormCityArr = addrFormCity.split(',')
+        const addrFormCity = this.form.tmsOrderShip.shipFromCityName || ''
+        const addrFormCityArr = addrFormCity.split(',')
 
-      this.$set(obj, 'toOrgName', this._getOrgName(this.form.tmsOrderShip.shipToOrgid)) // 到达网点
-      this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
-      this.$set(obj, 'description', cargoInfo['description'] ? cargoInfo['description'] : '') // 品种规格
-      this.$set(obj, 'toCity', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到站
-      this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
+        this.$set(obj, 'toOrgName', this._getOrgName(this.form.tmsOrderShip.shipToOrgid)) // 到达网点
+        this.$set(obj, 'fromCity', addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '') // 发站
+        this.$set(obj, 'description', cargoInfo['description'] ? cargoInfo['description'] : '') // 品种规格
+        this.$set(obj, 'toCity', addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '') // 到站
+        this.$set(obj, 'deliveryMethod', this.DELIVERY_METHODS[parseInt(this.form.tmsOrderShip.shipDeliveryMethod)]) // 交接方式
 
-      if (type === 'lib') {
-        this.$set(obj, 'cargoPack', cargoInfo.cargoPack)
-        this.$set(obj, 'companyName', this.otherinfo.companyName)
-        this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
-        this.$set(obj, 'qrcode', '') // 二维码
-        this.$set(obj, 'companyAddr', this.otherinfo.companyInfo.detailedAddr) // 公司地址
-        this.$set(obj, 'mobilephone', this.otherinfo.mobilephone) // 业务员电话
-        obj.shipPrintLib = this.form.tmsOrderShip.shipPrintLib
-        console.log('this.form.tmsOrderShip.shipPrintLib', this.form.tmsOrderShip.shipPrintLib, this.form.tmsOrderShip)
-      } else if (type === 'order') {
-        console.log('cargoInfo', cargoInfo)
-        this.$set(obj, 'otherfeeOut', cargoInfo['otherfeeOut'] ? cargoInfo['otherfeeOut'] : '') // 其他费用支出
-        this.$set(obj, 'otherfeeIn', cargoInfo['otherfeeIn'] ? cargoInfo['otherfeeIn'] : '') // 其他费用收入
-        this.$set(obj, 'taxRate', cargoInfo['taxRate'] ? cargoInfo['taxRate'] : '') // 税率
-        this.$set(obj, 'taxes', cargoInfo['taxes'] ? cargoInfo['taxes'] : '') // 税金
-        this.$set(obj, 'housingFee', cargoInfo['housingFee'] ? cargoInfo['housingFee'] : '') // 入仓费
-        this.$set(obj, 'stampTax', cargoInfo['stampTax'] ? cargoInfo['stampTax'] : '') // 印花税
-        this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
-        this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
-        this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(cargoInfo.brokerageFee))) // 回扣标识
-        this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
+        if (type === 'lib') {
+          this.$set(obj, 'cargoPack', cargoInfo.cargoPack)
+          this.$set(obj, 'companyName', this.otherinfo.companyName)
+          this.$set(obj, 'companyPhone', this.otherinfo.mobilephone)
+          this.$set(obj, 'qrcode', '') // 二维码
+          this.$set(obj, 'companyAddr', this.otherinfo.companyInfo.detailedAddr) // 公司地址
+          this.$set(obj, 'mobilephone', this.otherinfo.mobilephone) // 业务员电话
+          obj.shipPrintLib = this.form.tmsOrderShip.shipPrintLib
+          console.log('this.form.tmsOrderShip.shipPrintLib', this.form.tmsOrderShip.shipPrintLib, this.form.tmsOrderShip)
+        } else if (type === 'order') {
+          console.log('cargoInfo', cargoInfo)
+          this.$set(obj, 'otherfeeOut', cargoInfo['otherfeeOut'] ? cargoInfo['otherfeeOut'] : '') // 其他费用支出
+          this.$set(obj, 'otherfeeIn', cargoInfo['otherfeeIn'] ? cargoInfo['otherfeeIn'] : '') // 其他费用收入
+          this.$set(obj, 'taxRate', cargoInfo['taxRate'] ? cargoInfo['taxRate'] : '') // 税率
+          this.$set(obj, 'taxes', cargoInfo['taxes'] ? cargoInfo['taxes'] : '') // 税金
+          this.$set(obj, 'housingFee', cargoInfo['housingFee'] ? cargoInfo['housingFee'] : '') // 入仓费
+          this.$set(obj, 'stampTax', cargoInfo['stampTax'] ? cargoInfo['stampTax'] : '') // 印花税
+          this.$set(obj, 'payWay', this.PAY_WAY[parseInt(this.form.tmsOrderShip.shipPayWay)]) // 付款方式
+          this.$set(obj, 'totalFee', parseFloat(Number(this.form.tmsOrderShip.shipTotalFee))) // 运费合计
+          this.$set(obj, 'brokerageFeeSign', 'R:' + parseFloat(Number(cargoInfo.brokerageFee))) // 回扣标识
+          this.$set(obj, 'receiptRequire', this.RECEIPT_TYPE[this.form.tmsOrderShip.shipReceiptRequire]) // 回单类型
 
-        this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
-        this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
-        this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
-        this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
-        this.$set(obj, 'createrName', this.shipUserName) // 开单员
-        this.$set(obj, 'userName', this.shipUserName) // 制单员
-        this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
+          this.$set(obj, 'customerNumber', this.form.tmsOrderShip.shipCustomerNumber) // 客户单号
+          this.$set(obj, 'shippingType', this.form.tmsOrderShip.shipShippingType) // 运输方式
+          this.$set(obj, 'businessType', this.form.tmsOrderShip.shipBusinessType) // 业务类型
+          this.$set(obj, 'effective', this.form.tmsOrderShip.shipEffective) // 时效
+          this.$set(obj, 'createrName', this.shipUserName) // 开单员
+          this.$set(obj, 'userName', this.shipUserName) // 制单员
+          this.$set(obj, 'remarks', this.form.tmsOrderShip.shipRemarks) // 备注
         // this.$set(obj, 'userName', this.form.tmsOrderShip.shipUserid) // 制单员
         // ///////////////////////////////////////////////////////////
         // /运单号-件数
-        this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + cargoInfo.cargoAmount)
+          this.$set(obj, 'shipSnCargoAmount', this.form.tmsOrderShip.shipSn + '-' + cargoInfo.cargoAmount)
         // //////////////////////////////////////////////////////////
         // /年月日
-        const year = parseTime(this.form.tmsOrderShip.createTime, '{y}')
-        this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
-        this.$set(obj, 'createYear2', year.substr(2, 2))
-        this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
-        this.$set(obj, 'createDate', parseTime(this.form.tmsOrderShip.createTime, '{d}'))
+          const year = parseTime(this.form.tmsOrderShip.createTime, '{y}')
+          this.$set(obj, 'createYear', parseTime(this.form.tmsOrderShip.createTime, '{y}'))
+          this.$set(obj, 'createYear2', year.substr(2, 2))
+          this.$set(obj, 'createMonth', parseTime(this.form.tmsOrderShip.createTime, '{m}'))
+          this.$set(obj, 'createDate', parseTime(this.form.tmsOrderShip.createTime, '{d}'))
         // //////////////////////////////////////////////////////////
         // /特殊处理 中转费
-        let totalTransferFee = 0
-        if (this.form.tmsOrderTransfer && this.form.tmsOrderTransfer.length > 0) {
-          this.form.tmsOrderTransfer.forEach(e => {
-            totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
-          })
-        }
-        this.$set(obj, 'transferFee', parseFloat(totalTransferFee)) // 中转费
-        console.log('中转费', totalTransferFee)
+          let totalTransferFee = 0
+          if (this.form.tmsOrderTransfer && this.form.tmsOrderTransfer.length > 0) {
+            this.form.tmsOrderTransfer.forEach(e => {
+              totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+            })
+          }
+          this.$set(obj, 'transferFee', parseFloat(totalTransferFee)) // 中转费
+          console.log('中转费', totalTransferFee)
         // //////////////////////////////////////////////////////////
         // /特殊处理 打勾
-        switch (this.form.tmsOrderShip.shipPayWay) { // 付款方式
-          case 76:
-            this.$set(obj, 'nowPay', '√') // 现付（√）
-            break
-          case 77:
-            this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
-            break
-          case 78:
-            this.$set(obj, 'monthPay', '√') // 月结（√）
-            break
-          case 79:
-            this.$set(obj, 'receiptPay', '√') // 回单付（√）
-            break
-          case 103:
+          switch (this.form.tmsOrderShip.shipPayWay) { // 付款方式
+            case 76:
+              this.$set(obj, 'nowPay', '√') // 现付（√）
+              break
+            case 77:
+              this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
+              break
+            case 78:
+              this.$set(obj, 'monthPay', '√') // 月结（√）
+              break
+            case 79:
+              this.$set(obj, 'receiptPay', '√') // 回单付（√）
+              break
+            case 103:
             // this.$set(obj, '', '√') // 免费（√）
-            break
-          case 104: // 多笔付
-            this.$set(obj, 'nowPay', '√') // 现付（√）
-            this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
-            this.$set(obj, 'monthPay', '√') // 月结（√）
-            this.$set(obj, 'receiptPay', '√') // 回单付（√）
-            break
-        }
-        console.log('自提  送货：：交接方式：：：', this.form.tmsOrderShip.shipDeliveryMethod)
-        if (this.form.tmsOrderShip.shipDeliveryMethod.toString().indexOf('68') !== -1) {
-          this.$set(obj, 'deliveryGood', '√') // 自提（√）
-        } else if (this.form.tmsOrderShip.shipDeliveryMethod === 69) {
-          this.$set(obj, 'sendGood', '√') // 送货（√）
-        }
-        if (this.form.tmsOrderShip.shipEffective === 95) {
-          this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
-        } else {
-          this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
-        }
-        console.log('控货 贵重物品：：：：', this.shipOther)
-        if (this.shipOther.indexOf('168') !== -1) {
-          this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
-        }
-        if (this.shipOther.indexOf('169') !== -1) {
-          this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
-        }
+              break
+            case 104: // 多笔付
+              this.$set(obj, 'nowPay', '√') // 现付（√）
+              this.$set(obj, 'deliveryPay', '√') // 提付（√）|| 到付（√）
+              this.$set(obj, 'monthPay', '√') // 月结（√）
+              this.$set(obj, 'receiptPay', '√') // 回单付（√）
+              break
+          }
+          console.log('自提  送货：：交接方式：：：', this.form.tmsOrderShip.shipDeliveryMethod)
+          if (this.form.tmsOrderShip.shipDeliveryMethod.toString().indexOf('68') !== -1) {
+            this.$set(obj, 'deliveryGood', '√') // 自提（√）
+          } else if (this.form.tmsOrderShip.shipDeliveryMethod === 69) {
+            this.$set(obj, 'sendGood', '√') // 送货（√）
+          }
+          if (this.form.tmsOrderShip.shipEffective === 95) {
+            this.$set(obj, 'urgent', this.form.tmsOrderShip.shipEffective) // 95-时效-加急
+          } else {
+            this.$set(obj, 'common', this.form.tmsOrderShip.shipEffective) // 94-时效-普通
+          }
+          console.log('控货 贵重物品：：：：', this.shipOther)
+          if (this.shipOther.indexOf('168') !== -1) {
+            this.$set(obj, 'controlGoods', this.shipOther) // 168-控货
+          }
+          if (this.shipOther.indexOf('169') !== -1) {
+            this.$set(obj, 'valuables', this.shipOther) // 169-贵重物品
+          }
         // //////////////////////////////////////////////////////////
         // /处理合计中文大写
-        if (this.form.tmsOrderShip.shipTotalFee) {
-          const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
-          this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
-          this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
-          this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
-          this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
-          this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
-        }
-        if (cargoInfo.agencyFund) {
-          const upagencyFeeBig = this.setFeeToBig(cargoInfo.agencyFund)
-          this.$set(obj, 'upagencyFundW', upagencyFeeBig[4]) // 代收货款(万)
-          this.$set(obj, 'upagencyFundQ', upagencyFeeBig[3]) // 代收货款(仟)
-          this.$set(obj, 'upagencyFundB', upagencyFeeBig[2]) // 代收货款(佰)
-          this.$set(obj, 'upagencyFundS', upagencyFeeBig[1]) // 代收货款(拾)
-          this.$set(obj, 'upagencyFundY', upagencyFeeBig[0]) // 代收货款(元)
+          if (this.form.tmsOrderShip.shipTotalFee) {
+            const totalFeeBig = this.setFeeToBig(this.form.tmsOrderShip.shipTotalFee)
+            this.$set(obj, 'uptotalFeeW', totalFeeBig[4]) // 运费合计(万)
+            this.$set(obj, 'uptotalFeeQ', totalFeeBig[3]) // 运费合计(仟)
+            this.$set(obj, 'uptotalFeeB', totalFeeBig[2]) // 运费合计(佰)
+            this.$set(obj, 'uptotalFeeS', totalFeeBig[1]) // 运费合计(拾)
+            this.$set(obj, 'uptotalFeeY', totalFeeBig[0]) // 运费合计(元)
+          }
+          if (cargoInfo.agencyFund) {
+            const upagencyFeeBig = this.setFeeToBig(cargoInfo.agencyFund)
+            this.$set(obj, 'upagencyFundW', upagencyFeeBig[4]) // 代收货款(万)
+            this.$set(obj, 'upagencyFundQ', upagencyFeeBig[3]) // 代收货款(仟)
+            this.$set(obj, 'upagencyFundB', upagencyFeeBig[2]) // 代收货款(佰)
+            this.$set(obj, 'upagencyFundS', upagencyFeeBig[1]) // 代收货款(拾)
+            this.$set(obj, 'upagencyFundY', upagencyFeeBig[0]) // 代收货款(元)
+          }
         }
       }
       this.printDataObject = Object.assign({}, obj)

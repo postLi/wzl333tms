@@ -904,7 +904,7 @@ export default {
     },
     // 初始化各个表单的情况
     init() {
-      this.getShipPayWay()
+      // this.getShipPayWay()
       this.setOrderFee()
     },
     // 设置费用列
@@ -1042,13 +1042,36 @@ export default {
     //   }
     // },
     doAction(type) {
+      const printObj = {
+        orderdata: {
+          tmsOrderShipInfo: this.orderdata.tmsOrderShipInfo,
+          tmsOrderCargoList: this.orderdata.tmsOrderCargoList,
+          tmsOrderTransferList: this.orderdata.tmsOrderTransferList,
+
+          tmsOrderShipSignList: this.orderdata.tmsOrderShipSignList,
+          tmsGxLoadsList: this.orderdata.tmsGxLoadsList,
+          tmsDbLoadsList: this.orderdata.tmsDbLoadsList
+        },
+        number: 1,
+        printer: '',
+        printSetup: [],
+        type: '',
+        preview: true
+      }
+      printObj.preview = !window.TMS_printOrderInfo
       switch (type) {
         case 'printLibkey': // 打印标签
           // console.log('运单详情 orderdata::', JSON.stringify(this.orderdata))
           // getSettingCompanyLi().then(data => {
           // console.log('系统所有打印可设置的数据 标签::', JSON.stringify(data))
           // })
+          printObj.printer = this.otherinfo.systemSetup.printSetting.label
           return getEnableLibSetting().then(data => {
+            printObj.printSetup = data
+            printObj.type = 'lib'
+            printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 1
+            CreatePrintPageEnable(printObj)
+            return data
               // console.log('打印设置标签 libData::', JSON.stringify(libData))
             this.setPrintData('lib') // 设置数据
             const libData = Object.assign([], data)
@@ -1061,9 +1084,9 @@ export default {
             }
             console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
             if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
-              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.form.tmsOrderShipInfo.shipPrintLib) // 调打印接口
+              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
             } else {
-              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label) // 调打印接口
+              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, false, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
             }
           })
             .catch(err => {
@@ -1075,7 +1098,12 @@ export default {
           // getSettingCompanyOrder().then(data => {
           // console.log('系统所有打印可设置的数据 运单::', data)
           // })
+          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
           return getEnableOrderSetting().then(data => {
+            printObj.printSetup = data
+            printObj.type = 'order'
+            CreatePrintPageEnable(printObj)
+            return data
             this.setPrintData('order') // 设置数据
             const libData = Object.assign([], data)
               // console.log('打印设置运单 libData::', libData)
@@ -1203,7 +1231,7 @@ export default {
 
         // //////////////////////////////////////////////////////////
         // /特殊处理 打勾
-        this.$set(obj, 'payWay', this.PAY_WAY[infoDetail.shipPayWay]) // 付款方式
+        this.$set(obj, 'payWay', infoDetail.shipPayWayName) // 付款方式
         switch (infoDetail.shipPayWay) { // 付款方式
           case 76:
             this.$set(obj, 'nowPay', '√') // 现付（√）
