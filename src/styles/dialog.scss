@@ -53,21 +53,38 @@ $dialogHeader_bgcolor: #e6e6e6;
     float: left;
     width: 350px;
     overflow: auto;
-    height: calc(100% - 48px;
-    );
+    height: calc(100% - 96px);
     position: relative;
-    top: 48px;
+    top: 96px;
     .print_aside_head {
       position: fixed;
       top: 54px;
       left: 0;
-      padding: 0 20px;
+      padding: 0 10px;
       line-height: 48px;
       background-color: #ffffff;
       display: block;
       width: 350px;
       height: 48px;
+      // box-shadow: 1px 3px 10px #eee;
+    }
+    .print_aside_search{
+      border-top: 1px solid #eee;
+      position: fixed;
+      top: 100px;
+      left: 0;
+      padding: 10px;
+      background-color: #ffffff;
+      display: block;
+      width: 350px;
+      height: 48px;
       box-shadow: 1px 3px 10px #eee;
+      .el-autocomplete {
+        width: 100%;
+        .el-input-group__prepend{
+          padding: 0 10px;
+        }
+      }
     }
     .prinit_aside_paper {
       background-color: #f2f2f2;
@@ -94,11 +111,11 @@ $dialogHeader_bgcolor: #e6e6e6;
       justify-content: space-around;
       width: 100%;
       padding: 20px 0 0px 10px;
+      
       .prinit_aside_detail_head {
         height: 40px;
         line-height: 55px;
       }
-
       .el-form-item {
         margin-bottom: 0;
         width: 48%;
@@ -140,9 +157,24 @@ $dialogHeader_bgcolor: #e6e6e6;
         height: 40px;
         line-height: 55px;
       }
+      .box_container_2 .image-uploader{
+        width: auto;
+        margin-top: 5px;
+      }
+      .box_container_2 .el-upload--picture-card{
+        width: auto;
+        height: auto;
+        line-height: 19px;
+        .box_container_2 .el-upload__text{
+          margin-bottom: 0;
+        }
+        .box_container_2 .upload__tip{
+          line-height: 20px;
+        }
+      }
       .el-upload-dragger {
         width: 320px;
-        margin-top: 10px;
+        // margin-top: 10px;
         height: 120px;
         .el-icon-upload {
           margin: 25px 0 20px;
@@ -153,6 +185,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       padding: 10px; // background-color: #fbfbfb;
     }
     .print_aside_content_form {
+     box-shadow: 1px 3px 10px #eee;
       label {
         padding: 0 10px;
         display: block;
@@ -262,6 +295,7 @@ $dialogHeader_bgcolor: #e6e6e6;
           height: 25px;
           line-height: 25px;
           padding: 0 5px;
+          font-weight: 400;
         }
       }
       .isActiveDrag {
@@ -346,8 +380,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     float: left;
     width: 500px;
     overflow: auto;
-    height: calc(100% - 48px;
-    );
+    height: calc(100% - 48px);
     position: relative;
     top: 48px;
     .print_aside_head {

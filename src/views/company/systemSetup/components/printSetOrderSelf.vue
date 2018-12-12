@@ -11,6 +11,11 @@
         <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存</el-button>
         <el-button @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">刷新</el-button>
       </div>
+      <div class="print_aside_search">
+        <el-autocomplete v-model="currentSearch" :fetch-suggestions="querySearch" placeholder="查找非自定义字段" @select="handleSelect" popper-class="popperHide" size="mini" clearable>
+          <i slot="prefix" class="el-input__icon el-icon-search"></i>
+        </el-autocomplete>
+      </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <div class="print_aside_content_form">
           <label>发货人信息</label>
@@ -50,7 +55,7 @@
             <transition-group>
               <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" :data-fileName='item.filedValue' class="print_aside_content_self">
                 <!-- <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>  -->
-                <el-input size="mini" placeholder="自定义标签" v-model="labelSelf" clearable></el-input>
+                <el-input size="mini" placeholder="自定义标签" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)"></el-input>
                 <el-button size="mini" @click="addItemDrag(item, index)">添加</el-button>
               </li>
             </transition-group>
@@ -88,7 +93,7 @@
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
               <span><i class="el-icon-setting"></i> {{dragDetailInfo.filedName}}</span>
-              <span>{{ ' ('+ dragDetailInfo.leftx +', '+ dragDetailInfo.topy +')'}}</span>
+              <!-- <span>{{ ' ('+ dragDetailInfo.leftx +', '+ dragDetailInfo.topy +')'}}</span> -->
               <br>
               <el-form-item>
                 <el-input placeholder="请输入内容" v-model="dragDetailInfo.width" size="mini" @change="changeDragDetailInfo" v-number-only:point>
@@ -102,6 +107,19 @@
                   <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
+              <!--  <el-form-item>
+                <el-input placeholder="请输入内容" v-model="dragDetailInfo.leftx" size="mini" @change="changeDragDetailInfo" v-number-only:point>
+                  <template slot="prepend">左偏移</template>
+                  <template slot="append">mm</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-input placeholder="请输入内容" v-model="dragDetailInfo.topy" size="mini" @change="changeDragDetailInfo" v-number-only:point>
+                  <template slot="prepend">上偏移</template>
+                  <template slot="append">mm</template>
+                </el-input>
+              </el-form-item> -->
+              <!--   <div class="solidLine"></div> -->
               <el-form-item>
                 <el-input placeholder="请输入内容" v-model="dragDetailInfo.fontsize" size="mini" @change="changeDragDetailInfo" v-numberOnly>
                   <template slot="prepend">字号</template>
@@ -122,12 +140,13 @@
         <div class="prinit_aside_setpreview">
           <div class="prinit_aside_setpreview_head">
             <span><i class="el-icon-picture"></i> 打印背景图片效果预览</span>
-            <el-button @click="imageUrl=''" icon="el-icon-delete" :size="btnsize" style="float: right; margin-right: 10px;margin-top:10px;" v-if="imageUrl">清除背景</el-button>
+            <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right; margin-right: 10px;margin-top:10px;" v-if="imageUrl">清除背景</el-button>
           </div>
-          <el-upload drag :show-file-list="false" :on-change="handleChange" action="" :http-request="uploadHandleFile">
+          <Upload :title="'本地上传'" listtype="picture" v-model="imageUrl" />
+          <!-- <el-upload drag :show-file-list="false" :on-change="handleChange" action="" :http-request="uploadHandleFile">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          </el-upload>
+          </el-upload> -->
           <div class="prinit_aside_setpreview_foot" v-if="imageUrl">
             <el-button size="mini" @click="setBg('zoomOut')" type="primary" title="放大" icon="el-icon-circle-plus-outline"></el-button>
             <el-button size="mini" @click="setBg('zoomIn')" type="primary" title="缩小" icon="el-icon-remove-outline"></el-button>
@@ -144,7 +163,10 @@
       </el-form>
     </div>
     <div class="print_main">
-      <div class="print_main_head"><b>预览展示:</b><span> 纸张大小(宽×高)：{{this.formModel.paper.width+' (毫米mm) × '+this.formModel.paper.height + ' (毫米mm)'}}</span></div>
+      <div class="print_main_head">
+        <b>预览展示:</b>
+        <span> 纸张大小(宽×高)：{{this.formModel.paper.width+' (毫米mm) × '+this.formModel.paper.height + ' (毫米mm)'}}</span>
+      </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
         <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' :data-index="item._index" @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
           cursor: dragCursor,
@@ -158,6 +180,7 @@
           textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">
             {{'(x :'+Math.round(item.leftx*prxvalue) +' mm, y :'+ Math.round(item.topy*prxvalue) + ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}}
+            <!-- {{'(x :'+Math.round(item.leftx) +' mm, y :'+ Math.round(item.topy)+ ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}} -->
           </div>
           <div class="dragSizeControler">
             <span>{{'{ '+item.filedName+ ' }'}}</span>
@@ -187,9 +210,11 @@ import { objectMerge2 } from '@/utils/index'
 // import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 import { getCommonSetting } from '@/api/operation/print'
+import Upload from '@/components/Upload/singleImage2'
 export default {
   components: {
-    draggable
+    draggable,
+    Upload
   },
   props: {
     popVisible: {
@@ -199,9 +224,10 @@ export default {
   },
   data() {
     return {
+      currentSearch: '',
       labelSelf: '',
       labelIndex: 0,
-      loading: false,
+      loading: true,
       imageUrl: '',
       btnsize: 'mini',
       // 保存背景图的相关属性，用来操控
@@ -219,13 +245,14 @@ export default {
           topy: 0
         }
       },
-      defaultLabelWidth: 150,
-      defaultLabelHeight: 24,
+      defaultLabelWidth: 110,
+      defaultLabelHeight: 30,
       defaultLabelFontSize: 12,
+      imgNameStr: '预览图片lyy,',
       prxvalue: 0.264,
       mm2px: 3.779,
       maxLabel: 3, // 固有字段最多显示数量
-      maxLabelSelf: 20, // 自定义字段最多显示数量
+      maxLabelSelf: 19, // 自定义字段最多显示数量, 拿一个来做背景设置
       classItem: [],
       orgLabelList: [],
       labelListView: [],
@@ -260,6 +287,12 @@ export default {
     }
   },
   watch: {
+    imageUrl: {
+      handler(cval, oval) {
+        console.log('图片', cval, oval)
+      },
+      deep: true
+    },
     popVisible() {
       if (this.popVisible) {
         this.dialogVisible = true
@@ -278,13 +311,15 @@ export default {
       let viewHeight = 150
       const bgurl = this.imageUrl
       if (this.formModel) {
-        this.formModel.labelList.forEach(e => {
-          if (e.filedValue === 'setting') {
-            console.log('printPreviewContent', e.width, e.height)
-            viewWidth = e.width
-            viewHeight = e.height
-          }
-        })
+        viewWidth = this.formModel.paper.width
+        viewHeight = this.formModel.paper.height
+        // this.formModel.labelList.forEach(e => {
+        //   if (e.filedValue === 'setting') {
+        //     console.log('printPreviewContent', e.width, e.height)
+        //     viewWidth = e.width
+        //     viewHeight = e.height
+        //   }
+        // })
       }
       return {
         width: viewWidth / this.prxvalue + 'px',
@@ -310,6 +345,19 @@ export default {
     this.unbindKey()
   },
   methods: {
+    clearImgUrl() {
+      this.imageUrl = ''
+    },
+    querySearch(queryString, cb) { // 查找字段
+      this.currentSearch = queryString
+      const list = objectMerge2([], this.orgLabelList)
+      const result = queryString ? list.filter(el => el.filedName.indexOf(queryString) !== -1) : list
+      this.formModel.labelList = objectMerge2([], result)
+      cb(result)
+    },
+    handleSelect(item) {
+      console.log('handleSelect item', item)
+    },
     bindKey() {
       document.addEventListener('mousemove', this.conrightMove, true)
       document.addEventListener('mouseup', this.conrightEnd, true)
@@ -323,16 +371,17 @@ export default {
       document.removeEventListener('keydown', this.controlEditIndex)
     },
     handleChange(file, list) {
-      console.log('handleChange file:', file)
-      console.log('handleChange list:', list)
-      try {
-        file.url = URL.createObjectURL(file.raw)
-        this.imageUrl = file.url
-        this.setBg('reset')
-      } catch (err) {
-        console.error('上传本地图片错误', err);
-        return
-      }
+      // console.log('handleChange file:', file)
+      // console.log('handleChange list:', list)
+      // try {
+      //   file.url = URL.createObjectURL(file.raw)
+      //   this.imageUrl = file.url
+
+      //   this.setBg('reset')
+      // } catch (err) {
+      //   console.error('上传本地图片错误', err);
+      //   return
+      // }
     },
     uploadHandleFile(file) {},
     startSetBg(type) {
@@ -421,47 +470,52 @@ export default {
         this.isDrag = null
       }
     },
-    addItemDrag(row, index) { // 点击显示并且添加到预览区域\
-      console.warn('row size', index, row.size, row)
-      let arr = this.labelListView.filter(e => {
+    addItemDrag(row, index) { // 点击显示并且添加到预览区域
+      let len = this.labelListView.filter(e => {
         return e.filedValue === row.filedValue
       }).length
-      if (row.filedValue === 'customFields') {
+      if (row.filedValue === 'customFields') { // 自定义字段的添加，点击后需要清空输入框
         row.filedName = this.labelSelf
-        setTimeout(()=>{
+        setTimeout(() => {
           this.labelSelf = ''
         }, 300)
       }
-      if (arr < this.maxLabel) { // 第一次添加这个字段到预览区域
+      let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
-        row.width =  Math.round(this.defaultLabelWidth * this.prxvalue)
-        row.height =  Math.round(this.defaultLabelHeight * this.prxvalue)
-        row.fontsize =  this.defaultLabelFontSize
+        row.fontsize = this.defaultLabelFontSize
         console.log('row::::', row)
         let currentRow = objectMerge2({}, row)
         currentRow._index = ++this.labelIndex
-        //  let item = this.orgLabelList.filter(e => {
-        //   if (e.filedValue === row.filedValue) {
-        //     e.leftx = event.offsetX
-        //     e.topy = event.offsetY
-        //     e.isshow = true
-        //     return true
-        //   }
-        // })[0]
-        // const item = Object.assign({}, row)
+        currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
+        currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
+        currentRow.leftx = 0
+        currentRow.topy = 0
+        currentRow.fontsize = this.defaultLabelFontSize
+        currentRow.bold = 1
+        currentRow.alignment = 1
         this.labelListView.push(objectMerge2({}, currentRow))
+        this.orgLabelList.forEach((e, index) => {
+          if (e.filedValue === row.filedValue) {
+            this.$set(this.orgLabelList, index, objectMerge2({}, row))
+          }
+        })
+      }
+      if (row.filedValue === 'customFields' && len < this.maxLabelSelf) { // 添加自定义字段到预览区域
+        fn()
+      } else if (len < this.maxLabel) { // 添加普通字段到预览区域
+        fn()
       } else { // 多次添加这个字段到预览区域
         this.$notify.info({
           title: '消息',
-          message: '【 ' + row.filedName + ' 】最多添加' + this.maxLabel + '次'
+          message: '【 ' + row.filedName + ' 】最多添加' + (row.filedValue === 'customFields' ? this.maxLabelSelf : this.maxLabel) + '次'
         })
-
       }
       this.editDragItem(row, index)
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
       this.dragDetailInfo = Object.assign({}, row)
+      console.log('编辑显示项', this.dragDetailInfo)
       this.classItem = []
       this.showDragTips = []
       if (this.classItem[index] && event && this.isHiddenDragDetail) {
@@ -477,13 +531,14 @@ export default {
     changeDragDetailInfo(newVal) { // 修改编辑显示项的数据
       if (newVal) {
         this.labelListView.forEach((e, index) => {
-          if (e.filedValue === this.dragDetailInfo.filedValue) {
+          if (e._index === this.dragDetailInfo._index) {
             this.$set(this.labelListView, index, this.dragDetailInfo)
           }
         })
         this.formModel.labelList.forEach((e, index) => {
           if (e.filedValue === this.dragDetailInfo.filedValue) {
             this.$set(this.formModel.labelList, index, this.dragDetailInfo)
+
           }
           if (e.filedValue === 'setting') {
             this.$set(this.formModel.labelList, index, this.formModel.paper)
@@ -495,6 +550,7 @@ export default {
     review() { // 刷新
       this.viewKey = new Date().getTime()
       this.formModel.labelList = []
+      this.orgLabelList = []
       this.labelListView = []
       this.getCommonSetting()
       // this.getSettingCompanyOrder()
@@ -573,6 +629,7 @@ export default {
             console.log('labelList上的row', e.filedValue, e.isshow)
           }
         })
+        this.orgLabelList = objectMerge2([], this.formModel.labelList)
       }
     },
     // 处理绑定按钮的回调
@@ -713,7 +770,7 @@ export default {
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
-    getCommonSetting() {
+    getCommonSetting() { // 获取系统所有字段
       this.loading = true
       this.commonLabelList = []
       getCommonSetting().then(data => {
@@ -732,8 +789,7 @@ export default {
                 fontsize: 10,
                 alignment: 1,
                 bold: 0,
-                type: el.type,
-                size: 0 // 打印拖拽次数
+                type: el.type
               }
               // type
               // 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息
@@ -747,7 +803,8 @@ export default {
           this._handlerCatchMsg(err)
         })
     },
-    getSettingCompanyOrder() {
+    getSettingCompanyOrder() { // 获取当前公司打印设置信息
+      this.loading = true
       // 清空右边栏
       this.labelListView = []
       // this.formModel.labelList = []
@@ -755,11 +812,11 @@ export default {
       this.viewKey = new Date().getTime()
       getSettingCompanyOrder().then(data => {
           if (data) {
-            this.loading = false
             let array = Object.assign([], data)
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
             let labelList = objectMerge2([], this.commonLabelList)
+            // 匹配当前公司打印设置字段和系统所有字段
             array.forEach(e => {
               labelList.forEach((el, index) => {
                 if (el.filedValue === e.filedValue) {
@@ -772,7 +829,6 @@ export default {
                     this.$set(this.formModel.labelList, index, e)
                     this.formModel.labelList[index] = e
                   }
-
                   this.$set(e, 'type', el.type) // 给旧数据设置类型
                   labelList.splice(index, 1)
                   commonArr.push(e)
@@ -782,38 +838,54 @@ export default {
             console.log('相同字段', commonArr.length, commonArr)
             console.log('差异字段', labelList.length, labelList)
             this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
-            this.orgLabelList = objectMerge2([], this.formModel.labelList)
-
+            // 匹配完所有字段 初始化显示
             this.formModel.labelList.forEach((e, index) => {
               e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
               e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
-              if (e.filedValue === 'setting') {
+              if (e.filedValue === 'setting') { // 设置纸张
                 const obj = Object.assign({}, e)
                 obj.leftx = Math.round(obj.leftx * this.prxvalue)
                 obj.topy = Math.round(obj.topy * this.prxvalue)
                 this.formModel.paper = obj
-
-              } else {
-                if (e.isshow) { // 显示项要在预览处初始化
-                  /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
-                  e._index = ++this.labelIndex
-                  this.labelListView.push(e)
-                }
+              } else { // 设置其他字段
+                array.forEach(em => { // 重复字段处理
+                  if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
+                    if (em.isshow) {
+                      em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
+                      em.height = Math.round((em.height ? em.height : this.defaultLabelHeight) * this.prxvalue)
+                      // em.leftx = Math.round((em.leftx ? em.leftx : 0) * this.prxvalue)
+                      // em.topy = Math.round((em.topy ? em.topy : 0) * this.prxvalue)
+                      // 单位是pt，缺省值是9，可以含小数，如13.5
+                      em.fontsize = em.fontsize ? em.fontsize : 10
+                      em.isshow = em.isshow === 1 // 1-true 显示
+                      // 1代表粗体，0代表非粗体，缺省值是0
+                      em.bold = em.bold === 2 // 2-true 加粗
+                      em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+                      /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
+                      em._index = ++this.labelIndex
+                      this.labelListView.push(em)
+                    } else {
+                      if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
+                        this.imageUrl = em.filedName.split(',')[1]
+                      }
+                    }
+                  }
+                })
                 // 单位是pt，缺省值是9，可以含小数，如13.5
                 e.fontsize = e.fontsize ? e.fontsize : 10
-
                 e.isshow = e.isshow === 1 // 1-true 显示
                 // 1代表粗体，0代表非粗体，缺省值是0
                 e.bold = e.bold === 2 // 2-true 加粗
-
                 e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
               }
             })
+            this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
           }
-
+            this.loading = false
         })
         .catch(err => {
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },
@@ -831,31 +903,52 @@ export default {
         return
       }
     },
-    submitForm(formName) {
+    submitForm(formName) { // 保存修改
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true
-          const obj = objectMerge2([], this.formModel.labelList)
-          obj.forEach(e => {
+
+          const arr = objectMerge2([], this.labelListView)
+          let bgImg = {}
+          arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息
+          this.formModel.labelList.forEach(e => {
+            if (e.filedValue === 'customFields') {
+              if (this.imageUrl) {
+                  bgImg = objectMerge2({}, e)
+                  bgImg.filedName = this.imgNameStr + this.imageUrl
+                  bgImg.isshow = false
+                 console.log(' 提交的时候 imageUrl1',  this.imageUrl, bgImg)
+                }
+            }
+          })
+          if (this.imageUrl){
+            arr.push(bgImg)
+          }
+          arr.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
             } else {
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
+              e.isshow = e.isshow ? 1 : 0
+              e.bold = e.bold ? 2 : 1
               if (e.filedValue === 'setting') {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
+              }else {
+                // e.leftx = Math.round(e.leftx / this.prxvalue)
+                // e.topy = Math.round(e.topy / this.prxvalue)
               }
-              e.isshow = e.isshow ? 1 : 0
-              e.bold = e.bold ? 1 : 0
             }
           })
-          putSettingCompanyOrder(obj).then(data => {
+          console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
+          
+          putSettingCompanyOrder(arr).then(data => {
               this.loading = false
               this.$message({ type: 'success', message: '运单打印设置成功！' })
-              this.getSettingCompanyOrder()
+              this.getCommonSetting()
               this.viewKey = new Date().getTime()
             })
             .catch(err => {
@@ -896,34 +989,24 @@ export default {
     handleSwitch(newVal) { // 显示-隐藏字段 判断是否打印
       // ....取反操作符号放错位置了吧
       // this.dragDetailInfo.isshow = !this.dragDetailInfo.isshow
-     
       let len = 0
       this.labelListView.forEach((e, index) => {
         if (e._index === this.dragDetailInfo._index) {
           this.labelListView.splice(index, 1)
         }
         if (e.filedValue === this.dragDetailInfo.filedValue) {
-          len = len +1
+          len = len + 1
         }
       })
       console.log('len', len)
       if (len === 1) {
         this.formModel.labelList.forEach((e, index) => {
           if (e.filedValue === this.dragDetailInfo.filedValue) {
-            this.$set(this.formModel.labelList[index],'isshow' , false)
+            this.$set(this.formModel.labelList[index], 'isshow', false)
           }
         })
+        this.orgLabelList = objectMerge2([], this.formModel.labelList)
       }
-
-
-      // this.formModel.labelList.forEach((e, index) => {
-      //   if (e.filedValue === this.dragDetailInfo.filedValue) {
-      //     this.$set(this.formModel.labelList, index, this.dragDetailInfo)
-      //   }
-      // })
-      // this.labelListView = this.labelListView.filter(e => {
-      //   return e.filedValue !== this.dragDetailInfo.filedValue
-      // })
       this.$nextTick(() => {
         this.showDragDetail = false
       })
@@ -939,6 +1022,11 @@ export default {
 .prinit_aside_setpreview_foot {
   .el-button+.el-button {
     margin-left: 2px;
+  }
+  .el-button--mini,
+  .el-button--mini.is-round {
+    padding: 7px 13px;
+    margin-top: 5px;
   }
 }
 
