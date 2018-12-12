@@ -194,10 +194,16 @@ $dialogHeader_bgcolor: #e6e6e6;
             font-weight: 400;
             font-style: normal;
           }
+
         }
       }
       li:hover b {
         border-bottom: 1px solid #999;
+      }
+      li.print_aside_content_self {
+        .el-input{
+          width: auto;
+        }
       }
   }
   .print_main {

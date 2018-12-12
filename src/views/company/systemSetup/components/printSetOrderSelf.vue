@@ -48,8 +48,10 @@
           <label>自定义信息</label>
           <ul class="print_aside_content">
             <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
+              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" :data-fileName='item.filedValue' class="print_aside_content_self">
+                <!-- <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>  -->
+                <el-input size="mini" placeholder="自定义标签" v-model="labelSelf" clearable></el-input>
+                <el-button size="mini" @click="addItemDrag(item, index)">添加</el-button>
               </li>
             </transition-group>
           </ul>
@@ -197,6 +199,7 @@ export default {
   },
   data() {
     return {
+      labelSelf: '',
       labelIndex: 0,
       loading: false,
       imageUrl: '',
@@ -216,6 +219,9 @@ export default {
           topy: 0
         }
       },
+      defaultLabelWidth: 150,
+      defaultLabelHeight: 24,
+      defaultLabelFontSize: 12,
       prxvalue: 0.264,
       mm2px: 3.779,
       maxLabel: 3, // 固有字段最多显示数量
@@ -420,8 +426,17 @@ export default {
       let arr = this.labelListView.filter(e => {
         return e.filedValue === row.filedValue
       }).length
+      if (row.filedValue === 'customFields') {
+        row.filedName = this.labelSelf
+        setTimeout(()=>{
+          this.labelSelf = ''
+        }, 300)
+      }
       if (arr < this.maxLabel) { // 第一次添加这个字段到预览区域
         row.isshow = true
+        row.width =  Math.round(this.defaultLabelWidth * this.prxvalue)
+        row.height =  Math.round(this.defaultLabelHeight * this.prxvalue)
+        row.fontsize =  this.defaultLabelFontSize
         console.log('row::::', row)
         let currentRow = objectMerge2({}, row)
         currentRow._index = ++this.labelIndex
@@ -749,8 +764,8 @@ export default {
               labelList.forEach((el, index) => {
                 if (el.filedValue === e.filedValue) {
                   if (!e.isshow && el.filedValue !== 'setting') {
-                    e.width = 150
-                    e.height = 24
+                    e.width = this.defaultLabelWidth
+                    e.height = this.defaultLabelHeight
                   }
                   if (el.filedValue === 'setting') {
                     console.log('纸张设置', this.formModel.labelList[index], e)
@@ -770,8 +785,8 @@ export default {
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
 
             this.formModel.labelList.forEach((e, index) => {
-              e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
-              e.height = Math.round((e.height ? e.height : 24) * this.prxvalue)
+              e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
+              e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
               if (e.filedValue === 'setting') {
                 const obj = Object.assign({}, e)
                 obj.leftx = Math.round(obj.leftx * this.prxvalue)
@@ -863,8 +878,8 @@ export default {
                   e.topy = 0
                   e.leftx = 0
                   e.isshow = 0
-                  e.width = Math.round(150 * this.prxvalue)
-                  e.height = Math.round(24 * this.prxvalue)
+                  e.width = Math.round(this.defaultLabelWidth * this.prxvalue)
+                  e.height = Math.round(this.defaultLabelHeight * this.prxvalue)
                   e.fontsize = 10
                   e.bold = 0
                   e.alignment = 1
@@ -881,7 +896,6 @@ export default {
     handleSwitch(newVal) { // 显示-隐藏字段 判断是否打印
       // ....取反操作符号放错位置了吧
       // this.dragDetailInfo.isshow = !this.dragDetailInfo.isshow
-      console.log('this.dragDetailInfo', this.dragDetailInfo)
      
       let len = 0
       this.labelListView.forEach((e, index) => {
@@ -889,14 +903,14 @@ export default {
           this.labelListView.splice(index, 1)
         }
         if (e.filedValue === this.dragDetailInfo.filedValue) {
-          len++
+          len = len +1
         }
       })
       console.log('len', len)
-      if (len === 0) {
+      if (len === 1) {
         this.formModel.labelList.forEach((e, index) => {
           if (e.filedValue === this.dragDetailInfo.filedValue) {
-            this.$set(this.formModel.labelList[index], 'isshow', false)
+            this.$set(this.formModel.labelList[index],'isshow' , false)
           }
         })
       }

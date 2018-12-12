@@ -1016,7 +1016,7 @@ export default {
               message: '每次只能修改单条数据',
               type: 'warning'
             })
-          } else {
+          }else if (this.selected[0].signStatus === 227){
             this.isPick = true
             this.isDbclick = false
             this.isDelivery = false
@@ -1024,6 +1024,11 @@ export default {
             this.id = this.selected[0].signId
             console.log(this.id)
             this.openAddSign()
+          } else {
+            this.$message({
+              message: '已签收状态才可以修改',
+              type: 'warning'
+            })
           }
           break
 
