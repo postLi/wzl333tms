@@ -414,10 +414,10 @@
      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
        feezh[4] = feezhAll.slice(0, feezhAll.indexOf('万'))
      } else if (feezh && feezh.length < 5) { // 补充零
-      for (let i = 0; i < 5; i++) {
-        feezh[i] = feezh[i] || '零'
-      }
-    }
+       for (let i = 0; i < 5; i++) {
+         feezh[i] = feezh[i] || '零'
+       }
+     }
      console.log('feezh:::::', feezh)
      return feezh
    }
@@ -534,10 +534,10 @@
     // /特殊处理 中转费
      let totalTransferFee = 0
      if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
-      tmsOrderTransferList.forEach(e => {
-        totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
-      })
-    }
+       tmsOrderTransferList.forEach(e => {
+         totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+       })
+     }
      obj.transferFee = parseFloat(totalTransferFee) // 中转费
      console.log('中转费', totalTransferFee)
 
@@ -546,58 +546,58 @@
      obj.payWay = infoDetail.shipPayWayName
     // 付款方式
      switch (infoDetail.shipPayWay) { // 付款方式
-      case 76:
-        obj.nowPay = '√'  // 现付（√）
+       case 76:
+         obj.nowPay = '√'  // 现付（√）
         // this.$set(obj, 'payWay', infoDetail.shipNowpayFee) // 付款方式
-        break
-      case 77:
-        obj.deliveryPay = '√'  // 提付（√）|| 到付（√）
+         break
+       case 77:
+         obj.deliveryPay = '√'  // 提付（√）|| 到付（√）
         // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
         // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
-        break
-      case 78:
-        obj.monthPay = '√' // 月结（√）
+         break
+       case 78:
+         obj.monthPay = '√' // 月结（√）
         // this.$set(obj, 'payWay', infoDetail.shipMonthpayFee) // 付款方式
-        break
-      case 79:
-        obj.receiptPay = '√'  // 回单付（√）
+         break
+       case 79:
+         obj.receiptPay = '√'  // 回单付（√）
         // this.$set(obj, 'payWay', infoDetail.shipReceiptpayFee) // 付款方式
-        break
-    }
+         break
+     }
      if (infoDetail.shipDeliveryMethod === 68) {
-      obj.deliveryGood = '√' // 自提（√）
-    } else if (infoDetail.shipDeliveryMethod === 69) {
-      obj.sendGood = '√' // 送货（√）
-    }
+       obj.deliveryGood = '√' // 自提（√）
+     } else if (infoDetail.shipDeliveryMethod === 69) {
+       obj.sendGood = '√' // 送货（√）
+     }
      if (infoDetail.shipOther && infoDetail.shipOther.indexOf(168) !== -1) {
-      obj.controlGoods = infoDetail.shipOther // 168-控货
-    }
+       obj.controlGoods = infoDetail.shipOther // 168-控货
+     }
      if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
-      obj.valuables = infoDetail.shipOther  //  169-贵重物品
-    }
+       obj.valuables = infoDetail.shipOther  //  169-贵重物品
+     }
      if (infoDetail.shipEffective === 95) {
-      obj.urgent = infoDetail.shipEffective // 95-时效-加急
-    } else {
-      obj.common = infoDetail.shipEffective // 94-时效-普通
-    }
+       obj.urgent = infoDetail.shipEffective // 95-时效-加急
+     } else {
+       obj.common = infoDetail.shipEffective // 94-时效-普通
+     }
     // //////////////////////////////////////////////////////////
     // /处理合计中文大写
      if (infoDetail.shipTotalFee) {
-      const totalFeeBig = setFeeToBig(infoDetail.shipTotalFee)
-      obj.uptotalFeeW = totalFeeBig[4] // 运费合计(万)
-      obj.uptotalFeeQ = totalFeeBig[3] // 运费合计(仟)
-      obj.uptotalFeeB = totalFeeBig[2] // 运费合计(佰)
-      obj.uptotalFeeS = totalFeeBig[1] // 运费合计(拾)
-      obj.uptotalFeeY = totalFeeBig[0] // 运费合计(元)
-    }
+       const totalFeeBig = setFeeToBig(infoDetail.shipTotalFee)
+       obj.uptotalFeeW = totalFeeBig[4] // 运费合计(万)
+       obj.uptotalFeeQ = totalFeeBig[3] // 运费合计(仟)
+       obj.uptotalFeeB = totalFeeBig[2] // 运费合计(佰)
+       obj.uptotalFeeS = totalFeeBig[1] // 运费合计(拾)
+       obj.uptotalFeeY = totalFeeBig[0] // 运费合计(元)
+     }
      if (infoDetail.agencyFund) {
-      const upagencyFeeBig = setFeeToBig(infoDetail.agencyFund)
-      obj.upagencyFundW = upagencyFeeBig[4] // 代收货款(万)
-      obj.upagencyFundQ = upagencyFeeBig[3] // 代收货款(仟)
-      obj.upagencyFundB = upagencyFeeBig[2] // 代收货款(佰)
-      obj.upagencyFundS = upagencyFeeBig[1] // 代收货款(拾)
-      obj.upagencyFundY = upagencyFeeBig[0] // 代收货款(元)
-    }
+       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFund)
+       obj.upagencyFundW = upagencyFeeBig[4] // 代收货款(万)
+       obj.upagencyFundQ = upagencyFeeBig[3] // 代收货款(仟)
+       obj.upagencyFundB = upagencyFeeBig[2] // 代收货款(佰)
+       obj.upagencyFundS = upagencyFeeBig[1] // 代收货款(拾)
+       obj.upagencyFundY = upagencyFeeBig[0] // 代收货款(元)
+     }
    }
    return obj
  }
@@ -610,6 +610,7 @@
   * printer, // 打印机
   * printSetup // 打印设置
   * type // 打印类型
+  * noPreview // 是否预览
   * }
   */
  export function CreatePrintPageEnable(info, printer, preview, number) {

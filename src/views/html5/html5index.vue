@@ -387,7 +387,7 @@ export default {
     initYearChart(echart, shipArr, weightArr, volumeArr) {
       const option3 = {
         title: {
-          text: '安发物流2018年运力对比图',
+          text: '运力对比图',
           subtext: '年度数据'
         },
         tooltip: {
