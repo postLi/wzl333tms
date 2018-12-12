@@ -2988,7 +2988,7 @@ export default {
       this.setPrintData('lib')
       const printObj = {
         orderdata: this.printDataObject,
-        number: parseInt(this.printDataObject.shipPrintLib, 10) || 1,
+        number: parseInt(this.printDataObject.tmsOrderShipInfo.shipPrintLib, 10) || 1,
         printer: '',
         printSetup: [],
         type: 'lib',
@@ -3141,6 +3141,7 @@ export default {
 
         shipinfo.fromOrgName = shipinfo.fromOrgName || this.otherinfo.orgName
         shipinfo.toOrgName = shipinfo.toOrgName || this._getOrgName(shipinfo.shipToOrgid)
+        shipinfo.shipPrintLib = shipinfo.shipPrintLib
         // 根据运单详情返回的字段补上缺少的
         // shipinfo.backStatus = shipinfo.backStatus || ''
         // shipinfo.fundsGoodsStatus = shipinfo.fundsGoodsStatus || ''
