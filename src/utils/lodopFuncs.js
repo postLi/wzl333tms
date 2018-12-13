@@ -619,6 +619,7 @@
   */
  export function CreatePrintPageEnable(info, printer, preview, number) {
    console.log('是否预览', preview)
+   const user = getUserInfo()
 
    // info-打印数据
    // printer-打印机
@@ -636,7 +637,13 @@
        // 2.0：处理数据
        if (info.orderdata) {
          number = parseInt(info.number, 10) || 0
-         printer = info.printer
+
+         if (!info.printer) {
+           // 如果没有填写打印机，则根据类型判断去设置打印机
+           printer = info.type === 'lib' ? user.systemSetup.printSetting.label : info.type === 'order' ? user.systemSetup.printSetting.ship : ''
+         } else {
+           printer = info.printer
+         }
          preview = !info.preview
          printSetup = objectMerge2([], info.printSetup)
          if (!info.mock) {
@@ -818,8 +825,13 @@
 
          } */
        }
-       if (typeof el[column.prop] === 'undefined') {
+       if (typeof el[column.prop] === 'undefined' || el[column.prop] === null) {
          el[column.prop] = ''
+       }
+       // 特殊处理某些字段
+       if (/(shipFromCityName|shipToCityName)/.test(column.prop)) {
+         const objArr = el[column.prop].split(',')
+         el[column.prop] = objArr[2] || objArr[1] || objArr[0] || ''
        }
        column.width = column.width || ''
      })
