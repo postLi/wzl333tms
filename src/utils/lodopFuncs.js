@@ -828,6 +828,11 @@
        if (typeof el[column.prop] === 'undefined') {
          el[column.prop] = ''
        }
+       // 特殊处理某些字段
+       if (/(shipFromCityName|shipToCityName)/.test(column.prop)) {
+         const objArr = el[column.prop].split(',')
+         el[column.prop] = objArr[2] || objArr[1] || objArr[0] || ''
+       }
        column.width = column.width || ''
      })
    })
