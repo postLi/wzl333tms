@@ -1000,12 +1000,10 @@ export default {
                   e.alignment = 1
                 }
               })
-              this.formModel.paper = {
-                width: this.defaultPaperWidth,
-                height: this.defaultPaperHeight,
-                topy: 0,
-                leftx: 0
-              }
+              this.formModel.paper.width = this.defaultPaperWidth
+              this.formModel.paper.height = this.defaultPaperHeight
+              this.formModel.paper.topy = 0
+              this.formModel.paper.leftx = 0
               this.labelListView = []
             })
             .catch(err => {})

@@ -276,6 +276,8 @@ export default {
       defaultLabelWidth: 110,
       defaultLabelHeight: 30,
       defaultLabelFontSize: 12,
+      defaultPaperWidth: 80,
+      defaultPaperHeight: 80,
       imgNameStr: '预览图片lyy,',
       prxvalue: 0.264,
       mm2px: 3.779,
@@ -994,6 +996,10 @@ export default {
                   e.size = 0
                 }
               })
+              this.formModel.paper.width = this.defaultPaperWidth
+              this.formModel.paper.height = this.defaultPaperHeight
+              this.formModel.paper.topy = 0
+              this.formModel.paper.leftx = 0
               this.labelListView = []
             })
             .catch(err => {})

@@ -746,7 +746,12 @@ export default {
             type: 'warning'
           }).then(() => {
               this.formModel.labelList.forEach((e, index) => {
-                if (e.filedValue !== 'setting') {
+                if (e.filedValue === 'setting') {
+                  e.topy = 0
+                  e.leftx = 0
+                  e.width = Mthis.defaultPaperWidth
+                  e.height = this.defaultPaperHeight
+                }else {
                   e.topy = 0
                   e.leftx = 0
                   e.isshow = 0
@@ -757,12 +762,6 @@ export default {
                   e.alignment = 1
                 }
               })
-              this.formModel.paper = {
-                width: this.defaultPaperWidth,
-                height: this.defaultPaperHeight,
-                topy: 0,
-                leftx: 0
-              }
               this.labelListView = []
             })
             .catch(err => {})
