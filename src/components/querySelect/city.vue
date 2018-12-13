@@ -7,7 +7,7 @@
   :fetch-suggestions="querySearch"
   :value-key="showkey"
   @focus="()=>{$emit('focus'),initData()}"
-  @change="(val)=>{$emit('change' ,handleSelect(val))}"
+  @change="(val)=>{handleSelect(val)}"
   @blur="()=>{$emit('blur')}"
   :placeholder="place"
   ref="myautocomplete"
@@ -246,7 +246,7 @@ export default {
       immediate: false
     },
     value: {
-      handler(newVal) {
+      handler(newVal, oldVal) {
         // 当绑定值跟搜索字段一致时，响应绑定值的变化
         // 当被清空时
         // 转成字符串格式
@@ -260,14 +260,15 @@ export default {
         if (this.show !== 'input') {
           this.findValue(newVal)
         } else {
+          console.log('handkler: ', newVal, oldVal)
           this.handlevalue = newVal
         }
       },
       immediate: false
     },
-    handlevalue(newVal) {
+    handlevalue(newVal, oldval) {
       if (this.show === 'input') {
-        // console.log('handlevalue:', this.handlevalue)
+        console.log('handlevalue:', newVal, oldval)
         this.$emit('input', this.handlevalue)
       }
       if (this.getinput) {
@@ -279,11 +280,13 @@ export default {
   computed: {
     filterValue: {
       get() {
+        console.log('getgetget', this.handlevalue)
         let val = this.handlevalue || ''
         val = (val + '').split(',')
         return val[2] || val[1] || val[0] || this.handlevalue
       },
       set(val) {
+        console.log('setsetset', val)
         this.handlevalue = val
         this.handleSelect(val)
       }
@@ -655,10 +658,22 @@ export default {
         })
         info = info[0] || old
       }
-      console.log('handleSelect::::', info)
+      console.log('handleSelect::::', info, this.handlevalue, ':::', (info ? (info[this.valuekey] || info.value || info) : ''))
       this.$emit('input', info ? (info[this.valuekey] || info.value || info) : '')
 
-      this.$emit('change', info)
+      this.$emit('change', {
+        longAddr: info.longAddr || info,
+        id: info.id || '',
+        province: info.province || '',
+        city: info.city || '',
+        area: info.area || ''
+      }, {
+        longAddr: info.longAddr || info,
+        id: info.id || '',
+        province: info.province || '',
+        city: info.city || '',
+        area: info.area || ''
+      })
     }
   }
 }

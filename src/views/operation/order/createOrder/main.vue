@@ -1356,6 +1356,7 @@ export default {
     },
     // 选择到站
     selectToCity(item, city) {
+      console.log('selectToCity:', item, city)
       if (item) {
         this.form.tmsOrderShip.shipToCityName = item.longAddr
         this.form.tmsOrderShip.shipToCityCode = item.id || ''
