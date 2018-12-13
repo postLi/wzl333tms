@@ -825,7 +825,7 @@
 
          } */
        }
-       if (typeof el[column.prop] === 'undefined') {
+       if (typeof el[column.prop] === 'undefined' || el[column.prop] === null) {
          el[column.prop] = ''
        }
        // 特殊处理某些字段
