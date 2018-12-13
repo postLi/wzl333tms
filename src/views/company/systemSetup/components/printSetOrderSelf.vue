@@ -6,6 +6,15 @@
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
         <el-popover placement="right" width="400" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
           <span>可将信息项手动拖拽到右边纸张中显示及设置位置和宽高；<br>(单位：毫米mm)</span>
+          <br>
+          <span>【快捷键：】</span>
+          <br>
+          <span>按↑ ↓ ← →移动编辑项，</span>
+          <br><span>按ctrl+↑↓控制高度变化，</span>
+          <br><span>按ctrl+←→控制宽度变化 </span>
+          <br>
+          <span>按tab键切换编辑项，</span>
+          <br><span>shift+tab切换回上一个编辑项</span>
           <i class="el-icon-warning" slot="reference"></i>
         </el-popover>
         <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存</el-button>
@@ -55,7 +64,7 @@
             <transition-group>
               <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" :data-fileName='item.filedValue' class="print_aside_content_self">
                 <!-- <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>  -->
-                <el-input size="mini" placeholder="自定义标签" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)"></el-input>
+                <el-input size="mini" placeholder="自定义标签(最多128个字符)" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)" :maxlength="128"></el-input>
                 <el-button size="mini" @click="addItemDrag(item, index)">添加</el-button>
               </li>
             </transition-group>
@@ -165,7 +174,15 @@
     <div class="print_main">
       <div class="print_main_head">
         <b>预览展示:</b>
-        <span> 纸张大小(宽×高)：{{this.formModel.paper.width+' (毫米mm) × '+this.formModel.paper.height + ' (毫米mm)'}}</span>
+        <span> 纸张(宽×高)：{{this.formModel.paper.width+'(mm) × '+this.formModel.paper.height + '(mm)'}}</span>
+        <div class="print_main_head_btns">
+          <label for="">默认打印机：</label>
+          <el-select v-model="formPrint.printSetting.ship" size="mini">
+            <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
+          </el-select>
+           <el-button icon="el-icon-printer" @click="print('test')" size="mini" title="打印测试"></el-button>
+          <el-button icon="el-icon-view" @click="print('preview')" size="mini" title="打印预览"></el-button>
+        </div>
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
         <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' :data-index="item._index" @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
@@ -209,8 +226,10 @@ import hotkeys from '@/utils/hotkeys'
 import { objectMerge2 } from '@/utils/index'
 // import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
 import { getSettingCompanyOrder, putSettingCompanyOrder } from '@/api/operation/print'
-import { getCommonSetting } from '@/api/operation/print'
+import { getCommonSettingOrder } from '@/api/operation/print'
 import Upload from '@/components/Upload/singleImage2'
+import { CreatePrintPageEnable, CreatePrinterList } from '@/utils/lodopFuncs'
+import { putSetting } from '@/api/company/systemSetup'
 export default {
   components: {
     draggable,
@@ -220,10 +239,20 @@ export default {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    formInfo: {
+      type: [Object, Array],
+      default: () => {}
     }
   },
   data() {
     return {
+      formPrint: {
+        printSetting: {
+          ship: ''
+        }
+      },
+      printers: [],
       currentSearch: '',
       labelSelf: '',
       labelIndex: 0,
@@ -293,11 +322,15 @@ export default {
       },
       deep: true
     },
+    formInfo: {
+      handler(cval, oval) {},
+      deep: true
+    },
     popVisible() {
       if (this.popVisible) {
         this.dialogVisible = true
-        this.getCommonSetting()
-        // this.getSettingCompanyOrder()
+        this.loading = true
+        this.init()
         this.bindKey()
       } else {
         this.dialogVisible = false
@@ -345,6 +378,38 @@ export default {
     this.unbindKey()
   },
   methods: {
+    init() {
+      this.initPrinter()
+        this.formPrint = objectMerge2({},this.formInfo)
+      this.getCommonSettingOrder()
+    },
+    print(type) { // preview-打印预览 test-打印测试
+      let labelList = objectMerge2([], this.labelListView)
+      labelList.push(objectMerge2({}, this.formModel.paper))
+      labelList.forEach(e => {
+        e.width = Math.round(e.width / this.prxvalue)
+        e.height = Math.round(e.height / this.prxvalue)
+        e.isshow = e.isshow ? 1 : 0
+        e.bold = e.bold ? 2 : 1
+        e.isshow = e.isshow ? 1 : 0
+        e.value = e.filedName
+      })
+      CreatePrintPageEnable({
+        orderdata: {}, // 运单数据
+        number: 1, // 打印份数
+        printer: this.otherinfo.systemSetup.printSetting.ship, // 打印机
+        printSetup: labelList, // 打印设置
+        type: 'order', // 打印类型
+        preview: type === 'preview' ?true : false, // 是否预览
+        mock: true // 是否直接读取value字段
+      })
+    },
+    initPrinter() { // 初始化打印机列表
+      this.printers = Object.assign([], CreatePrinterList())
+      for (const item in this.printers) {
+        this.printers[item] = this.printers[item].replace(/%^/g, '\\')
+      }
+    },
     clearImgUrl() {
       this.imageUrl = ''
     },
@@ -491,7 +556,7 @@ export default {
         currentRow.leftx = 0
         currentRow.topy = 0
         currentRow.fontsize = this.defaultLabelFontSize
-        currentRow.bold = 1
+        currentRow.bold = 0
         currentRow.alignment = 1
         this.labelListView.push(objectMerge2({}, currentRow))
         this.orgLabelList.forEach((e, index) => {
@@ -552,7 +617,7 @@ export default {
       this.formModel.labelList = []
       this.orgLabelList = []
       this.labelListView = []
-      this.getCommonSetting()
+      this.getCommonSettingOrder()
       // this.getSettingCompanyOrder()
       this.showDragDetail = false
       this.dragDetailInfo = {}
@@ -770,10 +835,10 @@ export default {
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
-    getCommonSetting() { // 获取系统所有字段
+    getCommonSettingOrder() { // 获取系统所有字段
       this.loading = true
       this.commonLabelList = []
-      getCommonSetting().then(data => {
+      getCommonSettingOrder().then(data => {
           if (data) {
             data.forEach((el, index) => {
               let obj = {
@@ -882,7 +947,7 @@ export default {
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
           }
-            this.loading = false
+          this.loading = false
         })
         .catch(err => {
           this.loading = false
@@ -902,61 +967,6 @@ export default {
         // ....这个等同于上面的返回值
         return
       }
-    },
-    submitForm(formName) { // 保存修改
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.loading = true
-
-          const arr = objectMerge2([], this.labelListView)
-          let bgImg = {}
-          arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息
-          this.formModel.labelList.forEach(e => {
-            if (e.filedValue === 'customFields') {
-              if (this.imageUrl) {
-                  bgImg = objectMerge2({}, e)
-                  bgImg.filedName = this.imgNameStr + this.imageUrl
-                  bgImg.isshow = false
-                 console.log(' 提交的时候 imageUrl1',  this.imageUrl, bgImg)
-                }
-            }
-          })
-          if (this.imageUrl){
-            arr.push(bgImg)
-          }
-          arr.forEach(e => {
-            if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
-              this.$message({ type: 'warning', message: '不能为空' })
-              return false
-            } else {
-              e.width = Math.round(e.width / this.prxvalue)
-              e.height = Math.round(e.height / this.prxvalue)
-              e.isshow = e.isshow ? 1 : 0
-              e.bold = e.bold ? 2 : 1
-              if (e.filedValue === 'setting') {
-                console.log('this.formModel.paper::', this.formModel.paper, e)
-                e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
-                e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
-              }else {
-                // e.leftx = Math.round(e.leftx / this.prxvalue)
-                // e.topy = Math.round(e.topy / this.prxvalue)
-              }
-            }
-          })
-          console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
-          
-          putSettingCompanyOrder(arr).then(data => {
-              this.loading = false
-              this.$message({ type: 'success', message: '运单打印设置成功！' })
-              this.getCommonSetting()
-              this.viewKey = new Date().getTime()
-            })
-            .catch(err => {
-              this.loading = false
-              this._handlerCatchMsg(err)
-            })
-        }
-      })
     },
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
@@ -1013,21 +1023,90 @@ export default {
     },
     changeValue(obj, item, index) {
       this.viewKey = new Date().getTime()
+    },
+    savePrinter() {
+      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship) {
+        this.$confirm('默认打印机已修改，是否需要保存?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // 转译一下打印的\\字符
+          const formPrintSetting = objectMerge2({}, this.formPrint.printSetting)
+          for (const item in formPrintSetting) {
+            formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
+          }
+          const form = Object.assign({}, this.formPrint)
+          form.printSetting = Object.assign({}, formPrintSetting)
+          putSetting(form).then(data => {
+              this.otherinfo.systemSetup = this.formInfo
+              this.$emit('success')
+              this.$message({
+                message: '保存打印机设置成功',
+                type: 'success'
+              })
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
+            })
+        }).catch(() => {})
+      }
+    },
+    submitForm(formName) { // 保存修改
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.savePrinter()
+          this.loading = true
+          const arr = objectMerge2([], this.labelListView)
+          let bgImg = {}
+          arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息
+          this.formModel.labelList.forEach(e => {
+            if (e.filedValue === 'customFields') {
+              if (this.imageUrl) {
+                bgImg = objectMerge2({}, e)
+                bgImg.filedName = this.imgNameStr + this.imageUrl
+                bgImg.isshow = false
+                console.log(' 提交的时候 imageUrl1', this.imageUrl, bgImg)
+              }
+            }
+          })
+          if (this.imageUrl) {
+            arr.push(bgImg)
+          }
+          arr.forEach(e => {
+            if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
+              this.$message({ type: 'warning', message: '不能为空' })
+              return false
+            } else {
+              e.width = Math.round(e.width / this.prxvalue)
+              e.height = Math.round(e.height / this.prxvalue)
+              e.isshow = e.isshow ? 1 : 0
+              e.bold = e.bold ? 2 : 1
+              if (e.filedValue === 'setting') {
+                console.log('this.formModel.paper::', this.formModel.paper, e)
+                e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
+                e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
+              } else {
+                // e.leftx = Math.round(e.leftx / this.prxvalue)
+                // e.topy = Math.round(e.topy / this.prxvalue)
+              }
+            }
+          })
+          console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
+          putSettingCompanyOrder(arr).then(data => {
+              this.loading = false
+              this.$message({ type: 'success', message: '运单打印设置成功！' })
+              this.getCommonSettingOrder()
+              this.viewKey = new Date().getTime()
+            })
+            .catch(err => {
+              this.loading = false
+              this._handlerCatchMsg(err)
+            })
+        }
+      })
     }
   }
 }
 
 </script>
-<style lang="scss">
-.prinit_aside_setpreview_foot {
-  .el-button+.el-button {
-    margin-left: 2px;
-  }
-  .el-button--mini,
-  .el-button--mini.is-round {
-    padding: 7px 13px;
-    margin-top: 5px;
-  }
-}
-
-</style>

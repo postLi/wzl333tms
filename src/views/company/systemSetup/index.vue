@@ -282,8 +282,8 @@
     <div class="system-setup-footer">
       <el-button type="primary" @click="saveData" :disabled="nochange">保存</el-button>
     </div>
-    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder"></printSetOrder>
-    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi"></printSetLi>
+    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="initOrder"></printSetOrder>
+    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="initOrder"></printSetLi>
   </div>
 </template>
 <script>
@@ -291,7 +291,6 @@ import { getAllSetting, putSetting, putResetSetting } from '@/api/company/system
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
-import selectPrinter from '@/components/selectPrinter/index'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrderDrag'
 import printSetLi from './components/printSetLiDrag'
@@ -300,7 +299,6 @@ export default {
   name: 'systemSetup',
   components: {
     SelectType,
-    selectPrinter,
     printSetOrder,
     printSetLi
   },
