@@ -697,9 +697,15 @@ export default {
     submitForm() {
       // 判断是否要保存数据
       if (this.thecode) {
-        this.changeTbaleSetup().then(res => {
-          this.callback()
-        })
+        if (!this.isloading) {
+          this.isloading = true
+          this.changeTbaleSetup().then(res => {
+            this.isloading = false
+            this.callback()
+          }).catch(e => {
+            this.isloading = false
+          })
+        }
       } else {
         this.callback()
       }

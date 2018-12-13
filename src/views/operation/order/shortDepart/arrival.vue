@@ -42,7 +42,7 @@
       <!-- 批次详情 -->
       <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'arrival'"></editInfo>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' code="ORDER_SHORT-2" @close="closeSetupTable" @success="setColumn"></TableSetup>
       <!-- 实际发车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
     </div>
@@ -96,8 +96,8 @@ export default {
         width: '80',
         fixed: true,
         slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
       },
       {
         label: '发货批次',
@@ -147,8 +147,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '实际发车时间',
@@ -156,8 +156,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '实际到车时间',
@@ -165,8 +165,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到车操作时间',
@@ -174,8 +174,8 @@ export default {
         width: '160',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达网点',
@@ -381,11 +381,11 @@ export default {
         this.loading = true
         postConfirmToCar(data).then(data => {
           if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '短驳到车操作成功' })
-              this.getAllList()
-              this.clearInfo()
-            }
+            this.loading = false
+            this.$message({ type: 'success', message: '短驳到车操作成功' })
+            this.getAllList()
+            this.clearInfo()
+          }
         })
           .catch(err => {
             this.loading = false
@@ -462,12 +462,12 @@ export default {
       }
       return postLoadList(this.searchQuery).then(data => {
         if (data) {
-            this.infoList = data.list
-            this.total = data.total
-            this.loading = false
-          } else {
-            this.loading = false
-          }
+          this.infoList = data.list
+          this.total = data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
         .catch(err => {
           this._handlerCatchMsg(err)

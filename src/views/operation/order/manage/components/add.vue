@@ -119,14 +119,14 @@
               <td>
                 <el-form-item label="发站">
 
-                  <querySelect search="longAddr" @change="selectFromCity" type="city"
+                  <queryCity search="longAddr" @change="selectFromCity" type="city"
                                v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"
-                               show="select"/>
+                               />
                 </el-form-item>
               </td>
               <td>
                 <el-form-item label="到站" prop="tmsOrderPre.orderToCityName">
-                  <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
+                  <queryCity @change="selectToCity"  search="longAddr" type="city"
                                v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
                 </el-form-item>
               </td>
@@ -220,6 +220,7 @@
   import SelectTree from '@/components/selectTree/index'
   import SelectType from '@/components/selectType/index'
   import querySelect from '@/components/querySelect/index'
+  import queryCity from '@/components/querySelect/city'
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
 
@@ -229,7 +230,8 @@
       Upload,
       SelectTree,
       SelectType,
-      querySelect
+      querySelect,
+      queryCity
     },
     props: {
       popVisible: {

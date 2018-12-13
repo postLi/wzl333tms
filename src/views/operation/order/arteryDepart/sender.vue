@@ -48,7 +48,7 @@
       </div>
     </div>
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
+    <TableSetup code="ORDER_ARTER-1" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <AddLntelligent :popVisible.sync="lntelligentVisible" @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
      <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
@@ -149,11 +149,11 @@ export default {
         width: '120',
         fixed: true
       }, {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      }, {
           label: '操作费(元)',
           prop: 'handlingFeeAll',
           width: '100',
@@ -303,11 +303,11 @@ export default {
         width: '120',
         fixed: false
       }, {
-          label: '备注',
-          prop: 'remark',
-          width: '150',
-          fixed: false
-        }
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ]
     }
   },
@@ -547,21 +547,21 @@ export default {
       let loadIds = this.selected.filter(el => {
         return el.batchTypeName === '已装车'
       }).map(el => {
-            return el.id
-          })
+        return el.id
+      })
       if (!loadIds.length) {
-            const batchTypeName = this.selected[0].batchTypeName
-            this.$message({
+        const batchTypeName = this.selected[0].batchTypeName
+        this.$message({
               message: '批次状态为：' + batchTypeName + '不允许发车~',
               type: 'warning'
             })
-            return false
-          } else {
+        return false
+      } else {
             // =>todo 删除多个
-            loadIds = loadIds.join(',')
-            const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
-            this.loading = true
-            putLoadDepart(loadIds, 39, timer).then(res => {
+        loadIds = loadIds.join(',')
+        const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+        this.loading = true
+        putLoadDepart(loadIds, 39, timer).then(res => {
               if (res) {
                 this.loading = false
                 this.$message({
@@ -574,7 +574,7 @@ export default {
               this.loading = false
               this._handlerCatchMsg(err)
             })
-          }
+      }
     },
     openlntelligent() {
       this.lntelligentVisible = true

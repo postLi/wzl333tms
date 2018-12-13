@@ -635,7 +635,7 @@
        console.log('print', info, printer, number)
        // 2.0：处理数据
        if (info.orderdata) {
-         number = parseInt(info.number, 10) || 1
+         number = parseInt(info.number, 10) || 0
          printer = info.printer
          preview = !info.preview
          printSetup = objectMerge2([], info.printSetup)
@@ -651,6 +651,11 @@
          }
 
          info = copy
+         // 如果是0份则不处理，直接标记完成且不需要预览
+         if (!number && preview) {
+           resolve()
+           return
+         }
        }
 
        // if (printer) {
@@ -749,6 +754,8 @@
          console.log('number', number)
          LODOP.SET_PRINT_COPIES(number)
        }
+       LODOP.SET_PRINT_MODE('RESELECT_COPIES', 1)
+
        if (preview) { // 直接打印不预览
          var code = LODOP.PRINT()
        } else { // 打开打印设置弹框
