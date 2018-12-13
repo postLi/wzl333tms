@@ -43,7 +43,7 @@
       </div>
     </div>
     <!-- 表格设置 -->
-    <TableSetup code="NOSET" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup code="ORDER_SHORT-1" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 在途跟踪 -->
     <editInfo :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" :type="'deliver'"></editInfo>
     <!-- 实际发车时间 弹出框 -->
@@ -355,12 +355,12 @@ export default {
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
         if (data) {
-            this.dataList = data.list
-            this.total = data.total
-            this.loading = false
-          } else {
-            this.loading = false
-          }
+          this.dataList = data.list
+          this.total = data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -419,11 +419,11 @@ export default {
         this.loading = true
         putTruckDepart(this.commonTruck).then(data => {
           if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '发车成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
+            this.loading = false
+            this.$message({ type: 'success', message: '发车成功！' })
+            this.fetchAllShortDepartList()
+            this.clearData()
+          }
         })
           .catch(err => {
             this.loading = false
@@ -447,11 +447,11 @@ export default {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
             if (data) {
-                this.loading = false
-                this.$message({ type: 'success', message: '取消发车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.loading = false
+              this.$message({ type: 'success', message: '取消发车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(err => {
               this.loading = false
@@ -476,11 +476,11 @@ export default {
           this.loading = true
           putTruckLoad(this.commonTruck).then(data => {
             if (data) {
-                this.loading = false
-                this.$message({ type: 'success', message: '取消装车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.loading = false
+              this.$message({ type: 'success', message: '取消装车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(err => {
               this.loading = false

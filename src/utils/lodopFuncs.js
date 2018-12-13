@@ -488,32 +488,32 @@
      obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
      obj.qrcode = '' // 二维码
    } else if (type === 'order') {
-     obj.totalFee = parseFloat(infoDetail.shipTotalFee) // 运费合计
-     obj.shipFee = parseFloat(infoDetail.shipFee) // 运费
-     obj.deliveryFee = parseFloat(infoDetail.deliveryFee) // 送货费
-     obj.productPrice = parseFloat(infoDetail.productPrice) // 声明价值
-     obj.brokerageFee = parseFloat(infoDetail.brokerageFee) // 回扣
-     obj.brokerageFeeSign = 'R:' + parseFloat(infoDetail.brokerageFee) // 回扣标识
-     obj.agencyFund = parseFloat(infoDetail.agencyFund) // 代收货款
-     obj.commissionFee = parseFloat(infoDetail.commissionFee) // 代收货款手续费
-     obj.insuranceFee = parseFloat(infoDetail.insuranceFee) // 保险费
-     obj.handlingFee = parseFloat(infoDetail.handlingFee) // 装卸费
-     obj.packageFee = parseFloat(infoDetail.packageFee) // 包装费
-     obj.pickupFee = parseFloat(infoDetail.pickupFee) // 提货费
-     obj.upStairsFee = parseFloat(infoDetail.goupstairsFee) // 上楼费
-     obj.realityhandlingFee = parseFloat(infoDetail.realityhandlingFee) // 实际提货费
-     obj.forkliftFee = parseFloat(infoDetail.forkliftFee) // 叉车费
-     obj.customsFee = parseFloat(infoDetail.customsFee) // 报关费
-     obj.weightFee = parseFloat(infoDetail.weightFee) // 重量单价
-     obj.volumeFee = parseFloat(infoDetail.volumeFee) // 体积单价
-     obj.amountFee = parseFloat(infoDetail.amountFee) // 件数单价
-     obj.otherfeeOut = parseFloat(infoDetail.otherfeeOut) // 其他费用支出
-     obj.otherfeeIn = parseFloat(infoDetail.otherfeeIn) // 其他费用收入
-     obj.taxRate = parseFloat(infoDetail.taxRate) // 税率
-     obj.taxes = parseFloat(infoDetail.taxes) // 税金
-     obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
-     obj.stampTax = parseFloat(infoDetail.stampTax) // 印花税
-     obj.housingFee = parseFloat(infoDetail.housingFee) // 入仓费
+     obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
+     obj.shipFee = parseFloat(infoDetail.shipFee) || '' // 运费
+     obj.deliveryFee = parseFloat(infoDetail.deliveryFee) || '' // 送货费
+     obj.productPrice = parseFloat(infoDetail.productPrice) || '' // 声明价值
+     obj.brokerageFee = parseFloat(infoDetail.brokerageFee) || '' // 回扣
+     obj.brokerageFeeSign = 'R:' + (parseFloat(infoDetail.brokerageFee) || '')// 回扣标识
+     obj.agencyFund = parseFloat(infoDetail.agencyFund) || '' // 代收货款
+     obj.commissionFee = parseFloat(infoDetail.commissionFee) || '' // 代收货款手续费
+     obj.insuranceFee = parseFloat(infoDetail.insuranceFee) || '' // 保险费
+     obj.handlingFee = parseFloat(infoDetail.handlingFee) || '' // 装卸费
+     obj.packageFee = parseFloat(infoDetail.packageFee) || '' // 包装费
+     obj.pickupFee = parseFloat(infoDetail.pickupFee) || '' // 提货费
+     obj.upStairsFee = parseFloat(infoDetail.goupstairsFee) || '' // 上楼费
+     obj.realityhandlingFee = parseFloat(infoDetail.realityhandlingFee) || '' // 实际提货费
+     obj.forkliftFee = parseFloat(infoDetail.forkliftFee) || '' // 叉车费
+     obj.customsFee = parseFloat(infoDetail.customsFee) || '' // 报关费
+     obj.weightFee = parseFloat(infoDetail.weightFee) || '' // 重量单价
+     obj.volumeFee = parseFloat(infoDetail.volumeFee) || '' // 体积单价
+     obj.amountFee = parseFloat(infoDetail.amountFee) || '' // 件数单价
+     obj.otherfeeOut = parseFloat(infoDetail.otherfeeOut) || '' // 其他费用支出
+     obj.otherfeeIn = parseFloat(infoDetail.otherfeeIn) || '' // 其他费用收入
+     obj.taxRate = parseFloat(infoDetail.taxRate) || '' // 税率
+     obj.taxes = parseFloat(infoDetail.taxes) || '' // 税金
+     obj.housingFee = parseFloat(infoDetail.housingFee) || '' // 入仓费
+     obj.stampTax = parseFloat(infoDetail.stampTax) || '' // 印花税
+     obj.housingFee = parseFloat(infoDetail.housingFee) || '' // 入仓费
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
      obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
@@ -540,7 +540,7 @@
          totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
        })
      }
-     obj.transferFee = parseFloat(totalTransferFee) // 中转费
+     obj.transferFee = parseFloat(totalTransferFee) || '' // 中转费
      console.log('中转费', totalTransferFee)
 
     // //////////////////////////////////////////////////////////
@@ -619,6 +619,7 @@
   */
  export function CreatePrintPageEnable(info, printer, preview, number) {
    console.log('是否预览', preview)
+   const user = getUserInfo()
 
    // info-打印数据
    // printer-打印机
@@ -635,8 +636,14 @@
        console.log('print', info, printer, number)
        // 2.0：处理数据
        if (info.orderdata) {
-         number = info.number
-         printer = info.printer
+         number = parseInt(info.number, 10) || 0
+
+         if (!info.printer) {
+           // 如果没有填写打印机，则根据类型判断去设置打印机
+           printer = info.type === 'lib' ? user.systemSetup.printSetting.label : info.type === 'order' ? user.systemSetup.printSetting.ship : ''
+         } else {
+           printer = info.printer
+         }
          preview = !info.preview
          printSetup = objectMerge2([], info.printSetup)
          if (!info.mock) {
@@ -651,6 +658,11 @@
          }
 
          info = copy
+         // 如果是0份则不处理，直接标记完成且不需要预览
+         if (!number && preview) {
+           resolve()
+           return
+         }
        }
 
        // if (printer) {
@@ -749,6 +761,8 @@
          console.log('number', number)
          LODOP.SET_PRINT_COPIES(number)
        }
+       LODOP.SET_PRINT_MODE('RESELECT_COPIES', 1)
+
        if (preview) { // 直接打印不预览
          var code = LODOP.PRINT()
        } else { // 打开打印设置弹框

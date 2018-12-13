@@ -430,9 +430,16 @@ export default {
       this.viewKey = new Date().getTime()
       getSettingCompanyLi().then(data => {
         // 针对瑞千鑫特殊处理
+        // 特殊处理某些字段
         data = data.map(e => {
           if (e.companyid === 233 || e.companyid === 234) {
             e.filedName = e.filedName.replace('业务员电话', '业务投诉电话')
+          }
+          if (e.filedValue === 'fromCity') {
+            e.filedName = '发站'
+          }
+          if (e.filedValue === 'toCity') {
+            e.filedName = '到站'
           }
           return e
         })
