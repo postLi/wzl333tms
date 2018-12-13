@@ -500,7 +500,7 @@
      obj.deliveryFee = parseFloat(infoDetail.deliveryFee) || '' // 送货费
      obj.productPrice = parseFloat(infoDetail.productPrice) || '' // 声明价值
      obj.brokerageFee = parseFloat(infoDetail.brokerageFee) || '' // 回扣
-     obj.brokerageFeeSign = 'R:' + (parseFloat(infoDetail.brokerageFee) || '')// 回扣标识
+     obj.brokerageFeeSign = 'R:' + (parseFloat(infoDetail.brokerageFee) || '') // 回扣标识
      obj.agencyFund = parseFloat(infoDetail.agencyFund) || '' // 代收货款
      obj.commissionFee = parseFloat(infoDetail.commissionFee) || '' // 代收货款手续费
      obj.insuranceFee = parseFloat(infoDetail.insuranceFee) || '' // 保险费
@@ -558,20 +558,29 @@
      switch (infoDetail.shipPayWay) { // 付款方式
        case 76:
          obj.nowPay = '√' // 现付（√）
-         // this.$set(obj, 'payWay', infoDetail.shipNowpayFee) // 付款方式
+         obj.nowPayFee = infoDetail.shipNowpayFee
          break
        case 77:
          obj.deliveryPay = '√' // 提付（√）|| 到付（√）
-         // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
-         // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
+         obj.deliveryPayFee = infoDetail.shipArrivepayFee
          break
        case 78:
          obj.monthPay = '√' // 月结（√）
-         // this.$set(obj, 'payWay', infoDetail.shipMonthpayFee) // 付款方式
+         obj.monthPayFee = infoDetail.shipMonthpayFee
          break
        case 79:
          obj.receiptPay = '√' // 回单付（√）
-         // this.$set(obj, 'payWay', infoDetail.shipReceiptpayFee) // 付款方式
+         obj.receiptPayFee = infoDetail.shipReceiptpayFee
+         break
+       case 104: // 多笔付
+         obj.nowPay = infoDetail.shipNowpayFee ? '√' : ''
+         obj.deliveryPay = infoDetail.shipArrivepayFee ? '√' : ''
+         obj.monthPay = infoDetail.shipMonthpayFee ? '√' : ''
+         obj.receiptPay = infoDetail.shipReceiptpayFee ? '√' : ''
+         obj.nowPayFee = infoDetail.shipNowpayFee || ''
+         obj.deliveryPayFee = infoDetail.shipArrivepayFee || ''
+         obj.monthPayFee = infoDetail.shipMonthpayFee || ''
+         obj.receiptPayFee = infoDetail.shipReceiptpayFee || ''
          break
      }
      if (infoDetail.shipDeliveryMethod === 68) {
@@ -656,7 +665,6 @@
          if (!info.mock) {
            info = formatOrderData(info.orderdata, info.type)
            copy = printSetup.map(el => {
-             console.log('eldfsdfsd', el, el.filedValue)
              if (el.filedValue === 'customFields') {
                el.value = el.filedName
              } else {
@@ -709,8 +717,9 @@
          if (e.filedValue === 'setting') {
            console.log('setting::', e)
            // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
-           LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
+           // LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
            // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
+           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
            LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '')
            pageWidth = e.width
            pageHeight = e.height
@@ -744,7 +753,6 @@
                  LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
                }
              } else {
-               console.log('dorosndf1111111111111111111111111111', e.value, e.topy, e.leftx, e.width, e.height, e.fontsize, e.alignment)
                LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
                LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
                LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)

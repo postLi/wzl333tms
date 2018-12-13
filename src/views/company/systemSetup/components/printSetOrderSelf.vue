@@ -180,7 +180,7 @@
           <el-select v-model="formPrint.printSetting.ship" size="mini">
             <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
           </el-select>
-           <el-button icon="el-icon-printer" @click="print('test')" size="mini" title="打印测试"></el-button>
+          <el-button icon="el-icon-printer" @click="print('test')" size="mini" title="打印测试"></el-button>
           <el-button icon="el-icon-view" @click="print('preview')" size="mini" title="打印预览"></el-button>
         </div>
       </div>
@@ -277,6 +277,8 @@ export default {
       defaultLabelWidth: 110,
       defaultLabelHeight: 30,
       defaultLabelFontSize: 12,
+      defaultPaperWidth: 240,
+      defaultPaperHeight: 140,
       imgNameStr: '预览图片lyy,',
       prxvalue: 0.264,
       mm2px: 3.779,
@@ -380,27 +382,37 @@ export default {
   methods: {
     init() {
       this.initPrinter()
-        this.formPrint = objectMerge2({},this.formInfo)
+      this.formPrint = objectMerge2({}, this.formInfo)
       this.getCommonSettingOrder()
     },
     print(type) { // preview-打印预览 test-打印测试
       let labelList = objectMerge2([], this.labelListView)
       labelList.push(objectMerge2({}, this.formModel.paper))
       labelList.forEach(e => {
+
         e.width = Math.round(e.width / this.prxvalue)
         e.height = Math.round(e.height / this.prxvalue)
         e.isshow = e.isshow ? 1 : 0
         e.bold = e.bold ? 2 : 1
         e.isshow = e.isshow ? 1 : 0
         e.value = e.filedName
+
+        if (e.filedValue === 'setting') {
+          e.bold = 0
+          e.fontsize = null
+          e.alignment = null
+          e.value = ''
+        } else {
+
+        }
       })
       CreatePrintPageEnable({
-        orderdata: {}, // 运单数据
+        orderdata: labelList, // 运单数据
         number: 1, // 打印份数
         printer: this.otherinfo.systemSetup.printSetting.ship, // 打印机
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
-        preview: type === 'preview' ?true : false, // 是否预览
+        preview: type === 'preview' ? true : false, // 是否预览
         mock: true // 是否直接读取value字段
       })
     },
@@ -971,14 +983,14 @@ export default {
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
+          this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               this.formModel.labelList.forEach((e, index) => {
                 if (e.filedValue !== 'setting') {
-                  e.topy = 0
+                    e.topy = 0
                   e.leftx = 0
                   e.isshow = 0
                   e.width = Math.round(this.defaultLabelWidth * this.prxvalue)
@@ -986,9 +998,14 @@ export default {
                   e.fontsize = 10
                   e.bold = 0
                   e.alignment = 1
-                  e.size = 0
                 }
               })
+              this.formModel.paper = {
+                width: this.defaultPaperWidth,
+                height: this.defaultPaperHeight,
+                topy: 0,
+                leftx: 0
+              }
               this.labelListView = []
             })
             .catch(err => {})

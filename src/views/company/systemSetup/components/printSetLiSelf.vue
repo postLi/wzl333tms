@@ -386,7 +386,11 @@ export default {
     },
     previewPrint(type) { // preview-打印预览 test-打印测试
       let labelList = objectMerge2([], this.labelListView)
-      labelList.push(objectMerge2({}, this.formModel.paper))
+      let setting = objectMerge2({}, this.formModel.paper)
+      setting.fontsize = null
+      setting.alignment = null
+      setting.bold = 0
+      labelList.push(setting)
       labelList.forEach(e => {
         e.width = Math.round(e.width / this.prxvalue)
         e.height = Math.round(e.height / this.prxvalue)
@@ -972,7 +976,7 @@ export default {
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
+          this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
