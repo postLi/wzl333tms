@@ -292,8 +292,8 @@ import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
-import printSetOrder from './components/printSetOrderDrag'
-import printSetLi from './components/printSetLiDrag'
+import printSetOrder from './components/printSetOrderSelf'
+import printSetLi from './components/printSetLiSelf'
 
 export default {
   name: 'systemSetup',
