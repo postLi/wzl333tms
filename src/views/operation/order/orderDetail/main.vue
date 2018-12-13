@@ -1069,7 +1069,7 @@ export default {
           return getEnableLibSetting().then(data => {
             printObj.printSetup = data
             printObj.type = 'lib'
-            printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 1
+            printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 0
             CreatePrintPageEnable(printObj)
             return data
               // console.log('打印设置标签 libData::', JSON.stringify(libData))

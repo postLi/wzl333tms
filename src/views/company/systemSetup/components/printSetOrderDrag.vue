@@ -198,17 +198,17 @@ export default {
       dragCursor: 'move',
       alignmentValue: ['', 'left', 'center', 'right'],
       alignmentOptions: [{
-          value: 1,
-          label: '文字靠左'
-        },
-        {
-          value: 2,
-          label: '文字居中'
-        },
-        {
-          value: 3,
-          label: '文字靠右'
-        }
+        value: 1,
+        label: '文字靠左'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      },
+      {
+        value: 3,
+        label: '文字靠右'
+      }
       ],
       dialogVisible: false
     }
@@ -282,7 +282,7 @@ export default {
         this.imageUrl = file.url
         this.setBg('reset')
       } catch (err) {
-        console.error('上传本地图片错误', err);
+        console.error('上传本地图片错误', err)
         return
       }
     },
@@ -376,7 +376,7 @@ export default {
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       if (!row.isshow) {
         console.log('row::::', row)
-        let item = this.orgLabelList.filter(e => {
+        const item = this.orgLabelList.filter(e => {
           if (e.filedValue === row.filedValue) {
             e.leftx = event.offsetX
             e.topy = event.offsetY
@@ -641,6 +641,17 @@ export default {
       this.labelListView = []
       this.viewKey = new Date().getTime()
       getSettingCompanyOrder().then(data => {
+        // 特殊处理某些字段
+        data = data.map(e => {
+          if (e.filedValue === 'fromCity') {
+            e.filedName = '发站'
+          }
+          if (e.filedValue === 'toCity') {
+            e.filedName = '到站'
+          }
+          return e
+        })
+
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
@@ -727,10 +738,10 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
               this.formModel.labelList.forEach((e, index) => {
                 if (e.filedValue !== 'setting') {
                   e.topy = 0

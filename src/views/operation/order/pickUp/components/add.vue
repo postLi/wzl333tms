@@ -53,7 +53,7 @@
                         :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item required prop="tmsOrderPickup.toCityName" label="到站" class="order_toCityCode">
-            <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
+            <queryCity @change="selectToCity"  search="longAddr" type="city"
                          v-model="form.tmsOrderPickup.toCityName" :remote="true" :disabled="isDbclick"/>
           </el-form-item>
           <el-form-item label="备注" prop="tmsOrderPickup.remark" class="order_remark">
@@ -145,6 +145,7 @@
   import SelectType from '@/components/selectType/index'
   import SelectCity from '@/components/selectCity/index'
   import querySelect from '@/components/querySelect/index'
+  import queryCity from '@/components/querySelect/city'
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
 
@@ -154,6 +155,7 @@
       Upload,
       querySelect,
       SelectType,
+      queryCity,
       SelectCity
     },
     props: {

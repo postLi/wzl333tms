@@ -36,7 +36,7 @@
       </div>
     </div>
     <AddCustomer :arrivalStatus="arrivalStatus" :issender="true" :isModify.sync="isModify" :isAlFun="isAlFun" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
+    <TableSetup code="ORDER_ARTER-2" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
@@ -113,14 +113,14 @@ export default {
         width: '70',
         fixed: true,
         slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
       }, {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '120',
-          fixed: true
-        },
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '120',
+        fixed: true
+      },
       {
         label: '到付(元)',
         prop: 'shipArrivepayFee',
@@ -139,11 +139,11 @@ export default {
         width: '110',
         fixed: true
       }, {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '110',
-          fixed: false
-        }, {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '110',
+        fixed: false
+      }, {
           label: '目的网点',
           prop: 'endOrgName',
           width: '110',
@@ -235,11 +235,11 @@ export default {
         width: '120',
         fixed: false
       }, {
-          label: '现付运费(元)',
-          prop: 'nowpayCarriage',
-          width: '110',
-          fixed: false
-        }, {
+        label: '现付运费(元)',
+        prop: 'nowpayCarriage',
+        width: '110',
+        fixed: false
+      }, {
           label: '现付油卡(元)',
           prop: 'nowpayOilCard',
           width: '110',
@@ -271,11 +271,11 @@ export default {
         width: '110',
         fixed: false
       }, {
-          label: '整车保险费(元)',
-          prop: 'carloadInsuranceFee',
-          width: '120',
-          fixed: false
-        }, {
+        label: '整车保险费(元)',
+        prop: 'carloadInsuranceFee',
+        width: '120',
+        fixed: false
+      }, {
           label: '发站装卸费(元)',
           prop: 'leaveHandlingFee',
           width: '120',
@@ -386,7 +386,7 @@ export default {
               this.openAddCustomer()
               console.log('选中的数据1111111', this.selectInfo)
             } else {
-              this.$message.warning('批次【 '+this.selected[0].batchNo+' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
+              this.$message.warning('批次【 ' + this.selected[0].batchNo + ' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
               this.closeAddCustomer()
               this.$refs.multipleTable.clearSelection()
               return false
@@ -406,7 +406,7 @@ export default {
           if (this.selected[0].bathStatusName === '在途中') {
             this.timeInfoVisible = true
           } else {
-             this.closeAddCustomer()
+            this.closeAddCustomer()
             this.$message({
               message: '批次状态为：' + this.selected[0].bathStatusName + '不允许做到车确定~',
               type: 'warning'

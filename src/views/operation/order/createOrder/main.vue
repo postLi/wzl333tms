@@ -41,7 +41,7 @@
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipFromCityName}">发站</span>
                 <el-form-item :error='shipFieldValueInfo.shipFromCityName'>
-                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput" show='select' filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity" v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
+                  <queryCity :key="customkey" :maxlength="50" ref="tmsOrderShipFromCityName" @keydown.enter.native="goNextInput"  filterable search="longAddr" @change="selectFromCity" :name="fromCityName" valuekey="longAddr" type="fromcity" v-model="form.tmsOrderShip.shipFromCityName" :remote="true" />
                 </el-form-item>
               </div>
             </el-col>
@@ -49,7 +49,7 @@
               <div class="order-form-item">
                 <span class="order-form-label required">到站</span>
                 <el-form-item :error='shipFieldValueInfo.shipToCityName'>
-                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput" show='select' filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity" v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
+                  <queryCity :key="customkey" :maxlength="50" ref="tmsOrderShipshipToCityName" @keydown.enter.native="goNextInput"  filterable @change="selectToCity" search="longAddr" valuekey="longAddr" type="tocity" v-model="form.tmsOrderShip.shipToCityName" :remote="true" />
                 </el-form-item>
               </div>
             </el-col>
@@ -485,6 +485,7 @@ import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
+import queryCity from '@/components/querySelect/city'
 import { getSelectType } from '@/api/common'
 // 当前模块子组件
 import FeeDialog from './components/feePop'
@@ -503,7 +504,8 @@ export default {
     SelectTree,
     SelectCity,
     querySelect,
-    ManageRemarks
+    ManageRemarks,
+    queryCity
   },
   props: {
     ispop: {
@@ -1240,7 +1242,7 @@ export default {
     // 设置上一次的运单信息
     setLastOrderInfo() {
       if (this.lastOrderInfo) {
-        this.form.tmsOrderShip.shipToCityName = this.lastOrderInfo.shipToCityName
+        // this.form.tmsOrderShip.shipToCityName = this.lastOrderInfo.shipToCityName
         this.form.tmsOrderShip.shipToOrgid = this.lastOrderInfo.shipToOrgid
         console.log('this.lastOrderInfo', this.lastOrderInfo)
       }
@@ -2013,6 +2015,15 @@ export default {
               this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
             }
           }
+        }
+      }
+      if (/deliveryFee/.test(name)) {
+        const val = parseFloat(event.target.value, 10) || 0
+        if (val > 0) {
+          /* this.$notify.info({
+            title: '消息',
+            message: '您设置了送货费，'
+          }) */
         }
       }
       // 修改时计算总运费
@@ -2988,7 +2999,7 @@ export default {
       this.setPrintData('lib')
       const printObj = {
         orderdata: this.printDataObject,
-        number: parseInt(this.printDataObject.tmsOrderShipInfo.shipPrintLib, 10) || 1,
+        number: parseInt(this.printDataObject.tmsOrderShipInfo.shipPrintLib, 10) || 0,
         printer: '',
         printSetup: [],
         type: 'lib',

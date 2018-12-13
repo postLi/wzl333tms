@@ -197,7 +197,7 @@
                 </div>
               </div>
             </div>
-            <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+            <TableSetup code="ORDER_ARTER-3" :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
           </el-tab-pane>
           <el-tab-pane label="批次跟踪" name="second">
             <div class="deliveryinfo_box" v-loading="loading">
@@ -398,7 +398,7 @@ import popRight from '@/components/PopRight/index'
 import selectType from '@/components/selectType/index'
 import { getLoadDetail, deleteTrack, postAddTrack, putUpdateTrack, getSelectLoadList } from '@/api/operation/track'
 import { postSelectLoadMainInfoList, postAddRepertory, postConfirmToCar } from '@/api/operation/arteryDelivery'
-import {getLookContract} from '@/api/operation/arteryDepart'
+import { getLookContract } from '@/api/operation/arteryDepart'
 // import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
@@ -504,14 +504,14 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
             return scope.$index + 1
           }
-        }, {
+      }, {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '120',
@@ -527,18 +527,18 @@ export default {
           width: '120',
           fixed: false
         },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFee',
-          width: '100',
-          fixed: false
-        },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFee',
+        width: '100',
+        fixed: false
+      },
         //   {
         //   label: '应到件数',
         //   prop: 'loadAmount',
@@ -556,22 +556,22 @@ export default {
         //   fixed: false
         // },
         // v-if="isAlFun"   入库前的
-        {
-          label: '实到件数',
-          prop: 'actualAmount',
-          width: '100',
-          isAlFun: true,
-          expand: true,
-          fixed: false,
-          checkfn: (row) => {
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        isAlFun: true,
+        expand: true,
+        fixed: false,
+        checkfn: (row) => {
             return row.warehouStatus === 1
           },
 
-          slot: (scope) => {
+        slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
           }
-        }, {
+      }, {
           label: '实到重量(kg)',
           prop: 'actualWeight',
           width: '120',
@@ -626,12 +626,12 @@ export default {
         //   fixed: false
         // },
         //
-        {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
           label: '配载重量(kg)',
           prop: 'loadWeight',
           width: '120',
@@ -805,9 +805,7 @@ export default {
       this.getDetail()
       this.fetchAllCustomer()
       this.fetchSelectLoadMainInfoList()
-
     }
-
   },
   methods: {
 
