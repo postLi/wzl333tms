@@ -52,7 +52,7 @@ $dialogHeader_bgcolor: #e6e6e6;
   .print_aside {
     background-color: rgba(0, 0, 0, 0.1);
     float: left;
-    width: 350px;
+    width: 450px;
     overflow: auto;
     height: calc(100% - 96px);
     position: relative;
@@ -75,7 +75,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       line-height: 48px;
       background-color: #ffffff;
       display: block;
-      width: 350px;
+      width: 450px;
       height: 48px; // box-shadow: 1px 3px 10px #eee;
     }
     .print_aside_search {
@@ -86,7 +86,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       padding: 10px;
       background-color: #ffffff;
       display: block;
-      width: 350px;
+      width: 450px;
       height: 48px;
       box-shadow: 1px 3px 10px #eee;
       .el-autocomplete {
@@ -162,7 +162,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       flex-direction: row;
       justify-content: space-around;
       width: 100%;
-      padding: 0px 0 10px 10px;
+      padding: 0px 10px 10px 10px;
       .prinit_aside_setpreview_head {
         height: 40px;
         line-height: 55px;
@@ -174,6 +174,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       .box_container_2 .el-upload--picture-card {
         width: auto;
         height: auto;
+        display: block;
         line-height: 19px;
       }
        .box_container_2 .el-upload__text {
@@ -183,7 +184,7 @@ $dialogHeader_bgcolor: #e6e6e6;
           line-height: 20px;
         }
       .el-upload-dragger {
-        width: 320px;
+        width: 100%;
         height: 120px;
         .el-icon-upload {
           margin: 25px 0 20px;
@@ -205,6 +206,10 @@ $dialogHeader_bgcolor: #e6e6e6;
         color: #409eff;
         font-weight: 900;
         position: relative;
+        .el-button {
+          float: right;
+          margin-top: 4px;
+        }
       }
       label:before {
         content: '';
@@ -224,16 +229,19 @@ $dialogHeader_bgcolor: #e6e6e6;
       position: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      padding: 10px 0;
+      padding: 10px;
       li {
         display: inline-block;
         cursor: pointer;
-        flex-grow: 1; // float: left;
-        padding: 0 10px; // background-color:#fff;
-        height: 28px;
+        flex-grow: 1;
+        width: 25%;
         line-height: 28px;
+        .el-tag{
+         background-color: rgba(0,0,0,0);
+        }
         b {
           font-weight: 400;
+          color: #333;
           font-style: normal;
         }
       }
@@ -243,7 +251,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
     li.print_aside_content_self {
       .el-input {
-        width: auto;
+        width: 80%;
       }
     }
   }
@@ -259,11 +267,11 @@ $dialogHeader_bgcolor: #e6e6e6;
     .print_main_head {
       position: fixed;
       top: 54px;
-      left: 350px;
+      left: 450px;
       padding: 6px 10px;
       line-height: 36px;
       display: block;
-      width: calc(100% - 350px);
+      width: calc(100% - 450px);
       height: 48px;
       min-width: 755px;
       text-align: left;
