@@ -122,7 +122,7 @@ module.exports = {
         changeOrigin: true
       },
       '/aliyun': {
-        target: 'http://119.23.201.233:9528/api',
+        target: 'http://www.28tms.cn/api',
         pathRewrite: {
           '^/aliyun': ''
         },

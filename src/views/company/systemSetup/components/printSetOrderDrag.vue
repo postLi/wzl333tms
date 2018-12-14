@@ -1,6 +1,6 @@
 <template>
   <!-- 打印运单设置 -->
-  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag">
+  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -161,6 +161,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       imageUrl: '',
       btnsize: 'mini',
       // 保存背景图的相关属性，用来操控
@@ -178,6 +179,8 @@ export default {
           topy: 0
         }
       },
+      defaultPaperWidth: 240,
+      defaultPaperHeight: 140,
       prxvalue: 0.264,
       mm2px: 3.779,
       classItem: [],
@@ -197,17 +200,17 @@ export default {
       dragCursor: 'move',
       alignmentValue: ['', 'left', 'center', 'right'],
       alignmentOptions: [{
-          value: 1,
-          label: '文字靠左'
-        },
-        {
-          value: 2,
-          label: '文字居中'
-        },
-        {
-          value: 3,
-          label: '文字靠右'
-        }
+        value: 1,
+        label: '文字靠左'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      },
+      {
+        value: 3,
+        label: '文字靠右'
+      }
       ],
       dialogVisible: false
     }
@@ -281,7 +284,7 @@ export default {
         this.imageUrl = file.url
         this.setBg('reset')
       } catch (err) {
-        console.error('上传本地图片错误', err);
+        console.error('上传本地图片错误', err)
         return
       }
     },
@@ -375,7 +378,7 @@ export default {
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       if (!row.isshow) {
         console.log('row::::', row)
-        let item = this.orgLabelList.filter(e => {
+        const item = this.orgLabelList.filter(e => {
           if (e.filedValue === row.filedValue) {
             e.leftx = event.offsetX
             e.topy = event.offsetY
@@ -636,9 +639,21 @@ export default {
     },
     getSettingCompanyOrder() {
       // 清空右边栏
+      this.loading = true
       this.labelListView = []
       this.viewKey = new Date().getTime()
       getSettingCompanyOrder().then(data => {
+        // 特殊处理某些字段
+        data = data.map(e => {
+          if (e.filedValue === 'fromCity') {
+            e.filedName = '发站'
+          }
+          if (e.filedValue === 'toCity') {
+            e.filedName = '到站'
+          }
+          return e
+        })
+
         this.formModel.labelList = data
         this.orgLabelList = data
         this.formModel.labelList.forEach(e => {
@@ -664,6 +679,11 @@ export default {
             e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
           }
         })
+        this.loading = false
+      })
+      .catch(err => {
+        this.loading = false
+        this._handlerCatchMsg(err)
       })
     },
     closeMe(done) {
@@ -683,7 +703,9 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.loading = true
           const obj = objectMerge2([], this.formModel.labelList)
+          // obj.push(objectMerge2([], this.formModel.paper))
           obj.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
@@ -703,9 +725,14 @@ export default {
           })
 
           putSettingCompanyOrder(obj).then(data => {
+            this.loading = false
             this.$message({ type: 'success', message: '运单打印设置成功！' })
             this.getSettingCompanyOrder()
             this.viewKey = new Date().getTime()
+          })
+          .catch(err => {
+            this.loading = false
+            this._handlerCatchMsg(err)
           })
         }
       })
@@ -713,13 +740,18 @@ export default {
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+          this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
               this.formModel.labelList.forEach((e, index) => {
-                if (e.filedValue !== 'setting') {
+                if (e.filedValue === 'setting') {
+                  e.topy = 0
+                  e.leftx = 0
+                  e.width = Mthis.defaultPaperWidth
+                  e.height = this.defaultPaperHeight
+                }else {
                   e.topy = 0
                   e.leftx = 0
                   e.isshow = 0

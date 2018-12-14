@@ -6,9 +6,9 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:PAY_SHIPSET1>结算</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI1>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP1>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:HANDLING_PAY2>核销</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:HANDLING_PRINT2>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:HANDLING_EXPORT2>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
@@ -125,7 +125,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结操作费',
+          label: '已核销操作费',
           prop: 'paidFee',
           width: '110',
           slot: (scope) => {
@@ -138,7 +138,7 @@ export default {
           fixed: false
         },
         {
-          label: '未结操作费',
+          label: '未核销操作费',
           prop: 'unpaidFee',
           width: '110',
           slot: (scope) => {
@@ -217,7 +217,7 @@ export default {
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '应付账款-操作费核销'
+            name: '应付账款-操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

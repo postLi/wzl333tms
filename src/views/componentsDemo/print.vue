@@ -183,7 +183,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="打印结算单" name="third">打印结算单</el-tab-pane>
+      <el-tab-pane label="打印核销单" name="third">打印核销单</el-tab-pane>
       <el-tab-pane label="打印合同" name="fourth">打印合同</el-tab-pane>
     </el-tabs>
   </div>

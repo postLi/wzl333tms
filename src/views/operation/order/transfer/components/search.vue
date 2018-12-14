@@ -18,7 +18,7 @@
         <el-form-item label="承运商:">
           <querySelect search="carrierName" type="carrier" valuekey="carrierId" show="select" v-model="searchForm.carrierId" :filterable="false" placeholder="请选择" />
         </el-form-item>
-      <el-form-item v-if="!isbatch" label="出发城市:" class="searchinfo--order">
+      <el-form-item v-if="!isbatch" label="发站:" class="searchinfo--order">
           <el-input
               v-model="searchForm.shipFromCityName"
               maxlength="15"
@@ -26,7 +26,7 @@
               clearable>
           </el-input>
         </el-form-item>
-        <el-form-item v-if="!isbatch" label="到达城市:" class="searchinfo--order">
+        <el-form-item v-if="!isbatch" label="到站:" class="searchinfo--order">
           <el-input
               v-model="searchForm.shipToCityName"
               maxlength="15"

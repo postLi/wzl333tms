@@ -4,14 +4,15 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="success" :size="btnsize" icon="el-icon-document" @click="doAction('theAudit')" plain
-                   v-has:PICK_FINASH>反审核
+                   v-has:CERTVERFICATION_CONTRARY_VERIFY>反审核
         </el-button>
         <el-button type="info" :size="btnsize" icon="el-icon-tickets" @click="doAction('audit')" plain
-                   v-has:PICK_SEL>审核
+                   v-has:CERTVERFICATION_VERIFY>审核
         </el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
-                   v-has:PICK_EXP>导出
+                   v-has:CERTVERFICATION_EXPORT>导出
         </el-button>
+        <span style="font-size: 14px;line-height: 28px;padding-left: 10px;color: #ccc">双击查看明细</span>
         <!--<el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain-->
         <!--v-has:PICK_PRI>打印-->
         <!--</el-button>-->
@@ -273,7 +274,7 @@
                 postFinCerFicationcert(data).then(res => {
                   this.$message({
                     type: 'success',
-                    message: '审核成功!'
+                    message: '反核销成功!'
                   })
                   this.fetchData()
                 }).catch(err => {

@@ -13,20 +13,24 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
+        <!-- isNeededVoucher 1-需要核销 2-不需要核销 (不可以修改科目信息)  -->
+        <el-form-item label="一级科目" 
+        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
+        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)"
+             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="凭证日期" prop="certTime">
-          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false">
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false"  >
           </el-date-picker>
         </el-form-item>
       </div>
       <div class="income_item">
         <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +41,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +52,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -113,8 +117,11 @@ export default {
     },
     btnLoading: {
       handler(cval, oval) {
-
       },
+      deep: true
+    },
+    fiOrderType: {
+      handler (cval, oval) {},
       deep: true
     }
   },
@@ -192,12 +199,15 @@ export default {
     postVerificationBaseInfo() { // 新增时初始化数据
       this.baseQuery.orgId = this.orgId
       this.baseQuery.amount = this.info.amount
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
+          if (data.verificationList) {
           this.veryficationList = data.verificationList
           data.verificationList.forEach((el, index) => {
             this.veryficationType[el.id] = el.verificationWay
           })
+        }
           this.initSubject()
         })
         .catch(err => {
@@ -357,7 +367,7 @@ export default {
           if (!dataInfo.certTime) {
            dataInfo.certTime = new Date()
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList
           this.$emit('success', dataInfo)
         }

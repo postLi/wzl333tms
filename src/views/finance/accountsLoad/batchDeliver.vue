@@ -1,5 +1,5 @@
 <template>
-  <!-- 送货费结算页面 -->
+  <!-- 送货费核销页面 -->
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">送货费结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">送货费核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -151,7 +151,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -172,7 +172,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结送货费',
+          label: '已核销送货费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -182,7 +182,7 @@ export default {
           }
         },
         {
-          label: '未结送货费',
+          label: '未核销送货费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -247,7 +247,7 @@ export default {
           fixed: true
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -274,7 +274,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结送货费',
+          label: '已核销送货费',
           prop: 'paidFee',
           width: '120',
           fixed: false,
@@ -284,7 +284,7 @@ export default {
           }
         },
         {
-          label: '未结送货费',
+          label: '未核销送货费',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -294,7 +294,7 @@ export default {
           }
         },
         {
-          label: '实结送货费',
+          label: '实际核销送货费',
           prop: 'amount',
           width: '120',
           fixed: false,
@@ -435,8 +435,8 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
@@ -445,7 +445,7 @@ export default {
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
@@ -485,7 +485,7 @@ export default {
         // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.amount = e.unpaidFee
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
             return em.batchNo !== e.batchNo
@@ -607,7 +607,7 @@ export default {
       }
       if (count > 0) {
         count = 0
-        this.$message({ type: 'warning', message: '不能同时结算两个网点' })
+        this.$message({ type: 'warning', message: '不能同时核销两个网点' })
         return false
       }
       this.infoTable = this.$options.data().infoTable
@@ -616,7 +616,7 @@ export default {
           let amount = 0
         this.rightTable.forEach((e, index) => {
           console.log('右边列表', index, e)
-          if (e.amount > 0 && e.amount <= e.unpaidFee) { // 提交可结算项
+          if (e.amount > 0 && e.amount <= e.unpaidFee) { // 提交可核销项
             let item = {
               id: e.id,
               amount: e.amount,
@@ -632,7 +632,7 @@ export default {
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   let item = {
@@ -640,15 +640,15 @@ export default {
         //     amount: e.amount,
         //     feeTypeId: e.feeTypeId
         //   }
-        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
         //     this.tableReceiptInfo.push(item)
         //   }
         //   item = {}
         // })
-        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         // }
       }
     },

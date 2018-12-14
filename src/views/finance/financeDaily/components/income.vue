@@ -15,7 +15,7 @@
       <div class="income_item_line"></div>
       <div class="income_item">
         <el-form-item label="记账方向">
-          <el-select v-model="formModel.paymentsType" placeholder="请选择" :size="btnsize">
+          <el-select v-model="formModel.paymentsType" placeholder="请选择" :size="btnsize" :disabled="formModel.dataSrc === 0">
             <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
           </el-select>
         </el-form-item>
@@ -31,20 +31,23 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)">
+        <el-form-item label="一级科目"  
+        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
+        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)"  
+            :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="二级科目" prop="subjectTwoId" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select clearable v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select clearable v-model="formModel.subjectTwoId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,2)"  :disabled="formModel.isNeededVoucher !== '1'" >
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select clearable v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select clearable v-model="formModel.subjectThreeId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,3)"  :disabled="formModel.isNeededVoucher !== '1'" >
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -52,7 +55,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select clearable v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select clearable v-model="formModel.subjectFourId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,4)"  :disabled="formModel.isNeededVoucher !== '1'" >
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -64,7 +67,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount" class="formItemTextDanger">
-          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8"></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" :disabled="formModel.dataSrcZh === '核销产生'"></el-input>
         </el-form-item>
       </div>
       <div class="income_item_line"></div>
@@ -103,8 +106,8 @@
       <div class="income_item_line"></div>
     </el-form>
     <span slot="footer">
-          <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document">保存</el-button>
-          <el-button type="success" @click="submitForm('formModel', 'print')" plain icon="el-icon-printer">保存并打印</el-button>
+          <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
+          <el-button type="success" @click="submitForm('formModel', 'print')" plain icon="el-icon-printer" :loading="btnLoading">保存并打印</el-button>
           <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
@@ -116,6 +119,7 @@ import Upload from '@/components/Upload/singleImage2'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, postAddIncome, postBillRecordDetailList, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 import { REGEX } from '@/utils/validate'
+import { PrintContract } from '@/utils/lodopFuncs'
 export default {
   components: {
     SelectTree,
@@ -182,6 +186,7 @@ export default {
       }
     }
     return {
+      btnLoading: false,
       subjectOne: [],
       subjectTwo: [],
       subjectThree: [],
@@ -198,14 +203,15 @@ export default {
         amount: [{ required: true, message: '不能为空', trigger: 'blur' }],
         verificationId: [{ required: true, message: '不能为空', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       formModelTitle: '现金记账凭证【出纳】',
       searchQuery: {
-        orgId: ''
+        orgId: '',
+        dataSrc: 1
       },
       searchQuerySub: {
         orgId: '',
@@ -221,11 +227,12 @@ export default {
       this.searchQuery.orgId = this.otherinfo.orgid
       this.searchQuerySub.orgId = this.otherinfo.orgid
       if (this.isModify) {
+        // 根据id获取当前日记账信息
         this.formModel = Object.assign({}, this.info)
         console.log('paymentsType', this.formModel.paymentsType)
         this.$set(this.formModel, 'paymentsType', this.formModel.paymentsType + '')
-        this.getVeryficationList()
         this.initSubject()
+        this.getVeryficationList()
         this.loading = false
       } else {
         this.getBaseInfo()
@@ -245,7 +252,6 @@ export default {
     },
     initSubject() { // 修改时回填科目列表
       this.getFinanceSubjects().then(() => { // 获取一级科目
-
         if (this.formModel.subjectOneId) {
           if (!this.checkSubject(1)) {
             for (let item in this.formModel) {
@@ -292,6 +298,7 @@ export default {
       })
     },
     getBaseInfo() {
+      this.$set(this.searchQuery, 'dataSrc', 1)
       return postVerificationBaseInfo(this.searchQuery).then(data => {
           if (data) {
             this.formModel = data
@@ -375,6 +382,11 @@ export default {
     },
     getFinanceSubjects(subjectLevel, parentId) {
       console.warn('getFinanceSubjects 科目', subjectLevel, parentId)
+      for(let item in this.formModel) {
+        if (/^subject/.test(item)) {
+          console.log(item, this.formModel[item])
+        }
+      }
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''
       return getFinanceSubjects(this.searchQuerySub).then(data => {
@@ -384,15 +396,24 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目二: ', this.subjectTwo)
+              this.subjectTwo.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             case 3:
               this.subjectThree = data
               this.subjectFour = []
               console.log('科目三: ', this.subjectThree)
+              this.subjectThree.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             case 4:
               this.subjectFour = data
               console.log('科目四: ', this.subjectFour)
+              this.subjectFour.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
             default:
               this.subjectOne = data
@@ -400,6 +421,9 @@ export default {
               this.subjectThree = []
               this.subjectFour = []
               console.log('科目一: ', this.subjectOne)
+              this.subjectOne.forEach((e, index) => {
+                console.log(index, e.id)
+              })
               break
           }
         })
@@ -475,32 +499,33 @@ export default {
               if (this.subjectFour.length > 0) {
                 if (this.formModel.subjectFourId) {
                   return true
-                }else {
+                } else {
                   this.$message.warning('请填写四级科目')
                   return false
                 }
-              }else {
+              } else {
                 return true
               }
-            }else {
+            } else {
               this.$message.warning('请填写三级科目')
               return false
             }
-          }else {
+          } else {
             return true
           }
         } else {
           this.$message.warning('请填写二级科目!')
           return false
         }
-      }else {
+      } else {
         return true
       }
     },
     submitForm(formName, type) {
-      if (!this.formModel.certNo) {
+
+      if (!this.formModel.certNo && this.formModel.isNeededVoucher === '1') {
         this.$message.error('缺少凭证编号')
-        this.postVerificationBaseInfo()
+        this.getBaseInfo()
         return
       }
       if (!this.checkSubjectIsNull()) {
@@ -508,39 +533,58 @@ export default {
       }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           this.loading = true
           let query = Object.assign({}, this.formModel)
           if (!query.certTime) {
-           query.certTime = new Date()
+            query.certTime = new Date()
           }
-          this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(query, 'certTime', parseTime(query.certTime, '{y}-{m}-{d}')+ ' 00:00:00')
           this.$set(query, 'dataSrc', query.id ? query.dataSrc : 1) // (数据)来源 ,0  核销产生, 1 手工录入
-          this.$set(query, 'orderList', [])
-          // 添加的时候 需要创建一个空的详情列表
-          query.orderList.push({
-            shipLoadId: '',
-            manualAmount: query.amount,
-            subjectName: '',
-            subjectId: ''
-          })
+          if (!this.isModify) {
+            this.$set(query, 'orderList', [])
+            // 添加的时候 需要创建一个空的详情列表
+            query.orderList.push({
+              shipLoadId: '',
+              manualAmount: query.amount,
+              subjectName: '',
+              subjectId: ''
+            })
+          }
           if (type) { // 打印
-            this.$message.warning('暂无此功能~')
+            // this.$message.warning('暂无此功能~')
+            this.print()
+            this.loading = false
           }
           console.log('query:::', query)
           delete query.verificationList
           postAddIncome(query).then(data => {
               query = {}
               this.closeMe()
-              this.$message.success('记账成功！')
+              this.$message.success('保存成功！')
               this.$emit('success')
               this.loading = false
+              this.btnLoading = false
             })
             .catch(err => {
               this._handlerCatchMsg(err)
               this.loading = false
+              this.btnLoading = false
             })
         }
       })
+    },
+    print() {
+      let str = '?'
+      let formModel = Object.assign({}, this.formModel)
+      this.$set(formModel, 'orgName', this.otherinfo.orgName)
+      this.$set(formModel, 'certTypeName', formModel.certType === '1' ? '冲销' : '正常')
+      formModel.paymentsTypeZh = formModel.paymentsType==='1' ? '支出' : '收入'
+      for (const item in formModel) {
+        str += item + '=' + (formModel[item] === null || formModel[item] === undefined || formModel[item] === '' ? '无' : formModel[item]) + '&'
+      }
+      const path = window.location.protocol + '//' + window.location.host + '/static/print/voucher.html' + str + new Date().getTime()
+      PrintContract(encodeURI(path), 'voucher')
     },
     setting() {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
@@ -553,6 +597,7 @@ export default {
     }
   }
 }
+
 
 </script>
 <style lang="scss">

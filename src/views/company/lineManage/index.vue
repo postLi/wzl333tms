@@ -4,7 +4,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-info" plain @click="doAction('add')" >新增线路</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-info" v-has:LINE_MANAGE_ADD plain @click="doAction('add')" >新增线路</el-button>
           <span class="viewtip">
             双击查看详情
           </span>
@@ -61,10 +61,10 @@
             width="300"
           >
           <template slot-scope="scope">
-            <el-button @click.stop="handleStatus(scope.row)" :type="scope.row.rangeStatus == '0' ? 'primary' : 'info'" size="mini">{{scope.row.rangeStatus == '0' ? '启用' : '禁用'}}</el-button>
-            <el-button @click.stop="handleEdit(scope.row)" type="primary" size="mini">修改</el-button>
+            <el-button v-has:LINE_MANAGE_DISABLED @click.stop="handleStatus(scope.row)" :type="scope.row.rangeStatus == '0' ? 'primary' : 'info'" size="mini">{{scope.row.rangeStatus == '0' ? '启用' : '禁用'}}</el-button>
+            <el-button v-has:LINE_MANAGE_UPDATE @click.stop="handleEdit(scope.row)" type="primary" size="mini">修改</el-button>
             <el-button @click.stop="viewDetails(scope.row)" type="primary" size="mini">查看</el-button>
-            <el-button @click.stop="handleDelete(scope.row)" type="danger" size="mini">删除</el-button>
+            <el-button  v-has:LINE_MANAGE_DELETE @click.stop="handleDelete(scope.row)" type="danger" size="mini">删除</el-button>
           </template>
           </el-table-column>
         </el-table>
@@ -125,7 +125,7 @@ export default {
           return scope.$index + 1
         }
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'rangeFromCity',
         width: 200,
         slot: (scope) => {
@@ -136,7 +136,7 @@ export default {
         'prop': 'fromOrgName',
         width: 100
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'rangeToCity',
         width: 200,
         slot: (scope) => {

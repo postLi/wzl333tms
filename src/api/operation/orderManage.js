@@ -89,7 +89,7 @@ export default {
     "shipSn": "string", 运单号
     "shipStatus": 0, 运单状态
     "shipStatusName": "string", 运单状态名称
-    "shipToCityCode": "string", 到达城市code
+    "shipToCityCode": "string", 到站code
     "shipToOrgid": 0, 目的网点
     "shipTotalFee": 0, 运费合计
     "shipTruckIdNumber": "string", 提货车号
@@ -118,7 +118,7 @@ export default {
     if (vo.shipIsUpdate === 1) {
       url = '/api-order/order/v1/change'
     }
-    return fetch.post(url, param).then(checkStatus).then(res => {
+    return fetch.post(url, param).then(res => {
       return res.data ? res.data : { total: 0, list: [] }
     })
   },
@@ -127,7 +127,7 @@ export default {
    * @param {*} param 查询参数
    */
   getFindByShipSnOrGoodSn(tmsOrderShipQuery) {
-    return fetch.post('/api-order/order/v1/findByShipSnOrGoodSn', tmsOrderShipQuery).then(checkStatus)
+    return fetch.post('/api-order/order/v1/findByShipSnOrGoodSn', tmsOrderShipQuery)
   },
   /**
    * 创建运单
@@ -135,7 +135,7 @@ export default {
    * 同修改
    */
   postNewOrder(data) {
-    return fetch.post('/api-order/order/v1/', data).then(checkStatus)
+    return fetch.post('/api-order/order/v1/', data)
   },
   /**
    * 修改开单对象
@@ -286,28 +286,28 @@ export default {
 }
    */
   putChangeOrder(data) {
-    return fetch.put('/api-order/order/v1/', data).then(checkStatus)
+    return fetch.put('/api-order/order/v1/', data)
   },
   /**
    * 查询开单对象
    * @param {*} id 运单id
    */
   getOrderInfoById(id) {
-    return fetch.get('/api-order/order/v1/' + id).then(checkStatus)
+    return fetch.get('/api-order/order/v1/' + id)
   },
   /**
    * 删除运单
    * @param {*} id 运单id
    */
   deleteOrderInfoById(id) {
-    return fetch.delete('/api-order/order/v1/' + id + '?type=2').then(checkStatus)
+    return fetch.delete('/api-order/order/v1/' + id + '?type=2')
   },
   /**
    * 作废运单
    * @param {*} id 运单id
    */
   deleteCancleOrderById(id) {
-    return fetch.delete('/api-order/order/v1/' + id + '?type=3').then(checkStatus)
+    return fetch.delete('/api-order/order/v1/' + id + '?type=3')
   },
   /**
    * 根据系统设置获取货号
@@ -326,7 +326,7 @@ export default {
 }
    */
   postGenerateGoodsSn(param) {
-    return fetch.post('/api-order/order/v1/generateGoodsSn', param).then(checkStatus)
+    return fetch.post('/api-order/order/v1/generateGoodsSn', param)
   },
   /**
    * 自动获取运单号
@@ -337,7 +337,7 @@ export default {
       params: {
         orgid
       }
-    }).then(checkStatus)
+    })
   },
   /**
    * 判断运单号是否唯一
@@ -348,7 +348,7 @@ export default {
       params: {
         orgId
       }
-    }).then(checkStatus)
+    })
   },
   // 导出数据
   getExportExcel() {
@@ -366,7 +366,7 @@ export default {
         resolve(type ? (data[type] || {}) : data)
       })
     } else {
-      return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus).then(res => {
+      return fetch.get('/api-order/order/tmsshipsetting/v1/' + userId).then(res => {
         CACHE.set('PersonalSetup' + '_update', false)
         CACHE.set('PersonalSetup', res.data)
         return res.data ? (type ? (res.data[type] || {}) : res.data) : {}
@@ -401,7 +401,7 @@ export default {
    */
   putPersonalSetup(data) {
     CACHE.set('PersonalSetup' + '_update', true)
-    return fetch.put('/api-order/order/tmsshipsetting/v1/', data).then(checkStatus)
+    return fetch.put('/api-order/order/tmsshipsetting/v1/', data)
   },
   /**
    * 重置个人设置
@@ -409,14 +409,14 @@ export default {
    */
   resetPersonalSetup(userId) {
     CACHE.set('PersonalSetup' + '_update', true)
-    return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId).then(checkStatus)
+    return fetch.put('/api-order/order/tmsshipsetting/v1/' + userId)
   },
   /**
    * 获取批次信息
    * @param {*} orgid 组织id
    */
   getBatchList(orgid) {
-    return fetch.get('/api-order/order/v1/bath/' + orgid).then(checkStatus)
+    return fetch.get('/api-order/order/v1/bath/' + orgid)
   },
   /**
    * type为1是货品名 2是包装
@@ -427,7 +427,7 @@ export default {
       params: {
         Type
       }
-    }).then(checkStatus)
+    })
   },
   /**
    * 获取创建订单的时间
@@ -435,13 +435,13 @@ export default {
   getCreateOrderDate() {
     return fetch.get('/api-order/order/v1/orderCreateDate').then(res => {
       return res.data || ''
-    }).then(checkStatus)
+    })
   },
   /**
    * 获取备注列表
    */
   getRemarkList() {
-    return fetch.get('/api-order/order/recently/v1/').then(checkStatus).then(res => {
+    return fetch.get('/api-order/order/recently/v1/').then(res => {
       return res.data || { list: [], total: 0 }
     })
   },
@@ -456,7 +456,7 @@ export default {
 }
    */
   postRemark(data) {
-    return fetch.post('/api-order/order/recently/v1/', data).then(checkStatus)
+    return fetch.post('/api-order/order/recently/v1/', data)
   },
   /**
    * 修改备注
@@ -467,14 +467,14 @@ export default {
 }
    */
   putRemark(id, data) {
-    return fetch.put('/api-order/order/recently/v1/' + id, data).then(checkStatus)
+    return fetch.put('/api-order/order/recently/v1/' + id, data)
   },
   /**
    * 删除备注
    * @param {*} id 备注id
    */
   deleteRemark(id) {
-    return fetch.delete('/api-order/order/recently/v1/' + id).then(checkStatus)
+    return fetch.delete('/api-order/order/recently/v1/' + id)
   },
   /**
    * 获取货品设置
@@ -491,7 +491,7 @@ export default {
           orgId,
           Type: 'orderCargoSetting'
         }
-      }).then(checkStatus).then(res => {
+      }).then(res => {
         CACHE.set('cargosetting' + '_update', false)
         CACHE.set('cargosetting', res.data)
         return res.data || []
@@ -504,7 +504,7 @@ export default {
    */
   putCargoSetting(data) {
     CACHE.set('cargosetting' + '_update', true)
-    return fetch.put('/api-order/order/tmsorderfield/v1/', data).then(checkStatus)
+    return fetch.put('/api-order/order/tmsorderfield/v1/', data)
   },
   /**
    * 查看运单的修改日志
@@ -617,5 +617,9 @@ export default {
    */
   postMatchLine(data) {
     return fetch.post('/api-system/system/tmssystemtransportrange/v1/matchRange', data)
+  },
+  // 获取上一次开单信息
+  getLastOrderInfo() {
+    return fetch.get('/api-order/order/v1/selectOrderByCreateTime')
   }
 }

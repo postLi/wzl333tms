@@ -49,14 +49,14 @@
       <div class="fee_btn_transferTable tableItem">
         <!-- 操作按钮区 -->
         <div class="fee_btn_boxs">
-          <el-button :size="btnsize" plain type="success" @click="doAction('count')" icon="el-icon-date">智能结算</el-button>
+          <el-button :size="btnsize" plain type="success" @click="doAction('count')" icon="el-icon-date">智能核销</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('savePrint')" icon="el-icon-printer">保存并打印</el-button>
           <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
         <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
-        <!-- 智能结算弹出框 -->
+        <!-- 智能核销弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
     </div>
@@ -88,7 +88,7 @@ export default {
       loading: true,
       countVisible: false, // 弹出框默认隐藏
       feeInfo: 'feeInfoOne',
-      settlementId: 178, // 178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算
+      settlementId: 178, // 178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
       btnsize: 'mini',
       formModel: {
         bankAccount: '',

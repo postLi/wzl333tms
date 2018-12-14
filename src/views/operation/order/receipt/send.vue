@@ -66,10 +66,10 @@
               sortable
               prop="shipFromCityName"
               width="200"
-              label="出发城市">
+              label="发站">
             </el-table-column>
             <el-table-column
-              label="到达城市"
+              label="到站"
               width="200"
               prop="shipToCityName"
               sortable
@@ -269,7 +269,10 @@
               >
             </el-table-column>
           </el-table> -->
-          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+          :summary-method="getSumLeft"
+          show-summary
+           tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -295,7 +298,7 @@ import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import AddMark from './components/add'
 export default {
@@ -378,12 +381,12 @@ export default {
         },
         fixed: false
       }, {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '120',
         fixed: false
       }, {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '120',
         fixed: false
@@ -536,6 +539,9 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     fetchAllreceipt() {
       this.loading = true
       return postReceipt(this.searchQuery).then(data => {

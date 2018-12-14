@@ -68,19 +68,38 @@
     <div class="tab_infos">
       <div class="btns_box">
         <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-popover
+          @mouseenter.native="showSaveBox"
+          @mouseout.native="hideSaveBox"
+          placement="top"
+          trigger="manual"
+          width="160"
+          :value="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        </el-popover>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
+        
       </div>
       <div class="detailinfo_tab">
-        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+          <el-table-column fixed type="selection" width="50"></el-table-column>
+          <el-table-column fixed label="序号" prop="number" width="50">
+            <template slot-scope="scope">
+              {{scope.$index + 1}}
+            </template>
+          </el-table-column>
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" sortable>
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" >
             </el-table-column>
             <!-- 有返回值的列 -->
-            <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else sortable>
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else >
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
@@ -98,7 +117,8 @@
         </el-table>
       </div>
     </div>
-    <TableSetup  :popVisible="setupTableVisible" :columns="tableColumnArrival" code="ORDER_SHORT" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup v-if="isEditActual" :popVisible="setupTableVisible" :columns="tableColumnArrival" :code="code" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+    <TableSetup v-else :popVisible="setupTableVisible" :columns="tableColumnArrival" :code="code" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :isArrival="true" :title="'到车'"></actualSendtime>
   </div>
@@ -134,6 +154,18 @@ export default {
   },
   data() {
     return {
+      code: 'ORDER_SHORT',
+      thecode: 'ORDER_SHORT',
+      visible2: false,
+      xuhaodata: {
+        label: '序号',
+        prop: 'number',
+        width: '40',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      },
       detailTableLoading: true,
       timeInfoVisible: false,
       textChangeDanger: [],
@@ -167,15 +199,15 @@ export default {
         truckIdNumber: ''
       },
       tableColumn: [],
-      tableColumnArrival: [{
-          label: '序号',
-          prop: 'id',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
-        }, {
+      tableColumnArrival: [/* {
+        label: '序号',
+        prop: 'id',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+        }, */ {
           label: '运单号',
           prop: 'shipSn',
           width: '130',
@@ -226,129 +258,135 @@ export default {
         //   fixed: false,
         //   hide: true
         // },
-      {
-        label: '实到件数',
-        prop: 'actualAmount',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
+        {
+          label: '实到件数',
+          prop: 'actualAmount',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
+          }
+        },
+        {
+          label: '实到重量(kg)',
+          prop: 'actualWeight',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
+          }
+        },
+        {
+          label: '实到体积(m³)',
+          prop: 'actualVolume',
+          width: '120',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
+          }
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载重量(kg)',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '配载体积(m³)',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单重量(kg)',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单体积(m³)',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '回扣',
+          prop: 'brokerageFee',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '200',
+          fixed: false
         }
-      },
-      {
-        label: '实到重量(kg)',
-        prop: 'actualWeight',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
-        }
-      },
-      {
-        label: '实到体积(m³)',
-        prop: 'actualVolume',
-        width: '120',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
-        }
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载重量(kg)',
-        prop: 'loadWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '配载体积(m³)',
-        prop: 'loadVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单件数',
-        prop: 'cargoAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单重量(kg)',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单体积(m³)',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到达城市',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发货人电话',
-        prop: 'shipSenderMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收货人电话',
-        prop: 'shipReceiverMobile',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '200',
-        fixed: false
-      }
       ],
       tableColumnDeiver: []
     }
@@ -388,32 +426,37 @@ export default {
   created() {
     switch (this.type) {
       case 'deliver':
+        this.code = 'ORDER_SHORT'
         this.isEditActual = true // 短驳发车
         break
       case 'arrival':
+        this.code = ''
         this.isEditActual = false // 短驳到货
+        this.tableColumn = this.$options.data().tableColumnArrival
         break
     }
+    const arrTableColumn = []
+    objectMerge2([], this.tableColumnArrival).forEach(e => {
+      if (!e.hide) {
+        if (e.expand) {
+          e.expand = false
+        }
+        arrTableColumn.push(e)
+      }
+    })
+    this.tableColumnDeiver = objectMerge2([], arrTableColumn)
     this.setTableColumn()
   },
   methods: {
     setTableColumn() { // 设置表格列
-      const arrTableColumn = []
-      objectMerge2([], this.tableColumnArrival).forEach(e => {
-        if (!e.hide) {
-          if (e.expand) {
-            e.expand = false
-          }
-          arrTableColumn.push(e)
-        }
-      })
-      this.tableColumnDeiver = objectMerge2([], arrTableColumn)
       this.tableColumn = this.isEditActual ? Object.assign([], this.tableColumnDeiver) : Object.assign([], this.tableColumnArrival)
     },
     setTable() {
       this.setupTableVisible = true
     },
     doAction(type) {
+      const columnArr = objectMerge2([], this.tableColumn)
+      columnArr.unshift(this.xuhaodata)
       switch (type) {
         case 'add': // 短驳入库
           if (this.arrivalStatus === '短驳中') {
@@ -423,16 +466,39 @@ export default {
           }
           break
         case 'print': // 打印
+          console.log('form', this.info)
+          const obj = {}
+          for (const item in this.info) {
+            obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
+          }
+          let appendTopStr = '<style>body{width: 100%;}</style>'
+          appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+            this.otherinfo.companyName +
+            '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.orgName + '   →   ' + obj.arriveOrgName +
+            '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.loadTime +
+            '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.batchNo +
+            '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.truckIdNumber +
+            '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.dirverName +
+            '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.dirverMobile +
+            '</td></tr></table></body>'
           PrintInFullPage({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
-            columns: this.tableColumn,
-            name: '送货管理'
+            columns: columnArr,
+            name: '送货管理',
+            appendTop: appendTopStr
           })
           break
         case 'export': // 导出
+          console.log('export column:', columnArr)
           SaveAsFile({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
-            columns: this.tableColumn,
+            columns: columnArr,
             name: '送货管理'
           })
           break
@@ -592,18 +658,25 @@ export default {
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
         if (data) {
-          this.detailList = data.data
+          this.detailList = (data.data || []).map(el => {
+            const start = (el.shipFromCityName || '').split(',')
+            const end = (el.shipToCityName || '').split(',')
+            el.shipFromCityName = start[2] || start[1] || start[0] || ''
+            el.shipToCityName = end[2] || end[1] || end[0] || ''
+
+            return el
+          })
           this.setData()
           this.toggleAllRows()
           this.$nextTick(() => {
             console.log('isNeedArrival', this.isNeedArrival)
             this.detailList.forEach(e => {
-                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                  if (e.warehouStatus !== 1) { // 部分入库
-                    e.actualAmount = e.loadAmount
-                    e.actualWeight = e.loadWeight
-                    e.actualVolume = e.loadVolume
-                  }
+              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                if (e.warehouStatus !== 1) { // 部分入库
+                  e.actualAmount = e.loadAmount
+                  e.actualWeight = e.loadWeight
+                  e.actualVolume = e.loadVolume
+                }
               } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
               }
             })
@@ -643,10 +716,50 @@ export default {
       }
     },
     setColumn(obj) { // 打开表格设置
-      console.log('setColumnn short:', JSON.stringify(obj))
-      this.tableColumnArrival = obj
+      if (this.isEditActual) {
+        this.tableColumnDeiver = obj
+      } else {
+        this.tableColumnArrival = obj
+      }
       this.setTableColumn()
       this.tablekey = Math.random()
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      console.log('set table:', newWidth, oldWidth, column)
+      // column.property
+      // column.label
+      // 不处理序号跟选择列
+      if (column.label !== '序号') {
+        /* this.columnWidthData = {
+          prop: column.property,
+          label: column.label,
+          width: newWidth
+        } */
+        const find = this.tableColumn.filter(el => el.prop === column.property)
+        if (find.length) {
+          find[0].width = newWidth
+
+          console.log('应该要显示保存框了')
+          this.visible2 = true
+          clearTimeout(this.tabletimer)
+          this.tabletimer = setTimeout(() => {
+            this.visible2 = false
+          }, 10000)
+        }
+      }
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
 }
@@ -660,6 +773,8 @@ export default {
   height: 100%;
   padding: 0 10px;
   position: relative;
+
+
 
   .detailTable_info {
     border-bottom: 2px dotted #ddd;
@@ -707,6 +822,21 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
+      .el-table .cell,.el-table th,.el-table td{
+        overflow: visible;
+        text-overflow: clip;
+        color: #000;
+      }
+      .el-table th{
+        font-weight: bold;
+      }
+      .el-table td{
+        overflow: hidden;
+      }
+      .el-table th div,.el-table .cell{
+        padding: 0;
+        text-align: center;
+      }
       .el-input.is-disabled .el-input__inner {
         background-color: #fff;
         color: #222;

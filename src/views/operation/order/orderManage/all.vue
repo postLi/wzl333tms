@@ -17,6 +17,7 @@
             @mouseout.native="hideSaveBox"
             placement="top"
             width="160"
+            trigger="manual"
             v-model="visible2">
             <p>表格宽度修改了，是否要保存？</p>
             <div style="text-align: right; margin: 0">
@@ -91,7 +92,7 @@ import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime, getSummaries } from '@/utils/index'
+import { parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
@@ -238,11 +239,11 @@ export default {
         'prop': 'volumeFee',
         'width': '150'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName',
         'width': '150'
       }, {
@@ -488,8 +489,7 @@ export default {
   },
   methods: {
     getSumLeft(param, type) {
-      const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
-      return getSummaries(param, propsArr)
+      return getSummaries(param, operationPropertyCalc)
     },
     viewDetails(row) {
       this.$router.push({

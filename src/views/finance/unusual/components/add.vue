@@ -15,10 +15,10 @@
           <el-form-item label="开单时间" prop="shipcreateTime">
             <el-input :value="form.shipcreateTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')" :maxlength="20" auto-complete="off"  :disabled=" true"></el-input>
           </el-form-item>
-          <el-form-item label="出发城市" prop="shipFromCityName">
+          <el-form-item label="发站" prop="shipFromCityName">
             <el-input v-model="form.shipFromCityName"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="到达城市" prop="shipToCityName">
+          <el-form-item label="到站" prop="shipToCityName">
             <el-input v-model="form.shipToCityName"  :maxlength="20" auto-complete="off" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="货品名" prop="cargoName">

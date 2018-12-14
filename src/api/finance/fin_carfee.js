@@ -96,3 +96,7 @@ export function deleteCarShort(id) {
 export function postUpdateBillCheckSelective(params) {
   return fetch.post('/api-finance/finance/tmsfinancebillcheck/v1/updateBillCheckSelective', params)
 }
+
+export function getLoadData() {
+  return fetch.get('/api-order/order/load/v1/getLoadTruck')
+}

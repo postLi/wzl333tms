@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消结算</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('cancelCount')" plain v-has:FLOW_CANCEL>取消核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -38,7 +38,7 @@
     </div>
     <!-- 表格设置弹出框 -->
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
-    <!-- 结算单 -->
+    <!-- 核销单 -->
     <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt>
   </div>
 </template>
@@ -79,13 +79,13 @@ export default {
       setupTableVisible: false,
       tableColumn: [],
       columnOrder: [{
-        label: '结算网点',
+        label: '核销网点',
         prop: 'orgName',
         width: '100',
         fixed: false
       },
       {
-        label: '结算单号',
+        label: '核销单号',
         prop: 'settlementSn',
         width: '140',
         fixed: true
@@ -97,13 +97,13 @@ export default {
         fixed: false
       },
       {
-        label: '结算类型',
+        label: '核销类型',
         prop: 'settlementIdZh',
         width: '90',
         fixed: true
       },
       {
-        label: '结算人',
+        label: '核销人',
         prop: 'settlementBy',
         width: '90',
         fixed: false
@@ -115,7 +115,7 @@ export default {
         fixed: false
       },
       {
-        label: '结算时间',
+        label: '核销时间',
         prop: 'settlementTime',
         width: '160',
         slot: (scope) => {
@@ -239,7 +239,7 @@ export default {
       }
       ],
       columnBatch: [{
-        label: '结算网点',
+        label: '核销网点',
         prop: 'orgName',
         width: '120',
         fixed: false
@@ -263,19 +263,19 @@ export default {
         fixed: false
       },
       {
-        label: '结算单号',
+        label: '核销单号',
         prop: 'settlementSn',
         width: '150',
         fixed: true
       },
       {
-        label: '结算类型',
+        label: '核销类型',
         prop: 'settlementIdZh',
         width: '110',
         fixed: true
       },
       {
-        label: '结算人',
+        label: '核销人',
         prop: 'settlementBy',
         width: '90',
         fixed: false
@@ -287,7 +287,7 @@ export default {
         fixed: false
       },
       {
-        label: '结算时间',
+        label: '核销时间',
         prop: 'settlementTime',
         width: '160',
         fixed: false,
@@ -468,7 +468,7 @@ export default {
     },
     setView() {
       // 设置表格视图
-      // 【178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算】
+      // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
       if (this.$route.query.settlementId === 178) {
         this.tableColumn = this.columnOrder // 运单视图
       } else {
@@ -505,12 +505,12 @@ export default {
         case 'expandtiure': // 记支出
           this.expandtiure()
           break
-        case 'cancelCount': // 取消结算
+        case 'cancelCount': // 取消核销
           if (isShow) {
             this.cancelCount()
           }
           break
-        case 'showCount': // 查看结算单
+        case 'showCount': // 查看核销单
           if (isShow) {
             this.showCount()
           }
@@ -537,7 +537,7 @@ export default {
       }
     },
     cancelCount() {
-      this.$confirm('确定要取消结算【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
+      this.$confirm('确定要取消核销【 ' + this.selectedList[0].settlementSn + ' 】吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -547,7 +547,7 @@ export default {
           detailFlowId: this.selectedList[0].id
         }
         postCancelSettlement(data).then(data => {
-          this.$message({ type: 'success', message: '取消结算操作成功' })
+          this.$message({ type: 'success', message: '取消核销操作成功' })
           this.fetchList()
         })
         .catch(err => {

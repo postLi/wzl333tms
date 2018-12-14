@@ -123,37 +123,7 @@
           </tr>
 
         </table>
-        <!--<el-form-item label="车牌号">-->
-        <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="司机">-->
-        <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="联系方式">-->
-        <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="对账单编号">-->
-        <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="开始时间">-->
-        <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
 
-        <!--</el-form-item>-->
-        <!--<el-form-item label="结束时间">-->
-        <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="账户账号" prop="bankAccount">-->
-        <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="账户开户行">-->
-        <!--<el-input v-model="messageInfo.bankName" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="支付宝">-->
-        <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30"></el-input>-->
-        <!--</el-form-item>-->
-        <!--<el-form-item label="微信" class="sWetPay">-->
-        <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30"></el-input>-->
-        <!--</el-form-item>-->
       </el-form>
     </div>
     <div class="sMessageCont">
@@ -260,7 +230,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>已付清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -414,7 +384,7 @@
                             :maxlength="10"></el-input>
                 </el-form-item>
               </th>
-              <th>联系方式</th>
+              <th>财务联系电话</th>
               <th>
                 <el-form-item label="" prop="orgFinancialOfficerPhone">
                   <el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off"
@@ -434,37 +404,6 @@
               </th>
             </tr>
           </table>
-          <!--<el-form-item label="备注">-->
-          <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<div class="sMessageCont_info">-->
-          <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
-          <!--</div>-->
-          <!--<el-form-item label="公司名称">-->
-          <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off"-->
-          <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgFinancialOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off"-->
-          <!--:maxlength="11"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-          <!--<el-date-picker-->
-          <!--v-model="messageButtonInfo.createTime"-->
-          <!--type="date"-->
-          <!--placeholder="选择日期">-->
-          <!--</el-date-picker>-->
-
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>
@@ -482,19 +421,19 @@
 </template>
 
 <script>
-  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
-  import { REGEX } from '@/utils/validate'
+  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
+  import {REGEX} from '@/utils/validate'
   import {
     postCarfBillCheckCarBaseInfo,
     postCarfBillCheckCarInitList,
     postCarfDtoById,
+    getLoadData,
     postCarfBillCheckCarUpdateList
   } from '@/api/finance/fin_carfee'
   import querySelect from '@/components/querySelect/index'
-  import { mapGetters } from 'vuex'
+  import {mapGetters} from 'vuex'
   import SaveDialog from './saveDialog'
-  import { getTrucK } from '@/api/operation/load'
-  import { SaveAsFileCarfeeDeliver } from '@/utils/recLodopFuncs'
+  import {SaveAsFileCarfeeDeliver} from '@/utils/recLodopFuncs'
 
   export default {
     components: {
@@ -617,15 +556,15 @@
         },
         rules: {
           'bankAccount': [
-            { message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER }
+            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ],
           'orgFinancialOfficerPhone': [
-            { message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE }
+            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
           ]
         }
       }
@@ -636,7 +575,6 @@
       ])
     },
     mounted() {
-      // this.searchCreatTime = this.defaultTime
       this.messageButtonInfo.createTime = new Date()
       this.changeOrgid(this.otherinfo, this.$route.query.id)
       if (this.$route.query.id) {
@@ -660,7 +598,6 @@
       export1() {
         if (this.searchTitle.memberName) {
           this.sendData()
-          // console.log(JSON.stringify(this.form))
           SaveAsFileCarfeeDeliver({
             data: objectMerge2({}, this.form),
             name: '送货对账'
@@ -675,9 +612,8 @@
       },
       truckName() {
         this.loading = true
-        return getTrucK().then(data => {
+        return getLoadData().then(data => {
           this.memberNameType = data.data
-          // console.log(this.memberNameType);
           this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
@@ -776,14 +712,12 @@
         }
       },
       // 查询
-
       onSubmit() {
         if (this.searchTitle.memberName) {
           if (!this.searchCreatTime[0]) {
             this.searchCreatTime = this.defaultTime
           }
           const searchObj = {}
-          // this.searchCreatTime = this.defaultTime
           searchObj.startTime = this.searchCreatTime ? parseTime(this.searchCreatTime[0], '{y}-{m}-{d} ') + '00:00:00' : ''
           searchObj.endTime = this.searchCreatTime ? parseTime(this.searchCreatTime[1], '{y}-{m}-{d} ') + '23:59:59' : ''
           this.infoSearchTime(searchObj.startTime, searchObj.endTime)
@@ -800,23 +734,6 @@
           return false
         }
       },
-      // onSubmit() {
-      //   if (this.searchTitle.memberName) {
-      //     this.fetchList()
-      //     this.fetchDealPay()
-      //     this.fetchReadyPay()
-      //   } else {
-      //     this.$message({
-      //       message: '车牌号不能为空~',
-      //       type: 'error'
-      //     })
-      //     return false
-      //   }
-      //   const searchObj = {}
-      //   searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-      //   searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-      //   this.infoSearchTime(searchObj.startTime, searchObj.endTime)
-      // },
       // 保存
       submit() {
         this.$refs['formName2'].validate((valid) => {
@@ -835,7 +752,6 @@
                   a.totalPay = el.totalPay
                   return a
                 }) : []
-
                 if (!this.form.payDetailList.length && !this.form.hadPayDetailList.length) {
                   this.$message({
                     message: '各款项不能为空~',
@@ -988,11 +904,15 @@
         this.searchAlReadyPay.endTime = endTime
       },
       getSummaries(param) {
-        const { columns, data } = param
+        const {columns, data} = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
+            return
+          }
+          if (columns[index].label === '司机' || columns[index].label === '备注') {
+            sums[index] = ''
             return
           }
           if (index === 3 || index === 4 || index === 5) {
@@ -1005,7 +925,6 @@
               const value = Number(curr)
               if (!isNaN(value)) {
                 return tmsMath._add(prev, curr)
-                // return prev + curr
               } else {
                 return prev
               }
@@ -1015,7 +934,6 @@
             sums[index] = ''
           }
         })
-
         return sums
       },
       iconDelete(index) {

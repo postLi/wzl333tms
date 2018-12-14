@@ -26,9 +26,9 @@
           <el-table-column fixed sortable type="selection" width="35">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <el-table-column :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -56,7 +56,7 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList } from '@/api/finance/financeDaily'
+import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList, getBillRecordInfo } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
@@ -90,8 +90,7 @@ export default {
       dataListTop: [],
       loading: true,
       setupTableVisible: false,
-      tableColumn: [],
-      columnOrder: [{
+      tableColumn: [{
           label: '序号',
           prop: 'id',
           width: '50',
@@ -150,18 +149,18 @@ export default {
           label: '凭证日期',
           prop: 'certTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
           label: '系统操作日期',
           prop: 'createTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -279,20 +278,20 @@ export default {
           fixed: false
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '120',
           fixed: false
         },
         {
           label: '发车类型',
-          prop: 'loadTypeId',
+          prop: 'loadTypeIdZh',
           width: '100',
           fixed: false
         },
@@ -341,9 +340,9 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     }
   },
-  created() {
-    this.setView()
-  },
+  // created() {
+  //   this.setView()
+  // },
   methods: {
     classLineRed(row, index) {
       if (row.row.billRecordStatus === 0) {
@@ -363,15 +362,15 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
-    setView() {
-      // 设置表格视图
-      // 【178-运单结算 179-干线批次结算 180-短驳结算 181-送货结算】
-      if (this.$route.query.settlementId === 178) {
-        this.tableColumn = this.columnOrder // 运单视图
-      } else {
-        this.tableColumn = this.columnOrder // 没有数据上显示运单视图
-      }
-    },
+    // setView() {
+    //   // 设置表格视图
+    //   // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
+    //   if (this.$route.query.settlementId === 178) {
+    //     this.tableColumn = this.columnOrder // 运单视图
+    //   } else {
+    //     this.tableColumn = this.columnOrder // 没有数据上显示运单视图
+    //   }
+    // },
     fetchList() {
       if (this.$route.query) {
         if (this.$route.query.searchQuery) {
@@ -380,6 +379,7 @@ export default {
         this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
         console.log('searchQuery', this.searchQuery)
         postBillRecordDetailList(this.searchQuery).then(data => {
+          this.tablekey = new Date().getTime()
           this.dataListTop = data.list
           this.total = data.total
           this.loading = false
@@ -396,7 +396,7 @@ export default {
           this.loading = false
           this._handlerCatchMsg(err)
         })
-        this.setView() // 设置视图
+        // this.setView() // 设置视图
       }
     },
     setTable() {},
@@ -408,6 +408,9 @@ export default {
       } else {
         isShow = true
       }
+       let list = this.dataListTop.filter(e => { // 只能打印导出未反核销的数据
+          return e.billRecordStatus !== 0 // billRecordStatus : 0-已被反核销 1-未反核销
+        })
       switch (type) {
         case 'income': // 新增
           if (isShow) {
@@ -426,14 +429,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-           data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : list,
             columns: this.tableColumn,
             name: '资金流水明细-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.selectedList.length > 0 ? this.selectedList : this.dataListTop,
+            data: this.selectedList.length > 0 ? this.selectedList : list,
             columns: this.tableColumn,
             name: '资金流水明细'
           })
@@ -446,25 +449,25 @@ export default {
       }
     },
     doEdit() { // 修改
-      this.cashSearchQuery.currentPage = 1
-      this.cashSearchQuery.pageSize = 100
-      this.$set(this.cashSearchQuery, 'id', this.recordId)
-      postBillRecordList(this.cashSearchQuery).then(data => {
-        console.log('cashData', data)
-        this.currentInfo = Object.assign({}, data.list[0])
-        this.isModify = true
-        this.popVisibleIncome = true
+      getBillRecordInfo({ id: this.recordId }).then(data => {
+        this.currentInfo = data
+        if (data.verifyStatusZh !== '已审核') {
+          this.isModify = true
+          this.popVisibleIncome = true
+        }else {
+          this.$message.warning('凭证【 ' + data.verifyStatusZh + ' 】不可修改')
+        }
         this.$refs.multipleTable.clearSelection()
       })
     },
     backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
       let selectedList = Object.assign([], this.selectedList).filter(e => {
-        return e.verifyStatusZh === '未审核'
+        return (e.verifyStatusZh === '未审核' && e.dataSrcZh === '核销产生')
       })
       let count = selectedList.length
       if (this.selectedList.length !== count) {
-        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+        this.$message.warning('凭证【已审核】和【手工录入】不可反核销')
       }
       if (count === 0) {
         this.$refs.multipleTable.clearSelection()
@@ -489,8 +492,8 @@ export default {
             cancelVerification(cancelQuery).then(data => {
                 this.loading = false
                 this.$message.success('反核销成功！')
-                this.$refs.multipleTable.clearSelection()
                 this.fetchList()
+                this.$refs.multipleTable.clearSelection()
                 console.warn('dataListTop', this.dataListTop.length)
 
               })

@@ -8,7 +8,10 @@
         <el-button type="success" :size="btnsize" icon="el-icon-setting" @click="setInfo" plain class="table_setup" :disabled="isDisBtn" v-has:LOADTRACK4>在途跟踪</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo" :key="tablekey">
+        <el-table ref="multipleTable" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+        :summary-method="getSumLeft"
+          show-summary
+         tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @row-dblclick="setInfo" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -43,7 +46,7 @@ import { postTransferList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfoTransfer from './components/editInfoTransfer'
 import TableSetup from '@/components/tableSetup'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 export default {
   components: {
     SearchForm,
@@ -90,43 +93,43 @@ export default {
         }
       },
       tableColumn: [
-      {
-          label: "中转单号",
-          prop: "oddNumbers",
-          width: "140",
-          fixed: true
-        },
-      {
-          label: "运单号",
-          prop: "shipSn",
-          width: "120",
+        {
+          label: '中转单号',
+          prop: 'oddNumbers',
+          width: '140',
           fixed: true
         },
         {
-          label: "运单状态",
-          prop: "shipStatusName",
-          width: "100",
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
           fixed: true
         },
-         {
-          label: "开单网点",
-          prop: "shipFromOrgidName",
-          width: "110"
+        {
+          label: '运单状态',
+          prop: 'shipStatusName',
+          width: '100',
+          fixed: true
         },
         {
-          label: "承运商",
-          prop: "carrierName",
-          width: "120"
+          label: '开单网点',
+          prop: 'shipFromOrgidName',
+          width: '110'
         },
         {
-          label: "承运商电话",
-          prop: "carrierMobile",
-          width: "120"
+          label: '承运商',
+          prop: 'carrierName',
+          width: '120'
         },
         {
-          label: "到站电话",
-          prop: "arrivalMobile",
-          width: "120"
+          label: '承运商电话',
+          prop: 'carrierMobile',
+          width: '120'
+        },
+        {
+          label: '到站电话',
+          prop: 'arrivalMobile',
+          width: '120'
         },
 
         // {
@@ -135,166 +138,166 @@ export default {
         //   width: "120"
         // },
         {
-          label: "开单时间",
-          prop: "createTime",
-          width: "160",
+          label: '开单时间',
+          prop: 'createTime',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
-          label: "中转时间",
-          prop: "transferTime",
-          width: "160",
+          label: '中转时间',
+          prop: 'transferTime',
+          width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.transferTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {
-          label: "中转运费",
-          prop: "transferCharge",
-          width: "120"
+          label: '中转运费',
+          prop: 'transferCharge',
+          width: '120'
         },
         {
-          label: "中转送货费",
-          prop: "deliveryExpense",
-          width: "120"
+          label: '中转送货费',
+          prop: 'deliveryExpense',
+          width: '120'
         },
         {
-          label: "中转费其他费",
-          prop: "transferOtherFee",
-          width: "120"
+          label: '中转费其他费',
+          prop: 'transferOtherFee',
+          width: '120'
         },
         {
-          label: "中转费合计",
-          prop: "totalCost",
-          width: "120"
+          label: '中转费合计',
+          prop: 'totalCost',
+          width: '120'
         },
         {
-          label: "中转付款方式",
-          prop: "paymentName",
-          width: "120"
+          label: '中转付款方式',
+          prop: 'paymentName',
+          width: '120'
         },
         {
-          label: "代收货款",
-          prop: "codService",
-          width: "120"
+          label: '代收货款',
+          prop: 'codService',
+          width: '120'
         },
         {
-          label: "发货人",
-          prop: "senderName",
-          width: "120"
+          label: '发货人',
+          prop: 'senderName',
+          width: '120'
         },
         {
-          label: "发货人电话",
-          prop: "senderMobile",
-          width: "120"
+          label: '发货人电话',
+          prop: 'senderMobile',
+          width: '120'
         },
         {
-          label: "收货人",
-          prop: "receiverName",
-          width: "120"
+          label: '收货人',
+          prop: 'receiverName',
+          width: '120'
         },
         {
-          label: "收货人电话",
-          prop: "receiverMobile",
-          width: "120"
+          label: '收货人电话',
+          prop: 'receiverMobile',
+          width: '120'
         },
         {
-          label: "出发城市",
-          prop: "shipFromCityName",
-          width: "120"
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '120'
         },
         {
-          label: "到达城市",
-          prop: "shipToCityName",
-          width: "120"
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '120'
         },
         {
-          label: "货物名称",
-          prop: "cargoName",
-          width: "120"
+          label: '货物名称',
+          prop: 'cargoName',
+          width: '120'
         },
         {
-          label: "件数",
-          prop: "cargoAmount",
-          width: "120"
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '120'
         },
         {
-          label: "重量",
-          prop: "cargoWeight",
-          width: "120"
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '120'
         },
         {
-          label: "体积",
-          prop: "cargoVolume",
-          width: "120"
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '120'
         },
         {
-          label: "包装",
-          prop: "cargoPack",
-          width: "120"
+          label: '包装',
+          prop: 'cargoPack',
+          width: '120'
         },
         {
-          label: "运单备注",
-          prop: "shipRemarks",
-          width: "120"
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120'
         },
         {
-          label: "中转备注",
-          prop: "remark",
-          width: "120"
+          label: '中转备注',
+          prop: 'remark',
+          width: '120'
         },
         {
-          label: "发货单位",
-          prop: "senderUnit",
-          width: "120"
+          label: '发货单位',
+          prop: 'senderUnit',
+          width: '120'
         },
         {
-          label: "发货地址",
-          prop: "senderAddr",
-          width: "120"
+          label: '发货地址',
+          prop: 'senderAddr',
+          width: '120'
         }, {
-          label: "收货单位",
-          prop: "receiverUnit",
-          width: "120"
+          label: '收货单位',
+          prop: 'receiverUnit',
+          width: '120'
         },
         {
-          label: "收货地址",
-          prop: "receiverAddr",
-          width: "120"
+          label: '收货地址',
+          prop: 'receiverAddr',
+          width: '120'
         },
         {
-          label: "运费",
-          prop: "shipFee",
-          width: "120"
+          label: '运费',
+          prop: 'shipFee',
+          width: '120'
         },
         {
-          label: "交接方式",
-          prop: "shipDeliveryMethodName",
-          width: "120"
+          label: '交接方式',
+          prop: 'shipDeliveryMethodName',
+          width: '120'
         },
         {
-          label: "货号",
-          prop: "shipGoodsSn",
-          width: "160"
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '160'
         },
         {
-          label: "品种规格",
-          prop: "description",
-          width: "120"
+          label: '品种规格',
+          prop: 'description',
+          width: '120'
         },
         {
-          label: "重量单价",
-          prop: "weightFee",
-          width: "100"
+          label: '重量单价',
+          prop: 'weightFee',
+          width: '100'
         },
         {
-          label: "体积单价",
-          prop: "volumeFee",
-          width: "100"
+          label: '体积单价',
+          prop: 'volumeFee',
+          width: '100'
         },
-        /*{
+        /* {
           label: "件数单价",
           prop: "batchTypeId",
           width: "120"
@@ -305,59 +308,59 @@ export default {
         //   width: "120"
         // },
         {
-          label: "回单要求",
-          prop: "shipReceiptRequireName",
-          width: "120"
+          label: '回单要求',
+          prop: 'shipReceiptRequireName',
+          width: '120'
         },
         {
-          label: "回单份数",
-          prop: "shipReceiptNum",
-          width: "120"
+          label: '回单份数',
+          prop: 'shipReceiptNum',
+          width: '120'
         },
         {
-          label: "代收款手续费",
-          prop: "commissionFee",
-          width: "120"
+          label: '代收款手续费',
+          prop: 'commissionFee',
+          width: '120'
         },
         {
-          label: "付款方式",
-          prop: "shipPayWayName",
-          width: "100"
+          label: '付款方式',
+          prop: 'shipPayWayName',
+          width: '100'
         },
         {
-          label: "现付",
-          prop: "shipNowpayFee",
-          width: "100"
+          label: '现付',
+          prop: 'shipNowpayFee',
+          width: '100'
         },
         {
-          label: "到付",
-          prop: "shipArrivepayFee",
-          width: "100"
+          label: '到付',
+          prop: 'shipArrivepayFee',
+          width: '100'
         },
         {
-          label: "回单付",
-          prop: "shipReceiptpayFee",
-          width: "100"
+          label: '回单付',
+          prop: 'shipReceiptpayFee',
+          width: '100'
         },
         {
-          label: "月结",
-          prop: "shipMonthpayFee",
-          width: "100"
+          label: '月结',
+          prop: 'shipMonthpayFee',
+          width: '100'
         },
         {
-          label: "运费合计",
-          prop: "shipTotalFee",
-          width: "120"
+          label: '运费合计',
+          prop: 'shipTotalFee',
+          width: '120'
         },
         {
-          label: "制单人",
-          prop: "name",
-          width: "120"
+          label: '制单人',
+          prop: 'name',
+          width: '120'
         },
         {
-          label: "回扣",
-          prop: "brokerageFee",
-          width: "100"
+          label: '回扣',
+          prop: 'brokerageFee',
+          width: '100'
         },
         //  {
         //   label: "客户单号",
@@ -365,59 +368,59 @@ export default {
         //   width: "120"
         // },
         {
-          label: "送货费",
-          prop: "deliveryFee",
-          width: "100"
+          label: '送货费',
+          prop: 'deliveryFee',
+          width: '100'
         },
         {
-          label: "声明价值",
-          prop: "productPrice",
-          width: "120"
+          label: '声明价值',
+          prop: 'productPrice',
+          width: '120'
         },
         {
-          label: "保险费",
-          prop: "insuranceFee",
-          width: "120"
+          label: '保险费',
+          prop: 'insuranceFee',
+          width: '120'
         },
         {
-          label: "装卸费",
-          prop: "handlingFee",
-          width: "120"
+          label: '装卸费',
+          prop: 'handlingFee',
+          width: '120'
         },
         {
-          label: "包装费",
-          prop: "packageFee",
-          width: "120"
+          label: '包装费',
+          prop: 'packageFee',
+          width: '120'
         },
         {
-          label: "提货费",
-          prop: "pickupFee",
-          width: "120"
+          label: '提货费',
+          prop: 'pickupFee',
+          width: '120'
         },
         {
-          label: "实际提货费",
-          prop: "realityhandlingFee",
-          width: "120"
+          label: '实际提货费',
+          prop: 'realityhandlingFee',
+          width: '120'
         },
         {
-          label: "上楼费",
-          prop: "goupstairsFee",
-          width: "120"
+          label: '上楼费',
+          prop: 'goupstairsFee',
+          width: '120'
         },
         {
-          label: "报关费",
-          prop: "customsFee",
-          width: "120"
+          label: '报关费',
+          prop: 'customsFee',
+          width: '120'
         },
         {
-          label: "其他费收入",
-          prop: "otherfeeIn",
-          width: "120"
+          label: '其他费收入',
+          prop: 'otherfeeIn',
+          width: '120'
         },
         {
-          label: "其他费支出",
-          prop: "otherfeeOut",
-          width: "120"
+          label: '其他费支出',
+          prop: 'otherfeeOut',
+          width: '120'
         }
       ]
     }
@@ -431,8 +434,11 @@ export default {
     this.fetchList()
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     getSearchParam(obj) {
-       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj) // 38-短驳 39-干线 40-送货
       if (!this.searchQuery.vo.orgId) {
@@ -498,7 +504,7 @@ export default {
         }
       })
       .catch(err => {
-         this._handlerCatchMsg(err)
+        this._handlerCatchMsg(err)
       })
       this.isTransferTrack()
     },

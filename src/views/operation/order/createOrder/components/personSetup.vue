@@ -7,10 +7,10 @@
     :close-on-click-modal="false"
     :modal-append-to-body="true"
     append-to-body
-    @open="getPersonalSetup"
-    width="600px"
+    @opened="getPersonalSetup"
+    width="725px"
     :before-close="close">
-    <el-form :model="form" label-width="100px" ref="ruleForm" :inline="true" label-position="right" size="mini">
+    <el-form :model="form" label-width="120px" ref="ruleForm" :inline="true" label-position="right" size="mini">
      <el-collapse v-model="activeNames">
       <el-collapse-item name="setup1" title="运单默认值设置">
         <el-form-item>
@@ -23,28 +23,39 @@
       <el-collapse-item name="setup2" title="快捷键设置">
         <div @keydown.stop.prevent @keyup.stop.prevent @keypress.stop.prevent>
         <el-form-item label="清空">
-          <el-input v-model="form.printKey.cleanKey" @keydown.stop.prevent.native="showkeycode('cleanKey', $event)" placeholder=""></el-input>
+          <el-input :disabled="!form.printKey.cleanKeyVisible" v-model="form.printKey.cleanKey" @keydown.stop.prevent.native="showkeycode('cleanKey', $event)" placeholder=""><template slot="append"><el-checkbox v-model="form.printKey.cleanKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         <el-form-item label="打印标签">
-          <el-input v-model="form.printKey.printLibkey" placeholder="" @keydown.prevent.stop.native="showkeycode('printLibkey', $event)"></el-input>
+          <el-input :disabled="!form.printKey.printLibkeyVisible" v-model="form.printKey.printLibkey" placeholder="" @keydown.prevent.stop.native="showkeycode('printLibkey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.printLibkeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         <el-form-item label="打印运单">
-          <el-input v-model="form.printKey.printShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('printShipKey', $event)"></el-input>
+          <el-input :disabled="!form.printKey.printShipKeyVisible" v-model="form.printKey.printShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('printShipKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.printShipKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         <el-form-item label="保存运单">
-          <el-input v-model="form.printKey.saveShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveShipKey', $event)"></el-input>
+          <el-input :disabled="!form.printKey.saveShipKeyVisible" v-model="form.printKey.saveShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveShipKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.saveShipKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         <el-form-item label="保存并新增">
-          <el-input v-model="form.printKey.saveInsertKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveInsertKey', $event)"></el-input>
+          <el-input :disabled="!form.printKey.saveInsertKeyVisible" v-model="form.printKey.saveInsertKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveInsertKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.saveInsertKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         <el-form-item label="保存并打印">
-          <el-input v-model="form.printKey.savePrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('savePrintKey', $event)"></el-input>
+          <el-input :disabled="!form.printKey.savePrintKeyVisible" v-model="form.printKey.savePrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('savePrintKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.savePrintKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
+        </el-form-item>
+        <el-form-item label="打印运单和标签">
+          <el-input :disabled="!form.printKey.printLibShipKeyVisible" v-model="form.printKey.printLibShipKey" placeholder="" @keydown.prevent.stop.native="showkeycode('printLibShipKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.printLibShipKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
+        </el-form-item>
+        <el-form-item label="保存新增并打印">
+          <el-input :disabled="!form.printKey.saveInsertPrintKeyVisible" v-model="form.printKey.saveInsertPrintKey" placeholder="" @keydown.prevent.stop.native="showkeycode('saveInsertPrintKey', $event)"><template slot="append"><el-checkbox v-model="form.printKey.saveInsertPrintKeyVisible" true-label="1" false-label="0" title="是否显示"></el-checkbox></template></el-input>
         </el-form-item>
         </div>
       </el-collapse-item>
       <el-collapse-item name="setup3" title="运单默认值设置">
         <el-form-item label="交接方式">
           <SelectType type="ship_delivery_method" v-model="form.shipSetKey.handoverMode">
+            <template slot-scope="{item}">
+              <el-option class="checkSelectLabel" :disabled="!!form.shipSetKey.handoverModeDict[item.id]" :key="item.id" :label="item.dictName" :value="item.id">
+                {{item.dictName}}<el-checkbox @click.stop.prevent.native="setSelectItem(form.shipSetKey.handoverModeDict,item.id)"  v-model="form.shipSetKey.handoverModeDict[item.id]" :true-label="0" :false-label="1" title="是否显示"></el-checkbox>
+              </el-option>
+            </template>
           </SelectType>
         </el-form-item>
         <el-form-item label="回单类型">
@@ -52,7 +63,7 @@
           </SelectType>
         </el-form-item>
         <el-form-item label="回单份数">
-          <el-input v-model="form.shipSetKey.receiptNum" placeholder=""></el-input>
+          <el-input class="huidanfenshu" v-model="form.shipSetKey.receiptNum" placeholder=""></el-input>
         </el-form-item>
         <el-form-item label="付款方式">
           <SelectType type="ship_pay_way" v-model="form.shipSetKey.paymentMode">
@@ -114,12 +125,34 @@ export default {
           'saveShipKey': '',
           'cleanKey': '',
           'printShipKey': '',
-          saveInsertKey: ''
+          'saveInsertKey': '',
+          'printLibShipKey': '',
+          'saveInsertPrintKey': '',
+          'printLibkeyVisible': 1,
+          'savePrintKeyVisible': 1,
+          'saveShipKeyVisible': 1,
+          'cleanKeyVisible': 1,
+          'printShipKeyVisible': 1,
+          'saveInsertKeyVisible': 1,
+          'printLibShipKeyVisible': 1,
+          'saveInsertPrintKeyVisible': 1
         },
         'shipSetKey': {
+          // 0 show
+          // 1 hidden
+          handoverModeDict: {
+            '68': 0,
+            '69': 0,
+            '70': 0,
+            '71': 0,
+            '72': 0,
+            '73': 0,
+            '74': 0,
+            '75': 0
+          },
+          handoverMode: '68',
           'receiptType': '',
           'receiptNum': '',
-          'handoverMode': '',
           'paymentMode': '',
           'transportMode': '',
           'businessType': ''
@@ -132,6 +165,14 @@ export default {
     this.userId = this.otherinfo.id
   },
   methods: {
+    setSelectItem(item, id) {
+      const val = item[id]
+      if (val === 0) {
+        item[id] = 1
+      } else {
+        item[id] = 0
+      }
+    },
     close(done) {
       this.$emit('update:dialogVisiblePerson', false)
       this.$emit('close')
@@ -185,6 +226,9 @@ export default {
 }
 </script>
 <style lang="scss">
+.checkSelectLabel .el-checkbox{
+  float: right;
+}
 .personalPopSetup{
   .el-dialog__header, .el-dialog__footer{
     background: #eee;
@@ -222,6 +266,13 @@ export default {
   }
   .dragArea{
 
+  }
+  .huidanfenshu{
+    display: block;
+    width: 178px;
+    .el-input__inner{
+      padding-right: 30px;
+    }
   }
   .list-complete-item{
     clear: both;

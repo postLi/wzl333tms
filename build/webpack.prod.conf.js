@@ -101,7 +101,8 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       chunks:['app'],
-      minChunks: function (module, count) {
+      minChunks: 3,
+      /* minChunks: function (module, count) {
 
         // any required modules inside node_modules are extracted to vendor
         return (
@@ -111,7 +112,7 @@ var webpackConfig = merge(baseWebpackConfig, {
             path.join(__dirname, '../node_modules')
           ) === 0
         )
-      }
+      } */
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'polyfills',

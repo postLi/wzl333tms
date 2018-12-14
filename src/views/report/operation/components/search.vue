@@ -9,7 +9,7 @@
         <SelectTree v-model="searchForm.orgId" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}">
         </SelectTree>
       </el-form-item>
-      <el-form-item label="到达城市" prop="shipToCityName">
+      <el-form-item label="到站" prop="shipToCityName">
        <el-input v-model="searchForm.shipToCityName"></el-input>
       </el-form-item>
       <el-form-item label="时间类型" prop="selectType">

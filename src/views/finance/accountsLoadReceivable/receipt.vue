@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
     <div class="accountsLoad_table">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -20,7 +20,7 @@
             </template>
           </el-table-column>
           <el-table-column fixed :render-header="setHeader" width="50">
-            <template slot-scope="scope">
+            <template slot-scope="scope" >
               <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
@@ -56,7 +56,7 @@
             </template>
           </el-table-column>
           <el-table-column :render-header="setHeader2" fixed width="50">
-            <template slot-scope="scope">
+            <template slot-scope="scope" >
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
@@ -155,7 +155,7 @@ export default {
         fixed: false
       },
       {
-        label: '结算状态',
+        label: '核销状态',
         prop: 'totalStatusCn',
         width: '120'
       },
@@ -181,10 +181,10 @@ export default {
         'label': '回单付',
         'prop': 'receiptpayFee'
       }, {
-        'label': '回单付结算状态',
+        'label': '回单付核销状态',
         'prop': 'receiptpayStateCn'
       }, {
-        'label': '已结回单付',
+        'label': '已核销回单付',
         width: '100',
         'prop': 'finishReceiptpayFee',
           slot: (scope) => {
@@ -193,7 +193,7 @@ export default {
         }
 
       }, {
-        'label': '未结回单付',
+        'label': '未核销回单付',
          width: '100',
         'prop': 'notReceiptpayFee',
           slot: (scope) => {
@@ -202,7 +202,7 @@ export default {
         }
       },
       {
-        label: '实结回单付',
+        label: '实际核销回单付',
         prop: 'inputReceiptpayFee',
         fixed: false,
         expand: true,
@@ -234,13 +234,13 @@ export default {
         }
       },
       {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '120',
         fixed: false
       },
       {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '120',
         fixed: false
@@ -289,6 +289,16 @@ export default {
       return this.rightTable.length
     }
   },
+   watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
     this.getList()
   },
@@ -321,6 +331,7 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+      this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
@@ -337,7 +348,7 @@ export default {
       if (!this.isFresh) {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
-          // 过滤未完成结算的数据
+          // 过滤未完成核销的数据
           this.leftTable = Object.assign([], data.list.filter(el => {
             return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.receiptpayState)
           }))
@@ -378,13 +389,19 @@ export default {
       }else {
         this.textChangeDanger[index] = false
       }
+       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notReceiptpayFee) {
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
+      }else {
+        this.isGoReceipt = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
@@ -420,24 +437,34 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
-          // const orgItem = this.orgLeftTable.indexOf(e)
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
+          // // const orgItem = this.orgLeftTable.indexOf(e)
 
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
 
-          }
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -518,7 +545,7 @@ export default {
     openDialog() {
       this.popVisibleDialog = true
     },
-    // 结算前整理数据
+    // 核销前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
       // this.tableReceiptInfo = []
@@ -541,7 +568,7 @@ export default {
             // }, item))
           }
 
-         /*  if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+         /*  if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
             this.tableReceiptInfo.push(item)
           } */
           /* if (ischeck) {
@@ -550,10 +577,10 @@ export default {
         })
         this.infoTable.amount = amount
         amount = 0
-        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
+        if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
       }
     },
@@ -598,7 +625,9 @@ export default {
 // settlementId 178
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader{
-  position: static;
+.receivableTable {
+  .tableHeadItemBtn .setTableHeader {
+    position: static;
+  }
 }
 </style>

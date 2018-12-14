@@ -22,7 +22,7 @@
             </li>
             <li>
               <el-form-item label="联系号码:" prop="customSend.customerMobile">
-                <querySelect search="customerMobile" type="sender" valuekey="customerMobile"
+                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" :maxlength="20"
                              v-model="form.customSend.customerMobile" @change="setSender" :disabled="isDbclick"/>
               </el-form-item>
             </li>
@@ -46,7 +46,7 @@
             </li>
             <li class="marginTop_10">
               <el-form-item label="收货人:" prop="customRece.customerName">
-                <querySelect search="customerName" type="receiver" valuekey="customerName"
+                <querySelect search="customerName" type="receiver" valuekey="customerName" :maxlength="20"
                              v-model="form.customRece.customerName" @change="setReceiver" :disabled="isDbclick"/>
               </el-form-item>
             </li>
@@ -117,16 +117,16 @@
             <tbody>
             <tr>
               <td>
-                <el-form-item label="出发城市">
+                <el-form-item label="发站">
 
-                  <querySelect search="longAddr" @change="selectFromCity" type="city"
+                  <queryCity search="longAddr" @change="selectFromCity" type="city"
                                v-model="form.tmsOrderPre.orderFromCityName" :remote="true" :disabled="isDbclick"
-                               show="select"/>
+                               />
                 </el-form-item>
               </td>
               <td>
-                <el-form-item label="到达城市" prop="tmsOrderPre.orderToCityName">
-                  <querySelect @change="selectToCity" show="select" search="longAddr" type="city"
+                <el-form-item label="到站" prop="tmsOrderPre.orderToCityName">
+                  <queryCity @change="selectToCity"  search="longAddr" type="city"
                                v-model="form.tmsOrderPre.orderToCityName" :remote="true" :disabled="isDbclick"/>
                 </el-form-item>
               </td>
@@ -220,6 +220,7 @@
   import SelectTree from '@/components/selectTree/index'
   import SelectType from '@/components/selectType/index'
   import querySelect from '@/components/querySelect/index'
+  import queryCity from '@/components/querySelect/city'
   import { mapGetters } from 'vuex'
   import { objectMerge2 } from '@/utils/index'
 
@@ -229,7 +230,8 @@
       Upload,
       SelectTree,
       SelectType,
-      querySelect
+      querySelect,
+      queryCity
     },
     props: {
       popVisible: {
@@ -315,22 +317,20 @@
         ke1yVal: '',
         rules: {
           'tmsOrderPre.orderToCityName': [
-            { required: true, validator: this.validateIsEmpty('到达城市不能为空') }
+            { required: true, validator: this.validateIsEmpty('到站不能为空') }
           ],
           'customSend.customerName': [
             // { required: true, validator: this.validateIsEmpty('发货人不能为空'), trigger: 'blur' },
             { required: true, validator: validcustomerName }
           ],
           'customSend.customerMobile': [
-            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') },
-            { validator: validateMobile }
+            { required: true, validator: this.validateIsEmpty('发货人联系电话不能为空') }
           ],
           'customRece.customerName': [
             { required: true, validator: this.validateIsEmpty('收货人不能为空') }
           ],
           'customRece.customerMobile': [
-            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') },
-            { validator: validateMobile }
+            { required: true, validator: this.validateIsEmpty('收货人联系电话不能为空') }
           ],
           'tmsOrderCargoList.cargoName': [
             { validator: this.validateIsEmpty('货品名不能为空') }
@@ -584,7 +584,7 @@
           this.checkShowMessage = false
         }
       },
-      // 选择出发城市
+      // 选择发站
       selectFromCity(item, city) {
         if (item) {
           this.form.tmsOrderPre.orderFromCityCode = item.id
@@ -593,7 +593,7 @@
           // this.form.tmsOrderPre.orderFromCityCode = city || ''
         }
       },
-      // 选择到达城市
+      // 选择到站
       selectToCity(item, city) {
         if (item) {
           this.form.tmsOrderPre.orderToCityCode = item.id

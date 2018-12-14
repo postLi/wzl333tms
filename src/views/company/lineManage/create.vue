@@ -1,19 +1,19 @@
 <template>
   <div class="create-range page-main identification">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
         <div class="prompt">
             <p><span class="tishi"><i class="el-icon-warning"></i>小提示： </span>(打<span class="star">*</span>号为必填项)</p>
         </div>
         <div class="searchInformation information">
             <h2>基本信息</h2>
             <el-form-item label="出发网点：" prop="fromOrgid" label-width="100px">
-                <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.orgid" />
+                <select-tree :disabled="unable" v-model="ruleForm.fromOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
-            <el-form-item label="出发城市：" label-width="100px" prop="startLocation">
+            <el-form-item label="发站：" label-width="100px" prop="startLocation">
                 <el-input :value="ruleForm.startLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeStart" :ifAera = 'true' class="form-control" @testCity="ifProvice('startLocation')" v-else>
-                    <el-input v-model="ruleForm.startLocation" placeholder="请选择出发城市" ></el-input>
+                    <el-input v-model="ruleForm.startLocation" placeholder="请选择发站" ></el-input>
                 </vregion>
             </el-form-item>
             <el-form-item label="联系人：" prop="rangeFromContacts" label-width="100px">
@@ -24,13 +24,13 @@
                         v-number-only :disabled="unable" type="text"></div>
             </el-form-item><br>
             <el-form-item label="到达网点：" prop="toOrgid" label-width="100px">
-                <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.orgid" />
+                <select-tree :disabled="unable" v-model="ruleForm.toOrgid" :orgid="otherinfo.companyId" />
             </el-form-item>
-            <el-form-item label="到达城市：" label-width="100px" prop="endLocation">
+            <el-form-item label="到站：" label-width="100px" prop="endLocation">
                 <el-input v-model="ruleForm.endLocation" v-if="unable" disabled></el-input>
 
                 <vregion :ui="true" @values="regionChangeEnd" :ifAera = 'true' class="form-control"  @testCity="ifProvice('endLocation')" v-else>
-                    <el-input v-model="ruleForm.endLocation"  placeholder="请选择到达城市"></el-input>
+                    <el-input v-model="ruleForm.endLocation"  placeholder="请选择到站"></el-input>
                 </vregion>
             </el-form-item>
             <el-form-item label="联系人：" prop="rangeToContacts" label-width="100px">
@@ -246,9 +246,9 @@ export default {
 
         'fromOrgid': '',
         'lowerPrice': '', // 最低一票价
-        'priceAbnormal': '',
-        'priceBigabnormal': '',
-        'priceNormal': '',
+        'priceAbnormal': 30,
+        'priceBigabnormal': 30,
+        'priceNormal': 10,
         'rangeFromArea': '',
         'rangeFromCity': '',
         'rangeFromContacts': '',
@@ -261,7 +261,7 @@ export default {
         'rangeToProvince': '',
         'toOrgid': '',
         'transportAging': '', // 0-1 3-1
-        'transportAgingType': '', // 0 天 1 小时 2 多天
+        'transportAgingType': 0, // 0 天 1 小时 2 多天
         'transportRemark': ''
       },
       ligthPriceForms: [
@@ -288,16 +288,16 @@ export default {
                     { required: true, message: '请选择到达网点', trigger: 'blur' }
         ],
         startLocation: [
-                    { required: true, message: '请输入出发城市', trigger: 'change' }
+                    { required: true, message: '请输入发站', trigger: 'change' }
         ],
         endLocation: [
-                    { required: true, message: '请输入到达城市', trigger: 'change' }
+                    { required: true, message: '请输入到站', trigger: 'change' }
         ],
         rangeFromContacts: [
-                    { message: '请输入出发城市联系人信息', trigger: 'blur' }
+                    { message: '请输入发站联系人信息', trigger: 'blur' }
         ],
         rangeToContacts: [
-                    { message: '请输入到达城市联系人信息', trigger: 'blur' }
+                    { message: '请输入到站联系人信息', trigger: 'blur' }
         ],
         rangeFromMobile: [
                     { required: true, validator: checkrangeFromMobile, trigger: 'change' }
@@ -360,7 +360,7 @@ export default {
   methods: {
     setInputVal(val, item, name) {
     //   this.$set(this.form.tmsOrderCargoList, name, val)
-      this.$set(item, name, Number(val) || 0)
+      this.$set(item, name, isNaN(parseFloat(val, 10)) ? '' : parseFloat(val, 10))
     },
     checkPrice() {
       let a = this.ruleForm.priceNormal
@@ -377,6 +377,10 @@ export default {
     },
     ifWrong(item, idx) {
       const flag = item[idx].endVolume <= item[idx].startVolume
+      if (item[idx].endVolume === '' && idx >= 1 && idx === (item.length - 1)) {
+        // 不处理最后一栏终止运量
+        return false
+      }
       if (flag) {
         this.$message({
           type: 'info',
@@ -411,7 +415,7 @@ export default {
       if (this.ruleForm.endLocation == this.ruleForm.startLocation) {
         this.$message({
           type: 'info',
-          message: '出发城市不可与到达城市重复！'
+          message: '发站不可与到站重复！'
         })
         this.ruleForm.endLocation = ''
         return
@@ -482,7 +486,7 @@ export default {
               this.ruleForm[i] = res.data[i]
             }
             this.ruleForm.id = res.data.id
-          // 出发城市
+          // 发站
             this.ruleForm.startLocation = data.rangeFromProvince + (this.isSpecialCity(data.rangeFromProvince) ? '' : data.rangeFromCity) + data.rangeFromArea
             this.ruleForm.endLocation = data.rangeToProvince + (this.isSpecialCity(data.rangeToProvince) ? '' : data.rangeToCity) + data.rangeToArea
             // 价格时效
@@ -491,6 +495,8 @@ export default {
               this.ruleForm.transportAging1 = data.transportAging.split('-')[0] || ''
               this.ruleForm.transportAging2 = data.transportAging.split('-')[1] || ''
             }
+            this.ruleForm.transportAgingType = parseInt(data.transportAgingType, 10) || 0
+
             // 重货、轻货
 
             if (data.heavePrice.length) {
@@ -630,19 +636,11 @@ export default {
         ifNull = false
       }
       // 检查是否选了时效类别但没填数据时提示
-      if (this.ruleForm.transportAgingType !== '') {
-        if (this.ruleForm.transportAgingType === 2) {
-          if (!this.ruleForm.transportAging1 || !this.ruleForm.transportAging2) {
-            messageInfo = '请填写时效值'
-            ifNull = false
-          }
-        } else if (!this.ruleForm.transportAging) {
-          messageInfo = '请填写时效值'
-          ifNull = false
-        }
-      } else {
-        if (this.ruleForm.transportAging) {
-          messageInfo = '请选择时效类型'
+      if (this.ruleForm.transportAgingType === 2) {
+        const sa = Number(this.ruleForm.transportAging1) || 0
+        const sb = Number(this.ruleForm.transportAging2) || 0
+        if (((sa + sb) && !(sa * sb)) || (sa > sb)) {
+          messageInfo = '请填写正确的时效值'
           ifNull = false
         }
       }
@@ -659,7 +657,7 @@ export default {
 
             // 针对数据进行格式化处理
             // 处理运输时效
-            if (data.transportAgingType === 2) {
+            if (data.transportAgingType === 2 && data.transportAging1 && data.transportAging2) {
               data.transportAging = data.transportAging1 + '-' + data.transportAging2
             }
             // 处理重货/轻货
@@ -728,6 +726,10 @@ export default {
 
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.ruleForm.transportAgingType = 0
+      this.ruleForm.priceAbnormal = 30
+      this.ruleForm.priceBigabnormal = 30
+      this.ruleForm.priceNormal = 10
       this.ligthPriceForms = [
         {
           startVolume: '0',

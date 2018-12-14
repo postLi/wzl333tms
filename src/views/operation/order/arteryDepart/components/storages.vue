@@ -146,15 +146,32 @@
                   </el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
-                  </el-button>
+                  <el-popover
+                    @mouseenter.native="showSaveBox"
+                    @mouseout.native="hideSaveBox"
+                    placement="top"
+                    width="160"
+                    trigger="manual"
+                    v-model="visible2">
+                    <p>表格宽度修改了，是否要保存？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+                      <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+                    </div>
+                    <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+                  </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-                    <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+                  <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                    <el-table-column fixed type="selection" width="50"></el-table-column>
+                    <el-table-column fixed label="序号" prop="number" width="50">
+                    <template slot-scope="scope">
+                      {{scope.$index + 1}}
+                    </template>
+                  </el-table-column>
                     <template v-for="column in tableColumn">
-                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -264,6 +281,7 @@
           <el-tab-pane label="运输合同" name="third">
             <div class="pact" id="contract">
               <el-form :model="sendContract" :rules="rules" ref="formName">
+                <div class="sComName">{{ sendContract.nomineeCompany }}</div>
                 <div class="pact_top">
                   <!--<h3>货物运输合同</h3>-->
                   <div class="sTitle">
@@ -301,7 +319,11 @@
                   </div>
                   <div class="pact_title">
                     <el-form-item label="承运方:" prop="">
-                      <el-input v-model="formModel.dirverName" auto-complete="off" disabled clearable></el-input>
+                      <el-select v-model="sendContract.carrier" :disabled="!editFn">
+                        <el-option v-for="item in carrierItem" :key="item.value" :label="item.value" :value="item.value" class="artselect-lll" style="width: 340px">
+                        </el-option>
+                      </el-select>
+                      <!--<el-input v-model="formModel.dirverName" auto-complete="off" disabled clearable></el-input>-->
                     </el-form-item>
                     <span class="orgSpan">(以下简称乙方)</span>
                   </div>
@@ -367,13 +389,13 @@
                     <el-form-item label="家庭电话:">
                       <el-input size="mini" disabled></el-input>
                     </el-form-item>
-                   <!--  <el-form-item label="车架号:">
-                      <el-input size="mini" disabled></el-input>
-                    </el-form-item> -->
+                    <!--  <el-form-item label="车架号:">
+                       <el-input size="mini" disabled></el-input>
+                     </el-form-item> -->
                     <el-form-item label="车架号:">
                       <el-input size="mini" disabled v-model="formModel.frameNum"></el-input>
                     </el-form-item>
-                     <el-form-item label="配载人员:">
+                    <el-form-item label="配载人员:">
                       <el-input size="mini" disabled v-model="formModel.userName"></el-input>
                     </el-form-item>
                     <span>甲方签章:</span>
@@ -391,7 +413,6 @@
                     <el-form-item label="发动机号:">
                       <el-input size="mini" disabled v-model="formModel.engineNum"></el-input>
                     </el-form-item>
-                   
                     <span>乙方签章:</span>
                   </div>
                 </div>
@@ -438,9 +459,8 @@
         <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
-      <TableSetup  :popVisible="setupTableVisible" :columns="tableColumn" code="ORDER_ARTER" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </div>
-    
   </pop-right>
 </template>
 <script>
@@ -461,6 +481,8 @@ import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
 export default {
   data() {
     return {
+      thecode: 'ORDER_ARTER',
+      visible2: false,
       formModelTrack: {
         loadStatus: '',
         operatorTime: +new Date(),
@@ -559,116 +581,122 @@ export default {
           'loadId': 1
         }
       },
-      tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
+      tableColumn: [/* {
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        }, */ {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '150',
+          fixed: true
+        }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: true
+        }, {
+          label: '子运单号',
+          prop: 'childShipSn',
+          width: '180',
+          fixed: false
+        }, {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量(kg)',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载体积(m³)',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '运单件数',
+          prop: 'cargoAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '运单重量(kg)',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '运单体积(m³)',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '发货人电话',
+          prop: 'shipSenderMobile',
+          width: '110',
+          fixed: false
+        }, {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '收货人电话',
+          prop: 'shipReceiverMobile',
+          width: '120',
+          fixed: false
+        }, {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '100',
+          fixed: false
+        }, {
+          label: '回扣',
+          prop: 'brokerageFee',
+          width: '120',
+          fixed: false
+        }, {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '130',
+          fixed: false
+        }, {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
         }
-      }, {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '150',
-        fixed: true
-      }, {
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: true
-      }, {
-        label: '子运单号',
-        prop: 'childShipSn',
-        width: '180',
-        fixed: false
-      }, {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFee',
-        width: '100',
-        fixed: false
-      }, {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      }, {
-        label: '配载重量(kg)',
-        prop: 'loadWeight',
-        width: '120',
-        fixed: false
-      }, {
-        label: '配载体积(m³)',
-        prop: 'loadVolume',
-        width: '120',
-        fixed: false
-      }, {
-        label: '运单件数',
-        prop: 'cargoAmount',
-        width: '100',
-        fixed: false
-      }, {
-        label: '运单重量(kg)',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      }, {
-        label: '运单体积(m³)',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      }, {
-        label: '出发城市',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      }, {
-        label: '到达城市',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      }, {
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '100',
-        fixed: false
-      }, {
-        label: '发货人电话',
-        prop: 'shipSenderMobile',
-        width: '110',
-        fixed: false
-      }, {
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '120',
-        fixed: false
-      }, {
-        label: '收货人电话',
-        prop: 'shipReceiverMobile',
-        width: '120',
-        fixed: false
-      }, {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '100',
-        fixed: false
-      }, {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '130',
-        fixed: false
-      }, {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }],
+      ],
       rules: {
         contractName: [
           { required: true, message: '合同名称不能为空!', trigger: 'blur' }
@@ -686,9 +714,11 @@ export default {
         nomineeCompany: '',
         contractName: '',
         contractNo: '',
+        carrier: '',
         remark: ''
-      }
+      },
 
+      carrierItem: []
     }
   },
   components: {
@@ -761,11 +791,23 @@ export default {
     }
   },
   methods: {
+    comInfo(item) {
+      this.sendContract = {
+        loadId: item.loadId,
+        nomineeCompany: item.nomineeCompany,
+        contractName: item.contractName,
+        contractNo: item.contractNo,
+        carrier: item.carrier,
+        remark: item.remark
+      }
+    },
     fetchGetLookContract() {
       this.loading = true
       const loadId = this.propsId
       return getLookContract(loadId).then(data => {
         this.sendContract = data.data
+        this.carrierItem = data.data.carrierList
+        this.comInfo(this.sendContract)
         this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
@@ -825,7 +867,19 @@ export default {
       this.loading = true
       const _id = this.propsId
       return getSelectLoadList(_id).then(data => {
-        this.usersArr = data
+        data = data || []
+        this.usersArr = data.map(el => {
+          const start = (el.shipFromCityName || '').split(',')
+          const end = (el.shipToCityName || '').split(',')
+          el.shipFromCityName = start[2] || start[1] || start[0] || ''
+          el.shipToCityName = end[2] || end[1] || end[0] || ''
+
+          return el
+        })
+        /* let mock = 20
+        while (mock--) {
+          this.usersArr.push(this.usersArr[0])
+        } */
         this.loading = false
         this.toggleAllRows()
       })
@@ -922,20 +976,54 @@ export default {
       // 显示导入窗口
     },
     doAction(type) {
+      console.log('form', this.formModel, JSON.stringify(this.formModel))
+      const obj = {}
+      for (const item in this.info) {
+        obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
+      }
+      let appendTopStr = '<style>body{width: 100%;}</style>'
+      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+                   this.otherinfo.companyName +
+                   '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.orgName + '   →   ' + obj.arriveOrgName +
+                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.loadTime +
+                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.batchNo +
+                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.truckIdNumber +
+                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverName +
+                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverMobile +
+                   '</td></tr></table></body>'
+      const columnArr = objectMerge2([], this.tableColumn)
+      columnArr.unshift({
+        label: '序号',
+        prop: 'id',
+        width: '40',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      })
       switch (type) {
         // 导出数据table_import
         // 导出
         case 'export':
+
           PrintInFullPage({
             data: this.usersArr,
-            columns: this.tableColumn
+            columns: columnArr,
+            // appendTop: '<style>*{color:#f00;}</style>表格后面用<font color=blue>ADD_PRINT_HTM</font>附加其它备注'
+            appendTop: appendTopStr
           })
           break
           // 打印
         case 'print':
           SaveAsFile({
             data: this.usersArr,
-            columns: this.tableColumn
+            columns: columnArr
           })
           break
       }
@@ -977,8 +1065,11 @@ export default {
     print() { // 打印合同
       let str = '?'
       this.formModel.checkBillName = this.sendContract.contractName
-      for (const item in this.formModel) {
-        str += item + '=' + (this.formModel[item] === null ? '' : this.formModel[item]) + '&'
+      const formModel = Object.assign({}, this.formModel)
+      this.$set(formModel, 'carrier', this.sendContract.carrier)
+      this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
+      for (const item in formModel) {
+        str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }
 
       // JSON.stringify(this.formModel)
@@ -990,6 +1081,40 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      console.log('set table:', newWidth, oldWidth, column)
+      // column.property
+      // column.label
+
+      /* this.columnWidthData = {
+        prop: column.property,
+        label: column.label,
+        width: newWidth
+      } */
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
   // }
@@ -1057,6 +1182,22 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
+      .el-table .cell,.el-table th,.el-table td{
+        overflow: visible;
+        text-overflow: clip;
+        color: #000;
+      }
+      .el-table td{
+        overflow: hidden;
+      }
+      
+      .el-table th{
+        font-weight: bold;
+      }
+      .el-table th div,.el-table .cell{
+        padding: 0;
+        text-align: center;
+      }
     }
   }
   .infos_tab_footer {
@@ -1113,9 +1254,9 @@ export default {
       border-right: 1px solid #d4d4d4;
       ul {
         /*border-top: 2px dotted #bbbbbb;
-            margin: 10px -10px -10px 0;
-            padding: 5px 10px 10px 10px;
-            /*background-color: #fbfbfb;*/
+              margin: 10px -10px -10px 0;
+              padding: 5px 10px 10px 10px;
+              /*background-color: #fbfbfb;*/
         width: 100%;
         display: -ms-flexbox;
         display: flex;
@@ -1421,6 +1562,13 @@ export default {
     padding-left: 20px;
     height: 100%;
     overflow: auto;
+    .sComName {
+      text-align: center;
+      font-size: 18px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
     .pact_top {
       position: relative;
       height: 40px;
@@ -1430,6 +1578,8 @@ export default {
         color: rgba(0, 0, 0, 0.85);
         font-weight: 500;
       }
+
+
 
       .sTitle {
         /*flex: 1;*/

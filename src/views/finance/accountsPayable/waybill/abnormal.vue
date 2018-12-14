@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET5>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('count')" plain v-has:PAY_SHIPSET5>核销</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:PAY_SHIPPRI5>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:PAY_SHIPEXP5>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -107,7 +107,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '150',
           fixed: false
@@ -128,13 +128,13 @@ export default {
           }
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '140',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '140',
           fixed: false
@@ -146,7 +146,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结异常理赔',
+          label: '已核销异常理赔',
           prop: 'closeFee',
           width: '110',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未结异常理赔',
+          label: '未核销异常理赔',
           prop: 'unpaidFee',
           width: '110',
           fixed: false,
@@ -199,7 +199,7 @@ export default {
           fixed: false
         },
         // {
-        //   label: '结算操作人',
+        //   label: '核销操作人',
         //   prop: 'settlementBy',
         //   width: '100',
         //   fixed: false
@@ -338,14 +338,14 @@ export default {
           SaveAsFile({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-异常理赔-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-异常理赔-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '运单结算-异常理赔'
+            name: '运单核销-异常理赔'
           })
           break
       }
@@ -355,7 +355,7 @@ export default {
       this.$router.push({
         path: '../../accountsLoad',
         query: {
-          tab: '异常理赔结算',
+          tab: '异常理赔核销',
           currentPage: 'waybillAbnormal', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

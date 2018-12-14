@@ -6,7 +6,7 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADSET4 @click="doAction('count')" plain>结算</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:PAY_LOADSET4 @click="doAction('count')" plain>核销</el-button>
         <el-button type="primary" v-has:PAY_LOADPRI4 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印</el-button>
         <el-button type="primary" v-has:PAY_LOADEXP4 :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
@@ -145,7 +145,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付运费',
+          label: '已核销到付运费',
           prop: 'paidArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未结到付运费',
+          label: '未核销到付运费',
           prop: 'unpaidArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -171,7 +171,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到付油卡',
+          label: '已核销到付油卡',
           prop: 'paidArrivepayOilCard',
           width: '120',
           fixed: false,
@@ -181,7 +181,7 @@ export default {
           }
         },
         {
-          label: '未结到付油卡',
+          label: '未核销到付油卡',
           prop: 'unpaidArrivepayOilCard',
           width: '120',
           fixed: false,
@@ -197,7 +197,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站装卸费',
+          label: '已核销到站装卸费',
           prop: 'paidArriveHandlingFee',
           width: '120',
           fixed: false,
@@ -207,7 +207,7 @@ export default {
           }
         },
         {
-          label: '未结到站装卸费',
+          label: '未核销到站装卸费',
           prop: 'unpaidArriveHandlingFee',
           width: '120',
           fixed: false,
@@ -223,7 +223,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结到站其他费',
+          label: '已核销到站其他费',
           prop: 'paidArriveOtherFee',
           width: '120',
           fixed: false,
@@ -233,7 +233,7 @@ export default {
           }
         },
         {
-          label: '未结到站其他费',
+          label: '未核销到站其他费',
           prop: 'unpaidArriveOtherFee',
           width: '120',
           fixed: false,
@@ -325,14 +325,14 @@ export default {
           SaveAsFile({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-到车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '车费核销-到车汇总-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '车费结算-到车汇总'
+            name: '车费核销-到车汇总'
           })
           break
       }
@@ -341,7 +341,7 @@ export default {
       this.$router.push({
        path: '../../accountsLoad',
        query: {
-          tab: '到车汇总结算',
+          tab: '到车汇总核销',
           currentPage: 'batchArrivalAll', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo

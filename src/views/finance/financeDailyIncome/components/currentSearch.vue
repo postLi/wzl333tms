@@ -1,51 +1,37 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @focus="clearSender">
-        <el-option label="发货方" value="unit"></el-option>
-        <el-option label="发货人" value="customer"></el-option>
+      <el-select v-model="senderSearch" placeholder="批次类型" :size="btnsize" @change="changeSenderSearch">
+        <el-option label="短驳" value="short"></el-option>
+        <el-option label="干线" value="load"></el-option>
+        <!-- <el-option label="送货" value="deliver"></el-option> -->
       </el-select>
     </el-form-item>
-    <el-form-item v-if="senderSearch==='customer'">
-      <el-autocomplete 
-       popper-class="popperHide"
-      ref="searchAutocomplete"
-      v-model="searchForm.shipSenderName" 
-      :size="btnsize" 
-      :maxlength="15"
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
-      @select="handleSelect">
-      </el-autocomplete>
-    </el-form-item>
-    <el-form-item v-if="senderSearch==='unit'">
-      <el-autocomplete 
-       popper-class="popperHide"
-      v-model="searchForm.shipSenderUnit" 
-      :size="btnsize"
-      :maxlength="15"
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
-      @select="handleSelect">
-      </el-autocomplete>
-    </el-form-item>
-    <!-- <el-form-item v-if="senderSearch==='unit'">
-      <el-autocomplete 
-      v-model="searchForm.senderCustomerUnit" 
-      :size="btnsize" 
-      :fetch-suggestions="(queryString, cb) => querySearch( 'senderCustomerUnit',queryString, cb)" placeholder="发货人搜索" 
-      @select="handleSelect">
-      </el-autocomplete>
-    </el-form-item> -->
-    <el-form-item label="运单号">
-      <el-autocomplete 
-       popper-class="popperHide"
-      v-model="searchForm.shipSn" 
-      :size="btnsize" 
-      :maxlength="20"
-      :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
-      placeholder="运单号搜索" 
-      @select="handleSelect">
+    <el-form-item v-if="senderSearch==='short'">
+      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect" popper-class="popperHide">
         <template slot-scope="{ item }">
-          <div class="name">{{ item.shipSn }}</div>
+          <div class="name">{{ item.batchNo }}</div>
+        </template>
+      </el-autocomplete>
+    </el-form-item>
+    <el-form-item v-if="senderSearch==='load'">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect"  popper-class="popperHide">
+        <template slot-scope="{ item }">
+          <div class="name">{{ item.batchNo }}</div>
+        </template>
+      </el-autocomplete>
+    </el-form-item>
+    <el-form-item v-if="senderSearch==='deliver'">
+      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect" popper-class="popperHide">
+        <template slot-scope="{ item }">
+          <div class="name">{{ item.batchNo }}</div>
+        </template>
+      </el-autocomplete>
+    </el-form-item>
+    <el-form-item label="车牌号">
+      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide">
+        <template slot-scope="{ item }">
+          <div class="name">{{ item.truckIdNumber }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
@@ -53,38 +39,86 @@
 </template>
 <script>
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, uniqueArray } from '@/utils/index'
 export default {
   components: {
     querySelect
   },
   data() {
     return {
-      senderSearch: '',
+      senderSearch: 'load',
       searchForm: {
-        shipSenderName: '',
-        senderCustomerUnit: '',
-        shipSn: ''
+        shortBatchNo: '',
+        mainBatchNo: '',
+        sendBatchNo: '',
+        truckIdNumber: ''
       },
       btnsize: 'mini',
-      selectVal: ''
+      selectVal: '',
+      settlementId: '',
+      isSender: false,
+      SETTLEMENT_TYPE: {
+        short: 180,
+        load: 179,
+        deliver: 181
+      }
     }
   },
   props: {
     info: {
       type: Array,
       default: []
+    },
+    getSettlementId: {
+      type: [Number, String]
+    }
+  },
+  watch: {
+    getSettlementId: {
+      handler(cval, oval) {
+        if (cval) {
+          this.isSender = true
+          this.settlementId = cval // 弹出框选择后 就根据选择切换
+          this.senderSearch = cval === 179?'load' : cval === 180 ? 'short' : 'deliver'
+        }
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    if (!this.isSender) {
+      this.initSettlementid()
     }
   },
   methods: {
+    initSettlementid() {
+      let type = this.senderSearch
+      this.settlementId = this.SETTLEMENT_TYPE[this.senderSearch]
+      console.log('选择批次类型后的settlementId', this.settlementId)
+      // switch (type) {
+      //   case 'short': // 短驳
+      //     this.settlementId = 180
+      //     break
+      //   case 'load': // 干线
+      //     this.settlementId = 179
+      //     break
+      //   case 'deliver': // 送货
+      //     this.settlementId = 181
+      //     break
+      // }
+      this.$emit('setSettlementId', this.settlementId)
+    },
+    changeSenderSearch(obj) {
+      if (obj) {
+        this.initSettlementid()
+      }
+    },
     querySearch(type, queryString, cb) {
-      let leftTable = Object.assign([], this.info)
-      console.log(leftTable.length)
+      let leftTable = leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象
       for (let item in this.searchForm) {
         if (this.searchForm[item] === undefined || this.searchForm[item] === '') {
-
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
@@ -98,7 +132,12 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        return (res[type] ? res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1 : false)
+        if (type !== 'truckIdNumber') {
+          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }else {
+          return (res.truckIdNumber.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }
+        
       }
     },
     handleSelect(obj) {
@@ -135,6 +174,9 @@ export default {
   .hidePopper {
     display: none !important;
     background-color: rgba(0, 0, 0, 0);
+  }
+  .el-autocomplete-suggestion .el-popper{
+    display:none;
   }
 }
 

@@ -162,7 +162,7 @@ export default {
       dialogTitle: '结 算 收 款 单',
       submitData: {},
       BANK_INFO: ['financialWay', 'bankName', 'bankAccount', 'bankAccountName', 'chequeNumber', 'receivableNumber', 'wechatAccount', 'alipayAccount', 'agent'],
-      // settlementTypeId: 180, // 178：运单结算、179：干线批次结算、180：短驳批次结算、181：送货批次结算
+      // settlementTypeId: 180, // 178：运单核销、179：干线批次核销、180：短驳批次核销、181：送货批次核销
       paymentsType: 0 // 收支类型, 0 收入, 1 支出,
     }
   },
@@ -386,7 +386,7 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
-            // 当添加结算时更新列表
+            // 当添加核销时更新列表
             this.eventBus.$emit('updateAccountsReceivableList')
           })
             .catch(err => {

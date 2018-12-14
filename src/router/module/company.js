@@ -151,8 +151,8 @@ export default {
     meta: {
       title: '线路管理',
       stitle: '线路',
-      noCache: false
-      // 'code': 'CARRIERLIST'
+      noCache: false,
+      'code': 'LINE_MANAGE'
     }
   }, {
     path: '/company/lineManage/detail',
@@ -175,8 +175,8 @@ export default {
     meta: {
       title: '新增线路',
       stitle: '线路',
-      noCache: false
-      // 'code': 'CARRIERLIST'
+      noCache: false,
+      'code': 'LINE_MANAGE_ADD'
     }
   }, {
     path: '/company/lineManage/modify',
@@ -187,8 +187,8 @@ export default {
     meta: {
       title: '修改线路',
       stitle: '线路',
-      noCache: false
-      // 'code': 'CARRIERLIST'
+      noCache: false,
+      'code': 'LINE_MANAGE_UPDATE'
     }
   }, {
     path: '/company/wallet',

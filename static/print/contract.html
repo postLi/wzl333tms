@@ -20,17 +20,30 @@
 
     body {
       padding: 10px 20px;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     .contract_title {
       position: relative;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     .contract_title h2 {
       text-align: center;
       margin: 20px 0;
       font-size: 16px;
+    }
+    .contract_title h1 {
+      text-align: center;
+      /*margin: 0 0 10px;*/
+      font-size: 18px;
+
+    }
+    .contract_title h1 i {
+      font-style: normal;
+      font-size: 24px;
     }
 
     .contract_title_number {
@@ -64,7 +77,7 @@
     .contract_form_item ul li {
       list-style: none;
       text-align: left;
-      padding: 8px 0;
+      padding: 3px 0 0;
     }
 
     label {
@@ -77,7 +90,7 @@
       margin-left: 15px;
       display: inline-block;
       min-width: 120px;
-      border-bottom: 1px solid #999;
+      border-bottom: 1px solid black;
     }
 
     #contract_time span,
@@ -96,13 +109,14 @@
 
 <body>
 <div class="contract_title">
-  <h2 id="contract_checkBillName">货物运输合同 </h2>
+  <h1><i id="contract_companyname"></i><i id="contract_checkBillName">货物运输合同</i></h1>
+  <!-- <h2 > </h2> -->
   <div class="contract_title_number" id="contract_title_number">No:23478237482378</div>
 </div>
 <div class="contract_info">
-  <p>委托方: <span id="partA">sdfsdfsd</span> (以下简称甲方)</p>
-  <p>承运方: <span id="partB">sdfsdf</span> (以下简称乙方)</p>
-  <p>为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
+  <p>委托方: <span id="partA"></span> (以下简称甲方)</p>
+  <p>承运方: <span id="partB"></span> (以下简称乙方)</p>
+  <p style="margin-top: 10px;">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
 </div>
 <div class="contract_atricle">
   <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
@@ -158,6 +172,7 @@
   var contract_checkBillName = document.getElementById('contract_checkBillName')
   var contract_title_number = document.getElementById('contract_title_number')
   var partA = document.getElementById('partA')
+  var contract_companyname = document.getElementById('contract_companyname')
   var partB = document.getElementById('partB')
   var contract_form = document.getElementById('contract_form')
   var goods_info = document.getElementById('goods_info')
@@ -170,7 +185,9 @@
   contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
   contract_title_number.innerHTML = 'NO.' + data.batchNo
   partA.innerHTML = data.orgName
-  partB.innerHTML = data.dirverName
+  contract_companyname.innerHTML = data.orgName
+  partB.innerHTML = data.carrier
+  console.error(data)
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
     '<li><label>家庭住址</label><span></span></li>' +

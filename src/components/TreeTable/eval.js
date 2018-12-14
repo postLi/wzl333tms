@@ -23,11 +23,12 @@ export default function treeToArray(data, expandAll, parent = null, level = null
     }
     tmp.push(record)
     if (index === (data.length - 1)) {
-      if (record.children.length === 0) {
-        Vue.set(record, 'islastnochil', true)
-      } else {
-        Vue.set(record, 'islast', true)
-      }
+      Vue.set(record, 'islast', true)
+      // if (record.children.length === 0) {
+      //   Vue.set(record, 'islastnochil', true)
+      // } else {
+      //   Vue.set(record, 'islast', true)
+      // }
 
     }
     if (index === (data.length - 2)) {

@@ -24,9 +24,9 @@
     <div class="tab_info">
       <div class="btns_box">
         <div class="finance_btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-plus" @click="doAction('income')" plain v-has:BILLRECORD_ADD>新增</el-button>
           <!-- <button type="button" class="el-button "> -->
-          <el-dropdown @command="handleCommand" class="dropdownButton">
+          <el-dropdown @command="handleCommand" class="dropdownButton" v-has:BILLRECORD_SMART_VERIFY>
             <el-button type="success" size="mini" plain>
               <i class="el-icon-circle-plus"></i> 智能核销
             </el-button>
@@ -36,12 +36,12 @@
             </el-dropdown-menu>
           </el-dropdown>
           <!-- </button> -->
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:FLOW_OUT>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button>
-          <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:FLOW_DETAIL>查看明细</el-button>
-          <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:FLOW_FIND>反核销</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('edit')" plain v-has:BILLRECORD_UPDATE>修改</el-button>
+          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delCount')" plain v-has:BILLRECORD_DELETE>删除</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-rank" @click="doAction('showDetail')" plain v-has:BILLRECORD_DETAIL>查看明细</el-button>
+          <el-button type="warning" :size="btnsize" icon="el-icon-tickets" @click="doAction('backCount')" plain v-has:BILLRECORD_CONTRARY_VERIFY>反核销</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:BILLRECORD_PRINT>打印</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:BILLRECORD_EXPORT>导出</el-button>
         </div>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
@@ -69,10 +69,13 @@
       </div>
     </div>
     <div class="previewPicture" v-if="isShowPre">
-      <el-button @click="isShowPre = false" icon="el-icon-close" size="mini">关闭预览</el-button>
+      <div class="previewPicture_info">
+        <el-tag type="info">{{currentCarousel + ' / ' + previews.length}}</el-tag>
+        <el-button type="info" plain @click="isShowPre = false" icon="el-icon-close" size="mini" class="previewPicture_close">关闭预览</el-button>
+      </div>
       <transition name="el-zoom-in-bottom">
-        <el-carousel :interval="3000" height="300px" arrow="always">
-          <el-carousel-item v-for="item in previews" :key="item">
+        <el-carousel ref="carousel" :interval="5000" :loop="false" height="300px" :arrow="arrowShow" :initial-index="0" @change="handleCarousel">
+          <el-carousel-item v-for="(item, index) in previews" :key="item">
             <img :src="item" alt="" @click="prePic(item)">
           </el-carousel-item>
         </el-carousel>
@@ -114,6 +117,8 @@ export default {
   },
   data() {
     return {
+      arrowShow: 'always',
+      currentCarousel: 1,
       previews: [],
       isShowPre: false,
       currentInfo: {},
@@ -204,18 +209,18 @@ export default {
           label: '凭证日期',
           prop: 'certTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
           label: '系统操作日期',
           prop: 'createTime',
           width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
+          // slot: (scope) => {
+          //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          // },
           fixed: false
         },
         {
@@ -256,7 +261,7 @@ export default {
         },
         {
           label: '核销人',
-          prop: 'createBy',
+          prop: 'createName',
           width: '120',
           fixed: false
         },
@@ -289,7 +294,7 @@ export default {
           prop: 'picsPath',
           width: '90',
           preview: true,
-          fixed: false
+          fixed: true
         }
       ]
     }
@@ -323,6 +328,10 @@ export default {
           // this.$message.warning('功能尚在开发中~')
           break
       }
+    },
+    handleCarousel(index) {
+      this.currentCarousel = index + 1
+      console.log(index)
     },
     setAddSuccess() {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -407,34 +416,48 @@ export default {
           break
       }
     },
-    backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
+    backCount() {
+      // 反核销 
+      // isNeededVoucher 2-不需要财务凭证的时候，可以直接反核销 
+      // isNeededVoucher 1-需要反核销的时候，只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      if (this.selectedList[0].verifyStatusZh === '已审核') {
-        this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
-        this.$refs.multipleTable.clearSelection()
+      if (this.selectedList[0].isNeededVoucher === '2') {
+        this.cancelVerification()
       } else {
-        this.$confirm('确定要反核销【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            cancelVerification({
-                id: this.selectedList[0].id
-              }).then(data => {
-                this.loading = false
-                this.$message.success('反核销成功！')
-                this.$refs.multipleTable.clearSelection()
-                this.fetchList()
-              })
-              .catch(err => {
-                this.loading = false
-                this.$refs.multipleTable.clearSelection()
-                this._handlerCatchMsg(err)
-              })
-          })
-          .catch(() => {})
+        if (this.selectedList[0].verifyStatusZh === '已审核') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
+          this.$refs.multipleTable.clearSelection()
+        } else if (this.selectedList[0].dataSrcZh === '手工录入') {
+          this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
+          this.$refs.multipleTable.clearSelection()
+        } else {
+          this.cancelVerification()
+        }
       }
+    },
+    cancelVerification() {
+      let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】' : ''
+      this.$confirm('确定要反核销' + certNo + '吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          cancelVerification({
+              id: this.selectedList[0].id
+            }).then(data => {
+              this.loading = false
+              this.$message.success('反核销成功！')
+              this.$refs.multipleTable.clearSelection()
+              this.fetchList()
+            })
+            .catch(err => {
+              this.loading = false
+              this.$refs.multipleTable.clearSelection()
+              this._handlerCatchMsg(err)
+            })
+        })
+        .catch(() => {})
     },
     delCount() { // 删除 只有手工录入并且未审核的可以删除
       if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
@@ -445,7 +468,8 @@ export default {
         }
         this.$refs.multipleTable.clearSelection()
       } else {
-        this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
+        let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】': ''
+        this.$confirm('确定要删除' + certNo + '吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
@@ -480,7 +504,7 @@ export default {
       const data = {}
       this.$set(data, 'flowId', this.selectedList[0].flowId)
       // postCancelSettlement(data).then(data => {
-      //     this.$message({ type: 'success', message: '取消结算操作成功' })
+      //     this.$message({ type: 'success', message: '取消核销操作成功' })
       //     this.fetchList()
       //   })
       //   .catch(err => {
@@ -584,6 +608,13 @@ export default {
       img {
         width: auto;
         height: 100%;
+      }
+    }
+    .previewPicture_info {
+      height: 38px;
+      .previewPicture_close {
+        float: right;
+        clear: both;
       }
     }
   }

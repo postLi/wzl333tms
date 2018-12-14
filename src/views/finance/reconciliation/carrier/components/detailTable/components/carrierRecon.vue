@@ -114,7 +114,7 @@
               </el-form-item>
             </th>
             <th>
-              结算方式
+              核销方式
             </th>
             <th>
               <el-form-item label="">
@@ -149,7 +149,7 @@
               </el-form-item>
             </th>
             <th>
-              联系方式
+              财务联系电话
             </th>
             <th>
               <el-form-item label="" prop="financialOfficerPhone">
@@ -178,86 +178,6 @@
             </th>
           </tr>
         </table>
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="承运商名称">-->
-        <!--<el-input v-model="messageInfo.memberName" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="业务负责人">-->
-        <!--<el-input v-model="messageInfo.memberPerson" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="联系方式" prop="memberPersonPhone">-->
-        <!--<el-input v-model="messageInfo.memberPersonPhone" auto-complete="off" :maxlength="11" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="对账单编号">-->
-        <!--<el-input v-model="messageInfo.checkBillCode" auto-complete="off" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-
-
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="承运商编号">-->
-        <!--<el-input v-model="messageInfo.memberCode" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="开始时间">-->
-        <!--<el-input v-model="messageInfo.checkStartTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="结束时间">-->
-        <!--<el-input v-model="messageInfo.checkEndTime" auto-complete="off" disabled></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="结算方式">-->
-        <!--<el-input v-model="messageInfo.settlementType" auto-complete="off" :maxlength="8" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="账户账号" prop="bankAccount">-->
-        <!--<el-input v-model="messageInfo.bankAccount" auto-complete="off" :maxlength="20" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="账户开户行">-->
-        <!--<el-input v-model="messageInfo.bankName" auto-complete="off" :maxlength="15" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="财务负责人">-->
-        <!--<el-input v-model="messageInfo.financialOfficer" auto-complete="off" :maxlength="10" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="联系方式" prop="financialOfficerPhone">-->
-        <!--<el-input v-model="messageInfo.financialOfficerPhone" auto-complete="off" :maxlength="11"></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
-        <!--<ul>-->
-        <!--<li>-->
-        <!--<el-form-item label="支付宝">-->
-        <!--<el-input v-model="messageInfo.alipayAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--<li>-->
-        <!--<el-form-item label="微信" class="sWetPay">-->
-        <!--<el-input v-model="messageInfo.wechatAccount" auto-complete="off" :maxlength="30" clearable></el-input>-->
-        <!--</el-form-item>-->
-        <!--</li>-->
-        <!--</ul>-->
       </el-form>
 
 
@@ -316,23 +236,21 @@
             width="150"
             label="中转单号">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="120"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="signStatusName"
             sortable
             width="120"
             label="签收状态">
-          </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="130"
-            label="到达城市">
           </el-table-column>
           <el-table-column
             sortable
@@ -465,17 +383,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="100"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -547,7 +463,7 @@
         </el-table>
       </div>
       <div class="sMessageCont_info">
-        <p>已收清单(本结算期内)</p>
+        <p>已收清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -614,17 +530,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="120"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="130"
-            label="到达城市">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -711,7 +625,7 @@
       </div>
 
       <div class="sMessageCont_info">
-        <p>已付清单(本结算期内)</p>
+        <p>已付清单(本核销期内)</p>
       </div>
       <div class="info_tab">
         <!--@selection-change="getSelection"-->
@@ -772,17 +686,15 @@
             width="120"
             label="签收状态">
           </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipFromCityName')}}
+            </template>
           </el-table-column>
-          <el-table-column
-            prop="shipToCityName"
-            sortable
-            width="100"
-            label="出发城市">
+          <el-table-column prop="shipToCityName" sortable label="到站" width="120">
+            <template slot-scope="scope">
+              {{ _processTableSlot(scope, 'shipToCityName')}}
+            </template>
           </el-table-column>
           <el-table-column
             sortable
@@ -922,39 +834,6 @@
               </th>
             </tr>
           </table>
-          <!--<el-form-item label="备注">-->
-          <!--<el-input :maxlength="300" v-model="messageButtonInfo.remark" auto-complete="off"></el-input>-->
-          <!--</el-form-item>-->
-          <!--<div class="sMessageCont_info">-->
-          <!--<p>若对以上对账 明细有疑问，请及时联系我们，我们的联系信息如下</p>-->
-          <!--</div>-->
-
-
-          <!--<el-form-item label="公司名称">-->
-          <!--<el-input v-model="messageButtonInfo.companyName" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="业务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficer" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="联系方式" prop="orgBusinessOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgBusinessOfficerPhone" auto-complete="off" clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务负责人">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficer" auto-complete="off" :maxlength="10"-->
-          <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="财务联系电话" prop="orgFinancialOfficerPhone">-->
-          <!--<el-input v-model="messageButtonInfo.orgFinancialOfficerPhone" auto-complete="off" :maxlength="11"-->
-          <!--clearable></el-input>-->
-          <!--</el-form-item>-->
-          <!--<el-form-item label="时间">-->
-          <!--<el-date-picker-->
-          <!--v-model="messageButtonInfo.createTime"-->
-          <!--type="date"-->
-          <!--placeholder="选择日期">-->
-          <!--</el-date-picker>-->
-
-          <!--</el-form-item>-->
         </el-form>
       </div>
     </div>
@@ -973,13 +852,13 @@
 </template>
 
 <script>
-  import {pickerOptions2, parseTime, objectMerge2, tmsMath} from '@/utils/'
-  import {REGEX} from '@/utils/validate'
-  import {postCarrierinitialize, getCarrierCarrierdetail} from '@/api/finance/fin_carrier'
+  import { pickerOptions2, parseTime, objectMerge2, tmsMath } from '@/utils/'
+  import { REGEX } from '@/utils/validate'
+  import { postCarrierinitialize, getCarrierCarrierdetail } from '@/api/finance/fin_carrier'
   import querySelect from '@/components/querySelect/index'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import SaveDialog from './saveDialog'
-  import {SaveAsFileCarrier} from '@/utils/recLodopFuncs'
+  import { SaveAsFileCarrier } from '@/utils/recLodopFuncs'
   import SelectType from '@/components/selectType/index'
 
   export default {
@@ -990,7 +869,7 @@
     },
     data() {
       const validateMobile = (rule, value, callback) => {
-        if (!REGEX.MOBILE.test(value) && value !== '') {
+        if (!REGEX.MOBILE.test(value)) {
           callback(new Error('请输入正确的联系号码~'))
         } else {
           callback()
@@ -1002,21 +881,21 @@
         rules: {
           'bankAccount': [
             // { trigger: 'change', validator: validateOnlyNum}
-            {message: '只能输入数字', trigger: 'blur', pattern: REGEX.ONLY_NUMBER}
+            { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ],
           'memberPersonPhone': [
-            {trigger: 'change', validator: validateMobile}
+            { validator: validateMobile, trigger: 'blur' }
           ],
           'financialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ]
         },
         btnRule: {
           'orgBusinessOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ],
           'orgFinancialOfficerPhone': [
-            {message: '请输入正确手机号码', trigger: 'blur', pattern: REGEX.MOBILE}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ]
         },
         pickerOptions2: {
@@ -1291,9 +1170,9 @@
           })
           // this.$router.back(-1)
           if (this.$route.query.tab === '承运商对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.id)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.id)
           } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.$route.query.urlId)
+            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.urlId)
           }
         }).catch(() => {
           this.$message({
@@ -1315,14 +1194,14 @@
         this.delCont()
       },
       getSummaries(param) {
-        const {columns, data} = param
+        const { columns, data } = param
         const sums = []
         columns.forEach((column, index) => {
           if (index === 0) {
             sums[index] = '合计'
             return
           }
-          if (index === 3 || index === 4 || index === 5 || index === 7) {
+          if (columns[index].label === '中转时间' || columns[index].label === '运单号' || columns[index].label === '中转单号' || columns[index].label === '发站' || columns[index].label === '到站' || columns[index].label === '货品名' || columns[index].label === '交接方式' || columns[index].label === '备注' || columns[index].label === '签收状态') {
             sums[index] = ''
             return
           }

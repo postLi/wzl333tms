@@ -157,7 +157,7 @@ export default {
           prop: 'shipToOrgName'
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName'
         },
         {
@@ -169,7 +169,7 @@ export default {
           prop: 'shipFromOrgName'
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName'
         },
         {
@@ -192,7 +192,7 @@ export default {
           prop: 'shipToOrgName'
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName'
         },
         {
@@ -226,7 +226,7 @@ export default {
           prop: 'shipToOrgName'
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName'
         },
         {
@@ -246,7 +246,7 @@ export default {
           prop: 'repertoryAmount'
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName'
         },
         {

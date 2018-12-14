@@ -87,7 +87,8 @@
             sortable
             label="操作">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" size="small" v-has:INIT_SUBJECT_VERIFY_UPDATE>修改
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -197,8 +198,13 @@
     },
     mounted() {
       this.searchQuery.vo.companyId = this.otherinfo.companyId
-      this.fetchData()
 
+      if (this.$route.query.isSubjectClose) {
+        this.fetchData()
+      } else {
+        this.fetchData()
+      }
+      // console.log(this.$route.query.isSubjectClose,'this.$router.isSubjectClose');
     },
     methods: {
       searchOrgid(item) {
@@ -247,21 +253,13 @@
             this.$router.push({
               path: '/finance/financeInfo/subjectDirection',
             })
-            // this.loading = false
-            // this.eventBus.$emit('replaceCurrentView','/finance/financeInfo/subjectDirection')
             this.loading = false
             break
           case 'doLast':
-            this.$router.push({
-              path: '/finance/financeInfo/subjectInfo',
-              // query: {
-              //   tab: '网点对账-对账明细',
-              //   arriveOrgid: row.arriveOrgid,
-              //   orgid: row.orgid,
-              //   orgName: row.arriveOrgName
-              //   // id: row.carrierId
-              // }
-            })
+            this.eventBus.$emit('replaceCurrentView', '/finance/financeInfo/subjectInfo')
+            // this.$router.push({
+            //   path: '/finance/financeInfo/subjectInfo',
+            // })
             this.loading = false
             break
           case 'export':
@@ -271,12 +269,6 @@
               name: '提货'
             })
             this.$refs.multipleTable.clearSelection()
-            // if (this.selected.length === 0) {
-            //   SaveAsFile(this.usersArr, this.tableColumn)
-            // } else {
-            //   // 筛选选中的项
-            //   SaveAsFile(this.selected, this.tableColumn)
-            // }
             break
           case 'print':
             PrintInFullPage({

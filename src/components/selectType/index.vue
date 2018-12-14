@@ -17,7 +17,6 @@
 // 引入事件对象
 import { eventBus } from '@/eventBus'
 import { getSelectType } from '@/api/common'
-import { mapGetters } from 'vuex'
 import CACHE from '@/utils/cache'
 import DICT from '@/utils/dict'
 
@@ -122,18 +121,21 @@ export default {
   },
   watch: {
     value: {
-      handler(newVal) {
+      handler(newVal, oldVal) {
         // 针对以id为value值的，将传过来的值做一次统一的转换为数值
         if (/\d+/.test(newVal)) {
-          this.val = parseInt(newVal, 10) || ''
+          this.val = parseInt(newVal, 10) || newVal
         } else {
           this.val = newVal || ''
         }
+        // console.log('newVal, oldVal', this.type, newVal, oldVal)
+        this.change(this.val)
       },
       immediate: true
     }
   },
   mounted() {
+    // console.log('ths.type.moutend', this.type)
     // 因为字典的数据修改频率极其小，
     // 尝试缓存以减少网络请求
     if (this.remote) {
@@ -184,14 +186,12 @@ export default {
     },
     fetchData() {
       var cb = (data) => {
-
-        if(this.arterDelivery){
+        if (this.arterDelivery) {
           this.types = data.filter(el => {
             return el.id !== 52
           })
-        }else{
+        } else {
           this.types = data
-
         }
 
         // this.listdata = data
@@ -215,8 +215,9 @@ export default {
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
     change(item) {
-      this.$emit('input', this.val)
-      this.$emit('change', item)
+      this.$emit('input', this.val + '')
+      const find = this.listdata.filter(el => el.id === item)
+      this.$emit('change', item, find[0] || {})
     }
   }
 }

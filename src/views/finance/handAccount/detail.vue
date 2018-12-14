@@ -166,10 +166,10 @@ export default {
         'prop': 'shipUserName',
         'width': '100'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName'
       }, {
         'label': '发货方',

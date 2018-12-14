@@ -261,11 +261,11 @@ export default {
         'prop': 'shipReceiverMobile',
         'width': '100'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName',
         'width': '100'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName',
         'width': '100'
       }, {

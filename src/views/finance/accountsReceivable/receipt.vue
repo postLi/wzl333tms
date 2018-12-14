@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET4>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET4>核销</el-button>
           
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI4>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP4>导出</el-button>
@@ -142,20 +142,20 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName'
       }, {
-        'label': '结算状态',
+        'label': '核销状态',
         'prop': 'receiptpayStateCn'
       }, {
         'label': '回单付',
 
         'prop': 'receiptpayFee'
       }, {
-        'label': '已结回单付',
+        'label': '已核销回单付',
         width: '100',
         'prop': 'finishReceiptpayFee',
           slot: (scope) => {
@@ -164,7 +164,7 @@ export default {
         }
 
       }, {
-        'label': '未结回单付',
+        'label': '未核销回单付',
          width: '100',
         'prop': 'notReceiptpayFee',
           slot: (scope) => {

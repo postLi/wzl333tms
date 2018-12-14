@@ -3,7 +3,7 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="凭证时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" type="daterange" align="right" :picker-options="pickerOptions" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
+          <el-date-picker v-model="searchCreatTime" type="daterange" align="right" :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
           </el-date-picker>
         </div>
       </el-form-item>
@@ -26,7 +26,7 @@
       </el-form-item>
       <el-form-item label="来源">
         <el-select v-model="searchForm.dataSrc" clearable>
-          <el-option label="结算产生" :value="0"></el-option>
+          <el-option label="核销产生" :value="0"></el-option>
           <el-option label="手工录入" :value="1"></el-option>
           <el-option label="全部" value=""></el-option>
         </el-select>
@@ -42,7 +42,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
-import { parseTime, pickerOptions2 } from '@/utils/'
+import { parseTime ,pickerOptions2} from '@/utils/'
 export default {
   components: {
     SelectType,
@@ -83,12 +83,10 @@ export default {
 
         }]
       },
-      pickerOptions: {
+      pickerOptions2: {
         shortcuts: pickerOptions2
-        /* disabledDate(time) {
-          return time.getTime() < Date.now() - 3600 * 1000 * 24
-        } */
       }
+
     }
   },
   watch: {

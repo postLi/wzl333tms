@@ -3,7 +3,7 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isShow="true" />  
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails(selected)" plain v-has:REC_SET2>结算</el-button>
+          <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="viewDetails" plain v-has:REC_SET2>核销</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:REC_PRI2>打印</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:REC_EXP2>导出</el-button>
           <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -140,27 +140,27 @@ export default {
           width: '100',
           fixed: false
         }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName'
       }, {
-        'label': '结算状态',
+        'label': '核销状态',
         'prop': 'nowPayStateCn'
       }, {
         'label': '现付',
         width: '100',
         'prop': 'nowPayFee'
       }, {
-        'label': '已结现付',
+        'label': '已核销现付',
         'prop': 'finishNowPayFee',
           slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
         }
       }, {
-        'label': '未结现付',
+        'label': '未核销现付',
         'prop': 'notNowPayFee',
         slot: (scope) => {
           const row = scope.row
@@ -225,15 +225,19 @@ export default {
     }
   },
   methods: {
-    viewDetails(row) {
-      row = row || []
+    viewDetails() {
+      let list = []
+      this.selected.forEach((e, index) => {
+        list.push(e.shipSn)
+      })
+      console.log('传给核销页面的数据:::query', this.searchQuery, list)
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
           tab: '现付核销',
-          searchQuery: JSON.stringify(this.searchQuery),
           currentPage: 'cash',
-          selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
+          searchQuery: JSON.stringify(this.searchQuery),
+          selectListShipSns: JSON.stringify(list)
         }
       })
     },

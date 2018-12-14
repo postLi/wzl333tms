@@ -1,6 +1,6 @@
 <template>
   <!-- 核销凭证 运单核销-->
-  <el-dialog :title="dialogTitle" v-loading="loading" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
+  <el-dialog :title="dialogTitle"  :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
         <el-form-item label="方向" prop="verificationId" class="formItemTextDanger">
@@ -9,12 +9,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount"  v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
+        <el-form-item label="一级科目" 
+        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
+        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
+             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject" size="mini">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -26,7 +29,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'"  size="mini">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +40,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +51,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -92,10 +95,10 @@ export default {
       type: [Object, Array],
       default: () => []
     },
-    btnLoading: {
-      type: Boolean,
-      default: false
-    }
+    // btnLoading: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
   watch: {
     popVisible: {
@@ -108,16 +111,16 @@ export default {
     },
     info: {
       handler(cval, oval) {
-        console.log('voucher info-table::', cval, oval)
+        console.log('voucher 接收到的数据::', cval)
       },
       deep: true
     },
-    btnLoading: {
-      handler(cval, oval) {
+    // btnLoading: {
+    //   handler(cval, oval) {
 
-      },
-      deep: true
-    },
+    //   },
+    //   deep: true
+    // },
     orgId: {
       handler(cval, oval) {
         console.log('orgId', cval, oval)
@@ -151,7 +154,7 @@ export default {
         case 'waybillAbnormal':
           return '异常理赔'
         case 'waybillUnusual':
-          return '异动费用结算'
+          return '异动费用核销'
       }
     },
     getRouteInfo() {
@@ -170,6 +173,7 @@ export default {
       }
     }
     return {
+      btnLoading: false,
       dialogTitle: '核销凭证',
       loading: true,
       btnsize: 'mini',
@@ -199,10 +203,10 @@ export default {
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -224,19 +228,23 @@ export default {
       this.formModel.amount = this.info.amount || 0
     },
     postVerificationBaseInfo() { // 新增时初始化数据
-      this.loading = true
+      // this.loading = true
       this.baseQuery.orgId = this.orgId || this.otherinfo.orgid
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
-          this.veryficationList = data.verificationList
-          data.verificationList.forEach((el, index) => {
-            this.veryficationType[el.id] = el.verificationWay
-          })
-          this.initSubject()
+          if (data.verificationList) {
+            this.veryficationList = data.verificationList
+            data.verificationList.forEach((el, index) => {
+              this.veryficationType[el.id] = el.verificationWay
+            })
+          }
+            this.initSubject()
         })
+          this.loading = false
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -323,13 +331,14 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
+          this.btnLoading = true
           let dataInfo = Object.assign({}, this.formModel)
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           if (!dataInfo.certTime) {
-           dataInfo.certTime = new Date()
+            dataInfo.certTime = new Date()
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList
           let query = {
             shipPayableFeeDtos: dataInfo.orderList,
@@ -337,7 +346,7 @@ export default {
           }
           delete query.tmsFinanceBillRecordDto.orderList
           let orgid = ''
-          if (this.dataName === '中转费') { // 中转结算的时候 传给后台中转网点
+          if (this.dataName === '中转费') { // 中转核销的时候 传给后台中转网点
             orgid = this.getRouteInfo.vo.transferOrgid
           } else if (this.dataName === '异常理赔') {
             orgid = this.getRouteInfo.vo.orgid
@@ -426,7 +435,7 @@ export default {
       }
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      this.loading = true
+      // this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''

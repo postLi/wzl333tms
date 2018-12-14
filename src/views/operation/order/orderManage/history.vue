@@ -223,11 +223,11 @@ export default {
         'prop': 'volumeFee',
         'width': '150'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'
       }, {
-        'label': '目的城市',
+        'label': '到站',
         'prop': 'shipToCityName',
         'width': '150'
       }, {
@@ -298,7 +298,7 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

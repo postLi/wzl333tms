@@ -34,6 +34,8 @@
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"
                   @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
+                  :summary-method="getSumLeft"
+          show-summary
                   style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -70,18 +72,18 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { fetchPostlist, deletebatchDelete } from '@/api/operation/pickup'
 
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import AddCustomer from './components/add'
   import PickupMain from './components/pickupMain'
   import PickupRelevance from './components/pickupRelevance'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     components: {
@@ -160,12 +162,12 @@
           //   width: '150',
           //   fixed: false
           // },
-          {
-            label: '发货人',
-            prop: 'customerName',
-            width: '120',
-            fixed: false
-          }, {
+        {
+          label: '发货人',
+          prop: 'customerName',
+          width: '120',
+          fixed: false
+        }, {
             label: '手机号',
             prop: 'customerMobile',
             width: '130',
@@ -226,7 +228,7 @@
             width: '120',
             fixed: false
           }, {
-            label: '到达城市',
+            label: '到站',
             prop: 'toCityName',
             width: '150',
             fixed: false
@@ -295,6 +297,9 @@
       }
     },
     methods: {
+      getSumLeft(param, type) {
+        return getSummaries(param, operationPropertyCalc)
+      },
       fetchAllCustomer() {
         this.loading = true
         return fetchPostlist(this.searchQuery).then(data => {

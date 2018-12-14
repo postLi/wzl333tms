@@ -2,7 +2,6 @@
     <div class="upload-container" :class="{'uploadlist': showFileList}">
         <el-upload 
             class="image-uploader" 
-            v-if="uploadUrl" 
             :data="upload" 
             :action="uploadUrl"
             :multiple="false" 
@@ -16,6 +15,7 @@
             :disabled="disabled"
             :on-remove="handleRemove"
             :on-error="handleError"
+            :http-request="handleUpload"
             :on-success="handleImageScucess">
             <slot name="content">
                 <div v-if="!showtc">
@@ -47,10 +47,13 @@
 </template>
 
 <script>
+import '@/vendor/lrz.all.bundle.js'
+
 // 上传接口
 import { getUploadPolicy, getUploadId, getUploadIdInfo, getTwocodeUrl } from '@/api/common'
 import { parseTime } from '@/utils/'
 import QRCode from 'qrcode'
+import fetch from '@/utils/fetch'
 
 export default {
   name: 'singleImageUpload',
@@ -139,14 +142,16 @@ export default {
             return obj
           })
         } else {
-          this.filelist = newVal ? [newVal] : []
+          this.filelist = newVal ? [{
+            url: newVal
+          }] : []
         }
       },
       immediate: true
     }
   },
   mounted() {
-    this.init()
+    // this.init()
   },
   updated() {
     console.log('single image updated~~~')
@@ -220,6 +225,36 @@ export default {
     handleError(err) {
       this.$message.error('上传错误：' + JSON.stringify(err))
       this.$emit('error', err)
+    },
+    // 保存上传
+    handleUpload(options) {
+      return new Promise((resolve, reject) => {
+        lrz(options.file, {
+          width: 1024
+        }).then(rst => {
+          const form = new FormData()
+          const url = this.uploadUrl
+
+          form.append('key', this.upload.key)
+          form.append('success_action_status', '201')
+          form.append('OSSAccessKeyId', this.upload.OSSAccessKeyId)
+          form.append('policy', this.upload.policy)
+          form.append('signature', this.upload.signature)
+          form.append('file', rst.file)
+
+          fetch.post(url, form, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          }).then(xml => {
+            resolve(xml)
+          }).catch(err => {
+            reject(err)
+            this._handlerCatchMsg(err, '上传失败:')
+          })
+        }).catch(err => {
+          reject(err)
+          this._handlerCatchMsg(err, '上传失败：')
+        })
+      })
     },
     beforeUpload(file) {
       const isJPG = /image\/\w+/.test(file.type) && /(jpe?g|png)/i.test(file.type)

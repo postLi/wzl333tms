@@ -13,12 +13,12 @@
         <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
-      <el-form-item label="结算网点" prop="orgid" v-if="isAbnormal">
+      <el-form-item label="核销网点" prop="orgid" v-if="isAbnormal">
         <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
-      <el-form-item label="结算状态" prop="status">
-        <el-select v-model="searchForm.status" placeholder="结算状态">
+      <el-form-item label="核销状态" prop="status">
+        <el-select v-model="searchForm.status" placeholder="核销状态">
           <el-option v-for="(value, key) in $const.COUNT_STATUS" :value="key" :key="key" :label="value"></el-option>
         </el-select>
       </el-form-item>
@@ -31,10 +31,10 @@
       <el-form-item label="发货人" prop="senderName">
         <el-input v-model="searchForm.senderName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="出发城市">
+      <el-form-item label="发站">
         <el-input v-model="searchForm.shipFromCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="到达城市">
+      <el-form-item label="到站">
         <el-input v-model="searchForm.shipToCityName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
       <el-form-item label="签收状态" prop="signStatus">

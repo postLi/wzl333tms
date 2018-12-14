@@ -33,6 +33,8 @@
 
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"
                   @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
+                  :summary-method="getSumLeft"
+          show-summary
                   style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
@@ -65,15 +67,15 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {getPostlist, putRefuse, deletebatchDelete, putCancel, putAccept} from '../../../../api/operation/manage'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { getPostlist, putRefuse, deletebatchDelete, putCancel, putAccept } from '../../../../api/operation/manage'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import AddCustomer from './components/add'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     components: {
@@ -235,12 +237,12 @@
             width: '120',
             fixed: false
           }, {
-            label: '出发城市',
+            label: '发站',
             prop: 'orderFromCityName',
             width: '110',
             fixed: false
           }, {
-            label: '目的城市',
+            label: '到站',
             prop: 'orderToCityName',
             width: '110',
             fixed: false
@@ -303,6 +305,9 @@
       })
     },
     methods: {
+      getSumLeft(param, type) {
+        return getSummaries(param, operationPropertyCalc)
+      },
       fetchAllList() {
         this.loading = true
         return getPostlist(this.searchForms).then(data => {

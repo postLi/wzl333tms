@@ -179,7 +179,10 @@
           </el-table-column>
         </el-table> -->
         <!-- 开始 -->
-        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%"
+        :summary-method="getSumLeft"
+          show-summary
+         tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -207,7 +210,7 @@ import { mapGetters } from 'vuex'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
@@ -375,6 +378,9 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     fetchAllreceipt() {
       this.loading = true
       return PostGetAbnormalList(this.searchQuery).then(data => {

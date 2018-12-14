@@ -219,10 +219,10 @@
         if (this.sendId) {
           data.tmsFinanceBillCheckDto.id = this.sendId
           promiseObj = postCSaveCustomerDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.urlId)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.urlId)
         } else {
           promiseObj = postCSaveCustomerDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账-对账明细&id=' + this.memberId)
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/customer/detailTable?tab=客户对账明细&id=' + this.memberId)
         }
 
         promiseObj.then(res => {

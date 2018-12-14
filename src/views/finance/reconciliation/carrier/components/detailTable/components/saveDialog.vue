@@ -167,25 +167,6 @@
     methods: {
       watchData() {
 
-        // console.log(this.tota)
-        // this.dialogData = Object.assign(this.tota)
-        // let count = []
-        // for (let item in this.dialogData) {
-        //    let data = 0
-        //     this.dialogData[item].forEach(el => {
-        //       data += Number(el.totalFee)
-        //       console.log(data)
-        //   })
-        //     count.push(data)
-        //     data = 0
-        // }
-        //
-        // count.forEach((e, index) => {
-        //   this.dialogInfo[index].toPay = e
-        //
-        // })
-
-
         this.dialogData = this.tota
         // console.log(this.dialogData);
         this.dialogInfo[0].toPay = 0
@@ -196,49 +177,35 @@
           this.$set(this.dialogInfo, 0, {
             date: '未收清单',
             toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalFee ? +el.totalFee : 0).result()
-            // toPay: this.dialogInfo[0].toPay + (el.totalFee ? +el.totalFee : 0)
           })
-            // this.dialogInfo[0].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.dealPaytota.map(el => {
           this.$set(this.dialogInfo, 1, {
             date: '未付清单',
-            // toPay: this.dialogInfo[1].toPay + (el.totalCost ? +el.totalCost : 0)
             toPay: tmsMath.add(this.dialogInfo[1].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
           })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.alreadytota.map(el => {
           this.$set(this.dialogInfo, 2, {
             date: '已收清单',
             toPay: tmsMath.add(this.dialogInfo[2].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
-            // toPay: this.dialogInfo[2].toPay + (el.totalFee ? +el.totalFee : 0)
           })
-            // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.dialogData.alreadyPaytota.map(el => {
           this.$set(this.dialogInfo, 3, {
             date: '已付清单',
-            // toPay: this.dialogInfo[3].toPay + (el.totalCost ? +el.totalCost : 0)
             toPay: tmsMath.add(this.dialogInfo[3].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
         this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay,this.dialogInfo[2].toPay,this.dialogInfo[3].toPay).result()
-        // this.totaMoney = this.dialogInfo[0].toPay + this.dialogInfo[1].toPay + this.dialogInfo[2].toPay + this.dialogInfo[3].toPay
-        // this.totaMoney
       },
       closeMe(done) {
-        this.reset()
         this.$emit('update:popVisible', false)
         if (typeof done === 'function') {
           done()
         }
       },
-      reset() {
-        // this.dotInfo = {}
-      },
-
       submitForm(formName) {
         this.loading = true
         let promiseObj
@@ -250,10 +217,10 @@
         if (this.sendId) {
           data.tmsFinanceBillCheckDto.id = this.sendId
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.urlId )
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.urlId )
         } else {
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账-对账明细&id=' + this.memberId )
+          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.memberId )
         }
         if (this.totaMoney === 0) {
 
@@ -284,7 +251,6 @@
       text-align: right;
       padding-right: 10px;
     }
-
   }
   .saveDialog-maintain .popRight-content{
     padding: 20px 10px 5px 10px;
@@ -295,13 +261,10 @@
     }
     .el-input{
       width: 90%;
-
     }
-
     .el-input__inner{
       height: 30px;
       font-size: 14px;
-
     }
     .dialogMoney{
       margin: 0 0 13px 0px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100" v-loading="loading">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
       <transferTable style="height: calc(100% - 40px);padding:10px">
         <!-- 左上角按钮区 -->
         <div slot="btnsBox">
-          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">结算</el-button>
+          <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
         </div>
         <!-- 左边表格区 -->
         <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -19,7 +19,7 @@
               </template>
             </el-table-column>
             <el-table-column fixed :render-header="setHeader" width="50">
-              <template slot-scope="scope">
+              <template slot-scope="scope" >
                 <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -55,7 +55,7 @@
               </template>
             </el-table-column>
             <el-table-column :render-header="setHeader2" fixed width="50">
-              <template slot-scope="scope">
+              <template slot-scope="scope" >
                 <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -65,7 +65,7 @@
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
                 <template slot-scope="scope">
                   <div v-if="column.expand">
-                    <el-input  v-numberOnly:point :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
+                    <el-input v-numberOnly:point :value="scope.row.notNowPayFee" @dblclick.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" @change="(val) => changLoadData(scope.$index, column.prop, val)" :size="btnsize"></el-input>
                   </div>
                   <div v-else>
                     <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -81,7 +81,7 @@
         </div>
       </transferTable>
       <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId"></Voucher>
       <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
     </div>
   </div>
@@ -108,7 +108,6 @@ export default {
   },
   data() {
     return {
-      btnLoading: false,
       infoTable: {
         amount: 0,
         orderList: []
@@ -154,7 +153,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'totalStatusCn',
           width: '120'
         },
@@ -180,24 +179,24 @@ export default {
           'label': '现付',
           'prop': 'nowPayFee'
         }, {
-          'label': '现付结算状态',
+          'label': '现付核销状态',
           'prop': 'nowPayStateCn'
         }, {
-          'label': '已结现付',
+          'label': '已核销现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
           }
         }, {
-          'label': '未结现付',
+          'label': '未核销现付',
           'prop': 'notNowPayFee',
           slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
           }
         }, {
-          label: '实结现付',
+          label: '实际核销现付',
           prop: 'inputNowPayFee',
           fixed: false,
           expand: true,
@@ -228,13 +227,13 @@ export default {
           }
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '120',
           fixed: false
@@ -269,21 +268,19 @@ export default {
           width: '120',
           fixed: false
         }
-      ],
-      getRouteInfo: {
-        vo: {
-          ascriptionOrgId: ''
-        }
-      }
+      ]
+      // getRouteInfo: {
+      //   vo: {
+      //     ascriptionOrgId: ''
+      //   }
+      // }
     }
   },
   computed: {
-    // getRouteInfo() {
-    //   if (this.$route.query) {
-    //   return JSON.parse(this.$route.query.searchQuery)
-
-    //   }
-    // },
+    getRouteInfo() {
+      console.log('核销页面的接收到的数据:::', this.$route.query)
+      return JSON.parse(this.$route.query.searchQuery)
+    },
     totalLeft() {
       return this.leftTable.length
     },
@@ -291,14 +288,20 @@ export default {
       return this.rightTable.length
     }
   },
+  watch: {
+    '$route.query': {
+      handler(cval, oval) {
+        if (cval) {
+          this.getList()
+        }
+      },
+      deep: true
+    }
+  },
   mounted() {
-    this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
-    this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
-    // this.initRouteInfo()
     this.getList()
   },
   methods: {
-    initRouteInfo() {},
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
@@ -309,16 +312,16 @@ export default {
       this.searchQuery.pageSize = 100
       this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       this.$set(this.searchQuery.vo, 'status', '')
-      if (!this.$route.query) {
-        //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        //   // this.$router.push({ path: './accountsPayable/waybill' })
-        this.isFresh = true // 是否手动刷新页面
-      } else {
-        //   this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        //   this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
-        //   this.$set(this.searchQuery.vo, 'status', '')
-        this.isFresh = false
-      }
+      // if (!this.$route.query) {
+      //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
+      //   // this.$router.push({ path: './accountsPayable/waybill' })
+      // this.isFresh = true // 是否手动刷新页面
+      // } else {
+      //   this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+      //   this.searchQuery.vo.ascriptionOrgId = this.otherinfo.orgid
+      //   this.$set(this.searchQuery.vo, 'status', '')
+      // this.isFresh = false
+      // }
     },
     setRight(item) {
       item.inputNowPayFee = item.notNowPayFee
@@ -332,7 +335,11 @@ export default {
       this.$set(this.rightTable, this.rightTable.length, item)
     },
     getList() {
+      this.loading = true
+      // this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
+      this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
+      console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
       } else {
@@ -345,40 +352,40 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       this.initLeftParams() // 设置searchQuery
-      if (!this.isFresh) {
-        accountApi.getReceivableList(this.searchQuery).then(data => {
-          // NOSETTLEMENT,PARTSETTLEMENT
-          // 过滤未完成结算的数据
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
-          }))
-          selectListShipSns.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.shipSn) {
-                this.setRight(item)
-              }
-            })
-          })
-          if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-          this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            e.inputBrokerageFee = e.unpaidFee
-            const item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+      // if (!this.isFresh) {
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+        // NOSETTLEMENT,PARTSETTLEMENT
+        // 过滤未完成核销的数据
+        this.leftTable = Object.assign([], data.list.filter(el => {
+          return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
+        }))
+        selectListShipSns.forEach(e => {
+          this.leftTable.forEach(item => {
+            if (e === item.shipSn) {
+              this.setRight(item)
             }
           })
-          // 保留原有数据的引用
-          this.orgLeftTable = objectMerge2([], this.leftTable)
-          this.loading = false
-        }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
         })
-      }
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          e.inputBrokerageFee = e.unpaidFee
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+        })
+        // 保留原有数据的引用
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+      // }
     },
     changLoadData(index, prop, newVal) {
       // this.rightTable[index][prop] = Number(newVal)
@@ -390,13 +397,19 @@ export default {
       } else {
         this.textChangeDanger[index] = false
       }
+       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notNowPayFee) {
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
+      }else {
+        this.isGoReceipt = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
@@ -432,24 +445,34 @@ export default {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-          let item = -1
-          this.leftTable.map((el, index) => {
-            if (el.shipSn === e.shipSn) {
-              item = index
-            }
+           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+            return em.shipSn !== e.shipSn
           })
-          if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-            this.leftTable.splice(item, 1)
-            this.orgLeftTable.splice(item, 1)
-          }
-          // const orgItem = this.orgLeftTable.indexOf(e)
+          this.rightTable.push(e)
+          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+            return el.shipSn !== e.shipSn
+          })
+          // let item = -1
+          // this.leftTable.map((el, index) => {
+          //   if (el.shipSn === e.shipSn) {
+          //     item = index
+          //   }
+          // })
+          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
+          //   this.leftTable.splice(item, 1)
+          //   this.orgLeftTable.splice(item, 1)
+          // }
+          // // const orgItem = this.orgLeftTable.indexOf(e)
 
-          if (item !== -1) { // 搜索源数据同样减去被穿梭数据
+          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
 
-          }
+          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -530,7 +553,7 @@ export default {
     openDialog() {
       this.popVisibleDialog = true
     },
-    // 结算前整理数据
+    // 核销前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
       // this.tableReceiptInfo = []
@@ -555,10 +578,10 @@ export default {
         })
         this.infoTable.amount = amount
         amount = 0
-        if (this.infoTable.orderList.length > 0) { // 判断是否要结算
+        if (this.infoTable.orderList.length > 0) { // 判断是否要核销
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
       }
     },
@@ -604,8 +627,9 @@ export default {
 
 </script>
 <style lang="scss">
-.tableHeadItemBtn .setTableHeader {
-  position: static;
+.receivableTable {
+  .tableHeadItemBtn .setTableHeader {
+    position: static;
+  }
 }
-
 </style>

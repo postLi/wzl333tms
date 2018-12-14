@@ -1,12 +1,13 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="70px" class="tableHeadItemForm">
-    <el-form-item label="到达城市">
+    <el-form-item label="到站">
       <el-autocomplete 
       v-model="searchForm.shipToCityName" 
       :size="btnsize" 
       popper-class="popperHide"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)" 
-      placeholder="到达城市搜索" 
+      placeholder="到站搜索" 
+      @keyup.enter.native="handleSelectAll"
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
@@ -17,6 +18,7 @@
       popper-class="popperHide"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
+      @keyup.enter.native="handleSelectAll"
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
@@ -37,7 +39,8 @@ export default {
         shipSn: ''
       },
       btnsize: 'mini',
-      selectVal: ''
+      selectVal: '',
+      resultList: []
     }
   },
   props: {
@@ -67,6 +70,7 @@ export default {
       results.forEach(e => {
         array.push(e)
       })
+      this.resultList = Object.assign({}, array)
       this.$emit('change', array)
     },
     createFilter(queryString, type) {
@@ -83,6 +87,10 @@ export default {
       this.$emit('change', array)
     },
     clearSender(event) {
+      this.searchForm = this.$options.data().searchForm
+    },
+    handleSelectAll () {
+      this.$emit('keyupEneter')
       this.searchForm = this.$options.data().searchForm
     }
   }

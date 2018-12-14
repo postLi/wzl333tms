@@ -309,7 +309,10 @@ export function getFeeStatusByShipId(shipId) {
  */
 export function getReceivableList(data) {
   return fetch.post('/api-finance/finance/feeReceivable/v1/list', data).then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 /**
@@ -341,7 +344,7 @@ export function postSaveLoadFee(data) {
  * ================================》应收明细《================
  */
 
- /**
+/**
   * 插入tms应收应付明细(收支费用明细)表信息
 {
   "arrivePayFee": 0,
@@ -373,18 +376,21 @@ export function postNewFeeDetail(data) {
  */
 export function getFeeDetail(id) {
   return fetch.get('/api-finance/finance/tmsfinancefeedetailreceivable/v1/').then(res => {
-    return res.data || { list: [], totalCount: 0 }
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 
-  /**
-   * 根据ID修改tms应收应付明细(收支费用明细)表信息
-   * id 明细信息id
-   * @param {*} data 同新建
-   */
+/**
+ * 根据ID修改tms应收应付明细(收支费用明细)表信息
+ * id 明细信息id
+ * @param {*} data 同新建
+ */
 export function putChangeFeeDetail(id, data) {
   return fetch.put('/api-finance/finance/tmsfinancefeedetailreceivable/v1/' +
-id, data)
+    id, data)
 }
 
 /**
@@ -393,7 +399,7 @@ id, data)
  */
 export function deleteFeeDetail(id) {
   return fetch.delete('/api-finance/finance/tmsfinancefeedetailreceivable/v1/' +
-  id)
+    id)
 }
 
 /**

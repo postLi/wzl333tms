@@ -38,8 +38,8 @@
                    v-if="isProgress"></el-progress>
       <p v-else>{{resMessage.resultInfo}}</p>
       <el-table ref="multipleTable" :data="resMessage.failInfoList" stripe border tooltip-effect="dark"
-                :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%;height: 400px;margin-top: 10px;"
-                :key="tableKey">
+                :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%;margin-top: 10px;"
+                :key="tableKey" :class="resMessage.failInfoList.length>11?'failinScroll':''">
         <el-table-column sortable type="index" width="60">
         </el-table-column>
         <el-table-column prop="failExcelNum" width="130" label="失败行"></el-table-column>

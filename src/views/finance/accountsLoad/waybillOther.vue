@@ -1,5 +1,5 @@
 <template>
-  <!-- 其他费用支出结算页面 -->
+  <!-- 其他费用支出核销页面 -->
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -8,7 +8,7 @@
     <transferTable style="height: calc(100% - 40px);padding:10px">
       <!-- 左上角按钮区 -->
       <div slot="btnsBox">
-        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">其他费用支出结算</el-button>
+        <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">其他费用支出核销</el-button>
       </div>
       <!-- 左边表格区 -->
       <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
@@ -155,7 +155,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -185,7 +185,7 @@ export default {
           fixed: false
         },
        {
-          label: '已结其他费用',
+          label: '已核销其他费用',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -195,7 +195,7 @@ export default {
           }
         },
         {
-          label: '未结其他费用',
+          label: '未核销其他费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -238,13 +238,13 @@ export default {
           }
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '120',
           fixed: false
@@ -287,7 +287,7 @@ export default {
           fixed: false
         },
         {
-          label: '结算状态',
+          label: '核销状态',
           prop: 'statusName',
           width: '120',
           fixed: false
@@ -317,7 +317,7 @@ export default {
           fixed: false
         },
         {
-          label: '已结其他费用',
+          label: '已核销其他费用',
           prop: 'closeFee',
           width: '120',
           fixed: false,
@@ -327,7 +327,7 @@ export default {
           }
         },
         {
-          label: '未结其他费用',
+          label: '未核销其他费用',
           prop: 'unpaidFee',
           width: '120',
           fixed: false,
@@ -337,7 +337,7 @@ export default {
           }
         },
         {
-          label: '实结其他费用',
+          label: '实际核销其他费用',
           prop: 'inputOtherFee',
           width: '120',
           fixed: false,
@@ -380,13 +380,13 @@ export default {
           }
         },
         {
-          label: '出发城市',
+          label: '发站',
           prop: 'shipFromCityName',
           width: '120',
           fixed: false
         },
         {
-          label: '到达城市',
+          label: '到站',
           prop: 'shipToCityName',
           width: '120',
           fixed: false
@@ -501,8 +501,8 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      const unpaidName = 'unpaidFee' // 未结费用名
-      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未结费用值
+      const unpaidName = 'unpaidFee' // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
         this.$set(this.textChangeDanger, index, true)
@@ -510,8 +510,10 @@ export default {
         this.$set(this.textChangeDanger, index, false)
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
-        this.$message({ type: 'warning', message: '实结费用不小于0，不大于未结费用。' })
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
+      this.isGoReceipt = true
       } else {
+        this.isGoReceipt = false
         // this.rightTable[index][prop] = Number(newVal)
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
           [prop]: this.rightTable[index][prop]
@@ -549,7 +551,7 @@ export default {
         // this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
         this.selectedRight.forEach((e, index) => {
-          // 默认设置实结数量
+          // 默认设置实际核销数量
           e.inputOtherFee = e.unpaidFee
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
             return em.shipSn !== e.shipSn
@@ -668,7 +670,7 @@ export default {
           let amount = 0
         this.rightTable.forEach((e, index) => {
           console.log('右边列表', index, e)
-          if (e.inputOtherFee > 0 && e.inputOtherFee <= e.unpaidFee) { // 提交可结算项
+          if (e.inputOtherFee > 0 && e.inputOtherFee <= e.unpaidFee) { // 提交可核销项
             let item = {
               shipId: e.shipId,
               shipSn: e.shipSn,
@@ -677,8 +679,8 @@ export default {
               inputOtherFee: e.inputOtherFee,
               shipFromCityName: e.shipFromCityName,
               shipToCityName: e.shipToCityName,
-              shipReceiverName: e.shipReceiverName,
-              shipSenderName: e.shipSenderName
+              shipReceiverName: e.receiverCustomerName,
+              shipSenderName: e.senderCustomerName
             }
             amount = tmsMath._add(amount, e.inputOtherFee)
             this.infoTable.orderList.push(item)
@@ -690,7 +692,7 @@ export default {
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
-          this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+          this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
         // this.rightTable.forEach((e, index) => {
         //   let item = {
@@ -700,15 +702,15 @@ export default {
         //     shipSn: e.shipSn,
         //     dataName: '其他费用支出'
         //   }
-        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可结算项
+        //   if (item.amount > 0 && item.amount <= e.unpaidFee) { // 提交可核销项
         //     this.tableReceiptInfo.push(item)
         //   }
         //   item = {}
         // })
-        // if (this.tableReceiptInfo.length > 0) { // 判断是否要结算
+        // if (this.tableReceiptInfo.length > 0) { // 判断是否要核销
         //   this.openDialog()
         // } else {
-        //   this.$message({ type: 'warning', message: '暂无可结算项！实结费用不小于0，不大于未结费用。' })
+        //   this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         // }
       }
     },

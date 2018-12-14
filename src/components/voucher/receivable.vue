@@ -13,8 +13,11 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" prop="subjectOneId" class="formItemTextDanger">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)">
+        <el-form-item label="一级科目" 
+        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
+        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
+             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -26,7 +29,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -37,7 +40,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="三级科目" :class="subjectThree.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)">
+          <el-select v-model="formModel.subjectThreeId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,3)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectThree" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -48,7 +51,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="四级科目" :class="subjectFour.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)">
+          <el-select v-model="formModel.subjectFourId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,4)" :disabled="formModel.isNeededVoucher !== '1'">
             <el-option v-for="(item, index) in subjectFour" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -77,6 +80,7 @@ import { getSystemTime } from '@/api/common'
 import { parseTime } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import { loadVerification } from '@/api/finance/accountsPayable'
 import { REGEX } from '@/utils/validate'
 import * as accountApi from '@/api/finance/accountsReceivable'
 export default {
@@ -92,16 +96,13 @@ export default {
     info: {
       type: [Object, Array],
       default: () => []
-    },
-    btnLoading: {
-      type: Boolean,
-      default: false
     }
   },
   watch: {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
+
           this.init()
         }
       },
@@ -110,12 +111,6 @@ export default {
     info: {
       handler(cval, oval) {
         console.log('voucher info-table::', cval, oval)
-      },
-      deep: true
-    },
-    btnLoading: {
-      handler(cval, oval) {
-
       },
       deep: true
     },
@@ -149,6 +144,12 @@ export default {
           }
         })
         return this.uniqueArray(ids).join(',')
+      } else if (this.$route.query.tab === '全部核销') {
+        // let ids = []
+        // // this.info.orderList.forEach(e => {
+        // //   ids.push(e.feeReceivableTypeId)
+        // // })
+        return this.uniqueArray(this.info.feeIds).join(',')
       } else {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
         return JSON.parse(this.$route.query.searchQuery).vo.feeType
@@ -167,6 +168,7 @@ export default {
     return {
       dialogTitle: '核销凭证',
       loading: true,
+      btnLoading: false,
       btnsize: 'mini',
       baseQuery: {
         orgId: '',
@@ -209,14 +211,21 @@ export default {
         orgId: '',
         parentId: '',
         subjectLevel: ''
-      }
+      },
+      paymentsType: 0 // 收支类型, 0 收入, 1 支出,
     }
   },
   methods: {
+    // getVeryficationList () {
+    //   return getVeryficationList({orgId: this.orgId}).then(data => {
+    //     this.veryficationList = data
+    //   })
+    // },
     init() {
       this.baseQuery = this.$options.data().baseQuery
       this.postVerificationBaseInfo()
       this.formModel.amount = this.info.amount || 0
+      // this.getVeryficationList()
     },
     postVerificationBaseInfo() { // 新增时初始化数据
       this.loading = true
@@ -225,12 +234,15 @@ export default {
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + '' || ''
       console.log('baseQuery', this.baseQuery, this.orgId)
+      this.$set(this.baseQuery, 'dataSrc', 0) 
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
-          this.veryficationList = data.verificationList
-          data.verificationList.forEach((el, index) => {
-            this.veryficationType[el.id] = el.verificationWay
-          })
+          if (data.verificationList) {
+            this.veryficationList = data.verificationList
+            data.verificationList.forEach((el, index) => {
+              this.veryficationType[el.id] = el.verificationWay
+            })
+          }
           this.initSubject()
           this.loading = false
         })
@@ -384,33 +396,66 @@ export default {
       if (!this.checkSubjectIsNull()) { return }
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let dataInfo = Object.assign({}, this.formModel)
-          this.$set(dataInfo, 'orderList', this.info.orderList)
-          this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
-          delete dataInfo.verificationList
-          if (!dataInfo.certTime) {
-            dataInfo.certTime = new Date()
+          this.btnLoading = true
+          if (this.$route.query.currentPage === 'handleFee') { // 操作费调另一个接口
+            let handleFeeInfo = Object.assign({}, this.formModel)
+             if (this.info.settlementTypeSign) {
+            this.$set(handleFeeInfo, 'settlementTypeSign', this.info.settlementTypeSign)
           }
-          this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
-          let query = {
-            receivableFees: dataInfo.orderList,
-            tmsFinanceBillRecordDto: dataInfo
+          this.$set(handleFeeInfo, 'tmsFinanceVerifiactionBillFees', this.info.orderList)
+          this.$set(handleFeeInfo, 'orgId', this.orgId)
+          this.$set(handleFeeInfo, 'paymentsType', this.paymentsType)
+          this.$set(handleFeeInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+          if (!handleFeeInfo.certTime) {
+            handleFeeInfo.certTime = new Date()
           }
-          delete query.tmsFinanceBillRecordDto.orderList
-          accountApi.postCreateFee(this.orgId, query).then(data => {
-              this.$message({ type: 'success', message: '保存成功' })
-              this.btnLoading = false
-              this.closeMe()
-              setTimeout(() => {
-                this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
-                // 当添加结算时更新列表
-                this.eventBus.$emit('updateAccountsReceivableList')
-              }, 500)
-            })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-              this.btnLoading = false
-            })
+          this.$set(handleFeeInfo, 'certTime', parseTime(handleFeeInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+          delete handleFeeInfo.verificationList
+
+          console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
+            loadVerification(handleFeeInfo).then(data => {
+                this.$message({ type: 'success', message: '保存成功' })
+                setTimeout(() => {
+                this.btnLoading = false
+                  this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+                  // 当添加结算时更新列表
+                  this.eventBus.$emit('updateAccountsReceivableList')
+                }, 500)
+                this.closeMe()
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.btnLoading = false
+              })
+          } else {
+            let dataInfo = Object.assign({}, this.formModel)
+            this.$set(dataInfo, 'orderList', this.info.orderList)
+            this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+            delete dataInfo.verificationList
+            if (!dataInfo.certTime) {
+              dataInfo.certTime = new Date()
+            }
+            this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
+            let query = {
+              receivableFees: dataInfo.orderList,
+              tmsFinanceBillRecordDto: dataInfo
+            }
+            delete query.tmsFinanceBillRecordDto.orderList
+            accountApi.postCreateFee(this.orgId, query).then(data => {
+                this.$message({ type: 'success', message: '保存成功' })
+                this.closeMe()
+                setTimeout(() => {
+                this.btnLoading = false
+                  this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
+                  // 当添加结算时更新列表
+                  this.eventBus.$emit('updateAccountsReceivableList')
+                }, 500)
+              })
+              .catch(err => {
+                this._handlerCatchMsg(err)
+                this.btnLoading = false
+              })
+          }
         }
       })
     },
@@ -418,7 +463,7 @@ export default {
       this.$router.push({ path: '/finance/financeInfo/subjectInfo' })
     },
     getFinanceSubjects(subjectLevel, parentId) {
-      this.loading = true
+      // this.loading = true
       console.log('接口查询下级科目列表：\n', subjectLevel, parentId)
       this.searchQuerySub.subjectLevel = subjectLevel || ''
       this.searchQuerySub.parentId = parentId || ''

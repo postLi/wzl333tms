@@ -58,15 +58,15 @@ export function deletebatchDelete(ids) {
  * /order/pickup/v1/relevancyShip
  提货单关联运单号加入列表
  */
-export function putRelevancyShip(pickupId,shipId,pickupFee) {
+export function putRelevancyShip(pickupId, shipId, pickupFee) {
   return fetch.put('/api-order/order/pickup/v1/relevancyShip/?pickupId=' + pickupId + '&shipId=' + shipId + '&pickupFee=' + pickupFee)
 }
 /**
  * /order/pickup/v1/removeShip
  提货单关联运单号从列表移除
  */
-export function putRremoveShip(pickupId,shipId) {
-  return fetch.put('/api-order/order/pickup/v1/removeShip/?pickupId=' + pickupId + '&shipId=' + shipId )
+export function putRremoveShip(pickupId, shipId) {
+  return fetch.put('/api-order/order/pickup/v1/removeShip/?pickupId=' + pickupId + '&shipId=' + shipId)
 }
 /**
  * /order/pickup/v1/findShipByid
@@ -156,7 +156,7 @@ export function putUpdatePickkupStatus(pickupId) {
 //  */
 // private Double pickupFee;
 // /**
-//  * 到达城市
+//  * 到站
 //  */
 // private String toCityCode;
 // /**

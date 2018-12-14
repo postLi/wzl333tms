@@ -22,6 +22,8 @@
           @selection-change="getSelection"
           height="100%"
           tooltip-effect="dark"
+          :summary-method="getSumLeft"
+          show-summary
           :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
 
@@ -68,7 +70,7 @@ import TableSetup from '@/components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { parseTime, uniqArray } from '@/utils/'
+import { parseTime, uniqArray, getSummaries, operationPropertyCalc } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
@@ -218,11 +220,11 @@ export default {
         'prop': 'shipReceiverMobile',
         'width': '150'
       }, {
-        'label': '出发城市',
+        'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'
       }, {
-        'label': '到达城市',
+        'label': '到站',
         'prop': 'shipToCityName',
         'width': '150'
       }, {
@@ -429,13 +431,16 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     fetchAllTransfer() {
       this.loading = true
       return transferManageApi.getAlreadyTransferList(this.searchQuery).then(data => {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -499,7 +504,7 @@ export default {
             })
           }
           var id = this.selected[0].id
-          let shipId = this.selected[0].shipId
+          const shipId = this.selected[0].shipId
 
           this.$router.push({ path: '/operation/order/track/transfer', query: {
             transfer: id,

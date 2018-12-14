@@ -1,11 +1,11 @@
 <template>
-    <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
-      <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
-      <div class="tab_info">
+  <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+    <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-check-outline" plain @click="doAction('pick')" v-has:ORDERSIGN_ADD2>签收</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain v-has:ORDERSIGN_CANCEL2>取消签收</el-button>
-        <el-button type="primary" :size="btnsize"  icon="el-icon-edit" plain @click="doAction('amend')" v-has:ORDERSIGN_EDIT2>修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" plain @click="doAction('amend')" v-has:ORDERSIGN_EDIT2>修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:ORDERSIGN_EXP2>导出</el-button>
         <!-- <el-button type="primary" :size="btnsize"  @click="doAction('import')" plain>打印</el-button> -->
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
@@ -59,10 +59,10 @@
             sortable
             prop="shipFromCityName"
             width="120"
-            label="出发城市">
+            label="发站">
           </el-table-column>
           <el-table-column
-            label="到达城市"
+            label="到站"
             width="120"
             prop="shipToCityName"
             sortable
@@ -475,7 +475,7 @@
             <template slot-scope="scope">{{ scope.row.signTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
           </el-table-column>
         </el-table> -->
-        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" :summary-method="getSumLeft" show-summary @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -488,12 +488,16 @@
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total}} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <div class="info_tab_footer">共计:{{ total}}
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange" />
+        </div>
       </div>
-      <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
-      <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
+    <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
+    <Addbatch :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+  </div>
 </template>
 <script>
 import SearchForm from './components/search'
@@ -504,7 +508,7 @@ import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
-import { objectMerge2, parseTime } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
@@ -519,9 +523,9 @@ export default {
     ...mapGetters(['otherinfo']),
     orgid() {
       // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-      return this.isModify
-        ? this.selectInfo.orgid
-        : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ?
+        this.selectInfo.orgid :
+        this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -614,12 +618,12 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '出发城市',
+        label: '发站',
         prop: 'shipFromCityName',
         width: '120',
         fixed: false
       }, {
-        label: '到达城市',
+        label: '到站',
         prop: 'shipToCityName',
         width: '120',
         fixed: false
@@ -904,6 +908,9 @@ export default {
     }
   },
   methods: {
+    getSumLeft(param, type) {
+      return getSummaries(param, operationPropertyCalc)
+    },
     parseShipStatus(id) {
       return parseShipStatus(id)
     },
@@ -914,7 +921,7 @@ export default {
         this.total = data.total
         this.signId = data.signId
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -976,7 +983,7 @@ export default {
             name: '送货签收'
           })
           break
-        // 签收
+          // 签收
         case 'pick':
           const ids = this.selected.filter(el => {
             return el.signStatus !== 227
@@ -1011,7 +1018,7 @@ export default {
               message: '每次只能修改单条数据',
               type: 'warning'
             })
-          } else {
+          } else if (this.selected[0].signStatus === 227) {
             this.isPick = true
             this.isDbclick = false
             this.isDelivery = false
@@ -1019,6 +1026,12 @@ export default {
             this.id = this.selected[0].signId
             console.log(this.id)
             this.openAddSign()
+
+          } else {
+            this.$message({
+              message: '已签收状态才可以修改',
+              type: 'warning'
+            })
           }
           break
 
@@ -1038,7 +1051,7 @@ export default {
                 message: '取消签收成功~',
                 type: 'success'
               })
-                // this.$emit('success')
+              // this.$emit('success')
               this.fetchAllreceipt()
               return false
             }).catch(err => {
@@ -1088,4 +1101,5 @@ export default {
     }
   }
 }
+
 </script>
