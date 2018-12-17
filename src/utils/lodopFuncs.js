@@ -258,7 +258,7 @@
        height: '20%'
      }, obj.topStyle || {})
      const _topMainStyle = {
-       top: '15%',
+       top: '14%',
        left: '1%',
        width: '98%',
        height: '78%'
@@ -267,7 +267,7 @@
        top: '1%',
        left: '1%',
        width: '98%',
-       height: '100%'
+       height: '98%'
      }
      const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
      /* const pageStyle = objectMerge2({
@@ -278,8 +278,8 @@
      }, obj.pageStyle || {}) */
      const pageStyle = objectMerge2({
        intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
-       intPageWidth: '218mm', // 单位为0.1mm
-       intPageHeight: '272mm',
+       intPageWidth: '218mm', // 单位为0.1mm 带孔240mm
+       intPageHeight: '278mm',
        strPageName: ''
      }, obj.pageStyle || {})
 
@@ -288,7 +288,12 @@
      console.log('tableId.innerHTML:', tableId.innerHTML)
      LODOP = getLodop()
      // PRINT_INITA(Top,Left,Width,Height,strPrintName)
-     LODOP.PRINT_INITA('-10px', '-3px', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+     if (obj.appendTop) {
+       LODOP.PRINT_INITA('-10px', '-3px', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+     } else {
+       LODOP.PRINT_INITA('0', '0', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+     }
+
      //  LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
@@ -303,8 +308,11 @@
      }
      LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
      if (obj.appendTop) {
-       LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-13%')
+       LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
+       LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
      }
+
+    //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
 
      console.log('topStyle:', topStyle, mainStyle)
 

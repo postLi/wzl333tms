@@ -876,10 +876,13 @@ export default {
 
           return el
         })
-        /* let mock = 20
-        while (mock--) {
-          this.usersArr.push(this.usersArr[0])
-        } */
+        if (location.href.indexOf('192.168.1.') !== -1) {
+          /* let mock = 30
+          while (mock--) {
+            this.usersArr.push(this.usersArr[0])
+          } */
+        }
+
         this.loading = false
         this.toggleAllRows()
       })
