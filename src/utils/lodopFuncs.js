@@ -312,7 +312,7 @@
        LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
      }
 
-    //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
+     //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
 
      console.log('topStyle:', topStyle, mainStyle)
 
@@ -508,53 +508,148 @@
      obj.fromOrgName = infoDetail.fromOrgName // 开单网点
      obj.description = infoDetail.description // 品种规格
    } else if (type === 'order') {
-     let objCargo = {} // 货物信息
-     let objCargoNotNum = ['shipGoodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
-     objCargo.goodsSn = infoDetail.shipGoodsSn // 货号
-     objCargo.cargoName = infoDetail.cargoName // 货品名
-     objCargo.cargoPack = infoDetail.cargoPack // 包装
-     objCargo.cargoAmount = infoDetail.cargoAmount // 件数
-     objCargo.cargoWeight = infoDetail.cargoWeight // 重量
-     objCargo.cargoVolume = infoDetail.cargoVolume // 体积
-     objCargo.fromOrgName = infoDetail.fromOrgName // 开单网点
-     objCargo.description = infoDetail.description // 品种规格
-     objCargo.shipFee = infoDetail.shipFee // 运费
-     objCargo.deliveryFee = infoDetail.deliveryFee // 送货费
-     objCargo.productPrice = infoDetail.productPrice // 声明价值
-     objCargo.brokerageFee = infoDetail.brokerageFee // 回扣
-     objCargo.brokerageFeeSign = infoDetail.brokerageFee // 回扣标识 R:*****
-     objCargo.agencyFund = infoDetail.agencyFund // 代收货款
-     objCargo.commissionFee = infoDetail.commissionFee // 代收货款手续费
-     objCargo.insuranceFee = infoDetail.insuranceFee // 保险费
-     objCargo.handlingFee = infoDetail.handlingFee // 装卸费
-     objCargo.packageFee = infoDetail.packageFee // 包装费
-     objCargo.pickupFee = infoDetail.pickupFee // 提货费
-     objCargo.upStairsFee = infoDetail.goupstairsFee // 上楼费
-     objCargo.realityhandlingFee = infoDetail.realityhandlingFee // 实际提货费
-     objCargo.forkliftFee = infoDetail.forkliftFee // 叉车费
-     objCargo.customsFee = infoDetail.customsFee // 报关费
-     objCargo.weightFee = infoDetail.weightFee // 重量单价
-     objCargo.volumeFee = infoDetail.volumeFee // 体积单价
-     objCargo.amountFee = infoDetail.amountFee // 件数单价
-     objCargo.otherfeeOut = infoDetail.otherfeeOut // 其他费用支出
-     objCargo.otherfeeIn = infoDetail.otherfeeIn // 其他费用收入
-     objCargo.taxRate = infoDetail.taxRate // 税率
-     objCargo.taxes = infoDetail.taxes // 税金
-     objCargo.housingFee = infoDetail.housingFee // 入仓费
-     objCargo.stampTax = infoDetail.stampTax // 印花税
-     objCargo.housingFee = infoDetail.housingFee // 入仓费
-     // console.log('objCargo', objCargo)
-     for (const item in objCargo) {
+     // let objCargo = {} // 货物信息
+     let objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
+     let objCargo = [{ // 货号
+       cargo: 'goodsSn',
+       info: 'shipGoodsSn'
+     }, { // 货品名
+       cargo: 'cargoName',
+       info: 'cargoName'
+     }, { // 包装
+       cargo: 'cargoPack',
+       info: 'cargoPack'
+     }, { // 件数
+       cargo: 'cargoAmount',
+       info: 'cargoAmount'
+     }, { // 重量
+       cargo: 'cargoVolume',
+       info: 'cargoVolume'
+     }, { // 体积
+       cargo: 'cargoWeight',
+       info: 'cargoWeight'
+     }, { // 开单网点
+       cargo: 'fromOrgName',
+       info: 'fromOrgName'
+     }, { // 品种规格
+       cargo: 'description',
+       info: 'description'
+     }, { // 运费
+       cargo: 'shipFee',
+       info: 'shipFee'
+     }, { // 送货费
+       cargo: 'deliveryFee',
+       info: 'deliveryFee'
+     }, { // 声明价值
+       cargo: 'productPrice',
+       info: 'productPrice'
+     }, { // 回扣
+       cargo: 'brokerageFee',
+       info: 'brokerageFee'
+     }, { // 回扣标识
+       cargo: 'brokerageFeeSign',
+       info: 'brokerageFee',
+       flag: 'R:'
+     }, { // 代收货款
+       cargo: 'agencyFund',
+       info: 'agencyFund'
+     }, { // 代收货款手续费
+       cargo: 'commissionFee',
+       info: 'commissionFee'
+     }, { // 上楼费
+       cargo: 'upStairsFee',
+       info: 'goupstairsFee'
+     }, { // 装卸费
+       cargo: 'handlingFee',
+       info: 'handlingFee'
+     }, { // 保险费
+       cargo: 'insuranceFee',
+       info: 'insuranceFee'
+     }, { // 包装费
+       cargo: 'packageFee',
+       info: 'packageFee'
+     }, { // 提货费
+       cargo: 'pickupFee',
+       info: 'pickupFee'
+     }, { // 实际提货费
+       cargo: 'realityhandlingFee',
+       info: 'realityhandlingFee'
+     }, { // 叉车费
+       cargo: 'forkliftFee',
+       info: 'forkliftFee'
+     }, { // 报关费
+       cargo: 'customsFee',
+       info: 'customsFee'
+     }, { // 重量单价
+       cargo: 'weightFee',
+       info: 'weightFee'
+     }, { // 体积单价
+       cargo: 'volumeFee',
+       info: 'volumeFee'
+     }, { // 件数单价
+       cargo: 'amountFee',
+       info: 'amountFee'
+     }, { // 其他费用支出
+       cargo: 'otherfeeOut',
+       info: 'otherfeeOut'
+     }, { // 其他费用收入
+       cargo: 'otherfeeIn',
+       info: 'otherfeeIn'
+     }, { // 税率
+       cargo: 'taxRate',
+       info: 'taxRate'
+     }, { // 税金
+       cargo: 'taxes',
+       info: 'taxes'
+     }, { // 入仓费
+       cargo: 'housingFee',
+       info: 'housingFee'
+     }, { // 印花税
+       cargo: 'stampTax',
+       info: 'stampTax'
+     }]
+     // objCargo.goodsSn = infoDetail.shipGoodsSn // 货号
+     // objCargo.cargoName = infoDetail.cargoName // 货品名
+     // objCargo.cargoPack = infoDetail.cargoPack // 包装
+     // objCargo.cargoAmount = infoDetail.cargoAmount // 件数
+     // objCargo.cargoWeight = infoDetail.cargoWeight // 重量
+     // objCargo.cargoVolume = infoDetail.cargoVolume // 体积
+     // objCargo.fromOrgName = infoDetail.fromOrgName // 开单网点
+     // objCargo.description = infoDetail.description // 品种规格
+     // objCargo.shipFee = infoDetail.shipFee // 运费
+     // objCargo.deliveryFee = infoDetail.deliveryFee // 送货费
+     // objCargo.productPrice = infoDetail.productPrice // 声明价值
+     // objCargo.brokerageFee = infoDetail.brokerageFee // 回扣
+     // objCargo.brokerageFeeSign = infoDetail.brokerageFee // 回扣标识 R:*****
+     // objCargo.agencyFund = infoDetail.agencyFund // 代收货款
+     // objCargo.commissionFee = infoDetail.commissionFee // 代收货款手续费
+     // objCargo.insuranceFee = infoDetail.insuranceFee // 保险费
+     // objCargo.handlingFee = infoDetail.handlingFee // 装卸费
+     // objCargo.packageFee = infoDetail.packageFee // 包装费
+     // objCargo.pickupFee = infoDetail.pickupFee // 提货费
+     // objCargo.upStairsFee = infoDetail.goupstairsFee // 上楼费
+     // objCargo.realityhandlingFee = infoDetail.realityhandlingFee // 实际提货费
+     // objCargo.forkliftFee = infoDetail.forkliftFee // 叉车费
+     // objCargo.customsFee = infoDetail.customsFee // 报关费
+     // objCargo.weightFee = infoDetail.weightFee // 重量单价
+     // objCargo.volumeFee = infoDetail.volumeFee // 体积单价
+     // objCargo.amountFee = infoDetail.amountFee // 件数单价
+     // objCargo.otherfeeOut = infoDetail.otherfeeOut // 其他费用支出
+     // objCargo.otherfeeIn = infoDetail.otherfeeIn // 其他费用收入
+     // objCargo.taxRate = infoDetail.taxRate // 税率
+     // objCargo.taxes = infoDetail.taxes // 税金
+     // objCargo.housingFee = infoDetail.housingFee // 入仓费
+     // objCargo.stampTax = infoDetail.stampTax // 印花税
+     objCargo.forEach((item, index) => {
        for (let i = 0; i < cargoLen; i++) {
-
-         let itemDetail = item + (i > 0 ? i + 1 : '')
-         obj[itemDetail] = (objCargoNotNum.indexOf(item) !== -1) ? infoDetail[itemDetail] : (parseFloat(infoDetail[itemDetail]) || '')
-         if (item.indexOf('brokerageFeeSign') !== -1) {
-           obj[itemDetail] = 'R:' + obj['brokerageFee' + (i > 0 ? i + 1 : '')]
+         let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
+         let itemInfo = item.info + (i > 0 ? i + 1 : '')
+         obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
+         if (item.flag) { // 添加特殊标识
+           obj[itemCargo] = item.flag + obj[itemCargo]
          }
-         // console.log(itemDetail, obj[itemDetail])
        }
-     }
+     })
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
@@ -653,6 +748,7 @@
        obj.upagencyFundY = upagencyFeeBig[0] // 代收货款(元)
      }
    }
+   console.warn('obj', obj)
    return obj
  }
 
@@ -707,10 +803,10 @@
                // 打印设置有货物1并且运单列表必定有货物1
                // 打印设置有货物2并且运单列表有货物2
                // 打印设置有货物3并且运单列表有货物3
-               for (let i = 0; i < cargoLen - 1; i++) {
-                 const val = info[el.filedValue]
-                 el.value = typeof val === 'undefined' ? '' : val === null ? '' : val
-               }
+               // for (let i = 0; i < cargoLen - 1; i++) {
+               const val = info[el.filedValue]
+               el.value = typeof val === 'undefined' ? '' : val === null ? '' : val
+               // }
              }
              return el
            })
