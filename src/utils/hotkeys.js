@@ -168,7 +168,7 @@ function getPressedKey(keyEvent) {
   var name = ''
 
   // 用来判断是否为
-  const _mods = { altKey: 'alt', metaKey: 'command', ctrlKey: 'ctrl', shiftKey: 'shift' }
+  const _mods = { altKey: 'Alt', metaKey: 'command', ctrlKey: 'Ctrl', shiftKey: 'Shift' }
   // 判断是否为组合按键
   for (const i in _mods) {
     name += keyEvent[i] ? _mods[i] + '+' : ''
