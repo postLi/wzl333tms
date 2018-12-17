@@ -96,6 +96,7 @@ export default {
     }
   },
   mounted() {
+    this.searchForm.batchTypeId = this.$options.data().searchForm.batchTypeId
     this.onSubmit()
   },
   methods: {
@@ -113,6 +114,8 @@ export default {
         this.searchForm.startTime = parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00'
         this.searchForm.endTime = parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59'
       }
+
+      console.log(typeof this.searchForm.batchTypeId, this.searchForm.batchTypeId,  this.searchForm)
       this.$emit('change', this.searchForm)
       // this.searchForm = objectMerge2({}, this.$options.data().searchForm)
     },

@@ -262,7 +262,7 @@ export default {
           topy: 0
         }
       },
-      defaultLabelWidth: 110,
+      defaultLabelWidth: 150,
       defaultLabelHeight: 30,
       defaultLabelFontSize: 12,
       defaultPaperWidth: 240,
@@ -392,6 +392,7 @@ export default {
       this.currentSearch = ''
       this.initPrinter()
       this.formPrint = objectMerge2({}, this.formInfo)
+      this.loading = true
       this.getCommonSettingOrder()
     },
     print(type) { // preview-打印预览 test-打印测试
@@ -889,7 +890,6 @@ export default {
         })
     },
     getSettingCompanyOrder() { // 获取当前公司打印设置信息
-      this.loading = true
       // 清空右边栏
       this.labelListView = []
       // this.formModel.labelList = []
@@ -897,6 +897,7 @@ export default {
       this.viewKey = new Date().getTime()
       let cargoShow2 = false
       let cargoShow3 = false
+      this.loading = true
       getSettingCompanyOrder().then(data => {
           if (data) {
             let array = Object.assign([], data)

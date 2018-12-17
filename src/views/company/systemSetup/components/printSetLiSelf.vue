@@ -1,6 +1,6 @@
 <template>
-  <!-- 打印标签设置 -->
-  <el-dialog title="打印标签设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
+  <!-- 打印运单设置 -->
+  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -27,47 +27,39 @@
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <div class="print_aside_content_form">
-          <!-- <label>发货人信息</label> -->
+          <label>发货人信息</label>
           <ul class="print_aside_content">
-            <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" draggable='true' @dragstart='drag($event)' 
-              :data-fileName='item.filedValue' @click="addItemDrag(item, index)" v-if="item.filedValue !== 'customFields' && item.filedValue !== 'setting'">
-                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
-              </li>
-            </transition-group>
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===1" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
           </ul>
-          <!-- <label>收货人信息</label>
+          <label>收货人信息</label>
           <ul class="print_aside_content">
-            <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===2" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
-              </li>
-            </transition-group>
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===2" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
           </ul>
-          <label>标签主要信息</label>
+          <label>运单主要信息</label>
           <ul class="print_aside_content">
-            <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===3" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
-              </li>
-            </transition-group>
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===3" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
           </ul>
-          <label>货物主要信息</label>
-          <ul class="print_aside_content">
-            <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b>
-              </li>
-            </transition-group>
+          <!-- <label>货物主要信息
+            <el-button @click="showCargoPlus" icon="el-icon-plus" size="mini" type="circle" title="添加一套货物信息"></el-button>
+          </label>
+          <ul class="print_aside_content" :key="cargoKey">
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
           </ul> -->
           <label>自定义信息</label>
           <ul class="print_aside_content">
-            <transition-group>
-              <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.filedValue==='customFields'" :data-fileName='item.filedValue' class="print_aside_content_self">
-                <el-input size="mini" placeholder="自定义标签(最多128个字符)" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)" :maxlength="128"></el-input>
-                <el-button size="mini" @click="addItemDrag(item, index)">添加</el-button>
-              </li>
-            </transition-group>
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" :data-fileName='item.filedValue' class="print_aside_content_self" style="width: 100%;">
+              <!-- <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>  -->
+              <el-input size="mini" placeholder="自定义标签(最多128个字符)" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)" :maxlength="128"></el-input>
+              <el-button size="mini" @click="addItemDrag(item, index)" icon="el-icon-plus">添加</el-button>
+            </li>
           </ul>
         </div>
         <div class="prinit_aside_paper">
@@ -116,19 +108,6 @@
                   <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
-              <!--  <el-form-item>
-                <el-input placeholder="请输入内容" v-model="dragDetailInfo.leftx" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-                  <template slot="prepend">左偏移</template>
-                  <template slot="append">mm</template>
-                </el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-input placeholder="请输入内容" v-model="dragDetailInfo.topy" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-                  <template slot="prepend">上偏移</template>
-                  <template slot="append">mm</template>
-                </el-input>
-              </el-form-item> -->
-              <!--   <div class="solidLine"></div> -->
               <el-form-item>
                 <el-input placeholder="请输入内容" v-model="dragDetailInfo.fontsize" size="mini" @change="changeDragDetailInfo" v-numberOnly>
                   <template slot="prepend">字号</template>
@@ -177,11 +156,11 @@
         <span> 纸张(宽×高)：{{this.formModel.paper.width+'(mm) × '+this.formModel.paper.height + '(mm)'}}</span>
         <div class="print_main_head_btns">
           <label for="">默认打印机：</label>
-          <el-select v-model="formPrint.printSetting.label" size="mini">
+          <el-select v-model="formPrint.printSetting.ship" size="mini">
             <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
           </el-select>
-          <el-button icon="el-icon-printer" @click="previewPrint('test')" size="mini" title="打印测试"></el-button>
-          <el-button icon="el-icon-view" @click="previewPrint('preview')" size="mini" title="打印预览"></el-button>
+          <el-button icon="el-icon-printer" @click="print('test')" size="mini" title="打印测试"></el-button>
+          <el-button icon="el-icon-view" @click="print('preview')" size="mini" title="打印预览"></el-button>
         </div>
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
@@ -225,11 +204,10 @@ let dom = ''
 import draggable from 'vuedraggable'
 import hotkeys from '@/utils/hotkeys'
 import { objectMerge2 } from '@/utils/index'
-import { getSettingCompanyLi, putSettingCompanyLi } from '@/api/operation/print'
-import { getCommonSettingLib } from '@/api/operation/print'
 import Upload from '@/components/Upload/singleImage2'
 import { CreatePrintPageEnable, CreatePrinterList } from '@/utils/lodopFuncs'
 import { putSetting } from '@/api/company/systemSetup'
+import { getSettingCompanyLi, putSettingCompanyLi, getCommonSettingLib } from '@/api/operation/print'
 export default {
   components: {
     draggable,
@@ -247,11 +225,19 @@ export default {
   },
   data() {
     return {
+      tagSize: 'mini',
       formPrint: {
         printSetting: {
-          label: ''
+          ship: ''
         }
       },
+      cargoLabelList: [
+        [],
+        [],
+        []
+      ], // 货物主要信息列表
+      cargoNum: 1, // 货物字段展示数量
+      maxCargo: 3, // 最多显示货物字段数量
       printers: [],
       currentSearch: '',
       labelSelf: '',
@@ -274,11 +260,11 @@ export default {
           topy: 0
         }
       },
-      defaultLabelWidth: 110,
+      defaultLabelWidth: 150,
       defaultLabelHeight: 30,
       defaultLabelFontSize: 12,
-      defaultPaperWidth: 80,
-      defaultPaperHeight: 80,
+      defaultPaperWidth: 240,
+      defaultPaperHeight: 140,
       imgNameStr: '预览图片lyy,',
       prxvalue: 0.264,
       mm2px: 3.779,
@@ -314,7 +300,8 @@ export default {
         }
       ],
       dialogVisible: false,
-      commonLabelList: []
+      commonLabelList: [],
+      cargoKey: 0
     }
   },
   watch: {
@@ -325,9 +312,7 @@ export default {
       deep: true
     },
     formInfo: {
-      handler(cval, oval) {
-        console.warn('formInfo', cval, oval)
-      },
+      handler(cval, oval) {},
       deep: true
     },
     popVisible() {
@@ -382,33 +367,59 @@ export default {
     this.unbindKey()
   },
   methods: {
+    showCargoPlus() {
+      console.log('cargoNum', this.cargoNum)
+      if (this.cargoNum < this.maxCargo) {
+        this.cargoNum = this.cargoNum + 1
+        this.cargoLabelList[this.cargoNum - 1].forEach(e => {
+          this.formModel.labelList.forEach((el, index) => {
+            if (e.filedValue === el.filedValue) {
+              e.showCargo = true
+              this.$set(this.formModel.labelList, index, e)
+            }
+          })
+        })
+        this.cargoKey = new Date().getTime()
+      } else {
+        this.$message({ type: 'warning', message: '最多添加' + this.maxCargo + '套货物信息' })
+      }
+    },
     init() {
+      this.cargoNum = this.$options.data().cargoNum
+      this.cargoKey = new Date().getTime()
+      this.currentSearch = ''
       this.initPrinter()
       this.formPrint = objectMerge2({}, this.formInfo)
       this.getCommonSettingLib()
     },
-    previewPrint(type) { // preview-打印预览 test-打印测试
+    print(type) { // preview-打印预览 test-打印测试
       let labelList = objectMerge2([], this.labelListView)
-      let setting = objectMerge2({}, this.formModel.paper)
-      setting.fontsize = null
-      setting.alignment = null
-      setting.bold = 0
-      labelList.push(setting)
+      labelList.push(objectMerge2({}, this.formModel.paper))
       labelList.forEach(e => {
+
         e.width = Math.round(e.width / this.prxvalue)
         e.height = Math.round(e.height / this.prxvalue)
         e.isshow = e.isshow ? 1 : 0
         e.bold = e.bold ? 2 : 1
         e.isshow = e.isshow ? 1 : 0
         e.value = e.filedName
+
+        if (e.filedValue === 'setting') {
+          e.bold = 0
+          e.fontsize = null
+          e.alignment = null
+          e.value = ''
+        } else {
+
+        }
       })
       CreatePrintPageEnable({
-        orderdata: labelList, // 标签数据
+        orderdata: labelList, // 运单数据
         number: 1, // 打印份数
-        printer: this.formPrint.printSetting.label, // 打印机
+        printer: this.otherinfo.systemSetup.printSetting.ship, // 打印机
         printSetup: labelList, // 打印设置
-        type: 'lib', // 打印类型
-        preview: type==='preview' ?true : false, // 是否预览
+        type: 'order', // 打印类型
+        preview: type === 'preview' ? true : false, // 是否预览
         mock: true // 是否直接读取value字段
       })
     },
@@ -443,20 +454,6 @@ export default {
       document.removeEventListener('keyup', this.deleteEditIndex)
       document.removeEventListener('keydown', this.controlEditIndex)
     },
-    handleChange(file, list) {
-      // console.log('handleChange file:', file)
-      // console.log('handleChange list:', list)
-      // try {
-      //   file.url = URL.createObjectURL(file.raw)
-      //   this.imageUrl = file.url
-
-      //   this.setBg('reset')
-      // } catch (err) {
-      //   console.error('上传本地图片错误', err);
-      //   return
-      // }
-    },
-    uploadHandleFile(file) {},
     startSetBg(type) {
       clearInterval(this.bgtimer)
       this.bgtimer = setInterval(() => {
@@ -561,8 +558,8 @@ export default {
         currentRow._index = ++this.labelIndex
         currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
         currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
-        currentRow.leftx = 0
-        currentRow.topy = 0
+        // currentRow.leftx = 0
+        // currentRow.topy = 0
         currentRow.fontsize = this.defaultLabelFontSize
         currentRow.bold = 0
         currentRow.alignment = 1
@@ -625,8 +622,11 @@ export default {
       this.formModel.labelList = []
       this.orgLabelList = []
       this.labelListView = []
+      this.cargoNum = this.$options.data().cargoNum
+      this.cargoKey = new Date().getTime()
+      this.currentSearch = ''
+      this.initPrinter()
       this.getCommonSettingLib()
-      // this.getSettingCompanyLi()
       this.showDragDetail = false
       this.dragDetailInfo = {}
       this.isDrag = null
@@ -843,12 +843,19 @@ export default {
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
     },
+    sortLabel(array, key) {
+      return array.sort((a, b) => {
+        let x = a[key]
+        let y = b[key]
+        return x.length - y.length
+      })
+    },
     getCommonSettingLib() { // 获取系统所有字段
       this.loading = true
       this.commonLabelList = []
       getCommonSettingLib().then(data => {
           if (data) {
-            data.forEach((el, index) => {
+            objectMerge2([], data).forEach((el, index) => {
               let obj = {
                 id: el.id,
                 filedValue: el.fieldValue,
@@ -865,10 +872,13 @@ export default {
                 type: el.type
               }
               // type
-              // 0-纸张设置 1-发货人信息 2-收货人信息 3-标签主要信息 4-货物主要信息 5-自定义信息
+              // 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息
               this.commonLabelList.push(obj)
             })
-            this.getSettingCompanyLi()
+            this.sortLabel(this.commonLabelList, 'filedName')
+            this.$nextTick(() => {
+              this.getSettingCompanyLi()
+            })
           }
         })
         .catch(err => {
@@ -883,6 +893,8 @@ export default {
       // this.formModel.labelList = []
       this.orgLabelList = []
       this.viewKey = new Date().getTime()
+      let cargoShow2 = false
+      let cargoShow3 = false
       getSettingCompanyLi().then(data => {
           if (data) {
             let array = Object.assign([], data)
@@ -903,6 +915,16 @@ export default {
                     this.formModel.labelList[index] = e
                   }
                   this.$set(e, 'type', el.type) // 给旧数据设置类型
+                  if (e.type === 4) {
+                    if (e.filedName.slice(-1) === '2') {
+                      cargoShow2 = true
+                      this.cargoNum = 2
+                    }
+                    if (e.filedName.slice(-1) === '3') {
+                      cargoShow3 = true
+                      this.cargoNum = 3
+                    }
+                  }
                   labelList.splice(index, 1)
                   commonArr.push(e)
                 }
@@ -951,6 +973,28 @@ export default {
                 e.bold = e.bold === 2 // 2-true 加粗
                 e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
               }
+              if (e.type === 4) { // 货物主要信息
+                e.showCargo = false
+                switch (e.filedName.slice(-1)) {
+                  case '2':
+                    if (cargoShow2) {
+                      e.showCargo = true
+                    }
+                    this.cargoLabelList[1].push(e)
+                    break
+                  case '3':
+                    if (cargoShow3) {
+                      e.showCargo = true
+                    }
+                    this.cargoLabelList[2].push(e)
+                    break
+                  default:
+                    e.showCargo = true
+                    this.cargoLabelList[0].push(e)
+                    break
+                }
+              }
+
             })
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
@@ -994,7 +1038,6 @@ export default {
                   e.fontsize = 10
                   e.bold = 0
                   e.alignment = 1
-                  e.size = 0
                 }
               })
               this.formModel.paper.width = this.defaultPaperWidth
@@ -1002,6 +1045,8 @@ export default {
               this.formModel.paper.topy = 0
               this.formModel.paper.leftx = 0
               this.labelListView = []
+              this.currentSearch = ''
+              console.log('cargoNum', this.cargoNum)
             })
             .catch(err => {})
         }
@@ -1037,7 +1082,7 @@ export default {
       this.viewKey = new Date().getTime()
     },
     savePrinter() {
-      if (this.formInfo.printSetting.label !== this.formPrint.printSetting.label) {
+      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship) {
         this.$confirm('默认打印机已修改，是否需要保存?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -1093,7 +1138,7 @@ export default {
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0
-              e.bold = e.bold ? 2 : 0
+              e.bold = e.bold ? 2 : 1
               if (e.filedValue === 'setting') {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
@@ -1107,7 +1152,7 @@ export default {
           console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
           putSettingCompanyLi(arr).then(data => {
               this.loading = false
-              this.$message({ type: 'success', message: '标签打印设置成功！' })
+              this.$message({ type: 'success', message: '运单打印设置成功！' })
               this.getCommonSettingLib()
               this.viewKey = new Date().getTime()
             })
