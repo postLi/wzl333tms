@@ -30,7 +30,7 @@
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
-              </template>x
+              </template>
             </el-table-column>
           </template>
         </el-table>
@@ -450,7 +450,7 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
     }
   }
 }

@@ -522,7 +522,6 @@ export default {
       }
     },
     submitForm(formName, type) {
-
       if (!this.formModel.certNo && this.formModel.isNeededVoucher === '1') {
         this.$message.error('缺少凭证编号')
         this.getBaseInfo()
@@ -552,7 +551,6 @@ export default {
             })
           }
           if (type) { // 打印
-            // this.$message.warning('暂无此功能~')
             this.print()
             this.loading = false
           }

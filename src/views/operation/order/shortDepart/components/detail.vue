@@ -87,7 +87,7 @@
         
       </div>
       <div class="detailinfo_tab">
-        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="selection" width="50"></el-table-column>
           <el-table-column fixed label="序号" prop="number" width="50">
             <template slot-scope="scope">

@@ -604,6 +604,7 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            return false
           }
           var deleteItem = this.selected.filter(el => el.shipStatus === 59)
           console.log('delete:', deleteItem)

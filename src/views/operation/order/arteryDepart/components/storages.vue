@@ -1068,6 +1068,8 @@ export default {
       const formModel = Object.assign({}, this.formModel)
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
+      formModel.contractNo = this.sendContract.contractNo
+      formModel.remark = this.sendContract.remark
       for (const item in formModel) {
         str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }
