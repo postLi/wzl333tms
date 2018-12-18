@@ -423,7 +423,6 @@
      feezh = feezh.slice(pointIndex).reverse()
      feezh.forEach((e, index) => {
        feezh[index] = smalltoBIG(e).slice(0, 1)
-       // this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
      })
      feezh = feezh.reverse()
      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
@@ -496,7 +495,8 @@
    if (type === 'lib') {
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
-     obj.mobilephone = infoDetail.mobilephone || user.mobilephone // 业务员电话
+     obj.clerk = infoDetail.userName || user.username // 业务员
+     obj.clerkMobile = infoDetail.userMobile || user.mobilephone // 业务员电话
      obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
      obj.qrcode = '' // 二维码
      obj.goodsSn = infoDetail.shipGoodsSn // 货号

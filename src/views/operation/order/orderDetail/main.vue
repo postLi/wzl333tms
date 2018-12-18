@@ -284,7 +284,7 @@
             </el-col>
             <el-col :span="4">
               <div class="order-form-item">
-                <span class="order-form-label">制单员</span>
+                <span class="order-form-label">业务员</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.userName" disabled size="mini" />
                 </el-form-item>

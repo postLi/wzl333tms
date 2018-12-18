@@ -145,10 +145,6 @@ export default {
         })
         return this.uniqueArray(ids).join(',')
       } else if (this.$route.query.tab === '全部核销') {
-        // let ids = []
-        // // this.info.orderList.forEach(e => {
-        // //   ids.push(e.feeReceivableTypeId)
-        // // })
         return this.uniqueArray(this.info.feeIds).join(',')
       } else {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
@@ -235,6 +231,7 @@ export default {
       this.baseQuery.feeIds = this.feeId + '' || ''
       console.log('baseQuery', this.baseQuery, this.orgId)
       this.$set(this.baseQuery, 'dataSrc', 0) 
+      this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
           this.formModel = data
           if (data.verificationList) {
