@@ -25,7 +25,7 @@
           <i slot="prefix" class="el-input__icon el-icon-search"></i>
         </el-autocomplete>
       </div>
-      <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
+      <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px" class="print_aside_form">
         <div class="print_aside_content_form">
           <label>模板名称</label>
           <ul class="print_aside_content">
@@ -72,13 +72,13 @@
           <br>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.width" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">宽</template>
+              <template slot="prepend">纸张宽</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.height" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">高</template>
+              <template slot="prepend">纸张高</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
@@ -99,6 +99,9 @@
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
               <span><i class="el-icon-setting"></i> {{dragDetailInfo.filedName}}</span>
+               <el-form-item class="print_itemSet_switch">
+                <el-switch v-model="dragDetailInfo.isshow" active-color="#67c23a" :active-text="dragDetailInfo.isshow?'显示':'隐藏'" @change="handleSwitch"></el-switch>
+              </el-form-item>
               <!-- <span>{{ ' ('+ dragDetailInfo.leftx +', '+ dragDetailInfo.topy +')'}}</span> -->
               <br>
               <el-form-item>
@@ -118,12 +121,9 @@
                   <template slot="prepend">字号</template>
                 </el-input>
               </el-form-item>
-              <el-form-item>
-                <el-checkbox v-model="dragDetailInfo.bold" label="加粗" border size="mini" @change="changeDragDetailInfo"></el-checkbox>
-                <el-switch v-model="dragDetailInfo.isshow" active-color="#67c23a" :active-text="dragDetailInfo.isshow?'显示':'隐藏'" @change="handleSwitch"></el-switch>
-              </el-form-item>
-              <el-form-item class="print_itemSet_col">
-                <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
+              <el-form-item  class="print_itemSet_col">
+                <el-checkbox v-model="dragDetailInfo.bold" label="文字加粗" border size="mini" @change="changeDragDetailInfo"></el-checkbox>
+                 <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
                   <el-radio-button v-for="item in alignmentOptions" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>

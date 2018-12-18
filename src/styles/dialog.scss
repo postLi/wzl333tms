@@ -76,7 +76,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       background-color: #ffffff;
       display: block;
       width: 450px;
-      height: 48px; // box-shadow: 1px 3px 10px #eee;
+      height: 48px;
     }
     .print_aside_search {
       border-top: 1px solid #eee;
@@ -98,11 +98,8 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
     .prinit_aside_paper {
       background-color: #f2f2f2;
-      position: flex;
-      flex-direction: row;
-      justify-content: space-around;
       width: 100%;
-      padding: 20px 0 10px 10px;
+      padding: 10px 0 5px 10px;
       .el-form-item {
         margin-bottom: 0;
         width: 48%;
@@ -111,16 +108,14 @@ $dialogHeader_bgcolor: #e6e6e6;
         .el-input-group__append,
         .el-input-group__prepend {
           padding: 0 8px;
+          color: #333;
         }
       }
     }
     .prinit_aside_detail {
       background-color: #fbfbfb;
-      position: flex;
-      flex-direction: row;
-      justify-content: space-around;
       width: 100%;
-      padding: 20px 0 0px 10px;
+      padding: 10px 0 0px 10px;
 
       .prinit_aside_detail_head {
         height: 40px;
@@ -128,12 +123,13 @@ $dialogHeader_bgcolor: #e6e6e6;
       }
       .el-form-item {
         margin-bottom: 0;
-        width: 48%;
+        width: 32%;
         display: inline-block;
         padding-right: 1px;
         .el-input-group__append,
         .el-input-group__prepend {
           padding: 0 8px;
+          color: #333;
         }
         .el-switch {
           position: absolute;
@@ -151,25 +147,29 @@ $dialogHeader_bgcolor: #e6e6e6;
             z-index: 2;
           }
         }
+        .el-checkbox.is-bordered.el-checkbox--mini{
+          width: 32%;
+        }
       }
       .print_itemSet_col {
         width: 100%;
       }
+      .print_itemSet_switch{
+        float: right;
+        margin-top: -10px;
+        clear: both;
+      }
     }
     .prinit_aside_setpreview {
       background-color: #fbfbfb;
-      position: flex;
-      flex-direction: row;
-      justify-content: space-around;
       width: 100%;
       padding: 0px 10px 10px 10px;
       .prinit_aside_setpreview_head {
-        height: 40px;
-        line-height: 55px;
+        height: 36px;
+        line-height: 36px;
       }
       .box_container_2 .image-uploader {
         width: auto;
-        margin-top: 5px;
       }
       .box_container_2 .el-upload--picture-card {
         width: auto;
@@ -228,7 +228,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       position: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      padding: 10px;
+      padding: 5px 10px;
       // max-height: 130px;
       // overflow: auto;
       li {
@@ -236,7 +236,7 @@ $dialogHeader_bgcolor: #e6e6e6;
         cursor: pointer;
         flex-grow: 1;
         width: 25%;
-        line-height: 28px;
+        line-height: 24px;
         overflow-x: hidden;
         .el-tag{
          background-color: rgba(0,0,0,0);
