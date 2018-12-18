@@ -299,6 +299,7 @@ export default {
     },
     getBaseInfo() {
       this.$set(this.searchQuery, 'dataSrc', 1)
+      this.$set(this.searchQuery, 'companyId', this.otherinfo.companyId)
       return postVerificationBaseInfo(this.searchQuery).then(data => {
           if (data) {
             this.formModel = data

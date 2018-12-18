@@ -613,6 +613,7 @@
      })
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
+     obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
      obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
      obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
