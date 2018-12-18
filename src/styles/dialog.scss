@@ -225,17 +225,19 @@ $dialogHeader_bgcolor: #e6e6e6;
     ul.print_aside_content {
       background-color: #fbfbfb;
       width: 100%;
-
       position: flex;
       flex-direction: row;
       flex-wrap: wrap;
       padding: 10px;
+      // max-height: 130px;
+      // overflow: auto;
       li {
         display: inline-block;
         cursor: pointer;
         flex-grow: 1;
         width: 25%;
         line-height: 28px;
+        overflow-x: hidden;
         .el-tag{
          background-color: rgba(0,0,0,0);
         }
@@ -243,13 +245,14 @@ $dialogHeader_bgcolor: #e6e6e6;
           font-weight: 400;
           color: #333;
           font-style: normal;
+          font-size: 14px;
         }
       }
     }
     li:hover b {
       border-bottom: 1px solid #999;
     }
-    li.print_aside_content_self {
+    .print_aside_content_self {
       .el-input {
         width: 80%;
       }

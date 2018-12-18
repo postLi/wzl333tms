@@ -27,6 +27,12 @@
       </div>
       <el-form :model="formModel" :rules="rules" ref="formModel" label-width="0px">
         <div class="print_aside_content_form">
+          <label>模板名称</label>
+          <ul class="print_aside_content">
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===6" :data-fileName='item.filedValue' class="print_aside_content_self" style="width: 100%;">
+              <el-input size="mini" placeholder="请输入模板名称(最多128个字符)" v-model="modelNameSelf" clearable @keyup.enter.native="addItemDrag(item, index)" :maxlength="128" style="width: 100%;"></el-input>
+            </li>
+          </ul>
           <label>发货人信息</label>
           <ul class="print_aside_content">
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===1" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
@@ -56,7 +62,6 @@
           <label>自定义信息</label>
           <ul class="print_aside_content">
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===5" :data-fileName='item.filedValue' class="print_aside_content_self" style="width: 100%;">
-              <!-- <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>  -->
               <el-input size="mini" placeholder="自定义标签(最多128个字符)" v-model="labelSelf" clearable @keyup.enter.native="addItemDrag(item, index)" :maxlength="128"></el-input>
               <el-button size="mini" @click="addItemDrag(item, index)" icon="el-icon-plus">添加</el-button>
             </li>
@@ -199,7 +204,7 @@
 // 25.4mm = 96px
 // 1mm = 96/25.4 = 3.779px
 // 1px = 25.4/96 = 0.26458mm
-// 字段类型type 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息
+// 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
 let dom = ''
 import draggable from 'vuedraggable'
 import hotkeys from '@/utils/hotkeys'
@@ -303,7 +308,8 @@ export default {
       ],
       dialogVisible: false,
       commonLabelList: [],
-      cargoKey: 0
+      cargoKey: 0,
+      modelNameSelf: '' // 模板名称
     }
   },
   watch: {
@@ -621,6 +627,7 @@ export default {
       }
     },
     review() { // 刷新
+      this.showDragDetail = false
       this.viewKey = new Date().getTime()
       this.formModel.labelList = []
       this.orgLabelList = []
@@ -630,11 +637,11 @@ export default {
       this.currentSearch = ''
       this.initPrinter()
       this.getCommonSettingOrder()
-      this.showDragDetail = false
       this.dragDetailInfo = {}
       this.isDrag = null
     },
     dragStart(event, row, index) {
+      console.log('dragStart', event, row, index)
       this.showDragTips[index] = true
       if (this.isDrag) {
         console.log('dragStart')
@@ -658,8 +665,6 @@ export default {
         console.log('dragEnd')
         return false
       }
-
-      console.log(this.showDragTips[index])
       this.isDragView = true
       dom = event.currentTarget
       const strName = dom.getAttribute('data-fileName')
@@ -722,7 +727,7 @@ export default {
           if (this.dragDetailInfo.filedValue) {
             const find = {}
             this.labelListView.filter((el, lindex) => {
-              if (this.dragDetailInfo.filedValue === el.filedValue) {
+              if (this.dragDetailInfo._index === el._index) {
                 find.el = el
                 find.index = lindex
                 return true
@@ -766,7 +771,7 @@ export default {
         // 也可以BT遍历所有的x、y值，然后做到从左到右、从上到下逐个跳转的效果。。。
       })
       // 编辑宽高
-      this.handleKeyEvent(e, ['ctrl+up', 'ctrl+down', 'ctrl+left', 'ctrl+right'], (find, key, e) => {
+      this.handleKeyEvent(e, ['<ctrl></ctrl><up></up>', 'ctrl+down', 'ctrl+left', 'ctrl+right'], (find, key, e) => {
         // 因为可能会有部分浏览器绑定这些快捷键，所以需要屏蔽掉它的默认事件
         e.preventDefault()
         const keystr = /(up|down)/.test(key) ? 'height' : 'width'
@@ -791,6 +796,7 @@ export default {
         // 为了避免未满1mm的px值影响，需要简单计算原有值对应了多少mm
         const keystr = /(up|down)/.test(key) ? 'topy' : 'leftx'
         const val = find.el[keystr]
+        console.log('val', find, find.el, val, keystr)
         let rval = 0
         // 1.通过取余计算
         // 1.1 但容易遇到js计算的精度问题，所以需要做一个最小操作值判断，如果需要移动的值小于0.1，则直接跨越1mm是最好的选择
@@ -828,6 +834,9 @@ export default {
       if (!this.isMove) {
         this.orgLabelList.filter(e => {
           if (e.filedValue === strName && !this.isDragView) {
+            e.leftx = event.offsetX
+            e.topy = event.offsetY
+            // e.isshow = true
             this.addItemDrag(e)
           }
         })
@@ -875,7 +884,7 @@ export default {
                 type: el.type
               }
               // type
-              // 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息
+              // 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
               this.commonLabelList.push(obj)
             })
             this.sortLabel(this.commonLabelList, 'filedName')
@@ -946,7 +955,7 @@ export default {
                 obj.topy = Math.round(obj.topy * this.prxvalue)
                 this.formModel.paper = obj
               } else { // 设置其他字段
-                array.forEach(em => { // 重复字段处理
+                array.forEach(em => { // 添加的重复字段处理
                   if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
                     if (em.isshow) {
                       em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
@@ -975,6 +984,7 @@ export default {
                 // 1代表粗体，0代表非粗体，缺省值是0
                 e.bold = e.bold === 2 // 2-true 加粗
                 e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+
               }
               if (e.type === 4) { // 货物主要信息
                 e.showCargo = false
@@ -997,7 +1007,9 @@ export default {
                     break
                 }
               }
-
+              if (e.type === 6) { // 设置模板名称
+                this.modelNameSelf = e.filedName
+              }
             })
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
@@ -1048,6 +1060,7 @@ export default {
               this.formModel.paper.topy = 0
               this.formModel.paper.leftx = 0
               this.labelListView = []
+              this.showDragDetail = false
               this.currentSearch = ''
               console.log('cargoNum', this.cargoNum)
             })
@@ -1117,22 +1130,31 @@ export default {
         if (valid) {
           this.savePrinter()
           this.loading = true
+          this.showDragDetail = false
           const arr = objectMerge2([], this.labelListView)
           let bgImg = {}
+          let modelName = {}
           arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息
           this.formModel.labelList.forEach(e => {
             if (e.filedValue === 'customFields') {
-              if (this.imageUrl) {
+              if (this.imageUrl) { // 预览背景
                 bgImg = objectMerge2({}, e)
                 bgImg.filedName = this.imgNameStr + this.imageUrl
                 bgImg.isshow = false
                 console.log(' 提交的时候 imageUrl1', this.imageUrl, bgImg)
               }
             }
+            if (e.type === 6) { // 模板名称
+              modelName = objectMerge2({}, e)
+              modelName.filedName = this.modelNameSelf + ''
+              modelName.isshow = false
+              arr.push(modelName)
+            }
           })
           if (this.imageUrl) {
             arr.push(bgImg)
           }
+
           arr.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })

@@ -511,8 +511,8 @@
      // let objCargo = {} // 货物信息
      let objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
      let objCargo = [{ // 货号
-       cargo: 'goodsSn',
-       info: 'shipGoodsSn'
+       cargo: 'goodsSn', // 数据库label名称
+       info: 'shipGoodsSn' // 数据lable名称
      }, { // 货品名
        cargo: 'cargoName',
        info: 'cargoName'
@@ -546,10 +546,6 @@
      }, { // 回扣
        cargo: 'brokerageFee',
        info: 'brokerageFee'
-     }, { // 回扣标识
-       cargo: 'brokerageFeeSign',
-       info: 'brokerageFee',
-       flag: 'R:'
      }, { // 代收货款
        cargo: 'agencyFund',
        info: 'agencyFund'
@@ -608,46 +604,11 @@
        cargo: 'stampTax',
        info: 'stampTax'
      }]
-     // objCargo.goodsSn = infoDetail.shipGoodsSn // 货号
-     // objCargo.cargoName = infoDetail.cargoName // 货品名
-     // objCargo.cargoPack = infoDetail.cargoPack // 包装
-     // objCargo.cargoAmount = infoDetail.cargoAmount // 件数
-     // objCargo.cargoWeight = infoDetail.cargoWeight // 重量
-     // objCargo.cargoVolume = infoDetail.cargoVolume // 体积
-     // objCargo.fromOrgName = infoDetail.fromOrgName // 开单网点
-     // objCargo.description = infoDetail.description // 品种规格
-     // objCargo.shipFee = infoDetail.shipFee // 运费
-     // objCargo.deliveryFee = infoDetail.deliveryFee // 送货费
-     // objCargo.productPrice = infoDetail.productPrice // 声明价值
-     // objCargo.brokerageFee = infoDetail.brokerageFee // 回扣
-     // objCargo.brokerageFeeSign = infoDetail.brokerageFee // 回扣标识 R:*****
-     // objCargo.agencyFund = infoDetail.agencyFund // 代收货款
-     // objCargo.commissionFee = infoDetail.commissionFee // 代收货款手续费
-     // objCargo.insuranceFee = infoDetail.insuranceFee // 保险费
-     // objCargo.handlingFee = infoDetail.handlingFee // 装卸费
-     // objCargo.packageFee = infoDetail.packageFee // 包装费
-     // objCargo.pickupFee = infoDetail.pickupFee // 提货费
-     // objCargo.upStairsFee = infoDetail.goupstairsFee // 上楼费
-     // objCargo.realityhandlingFee = infoDetail.realityhandlingFee // 实际提货费
-     // objCargo.forkliftFee = infoDetail.forkliftFee // 叉车费
-     // objCargo.customsFee = infoDetail.customsFee // 报关费
-     // objCargo.weightFee = infoDetail.weightFee // 重量单价
-     // objCargo.volumeFee = infoDetail.volumeFee // 体积单价
-     // objCargo.amountFee = infoDetail.amountFee // 件数单价
-     // objCargo.otherfeeOut = infoDetail.otherfeeOut // 其他费用支出
-     // objCargo.otherfeeIn = infoDetail.otherfeeIn // 其他费用收入
-     // objCargo.taxRate = infoDetail.taxRate // 税率
-     // objCargo.taxes = infoDetail.taxes // 税金
-     // objCargo.housingFee = infoDetail.housingFee // 入仓费
-     // objCargo.stampTax = infoDetail.stampTax // 印花税
      objCargo.forEach((item, index) => {
        for (let i = 0; i < cargoLen; i++) {
          let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
          let itemInfo = item.info + (i > 0 ? i + 1 : '')
          obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
-         if (item.flag) { // 添加特殊标识
-           obj[itemCargo] = item.flag + obj[itemCargo]
-         }
        }
      })
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
@@ -688,29 +649,29 @@
      switch (infoDetail.shipPayWay) { // 付款方式
        case 76:
          obj.nowPay = '√' // 现付（√）
-         obj.nowPayFee = infoDetail.shipNowpayFee
+         obj.nowPayFee = parseFloat(infoDetail.shipNowpayFee) || ''
          break
        case 77:
          obj.deliveryPay = '√' // 提付（√）|| 到付（√）
-         obj.deliveryPayFee = infoDetail.shipArrivepayFee
+         obj.deliveryPayFee = parseFloat(infoDetail.shipArrivepayFee) || ''
          break
        case 78:
          obj.monthPay = '√' // 月结（√）
-         obj.monthPayFee = infoDetail.shipMonthpayFee
+         obj.monthPayFee = parseFloat(infoDetail.shipMonthpayFee) || ''
          break
        case 79:
          obj.receiptPay = '√' // 回单付（√）
-         obj.receiptPayFee = infoDetail.shipReceiptpayFee
+         obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
          break
        case 104: // 多笔付
          obj.nowPay = infoDetail.shipNowpayFee ? '√' : ''
          obj.deliveryPay = infoDetail.shipArrivepayFee ? '√' : ''
          obj.monthPay = infoDetail.shipMonthpayFee ? '√' : ''
          obj.receiptPay = infoDetail.shipReceiptpayFee ? '√' : ''
-         obj.nowPayFee = infoDetail.shipNowpayFee || ''
-         obj.deliveryPayFee = infoDetail.shipArrivepayFee || ''
-         obj.monthPayFee = infoDetail.shipMonthpayFee || ''
-         obj.receiptPayFee = infoDetail.shipReceiptpayFee || ''
+         obj.nowPayFee = parseFloat(infoDetail.shipNowpayFee) || ''
+         obj.deliveryPayFee = parseFloat(infoDetail.shipArrivepayFee) || ''
+         obj.monthPayFee = parseFloat(infoDetail.shipMonthpayFee) || ''
+         obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
          break
      }
      if (infoDetail.shipDeliveryMethod === 68) {
@@ -776,7 +737,7 @@
      try {
        const prxvalue = 0.264
        const str = ''
-       let islib = false // 判断是否标签打印
+       // let islib = false // 判断是否标签打印
        let printSetup = []
        let copy = []
        LODOP = getLodop()
@@ -829,20 +790,25 @@
 
        let arr = new Array()
        arr = Object.assign([], info)
+       let title = ''
        for (const item in arr) { // 没有传值的项设置位空字符串
-         if (arr[item].filedValue === 'setting') { // 判断是否是标签打印 islib: true-标签打印 false-运单打印
+         if (arr[item].filedValue === 'setting') {
            if (arr[item].filedName === '标签尺寸') {
-             islib = true
+             title = '标签打印'
            } else {
-             islib = false
+             title = '托运单打印'
            }
+           console.log('setting::', arr[item])
+           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
+           LODOP.PRINT_INITA(arr[item].topy, arr[item].leftx, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', title)
+           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
+           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
+           LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
          }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
          }
        }
-       let pageWidth = 0
-       let pageHeight = 0
 
        arr.forEach((e, index) => {
          let title = ''
@@ -851,53 +817,17 @@
          } else {
            title = '托运单打印'
          }
-         if (e.filedValue === 'setting') {
-           console.log('setting::', e)
-           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
-           // LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
-           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
-           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '')
-           pageWidth = e.width
-           pageHeight = e.height
-         } else {
+         if (e.filedValue !== 'setting') {
            if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
              LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
            } else {
-
-             if (islib) { // 打印标签的是否 特殊处理233和234两个公司  需要添加标题头
-               if (e.companyid === 233 || e.companyid === 234) {
-                 if (e.filedValue !== 'companyName') {
-                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName.replace('业务员电话', '业务投诉电话') + ': ' + e.value)
-                   // 允许标点溢出，且英文单词拆开。
-                   LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-                 } else {
-                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-                   // 允许标点溢出，且英文单词拆开。
-                   LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-                 }
-               } else {
-                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-                 LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-               }
-             } else {
-               LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-               LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-               LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-               LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-             }
-             // LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-             // LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-             // LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+             LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
+             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+             LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
@@ -905,7 +835,6 @@
          }
        })
        LODOP.SET_PRINT_MODE('CATCH_PRINT_STATUS', true)
-
        if (printer) {
          LODOP.SET_PRINTER_INDEXA(printer)
        }
