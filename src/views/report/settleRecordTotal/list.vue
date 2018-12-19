@@ -12,7 +12,7 @@
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" class="info_tab_report" id="report_settleRecordTotal">
-        <table id="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
+        <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
               <th rowspan="2" bgcolor="dimGray" width="70px">
@@ -216,11 +216,11 @@ export default {
         const data = res
         const countColVal = []
         this.loading = false
-
         const table = document.getElementById('report_settleRecordTotal_table')
         if (!table) {
           return
         }
+
         const tbodyLen = table.getElementsByTagName('tbody')
         const tfootLen = table.getElementsByTagName('tfoot')
         if (tbodyLen.length > 0) {
@@ -396,7 +396,7 @@ export default {
 
 
   /*设置边框的*/
-  #report_settleRecordTotal_table {
+  .report_settleRecordTotal_table {
       width: 100%;
       min-width: 1200px;
 

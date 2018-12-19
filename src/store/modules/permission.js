@@ -69,11 +69,12 @@ const permission = {
         // accessedRouters = asyncRouterMap
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         accessedRouters.map(el => {
-          if (el.meta && el.meta.code) {
-            el.children.map(ee => {
+          console.log('el name', el.name, el)
+          if (el.meta && el.meta.code === 'FINANCE') {
+            el.children.forEach(ee => {
               if (ee.meta && ee.meta.code) {
                 if (ee.children && ee.children.length) {
-                  el.redirect = ee.children[0].path
+                  // el.redirect = ee.children[0].path
                   ee.children.map(em => {
                     if (em.meta && em.meta.code) {
                       if (em.children && em.children.length) {
@@ -83,23 +84,25 @@ const permission = {
                       }
                     }
                   })
+                } else {
+                  // el.redirect = ee.path
                 }
               }
             })
           }
-          // if (el.meta && el.meta.code === 'SYSTEM') {
-          //   let flag = true
-          //   el.children.map(ee => {
-          //     if (ee.meta && ee.meta.code && flag) {
-          //       if (ee.children && ee.children.length) {
-          //         el.redirect = ee.children[0].path
-          //       } else {
-          //         el.redirect = ee.path
-          //       }
-          //       flag = false
-          //     }
-          //   })
-          // }
+          if (el.meta && el.meta.code === 'SYSTEM') {
+            let flag = true
+            el.children.map(ee => {
+              if (ee.meta && ee.meta.code && flag) {
+                if (ee.children && ee.children.length) {
+                  el.redirect = ee.children[0].path
+                } else {
+                  el.redirect = ee.path
+                }
+                flag = false
+              }
+            })
+          }
         })
         commit('SET_ROUTERS', accessedRouters)
         resolve()
