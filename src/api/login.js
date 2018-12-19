@@ -1,5 +1,6 @@
 import fetch from '@/utils/fetch'
 import { getRefreshToken } from '../utils/auth'
+import md5 from 'js-md5'
 
 export function login(username, password, orgid) {
   var grant_type = 'password'
@@ -26,7 +27,7 @@ export function login(username, password, orgid) {
     },
     params: {
       username,
-      password,
+      password: md5(password),
       grant_type,
       orgid
       // scope,
