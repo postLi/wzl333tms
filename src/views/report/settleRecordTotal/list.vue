@@ -12,7 +12,7 @@
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" class="info_tab_report" id="report_settleRecordTotal">
-        <table id="report_settleRecordTotal_table" width="780px" border="1px" style="border-collapse: collapse;">
+        <table id="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
               <th rowspan="2" bgcolor="dimGray" width="70px">
@@ -56,21 +56,9 @@
             </tr>
           </thead>
         </table>
-        <table ref="footTotalFee" class="footTotalFee" width="780px">
-          <!-- <tr>
-            <td width="70px"></td>
-            <td width="270px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-          </tr> -->
+        <table ref="footTotalFee" class="footTotalFee">
           <colgroup width="70px"></colgroup>
-          <colgroup width="240px"></colgroup>
+          <colgroup width="270px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
@@ -78,7 +66,7 @@
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
           <colgroup width="90px"></colgroup>
-          <colgroup width="110px"></colgroup>
+          <colgroup width="90px"></colgroup>
         </table>
       </div>
     </div>
@@ -127,47 +115,56 @@ export default {
       {
         label: '费用项目',
         prop: 'feeName',
-        textAlign: 'center'
+        textAlign: 'center',
+        width: '270'
       },
       {
         label: '应收合计',
         prop: 'totalreceivableFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '已收',
         prop: 'receivableFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '未收',
         prop: 'receivableUnpaidFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '数量',
         prop: 'receivableCount',
-        textAlign: 'center'
+        textAlign: 'center',
+        width: '90'
       },
       {
         label: '应付合计',
         prop: 'totalpayableFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '已付',
         prop: 'payableFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '未付',
         prop: 'payableUnpaidFee',
-        textAlign: 'right'
+        textAlign: 'right',
+        width: '90'
       },
       {
         label: '数量',
         prop: 'payableCount',
-        textAlign: 'center'
+        textAlign: 'center',
+        width: '90'
       }
       ],
       countCol: [ // 需要合计的-列

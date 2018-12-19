@@ -14,7 +14,7 @@
       <div @scroll="handleBottom" class="info_tab_report" id="report_turnoverTotal">
         <table id="report_turnoverTotal_table">
         </table>
-        <table ref="footTotalFee" class="footTotalFee">
+        <table ref="footTotalFee" class="footTotalFee_turnoverTotal">
           <colgroup width="65px"></colgroup>
           <colgroup width="110px"></colgroup>
           <colgroup width="110px"></colgroup>
@@ -247,7 +247,7 @@ export default {
         }
 
         // 复制-生成多一个浮动的底部合计行
-        const totalTable = document.getElementsByClassName('footTotalFee')[0]
+        const totalTable = document.getElementsByClassName('footTotalFee_turnoverTotal')[0]
         const total_tfootLen = totalTable.getElementsByTagName('tfoot')
         if (total_tfootLen.length > 0) {
           totalTable.removeChild(total_tfootLen[0])
@@ -378,6 +378,7 @@ export default {
         line-height: 23px;
         font-size: 13px;
         td {
+          width: 7%;
           font-size: 13px;
         }
       }
@@ -387,7 +388,7 @@ export default {
   }
 }
 
-.footTotalFee {
+.footTotalFee_turnoverTotal {
   width: 100%;
   position: absolute;
   min-width: 1200px;

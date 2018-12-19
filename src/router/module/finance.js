@@ -103,7 +103,7 @@ export default {
       }, {
         path: '/finance/accountsReceivable/abnormal',
         icon: 'QQ',
-        name: '异动费用',
+        name: '应收异动费用',
         component: _import('finance/accountsReceivable/abnormal'),
         meta: {
           role: ['admin'],
@@ -729,7 +729,7 @@ export default {
       }, {
         path: '/finance/financeInfo/subjectClose',
         icon: 'QQ',
-        name: '科目定义',
+        name: '核销科目',
         component: _import('finance/financeInfo/subjectClose'),
         meta: {
           role: ['admin'],
@@ -740,7 +740,7 @@ export default {
       }, {
         path: '/finance/financeInfo/subjectDirection',
         icon: 'QQ',
-        name: '科目定义',
+        name: '核销方向',
         component: _import('finance/financeInfo/subjectDirection'),
         meta: {
           role: ['admin'],
@@ -805,7 +805,7 @@ export default {
       path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
       icon: 'QQ',
       hidden: true,
-      name: '对账明细',
+      name: '承运商创建对账单',
       component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'),
       meta: {
         role: ['admin'],
@@ -816,7 +816,7 @@ export default {
       path: '/finance/reconciliation/group/detailTable/groupRecon',
       icon: 'QQ',
       hidden: true,
-      name: '对账明细',
+      name: '创建对账单',
       component: _import('finance/reconciliation/group/components/detailTable/components/groupRecon'),
       meta: {
         role: ['admin'],

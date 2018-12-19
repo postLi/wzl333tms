@@ -1,5 +1,5 @@
 <template>
-  <div class="system-setup-page">
+  <div class="system-setup-page" v-loading="loading">
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
         <el-collapse v-model="activeNames">
@@ -309,6 +309,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       // 表单项
       printers: [],
       shipNo: '',
@@ -694,6 +695,7 @@ export default {
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
     saveData() {
+      this.loading = true
       // 转译一下打印的\\字符
       const formPrintSetting = Object.assign({}, this.form.printSetting)
       for (const item in formPrintSetting) {
@@ -714,6 +716,7 @@ export default {
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.initOrder()
+          this.loading = false
           // this.infoFinance()
         })
       })

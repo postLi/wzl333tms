@@ -44,38 +44,6 @@
           <colgroup width="110px"></colgroup>
           <colgroup width="100px"></colgroup>
         </table>
-        <!-- <table id="report_turnoverDaily_table">
-          <colgroup width="58px"></colgroup>
-          <colgroup width="155px"></colgroup>
-          <colgroup width="145px"></colgroup>
-          <colgroup width="165px"></colgroup>
-          <colgroup width="120px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="120px"></colgroup>
-          <colgroup width="98px"></colgroup>
-        </table>
-        <table ref="footTotalFee" class="footTotalFee">
-          <colgroup width="58px"></colgroup>
-          <colgroup width="155px"></colgroup>
-          <colgroup width="145px"></colgroup>
-          <colgroup width="165px"></colgroup>
-          <colgroup width="120px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="98px"></colgroup>
-          <colgroup width="100px"></colgroup>
-          <colgroup width="98px"></colgroup>
-        </table> -->
       </div>
     </div>
   </div>

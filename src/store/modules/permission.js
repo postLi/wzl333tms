@@ -1,4 +1,7 @@
-import { asyncRouterMap, constantRouterMap } from '@/router/index'
+import {
+  asyncRouterMap,
+  constantRouterMap
+} from '@/router/index'
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -28,9 +31,10 @@ function filterAsyncRouter(asyncRouterMap, roles) {
     }
     return false
   })
+
   return accessedRouters
 }
-
+console.log('constantRouterMap', constantRouterMap)
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -47,9 +51,13 @@ const permission = {
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+    GenerateRoutes({
+      commit
+    }, data) {
       return new Promise(resolve => {
-        const { roles } = data
+        const {
+          roles
+        } = data
         let accessedRouters
         // 如果是管理员，则给于全部权限
         /* if (roles.indexOf('2') >= 0) {
@@ -58,28 +66,49 @@ const permission = {
           accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         } */
         // 暂时给于全部权限，等后台权限体系建立好再对接设置
-       // accessedRouters = asyncRouterMap
+        // accessedRouters = asyncRouterMap
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         accessedRouters.map(el => {
-          if (el.meta && el.meta.code === 'SYSTEM') {
-            let flag = true
+          if (el.meta && el.meta.code) {
             el.children.map(ee => {
-              if (ee.meta && ee.meta.code && flag) {
+              if (ee.meta && ee.meta.code) {
                 if (ee.children && ee.children.length) {
                   el.redirect = ee.children[0].path
-                } else {
-                  el.redirect = ee.path
+                  ee.children.map(em => {
+                    if (em.meta && em.meta.code) {
+                      if (em.children && em.children.length) {
+                        em.redirect = em.children[0].path
+                        // } else {
+                        //   em.redirect = em.path
+                      }
+                    }
+                  })
                 }
-                flag = false
               }
             })
           }
+          // if (el.meta && el.meta.code === 'SYSTEM') {
+          //   let flag = true
+          //   el.children.map(ee => {
+          //     if (ee.meta && ee.meta.code && flag) {
+          //       if (ee.children && ee.children.length) {
+          //         el.redirect = ee.children[0].path
+          //       } else {
+          //         el.redirect = ee.path
+          //       }
+          //       flag = false
+          //     }
+          //   })
+          // }
         })
         commit('SET_ROUTERS', accessedRouters)
         resolve()
       })
     },
-    GenerateSidebarRoutes({ commit, state }, data) {
+    GenerateSidebarRoutes({
+      commit,
+      state
+    }, data) {
       return new Promise(resolve => {
         const currentRouters = state.routers
         const subRouter = currentRouters.find(route => {
