@@ -472,6 +472,15 @@ export default {
       this.$set(this.formModel, 'verificationWay', obj.verificationWay)
       console.log('选中方向：：', obj, this.formModel)
     },
+     uniqueArray(arr) { // 去重
+      var hash = []
+      for (var i = 0; i < arr.length; i++) {
+        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i]) {
+          hash.push(arr[i])
+        }
+      }
+      return hash
+    },
     closeMe(done) {
       this.$emit('close')
       if (typeof done === 'function') {

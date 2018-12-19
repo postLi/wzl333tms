@@ -245,6 +245,15 @@ export default {
       this.settlementId = obj
       this.setSettlementId(obj)
     },
+    uniqueArray(arr) { // 去重
+      var hash = []
+      for (var i = 0; i < arr.length; i++) {
+        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i]) {
+          hash.push(arr[i])
+        }
+      }
+      return hash
+    },
     closeDialog() {
       this.popVisibleDialog = false
     }

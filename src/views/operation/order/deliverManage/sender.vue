@@ -173,10 +173,10 @@ export default {
       },
       {
         label: '实际送货完成时间',
-        prop: 'actualSendtime',
+        prop: 'actualArrivetime',
         width: '180',
         slot: (scope) => {
-          return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         }
       },
       {
@@ -360,7 +360,7 @@ export default {
       this.setData(57) // 57-送货中
       if (this.isBatch) {
         const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
-        this.$set(this.commonData, 'actualSendtime', timer)
+        this.$set(this.commonData, 'actualArrivetime', timer)
         this.loading = true
         putCompleteDelivery(this.commonData).then(data => {
           if (data) {

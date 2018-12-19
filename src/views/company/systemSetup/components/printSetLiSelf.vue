@@ -423,7 +423,7 @@ export default {
       CreatePrintPageEnable({
         orderdata: labelList, // 标签数据
         number: 1, // 打印份数
-        printer: this.otherinfo.systemSetup.printSetting.label, // 打印机
+        printer: this.formPrint.printSetting.label, // 打印机
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
         preview: type === 'preview' ? true : false, // 是否预览

@@ -386,6 +386,12 @@ export default {
               this.$set(this.formModel.labelList, index, e)
             }
           })
+           this.orgLabelList.forEach((el, index) => {
+            if (e.filedValue === el.filedValue) {
+              e.showCargo = true
+              this.$set(this.orgLabelList, index, e)
+            }
+          })
         })
         this.cargoKey = new Date().getTime()
       } else {
@@ -425,7 +431,7 @@ export default {
       CreatePrintPageEnable({
         orderdata: labelList, // 运单数据
         number: 1, // 打印份数
-        printer: this.otherinfo.systemSetup.printSetting.ship, // 打印机
+        printer: this.formPrint.printSetting.ship, // 打印机
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
         preview: type === 'preview' ? true : false, // 是否预览
@@ -871,7 +877,7 @@ export default {
               let obj = {
                 id: el.id,
                 filedValue: el.fieldValue,
-                filedName: el.fieldName,
+                filedName: el.fieldName || '',
                 topy: 0,
                 leftx: 0,
                 width: 0,

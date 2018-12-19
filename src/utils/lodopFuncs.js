@@ -675,6 +675,46 @@
          obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
          break
      }
+     ////////////////////////////////////////////////////////
+     ///回单要求
+     ///
+     switch (infoDetail.shipReceiptRequire) {
+       case 81: // 签回单
+         obj.receiptSign = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 82: // 签原单
+         obj.receiptOriginal = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 83: // 打收条
+         obj.receiptIssue = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 84: // 签信封
+         obj.receiptMailer = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 85: // 签回单盖章
+         obj.receiptSeal = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 86: // 电子回单
+         obj.receiptElectronic = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 102: // 传真
+         obj.receiptFax = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+     }
+     ///////////////////////////////////////////////////////////
+     ///业务类型
+     ///
+     switch (infoDetail.shipBusinessType) {
+       case 91: // 整车
+         obj.carLoad = infoDetail.shipBusinessType ? '√' : ''
+         break
+       case 92: // 零担
+         obj.zeroLoad = infoDetail.shipBusinessType ? '√' : ''
+         break
+       case 93: // 专线
+         obj.specialLine = infoDetail.shipBusinessType ? '√' : ''
+         break
+     }
      if (infoDetail.shipDeliveryMethod === 68) {
        obj.deliveryGood = '√' // 自提（√）
      } else if (infoDetail.shipDeliveryMethod === 69) {

@@ -24,7 +24,7 @@ export function putDeliverLoad(data) {
  * 送货完成(批量)
  */
 export function putCompleteDelivery(data) {
-	return fetch.put('/api-order/order/load/v1/completeDelivery/?loadTypeId=' + data.loadTypeId + '&loadIds=' + data.loadIds + '&actualSendtime=' + data.actualSendtime)
+	return fetch.put('/api-order/order/load/v1/completeDelivery/?loadTypeId=' + data.loadTypeId + '&loadIds=' + data.loadIds + '&actualArrivetime=' + data.actualArrivetime)
 }
 /**
  * 送货签收(批量)

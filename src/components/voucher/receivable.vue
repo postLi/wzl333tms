@@ -131,6 +131,7 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     },
     feeId() {
+      console.log('info', this.info)
       if (this.$route.query.currentPage === 'handleFee') {
         let ids = []
         this.info.orderList.forEach(e => {

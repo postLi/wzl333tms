@@ -499,6 +499,7 @@ export default {
           let item = {
             id: e.id,
             amount: e.amount,
+            loadTypeName: e.loadTypeName,
             feeTypeId: e.loadTypeName === '干线' ? 33 : 32
           }
           if (e.amount && e.unpaidFee > 0 && e.amount <= e.unpaidFee) {
