@@ -9,22 +9,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发生金额" prop="amount">
-          <el-input v-model.number="formModel.amount"  v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
+          <el-input v-model.number="formModel.amount" v-numberOnly:point placeholder="发生金额" :size="btnsize" :maxlength="8" disabled></el-input>
         </el-form-item>
       </div>
       <div class="income_item">
         <!-- isNeededVoucher 1-需要核销 2-不需要核销 (不可以修改科目信息)  -->
-        <el-form-item label="一级科目" 
-        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
-        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)"
-             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
+        <el-form-item label="一级科目" :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="请选择" :size="btnsize" @change="val => selectSubject(val,1)" :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="凭证日期" prop="certTime">
-          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false"  >
+          <el-date-picker v-model="formModel.certTime" type="date" :size="btnsize" placeholder="选择日期" :clearable="false">
           </el-date-picker>
         </el-form-item>
       </div>
@@ -116,12 +113,11 @@ export default {
       deep: true
     },
     btnLoading: {
-      handler(cval, oval) {
-      },
+      handler(cval, oval) {},
       deep: true
     },
     fiOrderType: {
-      handler (cval, oval) {},
+      handler(cval, oval) {},
       deep: true
     }
   },
@@ -171,10 +167,10 @@ export default {
       rules: {
         verificationId: [{ required: true, message: '请填写记账方向!', trigger: 'blur' }],
         subjectOneId: [{ required: true, message: '请填写一级科目!', trigger: 'blur' }],
-        receiptNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        invoiceNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        checkNo: [{validator: numberAndWordValid, trigger:'blur'}],
-        manualCert: [{validator: numberAndWordValid, trigger:'blur'}]
+        receiptNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        invoiceNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        checkNo: [{ validator: numberAndWordValid, trigger: 'blur' }],
+        manualCert: [{ validator: numberAndWordValid, trigger: 'blur' }]
       },
       veryficationType: {},
       veryficationList: [],
@@ -199,18 +195,27 @@ export default {
     postVerificationBaseInfo() { // 新增时初始化数据
       this.baseQuery.orgId = this.orgId
       this.baseQuery.amount = this.info.amount
-      this.$set(this.baseQuery, 'dataSrc', 0) 
+      this.$set(this.baseQuery, 'dataSrc', 0)
+      this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
-          this.formModel = data
-          if (data.verificationList) {
-          this.veryficationList = data.verificationList
-          data.verificationList.forEach((el, index) => {
-            this.veryficationType[el.id] = el.verificationWay
-          })
-        }
-          this.initSubject()
+          if (data) {
+            this.subjectOne = data.subOneList || []
+            this.subjectTwo = data.subTwoList || []
+            this.subjectThree = data.subThreeList || []
+            this.subjectFour = data.subFourList || []
+            this.formModel = data
+            this.loading = false
+            if (data.verificationList) {
+              this.veryficationList = data.verificationList || []
+              data.verificationList.forEach((el, index) => {
+                this.veryficationType[el.id] = el.verificationWay
+              })
+            }
+            // this.initSubject()
+          }
         })
         .catch(err => {
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },
@@ -365,7 +370,7 @@ export default {
           this.$set(dataInfo, 'orderList', this.info.orderList)
           this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
           if (!dataInfo.certTime) {
-           dataInfo.certTime = new Date()
+            dataInfo.certTime = new Date()
           }
           this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
           delete dataInfo.verificationList

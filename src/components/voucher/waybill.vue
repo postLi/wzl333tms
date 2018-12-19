@@ -1,6 +1,6 @@
 <template>
   <!-- 核销凭证 运单核销-->
-  <el-dialog :title="dialogTitle"  :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
+  <el-dialog :title="dialogTitle" :visible.sync="isShow" :close-on-click-modal="false" :before-close="closeMe" class="incomeDialog">
     <el-form ref="formModel" :model="formModel" :rules="rules" :inline="true" label-width="120px" v-loading="loading">
       <div class="income_item">
         <el-form-item label="方向" prop="verificationId" class="formItemTextDanger">
@@ -13,11 +13,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" 
-        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
-        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
-             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject" size="mini">
+        <el-form-item label="一级科目" :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject" size="mini">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -29,7 +26,7 @@
       </div>
       <div class="income_item">
         <el-form-item label="二级科目" :class="subjectTwo.length > 0 ? 'formItemTextDanger' : ''">
-          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'"  size="mini">
+          <el-select v-model="formModel.subjectTwoId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,2)" :disabled="formModel.isNeededVoucher !== '1'" size="mini">
             <el-option v-for="(item, index) in subjectTwo" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -233,18 +230,25 @@ export default {
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
-      this.$set(this.baseQuery, 'dataSrc', 0) 
+      this.$set(this.baseQuery, 'dataSrc', 0)
+      this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
-          this.formModel = data
-          if (data.verificationList) {
-            this.veryficationList = data.verificationList
-            data.verificationList.forEach((el, index) => {
-              this.veryficationType[el.id] = el.verificationWay
-            })
+          if (data) {
+            this.subjectOne = data.subOneList || []
+            this.subjectTwo = data.subTwoList || []
+            this.subjectThree = data.subThreeList || []
+            this.subjectFour = data.subFourList || []
+            this.formModel = data
+            this.loading = false
+            if (data.verificationList) {
+              this.veryficationList = data.verificationList || []
+              data.verificationList.forEach((el, index) => {
+                this.veryficationType[el.id] = el.verificationWay
+              })
+            }
+            // this.initSubject()
           }
-            this.initSubject()
         })
-          this.loading = false
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
