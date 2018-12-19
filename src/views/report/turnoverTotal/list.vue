@@ -349,7 +349,7 @@ export default {
 }
 .info_tab_report {
   height: 100%;
-  padding-bottom: 30px;
+  padding-bottom: 60px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;

@@ -345,6 +345,8 @@ export default {
       let height = el.offsetHeight
       let footel = this.$refs.footTotalFee
       let footheight = footel.offsetHeight
+      console.log('height offsetHeight', height)
+      console.log('footheight offsetHeight', footheight)
       let calctop = top + height - footheight
       if (hasscroll) {
         calctop -= this.scrollwidth
@@ -359,7 +361,7 @@ export default {
 }
 
 </script>
-<style lang="scss">
+<style lang="scss" >
 .tab-content.chartSender {
   width: 100%;
   height: calc(100%);
@@ -386,14 +388,11 @@ export default {
 }
 .info_tab_report {
   height: 100%;
-  padding-bottom: 30px;
+  padding-bottom: 60px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
   position: relative;
-
-
-
   /*设置边框的*/
   #report_turnoverDaily_table {
       width: 100%;

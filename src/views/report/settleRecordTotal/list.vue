@@ -56,7 +56,7 @@
             </tr>
           </thead>
         </table>
-        <table ref="footTotalFee" class="footTotalFee">
+        <table ref="footTotalFee" class="footTotalFee_settleRecordTotal">
           <colgroup width="70px"></colgroup>
           <colgroup width="270px"></colgroup>
           <colgroup width="90px"></colgroup>
@@ -283,7 +283,7 @@ export default {
         }
 
         // 复制-生成多一个浮动的底部合计行
-        const totalTable = document.getElementsByClassName('footTotalFee')[0]
+        const totalTable = document.getElementsByClassName('footTotalFee_settleRecordTotal')[0]
         const total_tfootLen = totalTable.getElementsByTagName('tfoot')
         if (total_tfootLen.length > 0) {
           totalTable.removeChild(total_tfootLen[0])
@@ -388,7 +388,7 @@ export default {
 
 .info_tab_report {
   height: 100%;
-  padding-bottom: 30px;
+  padding-bottom: 60px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
@@ -426,7 +426,7 @@ export default {
   }
 }
 
-.footTotalFee {
+.footTotalFee_settleRecordTotal {
   width: 100%;
   position: absolute;
   min-width: 1200px;
