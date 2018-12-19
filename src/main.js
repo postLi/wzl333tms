@@ -12,6 +12,7 @@ import * as $const from './utils/constant'
 // import * as $lodop from './utils/LodopFuncs'
 
 import * as filters from './filters'
+import md5 from 'js-md5'
 
 import './mixins'
 
@@ -47,6 +48,7 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 Vue.prototype.$const = $const
+Vue.prototype.$md5 = md5
 // Vue.prototype.$lodop = $lodop
 
 // register global utility filters.
