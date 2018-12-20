@@ -3,10 +3,10 @@
     <div class="container-top">
       <div class="login-top-wrapper clearfix">
         <img class="logo-img" src="../../assets/login_images/login_03.png" alt="">
-        <a href="http://www.28tms.com" target="_blank" rel="noopener noreferrer"><icon-svg  icon-class="shouye" /> 产品官网</a>
+        <a href="http://www.28tms.com" target="_blank" rel="noopener noreferrer">
+          <icon-svg icon-class="shouye" /> 产品官网</a>
       </div>
       <!-- 产品官网链接 -->
-
     </div>
     <div class="login-wrapper clearfix">
       <!-- <div class="container-left">
@@ -20,7 +20,7 @@
           <h3 class="title">会员登录</h3>
           <!--<div v-if="errInfo">-->
           <!--<span>{{errInfo}}</span>-->
-          <!--</div>--> 
+          <!--</div>-->
           <!-- <el-form-item prop="accNum"> -->
           <!--<span class="svg-container svg-container_login">-->
           <!--<icon-svg icon-class="yonghuming" />-->
@@ -55,8 +55,7 @@
           </div>
         </el-form>
       </div>
-
-    <!-- </div>
+      <!-- </div>
     <div class="login-wrapper clearfix"> -->
       <div class="button-cont">
         <ul>
@@ -133,17 +132,20 @@ export default {
     }
   },
   mounted() {
-    this.checkLocalStorage()
     if (process.env.NODE_ENV !== 'production') {
       this.loginForm.username = 'fangjian'
       this.loginForm.password = '123456'
     }
+    this.checkLocalStorage()
   },
   methods: {
     checkLocalStorage() {
       if (window.localStorage) {
         const storage = window.localStorage
-        console.log('localStorage', storage.getItem('lastloginUsername'))
+        console.log('localStorage', storage.getItem('TMS_rememberPwd'))
+        if (storage.getItem('TMS_rememberPwd')) {
+          this.loginForm = JSON.parse(storage.getItem('TMS_rememberPwd'))
+        }
       }
     },
     handleLogin() {
@@ -152,17 +154,12 @@ export default {
         console.log(valid)
         if (valid) {
           this.loading = true
+          if (this.checked) {
+            localStorage.setItem('TMS_rememberPwd', JSON.stringify(this.loginForm))
+          } else {
+            localStorage.removeItem('TMS_rememberPwd')
+          }
           this.$store.dispatch('Login', this.loginForm).then(() => {
-            // if (!this.loginForm.accNum) {
-            //   this.errInfo = true
-            //   this.errInfo = '该公司Id不存在'
-            // } else if (!this.loginForm.username) {
-            //   this.errInfo = true
-            //   this.errInfo = '该用户名不存在'
-            // } else if (!this.loginForm.password) {
-            //   this.errInfo = true
-            //   this.errInfo = '输入的密码错误'
-            // }
             this.loading = false
             // 获取登录前的页面地址
             // 有可能会出现前一个页面是现在登录账号没有权限访问的？
@@ -209,7 +206,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 @import "../../styles/mixin.scss";
 @import "../../styles/login-index.css";
-.hoverLink:hover{
+.hoverLink:hover {
   border-bottom: 1px solid #eee;
 }
 
