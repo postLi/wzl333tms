@@ -475,6 +475,12 @@
        }
      }
    }
+   infoDetail.agencyFundTotal = 0 // 代收货款合计
+   infoDetail.cargoAmountTotal = 0 // 货品件数合计
+   cargoList.forEach(e => { // 计算代收货款合计
+     infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
+     infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+   })
    console.warn(infoDetail)
    // 公用
    obj.shipSn = infoDetail.shipSn // 运单号
@@ -491,14 +497,15 @@
    obj.fromCity = addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '' // 发站
    obj.toCity = addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '' // 到站
    obj.deliveryMethod = infoDetail.shipDeliveryMethodName // 交接方式
+   obj.clerk = infoDetail.userName || user.username // 业务员
+
 
    if (type === 'lib') {
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
-     obj.clerk = infoDetail.userName || user.username // 业务员
-     obj.clerkMobile = infoDetail.userMobile || user.mobilephone // 业务员电话
      obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
      obj.qrcode = '' // 二维码
+     obj.clerkMobile = infoDetail.userMobile || user.mobilephone // 业务员电话
      obj.goodsSn = infoDetail.shipGoodsSn // 货号
      obj.cargoName = infoDetail.cargoName // 货品名
      obj.cargoPack = infoDetail.cargoPack // 包装
@@ -508,7 +515,6 @@
      obj.fromOrgName = infoDetail.fromOrgName // 开单网点
      obj.description = infoDetail.description // 品种规格
    } else if (type === 'order') {
-     // let objCargo = {} // 货物信息
      let objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
      let objCargo = [{ // 货号
        cargo: 'goodsSn', // 数据库label名称
@@ -611,19 +617,19 @@
          obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
        }
      })
+     obj.createrName = infoDetail.userName || user.username // 开单员
+     obj.userName = infoDetail.userName || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
      obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
      obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
-     obj.createrName = infoDetail.userName // 开单员
-     obj.userName = infoDetail.userName // 制单员
      obj.remarks = infoDetail.shipRemarks // 备注
      obj.effective = infoDetail.shipEffectiveName // 时效
      // ///////////////////////////////////////////////////////////
      // /运单号-件数
-     obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmount
+     obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmountTotal
      // //////////////////////////////////////////////////////////
      // /年月日
      const year = parseTime(infoDetail.createTime, '{y}')
@@ -643,7 +649,7 @@
      console.log('中转费', totalTransferFee)
 
      // //////////////////////////////////////////////////////////
-     // /特殊处理 打勾
+     // /付款方式
      // 104 多笔付
      obj.payWay = infoDetail.shipPayWayName
      // 付款方式
@@ -715,6 +721,23 @@
          obj.specialLine = infoDetail.shipBusinessType ? '√' : ''
          break
      }
+     //////////////////////////////////////////////////////////
+     /// 运输方式
+     ///
+     switch (infoDetail.shipShippingType) {
+       case 87: // 普通汽运
+         obj.shipTrucks = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 88: // 卡车航班
+         obj.shipAutotruck = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 89: // 水运
+         obj.shipCarrige = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 90: // 铁路
+         obj.shipTrain = infoDetail.shipShippingType ? '√' : ''
+         break
+     }
      if (infoDetail.shipDeliveryMethod === 68) {
        obj.deliveryGood = '√' // 自提（√）
      } else if (infoDetail.shipDeliveryMethod === 69) {
@@ -741,8 +764,9 @@
        obj.uptotalFeeS = totalFeeBig[1] // 运费合计(拾)
        obj.uptotalFeeY = totalFeeBig[0] // 运费合计(元)
      }
-     if (infoDetail.agencyFund) {
-       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFund)
+
+     if (infoDetail.agencyFundTotal) {
+       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFundTotal)
        obj.upagencyFundW = upagencyFeeBig[4] // 代收货款(万)
        obj.upagencyFundQ = upagencyFeeBig[3] // 代收货款(仟)
        obj.upagencyFundB = upagencyFeeBig[2] // 代收货款(佰)
@@ -802,13 +826,8 @@
              if (el.filedValue === 'customFields') {
                el.value = el.filedName
              } else {
-               // 打印设置有货物1并且运单列表必定有货物1
-               // 打印设置有货物2并且运单列表有货物2
-               // 打印设置有货物3并且运单列表有货物3
-               // for (let i = 0; i < cargoLen - 1; i++) {
                const val = info[el.filedValue]
                el.value = typeof val === 'undefined' ? '' : val === null ? '' : val
-               // }
              }
              return el
            })

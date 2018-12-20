@@ -52,7 +52,7 @@ $dialogHeader_bgcolor: #e6e6e6;
   .print_aside {
     background-color: rgba(0, 0, 0, 0.1);
     float: left;
-    width: 450px;
+    width: 500px;
     overflow: auto;
     height: calc(100% - 96px);
     position: relative;
@@ -75,7 +75,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       line-height: 48px;
       background-color: #ffffff;
       display: block;
-      width: 450px;
+      width: 500px;
       height: 48px;
     }
     .print_aside_search {
@@ -86,7 +86,7 @@ $dialogHeader_bgcolor: #e6e6e6;
       padding: 10px;
       background-color: #ffffff;
       display: block;
-      width: 450px;
+      width: 500px;
       height: 48px;
       box-shadow: 1px 3px 10px #eee;
       .el-autocomplete {
@@ -245,7 +245,7 @@ $dialogHeader_bgcolor: #e6e6e6;
           font-weight: 400;
           color: #333;
           font-style: normal;
-          font-size: 14px;
+          font-size: 12px;
         }
       }
     }
@@ -270,11 +270,11 @@ $dialogHeader_bgcolor: #e6e6e6;
     .print_main_head {
       position: fixed;
       top: 54px;
-      left: 450px;
+      left: 500px;
       padding: 6px 10px;
       line-height: 36px;
       display: block;
-      width: calc(100% - 450px);
+      width: calc(100% - 500px);
       height: 48px;
       min-width: 755px;
       text-align: left;
