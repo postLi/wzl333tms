@@ -140,20 +140,24 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
+        'label': '修改内容',
+        'prop': 'updateContent',
+        'width': '150'
+      }, {
         'label': '旧值',
-        'prop': 'old_value',
+        'prop': 'oldValue',
         'width': '150'
       }, {
         'label': '新值',
-        'prop': 'new_value',
+        'prop': 'newValue',
         'width': '150'
       }, {
         'label': '修改人',
-        'prop': 'name',
+        'prop': 'updateName',
         'width': '150'
       }, {
         'label': '修改日期',
-        'prop': 'update_time',
+        'prop': 'updateTime',
         'width': '150'
       }, {
         'label': '开单网点',
