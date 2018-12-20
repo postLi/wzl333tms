@@ -78,6 +78,8 @@
 import { isvalidUsername } from '@/utils/validate'
 import { requestFullScreen } from '@/utils/fullScreen'
 import setApiUrl from '@/components/changeApiUrl/index'
+import { objectMerge2 } from '@/utils/index'
+import md5 from 'js-md5'
 
 export default {
   name: 'login',
@@ -127,8 +129,22 @@ export default {
         // username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
-      loginError: false
+      loginError: false,
+      localForm: {}
 
+    }
+  },
+  watch: {
+    checked(cval) {
+      this.setLocalStorage()
+    },
+    loginForm: {
+      handler(cval, oval) {
+        if (cval) {
+          this.setLocalStorage()
+        }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -136,18 +152,31 @@ export default {
       this.loginForm.username = 'fangjian'
       this.loginForm.password = '123456'
     }
-    this.checkLocalStorage()
+    this.initLocalStorage()
   },
   methods: {
-    checkLocalStorage() {
+    setLocalStorage() {
+      if (this.checked) {
+        let form = {}
+        form.username = this.loginForm.username
+        form.password = md5(this.loginForm.password)
+        form.checked = this.checked
+        form.maskpwd = true
+        localStorage.setItem('TMS_rememberPwd', JSON.stringify(form))
+      } else {
+        localStorage.removeItem('TMS_rememberPwd')
+      }
+    },
+    initLocalStorage() {
       if (window.localStorage) {
         const storage = window.localStorage
-        console.log('localStorage', storage.getItem('TMS_rememberPwd'))
         if (storage.getItem('TMS_rememberPwd')) {
-          this.checked = true
-          this.loginForm = JSON.parse(storage.getItem('TMS_rememberPwd'))
-        }else {
-          this.checked = false
+          this.localForm = JSON.parse(storage.getItem('TMS_rememberPwd'))
+          this.loginForm.password = this.localForm.password
+          this.loginForm.username = this.localForm.username
+          this.checked = this.localForm.checked
+        } else {
+
         }
       }
     },
@@ -157,11 +186,6 @@ export default {
         console.log(valid)
         if (valid) {
           this.loading = true
-          if (this.checked) {
-            localStorage.setItem('TMS_rememberPwd', JSON.stringify(this.loginForm))
-          } else {
-            localStorage.removeItem('TMS_rememberPwd')
-          }
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
             // 获取登录前的页面地址

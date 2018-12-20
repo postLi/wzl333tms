@@ -1,22 +1,24 @@
 import fetch from '@/utils/fetch'
-import { getRefreshToken } from '../utils/auth'
+import {
+  getRefreshToken
+} from '../utils/auth'
 import md5 from 'js-md5'
 
 export function login(username, password, orgid) {
   var grant_type = 'password'
   var scope = 'webApp'
-/*   return fetch.post('/api-uaa/oauth/token', {
-    username,
-    password,
-    grant_type,
-    orgid
-    // scope,
-  }, {
-    headers: {
-      // 'content-type': 'application/x-www-form-urlencoded',
-      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
-    }
-  }) */
+  /*   return fetch.post('/api-uaa/oauth/token', {
+      username,
+      password,
+      grant_type,
+      orgid
+      // scope,
+    }, {
+      headers: {
+        // 'content-type': 'application/x-www-form-urlencoded',
+        'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+      }
+    }) */
   console.log('login:', arguments, fetch.axios)
   return fetch.request({
     url: '/api-uaa/oauth/token',
@@ -27,7 +29,7 @@ export function login(username, password, orgid) {
     },
     params: {
       username,
-      password: md5(password),
+      password: localStorage.getItem('TMS_rememberPwd') ? password : md5(password),
       grant_type,
       orgid
       // scope,
