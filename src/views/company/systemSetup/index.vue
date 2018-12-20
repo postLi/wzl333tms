@@ -282,8 +282,8 @@
     <div class="system-setup-footer">
       <el-button type="primary" @click="saveData" :disabled="nochange">保存</el-button>
     </div>
-    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="initOrder"></printSetOrder>
-    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="initOrder"></printSetLi>
+    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
+    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
   </div>
 </template>
 <script>
@@ -323,141 +323,141 @@ export default {
       fieldSetup: [],
       activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
       shipField: [{
-        key: 'shipFromCityName',
-        value: '0',
-        name: '发站'
-      },
-      {
-        key: 'shipToOrgid',
-        value: '0',
-        name: '目的网点'
-      },
-      {
-        key: 'shipGoodsSn',
-        value: '0',
-        name: '货号'
-      },
-      {
-        key: 'shipSenderId',
-        value: '0',
-        name: '发货方'
-      },
-      {
-        key: 'shipSenderName',
-        value: '0',
-        name: '发货人'
-      },
-      {
-        key: 'shipSenderMobile',
-        value: '0',
-        name: '发货人电话'
-      },
-      {
-        key: 'shipSenderAddress',
-        value: '0',
-        name: '发货地址'
-      },
-      {
-        key: 'shipReceiverId',
-        value: '0',
-        name: '收货方'
-      },
-      {
-        key: 'shipReceiverName',
-        value: '0',
-        name: '收货人'
-      },
-      {
-        key: 'shipReceiverMobile',
-        value: '0',
-        name: '收货人电话'
-      },
-      {
-        key: 'shipReceiverAddress',
-        value: '0',
-        name: '收货地址'
-      },
-      {
-        key: 'cargoWeight',
-        value: '0',
-        name: '重量'
-      },
-      {
-        key: 'cargoVolume',
-        value: '0',
-        name: '体积'
-      },
-      {
-        key: 'cargoPack',
-        value: '0',
-        name: '包装'
-      },
-      {
-        key: 'brokerageFee',
-        value: '0',
-        name: '回扣'
-      },
-      {
-        key: 'deliveryFee',
-        value: '0',
-        name: '送货费'
-      },
+          key: 'shipFromCityName',
+          value: '0',
+          name: '发站'
+        },
+        {
+          key: 'shipToOrgid',
+          value: '0',
+          name: '目的网点'
+        },
+        {
+          key: 'shipGoodsSn',
+          value: '0',
+          name: '货号'
+        },
+        {
+          key: 'shipSenderId',
+          value: '0',
+          name: '发货方'
+        },
+        {
+          key: 'shipSenderName',
+          value: '0',
+          name: '发货人'
+        },
+        {
+          key: 'shipSenderMobile',
+          value: '0',
+          name: '发货人电话'
+        },
+        {
+          key: 'shipSenderAddress',
+          value: '0',
+          name: '发货地址'
+        },
+        {
+          key: 'shipReceiverId',
+          value: '0',
+          name: '收货方'
+        },
+        {
+          key: 'shipReceiverName',
+          value: '0',
+          name: '收货人'
+        },
+        {
+          key: 'shipReceiverMobile',
+          value: '0',
+          name: '收货人电话'
+        },
+        {
+          key: 'shipReceiverAddress',
+          value: '0',
+          name: '收货地址'
+        },
+        {
+          key: 'cargoWeight',
+          value: '0',
+          name: '重量'
+        },
+        {
+          key: 'cargoVolume',
+          value: '0',
+          name: '体积'
+        },
+        {
+          key: 'cargoPack',
+          value: '0',
+          name: '包装'
+        },
+        {
+          key: 'brokerageFee',
+          value: '0',
+          name: '回扣'
+        },
+        {
+          key: 'deliveryFee',
+          value: '0',
+          name: '送货费'
+        },
 
         /*         {
                   key: 'productPrice',
                   value: '0',
                   name: '声明价值'
                 }, */
-      {
-        key: 'insuranceFee',
-        value: '0',
-        name: '保险费'
-      },
-      {
-        key: 'handlingFee',
-        value: '0',
-        name: '装卸费'
-      },
-      {
-        key: 'packageFee',
-        value: '0',
-        name: '包装费'
-      },
-      {
-        key: 'pickupFee',
-        value: '0',
-        name: '提货费'
-      },
-      {
-        key: 'amountFee',
-        value: '0',
-        name: '件数单价'
-      },
-      {
-        key: 'weightFee',
-        value: '0',
-        name: '重量单价'
-      },
-      {
-        key: 'volumeFee',
-        value: '0',
-        name: '体积单价'
-      },
-      {
-        key: 'shipReceiptSn',
-        value: '0',
-        name: '回单号'
-      },
-      {
-        key: 'shipCustomerNumber',
-        value: '0',
-        name: '客户单号'
-      },
-      {
-        key: 'shipUserid',
-        value: '0',
-        name: '业务员'
-      }
+        {
+          key: 'insuranceFee',
+          value: '0',
+          name: '保险费'
+        },
+        {
+          key: 'handlingFee',
+          value: '0',
+          name: '装卸费'
+        },
+        {
+          key: 'packageFee',
+          value: '0',
+          name: '包装费'
+        },
+        {
+          key: 'pickupFee',
+          value: '0',
+          name: '提货费'
+        },
+        {
+          key: 'amountFee',
+          value: '0',
+          name: '件数单价'
+        },
+        {
+          key: 'weightFee',
+          value: '0',
+          name: '重量单价'
+        },
+        {
+          key: 'volumeFee',
+          value: '0',
+          name: '体积单价'
+        },
+        {
+          key: 'shipReceiptSn',
+          value: '0',
+          name: '回单号'
+        },
+        {
+          key: 'shipCustomerNumber',
+          value: '0',
+          name: '客户单号'
+        },
+        {
+          key: 'shipUserid',
+          value: '0',
+          name: '业务员'
+        }
       ],
       vouchers: [{
         value: '1',
@@ -724,6 +724,7 @@ export default {
     putSetting(query) {
       return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
+        console.log('other.systemSetup', this.otherinfo.systemSetup)
         this.$message({
           message: '保存成功',
           type: 'success'
@@ -732,6 +733,16 @@ export default {
         this.loading = false
         this._handlerCatchMsg(err)
       })
+    },
+    changeSystem(obj) {
+      if (obj.ship) {
+        this.$set(this.form.printSetting, 'ship', obj.ship)
+        this.saveData()
+      }
+      if (obj.label) {
+        this.$set(this.form.printSetting, 'label', obj.label)
+        this.saveData()
+      }
     },
     initField() {
       this.fieldSetup = []

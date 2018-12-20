@@ -55,7 +55,15 @@
             <el-button @click="showCargoPlus" icon="el-icon-plus" size="mini" type="circle" title="添加一套货物信息"></el-button>
           </label>
           <ul class="print_aside_content" :key="cargoKey">
-            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo && item.filedName.slice(-1) !=='2' && item.filedName.slice(-1) !=='3'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
+            <hr v-if="cargoNum === 3 || cargoNum === 2">
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo && item.filedName.slice(-1) ==='2'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
+              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+            </li>
+            <hr  v-if="cargoNum === 3">
+            <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo && item.filedName.slice(-1) ==='3'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
               <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
             </li>
           </ul>
@@ -72,13 +80,13 @@
           <br>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.width" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">纸张宽</template>
+              <template slot="prepend">宽</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.height" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">纸张高</template>
+              <template slot="prepend">高</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
@@ -99,7 +107,7 @@
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
               <span><i class="el-icon-setting"></i> {{dragDetailInfo.filedName}}</span>
-               <el-form-item class="print_itemSet_switch">
+              <el-form-item class="print_itemSet_switch">
                 <el-switch v-model="dragDetailInfo.isshow" active-color="#67c23a" :active-text="dragDetailInfo.isshow?'显示':'隐藏'" @change="handleSwitch"></el-switch>
               </el-form-item>
               <!-- <span>{{ ' ('+ dragDetailInfo.leftx +', '+ dragDetailInfo.topy +')'}}</span> -->
@@ -121,9 +129,9 @@
                   <template slot="prepend">字号</template>
                 </el-input>
               </el-form-item>
-              <el-form-item  class="print_itemSet_col">
+              <el-form-item class="print_itemSet_col">
                 <el-checkbox v-model="dragDetailInfo.bold" label="文字加粗" border size="mini" @change="changeDragDetailInfo"></el-checkbox>
-                 <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
+                <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
                   <el-radio-button v-for="item in alignmentOptions" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
@@ -243,7 +251,7 @@ export default {
         [],
         []
       ], // 货物主要信息列表
-      cargoNum: 1, // 货物字段展示数量
+      cargoNum: 1, // 货物字段展示数量 默认显示为1
       maxCargo: 3, // 最多显示货物字段数量
       printers: [],
       currentSearch: '',
@@ -375,26 +383,32 @@ export default {
     this.unbindKey()
   },
   methods: {
-    showCargoPlus() {
+    showCargoPlus() { // 添加显示货物信息
       console.log('cargoNum', this.cargoNum)
-      if (this.cargoNum < this.maxCargo) {
-        this.cargoNum = this.cargoNum + 1
-        this.cargoLabelList[this.cargoNum - 1].forEach(e => {
+      let fn = (num) => {
+        this.cargoLabelList[num].forEach(e => {
           this.formModel.labelList.forEach((el, index) => {
             if (e.filedValue === el.filedValue) {
               e.showCargo = true
               this.$set(this.formModel.labelList, index, e)
             }
           })
-           this.orgLabelList.forEach((el, index) => {
+          this.orgLabelList.forEach((el, index) => {
             if (e.filedValue === el.filedValue) {
               e.showCargo = true
               this.$set(this.orgLabelList, index, e)
             }
           })
         })
+      }
+      if (this.cargoNum < this.maxCargo) {
+        this.cargoNum = this.cargoNum + 1
+        fn(this.cargoNum - 1)
         this.cargoKey = new Date().getTime()
       } else {
+        if (this.cargoNum === 3) {
+          fn(1)
+        }
         this.$message({ type: 'warning', message: '最多添加' + this.maxCargo + '套货物信息' })
       }
     },
@@ -916,6 +930,7 @@ export default {
       getSettingCompanyOrder().then(data => {
           if (data) {
             let array = Object.assign([], data)
+            this.cargoNum = this.$options.data().cargoNum
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
             let labelList = objectMerge2([], this.commonLabelList)
@@ -934,6 +949,7 @@ export default {
                   }
                   this.$set(e, 'type', el.type) // 给旧数据设置类型
                   if (e.type === 4) {
+
                     if (e.filedName.slice(-1) === '2') {
                       cargoShow2 = true
                       this.cargoNum = 2
@@ -942,6 +958,7 @@ export default {
                       cargoShow3 = true
                       this.cargoNum = 3
                     }
+
                   }
                   labelList.splice(index, 1)
                   commonArr.push(e)
@@ -1110,24 +1127,9 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          // 转译一下打印的\\字符
-          const formPrintSetting = objectMerge2({}, this.formPrint.printSetting)
-          for (const item in formPrintSetting) {
-            formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
-          }
-          const form = Object.assign({}, this.formPrint)
-          form.printSetting = Object.assign({}, formPrintSetting)
-          putSetting(form).then(data => {
-              this.otherinfo.systemSetup = this.formInfo
-              this.$emit('success')
-              this.$message({
-                message: '保存打印机设置成功',
-                type: 'success'
-              })
-            })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-            })
+          this.$emit('success', {
+            ship: this.formPrint.printSetting.ship
+          })
         }).catch(() => {})
       }
     },

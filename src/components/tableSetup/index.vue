@@ -42,7 +42,7 @@
       <div class="tableSetup_list">
         <div class="tableSetup_head">
           <div class="tableSetup_head_select">选择：{{leftCheckLen}}</div>
-          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列  {{leftListLen}} / {{columnListLen}}</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminateLeft" v-model="checkAllLeft" @change="handChangeAllLeft">隐藏列 {{leftListLen}} / {{columnListLen}}</el-checkbox>
           <div style="margin: 3px 0;">
             <el-autocomplete class="inline-input" v-model="searchLeft" :fetch-suggestions="querySearchLeft" placeholder="请输入内容" @select="handleSearchLeft" size="mini">
               <i class="el-icon-search el-input__icon" slot="suffix"></i>
@@ -189,7 +189,7 @@ export default {
       maxLen: 50,
       rightCheckLen: 0,
       leftCheckLen: 0,
-      thecode: ''// 需要请求的code值
+      thecode: '' // 需要请求的code值
     }
   },
   mounted() {
@@ -203,17 +203,17 @@ export default {
     rcode = ''
     this.thecode = ''
 
-   // 1 如果显示声明不用请求服务器则不作处理
+    // 1 如果显示声明不用请求服务器则不作处理
     if (code === 'NOSET') {
       this.convertData() // 打开页面就开启表格设置
     } else if (code) {
-     // 2 指定显示的code值
+      // 2 指定显示的code值
       this.thecode = code
     } else if (rcode) {
-     // 3 如果有从链接上拿到code值
+      // 3 如果有从链接上拿到code值
       this.thecode = rcode
     } else {
-     // 4 其余情况则直接处理
+      // 4 其余情况则直接处理
       this.convertData()
     }
     // 如果有code值则请求处理
@@ -247,14 +247,16 @@ export default {
     },
     initData(_data) {
       // 针对前端写的表格配置数据也进行简单的排序处理
-      console.warn('表格设置字段：', this.columns.length,'个')
-      let str = ''
-      this.columns.forEach(e => {
-        if (e.label !== '序号') {
-        str += "INSERT INTO tms_common_title VALUES ('"+e.label+"', '"+ e.prop+"', '');\n"
-        }
-      })
-      console.log(str)
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('表格设置字段：', this.columns.length, '个')
+        let str = ''
+        this.columns.forEach(e => {
+          if (e.label !== '序号') {
+            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');\n"
+          }
+        })
+        console.log(str)
+      }
       let fedata = objectMerge2([], this.columns)
       fedata = this.sort(fedata)
       _data = _data || fedata
@@ -279,7 +281,7 @@ export default {
         if (_data.length > 0) {
           let inx = 0
           _data.forEach((e, index) => {
-            if (e.hidden) {  // 默认隐藏列
+            if (e.hidden) { // 默认隐藏列
               const obj = objectMerge2(e)
               obj.key = index
               data.push(obj)
@@ -332,9 +334,9 @@ export default {
       this.columnListLen = getColumnListLen()
     },
     sort(array) { // 从小到大排序
-     // 1.只需要遍历一遍，分别处理fixed跟非fixed元素即可
-     // 2.将俩个数组合并返回即可
-     // 3.注意事项：array必须是已经经过titleOrder排序处理后的数组
+      // 1.只需要遍历一遍，分别处理fixed跟非fixed元素即可
+      // 2.将俩个数组合并返回即可
+      // 3.注意事项：array必须是已经经过titleOrder排序处理后的数组
 
       const copy = []
       const copy_unfixed = []
@@ -666,7 +668,7 @@ export default {
       console.log('handleSwitch', obj)
       let find = 0
       let unfind = false
-        // 找到最后一个fixed位置
+      // 找到最后一个fixed位置
       this.showColumnData.forEach((el, inx) => {
         if (el.fixed && !unfind) {
           find = inx
@@ -769,15 +771,15 @@ export default {
     }
 
     .tableSetup_head {
-      width:100%;
+      width: 100%;
       background-color: #eee;
       padding: 10px 10px 5px 10px;
       box-shadow: 1px 3px 10px #eee;
-      position:relative;
-      .tableSetup_head_select{
-        position:absolute;
-        right:10px;
-        top:10px;
+      position: relative;
+      .tableSetup_head_select {
+        position: absolute;
+        right: 10px;
+        top: 10px;
       }
     }
     .tableSetup_content {

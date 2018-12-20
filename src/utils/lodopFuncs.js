@@ -500,9 +500,10 @@
    obj.clerk = infoDetail.userName || user.username // 业务员
 
    if (type === 'lib') {
+     console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
-     obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
+     obj.companyAddr = infoDetail.detailedAddr || (user.companyInfo.city || '') + (user.companyInfo.detailedAddr || '') // 公司地址
      obj.qrcode = '' // 二维码
      obj.clerkMobile = infoDetail.userMobile || user.mobilephone // 业务员电话
      obj.goodsSn = infoDetail.shipGoodsSn // 货号

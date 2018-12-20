@@ -73,13 +73,13 @@
           <br>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.width" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">纸张宽</template>
+              <template slot="prepend">宽</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
           <el-form-item>
             <el-input placeholder="请输入内容" v-model="formModel.paper.height" size="mini" @change="changeDragDetailInfo" v-number-only:point>
-              <template slot="prepend">纸张高</template>
+              <template slot="prepend">高</template>
               <template slot="append">mm</template>
             </el-input>
           </el-form-item>
@@ -1101,24 +1101,9 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          // 转译一下打印的\\字符
-          const formPrintSetting = objectMerge2({}, this.formPrint.printSetting)
-          for (const item in formPrintSetting) {
-            formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
-          }
-          const form = Object.assign({}, this.formPrint)
-          form.printSetting = Object.assign({}, formPrintSetting)
-          putSetting(form).then(data => {
-              this.otherinfo.systemSetup = this.formInfo
-              this.$emit('success')
-              this.$message({
-                message: '保存打印机设置成功',
-                type: 'success'
-              })
-            })
-            .catch(err => {
-              this._handlerCatchMsg(err)
-            })
+          this.$emit('success', {
+            label: this.formPrint.printSetting.label
+          })
         }).catch(() => {})
       }
     },

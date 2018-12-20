@@ -102,12 +102,15 @@ $dialogHeader_bgcolor: #e6e6e6;
       padding: 10px 0 5px 10px;
       .el-form-item {
         margin-bottom: 0;
-        width: 48%;
+        width: 24%;
         display: inline-block;
         padding-right: 1px;
+        .el-input__inner{
+          padding: 0 3px;
+        }
         .el-input-group__append,
         .el-input-group__prepend {
-          padding: 0 8px;
+          padding: 0 5px;
           color: #333;
         }
       }
@@ -196,6 +199,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
     .print_aside_content_form {
       box-shadow: 1px 3px 10px #eee;
+
       label {
         padding: 0 10px;
         display: block;
@@ -229,6 +233,12 @@ $dialogHeader_bgcolor: #e6e6e6;
       flex-direction: row;
       flex-wrap: wrap;
       padding: 5px 10px;
+      hr{
+        border: none;
+        padding: 5px 0;
+        color: #eee;
+        background: #eee;
+      }
       // max-height: 130px;
       // overflow: auto;
       li {
