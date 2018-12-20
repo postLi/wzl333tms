@@ -499,7 +499,6 @@
    obj.deliveryMethod = infoDetail.shipDeliveryMethodName // 交接方式
    obj.clerk = infoDetail.userName || user.username // 业务员
 
-
    if (type === 'lib') {
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
@@ -615,10 +614,13 @@
          let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
          let itemInfo = item.info + (i > 0 ? i + 1 : '')
          obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
+         if (/(Amount|Volume|Weight)/.test(item.cargo) !== -1) { // 件数、重量、体积为0的时候不显示0
+           obj[itemCargo] = obj[itemCargo] ? obj[itemCargo] : ''
+         }
        }
      })
-     obj.createrName = infoDetail.userName || user.username // 开单员
-     obj.userName = infoDetail.userName || user.username // 制单员
+     obj.createrName = infoDetail.createUserName || user.username // 开单员
+     obj.userName = infoDetail.createUserName || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
