@@ -1,23 +1,29 @@
 import fetch from '@/utils/fetch'
-import { getRefreshToken } from '../utils/auth'
+import {
+  getRefreshToken
+} from '../utils/auth'
 import md5 from 'js-md5'
 
 export function login(username, password, orgid) {
   var grant_type = 'password'
   var scope = 'webApp'
-/*   return fetch.post('/api-uaa/oauth/token', {
-    username,
-    password,
-    grant_type,
-    orgid
-    // scope,
-  }, {
-    headers: {
-      // 'content-type': 'application/x-www-form-urlencoded',
-      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
-    }
-  }) */
+  /*   return fetch.post('/api-uaa/oauth/token', {
+      username,
+      password,
+      grant_type,
+      orgid
+      // scope,
+    }, {
+      headers: {
+        // 'content-type': 'application/x-www-form-urlencoded',
+        'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+      }
+    }) */
   console.log('login:', arguments, fetch.axios)
+  let rememberPwd = ''
+  if (localStorage.getItem('TMS_rememberPwd')) {
+    rememberPwd = JSON.parse(localStorage.getItem('TMS_rememberPwd')).password
+  }
   return fetch.request({
     url: '/api-uaa/oauth/token',
     method: 'post',
@@ -27,7 +33,7 @@ export function login(username, password, orgid) {
     },
     params: {
       username,
-      password: md5(password),
+      password: localStorage.getItem('TMS_rememberPwd') ? (password === rememberPwd ? rememberPwd : md5(password)) : md5(password),
       grant_type,
       orgid
       // scope,
@@ -49,5 +55,31 @@ export function logout() {
 }
 
 export function refreshToken() {
-  return fetch.put()
+  var grant_type = 'refresh_token'
+  var rtoken = getRefreshToken()
+  /*   return fetch.post('/api-uaa/oauth/token', {
+      username,
+      password,
+      grant_type,
+      orgid
+      // scope,
+    }, {
+      headers: {
+        // 'content-type': 'application/x-www-form-urlencoded',
+        'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+      }
+    }) */
+  console.log('login:', arguments, fetch.axios)
+  return fetch.request({
+    url: '/api-uaa/oauth/token',
+    method: 'post',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+    },
+    params: {
+      refresh_token: rtoken,
+      grant_type
+    }
+  })
 }

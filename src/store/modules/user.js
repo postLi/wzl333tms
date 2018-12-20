@@ -2,8 +2,10 @@ import Vue from 'vue'
 import {
   login,
   logout,
-  getInfo
+  getInfo,
+  refreshToken
 } from '@/api/login'
+import Cookies from 'js-cookie'
 import {
   getAllSetting
 } from '@/api/company/systemSetup'
@@ -11,6 +13,8 @@ import {
   getToken,
   setToken,
   removeToken,
+  setRefreshToken,
+  removeRefreshToken,
   setUsername,
   setOrgId,
   getOrgId,
@@ -23,6 +27,8 @@ import {
 import {
   getOrgId as getOrgInfo
 } from '@/api/company/groupManage'
+
+const refreshTimeKey = 'TMS-refreshTime'
 
 const user = {
   state: {
@@ -69,10 +75,12 @@ const user = {
         login(username, userInfo.password, userInfo.accNum).then(response => {
           const data = response
           setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
           setUsername(username)
           setOrgId(userInfo.accNum)
           commit('SET_TOKEN', data.access_token)
           commit('SET_USERNAME', username)
+          Cookies.set(refreshTimeKey, +new Date())
           resolve()
         }).catch(error => {
           reject(error)
@@ -83,11 +91,13 @@ const user = {
     // 前端设置token信息
     FeLogin({
       commit
-    }, token) {
+    }, token, refresh_token) {
       return new Promise((resolve, reject) => {
         console.log('feLogin:', token)
         commit('SET_TOKEN', token)
         setToken(token)
+        setRefreshToken(refresh_token)
+        Cookies.set(refreshTimeKey, +new Date())
         resolve()
       })
     },
@@ -112,18 +122,18 @@ const user = {
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
           // if (Vue.prototype.$_has_permission('SETTING')) {
-          let pro1 = getAllSetting({
+          const pro1 = getAllSetting({
             orgid: data.orgid,
             type: '',
             module: 'order'
           })
-          let pro2 = getAllSetting({
+          const pro2 = getAllSetting({
             orgid: data.orgid,
             type: 'financeSetting',
             module: 'finance'
           })
           Promise.all([pro1, pro2]).then(resArr => {
-            let res = resArr[0]
+            const res = resArr[0]
 
             data.systemSetup = res
             data.systemSetup.financeSetting = resArr[1].financeSetting
@@ -185,6 +195,24 @@ const user = {
       })
     },
 
+    // 更新TOKEN
+    RefreshToken({
+      commit,
+      state
+    }) {
+      return new Promise((resolve, reject) => {
+        refreshToken().then((data) => {
+          setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
+          commit('SET_TOKEN', data.access_token)
+          Cookies.set(refreshTimeKey, +new Date())
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
     // 登出
     LogOut({
       commit,
@@ -195,6 +223,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
+          removeRefreshToken()
           resolve()
         }).catch(error => {
           reject(error)
@@ -209,6 +238,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
+        removeRefreshToken()
         removeUserInfo()
         removeOrgId()
         removeUsername()
