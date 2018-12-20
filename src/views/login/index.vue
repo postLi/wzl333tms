@@ -144,7 +144,10 @@ export default {
         const storage = window.localStorage
         console.log('localStorage', storage.getItem('TMS_rememberPwd'))
         if (storage.getItem('TMS_rememberPwd')) {
+          this.checked = true
           this.loginForm = JSON.parse(storage.getItem('TMS_rememberPwd'))
+        }else {
+          this.checked = false
         }
       }
     },
