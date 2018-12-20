@@ -2,8 +2,10 @@ import Vue from 'vue'
 import {
   login,
   logout,
-  getInfo
+  getInfo,
+  refreshToken
 } from '@/api/login'
+import Cookies from 'js-cookie'
 import {
   getAllSetting
 } from '@/api/company/systemSetup'
@@ -25,6 +27,8 @@ import {
 import {
   getOrgId as getOrgInfo
 } from '@/api/company/groupManage'
+
+const refreshTimeKey = 'TMS-refreshTime'
 
 const user = {
   state: {
@@ -76,6 +80,7 @@ const user = {
           setOrgId(userInfo.accNum)
           commit('SET_TOKEN', data.access_token)
           commit('SET_USERNAME', username)
+          Cookies.set(refreshTimeKey, +new Date())
           resolve()
         }).catch(error => {
           reject(error)
@@ -92,6 +97,7 @@ const user = {
         commit('SET_TOKEN', token)
         setToken(token)
         setRefreshToken(refresh_token)
+        Cookies.set(refreshTimeKey, +new Date())
         resolve()
       })
     },
@@ -186,6 +192,24 @@ const user = {
         }).catch(error => {
           reject(error)
         }) */
+      })
+    },
+
+    // 更新TOKEN
+    RefreshToken({
+      commit,
+      state
+    }) {
+      return new Promise((resolve, reject) => {
+        refreshToken().then((data) => {
+          setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
+          commit('SET_TOKEN', data.access_token)
+          Cookies.set(refreshTimeKey, +new Date())
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
 
