@@ -306,7 +306,7 @@ export default {
           break
           // 删除客户
         case 'delete':
-          var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].truckIdNumber
+          var deleteItem = this.selected.length > 1 ? this.selected.length + '辆' : this.selected[0].truckIdNumber
                   // =>todo 删除多个
           var ids = this.selected.map(item => {
             return item.truckId

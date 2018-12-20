@@ -15,7 +15,7 @@ router.beforeEach((to, from, next) => {
   // 如果链接带有token信息，则将其保存
   // 会覆盖原有的token
   if (to.query.access_token) {
-    store.dispatch('FeLogin', to.query.access_token).then(() => {
+    store.dispatch('FeLogin', to.query.access_token, to.query.refresh_token).then(() => {
       next({
         path: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, '')
       })

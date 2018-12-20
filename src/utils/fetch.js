@@ -6,7 +6,9 @@ import {
 import store from '@/store'
 import {
   getToken,
-  removeToken
+  removeToken,
+  getRefreshToken,
+  removeRefreshToken
 } from '@/utils/auth'
 // 引入事件对象
 import {
@@ -155,6 +157,7 @@ service.interceptors.response.use(
         // 401:非法的token;Token 过期了;
         eventBus.$emit('hideSupcanChart')
         removeToken()
+
         MessageBox.alert('你已被登出，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
@@ -171,6 +174,7 @@ service.interceptors.response.use(
             location.href = '/login' // 为了重新实例化vue-router对象 避免bug
           })
         })
+
         return false
       } else {
         err = {

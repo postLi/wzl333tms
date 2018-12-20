@@ -11,6 +11,8 @@ import {
   getToken,
   setToken,
   removeToken,
+  setRefreshToken,
+  removeRefreshToken,
   setUsername,
   setOrgId,
   getOrgId,
@@ -69,6 +71,7 @@ const user = {
         login(username, userInfo.password, userInfo.accNum).then(response => {
           const data = response
           setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
           setUsername(username)
           setOrgId(userInfo.accNum)
           commit('SET_TOKEN', data.access_token)
@@ -83,11 +86,12 @@ const user = {
     // 前端设置token信息
     FeLogin({
       commit
-    }, token) {
+    }, token, refresh_token) {
       return new Promise((resolve, reject) => {
         console.log('feLogin:', token)
         commit('SET_TOKEN', token)
         setToken(token)
+        setRefreshToken(refresh_token)
         resolve()
       })
     },
@@ -112,18 +116,18 @@ const user = {
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
           // if (Vue.prototype.$_has_permission('SETTING')) {
-          let pro1 = getAllSetting({
+          const pro1 = getAllSetting({
             orgid: data.orgid,
             type: '',
             module: 'order'
           })
-          let pro2 = getAllSetting({
+          const pro2 = getAllSetting({
             orgid: data.orgid,
             type: 'financeSetting',
             module: 'finance'
           })
           Promise.all([pro1, pro2]).then(resArr => {
-            let res = resArr[0]
+            const res = resArr[0]
 
             data.systemSetup = res
             data.systemSetup.financeSetting = resArr[1].financeSetting
@@ -195,6 +199,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
+          removeRefreshToken()
           resolve()
         }).catch(error => {
           reject(error)
@@ -209,6 +214,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
+        removeRefreshToken()
         removeUserInfo()
         removeOrgId()
         removeUsername()
