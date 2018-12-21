@@ -75,9 +75,19 @@ const user = {
         login(username, userInfo.password, userInfo.accNum).then(response => {
           const data = response
           if (location.href.indexOf('192.168.1') !== -1) {
+            const token = data.access_token
             window.localStorage.ANFA_tms_login = JSON.stringify(data)
-            console.log('logingignigngiinfo')
+            const obj = localStorage.lastTmsToken || ''
+            const arr = obj.split(',')
+            if (arr.length < 5) {
+              arr.push(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
+            } else {
+              arr.unshift(token)
+              arr.splice(4, 1)
+            }
+            localStorage.lastTmsToken = arr.join(',')
           }
+
           setToken(data.access_token)
           setRefreshToken(data.refresh_token)
           setUsername(username)
@@ -223,7 +233,7 @@ const user = {
       state
     }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout(state.token || getToken()).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()

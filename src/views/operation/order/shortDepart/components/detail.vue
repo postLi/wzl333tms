@@ -430,7 +430,7 @@ export default {
         this.isEditActual = true // 短驳发车
         break
       case 'arrival':
-        this.code = ''
+        this.code = 'ORDER_SHORT-3'
         this.isEditActual = false // 短驳到货
         this.tableColumn = this.$options.data().tableColumnArrival
         break
