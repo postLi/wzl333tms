@@ -107,65 +107,65 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-        label: '序号',
-        prop: 'id',
-        textAlign: 'center',
-        width: '70'
-      },
-      {
-        label: '费用项目',
-        prop: 'feeName',
-        textAlign: 'center',
-        width: '270'
-      },
-      {
-        label: '应收合计',
-        prop: 'totalreceivableFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '已收',
-        prop: 'receivableFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '未收',
-        prop: 'receivableUnpaidFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '数量',
-        prop: 'receivableCount',
-        textAlign: 'center',
-        width: '90'
-      },
-      {
-        label: '应付合计',
-        prop: 'totalpayableFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '已付',
-        prop: 'payableFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '未付',
-        prop: 'payableUnpaidFee',
-        textAlign: 'right',
-        width: '90'
-      },
-      {
-        label: '数量',
-        prop: 'payableCount',
-        textAlign: 'center',
-        width: '90'
-      }
+          label: '序号',
+          prop: 'id',
+          textAlign: 'center',
+          width: '70'
+        },
+        {
+          label: '费用项目',
+          prop: 'feeName',
+          textAlign: 'center',
+          width: '270'
+        },
+        {
+          label: '应收合计',
+          prop: 'totalreceivableFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '已收',
+          prop: 'receivableFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '未收',
+          prop: 'receivableUnpaidFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '数量',
+          prop: 'receivableCount',
+          textAlign: 'center',
+          width: '90'
+        },
+        {
+          label: '应付合计',
+          prop: 'totalpayableFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '已付',
+          prop: 'payableFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '未付',
+          prop: 'payableUnpaidFee',
+          textAlign: 'right',
+          width: '90'
+        },
+        {
+          label: '数量',
+          prop: 'payableCount',
+          textAlign: 'center',
+          width: '90'
+        }
       ],
       countCol: [ // 需要合计的-列
         'totalreceivableFee',
@@ -210,13 +210,43 @@ export default {
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
     },
+     handleBottom(e) {
+      const el = e.target
+      const top = el.scrollTop
+      const width = el.offsetWidth
+      const orgwidth = el.scrollWidth
+      const hasscroll = orgwidth > width
+      const height = el.offsetHeight
+      const footel = this.$refs.footTotalFee
+      const footheight = footel.offsetHeight
+      let calctop = top + height - footheight
+      if (hasscroll) {
+        calctop -= this.scrollwidth
+      }
+
+      if (!this.maxheight) {
+        this.maxheight = el.scrollHeight
+      }
+      footel.style.bottom = 'auto'
+      footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
+      const cloneel = document.getElementById('tableClone')
+      cloneel.style.top = top+ 'px'
+    },
     reportSettleRecordTotal() {
       this.loading = true
       reportSettleRecordTotal(this.query).then(res => {
         const data = res
         const countColVal = []
         this.loading = false
+        const div = document.getElementById('report_settleRecordTotal')
         const table = document.getElementById('report_settleRecordTotal_table')
+        // 固定表头
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        div.appendChild(tableClone)
+        
         if (!table) {
           return
         }
@@ -306,6 +336,7 @@ export default {
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
+        
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -335,26 +366,6 @@ export default {
     getSearchParam(obj) {
       this.query = Object.assign({}, obj)
       this.reportSettleRecordTotal()
-    },
-    handleBottom(e) {
-      const el = e.target
-      const top = el.scrollTop
-      const width = el.offsetWidth
-      const orgwidth = el.scrollWidth
-      const hasscroll = orgwidth > width
-      const height = el.offsetHeight
-      const footel = this.$refs.footTotalFee
-      const footheight = footel.offsetHeight
-      let calctop = top + height - footheight
-      if (hasscroll) {
-        calctop -= this.scrollwidth
-      }
-
-      if (!this.maxheight) {
-        this.maxheight = el.scrollHeight
-      }
-      footel.style.bottom = 'auto'
-      footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
     }
   }
 }
@@ -375,8 +386,8 @@ export default {
     box-shadow: 1px 1px 10px #bbb;
     overflow: hidden;
   }
-  .tab_info{
-    transform: translate(0,0);
+  .tab_info {
+    transform: translate(0, 0);
   }
 }
 
@@ -387,42 +398,51 @@ export default {
 }
 
 .info_tab_report {
+  position: relative;
+  width: 100%;
   height: 100%;
   padding-bottom: 60px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
-  position: relative;
+  .tableCloneHead {
+    position: absolute;
+    width: 100%;
+    min-width: 1200px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
 
 
   /*设置边框的*/
   .report_settleRecordTotal_table {
-      width: 100%;
-      min-width: 1200px;
+    width: 100%;
+    min-width: 1200px;
 
-      tbody tr {
-        background-color: #FFF;
-        transition: 0.5s;
-      }
-      tbody tr:hover {
-        background-color: #ccc;
-        transition: 0.3s;
-      }
-      tbody tr td:hover {
-        background-color: #cdcdcd;
-        transition: 0.3s;
-      }
-      tbody {
-        color: #222;
-        line-height: 23px;
+    tbody tr {
+      background-color: #FFF;
+      transition: 0.5s;
+    }
+    tbody tr:hover {
+      background-color: #ccc;
+      transition: 0.3s;
+    }
+    tbody tr td:hover {
+      background-color: #cdcdcd;
+      transition: 0.3s;
+    }
+    tbody {
+      color: #222;
+      line-height: 23px;
+      font-size: 13px;
+      td {
         font-size: 13px;
-        td {
-          font-size: 13px;
-        }
       }
-      tfoot {
-        display: none;
-      }
+    }
+    tfoot {
+      display: none;
+    }
   }
 }
 
