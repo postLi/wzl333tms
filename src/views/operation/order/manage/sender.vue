@@ -62,7 +62,7 @@
     </div>
     <AddCustomer :key="mykey" :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo"
                  :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"/>
-    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
+    <TableSetup  :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
                 :columns="tableColumn"/>
   </div>
 </template>

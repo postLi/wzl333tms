@@ -1,30 +1,43 @@
 <template>
-  <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
-    <li class="menu-item" v-for="(route, index) in routes" :key="route.path" v-if="!route.hidden" :class="{'is-active': route.path === $route.path}" ref="sidebaritem">
-      <!-- 有子菜单但不展示 && 没有子菜单 -->
-      <router-link v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name">
-        <icon-svg v-if='route.icon' :icon-class="route.icon" />
-        <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-      </router-link>
-      <!-- 带子菜单展示 -->
-      <template v-if="isFolder(route)">
-        <span class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav" @click.stop="toggle($event)">
+    <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
+      <li
+        class="menu-item"
+        v-for="(route, index) in routes"
+        :key="route.path"
+        :data-path="isFolder(route) ? route.path : ''"
+        v-if="!route.hidden"
+
+        :class="{'is-active': detectPActive(route)}" 
+        ref="sidebaritem"
+        >
+        <!-- 有子菜单但不展示 && 没有子菜单 -->
+        <router-link  v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
+          <icon-svg v-if='route.icon' :icon-class="route.icon" /> 
+          <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+        </router-link>
+        <!-- 带子菜单展示 -->
+        <template v-if="isFolder(route)">
+          <span  class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
             <icon-svg v-if='route.icon' :icon-class="route.icon" />
              <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-        <i class="el-icon-caret-bottom dropdownIcon"></i>
-        </span>
-        <ul class='sidebar-submenu' @click.stop>
-          <!-- 暂时只展开二级菜单 -->
-          <li v-for="(item, index) in route.children" v-if="!item.hidden" :key="index" :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}" class="submenu-item">
-            <router-link :to="item.path" :index="item.path" :key="item.name">
-              <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
-            </router-link>
-          </li>
-        </ul>
-      </template>
-      <!-- 带tab菜单展示 -->
-      <template v-if="route.tab">
-        <span class="sidebar_menu_toggle" @click.stop="toggle($event)">
+            <i class="el-icon-caret-bottom dropdownIcon" ></i>
+           </span>
+           <ul class='sidebar-submenu' @click.stop>
+            <!-- 暂时只展开二级菜单 -->
+            <li v-for="(item, index) in route.children"
+              v-if="!item.hidden"
+              :key="index"
+              :class="{'is-active': detectActive(item, route)}"
+              class="submenu-item">
+              <router-link :to="item.path" :index="item.path" :key="item.name">
+                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
+              </router-link>
+            </li>
+          </ul>
+        </template>
+        <!-- 带tab菜单展示 -->
+        <template  v-if="route.tab">
+          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
         <i class="el-icon-caret-bottom dropdownIcon"></i>
         </span>
@@ -79,6 +92,30 @@ export default {
     }
   },
   methods: {
+    detectPActive(route) {
+      const flag = route.path === this.$route.path
+      // 如果有其它展开项，则将其隐藏
+      if (flag && this.isFolder(route) === false) {
+        Array.from(document.querySelectorAll('.isOpen') || []).forEach(el2 => {
+          el2.classList.remove('isOpen')
+        })
+      }
+      return flag
+    },
+    detectActive(item, route) {
+      const flag = this.isFolder(item) ? item.meta.title === this.$route.meta.ptitle : item.path === this.$route.path
+      if (flag) {
+        const path = route.path
+        // 稍微延时下，等dom结构渲染好
+        setTimeout(() => {
+          const el = document.querySelector('[data-path="' + path + '"]')
+          if (el) {
+            el.classList.add('isOpen')
+          }
+        }, 200)
+      }
+      return flag
+    },
     isFolder(item) {
       return item.children && item.children.length
     },

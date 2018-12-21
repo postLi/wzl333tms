@@ -1,6 +1,8 @@
 <template>
   <div class="fee-content" v-loading="loading">
-    <el-table
+    <tree-table :data="usersArr" :columns="columns" border :expand-all="expandAll" 
+                     :isParentId="true" />
+    <!-- <el-table
       ref="multipleTable"
       :data="usersArr"
       stripe
@@ -12,6 +14,11 @@
       <el-table-column
         prop="feeType"
         label="费用项"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="paymentsTypeZh"
+        label="收支类型"
         width="150">
       </el-table-column>
       <el-table-column
@@ -53,20 +60,32 @@
         label="备注"
         >
       </el-table-column>
-    </el-table>
+    </el-table> -->
   </div>
 </template>
 <script>
 import orderManage from '@/api/operation/orderManage'
+import treeTable from '@/components/TreeTable/index2'
 
 export default {
+  components: {
+    treeTable
+  },
   props: {
     orderid: [String, Number]
   },
   data() {
     return {
       loading: false,
-      usersArr: []
+      usersArr: [],
+      expandAll: true,
+      columns: [
+        {
+          text: '费用项',
+          value: 'feeType',
+          fixed: true
+        }
+      ]
     }
   },
   watch: {
@@ -95,3 +114,15 @@ export default {
   }
 }
 </script>
+<style type="text/css" lang="scss">
+  .row-expand-cover .el-table__expand-column .el-icon {
+    visibility: hidden;
+  }
+  .fee-content{
+    .scope-node{
+      text-align: left;
+      padding-left: 2em;
+    }
+
+  }
+</style>

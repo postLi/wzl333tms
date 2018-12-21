@@ -74,6 +74,10 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.accNum).then(response => {
           const data = response
+          if (location.href.indexOf('192.168.1') !== -1) {
+            window.localStorage.ANFA_tms_login = JSON.stringify(data)
+            console.log('logingignigngiinfo')
+          }
           setToken(data.access_token)
           setRefreshToken(data.refresh_token)
           setUsername(username)

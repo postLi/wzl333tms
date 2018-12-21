@@ -360,6 +360,7 @@
         if (newVal) {
           if (this.shipSn) {
             console.log('this.orderinfo::::', this.shipSn, this.orderinfo)
+            this.reset()
             orderManageApi.getAllShip({
               'currentPage': 1,
               'pageSize': 5,
@@ -644,7 +645,7 @@
       },
       reset() {
         // const oldVal = this.form.abnormalNo
-        // this.$refs['ruleForm'].resetFields()
+        this.$refs['ruleForm'].resetFields()
         // if (!this.isModify) {
         //   this.form.abnormalNo = oldVal
         // }

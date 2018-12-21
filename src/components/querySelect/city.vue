@@ -538,7 +538,7 @@ export default {
     // 高亮城市选择项
     highLightCity(item, ishightlight) {
       if (item.area) {
-        return ishightlight ? this.setHightLight(item.longAddr.split(',')[2], this.lastQuery) : (item.province + item.city)
+        return ishightlight ? this.setHightLight(item.longAddr.split(',')[2] || item.area, this.lastQuery) : (item.province === item.city ? item.province : (item.province + item.city))
       } else if (item.city) {
         return ishightlight ? this.setHightLight(item.city, this.lastQuery) : item.province
       } else {
