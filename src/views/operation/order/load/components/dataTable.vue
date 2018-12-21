@@ -252,7 +252,7 @@ export default {
         return
       }
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: // 按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: // 按运单运费占运费比例分摊 (运单-回扣）/（总运费-总回扣）*运费
           let totalBrokerageFee = 0 // 总回扣
           let totalShipTotalFee = 0 // 总运费合计
           this.rightTable.forEach(e => {
@@ -268,12 +268,12 @@ export default {
             }
           })
           break
-        case 44: // 按票数分摊 车费/票数
+        case 44: // 按票数分摊 运费/票数
           this.rightTable.forEach((e, index) => {
             e.handlingFee = this.calc(tmsMath._div(this.handlingFeeInfo.handlingFeeAll, this.rightTable.length))
           })
           break
-        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*车费
+        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*运费
           let totalWeight = 0
           this.rightTable.map(e => {
             totalWeight = tmsMath._add(totalWeight, e.loadWeight)
@@ -282,7 +282,7 @@ export default {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadWeight, totalWeight), this.handlingFeeInfo.handlingFeeAll))
           })
           break
-        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*车费
+        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*运费
           let totalVolume = 0
           this.rightTable.map(e => {
             totalVolume = tmsMath._add(totalVolume, e.loadVolume)
@@ -291,7 +291,7 @@ export default {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadVolume, totalVolume), this.handlingFeeInfo.handlingFeeAll))
           })
           break
-        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*车费
+        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*运费
           let totalAmount = 0
           this.rightTable.map(e => {
             totalAmount = tmsMath._add(totalAmount, e.loadAmount)

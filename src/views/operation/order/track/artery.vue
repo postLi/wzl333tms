@@ -177,7 +177,7 @@ export default {
           width: '120'
         },
       {
-        label: '现付运费',
+        label: '现付车费',
         prop: 'nowpayCarriage',
         width: '120'
       },
@@ -187,7 +187,7 @@ export default {
         width: '120'
       },
       {
-        label: '到付运费',
+        label: '到付车费',
         prop: 'arrivepayCarriage',
         width: '120'
       },
@@ -202,12 +202,12 @@ export default {
         width: '120'
       },
       {
-        label: '回付运费',
+        label: '回付车费',
         prop: 'backpayCarriage',
         width: '120'
       },
         // {
-        //   label: "运费合计",
+        //   label: "车费合计",
         //   prop: "userName",
         //   width: "120"
         // },

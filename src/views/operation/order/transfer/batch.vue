@@ -249,7 +249,7 @@ export default {
       }).catch((err) => {
         this.$message({
             type: 'info',
-            message: '已取消:' + JSON.stringify(err)
+            message: '已取消'
           })
       })
     },

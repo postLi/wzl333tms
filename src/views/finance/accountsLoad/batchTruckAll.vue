@@ -140,9 +140,9 @@ export default {
         vo: {}
       },
       FEE_TYPE: {
-        amountNowpayCarriage: '实际核销现付运费',
+        amountNowpayCarriage: '实际核销现付车费',
         amountNowpayOilCard: '实际核销现付油卡',
-        amountBackpayCarriage: '实际核销回付运费',
+        amountBackpayCarriage: '实际核销回付车费',
         amountBackpayOilCard: '实际核销回付油卡',
         amountCarloadInsuranceFee: '实际核销整车保险费',
         amountLeaveHandlingFee: '实际核销发站装卸费',
@@ -192,13 +192,13 @@ export default {
           }
       },
       {
-        label: '现付运费',
+        label: '现付车费',
         prop: 'nowpayCarriage',
         width: '150',
         fixed: false
       },
       {
-        label: '已核销现付运费',
+        label: '已核销现付车费',
         prop: 'paidNowpayCarriage',
         width: '180',
         fixed: false,
@@ -208,7 +208,7 @@ export default {
           }
       },
       {
-        label: '未核销现付运费',
+        label: '未核销现付车费',
         prop: 'unpaidNowpayCarriage',
         width: '150',
         fixed: false,
@@ -244,13 +244,13 @@ export default {
           }
       },
       {
-        label: '回付运费',
+        label: '回付车费',
         prop: 'backpayCarriage',
         width: '150',
         fixed: false
       },
       {
-        label: '已核销回付运费',
+        label: '已核销回付车费',
         prop: 'paidBackpayCarriage',
         width: '180',
         fixed: false,
@@ -260,7 +260,7 @@ export default {
           }
       },
       {
-        label: '未核销回付运费',
+        label: '未核销回付车费',
         prop: 'unpaidBackpayCarriage',
         width: '150',
         fixed: false,
@@ -460,13 +460,13 @@ export default {
           }
       },
       {
-        label: '现付运费',
+        label: '现付车费',
         prop: 'nowpayCarriage',
         width: '150',
         fixed: false
       },
       {
-        label: '已核销现付运费',
+        label: '已核销现付车费',
         prop: 'paidNowpayCarriage',
         width: '180',
         fixed: false,
@@ -476,7 +476,7 @@ export default {
           }
       },
       {
-        label: '未核销现付运费',
+        label: '未核销现付车费',
         prop: 'unpaidNowpayCarriage',
         width: '150',
         fixed: false,
@@ -486,7 +486,7 @@ export default {
           }
       },
       {
-        label: '实际核销现付运费',
+        label: '实际核销现付车费',
         prop: 'amountNowpayCarriage',
         width: '120',
         fixed: false,
@@ -532,13 +532,13 @@ export default {
           }
       },
       {
-        label: '回付运费',
+        label: '回付车费',
         prop: 'backpayCarriage',
         width: '150',
         fixed: false
       },
       {
-        label: '已核销回付运费',
+        label: '已核销回付车费',
         prop: 'paidBackpayCarriage',
         width: '180',
         fixed: false,
@@ -548,7 +548,7 @@ export default {
           }
       },
       {
-        label: '未核销回付运费',
+        label: '未核销回付车费',
         prop: 'unpaidBackpayCarriage',
         width: '150',
         fixed: false,
@@ -558,7 +558,7 @@ export default {
           }
       },
       {
-        label: '实际核销回付运费',
+        label: '实际核销回付车费',
         prop: 'amountBackpayCarriage',
         width: '120',
         fixed: false,
@@ -836,9 +836,9 @@ export default {
               this.leftTable.splice(item, 1)
             }
             // 默认设置实际核销数量
-            e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付运费
+            e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付车费
             e.amountNowpayOilCard = e.unpaidNowpayOilCard // 实际核销现付油卡
-            e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付运费
+            e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付车费
             e.amountBackpayOilCard = e.unpaidBackpayOilCard // 实际核销回付油卡
             e.amountCarloadInsuranceFee = e.unpaidCarloadInsuranceFee // 实际核销整车保险费
             e.amountLeaveHandlingFee = e.unpaidLeaveHandlingFee // 实际核销发站装卸费
@@ -908,9 +908,9 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置实际核销数量
-          e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付运费
+          e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付车费
           e.amountNowpayOilCard = e.unpaidNowpayOilCard // 实际核销现付油卡
-          e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付运费
+          e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付车费
           e.amountBackpayOilCard = e.unpaidBackpayOilCard // 实际核销回付油卡
           e.amountCarloadInsuranceFee = e.unpaidCarloadInsuranceFee // 实际核销整车保险费
           e.amountLeaveHandlingFee = e.unpaidLeaveHandlingFee // 实际核销发站装卸费
@@ -1032,9 +1032,9 @@ export default {
             e.amountCarloadInsuranceFee, 
             e.amountLeaveHandlingFee, 
             e.amountLeaveOtherFee).result()
-          let itemCarriage = { id: e.id, amount: e.amountNowpayCarriage, feeTypeId: 19, dataName: '现付运费' } // 实际核销现付运费
+          let itemCarriage = { id: e.id, amount: e.amountNowpayCarriage, feeTypeId: 19, dataName: '现付车费' } // 实际核销现付车费
           let itemOilCard = { id: e.id, amount: e.amountNowpayOilCard, feeTypeId: 20, dataName: '现付油卡' } // 实际核销现付油卡
-          let itemBackpayCarriage = { id: e.id, amount: e.amountBackpayCarriage, feeTypeId: 21, dataName: '回付运费' } // 实际核销回付运费
+          let itemBackpayCarriage = { id: e.id, amount: e.amountBackpayCarriage, feeTypeId: 21, dataName: '回付车费' } // 实际核销回付车费
           let itemBackpayOilCard = { id: e.id, amount: e.amountBackpayOilCard, feeTypeId: 22, dataName: '回付油卡' } // 实际核销回付油卡
           let itemInsurance = { id: e.id, amount: e.amountCarloadInsuranceFee, feeTypeId: 25, dataName: '整车保险费' } // 实际核销整车保险费
           let itemHandling = { id: e.id, amount: e.amountLeaveHandlingFee, feeTypeId: 26, dataName: '发站装卸费' } // 实际核销发站装卸费

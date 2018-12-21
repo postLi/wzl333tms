@@ -68,7 +68,7 @@
     </el-form>
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
-          <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
+          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
   </el-dialog>
@@ -127,6 +127,14 @@ export default {
         return this.popVisible
       },
       set() {}
+    },
+    feeId() {
+        let ids = []
+        this.info.orderList.forEach(e => {
+          ids = ids.concat(e.feeIdStr.split(','))
+          console.log('ids arr', ids, e.feeIdStr)
+        })
+        return this.uniqueArray(ids).join(',')
     }
   },
   data() {
@@ -197,6 +205,9 @@ export default {
       this.baseQuery.amount = this.info.amount
       this.$set(this.baseQuery, 'dataSrc', 0)
       this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
+      this.$set(this.baseQuery, 'feeIds', this.feeId || '')
+      // this.baseQuery.feeIds = this.feeId + '' || ''
+      console.warn('feeId', this.feeId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
           if (data) {
             this.subjectOne = data.subOneList || []
@@ -475,7 +486,7 @@ export default {
      uniqueArray(arr) { // 去重
       var hash = []
       for (var i = 0; i < arr.length; i++) {
-        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i]) {
+        if (hash.indexOf(arr[i]) == -1 && hash !== arr[i] && arr[i]) {
           hash.push(arr[i])
         }
       }

@@ -2,6 +2,10 @@ import {
   asyncRouterMap,
   constantRouterMap
 } from '@/router/index'
+import {
+  getUserInfo
+} from '@/utils/auth'
+
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -9,7 +13,13 @@ import {
  * @param route
  */
 function hasPermission(roles, route) {
+  const userInfo = getUserInfo()
   if (route.meta && route.meta.code) {
+    // if (route.path.indexOf('/finance/financeInfo') !== -1 || route.path.indexOf('/finance/certificationAudit') !== -1) {
+    //   if (userInfo.systemSetup.financeSetting.voucher && userInfo.systemSetup.financeSetting.voucher !== '1') {
+    //     route.hidden = true
+    //   }
+    // }
     return roles.some(role => route.meta.code === role.code)
   } else {
     return true
@@ -69,23 +79,17 @@ const permission = {
         // accessedRouters = asyncRouterMap
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         accessedRouters.map(el => {
-          console.log('el name', el.name, el)
           if (el.meta && el.meta.code === 'FINANCE') {
             el.children.forEach(ee => {
               if (ee.meta && ee.meta.code) {
                 if (ee.children && ee.children.length) {
-                  // el.redirect = ee.children[0].path
                   ee.children.map(em => {
                     if (em.meta && em.meta.code) {
                       if (em.children && em.children.length) {
                         em.redirect = em.children[0].path
-                        // } else {
-                        //   em.redirect = em.path
                       }
                     }
                   })
-                } else {
-                  // el.redirect = ee.path
                 }
               }
             })

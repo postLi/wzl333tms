@@ -509,6 +509,7 @@
               if (!bool) {
                 this.closeMe()
               }
+                this.popTitle = '新增网点'
               this.loading = false
             }).catch(err => {
               this._handlerCatchMsg(err)

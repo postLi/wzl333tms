@@ -235,7 +235,7 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '现付运费(元)',
+        label: '现付车费(元)',
         prop: 'nowpayCarriage',
         width: '110',
         fixed: false
@@ -245,7 +245,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '到付运费(元)',
+          label: '到付车费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
@@ -255,7 +255,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '回付运费(元)',
+          label: '回付车费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
@@ -266,7 +266,7 @@ export default {
           fixed: false
         },
       {
-        label: '运费合计(元)',
+        label: '车费合计(元)',
         prop: 'totalFee',
         width: '110',
         fixed: false

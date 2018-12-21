@@ -75,7 +75,7 @@ export default {
     }
 
     return {
-      searchCreatTime: [+new Date(), +new Date() + 60 * 24 * 60 * 60 * 1000],
+      searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
         pickupStatus: 235,
         pickupBatchNumber: '',

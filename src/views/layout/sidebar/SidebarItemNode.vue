@@ -12,7 +12,8 @@
       <!-- 包含子菜单展示 -->
       <template v-if="!item.noDropdown&&item.children&&item.children.length">
         <router-link :to="item.path" :key="item.name" >
-          <icon-svg v-if='item.icon' :icon-class="item.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (item.children[0].meta.stitle||item.children[0].meta.title) : item.children[0].meta.title}}</span>
+          <icon-svg v-if='item.icon' :icon-class="item.icon" /> 
+          <span class="sidebar-nav-title">{{ !sidebar.opened ? (item.children[0].meta.stitle||item.children[0].meta.title) : item.children[0].meta.title}}</span>
           <i :class="{'el-icon-caret-bottom': !open, 'el-icon-caret-top': open}" class="dropdownIcon" ></i>
         </router-link>
         <ul class='sidebar-submenu' v-if="isFolder" @click.stop>
@@ -42,6 +43,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { objectMerge2 } from '@/utils/index'
 export default {
   name: 'SidebarItemNode',
   props: {

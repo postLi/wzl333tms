@@ -131,13 +131,13 @@
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
               <ul class="feeList_lyy">
                 <li>
-                  <p>运费合计(元)</p>
+                  <p>车费合计(元)</p>
                   <el-form-item>
                     <el-input :maxlength="10" :size="mini" disabled :value="totalFormFee" style="text-align:center;"></el-input>
                   </el-form-item>
                 </li>
                 <li>
-                  <p>现付运费(元)</p>
+                  <p>现付车费(元)</p>
                   <el-form-item prop="nowpayCarriage">
                     <input type="text" class="nativeinput" v-number-only:point :value="formFee.nowpayCarriage" ref="nowpayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'nowpayCarriage')" />
                   </el-form-item>
@@ -149,7 +149,7 @@
                   </el-form-item>
                 </li>
                 <li>
-                  <p>回付运费(元)</p>
+                  <p>回付车费(元)</p>
                   <el-form-item prop="backpayCarriage">
                     <input type="text" class="nativeinput" v-number-only:point :value="formFee.backpayCarriage" ref="backpayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'backpayCarriage')" />
                   </el-form-item>
@@ -161,7 +161,7 @@
                   </el-form-item>
                 </li>
                 <li>
-                  <p>到付运费(元)</p>
+                  <p>到付车费(元)</p>
                   <el-form-item prop="arrivepayCarriage">
                     <input type="text" class="nativeinput" v-number-only:point :value="formFee.arrivepayCarriage" ref="arrivepayCarriage" :maxlength="10" @change="(e)=>changeLoadNum(e.target.value, 'arrivepayCarriage')" />
                   </el-form-item>
@@ -215,7 +215,7 @@
                   </el-form-item>
                 </li>
               </ul>
-              <span class="feeTips">注：运费合计 = 现付运费 + 现付油卡 + 回付运费 + 回付油卡 + 到付运费 + 到付油卡</span>
+              <span class="feeTips">注：车费合计 = 现付车费 + 现付油卡 + 回付车费 + 回付油卡 + 到付车费 + 到付油卡</span>
             </el-form>
           </div>
         </el-collapse-item>
@@ -428,7 +428,7 @@ export default {
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
       apportionTypeDescript: [
-      '(运单 - 回扣）/（总运费 - 总回扣）* 操作费', 
+      '(运单 - 回扣）/（总车费 - 总回扣）* 操作费', 
       '操作费 / 票数', 
       '该单重量 / 本车总重量 * 操作费', 
       '该单体积 / 本车总体积 * 操作费', 
