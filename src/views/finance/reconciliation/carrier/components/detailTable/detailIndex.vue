@@ -92,7 +92,7 @@
         total: 0,
         trackId: '',
         // 加载状态
-        loading: true,
+        loading: false,
         setupTableVisible: false,
         AddCustomerVisible: false,
         isModify: false,
@@ -256,9 +256,10 @@
           this.usersArr = data.list
           this.total = data.total
           this.loading = false
+          // this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
-          this.loading = false
+          // this.loading = false
         })
       },
       fetchData() {
