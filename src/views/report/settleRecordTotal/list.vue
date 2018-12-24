@@ -15,11 +15,11 @@
         <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
-              <th rowspan="2" bgcolor="dimGray" width="70px">
+              <th rowspan="2" bgcolor="dimGray" width="50px">
                 <font color="white" size="3">序号</font>
               </th>
-              <th rowspan="2" bgcolor="dimGray" width="270px">
-                <font color="white" size="3">费用项目</font>
+              <th rowspan="2" bgcolor="dimGray" width="100px">
+                <font color="white" size="2">费用项目</font>
               </th>
               <th colspan="4" bgcolor="dimGray">
                 <font color="white" size="3">应收汇总</font>
@@ -29,44 +29,44 @@
               </th>
             </tr>
             <tr height="32px">
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">应收合计</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="70px">
                 <font color="white" size="2">数量</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">应付合计</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">已付</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">未付</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="70px">
                 <font color="white" size="2">数量</font>
               </th>
             </tr>
           </thead>
         </table>
         <table ref="footTotalFee" class="footTotalFee_settleRecordTotal">
+          <colgroup width="50px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
           <colgroup width="70px"></colgroup>
-          <colgroup width="270px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="70px"></colgroup>
         </table>
       </div>
     </div>
@@ -110,61 +110,61 @@ export default {
           label: '序号',
           prop: 'id',
           textAlign: 'center',
-          width: '70'
+          width: '50'
         },
         {
           label: '费用项目',
           prop: 'feeName',
           textAlign: 'center',
-          width: '270'
+          width: '100'
         },
         {
           label: '应收合计',
           prop: 'totalreceivableFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '已收',
           prop: 'receivableFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '未收',
           prop: 'receivableUnpaidFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '数量',
           prop: 'receivableCount',
           textAlign: 'center',
-          width: '90'
+          width: '70'
         },
         {
           label: '应付合计',
           prop: 'totalpayableFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '已付',
           prop: 'payableFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '未付',
           prop: 'payableUnpaidFee',
           textAlign: 'right',
-          width: '90'
+          width: '100'
         },
         {
           label: '数量',
           prop: 'payableCount',
           textAlign: 'center',
-          width: '90'
+          width: '70'
         }
       ],
       countCol: [ // 需要合计的-列
@@ -238,13 +238,14 @@ export default {
         const data = res
         const countColVal = []
         this.loading = false
-        const div = document.getElementById('report_settleRecordTotal')
         const table = document.getElementById('report_settleRecordTotal_table')
         // 固定表头
+        const div = document.getElementById('report_settleRecordTotal')
         const tableClone = table.cloneNode(true)
         tableClone.setAttribute('id', 'tableClone')
         tableClone.setAttribute('refs', 'tableClone')
         tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
         div.appendChild(tableClone)
         
         if (!table) {
@@ -337,6 +338,7 @@ export default {
           td.setAttribute('color', 'white')
         }
         
+
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -412,6 +414,8 @@ export default {
     top: 0;
     left: 0;
     z-index: 2;
+    th {
+    }
   }
 
 
@@ -438,6 +442,7 @@ export default {
       font-size: 13px;
       td {
         font-size: 13px;
+         word-break: break-all;
       }
     }
     tfoot {
@@ -460,6 +465,7 @@ export default {
     td {
       font-size: 13px;
       border: 1px solid #bbb;
+      word-break: break-all;
     }
   }
 }

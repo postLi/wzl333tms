@@ -883,7 +883,11 @@ export default {
               }
               // type
                // 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
+              if (obj.filedValue === 'horizontalLine' || obj.filedValue === 'verticalLine') { // 排除横线竖线
+               console.log(obj.filedName)
+              }else {
               this.commonLabelList.push(obj)
+              }
             })
             this.sortLabel(this.commonLabelList, 'filedName')
             this.$nextTick(() => {

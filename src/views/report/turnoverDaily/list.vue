@@ -236,12 +236,14 @@ export default {
           th.setAttribute('width', (this.columns[i].width || 120) + 'px')
           theadTr.appendChild(th)
         }
+        console.log('table', table)
         // 固定表头
-        // const tableClone = table.cloneNode(true)
-        // tableClone.setAttribute('id', 'tableClone')
-        // tableClone.setAttribute('refs', 'tableClone')
-        // tableClone.className = 'tableCloneHead'
-        // div.appendChild(tableClone)
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
+        div.appendChild(tableClone)
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
           const tbodyTr = tbody.insertRow()
@@ -410,6 +412,9 @@ export default {
     top: 0;
     left: 0;
     z-index: 2;
+    th {
+      width: 7%;
+    }
   }
   /*设置边框的*/
   .report_turnoverDaily_table {
