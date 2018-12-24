@@ -239,6 +239,11 @@ export default {
         const countColVal = []
         this.loading = false
         const table = document.getElementById('report_settleRecordTotal_table')
+        
+        
+        if (!table) {
+          return
+        }
         // 固定表头
         const div = document.getElementById('report_settleRecordTotal')
         const tableClone = table.cloneNode(true)
@@ -248,10 +253,6 @@ export default {
         console.log('tableClone', tableClone)
         div.appendChild(tableClone)
         
-        if (!table) {
-          return
-        }
-
         const tbodyLen = table.getElementsByTagName('tbody')
         const tfootLen = table.getElementsByTagName('tfoot')
         if (tbodyLen.length > 0) {
