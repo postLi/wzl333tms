@@ -40,7 +40,7 @@
       <el-table ref="multipleTable" :data="resMessage.failInfoList" stripe border tooltip-effect="dark"
                 :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%;margin-top: 10px;"
                 :key="tableKey" :class="resMessage.failInfoList.length>11?'failinScroll':''">
-        <el-table-column sortable type="index" width="60">
+        <el-table-column sortable type="index" width="60" label="序号">
         </el-table-column>
         <el-table-column prop="failExcelNum" width="130" label="失败行"></el-table-column>
         <el-table-column prop="failInfo" label="失败字段"></el-table-column>

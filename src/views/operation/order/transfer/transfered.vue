@@ -125,6 +125,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '150'
