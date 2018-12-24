@@ -63,7 +63,7 @@
       </el-table-column>
     </el-table>
     </div>
-    <Addabnormal :key="abkey" :orderinfo="orderinfo" :issender="true" :isModify="false"  :isCheck="false" :info="{}" :id="''" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId"
+    <Addabnormal v-if="AddAbnormalVisibleFirst" :key="abkey" :orderinfo="orderinfo" :issender="true" :isModify="false"  :isCheck="false" :info="{}" :id="''" :orgid="otherinfo.orgid" :companyId="otherinfo.companyId"
     :shipSn="shipsn" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
   </div>
 </template>
@@ -87,6 +87,7 @@ export default {
     return {
       loading: false,
       AddAbnormalVisible: false,
+      AddAbnormalVisibleFirst: false,
       usersArr: [],
       abkey: '1'
     }
@@ -106,6 +107,7 @@ export default {
   methods: {
     openAddAbnormal() {
       // this.abkey = +new Date()
+      this.AddAbnormalVisibleFirst = true
       this.AddAbnormalVisible = true
     },
     closeAddAbnormal() {

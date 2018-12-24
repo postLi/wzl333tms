@@ -345,33 +345,41 @@
     mounted() {
       this.form.orgid = this.orgid
   
-      console.log('shis,.shipsnd', this.shipSn)
+      console.log('shis,.shipsnd', this.shipSn, this.inited)
       if (!this.inited) {
-        this.inited = true
         this.initInfo()
+        this.inited = true
       }
     },
     watch: {
-      popVisible(newVal, oldVal) {
-        if (!this.inited) {
-          this.inited = true
-          this.initInfo()
-        }
-        if (newVal) {
-          if (this.shipSn) {
-            console.log('this.orderinfo::::', this.shipSn, this.orderinfo)
-            this.reset()
-            orderManageApi.getAllShip({
-              'currentPage': 1,
-              'pageSize': 5,
-              vo: {
-                shipSn: this.shipSn
-              }
-            }).then(data => {
-              this.getShipSn(data.list[0])
-            })
+      popVisible: {
+        handler(newVal, oldVal) {
+          let isFirstTime = false
+          if (!this.inited) {
+            isFirstTime = true
+            this.initInfo()
+            this.inited = true
           }
-        }
+          if (newVal) {
+            if (this.shipSn) {
+              console.log('this.orderinfo::::', this.shipSn, this.orderinfo, this.inited)
+              if (!isFirstTime) {
+                this.reset()
+              }
+  
+              orderManageApi.getAllShip({
+                'currentPage': 1,
+                'pageSize': 5,
+                vo: {
+                  shipSn: this.shipSn
+                }
+              }).then(data => {
+                this.getShipSn(data.list[0])
+              })
+            }
+          }
+        },
+        immediate: true
       },
       orgid(newVal) {
         this.form.orgid = newVal

@@ -18,7 +18,7 @@
       @blur="setShort"
       @select="handleSelect">
       <icon-svg icon-class="sousuo" slot="prefix" />
-      <icon-svg v-if="!topSearch.length" icon-class="shouqicaidan" slot="suffix" />
+      <icon-svg v-if="!topSearch.length" @click.native="openSearchBox" icon-class="shouqicaidan" slot="suffix" />
       <i
         v-if="topSearch.length"
         class="el-icon-circle-close el-input__icon"
@@ -30,12 +30,22 @@
         <span class="val">{{ item.value }}</span>
       </template>
     </el-autocomplete>
+    <el-dialog top="0" width="90%" :close-on-click-modal="false" class="showSearchPop" v-if="showSearch" title="多条件查询" :visible.sync="showSearchVisible">
+        <SearchOrder v-if="showSearch" :orderid="orderid" />
+    </el-dialog>
   </div>
 </template>
 <script>
+import SearchOrder from '@/views/operation/order/orderManage/pop'
+
 export default {
+  components: {
+    SearchOrder
+  },
   data() {
     return {
+      showSearch: false,
+      showSearchVisible: false,
       topSearch: '',
       searchListArr: [],
       searchList: [
@@ -78,6 +88,11 @@ export default {
     }
   },
   methods: {
+    openSearchBox() {
+      debugger
+      this.showSearch = true
+      this.showSearchVisible = true
+    },
     // 显示小搜素框
     showmini() {
       this.$refs['topNavSearch'].classList.toggle('showMiniSearchBox')
@@ -136,6 +151,24 @@ export default {
 </script>
 <style lang="scss">
 @import "src/styles/variate.scss";
+.showSearchPop{
+    height: 100%;
+
+    .el-dialog{
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        top: 5%;
+    }
+
+
+    .el-dialog__body{
+        padding:5px 10px 10px;
+        overflow: auto;
+        flex: 1;
+    }
+}
+
 .topNav-search{
   position: absolute;
   top: 0;
