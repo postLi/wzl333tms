@@ -1019,6 +1019,13 @@ export default {
       this.receiver = {}
       this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
+
+      this.form.tmsOrderShipSign = {}
+      this.form.tmsOrderShipSignList = []
+      this.form.tmsShLoadsList = [{}]
+      this.form.tmsGxLoadsList = [{}]
+      this.form.tmsDbLoadsList = [{}]
+      this.form.tmsOrderTransferList = [{}]
       // this.setOrderDate()
     },
     // doAction(type) {

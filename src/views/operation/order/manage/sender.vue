@@ -62,7 +62,7 @@
     </div>
     <AddCustomer :key="mykey" :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo"
                  :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"/>
-    <TableSetup  :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
+    <TableSetup :code="code"  :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
                 :columns="tableColumn"/>
   </div>
 </template>
@@ -97,6 +97,7 @@
     },
     data() {
       return {
+        code: 'ORDERMANAGER_LIST',
         mykey: '',
         tablekey: 0,
         btnsize: 'mini',
