@@ -262,7 +262,7 @@ export default {
       // tableColumn: []  列表对字段
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {
