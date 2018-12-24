@@ -252,7 +252,7 @@ export default {
         let str = ''
         this.columns.forEach(e => {
           if (e.label !== '序号') {
-            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');\n"
+            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '"+this.code+"');\n"
           }
         })
         console.log(str)

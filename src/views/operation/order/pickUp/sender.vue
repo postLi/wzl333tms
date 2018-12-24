@@ -63,7 +63,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid"
                  :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" :key="mykey"/>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                @success="setColumn"></TableSetup>
+                @success="setColumn" :code="'ORDER_PICK'"></TableSetup>
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible"
                 @success="fetchData" :dotInfo="selectInfo"></PickupMain>
     <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible"

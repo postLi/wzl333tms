@@ -37,7 +37,7 @@
       <!-- 颜色设置弹出框 -->
       <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :code="'ORDER_REPER_ARRIVE'" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>

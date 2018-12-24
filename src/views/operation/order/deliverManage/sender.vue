@@ -45,7 +45,7 @@
     <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" @sendInfoData="sendInfo">
     </editInfo>
     <!-- 表格设置弹出框 -->
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn" :code="'ORDER_DELIVER'"></TableSetup>
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
     <!-- 实际发车时间 弹出框 -->

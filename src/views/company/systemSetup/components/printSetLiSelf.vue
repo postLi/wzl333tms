@@ -560,13 +560,16 @@ export default {
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
+        this.formModel.labelList.forEach((em, index) =>{
+          if (row.filedValue === em.filedValue) {
+            this.$set(this.formModel.labelList, index, row)
+          }
+        })
         console.log('row::::', row)
         let currentRow = objectMerge2({}, row)
         currentRow._index = ++this.labelIndex
         currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
         currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
-        // currentRow.leftx = 0
-        // currentRow.topy = 0
         currentRow.fontsize = this.defaultLabelFontSize
         currentRow.bold = 0
         currentRow.alignment = 1
@@ -828,6 +831,7 @@ export default {
     },
     drop(event) {
       event.preventDefault()
+      console.log( event.offsetX, event.offsetY, event)
       const strName = dom.getAttribute('data-fileName')
       if (!this.isMove) {
         this.orgLabelList.filter(e => {

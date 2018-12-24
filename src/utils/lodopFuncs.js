@@ -501,6 +501,7 @@
 
    if (type === 'lib') {
      console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
+     obj.customerSn = infoDetail.shipCustomerNumber // 客户单号
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
      obj.companyAddr = infoDetail.detailedAddr || (user.companyInfo.city || '') + (user.companyInfo.detailedAddr || '') // 公司地址
@@ -615,8 +616,8 @@
          let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
          let itemInfo = item.info + (i > 0 ? i + 1 : '')
          obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
-         if (/(Amount|Volume|Weight)/.test(item.cargo) !== -1) { // 件数、重量、体积为0的时候不显示0
-           obj[itemCargo] = obj[itemCargo] ? obj[itemCargo] : ''
+         if (/(Amount|Volume|Weight|cargoPack|description)/.test(item.cargo) !== -1) { // 件数、重量、体积、包装、品种规格为0的时候不显示0
+           obj[itemCargo] = obj[itemCargo] ? obj[itemCargo] === '0' ? '' : obj[itemCargo] : ''
          }
        }
      })
@@ -626,6 +627,7 @@
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
+
      obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
      obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
      obj.remarks = infoDetail.shipRemarks // 备注

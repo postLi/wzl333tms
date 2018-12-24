@@ -389,6 +389,7 @@ export default {
         this.cargoLabelList[num].forEach(e => {
           this.formModel.labelList.forEach((el, index) => {
             if (e.filedValue === el.filedValue) {
+              e._index = ++this.labelIndex
               e.showCargo = true
               this.$set(this.formModel.labelList, index, e)
             }
@@ -582,13 +583,16 @@ export default {
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
+        this.formModel.labelList.forEach((em, index) =>{
+          if (row.filedValue === em.filedValue) {
+            this.$set(this.formModel.labelList, index, row)
+          }
+        })
         console.log('row::::', row)
         let currentRow = objectMerge2({}, row)
         currentRow._index = ++this.labelIndex
         currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
         currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
-        // currentRow.leftx = 0
-        // currentRow.topy = 0
         currentRow.fontsize = this.defaultLabelFontSize
         currentRow.bold = 0
         currentRow.alignment = 1
@@ -852,8 +856,10 @@ export default {
       event.preventDefault()
       const strName = dom.getAttribute('data-fileName')
       if (!this.isMove) {
+        console.log('jiwjeifjsdijfiwejfisjdifjwiejf')
         this.orgLabelList.filter(e => {
           if (e.filedValue === strName && !this.isDragView) {
+            console.log('23478238493489529438349')
             e.leftx = event.offsetX
             e.topy = event.offsetY
             // e.isshow = true
