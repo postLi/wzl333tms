@@ -110,6 +110,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
+        prop:'number',
         width: '70',
         fixed: true,
         slot: (scope) => {

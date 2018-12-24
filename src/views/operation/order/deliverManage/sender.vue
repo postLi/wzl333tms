@@ -131,8 +131,10 @@ export default {
           dirverName: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
         label: '序号',
+        prop: 'number',
         width: '80',
         fixed: true,
         slot: (scope) => {

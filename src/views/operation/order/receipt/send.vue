@@ -351,7 +351,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {

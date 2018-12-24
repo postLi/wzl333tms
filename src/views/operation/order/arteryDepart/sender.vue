@@ -69,7 +69,7 @@ import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
 // import AddLntelligent from './components/intelligentFreight'
@@ -136,14 +136,17 @@ export default {
           departureEndTime: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
         label: '序号',
+        prop: 'number',
         width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      }, {
+      }, 
+      {
         label: '发车批次',
         prop: 'batchNo',
         width: '120',
@@ -368,14 +371,15 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '干线发车'
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 打印
         case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 合同

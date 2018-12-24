@@ -19,7 +19,7 @@
       <el-badge :value="counts.changeFeeCount" class="item" :hidden="counts.changeFeeCount === 0" v-has:FINANCE_RECLIST6>
         <router-link to="/finance/accountsReceivable/abnormal" class="tab-label">异动费用</router-link>
       </el-badge>
-      <el-badge :value="counts.handleFee" class="item" :hidden="counts.handleFee === 0" v-has:PAY_HANDLING_REC>
+      <el-badge :value="counts.handlingFeeCount" class="item" :hidden="counts.handlingFeeCount === 0" v-has:PAY_HANDLING_REC>
         <router-link to="/finance/accountsReceivable/handleFee" class="tab-label">操作费核销</router-link>
       </el-badge>
     </div>

@@ -123,6 +123,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },{
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -435,7 +443,7 @@ export default {
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '改单记录'
+            name: '改单记录-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

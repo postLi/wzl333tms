@@ -570,7 +570,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {
@@ -980,7 +980,7 @@ export default {
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
-            name: '送货签收'
+            name: '送货签收-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 签收

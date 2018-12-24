@@ -164,11 +164,11 @@
                 <div class="infos_tab">
                   <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed type="selection" width="50"></el-table-column>
-                    <el-table-column fixed label="序号" prop="number" width="50">
+                   <!--  <el-table-column fixed label="序号" prop="number" width="50">
                     <template slot-scope="scope">
                       {{scope.$index + 1}}
                     </template>
-                  </el-table-column>
+                  </el-table-column> -->
                     <template v-for="column in tableColumn">
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
@@ -581,15 +581,15 @@ export default {
           'loadId': 1
         }
       },
-      tableColumn: [/* {
+      tableColumn: [ {
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '100',
           fixed: true,
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, */ {
+        },  {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '150',
@@ -1001,15 +1001,15 @@ export default {
                    obj.dirverMobile +
                    '</td></tr></table></body>'
       const columnArr = objectMerge2([], this.tableColumn)
-      columnArr.unshift({
-        label: '序号',
-        prop: 'id',
-        width: '40',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      })
+      // columnArr.unshift({
+      //   label: '序号',
+      //   prop: 'number',
+      //   width: '40',
+      //   fixed: true,
+      //   slot: (scope) => {
+      //     return scope.$index + 1
+      //   }
+      // })
       switch (type) {
         // 导出数据table_import
         // 导出

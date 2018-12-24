@@ -691,19 +691,20 @@ export default {
     //     code: 'FLOW_OUT'
     //   }
     // },
+    // {
+    //   path: '/finance/IOManage',
+    //   icon: 'caiwugl3_shouzhifs',
+    //   name: 'IOManage',
+    //   component: _import('finance/IOManage/index'),
+    //   meta: {
+    //     role: ['admin'],
+    //     title: '收支方式管理',
+    //     stitle: '收支',
+    //     'code': 'FINANCE_IOMANAGE',
+    //     noCache: false
+    //   }
+    // }, 
     {
-      path: '/finance/IOManage',
-      icon: 'caiwugl3_shouzhifs',
-      name: 'IOManage',
-      component: _import('finance/IOManage/index'),
-      meta: {
-        role: ['admin'],
-        title: '收支方式管理',
-        stitle: '收支',
-        'code': 'FINANCE_IOMANAGE',
-        noCache: false
-      }
-    }, {
       path: '/finance/financeInfo',
       icon: 'caiwugl3_shouzhifs',
       name: 'financeInfo',

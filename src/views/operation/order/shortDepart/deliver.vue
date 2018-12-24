@@ -115,6 +115,15 @@ export default {
         //     }
         //   },
         {
+        label: '序号',
+        prop: 'number',
+        width: '80',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
+        }
+      },
+        {
           label: '发车批次',
           prop: 'batchNo',
           width: '110'
@@ -301,14 +310,14 @@ export default {
           SaveAsFile({
             data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
             columns: this.tableColumn,
-            name: '短驳发车'
+            name: '短驳发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print': // 打印
           PrintInFullPage({
             data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
             columns: this.tableColumn,
-            name: '短驳发车'
+            name: '短驳发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

@@ -248,12 +248,10 @@ export default {
     initData(_data) {
       // 针对前端写的表格配置数据也进行简单的排序处理
       if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：', this.columns.length, '个')
+        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
         let str = ''
         this.columns.forEach(e => {
-          if (e.label !== '序号') {
-            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '"+this.code+"');\n"
-          }
+            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '"+this.code+"');"+e.fixed+"\n"
         })
         console.log(str)
       }
@@ -368,6 +366,14 @@ export default {
     fetchTableSetup() {
       return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {
         var data = res.data
+         if (process.env.NODE_ENV !== 'production') {
+        console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
+        let str = ''
+        data.forEach(e => {
+            str += "('" + e.lable + "', '" + e.prop + "', '"+this.code+"');"+e.fixed+"\n"
+        })
+        console.log(str)
+      }
         // 保存原有数据，用来在上传时格式化数据
         this.orgdata = data
         if (data && data.length) {

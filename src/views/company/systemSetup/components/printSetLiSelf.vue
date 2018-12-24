@@ -914,8 +914,8 @@ export default {
       let cargoShow2 = false
       let cargoShow3 = false
       getSettingCompanyLi().then(data => {
-          if (data) {
-            let array = Object.assign([], data)
+          // if (data) {
+            let array = Object.assign([], data || [])
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
             let labelList = objectMerge2([], this.commonLabelList)
@@ -1018,7 +1018,7 @@ export default {
             })
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
-          }
+          // }
           this.loading = false
         })
         .catch(err => {

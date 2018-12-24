@@ -93,6 +93,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
+        prop: 'number',
         width: '80',
         fixed: true,
         slot: (scope) => {
@@ -331,14 +332,14 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.infoList,
             columns: this.tableColumn,
-            name: '短驳到货'
+            name: '短驳到货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'printList': // 打印
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.infoList,
             columns: this.tableColumn,
-            name: '短驳到货'
+            name: '短驳到货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }
@@ -491,7 +492,7 @@ export default {
       }
     },
     setColumn(obj) { // 重绘表格列表
-      // this.tableColumn = obj
+      this.tableColumn = obj
       this.tablekey = new Date().getTime() // 刷新表格视图
       console.log('setColumn', obj, this.tablekey)
     }

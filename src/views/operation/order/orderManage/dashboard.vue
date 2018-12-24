@@ -126,6 +126,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },{
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -460,7 +468,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print' ) {
         this.closeAddOrder()
         this.$message({
           message: '请选择要操作的项~',

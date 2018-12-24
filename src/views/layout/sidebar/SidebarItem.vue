@@ -1,43 +1,30 @@
 <template>
-    <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
-      <li
-        class="menu-item"
-        v-for="(route, index) in routes"
-        :key="route.path"
-        :data-path="isFolder(route) ? route.path : ''"
-        v-if="!route.hidden"
-
-        :class="{'is-active': detectPActive(route)}" 
-        ref="sidebaritem"
-        >
-        <!-- 有子菜单但不展示 && 没有子菜单 -->
-        <router-link  v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
-          <icon-svg v-if='route.icon' :icon-class="route.icon" /> 
-          <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-        </router-link>
-        <!-- 带子菜单展示 -->
-        <template v-if="isFolder(route)">
-          <span  class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
+  <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
+    <li class="menu-item" v-for="(route, index) in routes" :key="route.path" :data-path="isFolder(route) ? route.path : ''" v-if="!route.hidden" :class="{'is-active': detectPActive(route)}" ref="sidebaritem">
+      <!-- 有子菜单但不展示 && 没有子菜单 -->
+      <router-link v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name">
+        <icon-svg v-if='route.icon' :icon-class="route.icon" />
+        <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+      </router-link>
+      <!-- 带子菜单展示 -->
+      <template v-if="isFolder(route)">
+        <span class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav" @click.stop="toggle($event)">
             <icon-svg v-if='route.icon' :icon-class="route.icon" />
              <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-            <i class="el-icon-caret-bottom dropdownIcon" ></i>
-           </span>
-           <ul class='sidebar-submenu' @click.stop>
-            <!-- 暂时只展开二级菜单 -->
-            <li v-for="(item, index) in route.children"
-              v-if="!item.hidden"
-              :key="index"
-              :class="{'is-active': detectActive(item, route)}"
-              class="submenu-item">
-              <router-link :to="item.path" :index="item.path" :key="item.name">
-                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
-              </router-link>
-            </li>
-          </ul>
-        </template>
-        <!-- 带tab菜单展示 -->
-        <template  v-if="route.tab">
-          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
+        <i class="el-icon-caret-bottom dropdownIcon"></i>
+        </span>
+        <ul class='sidebar-submenu' @click.stop>
+          <!-- 暂时只展开二级菜单 -->
+          <li v-for="(item, index) in route.children" v-if="!item.hidden" :key="index" :class="{'is-active': detectActive(item, route)}" class="submenu-item">
+            <router-link :to="item.path" :index="item.path" :key="item.name">
+              <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </template>
+      <!-- 带tab菜单展示 -->
+      <template v-if="route.tab">
+        <span class="sidebar_menu_toggle" @click.stop="toggle($event)">
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
         <i class="el-icon-caret-bottom dropdownIcon"></i>
         </span>
@@ -72,7 +59,7 @@ export default {
     routes: {
       handler(cval, oval) {
         if (cval) {
-          let reg = /(\/finance\/financeInfo|\/finance\/certificationAudit)/
+          let reg = /(\/finance\/certificationAudit)/
           cval.map((e, index) => { // 财务凭证 1-需要 2-不需要  不需要的时候 不显示财务初始化和核销凭证 菜单
             if (reg.test(e.path)) {
               if (this.otherinfo.systemSetup.financeSetting.voucher !== '1') {
@@ -80,6 +67,17 @@ export default {
               } else {
                 this.$set(e, 'hidden', false)
               }
+            }
+            if (e.path === '/finance/financeInfo') {
+              e.children.map(em => {
+                if (em.path !== '/finance/financeInfo/subjectDirection') {
+                  if (this.otherinfo.systemSetup.financeSetting.voucher !== '1') {
+                    this.$set(em, 'hidden', true)
+                  } else {
+                    this.$set(em, 'hidden', false)
+                  }
+                }
+              })
             }
           })
         }
@@ -305,6 +303,7 @@ $sidebarBackgroundColor: #42485b;
     transition: transform .6s ease;
   }
 }
+
 
 
 

@@ -972,6 +972,7 @@
          console.log('column.label:', column.label)
          el['index'] = k + 1
          el['id'] = k + 1
+         el['number'] = k + 1
          /* if (column.label === '序号') {
 
          } else {
@@ -1332,9 +1333,29 @@
    }
  }
 
- function createTable(obj, noUnit) { // 打印导出创建表格视图
+ function createTable(obj, noUnit, page) { // 打印导出创建表格视图
    const data = obj.data // 数据表格
    const columns = obj.columns // 表格设置列
+   console.log('data', data)
+   console.log('columns', columns)
+
+   // 处理序号问题
+   // 简单排序
+   // page: 
+   // {
+   // currentPage: 1, //当前页码
+   // pageSize: 100 // 显示条数
+   // }
+   if (!page) {
+     page = {
+       currentPage: 1,
+       pageSize: 100
+     }
+   }
+   data.map((el, index) => {
+     el.number = ((page.currentPage - 1) * page.pageSize) + index + 1
+   })
+   console.log('createTable data', data, page)
 
    const div = document.createElement('div')
    const table = document.createElement('table')

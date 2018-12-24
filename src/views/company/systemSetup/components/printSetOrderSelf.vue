@@ -934,8 +934,7 @@ export default {
       let cargoShow3 = false
       this.loading = true
       getSettingCompanyOrder().then(data => {
-          if (data) {
-            let array = Object.assign([], data)
+            let array = Object.assign([], data || [])
             this.cargoNum = this.$options.data().cargoNum
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
@@ -1042,7 +1041,7 @@ export default {
             })
             this.orgLabelList = objectMerge2([], this.formModel.labelList)
             console.log('相同+差异', this.formModel.labelList)
-          }
+          // }
           this.loading = false
         })
         .catch(err => {
