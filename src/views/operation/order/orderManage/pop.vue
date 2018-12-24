@@ -505,6 +505,8 @@ export default {
     },
     showDetail(order) {
       // this.eventBus.$emit('showOrderDetail', order.id)
+      this.eventBus.$emit('setOpenSearchBoxUrl', this.$route.fullPath)
+      this.eventBus.$emit('hiddenSearchBox')
       this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
     },
     fetchAllOrder() {

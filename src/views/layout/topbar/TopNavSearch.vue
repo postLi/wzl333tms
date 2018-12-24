@@ -95,11 +95,16 @@ export default {
     this.eventBus.$on('hiddenSearchBox', () => {
       this.showSearchVisible = false
     })
+    this.eventBus.$on('openSearchBox', () => {
+      this.openSearchBox()
+    })
   },
   methods: {
     openSearchBox() {
       this.showSearch = true
       this.showSearchVisible = true
+      // 清除掉原来绑定打开的url
+      this.eventBus.$emit('clearOpenSearchBoxUrl')
     },
     // 显示小搜素框
     showmini() {

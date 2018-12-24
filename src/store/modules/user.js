@@ -82,7 +82,7 @@ const user = {
             if (arr.length < 5) {
               arr.push(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
             } else {
-              arr.unshift(token)
+              arr.unshift(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
               arr.splice(4, 1)
             }
             localStorage.lastTmsToken = arr.join(',')
