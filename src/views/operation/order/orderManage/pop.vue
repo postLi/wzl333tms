@@ -34,7 +34,7 @@
           border
           @row-dblclick="showDetail"
           @header-dragend="setTableWidth"
-          height="100%"
+          height="98%"
           :summary-method="getSumLeft"
           show-summary
           tooltip-effect="dark"
@@ -118,7 +118,7 @@ export default {
       usersArr: [],
       total: 0,
       // 加载状态
-      loading: true,
+      loading: false,
       setupTableVisible: false,
       isModify: false,
       selectInfo: {},

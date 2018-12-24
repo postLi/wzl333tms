@@ -203,7 +203,7 @@ export default {
 
 
     .el-dialog__body{
-        padding:5px 10px 30px;
+        padding:5px 10px 10px;
         overflow: hidden;
         flex: 1;
     }

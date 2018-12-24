@@ -5,7 +5,6 @@
         <el-input
             v-model="searchForm.shipSn"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -13,7 +12,6 @@
         <el-input
           v-model="searchForm.cargoName"
           maxlength="15"
-          @change="onSubmit"
           clearable>
         </el-input>
       </el-form-item>
@@ -21,13 +19,11 @@
         <el-input
             v-model="searchForm.startAmount"
             maxlength="6"
-            @change="onSubmit"
             clearable>
             </el-input>
             <el-input
             v-model="searchForm.endAmount"
             maxlength="6"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -35,7 +31,6 @@
         <el-input
             v-model="searchForm.shipGoodsSn"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -50,7 +45,6 @@
         <el-input
             v-model="searchForm.shipSenderName"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -58,7 +52,6 @@
         <el-input
             v-model="searchForm.shipSenderMobile"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -66,7 +59,6 @@
         <el-input
             v-model="searchForm.shipReceiverName"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -74,7 +66,6 @@
         <el-input
             v-model="searchForm.shipReceiverMobile"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
@@ -82,7 +73,6 @@
         <el-input
             v-model="searchForm.shipToCityName"
             maxlength="15"
-            @change="onSubmit"
             clearable>
         </el-input>
       </el-form-item>
