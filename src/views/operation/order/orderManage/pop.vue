@@ -1,6 +1,6 @@
  <template>
   <div class="tab-content" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
+    <SearchForm :query="query" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
           <span class="viewtip">
@@ -32,23 +32,14 @@
           :key="tablekey"
           stripe
           border
-          @row-click="clickDetails"
           @row-dblclick="showDetail"
-          @selection-change="getSelection"
           @header-dragend="setTableWidth"
           height="100%"
           :summary-method="getSumLeft"
           show-summary
           tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
           style="width: 100%">
 
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="60">
-          </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column
               :key="column.id"
@@ -74,22 +65,27 @@
         </el-table>
       </div>
       <!-- </el-tooltip> -->
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <!-- <Pager :total="total" @change="handlePageChange" /> --></div> </div>
     </div>
     <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
 import orderManageApi from '@/api/operation/orderManage'
-import SearchForm from './components/search'
+import SearchForm from './components/search3'
 import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
-import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
+  props: {
+    query: {
+      type: Object,
+      default: () => {}
+    }
+  },
   components: {
     SearchForm,
     Pager,
@@ -102,6 +98,11 @@ export default {
     orgid() {
       console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+    }
+  },
+  watch: {
+    query(newVal) {
+      this.usersArr = []
     }
   },
   mounted() {
@@ -127,8 +128,16 @@ export default {
         'currentPage': 1,
         'pageSize': 100,
         'vo': {
-          'shipFromOrgid': 1,
-          shipStatus: 2,
+          shipSn: '',
+          cargoName: '',
+          startAmount: '',
+          endAmount: '',
+          shipSenderName: '',
+          shipSenderMobile: '',
+          shipReceiverName: '',
+          shipReceiverMobile: '',
+          shipToCityName: '',
+          shipToOrgid: '',
           startTime: '',
           endTime: ''
         }
@@ -509,6 +518,7 @@ export default {
           if (this.searchQuery.vo.shipSn && this.searchQuery.vo.shipSn === this.usersArr[0].shipSn) {
             const order = this.usersArr[0]
             this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
+            this.eventBus.$emit('hiddenSearchBox')
           }
         }
       }).catch((err) => {
