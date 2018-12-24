@@ -11,7 +11,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" class="info_tab_report" id="report_settleRecordTotal">
+      <div @scroll="handleBottom" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
         <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
@@ -399,7 +399,7 @@ export default {
   height: calc(100% - 100px);
 }
 
-.info_tab_report {
+.info_tab_report_settleRecord {
   position: relative;
   width: 100%;
   height: 100%;

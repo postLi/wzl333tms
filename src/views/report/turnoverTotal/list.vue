@@ -12,7 +12,7 @@
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" class="info_tab_report" id="report_turnoverTotal">
-        <table id="report_turnoverTotal_table">
+        <table id="report_turnoverTotal_table" class="report_turnoverTotal_table">
         </table>
         <table ref="footTotalFee" class="footTotalFee_turnoverTotal">
           <colgroup width="65px"></colgroup>
@@ -60,8 +60,7 @@ export default {
       columns: [{ // 表头
         label: '序号',
         prop: 'id',
-        textAlign: 'center',
-        width: '70'
+        textAlign: 'center'
       },
       {
         label: '开单网点',
@@ -138,9 +137,11 @@ export default {
     report() {
       this.loading = true
       reportTurnoverTotal(this.query).then(res => {
-        const data = res.list
+        let data = res.list
+       
         const countColVal = []
         this.loading = false
+        const div = document.getElementById('report_turnoverTotal')
         const table = document.getElementById('report_turnoverTotal_table')
         if (!table) {
           return
@@ -200,6 +201,13 @@ export default {
           th.appendChild(font)
           theadTr.appendChild(th)
         }
+        // 固定表头
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
+        div.appendChild(tableClone)
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
           const tbodyTr = tbody.insertRow()
@@ -320,6 +328,8 @@ export default {
       }
       footel.style.bottom = 'auto'
       footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
+      const cloneel = document.getElementById('tableClone')
+      cloneel.style.top = top + 'px'
     }
   }
 }
@@ -354,10 +364,21 @@ export default {
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
   position: relative;
-
+  .tableCloneHead {
+    position: absolute;
+    width: 100%;
+    min-width: 1200px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    th {
+       width: 7%;
+      word-break: break-all;
+    }
+  }
 
   /*设置边框的*/
-  #report_turnoverTotal_table {
+  .report_turnoverTotal_table {
       width: 100%;
       min-width: 1200px;
 
@@ -378,8 +399,9 @@ export default {
         line-height: 23px;
         font-size: 13px;
         td {
-          width: 7%;
           font-size: 13px;
+           width: 7%;
+          word-break: break-all;
         }
       }
       tfoot {
@@ -401,41 +423,10 @@ export default {
     font-size: 13px;
     td {
       font-size: 13px;
+       width: 7%;
       border: 1px solid #bbb;
+      word-break: break-all;
     }
   }
 }
-// .info_tab_report {
-//   height: calc( 100%);
-//   overflow: auto;
-//   border: 1px solid #d0d7e5;
-//   box-shadow: 1px 1px 20px #ddd;
-//   /*设置边框的*/
-//   table {
-//     width: 100%;
-//     min-width: 1000px;
-//     tbody tr {
-//       background-color: #FFF;
-//       transition: 0.5s;
-//     }
-//     tbody tr:hover {
-//       background-color: #ccc;
-//       transition: 0.3s;
-//     }
-//     tbody tr td:hover {
-//       background-color: #cdcdcd;
-//       transition: 0.3s;
-//     }
-//     tbody,
-//     tfoot {
-//       color: #222;
-//       line-height: 23px;
-//       font-size: 13px;
-//       td {
-//         font-size: 13px;
-//       }
-//     }
-//   }
-// }
-
 </style>

@@ -11,7 +11,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>收入统计</h2> -->
-      <div class="info_tab_report" id="report_incomeTotal">
+      <div class="info_tab_report_incomeTotal" id="report_incomeTotal">
         <table id="report_incomeTotal_table"></table>
       </div>
     </div>
@@ -200,7 +200,7 @@ export default {
   height: calc(100% - 100px);
 }
 
-.info_tab_report {
+.info_tab_report_incomeTotal {
   height: calc( 100%);
   overflow: auto;
   border: 1px solid #d0d7e5;
@@ -227,6 +227,7 @@ export default {
       line-height: 23px;
       font-size: 13px;
       td {
+        width: 12%;
         font-size: 13px;
       }
     }
