@@ -27,7 +27,6 @@
             <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" 
            >表格设置</el-button>
           </el-popover>
-          
       </div>
       <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
         <div slot="content">双击查看运单详情</div> -->
