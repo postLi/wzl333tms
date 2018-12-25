@@ -251,7 +251,7 @@ export default {
         console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
         let str = ''
         this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
+          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
         })
         console.log(str)
       }
@@ -367,9 +367,18 @@ export default {
       return Promise.all([getOriginTableSetup(this.thecode), getTableSetup(this.otherinfo.orgid, this.thecode)]).then(resAll => {
         var orgData = resAll[0].data
         var data = resAll[1].data
-        var newData = []
 
-        // 所有不在右边列表的数据，都给个默认值
+        if (data && data.length) {
+          if (Array.isArray(data[0])) {
+            data = data[0]
+          }
+          // 后台返回的字段数量必然大于1个的，小于时就是数据有异常，按照请求失败处理
+          if (data.length <= 1) {
+            console.log('后台返回表格数据异常:', data)
+            this.fetchFail()
+            return false
+          }
+          // 所有不在右边列表的数据，都给个默认值
         // 默认隐藏
         /* {
           "id":635,
@@ -390,53 +399,51 @@ export default {
           "orgId": 1,
           "companyId": 1
         } */
-        orgData.forEach(el => {
-          const len = data.filter(el2 => {
-            return el.prop === el2.prop
-          }).length
-          // 如果找到，表示已存在
-          if (len === 0) {
-            const len2 = data.length
-            const userId = data[0].userId
-            const orgId = data[0].orgId
-            const companyId = data[0].companyId
+          let len2 = data.length
+          orgData.forEach(el => {
+            let diffTextWithSameProp = ''
+            const len = data.filter((el2, inx) => {
+            // 文案描述相同，字段不同
+              if (el2.lable === el.lable && el.prop !== el2.prop) {
+                diffTextWithSameProp = inx
+              }
+              return el.prop === el2.prop
+            }).length
+          // 如果找不到，表示需要插入
+            if (len === 0) {
+              const userId = data[0].userId
+              const orgId = data[0].orgId
+              const companyId = data[0].companyId
 
-            data.push({
-              'id': '',
-              'lable': el.lable,
-              'prop': el.prop,
-              'width': '150',
-              'hidden': true,
-              'fixed': false,
-              'titleOrder': len2 + 1,
-              'titleModule': el.titleModule,
-              'userId': userId,
-              'orgId': orgId,
-              'companyId': companyId
-            })
-          }
-        })
-
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
-          let str = ''
-          data.forEach(e => {
-            str += "('" + e.lable + "', '" + e.prop + "', '" + this.code + "');" + '\n'
+              data.push({
+                'id': '',
+                'lable': el.lable,
+                'prop': el.prop,
+                'width': '150',
+                'hidden': true,
+                'fixed': false,
+                'titleOrder': ++len2,
+                'titleModule': el.titleModule,
+                'userId': userId,
+                'orgId': orgId,
+                'companyId': companyId
+              })
+            } else if (diffTextWithSameProp !== '') {
+            // 删除用户数据中重复的字段
+              data.splice(diffTextWithSameProp, 1)
+            }
           })
-          console.log(str)
-        }
-        // 保存原有数据，用来在上传时格式化数据
-        this.orgdata = data
-        if (data && data.length) {
-          if (Array.isArray(data[0])) {
-            data = data[0]
+
+          if (process.env.NODE_ENV !== 'production') {
+            console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
+            let str = ''
+            data.forEach(e => {
+              str += "('" + e.lable + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
+            })
+            console.log(str)
           }
-          // 后台返回的字段数量必然大于1个的，小于时就是数据有异常，按照请求失败处理
-          if (data.length <= 1) {
-            console.log('后台返回表格数据异常:', data)
-            this.fetchFail()
-            return false
-          }
+
+          // 保存原有数据，用来在上传时格式化数据
           this.orgdata = data
           // 处理格式化本地数据
           // 如果本地存在不同的列，保留还是删除？
@@ -474,8 +481,11 @@ export default {
             // 将本地剩余的项塞到后面
             const find = copy.filter(_el => _el.prop === el.prop)
             if (find.length === 0) {
-              console.log('本地项，需要后台添加：',el.label,el.prop, el)
-              copy.push(el)
+              const find2 = copy.filter(_el => _el.label === find[0].label)
+              console.log('本地项，需要后台添加：', el)
+              if (find2.length === 0) {
+                copy.push(el)
+              }
             }
           })
 
