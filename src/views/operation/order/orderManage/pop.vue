@@ -67,7 +67,7 @@
       <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <!-- <Pager :total="total" @change="handlePageChange" /> --></div> </div>
     </div>
-    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup code="ORDER_ALL" :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
   </div>
 </template>
 <script>
@@ -110,7 +110,7 @@ export default {
     this.fetchAllOrder(this.otherinfo.orgid).then(res => {
       this.loading = false
     }) */
-    this.thecode = this.$route.meta.code
+    this.thecode = 'ORDER_ALL'
   },
   data() {
     return {
