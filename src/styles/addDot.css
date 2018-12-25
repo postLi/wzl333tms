@@ -25,7 +25,7 @@
   min-width: 140px !important;
 }
 .add-dot .el-input__suffix{
-  right: 23px;
+  right: 0px;
 }
 
 .add-dot .el-select-dropdown__item{

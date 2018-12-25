@@ -81,6 +81,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         label: '运单号',
         prop: 'shipSn',
         width: '120',
