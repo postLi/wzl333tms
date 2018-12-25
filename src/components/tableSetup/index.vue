@@ -393,13 +393,14 @@ export default {
         orgData.forEach(el => {
           const len = data.filter(el2 => {
             return el.prop === el2.prop
-          })
+          }).length
           // 如果找到，表示已存在
           if (len === 0) {
             const len2 = data.length
             const userId = data[0].userId
             const orgId = data[0].orgId
             const companyId = data[0].companyId
+
             data.push({
               'id': '',
               'lable': el.lable,
