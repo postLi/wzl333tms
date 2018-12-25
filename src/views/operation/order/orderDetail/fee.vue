@@ -78,7 +78,7 @@ export default {
     return {
       loading: false,
       usersArr: [],
-      expandAll: true,
+      expandAll: 'true',
       columns: [
         {
           text: '费用项',
