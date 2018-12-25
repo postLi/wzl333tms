@@ -138,7 +138,7 @@
  */
 import draggable from 'vuedraggable'
 import { objectMerge2 } from '@/utils/index'
-import { getTableSetup, putChangeTableSetup } from '@/api/common'
+import { getTableSetup, putChangeTableSetup, getOriginTableSetup } from '@/api/common'
 export default {
   props: {
     popVisible: {
@@ -251,7 +251,7 @@ export default {
         console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
         let str = ''
         this.columns.forEach(e => {
-            str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '"+this.code+"');"+e.fixed+"\n"
+          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
         })
         console.log(str)
       }
@@ -364,16 +364,66 @@ export default {
     },
     // 读取服务器上的设置
     fetchTableSetup() {
-      return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {
-        var data = res.data
-         if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
-        let str = ''
-        data.forEach(e => {
-            str += "('" + e.lable + "', '" + e.prop + "', '"+this.code+"');"+e.fixed+"\n"
+      return Promise.all([getOriginTableSetup(this.thecode), getTableSetup(this.otherinfo.orgid, this.thecode)]).then(resAll => {
+        var orgData = resAll[0].data
+        var data = resAll[1].data
+        var newData = []
+
+        // 所有不在右边列表的数据，都给个默认值
+        // 默认隐藏
+        /* {
+          "id":635,
+          "lable":"序号",
+          "prop":"number",
+          "titleModule":"ORDER_PICK"
+        } */
+        /* {
+          "id": "1076059305649635328",
+          "lable": "重量",
+          "prop": "pickupWeight",
+          "width": "150",
+          "hidden": true,
+          "fixed": false,
+          "titleOrder": 10,
+          "titleModule": "ORDER_PICK",
+          "userId": 217,
+          "orgId": 1,
+          "companyId": 1
+        } */
+        orgData.forEach(el => {
+          const len = data.filter(el2 => {
+            return el.prop === el2.prop
+          })
+          // 如果找到，表示已存在
+          if (len === 0) {
+            const len2 = data.length
+            const userId = data[0].userId
+            const orgId = data[0].orgId
+            const companyId = data[0].companyId
+            data.push({
+              'id': '',
+              'lable': el.lable,
+              'prop': el.prop,
+              'width': '150',
+              'hidden': true,
+              'fixed': false,
+              'titleOrder': len2 + 1,
+              'titleModule': el.titleModule,
+              'userId': userId,
+              'orgId': orgId,
+              'companyId': companyId
+            })
+          }
         })
-        console.log(str)
-      }
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
+          let str = ''
+          data.forEach(e => {
+            str += "('" + e.lable + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
+          })
+          console.log(str)
+        }
         // 保存原有数据，用来在上传时格式化数据
         this.orgdata = data
         if (data && data.length) {
@@ -435,11 +485,17 @@ export default {
           this.fetchFail()
         }
       }).catch(err => {
+        this.fetchFail()
+      })
+
+      /* return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {
+
+      }).catch(err => {
         // 如果从服务器上拿取数据出错，则将其当做本地数据处理
         // this.$message.info('获取表格数据失败。')
         // console.log('获取表格数据失败：', this.thecode)
         this.fetchFail()
-      })
+      }) */
     },
     changeTbaleSetup() {
       if (this.thecode) {
