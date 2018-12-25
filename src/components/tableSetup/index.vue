@@ -400,6 +400,15 @@ export default {
           "companyId": 1
         } */
           let len2 = data.length
+          let copydata = []
+          let copyflag = {}
+          data.forEach(el=>{
+            if(!copyflag[el.prop]){
+              copyflag[el.prop] = true
+              copydata.push(el)
+            }
+          })
+          data = copydata
           orgData.forEach(el => {
             let diffTextWithSameProp = ''
             const len = data.filter((el2, inx) => {
@@ -774,7 +783,6 @@ export default {
       // console.log('表格设置：', this.showColumnData.filter(el => !el.label), this.columnData.filter(el => !el.label))
       this.$emit('success', data)
       this.listKey = Math.random()
-
       this.closeMe()
     },
     submitForm() {
