@@ -284,7 +284,7 @@
             </el-col>
             <el-col :span="4">
               <div class="order-form-item">
-                <span class="order-form-label">制单员</span>
+                <span class="order-form-label">业务员</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.userName" disabled size="mini" />
                 </el-form-item>
@@ -1019,6 +1019,13 @@ export default {
       this.receiver = {}
       this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
+
+      this.form.tmsOrderShipSign = {}
+      this.form.tmsOrderShipSignList = []
+      this.form.tmsShLoadsList = [{}]
+      this.form.tmsGxLoadsList = [{}]
+      this.form.tmsDbLoadsList = [{}]
+      this.form.tmsOrderTransferList = [{}]
       // this.setOrderDate()
     },
     // doAction(type) {

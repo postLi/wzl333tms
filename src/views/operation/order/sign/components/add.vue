@@ -435,10 +435,10 @@ export default {
     //   this.form.orgid = id
     // },
     submitForm(ruleForm) {
-      this.loading = true
       this.form.signTime = this.searchCreatTime
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
+      this.loading = true
           const data = objectMerge2({}, this.obj)
           for (const i in data) {
             data[i] = this.form[i]

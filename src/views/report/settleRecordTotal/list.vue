@@ -11,15 +11,15 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" class="info_tab_report" id="report_settleRecordTotal">
-        <table id="report_settleRecordTotal_table" width="780px" border="1px" style="border-collapse: collapse;">
+      <div @scroll="handleBottom" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
+        <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
-              <th rowspan="2" bgcolor="dimGray" width="70px">
+              <th rowspan="2" bgcolor="dimGray" width="50px">
                 <font color="white" size="3">序号</font>
               </th>
-              <th rowspan="2" bgcolor="dimGray" width="270px">
-                <font color="white" size="3">费用项目</font>
+              <th rowspan="2" bgcolor="dimGray" width="100px">
+                <font color="white" size="2">费用项目</font>
               </th>
               <th colspan="4" bgcolor="dimGray">
                 <font color="white" size="3">应收汇总</font>
@@ -29,56 +29,44 @@
               </th>
             </tr>
             <tr height="32px">
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">应收合计</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">已收</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">未收</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="70px">
                 <font color="white" size="2">数量</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">应付合计</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">已付</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="100px">
                 <font color="white" size="2">未付</font>
               </th>
-              <th bgcolor="dimGray" width="90px">
+              <th bgcolor="dimGray" width="70px">
                 <font color="white" size="2">数量</font>
               </th>
             </tr>
           </thead>
         </table>
-        <table ref="footTotalFee" class="footTotalFee" width="780px">
-          <!-- <tr>
-            <td width="70px"></td>
-            <td width="270px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-            <td width="90px"></td>
-          </tr> -->
+        <table ref="footTotalFee" class="footTotalFee_settleRecordTotal">
+          <colgroup width="50px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
           <colgroup width="70px"></colgroup>
-          <colgroup width="240px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="90px"></colgroup>
-          <colgroup width="110px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="100px"></colgroup>
+          <colgroup width="70px"></colgroup>
         </table>
       </div>
     </div>
@@ -119,56 +107,65 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-        label: '序号',
-        prop: 'id',
-        textAlign: 'center',
-        width: '70'
-      },
-      {
-        label: '费用项目',
-        prop: 'feeName',
-        textAlign: 'center'
-      },
-      {
-        label: '应收合计',
-        prop: 'totalreceivableFee',
-        textAlign: 'right'
-      },
-      {
-        label: '已收',
-        prop: 'receivableFee',
-        textAlign: 'right'
-      },
-      {
-        label: '未收',
-        prop: 'receivableUnpaidFee',
-        textAlign: 'right'
-      },
-      {
-        label: '数量',
-        prop: 'receivableCount',
-        textAlign: 'center'
-      },
-      {
-        label: '应付合计',
-        prop: 'totalpayableFee',
-        textAlign: 'right'
-      },
-      {
-        label: '已付',
-        prop: 'payableFee',
-        textAlign: 'right'
-      },
-      {
-        label: '未付',
-        prop: 'payableUnpaidFee',
-        textAlign: 'right'
-      },
-      {
-        label: '数量',
-        prop: 'payableCount',
-        textAlign: 'center'
-      }
+          label: '序号',
+          prop: 'id',
+          textAlign: 'center',
+          width: '50'
+        },
+        {
+          label: '费用项目',
+          prop: 'feeName',
+          textAlign: 'center',
+          width: '100'
+        },
+        {
+          label: '应收合计',
+          prop: 'totalreceivableFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '已收',
+          prop: 'receivableFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '未收',
+          prop: 'receivableUnpaidFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '数量',
+          prop: 'receivableCount',
+          textAlign: 'center',
+          width: '70'
+        },
+        {
+          label: '应付合计',
+          prop: 'totalpayableFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '已付',
+          prop: 'payableFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '未付',
+          prop: 'payableUnpaidFee',
+          textAlign: 'right',
+          width: '100'
+        },
+        {
+          label: '数量',
+          prop: 'payableCount',
+          textAlign: 'center',
+          width: '70'
+        }
       ],
       countCol: [ // 需要合计的-列
         'totalreceivableFee',
@@ -213,17 +210,49 @@ export default {
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
     },
+     handleBottom(e) {
+      const el = e.target
+      const top = el.scrollTop
+      const width = el.offsetWidth
+      const orgwidth = el.scrollWidth
+      const hasscroll = orgwidth > width
+      const height = el.offsetHeight
+      const footel = this.$refs.footTotalFee
+      const footheight = footel.offsetHeight
+      let calctop = top + height - footheight
+      if (hasscroll) {
+        calctop -= this.scrollwidth
+      }
+
+      if (!this.maxheight) {
+        this.maxheight = el.scrollHeight
+      }
+      footel.style.bottom = 'auto'
+      footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
+      const cloneel = document.getElementById('tableClone')
+      cloneel.style.top = top+ 'px'
+    },
     reportSettleRecordTotal() {
       this.loading = true
       reportSettleRecordTotal(this.query).then(res => {
         const data = res
         const countColVal = []
         this.loading = false
-
         const table = document.getElementById('report_settleRecordTotal_table')
+        
+        
         if (!table) {
           return
         }
+        // 固定表头
+        const div = document.getElementById('report_settleRecordTotal')
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
+        div.appendChild(tableClone)
+        
         const tbodyLen = table.getElementsByTagName('tbody')
         const tfootLen = table.getElementsByTagName('tfoot')
         if (tbodyLen.length > 0) {
@@ -286,7 +315,7 @@ export default {
         }
 
         // 复制-生成多一个浮动的底部合计行
-        const totalTable = document.getElementsByClassName('footTotalFee')[0]
+        const totalTable = document.getElementsByClassName('footTotalFee_settleRecordTotal')[0]
         const total_tfootLen = totalTable.getElementsByTagName('tfoot')
         if (total_tfootLen.length > 0) {
           totalTable.removeChild(total_tfootLen[0])
@@ -309,6 +338,8 @@ export default {
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
+        
+
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -338,26 +369,6 @@ export default {
     getSearchParam(obj) {
       this.query = Object.assign({}, obj)
       this.reportSettleRecordTotal()
-    },
-    handleBottom(e) {
-      const el = e.target
-      const top = el.scrollTop
-      const width = el.offsetWidth
-      const orgwidth = el.scrollWidth
-      const hasscroll = orgwidth > width
-      const height = el.offsetHeight
-      const footel = this.$refs.footTotalFee
-      const footheight = footel.offsetHeight
-      let calctop = top + height - footheight
-      if (hasscroll) {
-        calctop -= this.scrollwidth
-      }
-
-      if (!this.maxheight) {
-        this.maxheight = el.scrollHeight
-      }
-      footel.style.bottom = 'auto'
-      footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
     }
   }
 }
@@ -378,8 +389,8 @@ export default {
     box-shadow: 1px 1px 10px #bbb;
     overflow: hidden;
   }
-  .tab_info{
-    transform: translate(0,0);
+  .tab_info {
+    transform: translate(0, 0);
   }
 }
 
@@ -389,47 +400,59 @@ export default {
   height: calc(100% - 100px);
 }
 
-.info_tab_report {
+.info_tab_report_settleRecord {
+  position: relative;
+  width: 100%;
   height: 100%;
-  padding-bottom: 30px;
+  padding-bottom: 60px;
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
-  position: relative;
+  .tableCloneHead {
+    position: absolute;
+    width: 100%;
+    min-width: 1200px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    th {
+    }
+  }
 
 
   /*设置边框的*/
-  #report_settleRecordTotal_table {
-      width: 100%;
-      min-width: 1200px;
+  .report_settleRecordTotal_table {
+    width: 100%;
+    min-width: 1200px;
 
-      tbody tr {
-        background-color: #FFF;
-        transition: 0.5s;
-      }
-      tbody tr:hover {
-        background-color: #ccc;
-        transition: 0.3s;
-      }
-      tbody tr td:hover {
-        background-color: #cdcdcd;
-        transition: 0.3s;
-      }
-      tbody {
-        color: #222;
-        line-height: 23px;
+    tbody tr {
+      background-color: #FFF;
+      transition: 0.5s;
+    }
+    tbody tr:hover {
+      background-color: #ccc;
+      transition: 0.3s;
+    }
+    tbody tr td:hover {
+      background-color: #cdcdcd;
+      transition: 0.3s;
+    }
+    tbody {
+      color: #222;
+      line-height: 23px;
+      font-size: 13px;
+      td {
         font-size: 13px;
-        td {
-          font-size: 13px;
-        }
+         word-break: break-all;
       }
-      tfoot {
-        display: none;
-      }
+    }
+    tfoot {
+      display: none;
+    }
   }
 }
 
-.footTotalFee {
+.footTotalFee_settleRecordTotal {
   width: 100%;
   position: absolute;
   min-width: 1200px;
@@ -443,6 +466,7 @@ export default {
     td {
       font-size: 13px;
       border: 1px solid #bbb;
+      word-break: break-all;
     }
   }
 }

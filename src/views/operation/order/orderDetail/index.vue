@@ -4,9 +4,9 @@
       <el-tab-pane class="ordermaininfo" name="one" label="运单信息">
         <orderdetail :orderid="orderid" :orderdata="orderdata" />
       </el-tab-pane>
-      <!-- <el-tab-pane name="two" label="费用信息">
-        <fee orderid="output.orderid" v-if="activeTab.two" />
-      </el-tab-pane> -->
+      <el-tab-pane name="two" label="费用信息">
+        <fee :orderid="output.orderid" v-if="activeTab.two" />
+      </el-tab-pane>
       <el-tab-pane name="three" label="运单跟踪">
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
@@ -164,23 +164,23 @@ export default {
       // setTimeout(() => {
       this.getOrderInfo(this.output.orderid).then(res => {
         if (!res.data) {
-            if (this.initindex > 3) {
+          if (this.initindex > 3) {
               this.$message.alert('获取信息失败，请尝试刷新页面。')
             } else {
               this.initOrder()
             }
-          } else {
-            this.initindex = 0
-            this.orderdata = res.data
-            this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
-            this.loading = false
-            this.eventBus.$emit('startPrint')
-          }
-      }).catch(err => {
+        } else {
+          this.initindex = 0
+          this.orderdata = res.data
+          this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
           this.loading = false
-          console.log('initOrderDetail err:', err)
-          this.showError()
-        })
+          this.eventBus.$emit('startPrint')
+        }
+      }).catch(err => {
+        this.loading = false
+        console.log('initOrderDetail err:', err)
+        this.showError()
+      })
       // }, 10000)
     },
     // 当前运单是否有效且含有信息

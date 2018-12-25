@@ -69,7 +69,7 @@ import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
 // import AddLntelligent from './components/intelligentFreight'
@@ -136,14 +136,17 @@ export default {
           departureEndTime: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
         label: '序号',
+        prop: 'number',
         width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      }, {
+      }, 
+      {
         label: '发车批次',
         prop: 'batchNo',
         width: '120',
@@ -224,7 +227,7 @@ export default {
           width: '120',
           fixed: false
         }, {
-          label: '现付运费(元)',
+          label: '现付车费(元)',
           prop: 'nowpayCarriage',
           width: '110',
           fixed: false
@@ -234,7 +237,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '到付运费(元)',
+          label: '到付车费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
@@ -244,7 +247,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '回付运费(元)',
+          label: '回付车费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
@@ -254,7 +257,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '运费合计(元)',
+          label: '车费合计(元)',
           prop: 'shipFeeAmount',
           width: '110',
           fixed: false
@@ -368,14 +371,15 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '干线发车'
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 打印
         case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 合同

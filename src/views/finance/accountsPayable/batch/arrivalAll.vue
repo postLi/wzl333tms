@@ -139,13 +139,13 @@ export default {
           }
         },
         {
-          label: '到付运费',
+          label: '到付车费',
           prop: 'arrivepayCarriage',
           width: '90',
           fixed: false
         },
         {
-          label: '已核销到付运费',
+          label: '已核销到付车费',
           prop: 'paidArrivepayCarriage',
           width: '120',
           fixed: false,
@@ -155,7 +155,7 @@ export default {
           }
         },
         {
-          label: '未核销到付运费',
+          label: '未核销到付车费',
           prop: 'unpaidArrivepayCarriage',
           width: '120',
           fixed: false,

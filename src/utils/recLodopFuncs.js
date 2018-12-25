@@ -120,7 +120,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -1120,7 +1120,7 @@ function createGroup(params) {
           <td colspan="1">操作费</td>
           <td colspan="1">到站装卸费</td>
           <td colspan="1">到站其他费</td>
-          <td colspan="1">到付运费</td>
+          <td colspan="1">到付车费</td>
           <td colspan="1">到付油卡</td>
           <td colspan="1">配载总件数</td>
           <td colspan="1">配载总体积</td>
@@ -1169,7 +1169,7 @@ function createGroup(params) {
           <td colspan="1">操作费</td>
           <td colspan="1">到站装卸费</td>
           <td colspan="1">到站其他费</td>
-          <td colspan="1">到付运费</td>
+          <td colspan="1">到付车费</td>
           <td colspan="1">到付油卡</td>
           <td colspan="1">配载总件数</td>
           <td colspan="1">配载总体积</td>
@@ -1826,13 +1826,13 @@ function createCarfeefeeArt(params) {
           <td colspan="1" >配载件数</td>
           <td colspan="1" >配载重量</td>
           <td colspan="1" >配载体积</td>
-          <td colspan="1" >现付运费</td>
+          <td colspan="1" >现付车费</td>
           <td colspan="1" >现付油卡</td>
-          <td colspan="1" >回付运费</td>
+          <td colspan="1" >回付车费</td>
           <td colspan="1" >回付油卡</td>
-          <td colspan="1" >到付运费</td>
+          <td colspan="1" >到付车费</td>
           <td colspan="1" >到付油卡</td>
-          <td colspan="1" >运费合计</td>
+          <td colspan="1" >车费合计</td>
           <td colspan="1" >备注</td>
       </tr>`
 
@@ -1878,13 +1878,13 @@ function createCarfeefeeArt(params) {
           <td colspan="1" >配载件数</td>
           <td colspan="1" >配载重量</td>
           <td colspan="1" >配载体积</td>
-          <td colspan="1" >现付运费</td>
+          <td colspan="1" >现付车费</td>
           <td colspan="1" >现付油卡</td>
-          <td colspan="1" >回付运费</td>
+          <td colspan="1" >回付车费</td>
           <td colspan="1" >回付油卡</td>
-          <td colspan="1" >到付运费</td>
+          <td colspan="1" >到付车费</td>
           <td colspan="1" >到付油卡</td>
-          <td colspan="1" >运费合计</td>
+          <td colspan="1" >车费合计</td>
           <td colspan="1" >备注</td>
       </tr>`
   // tbodyStr = tbodyStr

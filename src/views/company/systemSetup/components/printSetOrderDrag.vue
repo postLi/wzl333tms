@@ -179,6 +179,8 @@ export default {
           topy: 0
         }
       },
+      defaultPaperWidth: 240,
+      defaultPaperHeight: 140,
       prxvalue: 0.264,
       mm2px: 3.779,
       classItem: [],
@@ -703,6 +705,7 @@ export default {
         if (valid) {
           this.loading = true
           const obj = objectMerge2([], this.formModel.labelList)
+          // obj.push(objectMerge2([], this.formModel.paper))
           obj.forEach(e => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
@@ -737,13 +740,18 @@ export default {
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
+          this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
               this.formModel.labelList.forEach((e, index) => {
-                if (e.filedValue !== 'setting') {
+                if (e.filedValue === 'setting') {
+                  e.topy = 0
+                  e.leftx = 0
+                  e.width = Mthis.defaultPaperWidth
+                  e.height = this.defaultPaperHeight
+                }else {
                   e.topy = 0
                   e.leftx = 0
                   e.isshow = 0

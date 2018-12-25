@@ -61,7 +61,7 @@
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
-                      <p>现付运费</p>
+                      <p>现付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -73,7 +73,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>回付运费</p>
+                      <p>回付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -85,7 +85,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到付运费</p>
+                      <p>到付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
@@ -277,7 +277,7 @@
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
                     <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
                     <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
@@ -288,23 +288,23 @@
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
-                      方,全程运费
+                      方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
-                      元，到付运费
+                      元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
                       ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
-                      元，回付运费
+                      元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
                       元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -1057,6 +1057,27 @@ export default {
         })
         return false
       }
+      const obj = {}
+      for (const item in this.info) {
+        obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
+      }
+       let appendTopStr = '<style>body{width: 100%;}</style>'
+      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+                   this.otherinfo.companyName +
+                   '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.orgName + '   →   ' + obj.endOrgName +
+                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.loadTime +
+                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.batchNo +
+                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.truckIdNumber +
+                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverName +
+                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+                   obj.dirverMobile +
+                   '</td></tr></table></body>'
+
       switch (type) {
         // 导出
         case 'export':
@@ -1071,7 +1092,8 @@ export default {
           PrintInFullPage({
             data: this.detailList,
             columns: this.tableColumn,
-            name: '批次详情'
+            name: '批次详情',
+            appendTop: appendTopStr
           })
           break
           // 添加客户

@@ -88,6 +88,7 @@ export default {
     }
   },
   mounted() {
+    this.searchForm.batchTypeId = this.$options.data().searchForm.batchTypeId
     this.onSubmit()
   },
   methods: {

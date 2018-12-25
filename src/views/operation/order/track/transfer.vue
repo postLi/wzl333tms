@@ -35,7 +35,7 @@
       <!-- 在途跟踪 -->
       <editInfoTransfer :orgid="orgid" :id='transferId' :shipId="shipId"  :popVisible.sync="editInfoVisible" @close="closeMe"></editInfoTransfer>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn" code="LOADTRACK4"></TableSetup>
     </div>
   </div>
 </template>
@@ -92,7 +92,15 @@ export default {
           // truckIdNumber: ''
         }
       },
-      tableColumn: [
+      tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },
         {
           label: '中转单号',
           prop: 'oddNumbers',

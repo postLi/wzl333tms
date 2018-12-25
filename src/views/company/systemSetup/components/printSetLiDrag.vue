@@ -140,6 +140,8 @@ export default {
           height: 0
         }
       },
+      defaultPaperWidth: 80,
+      defaultPaperHeight: 80,
       prxvalue: 0.3,
       classItem: [],
       orgLabelList: [],
@@ -157,26 +159,26 @@ export default {
       dragDetailInfo: {},
       dragCursor: 'move',
       alignmentOptions: [{
-        value: 0,
-        label: '文字靠右'
-      },
-      {
-        value: 1,
-        label: '文字靠左'
-      },
-      {
-        value: 2,
-        label: '文字居中'
-      }
+          value: 0,
+          label: '文字靠右'
+        },
+        {
+          value: 1,
+          label: '文字靠左'
+        },
+        {
+          value: 2,
+          label: '文字居中'
+        }
       ],
       fontWeightOptions: [{
-        value: 0,
-        label: '默认粗细'
-      },
-      {
-        value: 2,
-        label: '加粗'
-      }
+          value: 0,
+          label: '默认粗细'
+        },
+        {
+          value: 2,
+          label: '加粗'
+        }
       ]
     }
   },
@@ -429,46 +431,46 @@ export default {
       this.labelListView = []
       this.viewKey = new Date().getTime()
       getSettingCompanyLi().then(data => {
-        // 针对瑞千鑫特殊处理
-        // 特殊处理某些字段
-        data = data.map(e => {
-          if (e.companyid === 233 || e.companyid === 234) {
-            e.filedName = e.filedName.replace('业务员电话', '业务投诉电话')
-          }
-          if (e.filedValue === 'fromCity') {
-            e.filedName = '发站'
-          }
-          if (e.filedValue === 'toCity') {
-            e.filedName = '到站'
-          }
-          return e
-        })
-
-        this.formModel.labelList = data
-        this.orgLabelList = data
-        this.formModel.labelList.forEach(e => {
-          if (e.filedValue === 'setting') {
-            e.width = Math.round((e.width ? e.width : 240) * this.prxvalue)
-            e.height = Math.round((e.height ? e.height : 140) * this.prxvalue)
-            this.formModel.paper = Object.assign({}, e)
-          } else {
-            e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
-            e.height = Math.round((e.height ? e.height : 40) * this.prxvalue)
-            if (e.isshow) { // 显示项要在预览处初始化
-              this.labelListView.push(e)
+          // 针对瑞千鑫特殊处理
+          // 特殊处理某些字段
+          data = data.map(e => {
+            if (e.companyid === 233 || e.companyid === 234) {
+              e.filedName = e.filedName.replace('业务员电话', '业务投诉电话')
             }
-            e.fontsize = e.fontsize ? e.fontsize : 14
-            e.isshow = e.isshow === 1 // 1-true 显示
-            e.bold = e.bold === 2 // 2-true 加粗
-            e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
-          }
+            if (e.filedValue === 'fromCity') {
+              e.filedName = '发站'
+            }
+            if (e.filedValue === 'toCity') {
+              e.filedName = '到站'
+            }
+            return e
+          })
+
+          this.formModel.labelList = data
+          this.orgLabelList = data
+          this.formModel.labelList.forEach(e => {
+            if (e.filedValue === 'setting') {
+              e.width = Math.round((e.width ? e.width : 240) * this.prxvalue)
+              e.height = Math.round((e.height ? e.height : 140) * this.prxvalue)
+              this.formModel.paper = Object.assign({}, e)
+            } else {
+              e.width = Math.round((e.width ? e.width : 150) * this.prxvalue)
+              e.height = Math.round((e.height ? e.height : 40) * this.prxvalue)
+              if (e.isshow) { // 显示项要在预览处初始化
+                this.labelListView.push(e)
+              }
+              e.fontsize = e.fontsize ? e.fontsize : 14
+              e.isshow = e.isshow === 1 // 1-true 显示
+              e.bold = e.bold === 2 // 2-true 加粗
+              e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
+            }
+          })
+          this.loading = false
         })
-        this.loading = false
-      })
-      .catch(err => {
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
     },
     closeMe(done) {
       this.$emit('close')
@@ -508,40 +510,44 @@ export default {
           })
 
           putSettingCompanyLi(labelList).then(data => {
-            this.$message({ type: 'success', message: '标签打印设置成功！' })
-            this.getSettingCompanyLi()
-            this.viewKey = new Date().getTime()
-            this.loading = false
-          })
-          .catch(err => {
-            this.loading = false
-            this._handlerCatchMsg(err)
-          })
+              this.$message({ type: 'success', message: '标签打印设置成功！' })
+              this.getSettingCompanyLi()
+              this.viewKey = new Date().getTime()
+              this.loading = false
+            })
+            .catch(err => {
+              this.loading = false
+              this._handlerCatchMsg(err)
+            })
         }
       })
     },
     resetForm(formName) { // 全部重置为0
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$confirm('此操作将所有设置重置为0,重置后不可恢复,是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.formModel.labelList.forEach(e => {
-              if (e.filedValue !== 'setting') {
-                e.topy = 0
-                e.leftx = 0
-                e.isshow = 0
-                e.width = Math.round(150 * this.prxvalue)
-                e.height = Math.round(24 * this.prxvalue)
-                e.fontsize = 14
-                e.bold = 0
-                e.alignment = 1
-              }
+          this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.formModel.labelList.forEach(e => {
+                if (e.filedValue !== 'setting') {
+                  e.topy = 0
+                  e.leftx = 0
+                  e.isshow = 0
+                  e.width = Math.round(150 * this.prxvalue)
+                  e.height = Math.round(24 * this.prxvalue)
+                  e.fontsize = 14
+                  e.bold = 0
+                  e.alignment = 1
+                }
+              })
+              this.formModel.paper.width = this.defaultPaperWidth
+              this.formModel.paper.height = this.defaultPaperHeight
+              this.formModel.paper.topy = 0
+              this.formModel.paper.leftx = 0
+              this.labelListView = []
             })
-            this.labelListView = []
-          })
             .catch(() => {})
         }
       })

@@ -24,9 +24,9 @@
               <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
               <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
             </div>
-            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" 
+           >表格设置</el-button>
           </el-popover>
-          
       </div>
       <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
         <div slot="content">双击查看运单详情</div> -->
@@ -83,7 +83,7 @@
       <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  code="ORDER_ALL" />
   </div>
 </template>
 <script>
@@ -604,6 +604,7 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            return false
           }
           var deleteItem = this.selected.filter(el => el.shipStatus === 59)
           console.log('delete:', deleteItem)

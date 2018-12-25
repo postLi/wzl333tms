@@ -40,6 +40,7 @@ const padding = 0
 export default {
   data() {
     return {
+      searchBoxUrl: '',
       visible: true,
       top: 0,
       left: 0,
@@ -95,6 +96,14 @@ export default {
       // console.log('closeCurrent:', _this.selectedTag)
       _this.closeSelectedTag(_this.selectedTag)
     })
+
+    // 多条件查询运单控制
+    this.eventBus.$on('setOpenSearchBoxUrl', (url) => {
+      this.searchBoxUrl = url
+    })
+    this.eventBus.$on('clearOpenSearchBoxUrl', () => {
+      this.searchBoxUrl = ''
+    })
   },
   methods: {
     // 判断是否为非首页
@@ -125,7 +134,13 @@ export default {
       if (!route) {
         return false
       }
-      this.$store.dispatch('addVisitedViews', route)
+      this.$store.dispatch('addVisitedViews', route).then(r => {
+        // 打开原来绑定的url
+        if (this.searchBoxUrl && route.fullPath == this.searchBoxUrl) {
+          this.searchBoxUrl = ''
+          this.eventBus.$emit('openSearchBox')
+        }
+      })
     },
     moveToCurrentTag() {
       // 针对首页特殊处理
@@ -149,6 +164,7 @@ export default {
     },
     closeSelectedTag(view) {
       this.$store.dispatch('delVisitedViews', view).then((views) => {
+        // 如果关闭的是当前标签，则需要特殊处理下， 将显示相邻的tab
         if (this.isActive(view)) {
           const latestView = views.slice(-1)[0]
           if (latestView) {
@@ -156,6 +172,10 @@ export default {
           } else {
             this.$router.push('/')
           }
+        }
+        // 关闭时清空原来绑定的url
+        if (this.searchBoxUrl && view.fullPath == this.searchBoxUrl) {
+          this.searchBoxUrl = ''
         }
       })
     },
@@ -166,11 +186,15 @@ export default {
       this.$router.push(this.selectedTag.fullPath)
       this.$store.dispatch('delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
+        // 关闭时清空原来绑定的url
+        this.searchBoxUrl = ''
       })
     },
     closeAllTags() {
       this.$store.dispatch('delAllViews')
       this.$router.push('/')
+      // 关闭时清空原来绑定的url
+      this.searchBoxUrl = ''
     },
     openMenu(tag, e, hideClose) {
       this.visible = true

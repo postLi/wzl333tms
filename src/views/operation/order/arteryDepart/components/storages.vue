@@ -60,7 +60,7 @@
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix">
                   <ul>
                     <li>
-                      <p>现付运费</p>
+                      <p>现付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -72,7 +72,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>回付运费</p>
+                      <p>回付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -84,7 +84,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到付运费</p>
+                      <p>到付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
@@ -164,11 +164,11 @@
                 <div class="infos_tab">
                   <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed type="selection" width="50"></el-table-column>
-                    <el-table-column fixed label="序号" prop="number" width="50">
+                   <!--  <el-table-column fixed label="序号" prop="number" width="50">
                     <template slot-scope="scope">
                       {{scope.$index + 1}}
                     </template>
-                  </el-table-column>
+                  </el-table-column> -->
                     <template v-for="column in tableColumn">
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
@@ -331,7 +331,7 @@
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
                     <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
                     <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
@@ -342,23 +342,23 @@
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
-                      方,全程运费
+                      方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
-                      元，到付运费
+                      元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
                       ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
-                      元，回付运费
+                      元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
                       元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -540,11 +540,11 @@ export default {
         // DateTimeFormat:'',//配载日期
         // requireArrivedTime:'',//要求到达日期：
         // remark:'',
-        //  nowpayCarriage:'',//现付运费
+        //  nowpayCarriage:'',//现付车费
         //  nowpayOilCard:'',//现付油卡
-        //  backpayCarriage:'',//回付运费
+        //  backpayCarriage:'',//回付车费
         //  backpayOilCard:'',//回付油卡
-        //  arrivepayCarriage:'',//到付运费
+        //  arrivepayCarriage:'',//到付车费
         //  arrivepayOilCard:'',//到付油卡
         //  carloadInsuranceFee:'',//整车保险费
         //  leaveHandlingFee:'',//发站装卸费
@@ -581,15 +581,15 @@ export default {
           'loadId': 1
         }
       },
-      tableColumn: [/* {
+      tableColumn: [ {
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '100',
           fixed: true,
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, */ {
+        },  {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '150',
@@ -1001,15 +1001,15 @@ export default {
                    obj.dirverMobile +
                    '</td></tr></table></body>'
       const columnArr = objectMerge2([], this.tableColumn)
-      columnArr.unshift({
-        label: '序号',
-        prop: 'id',
-        width: '40',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      })
+      // columnArr.unshift({
+      //   label: '序号',
+      //   prop: 'number',
+      //   width: '40',
+      //   fixed: true,
+      //   slot: (scope) => {
+      //     return scope.$index + 1
+      //   }
+      // })
       switch (type) {
         // 导出数据table_import
         // 导出
@@ -1071,6 +1071,8 @@ export default {
       const formModel = Object.assign({}, this.formModel)
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
+      formModel.contractNo = this.sendContract.contractNo
+      formModel.remark = this.sendContract.remark
       for (const item in formModel) {
         str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }

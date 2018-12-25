@@ -495,7 +495,7 @@
       </div>
       <Addsign :issender="true" :isPick="isPick" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id"></Addsign>
       <Addbatch  :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :show="show"></Addbatch>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" :code="'ORDERSIGN1'"></TableSetup>
     </div>
 </template>
 <script>
@@ -574,7 +574,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {
@@ -995,7 +995,7 @@ export default {
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
-            name: '自提签收'
+            name: '自提签收-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
               // 签收

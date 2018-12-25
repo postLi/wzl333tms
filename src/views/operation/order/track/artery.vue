@@ -35,8 +35,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe" :detailType="'detailArtery'"></editInfo>
       <!-- 表格设置弹出框 -->
-      <!-- <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup> -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn" code="LOADTRACK1"></TableSetup>
     </div>
   </div>
 </template>
@@ -85,6 +84,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         label: '发车批次',
         prop: 'batchNo',
         width: '110',
@@ -177,7 +184,7 @@ export default {
           width: '120'
         },
       {
-        label: '现付运费',
+        label: '现付车费',
         prop: 'nowpayCarriage',
         width: '120'
       },
@@ -187,7 +194,7 @@ export default {
         width: '120'
       },
       {
-        label: '到付运费',
+        label: '到付车费',
         prop: 'arrivepayCarriage',
         width: '120'
       },
@@ -202,12 +209,12 @@ export default {
         width: '120'
       },
       {
-        label: '回付运费',
+        label: '回付车费',
         prop: 'backpayCarriage',
         width: '120'
       },
         // {
-        //   label: "运费合计",
+        //   label: "车费合计",
         //   prop: "userName",
         //   width: "120"
         // },

@@ -3,9 +3,16 @@
    objectMerge2
  } from './index'
  // 阿拉伯数字转中文大写
- import { smalltoBIG } from '@/filters/'
- import { tmsMath, parseTime } from '@/utils/'
- import { getUserInfo } from '@/utils/auth'
+ import {
+   smalltoBIG
+ } from '@/filters/'
+ import {
+   tmsMath,
+   parseTime
+ } from '@/utils/'
+ import {
+   getUserInfo
+ } from '@/utils/auth'
 
  // import ExportJsonExcel from 'js-export-excel'
  //  const ExportJsonExcel = require('js-export-excel')
@@ -141,7 +148,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -305,7 +312,7 @@
        LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
      }
 
-    //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
+     //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
 
      console.log('topStyle:', topStyle, mainStyle)
 
@@ -416,7 +423,6 @@
      feezh = feezh.slice(pointIndex).reverse()
      feezh.forEach((e, index) => {
        feezh[index] = smalltoBIG(e).slice(0, 1)
-      // this.$set(feezh, index, smalltoBIG(e).slice(0, 1))
      })
      feezh = feezh.reverse()
      if (feezh && feezh.length > 4) { // 过万的数字直接拼接
@@ -431,18 +437,18 @@
    }
    return ''
  }
-/**
- * 格式化运单数据
- * {
- * tmsOrderShipInfo, 运单信息
- * tmsOrderCargoList 货物信息
- * tmsOrderTransferList 中转信息
- *
- * tmsOrderShipSignList 签收信息
- * tmsGxLoadsList 干线信息
- * tmsDbLoadsList 短驳信息
- * }
- */
+ /**
+  * 格式化运单数据
+  * {
+  * tmsOrderShipInfo, 运单信息
+  * tmsOrderCargoList 货物信息
+  * tmsOrderTransferList 中转信息
+  *
+  * tmsOrderShipSignList 签收信息
+  * tmsGxLoadsList 干线信息
+  * tmsDbLoadsList 短驳信息
+  * }
+  */
  export function formatOrderData(info, type) {
    // 获取用户信息
    const user = getUserInfo()
@@ -453,6 +459,8 @@
    const tmsOrderTransferList = info.tmsOrderTransferList
 
    const cargoOne = cargoList[0] || {}
+   const cargoLen = info.tmsOrderCargoList.length
+   console.log('货品列表长度：', cargoLen)
    const addrToCity = infoDetail.shipToCityName || ''
    const addrToCityArr = addrToCity.split(',')
 
@@ -461,13 +469,22 @@
 
    for (const item in cargoOne) {
      if (item !== 'id' && item !== 'orgid' && item !== 'createTime') {
-       infoDetail[item] = cargoOne[item]
+       for (let i = 0; i < cargoLen; i++) {
+         let itemDetail = item + (i > 0 ? i + 1 : '')
+         infoDetail[itemDetail] = cargoList[i][item]
+       }
      }
    }
-  // 公用
+   infoDetail.agencyFundTotal = 0 // 代收货款合计
+   infoDetail.cargoAmountTotal = 0 // 货品件数合计
+   cargoList.forEach(e => { // 计算代收货款合计
+     infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
+     infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+   })
+   console.warn(infoDetail)
+   // 公用
    obj.shipSn = infoDetail.shipSn // 运单号
    obj.createTime = infoDetail.createTime // 开单日期
-   obj.goodsSn = infoDetail.shipGoodsSn // 货号
    obj.senderUnit = infoDetail.shipSenderUnit // 发货单位
    obj.senderName = infoDetail.shipSenderName // 发货人
    obj.senderMobile = infoDetail.shipSenderMobile // 发货电话
@@ -476,72 +493,157 @@
    obj.receiverName = infoDetail.shipReceiverName // 收货人
    obj.receiverAddress = infoDetail.shipReceiverAddress // 收货地址
    obj.receiverMobile = infoDetail.shipReceiverMobile // 收货人电话
-   obj.cargoName = infoDetail.cargoName // 货品名
-   obj.cargoPack = infoDetail.cargoPack // 包装
-   obj.cargoAmount = infoDetail.cargoAmount // 件数
-   obj.cargoWeight = infoDetail.cargoWeight // 重量
-   obj.cargoVolume = infoDetail.cargoVolume // 体积
-   obj.fromOrgName = infoDetail.fromOrgName // 开单网点
    obj.toOrgName = infoDetail.toOrgName // 目的网点 || 到达网点
-   obj.description = infoDetail.description // 品种规格
-
    obj.fromCity = addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '' // 发站
    obj.toCity = addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '' // 到站
    obj.deliveryMethod = infoDetail.shipDeliveryMethodName // 交接方式
+   obj.clerk = infoDetail.userName || user.username // 业务员
 
    if (type === 'lib') {
+     console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
+     obj.customerSn = infoDetail.shipCustomerNumber // 客户单号
      obj.companyName = infoDetail.companyName || user.companyName // 公司名称
      obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
-     obj.mobilephone = infoDetail.mobilephone || user.mobilephone // 业务员电话
-     obj.companyAddr = infoDetail.detailedAddr || user.detailedAddr // 公司地址
+     obj.companyAddr = infoDetail.detailedAddr || (user.companyInfo.city || '') + (user.companyInfo.detailedAddr || '') // 公司地址
      obj.qrcode = '' // 二维码
+     obj.clerkMobile = infoDetail.userMobile || user.mobilephone // 业务员电话
+     obj.goodsSn = infoDetail.shipGoodsSn // 货号
+     obj.cargoName = infoDetail.cargoName // 货品名
+     obj.cargoPack = infoDetail.cargoPack // 包装
+     obj.cargoAmount = infoDetail.cargoAmount // 件数
+     obj.cargoWeight = infoDetail.cargoWeight // 重量
+     obj.cargoVolume = infoDetail.cargoVolume // 体积
+     obj.fromOrgName = infoDetail.fromOrgName // 开单网点
+     obj.description = infoDetail.description // 品种规格
    } else if (type === 'order') {
+     let objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
+     let objCargo = [{ // 货号
+       cargo: 'goodsSn', // 数据库label名称
+       info: 'shipGoodsSn' // 数据lable名称
+     }, { // 货品名
+       cargo: 'cargoName',
+       info: 'cargoName'
+     }, { // 包装
+       cargo: 'cargoPack',
+       info: 'cargoPack'
+     }, { // 件数
+       cargo: 'cargoAmount',
+       info: 'cargoAmount'
+     }, { // 重量
+       cargo: 'cargoVolume',
+       info: 'cargoVolume'
+     }, { // 体积
+       cargo: 'cargoWeight',
+       info: 'cargoWeight'
+     }, { // 开单网点
+       cargo: 'fromOrgName',
+       info: 'fromOrgName'
+     }, { // 品种规格
+       cargo: 'description',
+       info: 'description'
+     }, { // 运费
+       cargo: 'shipFee',
+       info: 'shipFee'
+     }, { // 送货费
+       cargo: 'deliveryFee',
+       info: 'deliveryFee'
+     }, { // 声明价值
+       cargo: 'productPrice',
+       info: 'productPrice'
+     }, { // 回扣
+       cargo: 'brokerageFee',
+       info: 'brokerageFee'
+     }, { // 代收货款
+       cargo: 'agencyFund',
+       info: 'agencyFund'
+     }, { // 代收货款手续费
+       cargo: 'commissionFee',
+       info: 'commissionFee'
+     }, { // 上楼费
+       cargo: 'upStairsFee',
+       info: 'goupstairsFee'
+     }, { // 装卸费
+       cargo: 'handlingFee',
+       info: 'handlingFee'
+     }, { // 保险费
+       cargo: 'insuranceFee',
+       info: 'insuranceFee'
+     }, { // 包装费
+       cargo: 'packageFee',
+       info: 'packageFee'
+     }, { // 提货费
+       cargo: 'pickupFee',
+       info: 'pickupFee'
+     }, { // 实际提货费
+       cargo: 'realityhandlingFee',
+       info: 'realityhandlingFee'
+     }, { // 叉车费
+       cargo: 'forkliftFee',
+       info: 'forkliftFee'
+     }, { // 报关费
+       cargo: 'customsFee',
+       info: 'customsFee'
+     }, { // 重量单价
+       cargo: 'weightFee',
+       info: 'weightFee'
+     }, { // 体积单价
+       cargo: 'volumeFee',
+       info: 'volumeFee'
+     }, { // 件数单价
+       cargo: 'amountFee',
+       info: 'amountFee'
+     }, { // 其他费用支出
+       cargo: 'otherfeeOut',
+       info: 'otherfeeOut'
+     }, { // 其他费用收入
+       cargo: 'otherfeeIn',
+       info: 'otherfeeIn'
+     }, { // 税率
+       cargo: 'taxRate',
+       info: 'taxRate'
+     }, { // 税金
+       cargo: 'taxes',
+       info: 'taxes'
+     }, { // 入仓费
+       cargo: 'housingFee',
+       info: 'housingFee'
+     }, { // 印花税
+       cargo: 'stampTax',
+       info: 'stampTax'
+     }]
+     objCargo.forEach((item, index) => {
+       for (let i = 0; i < cargoLen; i++) {
+         let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
+         let itemInfo = item.info + (i > 0 ? i + 1 : '')
+         obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
+         if (/(Amount|Volume|Weight|cargoPack|description)/.test(item.cargo) !== -1) { // 件数、重量、体积、包装、品种规格为0的时候不显示0
+           obj[itemCargo] = obj[itemCargo] ? obj[itemCargo] === '0' ? '' : obj[itemCargo] : ''
+         }
+       }
+     })
+     obj.createrName = infoDetail.createUserName || user.username // 开单员
+     obj.userName = infoDetail.createUserName || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
-     obj.shipFee = parseFloat(infoDetail.shipFee) || '' // 运费
-     obj.deliveryFee = parseFloat(infoDetail.deliveryFee) || '' // 送货费
-     obj.productPrice = parseFloat(infoDetail.productPrice) || '' // 声明价值
-     obj.brokerageFee = parseFloat(infoDetail.brokerageFee) || '' // 回扣
-     obj.brokerageFeeSign = 'R:' + (parseFloat(infoDetail.brokerageFee) || '')// 回扣标识
-     obj.agencyFund = parseFloat(infoDetail.agencyFund) || '' // 代收货款
-     obj.commissionFee = parseFloat(infoDetail.commissionFee) || '' // 代收货款手续费
-     obj.insuranceFee = parseFloat(infoDetail.insuranceFee) || '' // 保险费
-     obj.handlingFee = parseFloat(infoDetail.handlingFee) || '' // 装卸费
-     obj.packageFee = parseFloat(infoDetail.packageFee) || '' // 包装费
-     obj.pickupFee = parseFloat(infoDetail.pickupFee) || '' // 提货费
-     obj.upStairsFee = parseFloat(infoDetail.goupstairsFee) || '' // 上楼费
-     obj.realityhandlingFee = parseFloat(infoDetail.realityhandlingFee) || '' // 实际提货费
-     obj.forkliftFee = parseFloat(infoDetail.forkliftFee) || '' // 叉车费
-     obj.customsFee = parseFloat(infoDetail.customsFee) || '' // 报关费
-     obj.weightFee = parseFloat(infoDetail.weightFee) || '' // 重量单价
-     obj.volumeFee = parseFloat(infoDetail.volumeFee) || '' // 体积单价
-     obj.amountFee = parseFloat(infoDetail.amountFee) || '' // 件数单价
-     obj.otherfeeOut = parseFloat(infoDetail.otherfeeOut) || '' // 其他费用支出
-     obj.otherfeeIn = parseFloat(infoDetail.otherfeeIn) || '' // 其他费用收入
-     obj.taxRate = parseFloat(infoDetail.taxRate) || '' // 税率
-     obj.taxes = parseFloat(infoDetail.taxes) || '' // 税金
-     obj.housingFee = parseFloat(infoDetail.housingFee) || '' // 入仓费
-     obj.stampTax = parseFloat(infoDetail.stampTax) || '' // 印花税
-     obj.housingFee = parseFloat(infoDetail.housingFee) || '' // 入仓费
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
+     obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
+
      obj.shippingType = infoDetail.shipShippingTypeName // 运输方式
      obj.businessType = infoDetail.shipBusinessTypeName // 业务类型
-     obj.createrName = infoDetail.userName // 开单员
-     obj.userName = infoDetail.userName // 制单员
      obj.remarks = infoDetail.shipRemarks // 备注
      obj.effective = infoDetail.shipEffectiveName // 时效
-    // ///////////////////////////////////////////////////////////
-    // /运单号-件数
-     obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmount
-    // //////////////////////////////////////////////////////////
-    // /年月日
+     // ///////////////////////////////////////////////////////////
+     // /运单号-件数
+     obj.shipSnCargoAmount = infoDetail.shipSn + '-' + infoDetail.cargoAmountTotal
+     // //////////////////////////////////////////////////////////
+     // /年月日
      const year = parseTime(infoDetail.createTime, '{y}')
      obj.createYear = parseTime(infoDetail.createTime, '{y}')
      obj.createYear2 = year.substr(2, 2)
      obj.createMonth = parseTime(infoDetail.createTime, '{m}')
      obj.createDate = parseTime(infoDetail.createTime, '{d}')
-    // //////////////////////////////////////////////////////////
-    // /特殊处理 中转费
+     // //////////////////////////////////////////////////////////
+     // /特殊处理 中转费
      let totalTransferFee = 0
      if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
        tmsOrderTransferList.forEach(e => {
@@ -551,28 +653,94 @@
      obj.transferFee = parseFloat(totalTransferFee) || '' // 中转费
      console.log('中转费', totalTransferFee)
 
-    // //////////////////////////////////////////////////////////
-    // /特殊处理 打勾
-    // 104 多笔付
+     // //////////////////////////////////////////////////////////
+     // /付款方式
+     // 104 多笔付
      obj.payWay = infoDetail.shipPayWayName
-    // 付款方式
+     // 付款方式
      switch (infoDetail.shipPayWay) { // 付款方式
        case 76:
-         obj.nowPay = '√'  // 现付（√）
-        // this.$set(obj, 'payWay', infoDetail.shipNowpayFee) // 付款方式
+         obj.nowPay = '√' // 现付（√）
+         obj.nowPayFee = parseFloat(infoDetail.shipNowpayFee) || ''
          break
        case 77:
-         obj.deliveryPay = '√'  // 提付（√）|| 到付（√）
-        // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
-        // this.$set(obj, 'payWay', infoDetail.shipArrivepayFee) // 付款方式
+         obj.deliveryPay = '√' // 提付（√）|| 到付（√）
+         obj.deliveryPayFee = parseFloat(infoDetail.shipArrivepayFee) || ''
          break
        case 78:
          obj.monthPay = '√' // 月结（√）
-        // this.$set(obj, 'payWay', infoDetail.shipMonthpayFee) // 付款方式
+         obj.monthPayFee = parseFloat(infoDetail.shipMonthpayFee) || ''
          break
        case 79:
-         obj.receiptPay = '√'  // 回单付（√）
-        // this.$set(obj, 'payWay', infoDetail.shipReceiptpayFee) // 付款方式
+         obj.receiptPay = '√' // 回单付（√）
+         obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
+         break
+       case 104: // 多笔付
+         obj.nowPay = infoDetail.shipNowpayFee ? '√' : ''
+         obj.deliveryPay = infoDetail.shipArrivepayFee ? '√' : ''
+         obj.monthPay = infoDetail.shipMonthpayFee ? '√' : ''
+         obj.receiptPay = infoDetail.shipReceiptpayFee ? '√' : ''
+         obj.nowPayFee = parseFloat(infoDetail.shipNowpayFee) || ''
+         obj.deliveryPayFee = parseFloat(infoDetail.shipArrivepayFee) || ''
+         obj.monthPayFee = parseFloat(infoDetail.shipMonthpayFee) || ''
+         obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
+         break
+     }
+     ////////////////////////////////////////////////////////
+     ///回单要求
+     ///
+     switch (infoDetail.shipReceiptRequire) {
+       case 81: // 签回单
+         obj.receiptSign = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 82: // 签原单
+         obj.receiptOriginal = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 83: // 打收条
+         obj.receiptIssue = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 84: // 签信封
+         obj.receiptMailer = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 85: // 签回单盖章
+         obj.receiptSeal = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 86: // 电子回单
+         obj.receiptElectronic = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+       case 102: // 传真
+         obj.receiptFax = infoDetail.shipReceiptRequire ? '√' : ''
+         break
+     }
+     ///////////////////////////////////////////////////////////
+     ///业务类型
+     ///
+     switch (infoDetail.shipBusinessType) {
+       case 91: // 整车
+         obj.carLoad = infoDetail.shipBusinessType ? '√' : ''
+         break
+       case 92: // 零担
+         obj.zeroLoad = infoDetail.shipBusinessType ? '√' : ''
+         break
+       case 93: // 专线
+         obj.specialLine = infoDetail.shipBusinessType ? '√' : ''
+         break
+     }
+     //////////////////////////////////////////////////////////
+     /// 运输方式
+     ///
+     switch (infoDetail.shipShippingType) {
+       case 87: // 普通汽运
+         obj.shipTrucks = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 88: // 卡车航班
+         obj.shipAutotruck = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 89: // 水运
+         obj.shipCarrige = infoDetail.shipShippingType ? '√' : ''
+         break
+       case 90: // 铁路
+         obj.shipTrain = infoDetail.shipShippingType ? '√' : ''
          break
      }
      if (infoDetail.shipDeliveryMethod === 68) {
@@ -584,15 +752,15 @@
        obj.controlGoods = infoDetail.shipOther // 168-控货
      }
      if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
-       obj.valuables = infoDetail.shipOther  //  169-贵重物品
+       obj.valuables = infoDetail.shipOther //  169-贵重物品
      }
      if (infoDetail.shipEffective === 95) {
        obj.urgent = infoDetail.shipEffective // 95-时效-加急
      } else {
        obj.common = infoDetail.shipEffective // 94-时效-普通
      }
-    // //////////////////////////////////////////////////////////
-    // /处理合计中文大写
+     // //////////////////////////////////////////////////////////
+     // /处理合计中文大写
      if (infoDetail.shipTotalFee) {
        const totalFeeBig = setFeeToBig(infoDetail.shipTotalFee)
        obj.uptotalFeeW = totalFeeBig[4] // 运费合计(万)
@@ -601,8 +769,9 @@
        obj.uptotalFeeS = totalFeeBig[1] // 运费合计(拾)
        obj.uptotalFeeY = totalFeeBig[0] // 运费合计(元)
      }
-     if (infoDetail.agencyFund) {
-       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFund)
+
+     if (infoDetail.agencyFundTotal) {
+       const upagencyFeeBig = setFeeToBig(infoDetail.agencyFundTotal)
        obj.upagencyFundW = upagencyFeeBig[4] // 代收货款(万)
        obj.upagencyFundQ = upagencyFeeBig[3] // 代收货款(仟)
        obj.upagencyFundB = upagencyFeeBig[2] // 代收货款(佰)
@@ -610,6 +779,7 @@
        obj.upagencyFundY = upagencyFeeBig[0] // 代收货款(元)
      }
    }
+   console.warn('obj', obj)
    return obj
  }
 
@@ -637,7 +807,7 @@
      try {
        const prxvalue = 0.264
        const str = ''
-       let islib = false // 判断是否标签打印
+       // let islib = false // 判断是否标签打印
        let printSetup = []
        let copy = []
        LODOP = getLodop()
@@ -655,16 +825,20 @@
          preview = !info.preview
          printSetup = objectMerge2([], info.printSetup)
          if (!info.mock) {
+           const cargoLen = info.orderdata.tmsOrderCargoList.length
            info = formatOrderData(info.orderdata, info.type)
            copy = printSetup.map(el => {
-             const val = info[el.filedValue]
-             el.value = typeof val === 'undefined' ? '' : val === null ? '' : val
+             if (el.filedValue === 'customFields') {
+               el.value = el.filedName
+             } else {
+               const val = info[el.filedValue]
+               el.value = typeof val === 'undefined' ? '' : val === null ? '' : val
+             }
              return el
            })
          } else {
            copy = printSetup
          }
-
          info = copy
          // 如果是0份则不处理，直接标记完成且不需要预览
          if (!number && preview) {
@@ -681,20 +855,25 @@
 
        let arr = new Array()
        arr = Object.assign([], info)
+       let title = ''
        for (const item in arr) { // 没有传值的项设置位空字符串
-         if (arr[item].filedValue === 'setting') { // 判断是否是标签打印 islib: true-标签打印 false-运单打印
+         if (arr[item].filedValue === 'setting') {
            if (arr[item].filedName === '标签尺寸') {
-             islib = true
+             title = '标签打印'
            } else {
-             islib = false
+             title = '托运单打印'
            }
+           console.log('setting::', arr[item])
+           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
+           LODOP.PRINT_INITA(arr[item].topy, arr[item].leftx, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', title)
+           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
+           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
+           LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
          }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
          }
        }
-       let pageWidth = 0
-       let pageHeight = 0
 
        arr.forEach((e, index) => {
          let title = ''
@@ -703,50 +882,17 @@
          } else {
            title = '托运单打印'
          }
-         if (e.filedValue === 'setting') {
-           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
-           LODOP.PRINT_INITA(e.topy, e.leftx, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', title)
-           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + e.width + ',' + e.height + ', "");'
-           LODOP.SET_PRINT_PAGESIZE(0, e.width * prxvalue + 'mm', e.height * prxvalue + 'mm', '')
-           pageWidth = e.width
-           pageHeight = e.height
-         } else {
+         if (e.filedValue !== 'setting') {
            if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, '√')
              LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
            } else {
-             if (islib) { // 打印标签的是否 特殊处理233和234两个公司  需要添加标题头
-               if (e.companyid === 233 || e.companyid === 234) {
-                 if (e.filedValue !== 'companyName') {
-                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.filedName.replace('业务员电话', '业务投诉电话') + ': ' + e.value)
-                   // 允许标点溢出，且英文单词拆开。
-                   LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-                 } else {
-                   LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-                   // 允许标点溢出，且英文单词拆开。
-                   LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                   LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                   LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-                 }
-               } else {
-                 LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-                 LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-                 LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-                 LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-               }
-             } else {
-               LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-               LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
-               LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-               LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
-             }
-             // LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
-             // LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
-             // LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
+             LODOP.ADD_PRINT_TEXT(e.topy, e.leftx, e.width, e.height, e.value)
+             LODOP.SET_PRINT_STYLEA(0, 'TextNeatRow', true)
+             LODOP.SET_PRINT_STYLEA(0, 'FontSize', e.fontsize)
+             LODOP.SET_PRINT_STYLEA(0, 'Alignment', e.alignment)
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"' + e.value + '");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
@@ -754,7 +900,6 @@
          }
        })
        LODOP.SET_PRINT_MODE('CATCH_PRINT_STATUS', true)
-
        if (printer) {
          LODOP.SET_PRINTER_INDEXA(printer)
        }
@@ -827,6 +972,7 @@
          console.log('column.label:', column.label)
          el['index'] = k + 1
          el['id'] = k + 1
+         el['number'] = k + 1
          /* if (column.label === '序号') {
 
          } else {
@@ -1187,9 +1333,29 @@
    }
  }
 
- function createTable(obj, noUnit) { // 打印导出创建表格视图
+ function createTable(obj, noUnit, page) { // 打印导出创建表格视图
    const data = obj.data // 数据表格
    const columns = obj.columns // 表格设置列
+   console.log('data', data)
+   console.log('columns', columns)
+
+   // 处理序号问题
+   // 简单排序
+   // page: 
+   // {
+   // currentPage: 1, //当前页码
+   // pageSize: 100 // 显示条数
+   // }
+   if (!page) {
+     page = {
+       currentPage: 1,
+       pageSize: 100
+     }
+   }
+   data.map((el, index) => {
+     el.number = ((page.currentPage - 1) * page.pageSize) + index + 1
+   })
+   console.log('createTable data', data, page)
 
    const div = document.createElement('div')
    const table = document.createElement('table')

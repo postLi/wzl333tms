@@ -30,7 +30,7 @@
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
-              </template>x
+              </template>
             </el-table-column>
           </template>
         </el-table>
@@ -45,7 +45,7 @@
     <editInfo :orgid="orgid" :id='loadId' :info="loadInfo" :popVisible.sync="editInfoVisible" @close="closeMe" @isSuccess="isSuccess" @sendInfoData="sendInfo">
     </editInfo>
     <!-- 表格设置弹出框 -->
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn" :code="'ORDER_DELIVER'"></TableSetup>
     <!-- 签收弹出框 -->
     <SignFrom :popVisible="signVisible" :dotInfo="dotInfo" @close="closeSign" @message="signMessage"> </SignFrom>
     <!-- 实际发车时间 弹出框 -->
@@ -131,8 +131,10 @@ export default {
           dirverName: ''
         }
       },
-      tableColumn: [{
+      tableColumn: [
+      {
         label: '序号',
+        prop: 'number',
         width: '80',
         fixed: true,
         slot: (scope) => {
@@ -173,10 +175,10 @@ export default {
       },
       {
         label: '实际送货完成时间',
-        prop: 'actualSendtime',
+        prop: 'actualArrivetime',
         width: '180',
         slot: (scope) => {
-          return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         }
       },
       {
@@ -360,7 +362,7 @@ export default {
       this.setData(57) // 57-送货中
       if (this.isBatch) {
         const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
-        this.$set(this.commonData, 'actualSendtime', timer)
+        this.$set(this.commonData, 'actualArrivetime', timer)
         this.loading = true
         putCompleteDelivery(this.commonData).then(data => {
           if (data) {
@@ -450,7 +452,7 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
     }
   }
 }

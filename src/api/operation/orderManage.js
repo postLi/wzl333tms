@@ -621,5 +621,9 @@ export default {
   // 获取上一次开单信息
   getLastOrderInfo() {
     return fetch.get('/api-order/order/v1/selectOrderByCreateTime')
+  },
+  // 获取运单的费用信息
+  getOrderFinanceInfo(id) {
+    return fetch.get('/api-order/order/v1/getOrderFinanceInfo/' + id)
   }
 }

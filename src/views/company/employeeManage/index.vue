@@ -290,6 +290,7 @@ export default {
     },
     fetchData(orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
       this.loading = true
+      this.SetAuthVisible = false
       this.fetchAllUser(orgid, name, mobile).then(data => {
         this.loading = false
         this.usersArr = data.list

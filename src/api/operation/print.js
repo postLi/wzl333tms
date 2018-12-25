@@ -66,10 +66,18 @@ export function getEnableOrderSetting() {
   })
 }
 /**
- * 获取系统所有打印字段
+ * 获取运单-系统所有打印字段
  */
-export function getCommonSetting() {
+export function getCommonSettingOrder() {
   return fetch.get('/api-order/order/print//v1/getCommon').then(res => {
+    return res.data
+  })
+}
+/**
+ * 获取标签-系统所有打印字段
+ */
+export function getCommonSettingLib() {
+  return fetch.get('/api-order/order/libprint/v1/').then(res => {
     return res.data
   })
 }

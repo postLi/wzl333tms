@@ -140,13 +140,13 @@ export default {
           }
         },
         {
-          label: '现付运费',
+          label: '现付车费',
           prop: 'nowpayCarriage',
           width: '90',
           fixed: false
         },
         {
-          label: '已核销现付运费',
+          label: '已核销现付车费',
           prop: 'paidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -156,7 +156,7 @@ export default {
           }
         },
         {
-          label: '未核销现付运费',
+          label: '未核销现付车费',
           prop: 'unpaidNowpayCarriage',
           width: '120',
           fixed: false,
@@ -192,13 +192,13 @@ export default {
           }
         },
         {
-          label: '回付运费',
+          label: '回付车费',
           prop: 'backpayCarriage',
           width: '90',
           fixed: false
         },
         {
-          label: '已核销回付运费',
+          label: '已核销回付车费',
           prop: 'paidBackpayCarriage',
           width: '120',
           fixed: false,
@@ -208,7 +208,7 @@ export default {
           }
         },
         {
-          label: '未核销回付运费',
+          label: '未核销回付车费',
           prop: 'unpaidBackpayCarriage',
           width: '120',
           fixed: false,

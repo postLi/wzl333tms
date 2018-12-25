@@ -11,7 +11,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div class="info_tab_report" id="report_operation">
+      <div @scroll="handleBottom" class="info_tab_report_operation" id="report_operation">
         <table id="report_operation_table"></table>
       </div>
     </div>
@@ -82,7 +82,19 @@ export default {
       'otherinfo'
     ])
   },
+  mounted() {
+    this.getScrollWidth()
+  },
   methods: {
+    getScrollWidth() {
+      var noScroll, scroll, oDiv = document.createElement("DIV")
+      oDiv.style.cssText = "position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;"
+      noScroll = document.body.appendChild(oDiv).clientWidth
+      oDiv.style.overflowY = "scroll"
+      scroll = oDiv.clientWidth
+      document.body.removeChild(oDiv)
+      this.scrollwidth = noScroll - scroll
+    },
     report() {
       console.log('sdfsdf2347823748', this.query)
       this.loading = true
@@ -90,7 +102,7 @@ export default {
         let data = res
         let countColVal = []
         this.loading = false
-
+        const div = document.getElementById('report_operation')
        let table = document.getElementById('report_operation_table')
        if (!table) {
           return
@@ -130,12 +142,17 @@ export default {
           theadTr.appendChild(th)
         }
 
+        // 固定表头
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
+        div.appendChild(tableClone)
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
-          console.log(k)
           const tbodyTr = tbody.insertRow()
           for (let j = 0; j < this.columns.length; j++) {
-            console.log('j', j, this.countCol)
             const td = tbodyTr.insertCell()
             // 处理当列没有值、宽度设置等信息时，做默认值处理
             for (let t in this.countCol) { // 保留两位小数
@@ -179,6 +196,19 @@ export default {
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
       this.report()
+    },
+    handleBottom(e) {
+      let el = e.target
+      let top = el.scrollTop
+      let width = el.offsetWidth
+      let orgwidth = el.scrollWidth
+      let hasscroll = orgwidth > width
+      let height = el.offsetHeight
+      if (!this.maxheight) {
+        this.maxheight = el.scrollHeight
+      }
+      const cloneel = document.getElementById('tableClone')
+      cloneel.style.top = top + 'px'
     }
   }
 }
@@ -208,11 +238,23 @@ export default {
   height: calc(100% - 100px);
 }
 
-.info_tab_report {
+.info_tab_report_operation {
   height: calc( 100%);
   overflow: auto;
   border: 1px solid #d0d7e5;
   box-shadow: 1px 1px 20px #ddd;
+  position: relative;
+  .tableCloneHead {
+    position: absolute;
+    width: 100%;
+    min-width: 1000px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    th {
+      width: 7%;
+    }
+  }
   /*设置边框的*/
   table {
     width: 100%;
@@ -236,6 +278,7 @@ export default {
       font-size: 13px;
       td {
         font-size: 13px;
+        word-break: break-all;
       }
     }
   }

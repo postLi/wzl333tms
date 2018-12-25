@@ -869,7 +869,7 @@
     },
     data() {
       const validateMobile = (rule, value, callback) => {
-        if (!REGEX.MOBILE.test(value)) {
+        if (!REGEX.MOBILE.test(value) || value !== '') {
           callback(new Error('请输入正确的联系号码~'))
         } else {
           callback()
@@ -884,7 +884,8 @@
             { message: '只能输入数字', pattern: REGEX.ONLY_NUMBER }
           ],
           'memberPersonPhone': [
-            { validator: validateMobile, trigger: 'blur' }
+            // { validator: validateMobile}
+            { message: '请输入正确手机号码', pattern: REGEX.MOBILE }
           ],
           'financialOfficerPhone': [
             { message: '请输入正确手机号码', pattern: REGEX.MOBILE }

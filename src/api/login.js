@@ -45,7 +45,15 @@ export function getInfo(username, orgid) {
   return fetch.get('/api-system/system/user/v1/getCurrentUser')
 }
 
-export function logout() {
+export function logout(token) {
+  return new Promise(resolve => {
+    resolve({
+      errorInfo: '',
+      status: 200,
+      text: '请求成功',
+      data: ''
+    })
+  })
   return fetch.delete('/api-uaa/oauth/token', {
     headers: {
       'content-type': 'application/x-www-form-urlencoded',

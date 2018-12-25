@@ -110,6 +110,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
+        prop:'number',
         width: '70',
         fixed: true,
         slot: (scope) => {
@@ -235,7 +236,7 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '现付运费(元)',
+        label: '现付车费(元)',
         prop: 'nowpayCarriage',
         width: '110',
         fixed: false
@@ -245,7 +246,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '到付运费(元)',
+          label: '到付车费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
@@ -255,7 +256,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '回付运费(元)',
+          label: '回付车费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
@@ -266,7 +267,7 @@ export default {
           fixed: false
         },
       {
-        label: '运费合计(元)',
+        label: '车费合计(元)',
         prop: 'totalFee',
         width: '110',
         fixed: false
@@ -386,7 +387,7 @@ export default {
               this.openAddCustomer()
               console.log('选中的数据1111111', this.selectInfo)
             } else {
-              this.$message.warning('批次【 ' + this.selected[0].batchNo + ' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
+              this.$message.warning('批次【 ' + this.selected[0].batchNo + ' 】状态为：' + this.selected[0].bathStatusName + ', 不允许到车入库~')
               this.closeAddCustomer()
               this.$refs.multipleTable.clearSelection()
               return false

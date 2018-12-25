@@ -8,7 +8,7 @@
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed type="index" width="50" label="序号">
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
           <template slot-scope="scope">
@@ -65,7 +65,7 @@
     <!-- 右边表格区 -->
     <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn2">
       <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed type="index" width="50" label="序号">
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
           <template slot-scope="scope">

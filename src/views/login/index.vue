@@ -39,7 +39,7 @@
               <template slot="prepend">
                 <i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i>
                 <!-- 两种写法都可以 -->
-                <i @click="isview = !isview" :class="{ 'icon_by': isview , 'icon_zy':!isview}"></i>
+                <i @click="isview = !isview" :class="{ 'icon_zy': isview , 'icon_by':!isview}"></i>
                 <!-- <i @click="isview = !isview" :class="[isview ? 'icon_by':'icon_zy']"></i> -->
               </template>
             </el-input>

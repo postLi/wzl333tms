@@ -62,11 +62,11 @@
     <table class="detailTables_info_artery">
       <thead>
         <tr>
-          <th>现付运费(元)</th>
+          <th>现付车费(元)</th>
           <th>现付油卡(元)</th>
-          <th>回付运费(元)</th>
+          <th>回付车费(元)</th>
           <th>回付油卡(元)</th>
-          <th>到付运费(元)</th>
+          <th>到付车费(元)</th>
           <th>到付油卡(元)</th>
           <th>整车保险费(元)</th>
           <th>发站装卸费(元)</th>

@@ -167,6 +167,14 @@ export function deleteQueryLogListById(id) {
 }
 
 /**
+ * 根据网点和模块查询原始表头设置信息
+ * @param {*} module 模块名称
+ */
+export function getOriginTableSetup(module) {
+  return fetch.get('/api-order/order/tmscommontitle/v1.1/list/' + module)
+}
+
+/**
  * 根据网点和模块查询表头设置信息
  * @param {*} orgId 当前网点id
  * @param {*} module 模块名称

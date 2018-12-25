@@ -610,9 +610,9 @@ export default {
       this.isChangeHandlingFee = true
       console.log('-----获取操作费 switch 3------ ')
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: //按运单车费占车费比例分摊 (运单-回扣）/（总车费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
-          let totalShipTotalFee = 0 // 总运费合计
+          let totalShipTotalFee = 0 // 总车费合计
           this.rightTable.forEach(e => {
             totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee ? e.brokerageFee : 0)
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)

@@ -37,7 +37,7 @@
       <!-- 颜色设置弹出框 -->
       <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :code="'ORDER_REPER_SEND'" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -80,6 +80,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         label: '运单号',
         prop: 'shipSn',
         width: '120',
@@ -462,7 +470,7 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.repertoryArr,
             columns: this.tableColumn,
-            name: '发货库存'
+            name: '发货库存-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print': // 打印
@@ -470,7 +478,7 @@ export default {
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.repertoryArr,
             columns: this.tableColumn,
-            name: '发货库存'
+            name: '发货库存-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }
