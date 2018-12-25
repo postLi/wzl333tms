@@ -231,7 +231,7 @@ export default {
         'width': '150'
       }, {
         'label': '等通知放货',
-        'prop': 'shipIsControll',
+        'prop': 'status',
         'width': '150',
         'slot': function(scope) {
           return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'

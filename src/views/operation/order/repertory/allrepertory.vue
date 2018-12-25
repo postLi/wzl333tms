@@ -409,6 +409,11 @@ export default {
         width: '90'
       },
       {
+        label: '毛利',
+        prop: 'grossProfit',
+        width: '90'
+      },
+      {
         label: '客户单号',
         prop: 'shipCustomerNumber',
         width: '150',
@@ -422,7 +427,7 @@ export default {
       },
       {
         label: '业务类型',
-        prop: 'shipBusinessType',
+        prop: 'shipBusinessTypeName',
         width: '100',
         fixed: false
       },

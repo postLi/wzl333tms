@@ -251,7 +251,7 @@ export default {
         console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
         let str = ''
         this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
+          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
         })
         console.log(str)
       }
@@ -421,7 +421,7 @@ export default {
           console.warn('表格设置字段：【后台拿的数据】：', data.length, '个')
           let str = ''
           data.forEach(e => {
-            str += "('" + e.lable + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
+            str += "('" + e.lable + "', '" + e.prop + "', '" + this.code + "');" + '\n'
           })
           console.log(str)
         }
@@ -474,7 +474,7 @@ export default {
             // 将本地剩余的项塞到后面
             const find = copy.filter(_el => _el.prop === el.prop)
             if (find.length === 0) {
-              console.log('本地项，需要后台添加：', el)
+              console.log('本地项，需要后台添加：',el.label,el.prop, el)
               copy.push(el)
             }
           })

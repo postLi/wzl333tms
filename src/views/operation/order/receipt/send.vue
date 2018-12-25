@@ -513,29 +513,29 @@ export default {
         fixed: false
       }, {
         label: '到达省',
-        prop: 'shipToCityName1',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        // },
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName2',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        // },
         fixed: false
       }, {
         label: '到达县',
-        prop: 'shipToCityName3',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        // },
         fixed: false
-      }]
+      },]
     }
   },
   methods: {

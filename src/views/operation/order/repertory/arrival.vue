@@ -369,13 +369,18 @@ export default {
         width: '90'
       },
       {
+        label: '毛利',
+        prop: 'grossProfit',
+        width: '90'
+      },
+      {
         label: '运输方式',
         prop: 'shipShippingTypeName',
         width: '100'
       },
       {
         label: '业务类型',
-        prop: 'shipBusinessType',
+        prop: 'shipBusinessTypeName',
         width: '100'
       },
       {
