@@ -935,6 +935,7 @@ export default {
       this.loading = true
       getSettingCompanyOrder().then(data => {
             let array = Object.assign([], data || [])
+
             this.cargoNum = this.$options.data().cargoNum
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
@@ -979,6 +980,10 @@ export default {
               e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
               if (e.filedValue === 'setting') { // 设置纸张
                 const obj = Object.assign({}, e)
+                if (!data) { // 新公司默认展示纸张大小
+                  obj.width = this.defaultPaperWidth
+                  obj.height = this.defaultPaperHeight
+                }
                 obj.leftx = Math.round(obj.leftx * this.prxvalue)
                 obj.topy = Math.round(obj.topy * this.prxvalue)
                 this.formModel.paper = obj
@@ -1173,6 +1178,11 @@ export default {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
             } else {
+               if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
+                if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+                  arr.splice(index)
+                }
+              }
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0

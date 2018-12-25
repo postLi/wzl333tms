@@ -52,6 +52,7 @@ export default {
       'otherinfo'
     ]),
     myusers() {
+      console.log('users', this.users)
       this.form.users = {}
       this.users.map(el => {
         // 需要实现双向绑定

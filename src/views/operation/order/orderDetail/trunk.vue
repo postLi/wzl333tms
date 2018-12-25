@@ -25,27 +25,31 @@ export default {
   watch: {
     orderid(newVal) {
       if (newVal !== '') {
-        this.init()
+        // this.init(111)
       }
     },
-    orderdata() {
-
+    orderdata: {
+      handler() {
+        this.init(333)
+      },
+      deep: true
     }
   },
   mounted() {
-    this.init()
+    this.init(2222)
   },
   methods: {
     initMap() {
       const BMap = window.BMap
       if (BMap) {
-        var map = new BMap.Map('allmap')
+        var map = new BMap.Map('allmap', { minZoom: 5 })
 
         map.addControl(new BMap.MapTypeControl({
           mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP]
         }))
 
-        map.centerAndZoom(new BMap.Point(116.404, 39.915), 5)
+        map.centerAndZoom(new BMap.Point(116.404, 39.915), 7)
+        // 三种驾车策略：最少时间，最短距离，避开高速
         var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME, BMAP_DRIVING_POLICY_LEAST_DISTANCE, BMAP_DRIVING_POLICY_AVOID_HIGHWAYS]
 
         var start = this.start || '广州市'
@@ -54,11 +58,14 @@ export default {
         var arr = new Array(1)
         // arr[0] = '上饶'
         map.clearOverlays()
-        search(start, end, routePolicy[0])
+        map.enableScrollWheelZoom(true)     // 开启鼠标滚轮缩放
+
         function search(start, end, route) {
           var driving = new BMap.DrivingRoute(map, { renderOptions: { map: map, autoViewport: true }, policy: route })
           driving.search(start, end)
         }
+
+        search(start, end, routePolicy[0])
         var driving = new BMap.DrivingRoute(map, { renderOptions: { map: map, autoViewport: true }})
         driving.search(start, end, { waypoints: arr })// waypoints
       } else {
@@ -88,13 +95,15 @@ export default {
       }
     },
 
-    init() {
+    init(fromflag) {
+      console.log('fromflag:', fromflag)
       this.fetchData()
       return Promise.all([this.loadMap()]).then(() => {
         this.initMap()
       })
     },
     fetchData() {
+      console.log('this.orderdata.tmsOrderShipInfo:', this.orderdata.tmsOrderShipInfo)
       if (this.orderdata.tmsOrderShipInfo) {
         this.start = this.orderdata.tmsOrderShipInfo.shipFromCityName || '广州市'
         this.end = this.orderdata.tmsOrderShipInfo.shipToCityName || '杭州市'

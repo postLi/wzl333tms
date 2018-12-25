@@ -30,7 +30,7 @@
          </el-input>
         </el-form-item> -->
           <el-form-item prop="username">
-            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="11" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true">
+            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="11" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>
@@ -130,13 +130,16 @@ export default {
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loginError: false,
-      localForm: {},
+      localForm: {
+        password: '',
+        username: ''
+      },
 
     }
   },
   watch: {
     checked(cval) {
-        this.setLocalStorage()
+      this.setLocalStorage()
     }
   },
   mounted() {
@@ -148,6 +151,7 @@ export default {
   },
   methods: {
     setLocalStorage() {
+      console.log(this.checked)
       if (this.checked) {
         let form = {}
         form.username = this.loginForm.username
@@ -181,12 +185,12 @@ export default {
         console.log(valid)
         if (valid) {
           this.loading = true
-           if (this.checked) {
+          if (this.checked) {
             this.setLocalStorage()
-           }
+          }
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-           
+
             // 获取登录前的页面地址
             // 有可能会出现前一个页面是现在登录账号没有权限访问的？
             // const nexturl = this.$route.query.tourl
@@ -224,6 +228,16 @@ export default {
     },
     YJicon() {
       this.isview = !this.isview
+    },
+    changeUsername() {
+      if (this.checked) {
+        if (this.loginForm.password === this.localForm.password) { // 更换账号时要清空记录的密码，如果是输入的密码，更换账号可以不清空
+          this.loginForm.password = ''
+        }
+        if (this.loginForm.username === this.localForm.username) {
+          this.loginForm.password = this.localForm.password
+        }
+      }
     }
   }
 }

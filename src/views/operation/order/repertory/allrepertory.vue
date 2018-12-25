@@ -81,6 +81,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         label: '运单号',
         prop: 'shipSn',
         width: '120',
@@ -409,6 +417,11 @@ export default {
         width: '90'
       },
       {
+        label: '毛利',
+        prop: 'grossProfit',
+        width: '90'
+      },
+      {
         label: '客户单号',
         prop: 'shipCustomerNumber',
         width: '150',
@@ -422,7 +435,7 @@ export default {
       },
       {
         label: '业务类型',
-        prop: 'shipBusinessType',
+        prop: 'shipBusinessTypeName',
         width: '100',
         fixed: false
       },

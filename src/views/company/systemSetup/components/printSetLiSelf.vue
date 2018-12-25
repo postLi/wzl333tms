@@ -122,9 +122,9 @@
                   <template slot="prepend">字号</template>
                 </el-input>
               </el-form-item>
-               <el-form-item  class="print_itemSet_col">
+              <el-form-item class="print_itemSet_col">
                 <el-checkbox v-model="dragDetailInfo.bold" label="文字加粗" border size="mini" @change="changeDragDetailInfo"></el-checkbox>
-                 <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
+                <el-radio-group v-model="dragDetailInfo.alignment" size="mini" @change="changeDragDetailInfo">
                   <el-radio-button v-for="item in alignmentOptions" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
                 </el-radio-group>
               </el-form-item>
@@ -205,7 +205,7 @@
 // 25.4mm = 96px
 // 1mm = 96/25.4 = 3.779px
 // 1px = 25.4/96 = 0.26458mm
- // 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
+// 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
 let dom = ''
 import draggable from 'vuedraggable'
 import hotkeys from '@/utils/hotkeys'
@@ -560,7 +560,7 @@ export default {
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
-        this.formModel.labelList.forEach((em, index) =>{
+        this.formModel.labelList.forEach((em, index) => {
           if (row.filedValue === em.filedValue) {
             this.$set(this.formModel.labelList, index, row)
           }
@@ -678,6 +678,12 @@ export default {
           e.topy += event.pageY - e.y
         }
       })
+      this.findOutPage(row, index) // 判断是否出纸张边界  如果是 则取消显示
+
+      this.dragCursor = 'move'
+      this.showDragTips = []
+    },
+    findOutPage(row, index) {
       // 判断是否出纸张边界  如果是 则取消显示
       console.log(row.leftx, row.width)
       if (Math.round(row.leftx * this.prxvalue) + row.width < 0 || Math.round(row.topy * this.prxvalue) + row.height < 0 || row.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || row.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
@@ -687,9 +693,6 @@ export default {
         // 如果被删除了，则不在左边显示其编辑栏
         this.editDragItem(row, index)
       }
-
-      this.dragCursor = 'move'
-      this.showDragTips = []
     },
     // 删除指定位置的元素
     deleteItemByIndex(row, index) {
@@ -831,7 +834,7 @@ export default {
     },
     drop(event) {
       event.preventDefault()
-      console.log( event.offsetX, event.offsetY, event)
+      console.log(event.offsetX, event.offsetY, event)
       const strName = dom.getAttribute('data-fileName')
       if (!this.isMove) {
         this.orgLabelList.filter(e => {
@@ -886,11 +889,11 @@ export default {
                 type: el.type
               }
               // type
-               // 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
+              // 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
               if (obj.filedValue === 'horizontalLine' || obj.filedValue === 'verticalLine') { // 排除横线竖线
-               console.log(obj.filedName)
-              }else {
-              this.commonLabelList.push(obj)
+                console.log(obj.filedName)
+              } else {
+                this.commonLabelList.push(obj)
               }
             })
             this.sortLabel(this.commonLabelList, 'filedName')
@@ -915,109 +918,113 @@ export default {
       let cargoShow3 = false
       getSettingCompanyLi().then(data => {
           // if (data) {
-            let array = Object.assign([], data || [])
-            let commonArr = [] // 相同字段
-            let expandArr = [] // 差异字段
-            let labelList = objectMerge2([], this.commonLabelList)
-            // 匹配当前公司打印设置字段和系统所有字段
-            array.forEach(e => {
-              labelList.forEach((el, index) => {
-                if (el.filedValue === e.filedValue) {
-                  if (!e.isshow && el.filedValue !== 'setting') {
-                    e.width = this.defaultLabelWidth
-                    e.height = this.defaultLabelHeight
+          let array = Object.assign([], data || [])
+          let commonArr = [] // 相同字段
+          let expandArr = [] // 差异字段
+          let labelList = objectMerge2([], this.commonLabelList)
+          // 匹配当前公司打印设置字段和系统所有字段
+          array.forEach(e => {
+            labelList.forEach((el, index) => {
+              if (el.filedValue === e.filedValue) {
+                if (!e.isshow && el.filedValue !== 'setting') {
+                  e.width = this.defaultLabelWidth
+                  e.height = this.defaultLabelHeight
+                }
+                if (el.filedValue === 'setting') {
+                  console.log('纸张设置', this.formModel.labelList[index], e)
+                  this.$set(this.formModel.labelList, index, e)
+                  this.formModel.labelList[index] = e
+                }
+                this.$set(e, 'type', el.type) // 给旧数据设置类型
+                if (e.type === 4) {
+                  if (e.filedName.slice(-1) === '2') {
+                    cargoShow2 = true
+                    this.cargoNum = 2
                   }
-                  if (el.filedValue === 'setting') {
-                    console.log('纸张设置', this.formModel.labelList[index], e)
-                    this.$set(this.formModel.labelList, index, e)
-                    this.formModel.labelList[index] = e
+                  if (e.filedName.slice(-1) === '3') {
+                    cargoShow3 = true
+                    this.cargoNum = 3
                   }
-                  this.$set(e, 'type', el.type) // 给旧数据设置类型
-                  if (e.type === 4) {
-                    if (e.filedName.slice(-1) === '2') {
-                      cargoShow2 = true
-                      this.cargoNum = 2
+                }
+                labelList.splice(index, 1)
+                commonArr.push(e)
+              }
+            })
+          })
+          console.log('相同字段', commonArr.length, commonArr)
+          console.log('差异字段', labelList.length, labelList)
+          this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
+          // 匹配完所有字段 初始化显示
+          this.formModel.labelList.forEach((e, index) => {
+            e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
+            e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
+            if (e.filedValue === 'setting') { // 设置纸张
+              const obj = Object.assign({}, e)
+              if (!data) { // 新公司默认展示纸张大小
+                obj.width = this.defaultPaperWidth
+                obj.height = this.defaultPaperHeight
+              }
+              obj.leftx = Math.round(obj.leftx * this.prxvalue)
+              obj.topy = Math.round(obj.topy * this.prxvalue)
+              this.formModel.paper = obj
+            } else { // 设置其他字段
+              array.forEach(em => { // 重复字段处理
+                if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
+                  if (em.isshow) {
+                    em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
+                    em.height = Math.round((em.height ? em.height : this.defaultLabelHeight) * this.prxvalue)
+                    // em.leftx = Math.round((em.leftx ? em.leftx : 0) * this.prxvalue)
+                    // em.topy = Math.round((em.topy ? em.topy : 0) * this.prxvalue)
+                    // 单位是pt，缺省值是9，可以含小数，如13.5
+                    em.fontsize = em.fontsize ? em.fontsize : 10
+                    em.isshow = em.isshow === 1 // 1-true 显示
+                    // 1代表粗体，0代表非粗体，缺省值是0
+                    em.bold = em.bold === 2 // 2-true 加粗
+                    em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+                    /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
+                    em._index = ++this.labelIndex
+                    this.labelListView.push(em)
+                  } else {
+                    if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
+                      this.imageUrl = em.filedName.split(',')[1]
                     }
-                    if (e.filedName.slice(-1) === '3') {
-                      cargoShow3 = true
-                      this.cargoNum = 3
-                    }
                   }
-                  labelList.splice(index, 1)
-                  commonArr.push(e)
                 }
               })
-            })
-            console.log('相同字段', commonArr.length, commonArr)
-            console.log('差异字段', labelList.length, labelList)
-            this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
-            // 匹配完所有字段 初始化显示
-            this.formModel.labelList.forEach((e, index) => {
-              e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
-              e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
-              if (e.filedValue === 'setting') { // 设置纸张
-                const obj = Object.assign({}, e)
-                obj.leftx = Math.round(obj.leftx * this.prxvalue)
-                obj.topy = Math.round(obj.topy * this.prxvalue)
-                this.formModel.paper = obj
-              } else { // 设置其他字段
-                array.forEach(em => { // 重复字段处理
-                  if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
-                    if (em.isshow) {
-                      em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
-                      em.height = Math.round((em.height ? em.height : this.defaultLabelHeight) * this.prxvalue)
-                      // em.leftx = Math.round((em.leftx ? em.leftx : 0) * this.prxvalue)
-                      // em.topy = Math.round((em.topy ? em.topy : 0) * this.prxvalue)
-                      // 单位是pt，缺省值是9，可以含小数，如13.5
-                      em.fontsize = em.fontsize ? em.fontsize : 10
-                      em.isshow = em.isshow === 1 // 1-true 显示
-                      // 1代表粗体，0代表非粗体，缺省值是0
-                      em.bold = em.bold === 2 // 2-true 加粗
-                      em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
-                      /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
-                      em._index = ++this.labelIndex
-                      this.labelListView.push(em)
-                    } else {
-                      if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
-                        this.imageUrl = em.filedName.split(',')[1]
-                      }
-                    }
-                  }
-                })
-                // 单位是pt，缺省值是9，可以含小数，如13.5
-                e.fontsize = e.fontsize ? e.fontsize : 10
-                e.isshow = e.isshow === 1 // 1-true 显示
-                // 1代表粗体，0代表非粗体，缺省值是0
-                e.bold = e.bold === 2 // 2-true 加粗
-                e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
-              }
-              if (e.type === 4) { // 货物主要信息
-                e.showCargo = false
-                switch (e.filedName.slice(-1)) {
-                  case '2':
-                    if (cargoShow2) {
-                      e.showCargo = true
-                    }
-                    this.cargoLabelList[1].push(e)
-                    break
-                  case '3':
-                    if (cargoShow3) {
-                      e.showCargo = true
-                    }
-                    this.cargoLabelList[2].push(e)
-                    break
-                  default:
+              // 单位是pt，缺省值是9，可以含小数，如13.5
+              e.fontsize = e.fontsize ? e.fontsize : 10
+              e.isshow = e.isshow === 1 // 1-true 显示
+              // 1代表粗体，0代表非粗体，缺省值是0
+              e.bold = e.bold === 2 // 2-true 加粗
+              e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+            }
+            if (e.type === 4) { // 货物主要信息
+              e.showCargo = false
+              switch (e.filedName.slice(-1)) {
+                case '2':
+                  if (cargoShow2) {
                     e.showCargo = true
-                    this.cargoLabelList[0].push(e)
-                    break
-                }
+                  }
+                  this.cargoLabelList[1].push(e)
+                  break
+                case '3':
+                  if (cargoShow3) {
+                    e.showCargo = true
+                  }
+                  this.cargoLabelList[2].push(e)
+                  break
+                default:
+                  e.showCargo = true
+                  this.cargoLabelList[0].push(e)
+                  break
               }
-              if (e.type === 6) { // 设置模板名称
-                this.modelNameSelf = e.filedName
-              }
-            })
-            this.orgLabelList = objectMerge2([], this.formModel.labelList)
-            console.log('相同+差异', this.formModel.labelList)
+            }
+            if (e.type === 6) { // 设置模板名称
+              this.modelNameSelf = e.filedName
+            }
+          })
+          this.orgLabelList = objectMerge2([], this.formModel.labelList)
+          console.log('相同+差异', this.formModel.labelList)
           // }
           this.loading = false
         })
@@ -1144,11 +1151,17 @@ export default {
           if (this.imageUrl) {
             arr.push(bgImg)
           }
-          arr.forEach(e => {
+          arr.forEach((e, index) => {
             if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
               this.$message({ type: 'warning', message: '不能为空' })
               return false
             } else {
+              if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
+                if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+                  arr.splice(index)
+                }
+              }
+
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0
@@ -1157,13 +1170,10 @@ export default {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
-              } else {
-                // e.leftx = Math.round(e.leftx / this.prxvalue)
-                // e.topy = Math.round(e.topy / this.prxvalue)
               }
             }
           })
-          console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
+          console.log(' 提交的时候 arr', arr)
           putSettingCompanyLi(arr).then(data => {
               this.loading = false
               this.$message({ type: 'success', message: '标签打印设置成功！' })

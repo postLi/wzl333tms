@@ -249,7 +249,7 @@ export default {
       },
       {
         label: '毛利',
-        prop: 'shipTotalProfit',
+        prop: 'grossProfit',
         width: '90'
       },
       {
@@ -379,7 +379,7 @@ export default {
       },
       {
         label: '业务类型',
-        prop: 'shipBusinessType',
+        prop: 'shipBusinessTypeName',
         width: '100'
       },
       {
