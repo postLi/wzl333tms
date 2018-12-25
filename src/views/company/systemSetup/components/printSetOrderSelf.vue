@@ -935,6 +935,7 @@ export default {
       this.loading = true
       getSettingCompanyOrder().then(data => {
             let array = Object.assign([], data || [])
+
             this.cargoNum = this.$options.data().cargoNum
             let commonArr = [] // 相同字段
             let expandArr = [] // 差异字段
@@ -979,6 +980,10 @@ export default {
               e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
               if (e.filedValue === 'setting') { // 设置纸张
                 const obj = Object.assign({}, e)
+                if (!data) { // 新公司默认展示纸张大小
+                  obj.width = this.defaultPaperWidth
+                  obj.height = this.defaultPaperHeight
+                }
                 obj.leftx = Math.round(obj.leftx * this.prxvalue)
                 obj.topy = Math.round(obj.topy * this.prxvalue)
                 this.formModel.paper = obj

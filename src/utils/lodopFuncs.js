@@ -497,7 +497,7 @@
    obj.fromCity = addrFormCityArr[2] || addrFormCityArr[1] || addrFormCityArr[0] || '' // 发站
    obj.toCity = addrToCityArr[2] || addrToCityArr[1] || addrToCityArr[0] || '' // 到站
    obj.deliveryMethod = infoDetail.shipDeliveryMethodName // 交接方式
-   obj.clerk = infoDetail.userName || user.username // 业务员
+   obj.clerk = infoDetail.userName || user.name || user.username // 业务员
 
    if (type === 'lib') {
      console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
@@ -621,8 +621,8 @@
          }
        }
      })
-     obj.createrName = infoDetail.createUserName || user.username // 开单员
-     obj.userName = infoDetail.createUserName || user.username // 制单员
+     obj.createrName = infoDetail.createUserName || user.name || user.username // 开单员
+     obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号

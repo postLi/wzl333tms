@@ -438,6 +438,7 @@ export default {
       this.submitLoadNew = {}
       this.$nextTick(() => {
         this.submitLoadNew = obj
+        console.log('getSubmitLoadNew::::::::::::::::', this.submitLoadNew, obj)
       })
     },
     getSchemeIndex(num) { // 获取当前方案下标index

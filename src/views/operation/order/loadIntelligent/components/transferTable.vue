@@ -282,10 +282,9 @@ export default {
       },
       deep: true
     },
-    submitLoadNew: {
+    submitLoadNew: { // 计算配载后拿到的数据
       handler(cval, oval) {
         if (cval && cval.right) {
-          console.log('jsdifjisdjfisjdifjsifjiwjeifjsdijf', cval, oval)
           // this.orgLeftTable[this.truckIndex] = Object.assign([], cval)
           let arr = []
           this.orgLeftTable = Object.assign([], cval.left)
@@ -293,6 +292,7 @@ export default {
             arr.push(e.tmsOrderLoadDetailsList)
           })
           this.orgRightTable = Object.assign([], arr)
+          console.log('jsdifjisdjfisjdifjsifjiwjeifjsdijf', this.orgLeftTable, this.orgRightTable)
           // this.initTable()
         }
       }
@@ -437,15 +437,22 @@ export default {
           })
         }
       })
+      if (this.orgLeftTable.length) {
+        this.leftTable = objectMerge2([], this.orgLeftTable)
+      }
       if (arr.length) {
+        console.log('#$%#$%#$1 initTable 1', arr.length)
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
+          console.log('#$%#$%#$1 initTable 2', this.leftTable)
           this.leftTable = this.leftTable.filter(em => {
-            return em.repertoryId != e.repertoryId
+            return em.repertoryId !== e.repertoryId
           })
           this.orgLeftTable = Object.assign([], this.leftTable)
+          console.log('#$%#$%#$1 initTable 3', this.orgLeftTable )
         })
       } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
+        console.log('#$%#$%#$1 initTable 4',  this.leftTable )
       }
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽
