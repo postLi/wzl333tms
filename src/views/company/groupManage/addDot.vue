@@ -62,9 +62,20 @@
                          :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
                          :remote="true" clearable/>
           </el-form-item>
-          <el-form-item label="详细地址" :label-width="formLabelWidth">
+          <div class="rem-add-dot">
+            <el-form-item label="详细地址" :label-width="formLabelWidth" prop="">
+              <el-input
+                type="textarea"
+                :rows="2"
+                 :disabled="form.status===31" :maxlength="50"
+                placeholder="不可超300字"
+                v-model="form.detailedAddr"
+                auto-complete="off" ></el-input>
+            </el-form-item>
+          </div>
+          <!-- <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" :maxlength="50"></el-input>
-          </el-form-item>
+          </el-form-item> -->
 
           <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
@@ -187,14 +198,12 @@
             <p> 密码：123456</p>
           </div>
           <el-form-item v-if="form.accountStatus  && !isModify" :label-width="formLabelWidth" prop="accountName">
-
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
               <el-input v-model.trim="form.accountName" auto-complete="off" @focus="tooltip = true"
-                        @blur="tooltip = false" style="width: 310px;"></el-input>
+                        @blur="tooltip = false" style="width: 307px;"></el-input>
             </el-tooltip>
-
             <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
           </el-form-item>
 

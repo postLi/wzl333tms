@@ -604,6 +604,7 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
             return false
           }
           var deleteItem = this.selected.filter(el => el.shipStatus === 59)
@@ -657,6 +658,8 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
+            return false
           }
               // shipStatus 59 已入库
           var cancelItem = this.selected.filter(el => el.shipStatus === 59)

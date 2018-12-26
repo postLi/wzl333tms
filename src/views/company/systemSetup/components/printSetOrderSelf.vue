@@ -186,7 +186,7 @@
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
           fontWeight: item.bold ? 800 : 400,
-          textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, item.index,$event)">
+          textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">
             {{'(x :'+Math.round(item.leftx*prxvalue) +' mm, y :'+ Math.round(item.topy*prxvalue) + ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}}
             <!-- {{'(x :'+Math.round(item.leftx) +' mm, y :'+ Math.round(item.topy)+ ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}} -->

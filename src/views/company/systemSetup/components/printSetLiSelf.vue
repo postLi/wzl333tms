@@ -599,7 +599,7 @@ export default {
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
       this.dragDetailInfo = Object.assign({}, row)
-      console.log('编辑显示项', this.dragDetailInfo)
+      console.log('编辑显示项:', this.dragDetailInfo, index)
       this.classItem = []
       this.showDragTips = []
       if (this.classItem[index] && event && this.isHiddenDragDetail) {

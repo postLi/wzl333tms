@@ -4,7 +4,8 @@
       <el-form-item label="运单号" >
         <el-input
             v-model="searchForm.shipSn"
-            maxlength="15"
+            maxlength="30"
+            @keyup.native="validates('shipSn')"
             clearable>
         </el-input>
       </el-form-item>
@@ -30,7 +31,8 @@
       <el-form-item label="货号" >
         <el-input
             v-model="searchForm.shipGoodsSn"
-            maxlength="15"
+             @keyup.native="validates('shipGoodsSn')"
+            maxlength="30"
             clearable>
         </el-input>
       </el-form-item>
@@ -72,7 +74,7 @@
       <el-form-item label="到站" >
         <el-input
             v-model="searchForm.shipToCityName"
-            maxlength="15"
+            maxlength="30"
             clearable>
         </el-input>
       </el-form-item>
@@ -90,7 +92,7 @@
 <script>
 import { pickerOptions2, parseTime, objectMerge2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
-
+import { REGEX } from '@/utils/validate'
 export default {
   name: 'order-manage-pop-search',
   components: {
@@ -163,6 +165,7 @@ export default {
       // 传到子组件
     searchForm: {
       handler(cval, oval) {
+       
         console.log('searchForm:', this.searchObjs, cval, oval)
         this.searchObjs = Object.assign({}, cval)
         this.searchObjs.shipFromOrgid = this.searchForm.orgid
@@ -184,11 +187,15 @@ export default {
     }
   },
   methods: {
+    
     setSearch() {
       this.clearForm()
       const key = this.query.key
       const value = this.query.value
       this.searchForm[key] = value
+    },
+    validates (key) {
+       this.$set(this.searchForm, key,  this.searchForm[key].replace(/[\W]/g,''))
     },
     onSubmit() {
       const searchObj = objectMerge2({}, this.searchForm)
