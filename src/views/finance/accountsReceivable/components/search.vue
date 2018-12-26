@@ -47,6 +47,8 @@
     </el-form-item>
     <el-form-item label="运单号">
       <el-input
+          maxlength="15"
+          @keyup.native="validates('shipSn')"
           v-model="searchForm.shipSn"
           clearable>
       </el-input>
@@ -154,6 +156,9 @@ export default {
     })
   },
   methods: {
+    validates (key) {
+      this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d]/g,'')) // 只能输入数字
+    },
     getDataObj(obj) {
       this.searchCreatTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)

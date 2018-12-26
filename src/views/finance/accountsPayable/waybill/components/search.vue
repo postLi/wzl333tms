@@ -23,7 +23,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="运单号" prop="shipSn">
-        <el-input v-model="searchForm.shipSn" :maxlength="maxlength" clearable></el-input>
+        <el-input v-model="searchForm.shipSn" maxlength="15" clearable @keyup.native="validates('shipSn')"></el-input>
       </el-form-item>
       <el-form-item label="发货方" prop="senderUnit">
         <el-input v-model="searchForm.senderUnit" clearable :maxlength="maxlength"></el-input>
@@ -120,7 +120,7 @@ export default {
         // totalStatusValue: ''
       },
       rules: {
-        shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
+        // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
@@ -163,6 +163,9 @@ export default {
     this.onSubmit()
   },
   methods: {
+    validates (key) {
+      this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d]/g,'')) // 只能输入数字
+    },
     getDataObj(obj) {
       this.searchTime = [obj.startTime, obj.endTime]
       this.searchForm = Object.assign({}, obj)
