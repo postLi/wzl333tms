@@ -2913,9 +2913,11 @@ export default {
                     this.batchSaveList[this.currentBatch].issave = true
                     this.goNextEditBatch()
                   }
+                  console.log('创建的运单', data)
                   if (this.isSavePrint) {
                     this.printSave() // 执行成功后打印运单
                   }
+
                 }).catch(err => {
                   this.loading = false
                   reject(5)
