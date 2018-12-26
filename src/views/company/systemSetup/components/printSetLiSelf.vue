@@ -552,11 +552,14 @@ export default {
         return e.filedValue === row.filedValue
       }).length
       if (row.filedValue === 'customFields') { // 自定义字段的添加，点击后需要清空输入框
+        row.topy = 0
+        row.leftx = 0
         row.filedName = this.labelSelf
         setTimeout(() => {
           this.labelSelf = ''
         }, 300)
       }
+      
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
@@ -579,7 +582,9 @@ export default {
             this.$set(this.orgLabelList, index, objectMerge2({}, row))
           }
         })
+        this.editDragItem(currentRow, this.labelListView.length-1) // 这里应该改为显示区域的index = this.labelListView.length-1
       }
+
       if (row.filedValue === 'customFields' && len < this.maxLabelSelf) { // 添加自定义字段到预览区域
         fn()
       } else if (len < this.maxLabel) { // 添加普通字段到预览区域
@@ -590,7 +595,6 @@ export default {
           message: '【 ' + row.filedName + ' 】最多添加' + (row.filedValue === 'customFields' ? this.maxLabelSelf : this.maxLabel) + '次'
         })
       }
-      this.editDragItem(row, index)
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}

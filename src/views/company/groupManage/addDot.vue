@@ -166,7 +166,7 @@
           </el-form-item>
           <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+                      v-number-only> <template slot="append">元</template></el-input>
           </el-form-item>
           <el-form-item label="提现基准" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.benchmark" auto-complete="off" :disabled="form.status===31"
@@ -174,11 +174,13 @@
           </el-form-item>
           <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+                      v-number-only>
+                      <template slot="append">元</template>
+                    </el-input>
           </el-form-item>
           <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
-                      :disabled="form.status===31"></el-input>
+                      :disabled="form.status===31"> <template slot="append">元</template></el-input>
           </el-form-item>
 
           <div class="ad-add-dot" v-if="!isModify">
@@ -209,12 +211,12 @@
             </el-form-item>
           </div>
         </el-form>
-        <div class="spanDiv" v-if="companyId !== form.id">
+        <!-- <div class="spanDiv" v-if="companyId !== form.id">
           <span>元</span>
           <span>元</span>
           <span v-if="isModify" class="span-hidden">元</span>
           <span v-if="!isModify" class="span-last">元</span>
-        </div>
+        </div> -->
       </template>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm('ruleForm', true)">保存并添加</el-button>

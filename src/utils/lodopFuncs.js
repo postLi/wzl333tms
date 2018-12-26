@@ -624,6 +624,7 @@
      obj.createrName = infoDetail.createUserName || user.name || user.username // 开单员
      obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
+     obj.agencyFundTotal = parseFloat(infoDetail.agencyFundTotal) || '' // 代收款合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
