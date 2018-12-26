@@ -76,9 +76,6 @@
       ...mapGetters([
         'otherinfo'
       ]),
-      orgid() {
-
-      }
     },
     mounted() {
       this.searchQuery.vo.orgid = this.$route.query.orgid
@@ -334,7 +331,6 @@
                 })
               }
             }
-
             break
           // 取消对账
           case 'cancelCom':
@@ -401,7 +397,6 @@
                 })
               }
             }
-
             break
           // 导出数据
           case 'export':
