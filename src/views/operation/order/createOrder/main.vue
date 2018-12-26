@@ -873,10 +873,10 @@ export default {
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -966,14 +966,14 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -3000,24 +3000,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getEnableLibSetting().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.label
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-          CreatePrintPageEnable(printObj)
-          return data
-          this.setPrintData('lib') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getEnableLibSetting', data, printData)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
+        CreatePrintPageEnable(printObj)
+        return data
+        this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getEnableLibSetting', data, printData)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-        })
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3033,24 +3033,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getEnableOrderSetting().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-          CreatePrintPageEnable(printObj)
-          return
-          this.setPrintData('order') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getEnableOrderSetting', data)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
+        CreatePrintPageEnable(printObj)
+        return
+        this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getEnableOrderSetting', data)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-        })
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3170,6 +3170,14 @@ export default {
         // 运单状态
         shipinfo.shipStatusName = shipinfo.shipStatusName || '已入库'
         shipinfo.shipStatus = shipinfo.shipStatus || 59
+
+        // 将各个类型id转成数值类型
+        shipinfo.shipPayWay = parseInt(shipinfo.shipPayWay) || shipinfo.shipPayWay
+        shipinfo.shipReceiptRequire = parseInt(shipinfo.shipReceiptRequire) || shipinfo.shipReceiptRequire
+        shipinfo.shipBusinessType = parseInt(shipinfo.shipBusinessType) || shipinfo.shipBusinessType
+        shipinfo.shipShippingType = parseInt(shipinfo.shipShippingType) || shipinfo.shipShippingType
+        shipinfo.shipDeliveryMethod = parseInt(shipinfo.shipDeliveryMethod) || shipinfo.shipDeliveryMethod
+        shipinfo.shipEffective = parseInt(shipinfo.shipEffective) || shipinfo.shipEffective
 
         obj.tmsOrderShipInfo = shipinfo
         obj.tmsOrderCargoList = this.form.cargoList || [{}]
