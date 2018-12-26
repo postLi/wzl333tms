@@ -1175,16 +1175,8 @@ export default {
             arr.push(bgImg)
           }
 
-          arr.forEach(e => {
-            if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
-              this.$message({ type: 'warning', message: '不能为空' })
-              return false
-            } else {
-               if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
-                if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
-                  arr.splice(index)
-                }
-              }
+          arr = objectMerge2([], arr).filter(e => {
+            let fn = () => {
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0
@@ -1193,12 +1185,43 @@ export default {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
-              } else {
-                // e.leftx = Math.round(e.leftx / this.prxvalue)
-                // e.topy = Math.round(e.topy / this.prxvalue)
               }
             }
+
+            if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验是否出界
+              if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+                return false
+              } else {
+                fn()
+                return true
+              }
+            } else {
+              fn()
+              return true
+            }
           })
+          
+          // arr.forEach(e => {
+          //   if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
+          //     this.$message({ type: 'warning', message: '不能为空' })
+          //     return false
+          //   } else {
+          //      if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
+          //       if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+          //         arr.splice(index)
+          //       }
+          //     }
+          //     e.width = Math.round(e.width / this.prxvalue)
+          //     e.height = Math.round(e.height / this.prxvalue)
+          //     e.isshow = e.isshow ? 1 : 0
+          //     e.bold = e.bold ? 2 : 1
+          //     if (e.filedValue === 'setting') {
+          //       console.log('this.formModel.paper::', this.formModel.paper, e)
+          //       e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
+          //       e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
+          //     }
+          //   }
+          // })
           console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
           putSettingCompanyOrder(arr).then(data => {
               this.loading = false

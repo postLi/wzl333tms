@@ -5,7 +5,7 @@
 
         <!-- 本网点是父级时显示 -->
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm" :inline="true" label-position="right"
-                 size="mini" :key="formKey" v-if="companyId === form.id">
+                 size="mini" :key="formKey" v-if="companyId === form.id" >
           <el-form-item label="公司名称" :label-width="formLabelWidth" prop="orgName">
             <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 "
                       :maxlength="15"></el-input>
@@ -99,7 +99,7 @@
           </div> -->
         </el-form>
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm" :inline="true" label-position="right"
-                 size="mini"  :key="formKey" v-else>
+                 size="mini"  :key="formKey" v-else >
           <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
             <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 "
                       :maxlength="15"></el-input>
@@ -182,7 +182,6 @@
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
                       :disabled="form.status===31"> <template slot="append">元</template></el-input>
           </el-form-item>
-
           <div class="ad-add-dot" v-if="!isModify">
             <el-checkbox checked v-model="form.accountStatus">开通管理员账号</el-checkbox>
             <p> 密码：123456</p>
@@ -193,7 +192,7 @@
                         tabindex="-1">
               <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
               <el-input v-model.trim="form.accountName" auto-complete="off" @focus="tooltip = true"
-                        @blur="tooltip = false"></el-input>
+                        @blur="tooltip = false" style="width: 310px;"></el-input>
             </el-tooltip>
 
             <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
@@ -202,7 +201,6 @@
           <div class="rem-add-dot">
             <el-form-item label="备注" :label-width="formLabelWidth" prop="">
               <el-input
-
                 type="textarea"
                 :rows="2"
                 placeholder="不可超300字"
