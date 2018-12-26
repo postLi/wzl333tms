@@ -826,7 +826,11 @@ export default {
         }
       },
       // 系统设置
-      config: {},
+      config: {
+        shipPageFunc: {
+          decimalPlaces: '1'
+        }
+      },
       // 费用设置
       feeConfig: [],
       // 个人设置
@@ -954,7 +958,7 @@ export default {
     'form.tmsOrderShip.shipTotalFee': {
       handler(newVal) {
         if (newVal === '') {
-          this.form.tmsOrderShip.shipTotalFee = '0.00'
+          this.form.tmsOrderShip.shipTotalFee = this.config.shipPageFunc.decimalPlaces === '1' ? '0.00' : '0.00'
         }
         this.setShipFee('aaaaa')
       },
@@ -1235,6 +1239,7 @@ export default {
     setLastOrderInfo() {
       if (this.lastOrderInfo) {
         // this.form.tmsOrderShip.shipToCityName = this.lastOrderInfo.shipToCityName
+        this.form.tmsOrderShip.shipFromCityName = this.lastOrderInfo.shipFromCityName || this.orgInfo.city || ''
         this.form.tmsOrderShip.shipToOrgid = this.lastOrderInfo.shipToOrgid
         console.log('this.lastOrderInfo', this.lastOrderInfo)
       }
@@ -2042,7 +2047,11 @@ export default {
           }
         }
       })
-      this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
+      if (this.config.shipPageFunc.decimalPlaces === '1') {
+        this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
+      } else {
+        this.form.tmsOrderShip.shipTotalFee = Math.round(parseFloat(total, 10)).toFixed(2)
+      }
     },
     // 格式化运费输入框
     formatShipFee() {
@@ -2796,7 +2805,12 @@ export default {
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
               // 处理费用的小数点
-              data.tmsOrderShip.shipTotalFee = parseFloat(data.tmsOrderShip.shipTotalFee, 10).toFixed(2)
+              if (this.config.shipPageFunc.decimalPlaces === '1') {
+                data.tmsOrderShip.shipTotalFee = parseFloat(data.tmsOrderShip.shipTotalFee, 10).toFixed(2)
+              } else {
+                data.tmsOrderShip.shipTotalFee = parseFloat(data.tmsOrderShip.shipTotalFee, 10).toFixed(2)
+              }
+
               data.tmsOrderShip.shipNowpayFee = parseFloat(data.tmsOrderShip.shipNowpayFee, 10).toFixed(2)
               data.tmsOrderShip.shipArrivepayFee = parseFloat(data.tmsOrderShip.shipArrivepayFee, 10).toFixed(2)
               data.tmsOrderShip.shipReceiptpayFee = parseFloat(data.tmsOrderShip.shipReceiptpayFee, 10).toFixed(2)
@@ -3012,12 +3026,12 @@ export default {
         console.log('getEnableLibSetting', data, printData)
         const libData = Object.assign([], data)
         for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
         return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
       })
         .catch(err => {
@@ -3045,12 +3059,12 @@ export default {
         console.log('getEnableOrderSetting', data)
         const libData = Object.assign([], data)
         for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
         return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
       })
         .catch(err => {

@@ -72,11 +72,18 @@
         </el-input>
       </el-form-item>
       <el-form-item label="到站" >
-        <el-input
+        <el-autocomplete
+          v-model="searchForm.shipToCityName"
+          :fetch-suggestions="querySearchAsync"
+          placeholder=""
+          trigger-on-focus
+          @select="handleSelect"
+        ></el-autocomplete>
+        <!-- <el-input
             v-model="searchForm.shipToCityName"
             maxlength="30"
             clearable>
-        </el-input>
+        </el-input> -->
       </el-form-item>
       <el-form-item label="目的网点">
         <select-tree v-model="searchForm.shipToOrgid" :orgid="otherinfo.companyId" />
@@ -90,6 +97,7 @@
   </el-form>
 </template>
 <script>
+import orderManageApi from '@/api/operation/orderManage'
 import { pickerOptions2, parseTime, objectMerge2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
 import { REGEX } from '@/utils/validate'
@@ -165,7 +173,6 @@ export default {
       // 传到子组件
     searchForm: {
       handler(cval, oval) {
-       
         console.log('searchForm:', this.searchObjs, cval, oval)
         this.searchObjs = Object.assign({}, cval)
         this.searchObjs.shipFromOrgid = this.searchForm.orgid
@@ -187,15 +194,15 @@ export default {
     }
   },
   methods: {
-    
+
     setSearch() {
       this.clearForm()
       const key = this.query.key
       const value = this.query.value
       this.searchForm[key] = value
     },
-    validates (key) {
-       this.$set(this.searchForm, key,  this.searchForm[key].replace(/[\W]/g,''))
+    validates(key) {
+      this.$set(this.searchForm, key, this.searchForm[key].replace(/[\W]/g, ''))
     },
     onSubmit() {
       const searchObj = objectMerge2({}, this.searchForm)
@@ -208,6 +215,27 @@ export default {
     clearForm() {
       this.searchCreatTime = this.defaultTime
       this.searchForm = this.$options.data().searchForm
+    },
+    querySearchAsync(query, cb) {
+      orderManageApi.getLastToCities({
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'type': 5,
+          'value': query || ''
+        }
+      }).then(res => {
+        const data = res.data
+        if (data) {
+          cb(res.data.list)
+        } else {
+          cb([])
+        }
+        console.log('querySearchAsync', res)
+      })
+    },
+    handleSelect(item) {
+      console.log('handleSelect:', item)
     }
   }
 }

@@ -31,7 +31,7 @@
       </template>
     </el-autocomplete>
     <el-dialog top="0" width="1200px" modal-append-to-body append-to-body :close-on-click-modal="false" class="showSearchPop" v-if="showSearch" title="多条件查询" :visible.sync="showSearchVisible">
-        <SearchOrder v-if="showSearch" :query="query" :orderid="orderid" />
+        <SearchOrder v-if="showSearch" :query="query"  />
     </el-dialog>
   </div>
 </template>
@@ -225,6 +225,9 @@ export default {
       padding-right: 0;
       .el-form-item{
         margin-right: 20px;
+      }
+      .el-autocomplete input{
+        padding-right: 30px;
       }
     }
     .staff_searchinfo--input{
