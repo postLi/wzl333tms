@@ -79,11 +79,6 @@
           trigger-on-focus
           @select="handleSelect"
         ></el-autocomplete>
-        <!-- <el-input
-            v-model="searchForm.shipToCityName"
-            maxlength="30"
-            clearable>
-        </el-input> -->
       </el-form-item>
       <el-form-item label="目的网点">
         <select-tree v-model="searchForm.shipToOrgid" :orgid="otherinfo.companyId" />
