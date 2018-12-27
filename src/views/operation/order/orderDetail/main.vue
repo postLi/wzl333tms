@@ -595,7 +595,7 @@ import orderManage from '@/api/operation/orderManage'
 import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 获取打印位置参数接口
 // import { getPrintOrderItems, getPrintLibItems } from '@/api/operation/print'
-import { getEnableLibSetting, getEnableOrderSetting, getSettingCompanyLi, getSettingCompanyOrder } from '@/api/operation/print'
+import { getSettingCompanyLi, getSettingCompanyOrder } from '@/api/operation/print'
 // 阿拉伯数字转中文大写
 import { smalltoBIG } from '@/filters/'
 import { tmsMath, parseTime } from '@/utils/'
@@ -1092,7 +1092,7 @@ export default {
           // console.log('系统所有打印可设置的数据 标签::', JSON.stringify(data))
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.label
-          return getEnableLibSetting().then(data => {
+          return getSettingCompanyLi().then(data => {
               printObj.printSetup = data
               printObj.type = 'lib'
               printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 0
@@ -1125,7 +1125,7 @@ export default {
           // console.log('系统所有打印可设置的数据 运单::', data)
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.ship
-          return getEnableOrderSetting().then(data => {
+          return getSettingCompanyOrder().then(data => {
               printObj.printSetup = data
               printObj.type = 'order'
               CreatePrintPageEnable(printObj)
