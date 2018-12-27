@@ -775,17 +775,31 @@ export default {
       // 打印数据
       printDataObject: {},
       // 付款方式
-      PAY_WAY: {}
+      PAY_WAY: {},
+      initStartPrint: true
     }
   },
   watch: {
-    orderdata(newVal) {
-      console.log('watch orderdata:', newVal)
-      if (newVal) {
-        this.initIndex()
+    orderdata: {
+      handler(cval, oval) {
+        console.log('watch orderdata:', cval)
+        if (cval) {
+          console.log('shipSn', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+          this.eventBus.$on('startPrint', () => {
+            console.log('startPrint', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+            if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
+              if (this.initStartPrint) {
+                this.initStartPrint = false
+                this.startPrint()
+              }
+            }
+          })
+          this.initIndex()
+        }
+        this.initStartPrint = cval !== oval ? true : false
       }
     },
-    'form.shipFeeStatusDto.shipReceivableFeeStatus'(newVal) {
+    'form.shipFeeStatusDto.shipReceivableFeeStatus' (newVal) {
       switch (newVal) {
         case 'NOSETTLEMENT':
           this.shipStatus = 'ship-yunfeiweijie'
@@ -801,7 +815,7 @@ export default {
           break
       }
     },
-    'form.tmsOrderShipInfo.backStatus'(newVal) {
+    'form.tmsOrderShipInfo.backStatus' (newVal) {
       // 241 已接收未发放
       if (newVal === 242) {
         // shipReceiptNum
@@ -818,7 +832,7 @@ export default {
         }
       }
     },
-    'form.tmsOrderShipInfo.fundsGoodsStatus'(newVal) {
+    'form.tmsOrderShipInfo.fundsGoodsStatus' (newVal) {
       // 268 已到账未发放
       if (newVal === 269) {
         this.shipHuokuanStatus = 'ship-huokuanyifafang'
@@ -843,6 +857,7 @@ export default {
     }
   },
   activated() {
+
     // if (window.TMS_printOrderInfo) {
     //   const fn = () => {
     //     if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
@@ -859,15 +874,17 @@ export default {
     // }
   },
   mounted() {
-    this.eventBus.$on('startPrint', () => {
-      this.startPrint()
-    })
+
     this.loading = true
     this.initIndex()
+
+
   },
   methods: {
     startPrint() {
-      if (window.TMS_printOrderInfo) {
+      console.log('startPrint  111', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+      if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
+        console.log('startPrint 222', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
         const fn = () => {
           if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
             this.doAction('printLibkey').then(r => {
@@ -878,6 +895,7 @@ export default {
           } else {
             window.TMS_printOrderInfo = false
           }
+          console.log('startPrint 333', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
         }
         this.doAction('printShipKey').then(fn).catch(fn)
       }
@@ -1049,6 +1067,7 @@ export default {
     //   }
     // },
     doAction(type) {
+      console.log('doAction', type, this.orderdata, this.form)
       const printObj = {
         orderdata: {
           tmsOrderShipInfo: this.orderdata.tmsOrderShipInfo,
@@ -1074,28 +1093,28 @@ export default {
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.label
           return getEnableLibSetting().then(data => {
-            printObj.printSetup = data
-            printObj.type = 'lib'
-            printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 0
-            CreatePrintPageEnable(printObj)
-            return data
+              printObj.printSetup = data
+              printObj.type = 'lib'
+              printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 0
+              CreatePrintPageEnable(printObj)
+              return data
               // console.log('打印设置标签 libData::', JSON.stringify(libData))
-            this.setPrintData('lib') // 设置数据
-            const libData = Object.assign([], data)
-            for (const item in this.printDataObject) {
-              libData.forEach((e, index) => {
-                if (e.filedValue === item) {
-                  e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-                }
-              })
-            }
-            console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
-            if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
-              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
-            } else {
-              return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, false, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
-            }
-          })
+              this.setPrintData('lib') // 设置数据
+              const libData = Object.assign([], data)
+              for (const item in this.printDataObject) {
+                libData.forEach((e, index) => {
+                  if (e.filedValue === item) {
+                    e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+                  }
+                })
+              }
+              console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
+              if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
+                return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, true, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
+              } else {
+                return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, false, this.orderdata.tmsOrderShipInfo.shipPrintLib) // 调打印接口
+              }
+            })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
@@ -1107,27 +1126,27 @@ export default {
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.ship
           return getEnableOrderSetting().then(data => {
-            printObj.printSetup = data
-            printObj.type = 'order'
-            CreatePrintPageEnable(printObj)
-            return data
-            this.setPrintData('order') // 设置数据
-            const libData = Object.assign([], data)
+              printObj.printSetup = data
+              printObj.type = 'order'
+              CreatePrintPageEnable(printObj)
+              return data
+              this.setPrintData('order') // 设置数据
+              const libData = Object.assign([], data)
               // console.log('打印设置运单 libData::', libData)
-            for (const item in this.printDataObject) {
-              libData.forEach((e, index) => {
-                if (e.filedValue === item) {
-                  e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
-                }
-              })
-            }
-            console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
-            if (window.TMS_printOrderInfo) { // 不需要预览的打印
-              return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, true)
-            } else {
-              return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
-            }
-          })
+              for (const item in this.printDataObject) {
+                libData.forEach((e, index) => {
+                  if (e.filedValue === item) {
+                    e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
+                  }
+                })
+              }
+              console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
+              if (window.TMS_printOrderInfo) { // 不需要预览的打印
+                return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, true)
+              } else {
+                return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship)
+              }
+            })
             .catch(err => {
               this._handlerCatchMsg(err)
             })

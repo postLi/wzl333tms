@@ -28,7 +28,8 @@ export default {
         shipSn: ''
       },
       btnsize: 'mini',
-      selectVal: 'shipSn'
+      selectVal: 'shipSn',
+      resultList: []
     }
   },
   props: {
@@ -58,7 +59,9 @@ export default {
       results.forEach(e => {
         array.push(e)
       })
+      this.resultList = Object.assign([], array)
       this.$emit('change', array)
+
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
@@ -76,8 +79,10 @@ export default {
       this.searchForm = this.$options.data().searchForm
     },
     handleSelectAll() {
+      if (this.searchForm.shipSn && this.resultList.length) {
       this.$emit('keyupEneter')
       this.searchForm = this.$options.data().searchForm
+      }
     }
   }
 }
