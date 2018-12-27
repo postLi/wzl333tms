@@ -187,7 +187,6 @@
   partA.innerHTML = data.orgName
   contract_companyname.innerHTML = data.orgName
   partB.innerHTML = data.carrier
-  console.error(data)
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
     '<li><label>家庭住址</label><span></span></li>' +
@@ -220,7 +219,6 @@
   contract_time.innerHTML = contractTimeStr
   // 车辆备注
   remark.innerHTML = data.remark ? data.remark : ''
-  console.log('data', data)
 
 </script>
 </body>
