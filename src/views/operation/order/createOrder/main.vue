@@ -470,7 +470,7 @@ import { getSystemTime } from '@/api/common'
 import { getAllSetting } from '@/api/company/systemSetup'
 import orderManage from '@/api/operation/orderManage'
 import * as preOrderManage from '@/api/operation/manage'
-import { getPrintOrderItems, getEnableLibSetting, getEnableOrderSetting } from '@/api/operation/print'
+import { getPrintOrderItems, getSettingCompanyLi, getSettingCompanyOrder } from '@/api/operation/print'
 import { getOrgId } from '@/api/company/groupManage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
@@ -3014,7 +3014,7 @@ export default {
         type: 'lib',
         preview: !this.isPrintWithNoPreview
       }
-      return getEnableLibSetting().then(data => {
+      return getSettingCompanyLi().then(data => {
         printObj.printSetup = data
         printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
@@ -3022,7 +3022,7 @@ export default {
         return data
         this.setPrintData('lib') // 设置数据
         const printData = objectMerge2({}, this.printDataObject)
-        console.log('getEnableLibSetting', data, printData)
+        console.log('getSettingCompanyLi', data, printData)
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
@@ -3047,7 +3047,7 @@ export default {
         type: 'order',
         preview: !this.isPrintWithNoPreview
       }
-      return getEnableOrderSetting().then(data => {
+      return getSettingCompanyOrder().then(data => {
         printObj.printSetup = data
         printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
@@ -3055,7 +3055,7 @@ export default {
         return
         this.setPrintData('order') // 设置数据
         const printData = objectMerge2({}, this.printDataObject)
-        console.log('getEnableOrderSetting', data)
+        console.log('getSettingCompanyOrder', data)
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
