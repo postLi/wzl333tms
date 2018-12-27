@@ -148,7 +148,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -471,7 +471,7 @@
    for (const item in cargoOne) {
      if (item !== 'id' && item !== 'orgid' && item !== 'createTime') {
        for (let i = 0; i < cargoLen; i++) {
-         let itemDetail = item + (i > 0 ? i + 1 : '')
+         const itemDetail = item + (i > 0 ? i + 1 : '')
          infoDetail[itemDetail] = cargoList[i][item]
        }
      }
@@ -517,8 +517,8 @@
      obj.fromOrgName = infoDetail.fromOrgName // 开单网点
      obj.description = infoDetail.description // 品种规格
    } else if (type === 'order') {
-     let objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
-     let objCargo = [{ // 货号
+     const objCargoNotNum = ['goodsSn', 'cargoName', 'cargoPack', 'cargoAmount', 'cargoWeight', 'cargoVolume', 'fromOrgName', 'description']
+     const objCargo = [{ // 货号
        cargo: 'goodsSn', // 数据库label名称
        info: 'shipGoodsSn' // 数据lable名称
      }, { // 货品名
@@ -614,8 +614,8 @@
      }]
      objCargo.forEach((item, index) => {
        for (let i = 0; i < cargoLen; i++) {
-         let itemCargo = item.cargo + (i > 0 ? i + 1 : '')
-         let itemInfo = item.info + (i > 0 ? i + 1 : '')
+         const itemCargo = item.cargo + (i > 0 ? i + 1 : '')
+         const itemInfo = item.info + (i > 0 ? i + 1 : '')
          obj[itemCargo] = (objCargoNotNum.indexOf(item.cargo) !== -1) ? infoDetail[itemInfo] : (parseFloat(infoDetail[itemInfo]) || '')
          if (/(Amount|Volume|Weight|cargoPack|description)/.test(item.cargo) !== -1) { // 件数、重量、体积、包装、品种规格为0的时候不显示0
            obj[itemCargo] = obj[itemCargo] ? obj[itemCargo] === '0' ? '' : obj[itemCargo] : ''
@@ -688,9 +688,9 @@
          obj.receiptPayFee = parseFloat(infoDetail.shipReceiptpayFee) || ''
          break
      }
-     ////////////////////////////////////////////////////////
-     ///回单要求
-     ///
+     // //////////////////////////////////////////////////////
+     // /回单要求
+     // /
      switch (Number(infoDetail.shipReceiptRequire)) {
        case 81: // 签回单
          obj.receiptSign = infoDetail.shipReceiptRequire ? '√' : ''
@@ -714,9 +714,9 @@
          obj.receiptFax = infoDetail.shipReceiptRequire ? '√' : ''
          break
      }
-     ///////////////////////////////////////////////////////////
-     ///业务类型
-     ///
+     // /////////////////////////////////////////////////////////
+     // /业务类型
+     // /
      switch (Number(infoDetail.shipBusinessType)) {
        case 91: // 整车
          obj.carLoad = infoDetail.shipBusinessType ? '√' : ''
@@ -728,9 +728,9 @@
          obj.specialLine = infoDetail.shipBusinessType ? '√' : ''
          break
      }
-     //////////////////////////////////////////////////////////
-     /// 运输方式
-     ///
+     // ////////////////////////////////////////////////////////
+     // / 运输方式
+     // /
      switch (Number(infoDetail.shipShippingType)) {
        case 87: // 普通汽运
          obj.shipTrucks = infoDetail.shipShippingType ? '√' : ''
@@ -884,7 +884,7 @@
          } else {
            title = '托运单打印'
          }
-         if (e.filedValue !== 'setting') {
+         if (e.filedValue !== 'setting' && Number(e.isshow) === 1) {
            if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
              // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
              // str += 'LODOP.SET_PRINT_STYLEA(0,"FontSize",' + e.fontsize + ');'
@@ -1343,7 +1343,7 @@
 
    // 处理序号问题
    // 简单排序
-   // page: 
+   // page:
    // {
    // currentPage: 1, //当前页码
    // pageSize: 100 // 显示条数
