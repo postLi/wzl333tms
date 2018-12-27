@@ -20,7 +20,7 @@
           <el-option label="货物名称" value="cargoName"></el-option>
           <el-option label="货号" value="shipGoodsSn"></el-option>
         </el-select>
-        <el-input v-model="searchForm.value" maxlength="15" @change="onSubmit" clearable>
+        <el-input v-model="searchForm.value" maxlength="15" @keyup.enter.native="onSubmit" clearable>
         </el-input>
       </el-form-item>
       <el-form-item label="运单状态">

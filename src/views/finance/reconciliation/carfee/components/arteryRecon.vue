@@ -1021,7 +1021,6 @@
             sums[index] = ''
           }
         })
-
         return sums
       },
       iconDelete(index) {
@@ -1030,7 +1029,6 @@
         })
         this.delCont()
       },
-      //
       iconDeleteAl(index) {
         this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
           return inx !== index
@@ -1106,7 +1104,6 @@
       },
       getDbClick(row, event) {
       }
-
     },
     getSelection(selection) {
       this.selected = selection

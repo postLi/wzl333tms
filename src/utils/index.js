@@ -369,7 +369,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
@@ -1022,7 +1022,7 @@ function setCacheDEVInfo(data, pfix) {
 
 export function handleErrorMsg(err, premsg = '') {
   console.error('catch error:', err)
-  const vmsg = '未知错误，请重试~'
+  const vmsg = '出现错误，请重试~'
   const msg = (err.errorInfo || err.text || vmsg)
   Message.error(premsg + msg)
 

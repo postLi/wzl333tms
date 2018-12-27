@@ -64,18 +64,18 @@ export default {
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
+      
       let results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
       cb(results)
       let array = []
       results.forEach(e => {
         array.push(e)
       })
-      this.resultList = Object.assign({}, array)
+      this.resultList = Object.assign([], array)
       this.$emit('change', array)
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        console.log('sdfjisjdfisjdifjsdifjsidfjisdj')
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
@@ -90,8 +90,12 @@ export default {
       this.searchForm = this.$options.data().searchForm
     },
     handleSelectAll () {
-      this.$emit('keyupEneter')
-      this.searchForm = this.$options.data().searchForm
+      if (this.searchForm.shipSn || this.searchForm.shipToCityName) {
+        if (this.resultList.length) {
+        this.$emit('keyupEneter')
+        this.searchForm = this.$options.data().searchForm
+        }
+      }
     }
   }
 }

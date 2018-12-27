@@ -571,10 +571,13 @@ export default {
       }
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
+      console.log('skdofkwoefkosd  row::::', row)
       let len = this.labelListView.filter(e => {
         return e.filedValue === row.filedValue
       }).length
       if (row.filedValue === 'customFields') { // 自定义字段的添加，点击后需要清空输入框
+        row.topy = 0
+        row.leftx = 0
         row.filedName = this.labelSelf
         setTimeout(() => {
           this.labelSelf = ''
@@ -583,9 +586,9 @@ export default {
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
-        this.formModel.labelList.forEach((em, index) =>{
+        this.formModel.labelList.forEach((em, eindex) =>{
           if (row.filedValue === em.filedValue) {
-            this.$set(this.formModel.labelList, index, row)
+            this.$set(this.formModel.labelList, eindex, row)
           }
         })
         console.log('row::::', row)
@@ -597,11 +600,12 @@ export default {
         currentRow.bold = 0
         currentRow.alignment = 1
         this.labelListView.push(objectMerge2({}, currentRow))
-        this.orgLabelList.forEach((e, index) => {
+        this.orgLabelList.forEach((e, eindex) => {
           if (e.filedValue === row.filedValue) {
-            this.$set(this.orgLabelList, index, objectMerge2({}, row))
+            this.$set(this.orgLabelList, eindex, objectMerge2({}, row))
           }
         })
+         this.editDragItem(currentRow, this.labelListView.length-1) // 这里应该改为显示区域的index = this.labelListView.length-1
       }
       if (row.filedValue === 'customFields' && len < this.maxLabelSelf) { // 添加自定义字段到预览区域
         fn()
@@ -613,12 +617,12 @@ export default {
           message: '【 ' + row.filedName + ' 】最多添加' + (row.filedValue === 'customFields' ? this.maxLabelSelf : this.maxLabel) + '次'
         })
       }
-      this.editDragItem(row, index)
+     
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
       this.dragDetailInfo = Object.assign({}, row)
-      console.log('编辑显示项', this.dragDetailInfo)
+      console.log('编辑显示项', this.dragDetailInfo, row, index, event)
       this.classItem = []
       this.showDragTips = []
       if (this.classItem[index] && event && this.isHiddenDragDetail) {
@@ -856,10 +860,8 @@ export default {
       event.preventDefault()
       const strName = dom.getAttribute('data-fileName')
       if (!this.isMove) {
-        console.log('jiwjeifjsdijfiwejfisjdifjwiejf')
         this.orgLabelList.filter(e => {
           if (e.filedValue === strName && !this.isDragView) {
-            console.log('23478238493489529438349')
             e.leftx = event.offsetX
             e.topy = event.offsetY
             // e.isshow = true
@@ -1173,16 +1175,8 @@ export default {
             arr.push(bgImg)
           }
 
-          arr.forEach(e => {
-            if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
-              this.$message({ type: 'warning', message: '不能为空' })
-              return false
-            } else {
-               if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
-                if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
-                  arr.splice(index)
-                }
-              }
+          arr = objectMerge2([], arr).filter(e => {
+            let fn = () => {
               e.width = Math.round(e.width / this.prxvalue)
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0
@@ -1191,12 +1185,43 @@ export default {
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
-              } else {
-                // e.leftx = Math.round(e.leftx / this.prxvalue)
-                // e.topy = Math.round(e.topy / this.prxvalue)
               }
             }
+
+            if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验是否出界
+              if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+                return false
+              } else {
+                fn()
+                return true
+              }
+            } else {
+              fn()
+              return true
+            }
           })
+          
+          // arr.forEach(e => {
+          //   if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
+          //     this.$message({ type: 'warning', message: '不能为空' })
+          //     return false
+          //   } else {
+          //      if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
+          //       if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
+          //         arr.splice(index)
+          //       }
+          //     }
+          //     e.width = Math.round(e.width / this.prxvalue)
+          //     e.height = Math.round(e.height / this.prxvalue)
+          //     e.isshow = e.isshow ? 1 : 0
+          //     e.bold = e.bold ? 2 : 1
+          //     if (e.filedValue === 'setting') {
+          //       console.log('this.formModel.paper::', this.formModel.paper, e)
+          //       e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
+          //       e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
+          //     }
+          //   }
+          // })
           console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
           putSettingCompanyOrder(arr).then(data => {
               this.loading = false

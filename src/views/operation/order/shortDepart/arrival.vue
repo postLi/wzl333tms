@@ -436,7 +436,7 @@ export default {
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       if (this.loadInfo.bathStatusName === '已入库' || this.loadInfo.bathStatusName === '部分入库') {
-        this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+        this.$confirm('此操作将取消短驳入库, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

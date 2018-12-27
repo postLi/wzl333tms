@@ -417,6 +417,7 @@
  export function setFeeToBig(fee) { // 费用转成中文大写
    console.log('fee:::::::', fee, smalltoBIG(fee))
    if (fee) {
+     // fee = Math.round(parseFloat(fee)) 不需要四舍五入，所以注释掉
      let feezh = fee.toString().split('').reverse()
      const pointIndex = feezh.indexOf('.') + 1
      const feezhAll = smalltoBIG(fee)
@@ -624,6 +625,7 @@
      obj.createrName = infoDetail.createUserName || user.name || user.username // 开单员
      obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
+     obj.agencyFundTotal = parseFloat(infoDetail.agencyFundTotal) || '' // 代收款合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
@@ -658,7 +660,7 @@
      // 104 多笔付
      obj.payWay = infoDetail.shipPayWayName
      // 付款方式
-     switch (infoDetail.shipPayWay) { // 付款方式
+     switch (Number(infoDetail.shipPayWay)) { // 付款方式
        case 76:
          obj.nowPay = '√' // 现付（√）
          obj.nowPayFee = parseFloat(infoDetail.shipNowpayFee) || ''
@@ -689,7 +691,7 @@
      ////////////////////////////////////////////////////////
      ///回单要求
      ///
-     switch (infoDetail.shipReceiptRequire) {
+     switch (Number(infoDetail.shipReceiptRequire)) {
        case 81: // 签回单
          obj.receiptSign = infoDetail.shipReceiptRequire ? '√' : ''
          break
@@ -715,7 +717,7 @@
      ///////////////////////////////////////////////////////////
      ///业务类型
      ///
-     switch (infoDetail.shipBusinessType) {
+     switch (Number(infoDetail.shipBusinessType)) {
        case 91: // 整车
          obj.carLoad = infoDetail.shipBusinessType ? '√' : ''
          break
@@ -729,7 +731,7 @@
      //////////////////////////////////////////////////////////
      /// 运输方式
      ///
-     switch (infoDetail.shipShippingType) {
+     switch (Number(infoDetail.shipShippingType)) {
        case 87: // 普通汽运
          obj.shipTrucks = infoDetail.shipShippingType ? '√' : ''
          break
@@ -743,15 +745,15 @@
          obj.shipTrain = infoDetail.shipShippingType ? '√' : ''
          break
      }
-     if (infoDetail.shipDeliveryMethod === 68) {
+     if (Number(infoDetail.shipDeliveryMethod) === 68) {
        obj.deliveryGood = '√' // 自提（√）
-     } else if (infoDetail.shipDeliveryMethod === 69) {
+     } else if (Number(infoDetail.shipDeliveryMethod) === 69) {
        obj.sendGood = '√' // 送货（√）
      }
-     if (infoDetail.shipOther && infoDetail.shipOther.indexOf(168) !== -1) {
+     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 168) {
        obj.controlGoods = infoDetail.shipOther // 168-控货
      }
-     if (infoDetail.shipOther && infoDetail.shipOther.indexOf(169) !== -1) {
+     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 169) {
        obj.valuables = infoDetail.shipOther //  169-贵重物品
      }
      if (infoDetail.shipEffective === 95) {

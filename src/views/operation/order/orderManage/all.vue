@@ -145,11 +145,19 @@ export default {
       thecode: '', // 用来设置tablesetup的code值
       columnWidthData: {},
       tableColumn: [{
-        'label': '运单号',
-        'prop': 'shipSn',
-        'width': '150',
-        'fixed': true
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
       }, {
+          'label': '运单号',
+          'prop': 'shipSn',
+          'width': '150',
+          'fixed': true
+        }, {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
@@ -604,6 +612,7 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
             return false
           }
           var deleteItem = this.selected.filter(el => el.shipStatus === 59)
@@ -657,6 +666,8 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
+            return false
           }
               // shipStatus 59 已入库
           var cancelItem = this.selected.filter(el => el.shipStatus === 59)

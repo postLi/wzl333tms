@@ -4,7 +4,8 @@
       <el-form-item label="运单号" >
         <el-input
             v-model="searchForm.shipSn"
-            maxlength="15"
+            maxlength="30"
+            @keyup.native="validates('shipSn')"
             clearable>
         </el-input>
       </el-form-item>
@@ -30,7 +31,8 @@
       <el-form-item label="货号" >
         <el-input
             v-model="searchForm.shipGoodsSn"
-            maxlength="15"
+             @keyup.native="validates('shipGoodsSn')"
+            maxlength="30"
             clearable>
         </el-input>
       </el-form-item>
@@ -70,9 +72,16 @@
         </el-input>
       </el-form-item>
       <el-form-item label="到站" >
+        <!-- <el-autocomplete
+          v-model="searchForm.shipToCityName"
+          :fetch-suggestions="querySearchAsync"
+          placeholder=""
+          trigger-on-focus
+          @select="handleSelect"
+        ></el-autocomplete> -->
         <el-input
             v-model="searchForm.shipToCityName"
-            maxlength="15"
+            maxlength="30"
             clearable>
         </el-input>
       </el-form-item>
@@ -88,9 +97,10 @@
   </el-form>
 </template>
 <script>
+import orderManageApi from '@/api/operation/orderManage'
 import { pickerOptions2, parseTime, objectMerge2 } from '@/utils/'
 import SelectTree from '@/components/selectTree/index'
-
+import { REGEX } from '@/utils/validate'
 export default {
   name: 'order-manage-pop-search',
   components: {
@@ -184,11 +194,15 @@ export default {
     }
   },
   methods: {
+
     setSearch() {
       this.clearForm()
       const key = this.query.key
       const value = this.query.value
       this.searchForm[key] = value
+    },
+    validates(key) {
+      this.$set(this.searchForm, key, this.searchForm[key].replace(/[\W]/g, ''))
     },
     onSubmit() {
       const searchObj = objectMerge2({}, this.searchForm)
@@ -201,6 +215,30 @@ export default {
     clearForm() {
       this.searchCreatTime = this.defaultTime
       this.searchForm = this.$options.data().searchForm
+    },
+    querySearchAsync(query, cb) {
+      orderManageApi.getLastToCities({
+        'currentPage': 1,
+        'pageSize': 10,
+        'vo': {
+          'type': 5,
+          'value': query || ''
+        }
+      }).then(res => {
+        const data = res.data
+        if (data) {
+          cb(res.data.list)
+        } else {
+          cb([])
+        }
+        console.log('querySearchAsync', res)
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+        cb([])
+      })
+    },
+    handleSelect(item) {
+      console.log('handleSelect:', item)
     }
   }
 }

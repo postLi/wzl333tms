@@ -244,21 +244,14 @@ export default {
         if (!table) {
           return
         }
-        // 固定表头
-        const div = document.getElementById('report_settleRecordTotal')
-        const tableClone = table.cloneNode(true)
-        tableClone.setAttribute('id', 'tableClone')
-        tableClone.setAttribute('refs', 'tableClone')
-        tableClone.className = 'tableCloneHead'
-        console.log('tableClone', tableClone)
-        div.appendChild(tableClone)
-        
         const tbodyLen = table.getElementsByTagName('tbody')
         const tfootLen = table.getElementsByTagName('tfoot')
         if (tbodyLen.length > 0) {
           table.removeChild(tbodyLen[0])
           table.removeChild(tfootLen[0])
         }
+       
+
         const tbody = document.createElement('tbody')
         const tfoot = document.createElement('tfoot')
 
@@ -268,6 +261,16 @@ export default {
         table.style.border = '1px solid #d0d7e5'
         table.setAttribute('border', '1')
         table.setAttribute('font', '12px')
+
+         // 固定表头
+        const div = document.getElementById('report_settleRecordTotal')
+        const tableClone = table.cloneNode(true)
+        tableClone.setAttribute('id', 'tableClone')
+        tableClone.setAttribute('refs', 'tableClone')
+        tableClone.className = 'tableCloneHead'
+        console.log('tableClone', tableClone)
+        div.appendChild(tableClone)
+
         for (let k = 0; k < data.length; k++) {
           const tbodyTr = tbody.insertRow()
           for (let j = 0; j < this.columns.length; j++) {

@@ -5,7 +5,7 @@
 
         <!-- 本网点是父级时显示 -->
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm" :inline="true" label-position="right"
-                 size="mini" :key="formKey" v-if="companyId === form.id">
+                 size="mini" :key="formKey" v-if="companyId === form.id" >
           <el-form-item label="公司名称" :label-width="formLabelWidth" prop="orgName">
             <el-input v-model="form.orgName" auto-complete="off" :disabled="companyId === form.id || form.status===31 "
                       :maxlength="15"></el-input>
@@ -62,9 +62,20 @@
                          :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city"
                          :remote="true" clearable/>
           </el-form-item>
-          <el-form-item label="详细地址" :label-width="formLabelWidth">
+          <div class="rem-add-dot">
+            <el-form-item label="详细地址" :label-width="formLabelWidth" prop="">
+              <el-input
+                type="textarea"
+                :rows="2"
+                 :disabled="form.status===31" :maxlength="50"
+                placeholder="不可超300字"
+                v-model="form.detailedAddr"
+                auto-complete="off" ></el-input>
+            </el-form-item>
+          </div>
+          <!-- <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31" :maxlength="50"></el-input>
-          </el-form-item>
+          </el-form-item> -->
 
           <!-- <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31" v-number-only ></el-input>
@@ -99,7 +110,7 @@
           </div> -->
         </el-form>
         <el-form :model="form" :rules="rules" ref="ruleForm" class="demo-ruleForm" :inline="true" label-position="right"
-                 size="mini"  :key="formKey" v-else>
+                 size="mini"  :key="formKey" v-else >
           <el-form-item label="网点名称" :label-width="formLabelWidth" prop="orgName">
             <el-input v-model="form.orgName" auto-complete="off" :disabled="form.status===31 "
                       :maxlength="15"></el-input>
@@ -166,7 +177,7 @@
           </el-form-item>
           <el-form-item label="代收款限额" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.collectionFee" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+                      v-number-only> <template slot="append">元</template></el-input>
           </el-form-item>
           <el-form-item label="提现基准" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.benchmark" auto-complete="off" :disabled="form.status===31"
@@ -174,33 +185,31 @@
           </el-form-item>
           <el-form-item label="预警额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.warningQuota" auto-complete="off" :maxlength="9" :disabled="form.status===31"
-                      v-number-only></el-input>
+                      v-number-only>
+                      <template slot="append">元</template>
+                    </el-input>
           </el-form-item>
           <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
-                      :disabled="form.status===31"></el-input>
+                      :disabled="form.status===31"> <template slot="append">元</template></el-input>
           </el-form-item>
-
           <div class="ad-add-dot" v-if="!isModify">
             <el-checkbox checked v-model="form.accountStatus">开通管理员账号</el-checkbox>
             <p> 密码：123456</p>
           </div>
           <el-form-item v-if="form.accountStatus  && !isModify" :label-width="formLabelWidth" prop="accountName">
-
             <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip"
                         tabindex="-1">
               <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
               <el-input v-model.trim="form.accountName" auto-complete="off" @focus="tooltip = true"
-                        @blur="tooltip = false"></el-input>
+                        @blur="tooltip = false" style="width: 307px;"></el-input>
             </el-tooltip>
-
             <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
           </el-form-item>
 
           <div class="rem-add-dot">
             <el-form-item label="备注" :label-width="formLabelWidth" prop="">
               <el-input
-
                 type="textarea"
                 :rows="2"
                 placeholder="不可超300字"
@@ -209,12 +218,12 @@
             </el-form-item>
           </div>
         </el-form>
-        <div class="spanDiv" v-if="companyId !== form.id">
+        <!-- <div class="spanDiv" v-if="companyId !== form.id">
           <span>元</span>
           <span>元</span>
           <span v-if="isModify" class="span-hidden">元</span>
           <span v-if="!isModify" class="span-last">元</span>
-        </div>
+        </div> -->
       </template>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm('ruleForm', true)">保存并添加</el-button>

@@ -13,7 +13,7 @@
           <!--</div>-->
         <!--</el-form>-->
         <el-button class="table_setup" type="success" :size="btnsize" icon="el-icon-sort-up" @click="doAction('doLast')"
-                   plain
+                   plain v-if="otherinfo.systemSetup.financeSetting.voucher === '1'"
                    >上一步
         </el-button>
         <el-button class="table_setup" type="primary" :size="btnsize" icon="el-icon-circle-plus"
