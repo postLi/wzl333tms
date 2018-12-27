@@ -86,17 +86,17 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item :label="loadTimeFormName">
+                  <el-form-item prop="loadTime" :label="loadTimeFormName">
                     <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" :placeholder="loadTimeFormName">
                     </el-date-picker>
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="预计到达时间" v-if="loadTypeId===39">
+                  <el-form-item prop="planArrivedTime" label="预计到达时间" v-if="loadTypeId===39">
                     <el-date-picker size="mini" v-model="formModel.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                     </el-date-picker>
                   </el-form-item>
-                  <el-form-item label="要求到达时间" v-else>
+                  <el-form-item prop="requireArrivedTime" label="要求到达时间" v-else>
                     <el-date-picker size="mini" v-model="formModel.requireArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="要求到达时间">
                     </el-date-picker>
                   </el-form-item>
@@ -107,7 +107,7 @@
                     <span class="input-append">元</span>
                     <!-- <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input> -->
                   </el-form-item>
-                  <el-form-item label="备注" v-else>
+                  <el-form-item prop="remark" label="备注" v-else>
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
@@ -121,7 +121,7 @@
                   </el-form-item>
                 </div>
                 <div>
-                  <el-form-item label="备注" v-if="loadTypeId !== 40">
+                  <el-form-item prop="remark" label="备注" v-if="loadTypeId !== 40">
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
@@ -132,7 +132,7 @@
               <ul class="feeList_lyy">
                 <li>
                   <p>车费合计(元)</p>
-                  <el-form-item>
+                  <el-form-item prop="totalFormFee">
                     <el-input :maxlength="10" :size="mini" disabled :value="totalFormFee" style="text-align:center;"></el-input>
                   </el-form-item>
                 </li>
@@ -428,11 +428,11 @@ export default {
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
       },
       apportionTypeDescript: [
-      '(运单 - 回扣）/（总车费 - 总回扣）* 操作费', 
-      '操作费 / 票数', 
-      '该单重量 / 本车总重量 * 操作费', 
-      '该单体积 / 本车总体积 * 操作费', 
-      '该单件数 / 本车总件数 * 操作费'
+        '(运单 - 回扣）/（总车费 - 总回扣）* 操作费',
+        '操作费 / 票数',
+        '该单重量 / 本车总重量 * 操作费',
+        '该单体积 / 本车总体积 * 操作费',
+        '该单件数 / 本车总件数 * 操作费'
       ]
     }
   },
@@ -496,6 +496,7 @@ export default {
     '$route': {
       handler(to, from) {
         const bothBool = false
+
         if (to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
           // 1
           // 3
@@ -540,7 +541,9 @@ export default {
         this.apportionTypeList = []
         this.formFee = objectMerge2({}, this.$options.data().orgData)
         this.formModel = objectMerge2({}, this.$options.data().formModel)
-        this.$refs['formModel'].resetFields()
+        this.$nextTick(() => {
+          this.$refs['formModel'].resetFields()
+        })
       } else {
         // read data
         if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
@@ -744,9 +747,9 @@ export default {
     getLoadNo() {
       // if (this.loadTypeId) {
       return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-          this.truckMessage = data.text // 批次号
-          this.contractNo = data.text // 合同编号？？？？？
-        })
+        this.truckMessage = data.text // 批次号
+        this.contractNo = data.text // 合同编号？？？？？
+      })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -870,8 +873,8 @@ export default {
               this.$message({ type: 'success', message: '修改配载信息成功' })
               this.resetFieldsForm()
               this.$nextTick(() => {
-                  this.gotoPage() // 操作成功后跳转到配载列表页面
-                })
+                this.gotoPage() // 操作成功后跳转到配载列表页面
+              })
             })
               .catch(err => {
                 this.loading = false
@@ -885,8 +888,8 @@ export default {
               this.$message({ type: 'success', message: '插入配载信息成功' })
               this.resetFieldsForm()
               this.$nextTick(() => {
-                  this.gotoPage()
-                })
+                this.gotoPage()
+              })
             })
               .catch(err => {
                 this.loading = false
@@ -914,8 +917,8 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.resetFieldsForm()
             this.$nextTick(() => {
-                this.gotoPage() // 操作成功后跳转到配载列表页面
-              })
+              this.gotoPage() // 操作成功后跳转到配载列表页面
+            })
           })
             .catch(err => {
               this.loading = false
@@ -1166,11 +1169,11 @@ export default {
     getSelectType() {
       getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
         if (data) {
-            this.apportionTypeList = data
-            this.apportionTypeList.forEach((e, index) => {
-              this.$set(e, 'descript', this.apportionTypeDescript[index])
-            })
-          }
+          this.apportionTypeList = data
+          this.apportionTypeList.forEach((e, index) => {
+            this.$set(e, 'descript', this.apportionTypeDescript[index])
+          })
+        }
       })
         .catch(err => {
           this._handlerCatchMsg(err)
