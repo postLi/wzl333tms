@@ -3,7 +3,7 @@
     <el-header :key="viewKey" style="height:87px">
       <div></div>
       <div class="top_content" v-if="type===1">
-        <h6>系统体检：能帮助你在使用系统时，哪些需要维护的数据，保证系统的完整性，帮忙您更好的使用系统。</h6>
+        <h6>系统体检：能帮助你在使用系统时检查哪些需要维护的数据，保证系统的完整性，帮您更好的使用系统。</h6>
         <p class="top_ts">（上次检查还有<span class="top_num">{{ dataset.totals}}项</span>基础数据未维护）</p>
       </div>
       <div class="box_top" v-else-if="type===2">
@@ -164,15 +164,15 @@ export default {
       flog: false,
       disabled: false,
       countList: [{
-          value: 0,
-          label: 'orgCount',
-          title: '网点管理',
-          message: '网点' + this.valueCount + '个',
-          message1: '你还没有添加网点，请点击右边添加按钮',
-          message2: '需要增加点击右边增加按钮',
-          button1: '增加',
-          button2: '添加'
-        }, {
+        value: 0,
+        label: 'orgCount',
+        title: '网点管理',
+        message: '网点' + this.valueCount + '个',
+        message1: '你还没有添加网点，请点击右边添加按钮',
+        message2: '需要增加点击右边增加按钮',
+        button1: '增加',
+        button2: '添加'
+      }, {
           value: 0,
           label: 'userCount',
           title: '员工管理',
@@ -245,16 +245,16 @@ export default {
           button1: '设置',
           button2: '设置'
         },
-        {
-          value: 0,
-          label: 'fiSubjectCount',
-          title: '财务科目设置',
-          message: '已经有' + this.valueCount + '个财务科目',
-          message1: '你还没有维护财务科目，请点击右边设置按钮',
-          message2: '需要设置点击右边设置按钮',
-          button1: '设置',
-          button2: '设置'
-        }
+      {
+        value: 0,
+        label: 'fiSubjectCount',
+        title: '财务科目设置',
+        message: '已经有' + this.valueCount + '个财务科目',
+        message1: '你还没有维护财务科目，请点击右边设置按钮',
+        message2: '需要设置点击右边设置按钮',
+        button1: '设置',
+        button2: '设置'
+      }
       ],
       contTitleNull: false
     }
@@ -282,7 +282,7 @@ export default {
     this.isParentOrg()
 
     getInitializationCheck().then(data => {
-        if (data) {
+      if (data) {
           this.dataset = data
           var totals = 0
           for (const total in data) {
@@ -305,7 +305,7 @@ export default {
           }
           this.$set(this.dataset, 'totals', totals)
         }
-      })
+    })
       .catch(err => {
         this._handlerCatchMsg(err)
       })

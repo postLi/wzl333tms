@@ -68,7 +68,7 @@ export default {
       const obj = JSON.parse(this.$route.query.sendData)
       this.sendRoute.orgId = this.$route.query.orgId
       this.sendRoute.standCar = obj.map((item, val) => {
-        return { id: item.cid, spri: item.price , carNo: item.carNo}
+        return { id: item.cid, spri: item.price, carNo: item.carNo }
       })
       return getIntnteInit(this.sendRoute).then(data => {
         if (data) {
@@ -78,7 +78,7 @@ export default {
       }).catch(err => {
         this.httpend = true
         this.errorObj = err
-        this.errorMessage = err.errorInfo || err.text || '发生未知错误！'
+        this.errorMessage = err.errorInfo || err.text || '发生错误！'
       })
     },
     stopLoad() { // 请求失败时跳转到普通配载
@@ -87,7 +87,7 @@ export default {
         setTimeout(() => {
           this.eventBus.$emit('closeCurrentView')
           if (this.errorMessage === '无可智能配载的库存信息') {
-            this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' } })
+            this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' }})
           } else {
             this.$router.push({ path: '/operation/order/arteryDepart' })
           }

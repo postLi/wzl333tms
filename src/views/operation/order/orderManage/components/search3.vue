@@ -232,6 +232,9 @@ export default {
           cb([])
         }
         console.log('querySearchAsync', res)
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+        cb([])
       })
     },
     handleSelect(item) {

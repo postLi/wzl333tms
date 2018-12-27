@@ -145,11 +145,19 @@ export default {
       thecode: '', // 用来设置tablesetup的code值
       columnWidthData: {},
       tableColumn: [{
-        'label': '运单号',
-        'prop': 'shipSn',
-        'width': '150',
-        'fixed': true
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
       }, {
+          'label': '运单号',
+          'prop': 'shipSn',
+          'width': '150',
+          'fixed': true
+        }, {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',

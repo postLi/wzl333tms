@@ -2050,7 +2050,7 @@ export default {
       if (this.config.shipPageFunc.decimalPlaces === '1') {
         this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
       } else {
-        this.form.tmsOrderShip.shipTotalFee = Math.round(parseFloat(total, 10)).toFixed(2)
+        this.form.tmsOrderShip.shipTotalFee = parseFloat(total, 10).toFixed(2)
       }
     },
     // 格式化运费输入框
@@ -2931,7 +2931,6 @@ export default {
                   if (this.isSavePrint) {
                     this.printSave() // 执行成功后打印运单
                   }
-
                 }).catch(err => {
                   this.loading = false
                   reject(5)

@@ -30,7 +30,7 @@
         <span class="val">{{ item.value }}</span>
       </template>
     </el-autocomplete>
-    <el-dialog top="0" width="1200px" modal-append-to-body append-to-body :close-on-click-modal="false" class="showSearchPop" v-if="showSearch" title="多条件查询" :visible.sync="showSearchVisible">
+    <el-dialog top="0" :before-close="hidePopPage" width="1200px" modal-append-to-body append-to-body :close-on-click-modal="false" class="showSearchPop" v-if="showSearch" title="多条件查询" :visible.sync="showSearchVisible">
         <SearchOrder v-if="showSearch" :query="query"  />
     </el-dialog>
   </div>
@@ -100,6 +100,10 @@ export default {
     })
   },
   methods: {
+    hidePopPage(done) {
+      this.showSearch = false
+      done && done()
+    },
     openSearchBox() {
       this.showSearch = true
       this.showSearchVisible = true
