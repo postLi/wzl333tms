@@ -10,9 +10,9 @@
         </el-form-item>
         <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
-            <div slot="content">账号可以由字母、数字组成<br/>长度范围2~15个字符</div>
+            <div slot="content">账号可以由字母、数字组成<br/>长度范围2~20个字符</div>
             <!-- <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input> -->
-            <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="15" v-onlyNumberAndLetter class="nativeinput">
+            <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="20" v-onlyNumberAndLetter class="nativeinput">
           </el-tooltip>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
@@ -153,7 +153,7 @@ export default {
         ],
         username: [
           { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
-          { max: 15, message: '不能超过15个字符', trigger: 'blur' }
+          { max: 20, message: '不能超过20个字符', trigger: 'blur' }
         ],
         position: [
           { max: 10, message: '不能超过10个字符', trigger: 'blur' }
