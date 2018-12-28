@@ -13,7 +13,7 @@
       <el-tab-pane name="six" label="运单轨迹">
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
-      <el-tab-pane name="seven" label="行车轨迹">
+      <el-tab-pane v-if="viewLog()" name="seven" label="行车轨迹">
         <trunkLog v-if="activeTab.seven" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
@@ -60,6 +60,7 @@ export default {
     trunkLog
   },
   watch: {
+
     ispop(newVal) {
       if (newVal) {
         // this.init()
@@ -115,6 +116,9 @@ export default {
     }
   },
   methods: {
+    viewLog(){
+      return location.href.indexOf('28tms.cn')===-1
+    },
     // 获取运单数据
     getOrderInfo(orderId) {
       return orderManage.getOrderInfoById(orderId)

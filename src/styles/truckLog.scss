@@ -1,0 +1,83 @@
+#allmap {
+  height: 100%;
+  width: 100%;
+  box-shadow: 1px 1px 10px #ccc;
+}
+
+.truck-log {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: calc(100% - 0px) !important;
+  .popTree{
+    position: absolute;
+    width: 550px;
+    right: 10px;
+    top: 65px;
+    z-index: 2;
+    .popTree-group{
+      float: left;
+      width: 100%;
+    }
+    .popTree-child {
+      float: right;
+    }
+  }
+  .truck-log-expand{
+    background-color: #409eff;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 0 10px;
+    cursor: n-resize;
+    .el-button{
+      float: right;
+      margin-top: 5px;
+      margin-right: 5px;
+      font-size: 16px;
+    }
+    .el-button--text{
+      color: #fff;
+    }
+  }
+  .truck-log-info {
+   .info_tab_footer {
+      padding-left: 20px;
+      background: #eee;
+      height: 40px;
+      line-height: 40px;
+      box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
+      position: relative;
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .show_pager {
+      float: right;
+      line-height: 40px;
+      height: 40px;
+      overflow: hidden;
+    }
+  }
+  .search-card {
+    display: block;
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 10px 10px 5px;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    z-index: 2;
+    box-shadow: 1px 1px 10px #ccc;
+    border-radius: 5px;
+    .el-form {
+      .el-form-item--mini.el-form-item,
+      .el-form-item--small.el-form-item {
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
