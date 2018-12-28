@@ -34,7 +34,7 @@ body{
   outline: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   body{
     overflow-x: scroll;
   }
@@ -113,7 +113,7 @@ table{
 //main-container全局样式
 #app{
   height: 100%;
-  min-width: 800px;
+  min-width: 1200px;
 }
 
 .app-main{

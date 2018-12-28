@@ -214,7 +214,7 @@ export default {
     querySearchAsync(query, cb) {
       orderManageApi.getLastToCities({
         'currentPage': 1,
-        'pageSize': 10,
+        'pageSize': 50,
         'vo': {
           'type': 5,
           'value': query || ''
