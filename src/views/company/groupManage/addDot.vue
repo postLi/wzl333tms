@@ -54,7 +54,7 @@
             <el-input v-model="form.serviceName" auto-complete="off" :disabled="form.status===31" clearable></el-input>
           </el-form-item>
           <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" clearable>
-            <el-input v-model="form.servicePhone" auto-complete="off" :maxlength="11"
+            <el-input v-model="form.servicePhone" auto-complete="off" :maxlength="30"
                       :disabled="form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
@@ -165,7 +165,7 @@
           </el-form-item>
           <el-form-item label="客服电话" :label-width="formLabelWidth" prop="servicePhone" clearable>
             <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"
-                      :maxlength="11"></el-input>
+                      :maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"

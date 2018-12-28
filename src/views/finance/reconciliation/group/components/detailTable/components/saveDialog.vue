@@ -15,7 +15,9 @@
             border
             tooltip-effect="dark"
             :default-sort="{prop: 'id', order: 'ascending'}"
-            style="width: 100%">
+            style="width: 100%"
+
+          >
             <el-table-column
               fixed
               sortable
@@ -102,7 +104,7 @@
         dialogInfo: [
           {
             toPay: 0,
-            date: '已收（应收账款）'
+            date: "已收（应收账款）"
           },
           {
             toPay: 0,
@@ -183,7 +185,7 @@
         this.dialogInfo[3].toPay = 0
         this.dialogData.dealtota.map(el => {
           this.$set(this.dialogInfo, 0, {
-            date: '已收 (应收账款)',
+            date: "已收 (应收账款)",
             toPay: tmsMath.add(this.dialogInfo[0].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
 
@@ -256,16 +258,37 @@
 </script>
 
 <style lang="scss">
-  .saveDialog-maintain .pickpopDepMain {
-    top: 29%;
-    bottom: auto;
-    min-width: 486px;
-    max-width: 486px;
-    .dialog-footer-frame {
-      text-align: right;
-      padding-right: 10px;
-    }
+  .saveDialog-maintain {
+    .pickpopDepMain {
+      top: 29%;
+      bottom: auto;
+      min-width: 486px;
+      max-width: 486px;
 
+      .dialog-footer-frame {
+        text-align: right;
+        padding-right: 10px;
+      }
+      .el-table__body {
+        .el-table__row:first-of-type.el-table_5_column_66{
+          td:nth-of-type(2){
+            padding-left: 2px !important;
+            background: green !important;
+          }
+        }
+      }
+    }
+    .el-table {
+      tbody {
+        tr.el-table__row:first-of-type {
+          td.el-table_5_column_66 {
+            .cell {
+              padding-left: 2px !important;
+            }
+          }
+        }
+      }
+    }
   }
 
   .saveDialog-maintain .popRight-content {
@@ -294,5 +317,6 @@
         font-weight: 600;
       }
     }
+
   }
 </style>

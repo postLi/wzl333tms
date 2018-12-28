@@ -10,6 +10,7 @@
 @import './dialog.scss';
 @import './accountLoadTable.scss'; // 财务结算 左右穿梭框样式
 @import './financeReceipt.scss'; // 财务结算 结算单样式
+@import './truckLog.scss'; // 行车轨迹
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -34,7 +35,7 @@ body{
   outline: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   body{
     overflow-x: scroll;
   }
@@ -113,7 +114,7 @@ table{
 //main-container全局样式
 #app{
   height: 100%;
-  min-width: 800px;
+  min-width: 1200px;
 }
 
 .app-main{

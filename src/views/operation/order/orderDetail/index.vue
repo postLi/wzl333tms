@@ -13,6 +13,9 @@
       <el-tab-pane name="six" label="运单轨迹">
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
+      <el-tab-pane v-if="viewLog()" name="seven" label="行车轨迹">
+        <trunkLog v-if="activeTab.seven" :orderdata="orderdata" :orderid="output.orderid" />
+      </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
         <abnormal :orderinfo="orderdata" v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
       </el-tab-pane>
@@ -32,6 +35,7 @@ import ordertrack from './track'
 import abnormal from './abnormal'
 import log from './log'
 import trunk from './trunk'
+import trunkLog from './trunkLog'
 
 export default {
   name: 'orderDetail',
@@ -52,9 +56,11 @@ export default {
     ordertrack,
     abnormal,
     log,
-    trunk
+    trunk,
+    trunkLog
   },
   watch: {
+
     ispop(newVal) {
       if (newVal) {
         // this.init()
@@ -99,7 +105,8 @@ export default {
         'three': false,
         'four': false,
         'five': false,
-        'six': false
+        'six': false,
+        'seven': false
       },
       output: {
         orderid: '',
@@ -109,6 +116,9 @@ export default {
     }
   },
   methods: {
+    viewLog(){
+      return location.href.indexOf('28tms.cn')===-1
+    },
     // 获取运单数据
     getOrderInfo(orderId) {
       return orderManage.getOrderInfoById(orderId)

@@ -30,7 +30,7 @@
          </el-input>
         </el-form-item> -->
           <el-form-item prop="username">
-            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="11" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
+            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="30" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>

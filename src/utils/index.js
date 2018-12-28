@@ -54,7 +54,6 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
         prop = el
         return true
       }
-
       const propArr = el.split('|')
       if (propArr.length > 1) {
         // 前缀等于属性名
@@ -369,7 +368,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number
