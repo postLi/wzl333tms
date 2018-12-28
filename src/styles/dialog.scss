@@ -264,7 +264,7 @@ $dialogHeader_bgcolor: #e6e6e6;
     }
     .print_aside_content_self {
       .el-input {
-        width: 80%;
+        width: 83%;
       }
     }
   }
@@ -291,6 +291,9 @@ $dialogHeader_bgcolor: #e6e6e6;
       .print_main_head_btns{
         float: right;
         clear: both;
+        .el-button+.el-button {
+          margin-left: 0px;
+        }
       }
       box-shadow: 1px 3px 20px #eee;
     }
@@ -348,6 +351,8 @@ $dialogHeader_bgcolor: #e6e6e6;
 .dragSizeControler {
   // 缩放控制器
   position: relative;
+  height: 100%;
+  width: 100%;
   .conrigth {
     position: absolute;
     right: -2px;

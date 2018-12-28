@@ -55,6 +55,7 @@ export default {
       handler(cval, oval) {
         if (cval) {
           this.inited = true
+          this.loading = false
           this.currentTime = parseTime(+new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
           this.searchForm.actualArrivetime = this.currentTime
           this.searchForm.actualSendtime = this.currentTime

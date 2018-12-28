@@ -62,7 +62,7 @@
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo && item.filedName.slice(-1) ==='2'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
               <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
             </li>
-            <hr  v-if="cargoNum === 3">
+            <hr v-if="cargoNum === 3">
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===4 && item.showCargo && item.filedName.slice(-1) ==='3'" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
               <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
             </li>
@@ -141,7 +141,8 @@
         <div class="prinit_aside_setpreview">
           <div class="prinit_aside_setpreview_head">
             <span><i class="el-icon-picture"></i> 打印背景图片效果预览</span>
-            <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right; margin-right: 10px;margin-top:10px;" v-if="imageUrl">清除背景</el-button>
+            <el-button @click="toggleShowBkimg" :icon="isShowBkimg ? 'el-icon-news' : 'el-icon-view'" :size="btnsize" style="float: right; margin-left: 10px;margin-top:5px;" v-if="imageUrl" >{{isShowBkimg ? '隐藏背景图' :'显示背景图'}}</el-button>
+            <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right;margin-top:5px;" v-if="imageUrl">清除背景</el-button>
           </div>
           <Upload :title="'本地上传'" listtype="picture" v-model="imageUrl" />
           <!-- <el-upload drag :show-file-list="false" :on-change="handleChange" action="" :http-request="uploadHandleFile">
@@ -174,6 +175,7 @@
           </el-select>
           <el-button icon="el-icon-printer" @click="print('test')" size="mini" title="打印测试"></el-button>
           <el-button icon="el-icon-view" @click="print('preview')" size="mini" title="打印预览"></el-button>
+          <el-button icon="el-icon-view" @click="print('preview', true)" size="mini" title="打印预览(包含背景图)">+ <i class="el-icon-picture-outline"></i></el-button>
         </div>
       </div>
       <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
@@ -182,10 +184,10 @@
           transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
           width:item.width/prxvalue +'px', 
           height:item.height/prxvalue+'px',
-          lineHeight:(item.height/prxvalue - 3)+'px', 
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
-          fontWeight: item.bold ? 800 : 400,
+          fontStyle: 'Simsun',
+          fontWeight: item.bold ? 700 : 400,
           textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">
             {{'(x :'+Math.round(item.leftx*prxvalue) +' mm, y :'+ Math.round(item.topy*prxvalue) + ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}}
@@ -240,7 +242,14 @@ export default {
   },
   data() {
     return {
+      isShowBkimg: true, // 背景图 true-显示状态 false-隐藏状态
       tagSize: 'mini',
+      bgLabelObj: { // 图片对象
+        width: 0,
+        height: 0,
+        topy: 0,
+        leftx: 0,
+      },
       formPrint: {
         printSetting: {
           ship: ''
@@ -280,7 +289,7 @@ export default {
       defaultLabelFontSize: 12,
       defaultPaperWidth: 240,
       defaultPaperHeight: 140,
-      imgNameStr: '预览图片lyy,',
+      imgNameStr: '预览图片TMS,',
       prxvalue: 0.264,
       mm2px: 3.779,
       maxLabel: 3, // 固有字段最多显示数量
@@ -324,6 +333,9 @@ export default {
     imageUrl: {
       handler(cval, oval) {
         console.log('图片', cval, oval)
+        if (cval !== oval) {
+          this.isShowBkimg = true
+        }
       },
       deep: true
     },
@@ -341,23 +353,30 @@ export default {
         this.dialogVisible = false
         this.unbindKey()
       }
+    },
+    bgprop: {
+      handler (cval, oval) {
+        if (cval) {
+          if (this.imageUrl&& this.isShowBkimg) { // 有背景图片并且显示的时候才可以修改参数值
+            this.bgLabelObj.width =  Math.round(this.printPreviewContent.width.slice(0, -2) * this.prxvalue*this.bgprop.scale)
+            this.bgLabelObj.height =  Math.round(this.printPreviewContent.height.slice(0, -2) * this.prxvalue*this.bgprop.scale)
+            this.bgLabelObj.leftx = cval.x
+            this.bgLabelObj.topy = cval.y
+          }
+          console.log('bgprop', cval, cval.scale, cval.x, cval.y, this.printPreviewContent, this.bgLabelObj)
+        }
+      },
+      deep: true
     }
   },
   computed: {
     printPreviewContent() {
       let viewWidth = 300
       let viewHeight = 150
-      const bgurl = this.imageUrl
+      const bgurl = this.isShowBkimg ? this.imageUrl : ''
       if (this.formModel) {
         viewWidth = this.formModel.paper.width
         viewHeight = this.formModel.paper.height
-        // this.formModel.labelList.forEach(e => {
-        //   if (e.filedValue === 'setting') {
-        //     console.log('printPreviewContent', e.width, e.height)
-        //     viewWidth = e.width
-        //     viewHeight = e.height
-        //   }
-        // })
       }
       return {
         width: viewWidth / this.prxvalue + 'px',
@@ -365,8 +384,8 @@ export default {
         backgroundImage: 'url(' + bgurl + ')',
         backgroundRepeat: 'no-repeat',
         backgroundSize: (this.bgprop.scale * 100) + '% auto',
-        // backgroundSize: 'contain',
-        backgroundPosition: this.bgprop.x + 'px ' + this.bgprop.y + 'px'
+        // backgroundPosition: this.bgprop.x + 'px ' + this.bgprop.y + 'px'
+        backgroundPosition: this.bgLabelObj.leftx + 'px ' + this.bgLabelObj.topy + 'px'
       }
     },
     printPreviewPaper() {},
@@ -375,14 +394,17 @@ export default {
     }
   },
   mounted() {
-    // this.getSettingCompanyOrder()
-
   },
   // 销毁对象时，需清除绑定的事件
   destroyed() {
     this.unbindKey()
   },
   methods: {
+    toggleShowBkimg () {
+      if (this.imageUrl) {
+        this.isShowBkimg = !this.isShowBkimg
+      }
+    },
     showCargoPlus() { // 添加显示货物信息
       console.log('cargoNum', this.cargoNum)
       let fn = (num) => {
@@ -420,11 +442,15 @@ export default {
       this.initPrinter()
       this.formPrint = objectMerge2({}, this.formInfo)
       this.loading = true
+      this.isShowBkimg = true
       this.getCommonSettingOrder()
     },
-    print(type) { // preview-打印预览 test-打印测试
+    print(type, bkimg = false) { // preview-打印预览 test-打印测试 previewBkimg-打印预览包含背景图 testBkimg-打印测试包含背景图
+      console.log('type bkimg', type, bkimg)
       let labelList = objectMerge2([], this.labelListView)
+      let imgObj = {}
       labelList.push(objectMerge2({}, this.formModel.paper))
+
       labelList.forEach(e => {
 
         e.width = Math.round(e.width / this.prxvalue)
@@ -439,10 +465,19 @@ export default {
           e.fontsize = null
           e.alignment = null
           e.value = ''
-        } else {
-
         }
+        if (this.imageUrl && bkimg) { // 如果要预览背景图片
+          console.log('要预览背景图片')
+          imgObj = objectMerge2({}, e)
+          imgObj.filedName = this.imgNameStr + this.imageUrl
+          imgObj.isshow = 0
+        }
+
       })
+      if (this.imageUrl && bkimg) {
+        labelList.push(imgObj)
+      }
+      console.log('labelList', labelList)
       CreatePrintPageEnable({
         orderdata: labelList, // 运单数据
         number: 1, // 打印份数
@@ -450,7 +485,8 @@ export default {
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
         preview: type === 'preview' ? true : false, // 是否预览
-        mock: true // 是否直接读取value字段
+        mock: true, // 是否直接读取value字段，
+        bkimg: bkimg
       })
     },
     initPrinter() { // 初始化打印机列表
@@ -461,6 +497,7 @@ export default {
     },
     clearImgUrl() {
       this.imageUrl = ''
+      this.bgLabelObj = this.$options.data().bgLabelObj
     },
     querySearch(queryString, cb) { // 查找字段
       this.currentSearch = queryString
@@ -586,7 +623,7 @@ export default {
       let fn = () => { // 添加一个新的字段到显示区域
         row.isshow = true
         row.fontsize = this.defaultLabelFontSize
-        this.formModel.labelList.forEach((em, eindex) =>{
+        this.formModel.labelList.forEach((em, eindex) => {
           if (row.filedValue === em.filedValue) {
             this.$set(this.formModel.labelList, eindex, row)
           }
@@ -605,7 +642,7 @@ export default {
             this.$set(this.orgLabelList, eindex, objectMerge2({}, row))
           }
         })
-         this.editDragItem(currentRow, this.labelListView.length-1) // 这里应该改为显示区域的index = this.labelListView.length-1
+        this.editDragItem(currentRow, this.labelListView.length - 1) // 这里应该改为显示区域的index = this.labelListView.length-1
       }
       if (row.filedValue === 'customFields' && len < this.maxLabelSelf) { // 添加自定义字段到预览区域
         fn()
@@ -617,7 +654,7 @@ export default {
           message: '【 ' + row.filedName + ' 】最多添加' + (row.filedValue === 'customFields' ? this.maxLabelSelf : this.maxLabel) + '次'
         })
       }
-     
+
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
@@ -936,118 +973,126 @@ export default {
       let cargoShow3 = false
       this.loading = true
       getSettingCompanyOrder().then(data => {
-            let array = Object.assign([], data || [])
+          let array = Object.assign([], data || [])
 
-            this.cargoNum = this.$options.data().cargoNum
-            let commonArr = [] // 相同字段
-            let expandArr = [] // 差异字段
-            let labelList = objectMerge2([], this.commonLabelList)
-            // 匹配当前公司打印设置字段和系统所有字段
-            array.forEach(e => {
-              labelList.forEach((el, index) => {
-                if (el.filedValue === e.filedValue) {
-                  if (!e.isshow && el.filedValue !== 'setting') {
-                    e.width = this.defaultLabelWidth
-                    e.height = this.defaultLabelHeight
-                  }
-                  if (el.filedValue === 'setting') {
-                    console.log('纸张设置', this.formModel.labelList[index], e)
-                    this.$set(this.formModel.labelList, index, e)
-                    this.formModel.labelList[index] = e
-                  }
-                  this.$set(e, 'type', el.type) // 给旧数据设置类型
-                  if (e.type === 4) {
+          this.cargoNum = this.$options.data().cargoNum
+          let commonArr = [] // 相同字段
+          let expandArr = [] // 差异字段
+          let labelList = objectMerge2([], this.commonLabelList)
+          // 匹配当前公司打印设置字段和系统所有字段
+          array.forEach(e => {
+            labelList.forEach((el, index) => {
+              if (el.filedValue === e.filedValue) {
+                if (!e.isshow && el.filedValue !== 'setting') {
+                  e.width = this.defaultLabelWidth
+                  e.height = this.defaultLabelHeight
+                }
+                if (el.filedValue === 'setting') {
+                  console.log('纸张设置', this.formModel.labelList[index], e)
+                  this.$set(this.formModel.labelList, index, e)
+                  this.formModel.labelList[index] = e
+                }
+                this.$set(e, 'type', el.type) // 给旧数据设置类型
+                if (e.type === 4) {
 
-                    if (e.filedName.slice(-1) === '2') {
-                      cargoShow2 = true
-                      this.cargoNum = 2
+                  if (e.filedName.slice(-1) === '2') {
+                    cargoShow2 = true
+                    this.cargoNum = 2
+                  }
+                  if (e.filedName.slice(-1) === '3') {
+                    cargoShow3 = true
+                    this.cargoNum = 3
+                  }
+
+                }
+                labelList.splice(index, 1)
+                commonArr.push(e)
+              }
+            })
+          })
+          console.log('相同字段', commonArr.length, commonArr)
+          console.log('差异字段', labelList.length, labelList)
+          this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
+          // 匹配完所有字段 初始化显示
+          this.formModel.labelList.forEach((e, index) => {
+            e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
+            e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
+            if (e.filedValue === 'setting') { // 设置纸张
+              const obj = Object.assign({}, e)
+              if (!data) { // 新公司默认展示纸张大小
+                obj.width = this.defaultPaperWidth
+                obj.height = this.defaultPaperHeight
+              }
+              obj.leftx = Math.round(obj.leftx * this.prxvalue)
+              obj.topy = Math.round(obj.topy * this.prxvalue)
+              this.formModel.paper = obj
+            } else { // 设置其他字段
+              array.forEach(em => { // 添加的重复字段处理
+                if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
+                  if (em.isshow) {
+                    em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
+                    em.height = Math.round((em.height ? em.height : this.defaultLabelHeight) * this.prxvalue)
+                    // em.leftx = Math.round((em.leftx ? em.leftx : 0) * this.prxvalue)
+                    // em.topy = Math.round((em.topy ? em.topy : 0) * this.prxvalue)
+                    // 单位是pt，缺省值是9，可以含小数，如13.5
+                    em.fontsize = em.fontsize ? em.fontsize : 10
+                    em.isshow = em.isshow === 1 // 1-true 显示
+                    // 1代表粗体，0代表非粗体，缺省值是0
+                    em.bold = em.bold === 2 // 2-true 加粗
+                    em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+                    /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
+                    em._index = ++this.labelIndex
+                    this.labelListView.push(em)
+                  } else {
+                    if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
+                      this.imageUrl = em.filedName.split(',')[1]
+                      this.bgLabelObj.width = em.width
+                      this.bgLabelObj.height = em.height
+                      this.bgLabelObj.topy = em.topy
+                      this.bgLabelObj.leftx = em.leftx
+                      this.bgprop.scale = Math.round((em.width/this.formModel.paper.width))
+                      this.bgprop.x = em.leftx
+                      this.bgprop.y = em.topy
+                      console.log('放大%', Math.round((em.width/this.formModel.paper.width)))
                     }
-                    if (e.filedName.slice(-1) === '3') {
-                      cargoShow3 = true
-                      this.cargoNum = 3
-                    }
-
                   }
-                  labelList.splice(index, 1)
-                  commonArr.push(e)
                 }
               })
-            })
-            console.log('相同字段', commonArr.length, commonArr)
-            console.log('差异字段', labelList.length, labelList)
-            this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
-            // 匹配完所有字段 初始化显示
-            this.formModel.labelList.forEach((e, index) => {
-              e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
-              e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
-              if (e.filedValue === 'setting') { // 设置纸张
-                const obj = Object.assign({}, e)
-                if (!data) { // 新公司默认展示纸张大小
-                  obj.width = this.defaultPaperWidth
-                  obj.height = this.defaultPaperHeight
-                }
-                obj.leftx = Math.round(obj.leftx * this.prxvalue)
-                obj.topy = Math.round(obj.topy * this.prxvalue)
-                this.formModel.paper = obj
-              } else { // 设置其他字段
-                array.forEach(em => { // 添加的重复字段处理
-                  if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
-                    if (em.isshow) {
-                      em.width = Math.round((em.width ? em.width : this.defaultLabelWidth) * this.prxvalue)
-                      em.height = Math.round((em.height ? em.height : this.defaultLabelHeight) * this.prxvalue)
-                      // em.leftx = Math.round((em.leftx ? em.leftx : 0) * this.prxvalue)
-                      // em.topy = Math.round((em.topy ? em.topy : 0) * this.prxvalue)
-                      // 单位是pt，缺省值是9，可以含小数，如13.5
-                      em.fontsize = em.fontsize ? em.fontsize : 10
-                      em.isshow = em.isshow === 1 // 1-true 显示
-                      // 1代表粗体，0代表非粗体，缺省值是0
-                      em.bold = em.bold === 2 // 2-true 加粗
-                      em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
-                      /////////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
-                      em._index = ++this.labelIndex
-                      this.labelListView.push(em)
-                    } else {
-                      if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
-                        this.imageUrl = em.filedName.split(',')[1]
-                      }
-                    }
-                  }
-                })
-                // 单位是pt，缺省值是9，可以含小数，如13.5
-                e.fontsize = e.fontsize ? e.fontsize : 10
-                e.isshow = e.isshow === 1 // 1-true 显示
-                // 1代表粗体，0代表非粗体，缺省值是0
-                e.bold = e.bold === 2 // 2-true 加粗
-                e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
+              // 单位是pt，缺省值是9，可以含小数，如13.5
+              e.fontsize = e.fontsize ? e.fontsize : 10
+              e.isshow = e.isshow === 1 // 1-true 显示
+              // 1代表粗体，0代表非粗体，缺省值是0
+              e.bold = e.bold === 2 // 2-true 加粗
+              e.alignment = e.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
 
-              }
-              if (e.type === 4) { // 货物主要信息
-                e.showCargo = false
-                switch (e.filedName.slice(-1)) {
-                  case '2':
-                    if (cargoShow2) {
-                      e.showCargo = true
-                    }
-                    this.cargoLabelList[1].push(e)
-                    break
-                  case '3':
-                    if (cargoShow3) {
-                      e.showCargo = true
-                    }
-                    this.cargoLabelList[2].push(e)
-                    break
-                  default:
+            }
+            if (e.type === 4) { // 货物主要信息
+              e.showCargo = false
+              switch (e.filedName.slice(-1)) {
+                case '2':
+                  if (cargoShow2) {
                     e.showCargo = true
-                    this.cargoLabelList[0].push(e)
-                    break
-                }
+                  }
+                  this.cargoLabelList[1].push(e)
+                  break
+                case '3':
+                  if (cargoShow3) {
+                    e.showCargo = true
+                  }
+                  this.cargoLabelList[2].push(e)
+                  break
+                default:
+                  e.showCargo = true
+                  this.cargoLabelList[0].push(e)
+                  break
               }
-              if (e.type === 6) { // 设置模板名称
-                this.modelNameSelf = e.filedName
-              }
-            })
-            this.orgLabelList = objectMerge2([], this.formModel.labelList)
-            console.log('相同+差异', this.formModel.labelList)
+            }
+            if (e.type === 6) { // 设置模板名称
+              this.modelNameSelf = e.filedName
+            }
+          })
+          this.orgLabelList = objectMerge2([], this.formModel.labelList)
+          console.log('相同+差异', this.formModel.labelList)
           // }
           this.loading = false
         })
@@ -1159,6 +1204,10 @@ export default {
             if (e.filedValue === 'customFields') {
               if (this.imageUrl) { // 预览背景
                 bgImg = objectMerge2({}, e)
+                bgImg.width = this.bgLabelObj.width
+                bgImg.height = this.bgLabelObj.height
+                bgImg.topy = this.bgLabelObj.topy
+                bgImg.leftx = this.bgLabelObj.leftx
                 bgImg.filedName = this.imgNameStr + this.imageUrl
                 bgImg.isshow = false
                 console.log(' 提交的时候 imageUrl1', this.imageUrl, bgImg)
@@ -1200,28 +1249,6 @@ export default {
               return true
             }
           })
-          
-          // arr.forEach(e => {
-          //   if (this.checkNull(e.topy) || this.checkNull(e.leftx) || this.checkNull(e.width) || this.checkNull(e.height)) {
-          //     this.$message({ type: 'warning', message: '不能为空' })
-          //     return false
-          //   } else {
-          //      if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验
-          //       if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
-          //         arr.splice(index)
-          //       }
-          //     }
-          //     e.width = Math.round(e.width / this.prxvalue)
-          //     e.height = Math.round(e.height / this.prxvalue)
-          //     e.isshow = e.isshow ? 1 : 0
-          //     e.bold = e.bold ? 2 : 1
-          //     if (e.filedValue === 'setting') {
-          //       console.log('this.formModel.paper::', this.formModel.paper, e)
-          //       e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
-          //       e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
-          //     }
-          //   }
-          // })
           console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
           putSettingCompanyOrder(arr).then(data => {
               this.loading = false

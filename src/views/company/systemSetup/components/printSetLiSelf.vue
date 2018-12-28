@@ -134,7 +134,7 @@
         <div class="prinit_aside_setpreview">
           <div class="prinit_aside_setpreview_head">
             <span><i class="el-icon-picture"></i> 打印背景图片效果预览</span>
-            <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right; margin-right: 10px;margin-top:10px;" v-if="imageUrl">清除背景</el-button>
+            <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right; margin-top:10px;" v-if="imageUrl">清除背景</el-button>
           </div>
           <Upload :title="'本地上传'" listtype="picture" v-model="imageUrl" />
           <!-- <el-upload drag :show-file-list="false" :on-change="handleChange" action="" :http-request="uploadHandleFile">
@@ -175,7 +175,6 @@
           transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
           width:item.width/prxvalue +'px', 
           height:item.height/prxvalue+'px',
-          lineHeight:(item.height/prxvalue - 3)+'px', 
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
           fontWeight: item.bold ? 800 : 400,

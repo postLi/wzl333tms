@@ -795,23 +795,27 @@
   * type // 打印类型
   * preview // 是否预览
   * mock // 是否直接读取value字段
+  * bkimg // 是否包含背景图
   * }
   */
  export function CreatePrintPageEnable(info, printer, preview, number) {
-   console.log('是否预览', preview)
+   console.log('是否预览', preview, info)
    const user = getUserInfo()
 
    // info-打印数据
    // printer-打印机
    // number-打印份数
    // preview-是否预览
+   // bkimg-是否背景图 
    return new Promise((resolve, reject) => {
      try {
        const prxvalue = 0.264
        const str = ''
+       let imgNameStr = '预览图片TMS,'
        // let islib = false // 判断是否标签打印
        let printSetup = []
        let copy = []
+       let bkimg = info.bkimg || false
        LODOP = getLodop()
        console.log('print', info, printer, number)
        // 2.0：处理数据
@@ -856,6 +860,7 @@
        // }
 
        let arr = new Array()
+       let bkimgUrl = '' // 背景图片的url链接
        arr = Object.assign([], info)
        let title = ''
        for (const item in arr) { // 没有传值的项设置位空字符串
@@ -874,6 +879,16 @@
          }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
+         }
+         if (arr[item].filedName.indexOf(imgNameStr) !== -1) { // 是否有背景图片
+           bkimgUrl = arr[item].filedName.split(',')[1] || ''
+           console.log('拿到背景图片url', bkimgUrl, info)
+           if (bkimg) {
+             console.log('ADD_PRINT_SETUP_BKIMG')
+             LODOP.ADD_PRINT_SETUP_BKIMG("<img border='0' src='" + bkimgUrl + "'>")
+           }
+           console.log('BKIMG_IN_PREVIEW')
+           LODOP.SET_SHOW_MODE('BKIMG_IN_PREVIEW', bkimg ? 1 : 0) // 第二个参数 整数或字符型，1或true=是,否则不是
          }
        }
 
