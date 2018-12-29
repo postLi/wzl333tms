@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-console.log("!+Cookies.get('lockScreenStatus')", !+Cookies.get('lockScreenStatus'),Cookies.get('lockScreenStatus'))
+
 const app = {
   state: {
     sidebar: {
@@ -8,6 +8,7 @@ const app = {
     lockScreen: {
       opened: !!+Cookies.get('lockScreenStatus')
     }
+
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {

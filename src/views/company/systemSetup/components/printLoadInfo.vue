@@ -39,7 +39,7 @@
       </el-form-item>
       <el-form-item label="打印方向">
         <el-select v-model="formModel.printing_direction">
-          <el-option  key="0" value="0" label="横向"></el-option>
+          <el-option  key="2" value="2" label="横向"></el-option>
           <el-option  key="1" value="1" label="竖向"></el-option>
         </el-select>
       </el-form-item>
