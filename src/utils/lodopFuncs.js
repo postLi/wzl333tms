@@ -148,7 +148,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -478,9 +478,11 @@
    }
    infoDetail.agencyFundTotal = 0 // 代收货款合计
    infoDetail.cargoAmountTotal = 0 // 货品件数合计
+   // infoDetail.brokerageFeeTotal = 0 // 回扣合计
    cargoList.forEach(e => { // 计算代收货款合计
      infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
      infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+     // infoDetail.brokerageFeeTotal = tmsMath._add(infoDetail.brokerageFeeTotal, e.brokerageFee)
    })
    console.warn(infoDetail)
    // 公用
@@ -626,6 +628,7 @@
      obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.agencyFundTotal = parseFloat(infoDetail.agencyFundTotal) || '' // 代收款合计
+     // obj.brokerageFeeTotal = parseFloat(infoDetail.brokerageFeeTotal) || '' // 回扣合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号

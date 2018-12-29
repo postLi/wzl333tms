@@ -1,11 +1,11 @@
 <template>
-  <div class="orderinfo-manager truck-log " v-loading="loading">
-   
-      <div class="search-card">
-        <el-form ref="form" size="mini" :model="form" label-width="65px">
+  <div class="orderinfo-manager truck-log" ref="truckLog" v-loading="loading">
+    <transition name="el-zoom-in-center">
+      <div class="search-card" v-if="showSearchCard && !isAllTable">
+        <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
           <el-form-item label="选择车辆">
-            <el-input :size='btnsize' v-model="form.truckIdNumber">
-              <el-button slot="append" icon="el-icon-menu" @click="handleTruck"></el-button>
+            <el-input :size='btnsize' v-model="searchQuery.vo.truckIdNumber" placeholder="请输入车牌号" maxlength="8" clearable>
+              <el-button slot="append" :icon="popTreeVisible?'el-icon-close':'el-icon-menu'" @click="handleTruck"></el-button>
             </el-input>
           </el-form-item>
           <el-form-item label="时间范围">
@@ -14,50 +14,69 @@
           </el-form-item>
           <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit" icon="el-icon-search">查询</el-button>
+            <el-button :type="isShowInlineTruckMap?'success':'warning'" @click="mapTruck">查看{{isShowInlineTruckMap ? '车辆轨迹' : '实时车辆'}} <i :class="isShowInlineTruckMap ?'el-icon-share':'el-icon-location'"></i></el-button>
           </el-form-item>
         </el-form>
-        
       </div>
-       <transition name="el-zoom-in-center">
-        <el-card v-if="popTreeVisible" class="popTree">
-          <div class="popTree-group">
-            <div v-for="(group, gindex) in groupList">
-              <i class="el-icon-star-on"></i> {{group.name}}
-              <div class="popTree-child">
-                <div v-for=" (item, index) in group.truck ">{{item.truckNumber}}</div>
-              </div>
-            </div>
-          </div>
-        </el-card>
     </transition>
-    <div id="allmap"></div>
+    <transition name="el-zoom-in-center">
+      <el-card v-if="popTreeVisible" class="popTree" v-show="!isAllTable">
+        <div class="popTree-group">
+          <div v-for="(item, index) in groupList" class="popTree-group-item" :class="" @click="selectGroup(item, index)">
+            <p>{{item.name}}</p>
+          </div>
+        </div>
+        <div class="popTree-child">
+          <div v-for=" (item, index) in truckList " @click="selectTruck(item, index)" class="popTree-child-item">
+            <p>{{item.truckIdNumber}}</p>
+          </div>
+        </div>
+      </el-card>
+    </transition>
+    <div id="allmap" ref="allmap"></div>
     <div class="truck-log-expand">
-      <span>轨迹详情（盲点补传数据里程为空，无线设备系列里程为"--"）</span>
-      <el-button :size="btnsize" icon="el-icon-rank" type="text"></el-button>
-      <el-button :size="btnsize" type="text" @click="exportData">导出</el-button>
-    </div>
-    <div class="truck-log-info">
-      <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border :height="tableHeight + 'px'" show-summary tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
-          <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-              <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                <span v-else v-html="column.slot(scope)"></span>
-              </template>
-            </el-table-column>
-          </template>
-        </el-table>
+      <transition name="el-zoom-in-center">
+        <div class="control-panel" v-show="!isAllTable">
+          <el-button :size="btnsize" type="text" icon="el-icon-caret-right" @click="doLine('start')"></el-button>
+          <el-button :size="btnsize" type="text" icon="el-icon-refresh" @click="doLine('end')"></el-button>
+          <span>速度:</span><i style="color: green;">慢 </i>
+          <el-slider v-model="sliderStep" class="slider-step"></el-slider>
+          <i style="color: #409eff;">快 </i>
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="70" status="success"></el-progress>
+        </div>
+      </transition>
+      <div @mousedown.prevent.stop.capture="conStart" class="control-bur">
+        <span>轨迹详情（盲点补传数据里程为空，无线设备系列里程为"--"）</span>
+        <el-tooltip class="item" effect="dark" :content="isShowTable?'隐藏':'显示'" placement="bottom-end">
+          <el-button :size="btnsize" icon="el-icon-rank" type="text" @click="hideTable"></el-button>
+        </el-tooltip>
+        <el-button :size="btnsize" type="text" @click="exportData">导出Excel</el-button>
       </div>
-      <div class="info_tab_footer">
-        共计:{{ total }}
-        <div class="show_pager">
-          <Pager :total="total" @change="handlePageChange" />
+    </div>
+    <transition name="el-zoom-in-bottom">
+      <div class="truck-log-info" v-if="isShowTable">
+        <div class="info_tab">
+          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border :height="tableHeight.height+'px'" show-summary tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+            <template v-for="column in tableColumn">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+                <template slot-scope="scope">
+                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                  <span v-else v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </div>
+        <div class="info_tab_footer">
+          共计:{{ total }}
+          <div class="show_pager">
+            <Pager :total="total" @change="handlePageChange" />
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -75,6 +94,48 @@ export default {
   },
   data() {
     return {
+      isAllTable: false, // true-表格全屏
+      isShowTable: false, // true-显示table false-隐藏table
+      showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
+      isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
+      sliderStep: 0,
+      resouseData: {
+        "currentPage": 1,
+        "pageSize": 10000,
+        "totalCount": 2,
+        "totalPage": 1,
+        "list": [{
+          "id": "1078222090932322307",
+          "orderSerial": "AFTC201812271731180738822",
+          "driverId": "1076033378458796032",
+          "address": "广东省广州市天河区天河东路240号靠近中国工商银行(广州天河支行)",
+          "dirverName": "13560000001",
+          "latitude": "23.132086",
+          "longitude": "113.333569",
+          "locationTime": 1545903154000,
+          "createTime": 1545903154000,
+          "updateTime": 1545903154000,
+          "creater": "13560000001",
+          "updater": "13560000001",
+          "version": null,
+          "truckIdNumber": '粤L1Y998'
+        }, {
+          "id": "1078222289415176192",
+          "orderSerial": "AFTC201812271731180738822",
+          "driverId": "1076033378458796032",
+          "address": "广东省广州市天河区天河东路240号靠近中国工商银行(广州天河支行)",
+          "dirverName": "13560000001",
+          "latitude": "26.904987",
+          "longitude": "116.405289",
+          "locationTime": 1545903201000,
+          "createTime": 1545903201000,
+          "updateTime": 1545903201000,
+          "creater": "13560000001",
+          "updater": "13560000001",
+          "version": null,
+          "truckIdNumber": '粤L1Y998'
+        }]
+      },
       popTreeVisible: false,
       gridData: [],
       tablekey: 0,
@@ -85,68 +146,110 @@ export default {
       thepos: '',
       thename: '',
       theobj: {},
-      form: {},
       btnsize: 'mini',
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       pickerOptions2: {
         shortcuts: pickerOptions2
       },
+      truckList: [],
       groupList: [{
         name: '安发车组',
         truck: [{
-          truckNumber: '粤L1Y998'
-        },
-        {
-          truckNumber: '粤S1Y688'
-        }]
+            truckIdNumber: '粤L1Y998'
+          },
+          {
+            truckIdNumber: '粤S1Y688'
+          }
+        ]
+      }, {
+        name: '纽枯禄车组',
+        truck: [{
+            truckIdNumber: '川A1Y221'
+          },
+          {
+            truckIdNumber: '京B1Y463'
+          }
+        ]
+      }, {
+        name: '洁柔车组',
+        truck: [{
+            truckIdNumber: '豫A1Y221'
+          },
+          {
+            truckIdNumber: '鲁B1Y463'
+          }
+        ]
       }],
       tableColumn: [{
-        label: '序号',
-        prop: 'number',
-        width: '70',
-        fixed: true
-      }, {
-        label: '车牌号码',
-        prop: 'truckNumber',
-        width: '110',
-        fixed: true
-      }, {
-        label: '时间',
-        prop: 'time',
-        width: '150'
-      }, {
-        label: '速度 km/h',
-        prop: 'speed',
-        width: '100'
-      }, {
-        label: '方向',
-        prop: 'dirction',
-        width: '100'
-      }, {
-        label: '里程 km',
-        prop: 'li',
-        width: '80'
-      },{
-        label: '海拔 m',
-        prop: 'li',
-        width: '80'
-      },  
-      {
-        label: '部件状态',
-        prop: 'status',
-        width: '90'
-      }, {
-        label: '位置',
-        prop: 'location'
-      }
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          },
+          fixed: true
+        }, {
+          label: '车牌号码',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: true
+        },
+        {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '110',
+          fixed: true
+        }, {
+          label: '车辆定位时间',
+          prop: 'locationTime',
+          width: '160',
+          slot: (scope) => {
+            return parseTime(scope.row.locationTime, '{y}-{m}-{d} {h}:{i}:{s}')
+          }
+        }, {
+          label: '速度 km/h',
+          prop: 'speed',
+          width: '100'
+        }, {
+          label: '方向',
+          prop: 'direction',
+          width: '100'
+        }, {
+          label: '里程 km',
+          prop: 'li',
+          width: '80'
+        }, {
+          label: '海拔 m',
+          prop: 'li',
+          width: '80'
+        },
+        {
+          label: '部件状态',
+          prop: 'status',
+          width: '90'
+        }, {
+          label: '位置',
+          prop: 'address'
+        }
       ],
       total: 0,
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
-        vo: {}
+        vo: {
+          truckIdNumber: '',
+          startTime: '',
+          endTime: ''
+        }
       },
-      tableHeight: '300'
+      tableHeight: {
+        height: 300,
+        x: 0,
+        y: 0
+      },
+      pathSimplifierIns: {},
+      map: {},
+      isDrag: false
     }
   },
   watch: {
@@ -175,6 +278,64 @@ export default {
     this.exit()
   },
   methods: {
+    conStart(event) {
+      let eventY = event.pageY //鼠标当前位置的y坐标
+      this.tableHeight.y = eventY
+      this.tableHeight.orgheight = this.tableHeight.height
+      if (!this.isShowTable) {
+        this.isShowTable = true
+        this.tableHeight.height = 36
+      }
+      this.isDrag = true
+      console.log('conStart eventY', eventY)
+
+      console.log('allmap', this.$refs.allmap.offsetHeight)
+    },
+    conMove(event) {
+      if (this.isDrag) {
+        console.log(this.$refs.allmap.offsetHeight)
+        let h = this.tableHeight.y - event.pageY
+        let height = this.tableHeight.orgheight + h
+        this.isShowTable = height >= 37
+        this.isAllTable = this.$refs.allmap.offsetHeight < 190
+        this.tableHeight.height = height
+      }
+    },
+    conEnd(event) {
+      if (this.isDrag) {
+        this.tableHeight.y = event.pageY
+        this.isDrag = false
+      }
+    },
+    calcWH() {
+
+    },
+    bindKey() {
+      document.addEventListener('mousemove', this.conMove, true)
+      document.addEventListener('mouseup', this.conEnd, true)
+    },
+    unbindKey() {
+      document.addEventListener('mousemove', this.conMove)
+      document.addEventListener('mouseup', this.conEnd)
+    },
+    mapTruck() {
+      this.isShowInlineTruckMap = !this.isShowInlineTruckMap
+      this.showSearchCard = false
+      setTimeout(() => {
+        this.showSearchCard = true
+      }, 300)
+    },
+    hideTable() {
+      this.isShowTable = !this.isShowTable
+    },
+    selectGroup(row, index) {
+      this.truckList = row.truck
+    },
+    selectTruck(row, index) {
+      console.log('选择车辆', index, row)
+      this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
+      this.popTreeVisible = false
+    },
     handlePageChange() {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
@@ -185,10 +346,75 @@ export default {
       // this.$message.warning('功能尚在开发中 ~')
     },
     onSubmit() { // 查询
+      // this.$message.warning('功能尚在开发中 ~')
+      let data = this.resouseData
+      this.dataList = data.list
+      this.isShowTable = true
+    },
+    exportData() { // 导出数据表格
       this.$message.warning('功能尚在开发中 ~')
     },
-    exportData () { // 导出数据表格
-      this.$message.warning('功能尚在开发中 ~')
+    doLine(type) {
+      switch (type) {
+        case 'start':
+          this.getNavg()
+          break
+        case 'end':
+          break
+      }
+    },
+    getNavg() {
+      const _this = this
+      const AMapUI = window.AMapUI
+      const map = _this.map
+      AMapUI.load(['ui/misc/PathSimplifier'], function(PathSimplifier) {
+        if (!PathSimplifier.supportCanvas) {
+          alert('当前环境不支持 Canvas！');
+          return;
+        }
+        console.log('getNavg this.map', map)
+        var pathSimplifierIns = new PathSimplifier({
+          zIndex: 100,
+          map: map, //所属的地图实例
+          getPath: function(pathData, pathIndex) {
+            return pathData.path;
+          },
+          getHoverTitle: function(pathData, pathIndex, pointIndex) {
+            if (pointIndex >= 0) {
+              //point 
+              return pathData.name + '，点：' + pointIndex + '/' + pathData.path.length;
+            }
+            return pathData.name + '，点数量' + pathData.path.length;
+          },
+          renderOptions: {
+            renderAllPointsIfNumberBelow: 100 //绘制路线节点，如不需要可设置为-1
+          }
+        })
+        window.pathSimplifierIns = pathSimplifierIns
+        //设置数据
+        pathSimplifierIns.setData(_this.setDataLine())
+        //对第一条线路（即索引 0）创建一个巡航器
+        var navg1 = pathSimplifierIns.createPathNavigator(0, {
+          loop: false, //循环播放
+          speed: 1000000 //巡航速度，单位千米/小时
+        })
+        navg1.start()
+      })
+    },
+    setDataLine() { // 设置经纬度数据
+      let arr = []
+      let obj = {
+        name: '',
+        path: []
+      }
+      this.dataList.forEach((e, index) => {
+        let location = [Number(e.longitude), Number(e.latitude)]
+        obj.name = e.truckIdNumber
+        obj.path.push(location)
+      })
+      arr.push(obj)
+      console.log('setDataLine', arr)
+      return arr
     },
     exit() {
       if (this.map && this.map.destroy && typeof this.map.destroy === 'function') {
@@ -208,11 +434,12 @@ export default {
       if (this.popVisible) {
         this.thepos = this.pos
         this.thename = this.name
-
       } else {
         // 隐藏时，摧毁地图对象
         // this.exit()
       }
+      this.onSubmit()
+      this.bindKey()
     },
     loadMap() {
       if (window.AMap) {
@@ -223,11 +450,15 @@ export default {
         }, 500)
       } else {
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-          // loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
-          // this.initMap()
-          // })
+          loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+            this.initMap()
+            console.log('window.AMap', window.AMap)
+            console.log('window.AMapUI', window.AMapUI)
+            console.log('this.map', this.map)
+          })
         })
       }
+
     },
     close(done) {
       this.exit()
@@ -261,7 +492,6 @@ export default {
         this.$refs['tipinput'].value = name.replace('市辖区', '')
         placeSearch.search(name)
       }
-
       /* AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
         var map = new AMap.Map('container', {
           zoom: 16
@@ -385,18 +615,18 @@ export default {
       this.noinfo = false
       console.log(obj)
     },
-    submitForm() {
-      this.$emit('success', this.thepos, this.thename, this.theobj)
-      this.close()
-    },
-    fetchData() {
-      console.log('this.orderdata.tmsOrderShipInfo:', this.orderdata.tmsOrderShipInfo)
-      if (this.orderdata.tmsOrderShipInfo) {
-        this.start = this.orderdata.tmsOrderShipInfo.shipFromCityName || '广州市'
-        this.end = this.orderdata.tmsOrderShipInfo.shipToCityName || '杭州市'
-        return
-      }
-    }
+    // submitForm() {
+    //   this.$emit('success', this.thepos, this.thename, this.theobj)
+    //   this.close()
+    // },
+    // fetchData() {
+    //   console.log('this.orderdata.tmsOrderShipInfo:', this.orderdata.tmsOrderShipInfo)
+    //   if (this.orderdata.tmsOrderShipInfo) {
+    //     this.start = this.orderdata.tmsOrderShipInfo.shipFromCityName || '广州市'
+    //     this.end = this.orderdata.tmsOrderShipInfo.shipToCityName || '杭州市'
+    //     return
+    //   }
+    // }
   }
 }
 

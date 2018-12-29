@@ -178,7 +178,7 @@
           <el-button icon="el-icon-view" @click="print('preview', true)" size="mini" title="打印预览(包含背景图)">+ <i class="el-icon-picture-outline"></i></el-button>
         </div>
       </div>
-      <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
+      <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)' @click="clickPanel">
         <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' :data-index="item._index" @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
           cursor: dragCursor,
           transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
@@ -194,7 +194,7 @@
             <!-- {{'(x :'+Math.round(item.leftx) +' mm, y :'+ Math.round(item.topy)+ ' mm)'}} {{'(宽: '+item.width +' mm, 高: '+ item.height + ' mm)'}} -->
           </div>
           <div class="dragSizeControler">
-            <span>{{'{ '+item.filedName+ ' }'}}</span>
+            <span>{{(item.filedValue === 'customFields' ? '' :'{')+item.filedName+ (item.filedValue === 'customFields' ? '' :'}')}}</span>
             <div class="conrigth" @dragstart.prevent.stop @mousedown.prevent.stop.capture="($event) => conrigthStart($event, item, index, 'right')"></div>
             <div class="conbottom" @dragstart.prevent.stop.capture @mousedown.prevent.stop.capture="($event) => conrigthStart($event, item, index, 'bottom')"></div>
             <div class="conbottomright" @dragstart.prevent.stop.capture @mousedown.prevent.stop.capture="($event) => conrigthStart($event, item, index, 'bottomright')"></div>
@@ -606,6 +606,9 @@ export default {
         row.y = event.pageY
         this.isDrag = null
       }
+    },
+    clickPanel (event) {
+      console.log(event)
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       console.log('skdofkwoefkosd  row::::', row)
