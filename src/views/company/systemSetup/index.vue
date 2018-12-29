@@ -280,6 +280,12 @@
                 <el-form-item>
                   <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
                 </el-form-item>
+                <el-form-item>
+                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-document" type="primary" plain>打印配载单设置</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="primary" plain>打印合同设置</el-button>
+                </el-form-item>
               </div>
             </div>
           </el-collapse-item>
@@ -304,6 +310,8 @@
     </div>
     <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
     <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" ></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" ></printContract>
   </div>
 </template>
 <script>
@@ -314,13 +322,17 @@ import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrderSelf'
 import printSetLi from './components/printSetLiSelf'
+import printLoadInfo from './components/printLoadInfo'
+import printContract from './components/printContract'
 
 export default {
   name: 'systemSetup',
   components: {
     SelectType,
     printSetOrder,
-    printSetLi
+    printSetLi,
+    printLoadInfo,
+    printContract
   },
   computed: {
     ...mapGetters([
@@ -336,6 +348,8 @@ export default {
       cargoNo: '',
       printSetOrderVisible: false,
       printSetLiVisible: false,
+      printLoadInfoVisible: false,
+      printContractVisible: false,
       nochange: true,
       tooltip1: false,
       tooltip2: false,
@@ -636,6 +650,14 @@ export default {
           break
         case 'printSetLi': // 打印标签设置
           this.printSetLi()
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
+        case 'printLoadInfo': // 打印配载单设置
+          this.printLoadInfoVisible = true
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
+        case 'printContract': // 打印合同设置
+          this.printContractVisible = true
           // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
       }

@@ -81,3 +81,20 @@ export function getCommonSettingLib() {
     return res.data
   })
 }
+
+/**
+ * 打印列表设置
+ * "companyId": 1,
+   "printType": 0 清单 1运输合同
+ */
+export function getPrintSetting(data) {
+  return fetch.post('/api-system/system/tmssystemsettingprint/v1.4/getSystemSettingPrintList', data)
+}
+
+/**
+ * 修改打印列表设置
+ */
+export function putPrintSetting(data) {
+  return fetch.put('/api-system/system/tmssystemsettingprint/v1.4/updateSystemSettingPrints', data)
+}
+
