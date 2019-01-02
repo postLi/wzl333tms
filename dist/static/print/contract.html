@@ -187,6 +187,7 @@
   contract_title_number.innerHTML = 'NO.' + data.contractNo
   partA.innerHTML = data.orgName
   contract_companyname.innerHTML = data.heading_content || ''
+  contract_companyname.style.fontSize = (data.heading_word_size || 18) + 'px'
   partB.innerHTML = data.carrier
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
