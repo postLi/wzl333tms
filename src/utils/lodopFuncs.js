@@ -1530,7 +1530,7 @@
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
 
    table.setAttribute('width', '100%')
-   table.setAttribute('border', '1px solid #999')
+   table.setAttribute('border', '1')
    table.style.borderCollapse = 'collapse'
    table.style.fontSize = (printObj.content_word_size || '16') + 'px'
    // table.style.wordBreak = 'break-all';
@@ -1577,17 +1577,17 @@
    tbodyStr += '<tr style="height:36px;"><td>合计</td><td style="text-align:left;">大写：' + obj.amountMessage + '</td>' +
      '<td colspan="10" style="text-align:left;">小写：' + obj.amount + ' 元</td>'
    // 结算单信息
-   const infoStr = '<p style="margin:0;padding:0;">单据号<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
-     obj.settlementSn + '</label></p><p style="margin:0;padding:0;">发生时间<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
-     obj.settlementTime + '</label></p><p style="margin:0;padding:0;">经办人<label style="border-bottom:1px solid #333;padding:0 20px 0 ;margin-left: 10px;">' +
+   const infoStr = '<p style="margin:0;padding:0;">单据号<label style="border-bottom:1px solid black;padding:0 20px 0 ;margin-left: 10px;">' +
+     obj.settlementSn + '</label></p><p style="margin:0;padding:0;">发生时间<label style="border-bottom:1px solid black;padding:0 20px 0 ;margin-left: 10px;">' +
+     obj.settlementTime + '</label></p><p style="margin:0;padding:0;">经办人<label style="border-bottom:1px solid black;padding:0 20px 0 ;margin-left: 10px;">' +
      obj.settlementBy + '</label></p>'
 
    div.setAttribute('id', tableId)
    div.setAttribute('style', "text-align:center;width:100%;font-family:'微软雅黑';font-size:10px")
-   h3.setAttribute('style', 'border-bottom: 2px solid #333;margin-left:calc(50% - 80px);font-size:1.6rem;')
+   h3.setAttribute('style', 'border-bottom: 2px solid black;margin-left:calc(50% - 80px);font-size:1.6rem;')
    table.setAttribute('style', "width: 100%;text-align:center;font-size:0.8rem;font-family:'微软雅黑';margin-top:0.8rem;")
    thead.setAttribute('style', "background-color: '#EEEEEE';font-weight:400;")
-   table.setAttribute('border', '1px solid #999')
+   table.setAttribute('border', '1px solid black')
    table.style.borderCollapse = 'collapse'
    infoDiv.setAttribute('style', 'width:100%;display: inline-flex;flex-direction: row;line-height: 1.3rem;margin-top: 2rem;margin-bottom: 1rem;justify-content: space-between;font-size:1rem;')
    thead.innerHTML = theadStr
