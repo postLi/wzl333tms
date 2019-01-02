@@ -102,23 +102,23 @@ export const asyncRouterMap = [
       name: 'console',
       icon: 'baobiao',
       meta: {
-          title: '财务控制台',
-          noCache: false,
-          'code': 'HOME_PAGE_4',
-          'proute': 'dashboard'
-        }
+        title: '财务控制台',
+        noCache: false,
+        'code': 'HOME_PAGE_4',
+        'proute': 'dashboard'
+      }
     }, {
-        path: '/console2',
-        component: _import('html5/index2'),
-        name: 'console2',
-        icon: 'c',
-        meta: {
+      path: '/console2',
+      component: _import('html5/index2'),
+      name: 'console2',
+      icon: 'c',
+      meta: {
           title: '运输控制台',
           noCache: false,
           'code': 'HOME_PAGE_5',
           'proute': 'dashboard'
         }
-      }, {
+    }, {
         path: '/checklist/index',
         component: _import('checklist/index'),
         name: 'checklistpage',
@@ -137,7 +137,7 @@ export const asyncRouterMap = [
         meta: {
           title: '流程图',
           noCache: true,
-          'code': 'HOME_PAGE_3',
+          // 'code': 'HOME_PAGE_3',
           'proute': 'dashboard'
         }
       }, {
