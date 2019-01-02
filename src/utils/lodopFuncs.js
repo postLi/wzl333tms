@@ -13,6 +13,7 @@
  import {
    getUserInfo
  } from '@/utils/auth'
+ import { getPrintSetting } from '@/api/operation/print'
 
  // import ExportJsonExcel from 'js-export-excel'
  //  const ExportJsonExcel = require('js-export-excel')
@@ -248,81 +249,133 @@
  }
  // 打印表格
  export function PrintInFullPage(obj) {
-   try {
-     // let tableId = createTable(data, columns) // 重新创建打印视图table
-     obj = formatTableData(objectMerge2({}, obj))
-     const topStyle = objectMerge2({
-       top: '1%',
-       left: '1%',
-       width: '98%',
-       height: '20%'
-     }, obj.topStyle || {})
-     const _topMainStyle = {
-       top: '14%',
-       left: '1%',
-       width: '98%',
-       height: '78%'
+   const fn = (printObj) => {
+     try {
+      // let tableId = createTable(data, columns) // 重新创建打印视图table
+       obj = formatTableData(objectMerge2({}, obj))
+       const topStyle = objectMerge2({
+         top: '1%',
+         left: '1%',
+         width: '98%',
+         height: '20%'
+       }, obj.topStyle || {})
+       const _topMainStyle = {
+         top: '14%',
+         left: '1%',
+         width: '97.5%',
+         height: '78%'
+       }
+       const _mainStyle = {
+         top: '1%',
+         left: '1%',
+         width: '97.5%',
+         height: '98%'
+       }
+
+       const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
+      /* const pageStyle = objectMerge2({
+        intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
+        intPageWidth: 0, // 单位为0.1mm
+        intPageHeight: 0,
+        strPageName: 'A4' // intPageWidth等于零时本参数才有效
+      }, obj.pageStyle || {}) */
+       const pageStyle = objectMerge2({
+         intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
+         intPageWidth: (printObj.paper_width || '218') + 'mm', // 单位为0.1mm 带孔240mm
+         intPageHeight: (printObj.paper_height || '278') + 'mm',
+         strPageName: ''
+       }, obj.pageStyle || {})
+
+       const objp = {
+         w: printObj.paper_width,
+         h: printObj.paper_height,
+         l: printObj.left_distance || 0,
+         t: printObj.top_distance || 0
+       }
+       objp.w = objp.w - 5 - objp.l
+       objp.h = objp.h - 5 - objp.t
+
+       console.log('print obj:', obj)
+       const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
+       console.log('tableId.innerHTML:', tableId.innerHTML)
+       LODOP = getLodop()
+      // PRINT_INITA(Top,Left,Width,Height,strPrintName)
+       if (obj.appendTop) {
+         pageStyle.intOrient = printObj.printing_direction || pageStyle.intOrient
+         LODOP.PRINT_INITA(objp.t, objp.l, objp.w, objp.h, '订货单')
+       } else {
+         LODOP.PRINT_INITA('0', '0', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
+       }
+
+      //  LODOP.PRINT_INIT('订货单')
+      // LODOP.SET_PRINT_STYLE("FontSize", 10);
+      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
+      // LODOP.SET_PRINT_STYLE("Bold", 1);
+       LODOP.SET_PRINT_PAGESIZE(pageStyle.intOrient, pageStyle.intPageWidth, pageStyle.intPageHeight, pageStyle.strPageName)
+       LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true)// 设置以纸张边缘为基点
+      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
+
+       if (printObj.printer) {
+         LODOP.SET_PRINTER_INDEXA(printObj.printer)
+       }
+
+       if (obj.appendTop) {
+         obj.appendTop = obj.appendTop.replace('{heading_content}', printObj.heading_content).replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)
+         LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
+
+        //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
+       }
+       LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
+       if (obj.appendTop) {
+         LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
+         LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
+       }
+
+       if (printObj.print_page_num === '1') {
+         const le = objp.w - 20
+         const to = objp.h - 20
+         // 如果是横向，翻转宽高位置
+         if (printObj.printing_direction === '2') {
+           const a = le
+           le = to
+           to = a
+         }
+         LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
+         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
+         LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
+         LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
+       }
+       console.log('printObj:', printObj)
+
+      //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
+
+      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
+       LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
+       LODOP.PREVIEW()
+     } catch (err) {
+       console.log('lodop PrintInFullPage error:', err)
+       getLodop()
      }
-     const _mainStyle = {
-       top: '1%',
-       left: '1%',
-       width: '98%',
-       height: '98%'
-     }
-     const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
-     /* const pageStyle = objectMerge2({
-       intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
-       intPageWidth: 0, // 单位为0.1mm
-       intPageHeight: 0,
-       strPageName: 'A4' // intPageWidth等于零时本参数才有效
-     }, obj.pageStyle || {}) */
-     const pageStyle = objectMerge2({
-       intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
-       intPageWidth: '218mm', // 单位为0.1mm 带孔240mm
-       intPageHeight: '278mm',
-       strPageName: ''
-     }, obj.pageStyle || {})
-
-     console.log('print obj:', obj)
-     const tableId = createTable(obj, true) // 重新创建打印视图table
-     console.log('tableId.innerHTML:', tableId.innerHTML)
-     LODOP = getLodop()
-     // PRINT_INITA(Top,Left,Width,Height,strPrintName)
-     if (obj.appendTop) {
-       LODOP.PRINT_INITA('-10px', '-3px', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
-     } else {
-       LODOP.PRINT_INITA('0', '0', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
-     }
-
-     //  LODOP.PRINT_INIT('订货单')
-     // LODOP.SET_PRINT_STYLE("FontSize", 10);
-     // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
-     // LODOP.SET_PRINT_STYLE("Bold", 1);
-     LODOP.SET_PRINT_PAGESIZE(pageStyle.intOrient, pageStyle.intPageWidth, pageStyle.intPageHeight, pageStyle.strPageName)
-     // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-
-     if (obj.appendTop) {
-       LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
-
-       //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
-     }
-     LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
-     if (obj.appendTop) {
-       LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
-       LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
-     }
-
-     //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
-
-     console.log('topStyle:', topStyle, mainStyle)
-
-     // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
-     LODOP.PREVIEW()
-   } catch (err) {
-     console.log('lodop PrintInFullPage error:', err)
-     getLodop()
    }
+   // 获取用户信息
+   const user = getUserInfo()
+   getPrintSetting({
+     'companyId': user.companyId,
+     'printType': 0
+   }).then(res => {
+     const data = res.data
+     if (data) {
+       const obj = {}
+       data.forEach(el => {
+         obj[el.fieldName] = el.fieldValue
+       })
+       fn(obj)
+     } else {
+       console.error('获取打印信息失败')
+     }
+   }).catch(err => {
+
+   })
  }
  // 打印表格 普通table
  export function PrintInSamplePage(obj) {
@@ -346,32 +399,71 @@
  }
  // 打印合同或核销凭证
  export function PrintContract(obj, type) {
-   try {
-     const tableId = obj
-     LODOP = getLodop()
-     if (type === 'voucher') {
-       LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
-     } else {
-       LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '合同')
-     }
+   const fn = (printObj) => {
+     try {
+       const tableId = obj
+       LODOP = getLodop()
+       if (type === 'voucher') {
+         LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
+         LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
+       } else {
+         const objp = {
+           w: printObj.paper_width,
+           h: printObj.paper_height,
+           l: printObj.left_distance || 0,
+           t: printObj.top_distance || 5
+         }
+         objp.w = objp.w - 5 - objp.l
+         objp.h = objp.h - 5 - objp.t
+         LODOP.PRINT_INITA(objp.t + 'mm', objp.l + 'mm', objp.w + 'mm', objp.h + 'mm', '合同')
+         LODOP.SET_PRINT_PAGESIZE(printObj.printing_direction, printObj.paper_width + 'mm', printObj.paper_height + 'mm', '合同')
+         if (printObj.printer) {
+           LODOP.SET_PRINTER_INDEXA(printObj.printer)
+         }
+         console.log('PrintContract printObj:', printObj, objp)
+         obj += encodeURI('&heading_content=' + printObj.heading_content + '&heading_word_size=' + printObj.heading_word_size + '&content_word_size=' + printObj.content_word_size)
+       }
      //  LODOP.PRINT_INIT('合同')
 
-     LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true) // 设置以纸张边缘为基点
-     LODOP.SET_PRINT_STYLE('FontSize', 14)
+       LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true) // 设置以纸张边缘为基点
+       LODOP.SET_PRINT_STYLE('FontSize', 14)
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
-     LODOP.SET_PRINT_STYLE('Bold', 1)
+       LODOP.SET_PRINT_STYLE('Bold', 1)
      //  LODOP.SET_PRINT_PAGESIZE(1, 0, 0, 'A4')
-     LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
 
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-     console.log(obj)
-     LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '98%', 'URL:' + obj)
+       console.log(obj)
+       LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '98%', 'URL:' + obj)
      // LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
-     LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
-     LODOP.PREVIEW()
-   } catch (err) {
-     getLodop()
+       LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
+       LODOP.PREVIEW()
+     } catch (err) {
+       getLodop()
+     }
+   }
+   if (type === 'voucher') {
+     fn()
+   } else {
+    // 获取用户信息
+     const user = getUserInfo()
+     getPrintSetting({
+       'companyId': user.companyId,
+       'printType': 1
+     }).then(res => {
+       const data = res.data
+       if (data) {
+         const obj = {}
+         data.forEach(el => {
+           obj[el.fieldName] = el.fieldValue
+         })
+         fn(obj)
+       } else {
+         console.error('获取打印信息失败')
+       }
+     }).catch(err => {
+
+     })
    }
  }
  // 打印结算单
@@ -478,9 +570,11 @@
    }
    infoDetail.agencyFundTotal = 0 // 代收货款合计
    infoDetail.cargoAmountTotal = 0 // 货品件数合计
+   // infoDetail.brokerageFeeTotal = 0 // 回扣合计
    cargoList.forEach(e => { // 计算代收货款合计
      infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
      infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+     // infoDetail.brokerageFeeTotal = tmsMath._add(infoDetail.brokerageFeeTotal, e.brokerageFee)
    })
    console.warn(infoDetail)
    // 公用
@@ -626,6 +720,7 @@
      obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
      obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
      obj.agencyFundTotal = parseFloat(infoDetail.agencyFundTotal) || '' // 代收款合计
+     // obj.brokerageFeeTotal = parseFloat(infoDetail.brokerageFeeTotal) || '' // 回扣合计
      obj.receiptRequire = infoDetail.shipReceiptRequireName // 回单要求
      obj.shipReceiptSn = infoDetail.shipReceiptSn // 回单号
      obj.customerNumber = infoDetail.shipCustomerNumber // 客户单号
@@ -806,16 +901,16 @@
    // printer-打印机
    // number-打印份数
    // preview-是否预览
-   // bkimg-是否背景图 
+   // bkimg-是否背景图
    return new Promise((resolve, reject) => {
      try {
        const prxvalue = 0.264
        const str = ''
-       let imgNameStr = '预览图片TMS,'
+       const imgNameStr = '预览图片TMS,'
        // let islib = false // 判断是否标签打印
        let printSetup = []
        let copy = []
-       let bkimg = info.bkimg || false
+       const bkimg = info.bkimg || false
        LODOP = getLodop()
        console.log('print', info, printer, number)
        // 2.0：处理数据
@@ -1350,7 +1445,7 @@
    }
  }
 
- function createTable(obj, noUnit, page) { // 打印导出创建表格视图
+ function createTable(obj, noUnit, page, printObj) { // 打印导出创建表格视图
    const data = obj.data // 数据表格
    const columns = obj.columns // 表格设置列
    console.log('data', data)
@@ -1384,6 +1479,9 @@
    const colgroup = document.createElement('colgroup') // 设置列宽 无效果
    const summaries = getSummaries(obj, '', noUnit, '')
 
+   // 控制是否换行
+   const iswrap = printObj.content_wrap === '1' ? 'normal;word-break: break-all;' : 'nowrap;'
+
    for (let i = 0; i < columns.length; i++) { // 设置表头
      const th = document.createElement('td')
      const col = document.createElement('col')
@@ -1391,14 +1489,14 @@
      // th.innerHTML = columns[i].label
      th.style.fontWeight = 600
      th.style.height = '25px'
-     th.innerHTML = '<div style="white-space:nowrap;width:' + columns[i].width + 'px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
+     th.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[i].width + 'px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
 
      theadTr.appendChild(th)
      colgroup.appendChild(col)
 
      const tfoottd = document.createElement('td')
      console.warn(typeof summaries[i], summaries[i])
-     tfoottd.innerHTML = '<div style="white-space:nowrap;width:' + columns[i].width + 'px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
+     tfoottd.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[i].width + 'px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
      // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
      tfootTr.appendChild(tfoottd)
    }
@@ -1419,9 +1517,9 @@
        // 处理当列没有值、宽度设置等信息时，做默认值处理
        // td.innerHTML = (columns[j].prop === 'id' || columns[j].label === '序号') ? k + 1 : (typeof data[k][columns[j].prop] === 'undefined' ? '' : data[k][columns[j].prop])
        // td.innerHTML = data[k][columns[j].prop] || ''
-       td.innerHTML = '<div style="white-space:nowrap;width:' + columns[j].width + 'px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
+       td.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[j].width + 'px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
        td.style.width = columns[j].width
-       td.style.whitSpace = 'nowrap'
+      //  td.style.whitSpace = iswrap
        // td.setAttribute('width', data[k][columns[j].width])
      }
    }
@@ -1434,7 +1532,7 @@
    table.setAttribute('width', '100%')
    table.setAttribute('border', '1px solid #999')
    table.style.borderCollapse = 'collapse'
-   table.style.fontSize = '16px'
+   table.style.fontSize = (printObj.content_word_size || '16') + 'px'
    // table.style.wordBreak = 'break-all';
    // table.style.wordWrap = 'break'
    div.appendChild(table)
