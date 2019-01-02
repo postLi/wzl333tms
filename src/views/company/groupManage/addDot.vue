@@ -244,18 +244,18 @@
   } from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
-  import SelectCity from '@/components/selectCity/index'
-  import querySelect from '@/components/querySelect/index'
-  import {REGEX} from '../../../utils/validate'
-  import {objectMerge2} from '@/utils/index'
-  import {mapGetters} from 'vuex'
+
+  import querySelect from '@/components/querySelect/city'
+  import { REGEX } from '../../../utils/validate'
+  import { objectMerge2 } from '@/utils/index'
+  import { mapGetters } from 'vuex'
   import SelectType from '@/components/selectType/index'
   // import {Obj}
   export default {
     components: {
       popRight,
       SelectTree,
-      SelectCity,
+
       querySelect,
       SelectType
     },
@@ -374,36 +374,36 @@
         },
         rules: {
           orgName: [
-            {required: true, message: '请输入网点名称'}
+            { required: true, message: '请输入网点名称' }
           ],
           servicePhone: [
-            {required: true, pattern: REGEX.TELANDPHONE, message: '客服号码格式不正确'}
+            { required: true, pattern: REGEX.TELANDPHONE, message: '客服号码格式不正确' }
           ],
           responsibleName: [
-            {validator: callBackName, trigger: 'blur'},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { validator: callBackName, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           responsibleTelephone: [
-            {pattern: REGEX.MOBILE, message: '请输入正确的电话号码', trigger: ['blur', 'change']}
+            { pattern: REGEX.MOBILE, message: '请输入正确的电话号码', trigger: ['blur', 'change'] }
           ],
           serviceName: [
-            {validator: callBackName, trigger: 'blur'},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { validator: callBackName, trigger: 'blur' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           networkCode: [
-            {required: true, message:'请输入网点代码'},
-            {min: 2, message: '最少2个字符', trigger: 'blur'},
-            {max: 10, message: '不可超过10个字符', trigger: 'blur'}
+            { required: true, message: '请输入网点代码' },
+            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
             // 请选择城市
-            {required: true, message:'请选择城市'}
+            { required: true, message: '请选择城市' }
           ],
           accountName: [
-            {required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME},
-            {max: 15, message: '不能超过15个字符', trigger: 'blur'}
+            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+            { max: 15, message: '不能超过15个字符', trigger: 'blur' }
           ]
         },
         dialogVisible: false,
@@ -518,7 +518,7 @@
               if (!bool) {
                 this.closeMe()
               }
-                this.popTitle = '新增网点'
+              this.popTitle = '新增网点'
               this.loading = false
             }).catch(err => {
               this._handlerCatchMsg(err)

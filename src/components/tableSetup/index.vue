@@ -225,7 +225,7 @@ export default {
             const find = this.showColumnData.filter(el => el.prop === data.prop)
             if (find.length) {
               find[0].width = data.width
-              this.changeTbaleSetup()
+              this.changeTableSetup()
             }
           } else {
             data.forEach(dat => {
@@ -234,7 +234,7 @@ export default {
                 find[0].width = dat.width
               }
             })
-            this.changeTbaleSetup()
+            this.changeTableSetup()
           }
         }
       })
@@ -400,10 +400,10 @@ export default {
           "companyId": 1
         } */
           let len2 = data.length
-          let copydata = []
-          let copyflag = {}
-          data.forEach(el=>{
-            if(!copyflag[el.prop]){
+          const copydata = []
+          const copyflag = {}
+          data.forEach(el => {
+            if (!copyflag[el.prop]) {
               copyflag[el.prop] = true
               copydata.push(el)
             }
@@ -517,7 +517,7 @@ export default {
         this.fetchFail()
       }) */
     },
-    changeTbaleSetup() {
+    changeTableSetup() {
       if (this.thecode) {
         return putChangeTableSetup(this.otherinfo.orgid, this.thecode, this.formatColumn(this.showColumnData)).then(res => {
           this.$message.info('保存成功')
@@ -790,7 +790,7 @@ export default {
       if (this.thecode) {
         if (!this.isloading) {
           this.isloading = true
-          this.changeTbaleSetup().then(res => {
+          this.changeTableSetup().then(res => {
             this.isloading = false
             this.callback()
           }).catch(e => {
