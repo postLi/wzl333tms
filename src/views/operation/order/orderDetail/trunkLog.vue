@@ -22,12 +22,7 @@
     <transition name="el-zoom-in-center">
       <el-card v-if="popTreeVisible" class="popTree" v-show="!isAllTable">
         <div class="popTree-group">
-          <div v-for="(item, index) in groupList" class="popTree-group-item" :class="" @click="selectGroup(item, index)">
-            <p>{{item.name}}</p>
-          </div>
-        </div>
-        <div class="popTree-child">
-          <div v-for=" (item, index) in truckList " @click="selectTruck(item, index)" class="popTree-child-item">
+          <div v-for="(item, index) in realTimeTrucks" class="popTree-group-item" :class="" @click="selectGroup(item, index)">
             <p>{{item.truckIdNumber}}</p>
           </div>
         </div>
@@ -38,11 +33,11 @@
       <transition name="el-zoom-in-center">
         <div class="control-panel" v-show="!isAllTable">
           <el-button :size="btnsize" type="text" icon="el-icon-caret-right" @click="doLine('start')"></el-button>
-          <el-button :size="btnsize" type="text" icon="el-icon-refresh" @click="doLine('end')"></el-button>
+          <el-button :size="btnsize" type="text" icon="el-icon-refresh" @click="doLine('refresh')"></el-button>
           <span>速度:</span><i style="color: green;">慢 </i>
           <el-slider v-model="sliderStep" class="slider-step"></el-slider>
           <i style="color: #409eff;">快 </i>
-          <el-progress :text-inside="true" :stroke-width="18" :percentage="70" status="success"></el-progress>
+          <el-progress :text-inside="true" :stroke-width="18" :percentage="progressPercentage" status="success"></el-progress>
         </div>
       </transition>
       <div @mousedown.prevent.stop.capture="conStart" class="control-bur">
@@ -56,7 +51,7 @@
     <transition name="el-zoom-in-bottom">
       <div class="truck-log-info" v-if="isShowTable">
         <div class="info_tab">
-          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border :height="tableHeight.height+'px'" show-summary tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
+          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border :height="tableHeight.height+'px'" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
               </el-table-column>
@@ -84,6 +79,7 @@
 import orderManage from '@/api/operation/orderManage'
 import { loadJs, objectMerge2, pickerOptions2, parseTime } from '@/utils/'
 import Pager from '@/components/Pagination/index'
+import { realTimeLocation, trajectory } from '@/api/operation/truckLog'
 export default {
   components: {
     Pager
@@ -99,43 +95,6 @@ export default {
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
       isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
       sliderStep: 0,
-      resouseData: {
-        "currentPage": 1,
-        "pageSize": 10000,
-        "totalCount": 2,
-        "totalPage": 1,
-        "list": [{
-          "id": "1078222090932322307",
-          "orderSerial": "AFTC201812271731180738822",
-          "driverId": "1076033378458796032",
-          "address": "广东省广州市天河区天河东路240号靠近中国工商银行(广州天河支行)",
-          "dirverName": "13560000001",
-          "latitude": "23.132086",
-          "longitude": "113.333569",
-          "locationTime": 1545903154000,
-          "createTime": 1545903154000,
-          "updateTime": 1545903154000,
-          "creater": "13560000001",
-          "updater": "13560000001",
-          "version": null,
-          "truckIdNumber": '粤L1Y998'
-        }, {
-          "id": "1078222289415176192",
-          "orderSerial": "AFTC201812271731180738822",
-          "driverId": "1076033378458796032",
-          "address": "广东省广州市天河区天河东路240号靠近中国工商银行(广州天河支行)",
-          "dirverName": "13560000001",
-          "latitude": "26.904987",
-          "longitude": "116.405289",
-          "locationTime": 1545903201000,
-          "createTime": 1545903201000,
-          "updateTime": 1545903201000,
-          "creater": "13560000001",
-          "updater": "13560000001",
-          "version": null,
-          "truckIdNumber": '粤L1Y998'
-        }]
-      },
       popTreeVisible: false,
       gridData: [],
       tablekey: 0,
@@ -151,39 +110,11 @@ export default {
       pickerOptions2: {
         shortcuts: pickerOptions2
       },
-      truckList: [],
-      groupList: [{
-        name: '安发车组',
-        truck: [{
-            truckIdNumber: '粤L1Y998'
-          },
-          {
-            truckIdNumber: '粤S1Y688'
-          }
-        ]
-      }, {
-        name: '纽枯禄车组',
-        truck: [{
-            truckIdNumber: '川A1Y221'
-          },
-          {
-            truckIdNumber: '京B1Y463'
-          }
-        ]
-      }, {
-        name: '洁柔车组',
-        truck: [{
-            truckIdNumber: '豫A1Y221'
-          },
-          {
-            truckIdNumber: '鲁B1Y463'
-          }
-        ]
-      }],
+      groupList: [],
       tableColumn: [{
           label: '序号',
           prop: 'number',
-          width: '70',
+          width: '55',
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
           },
@@ -191,45 +122,53 @@ export default {
         }, {
           label: '车牌号码',
           prop: 'truckIdNumber',
+          width: '100',
+          fixed: true
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
           width: '110',
           fixed: true
         },
         {
           label: '司机名称',
           prop: 'dirverName',
-          width: '110',
           fixed: true
         }, {
           label: '车辆定位时间',
-          prop: 'locationTime',
-          width: '160',
-          slot: (scope) => {
-            return parseTime(scope.row.locationTime, '{y}-{m}-{d} {h}:{i}:{s}')
-          }
+          prop: 'time',
+          width: '160'
+          // slot: (scope) => {
+          //   return parseTime(scope.row.locationTime, '{y}-{m}-{d} {h}:{i}:{s}')
+          // }
         }, {
           label: '速度 km/h',
           prop: 'speed',
-          width: '100'
+          width: '90'
         }, {
           label: '方向',
           prop: 'direction',
-          width: '100'
+          width: '90'
         }, {
           label: '里程 km',
           prop: 'li',
-          width: '80'
+          width: '80',
+          slot: (scope) => {
+            return ' - '
+          }
         }, {
           label: '海拔 m',
-          prop: 'li',
+          prop: 'altitude',
           width: '80'
         },
         {
           label: '部件状态',
           prop: 'status',
-          width: '90'
-        }, {
-          label: '位置',
-          prop: 'address'
+          width: '90',
+          slot: (scope) => {
+            return ' - '
+          }
         }
       ],
       total: 0,
@@ -237,7 +176,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          truckIdNumber: '',
+          truckIdNumber: '陕YH0009',
           startTime: '',
           endTime: ''
         }
@@ -249,7 +188,11 @@ export default {
       },
       pathSimplifierIns: {},
       map: {},
-      isDrag: false
+      isDrag: false,
+      orgPageDataList: [],
+      orgDataList: [],
+      totalPageSize: 0,
+      realTimeTrucks: [] // 实时车辆信息
     }
   },
   watch: {
@@ -265,6 +208,21 @@ export default {
       deep: true
     }
   },
+  computed: {
+    progressPercentage() {
+      if (this.totalPageSize) {
+        if (this.searchQuery.currentPage === 1) {
+          return 0
+        }else {
+          console.log('progressPercentage', this.searchQuery.currentPage, this.totalPageSize, Math.floor((this.searchQuery.currentPage / this.totalPageSize)*100))
+        return Math.floor((this.searchQuery.currentPage / this.totalPageSize)*100)
+        }
+        
+      } else {
+        return 0
+      }
+    }
+  },
   mounted() {
     const _this = this
     window.loadedGaodeMap = function() {
@@ -278,6 +236,11 @@ export default {
     this.exit()
   },
   methods: {
+    selectGroup(row, index) {
+      console.log('选中的车：：', index, row.truckIdNumber, row.longitude, row.latitude, row)
+      this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
+      this.popTreeVisible = false
+    },
     conStart(event) {
       let eventY = event.pageY //鼠标当前位置的y坐标
       this.tableHeight.y = eventY
@@ -288,7 +251,6 @@ export default {
       }
       this.isDrag = true
       console.log('conStart eventY', eventY)
-
       console.log('allmap', this.$refs.allmap.offsetHeight)
     },
     conMove(event) {
@@ -328,28 +290,108 @@ export default {
     hideTable() {
       this.isShowTable = !this.isShowTable
     },
-    selectGroup(row, index) {
-      this.truckList = row.truck
-    },
-    selectTruck(row, index) {
-      console.log('选择车辆', index, row)
-      this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
-      this.popTreeVisible = false
-    },
-    handlePageChange() {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      this.getAllList()
+      this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
     },
     handleTruck() { // 修改车辆信息
       this.popTreeVisible = !this.popTreeVisible
       // this.$message.warning('功能尚在开发中 ~')
     },
-    onSubmit() { // 查询
-      // this.$message.warning('功能尚在开发中 ~')
-      let data = this.resouseData
-      this.dataList = data.list
-      this.isShowTable = true
+    onSubmit() { // 查询实时车辆
+      console.log('orderdata', this.orderdata)
+      let params = this.orderdata.tmsOrderShipInfo.id
+      let _this = this
+      if (this.isShowInlineTruckMap) {
+        // 实时车辆信息
+        realTimeLocation(params).then(data => {
+            if (data) {
+              this.realTimeTrucks = data
+              this.isShowTable = false
+              this.tomap()
+            }
+          })
+          .catch(err => {
+            this._handlerCatchMsg(err)
+          })
+      } else {
+
+        let fn = (lineData) => {
+          _this.orgPageDataList = []
+          _this.orgDataList = []
+          _this.dataList = []
+          _this.total = lineData.trajectoryList.length || 0
+          _this.totalPageSize = Math.floor(_this.total / this.searchQuery.pageSize) + 1
+          for (let i = 0; i < _this.totalPageSize; i++) {
+            _this.orgPageDataList[i] = []
+          }
+
+          lineData.trajectoryList.forEach((el, index) => {
+            el.dirverMobile = lineData.dirverMobile
+            el.dirverName = lineData.dirverName
+            el.truckIdNumber = lineData.truckIdNumber
+            let _index = Math.floor(index / _this.searchQuery.pageSize)
+            _this.orgDataList[index] = el
+            _this.orgPageDataList[_index].push(el)
+          })
+          // 当前页面的数据
+          _this.isShowTable = true
+          _this.dataList = _this.orgPageDataList[_this.searchQuery.currentPage]
+        }
+
+        if (localStorage.getItem('truckMessage')) {
+          fn(JSON.parse(localStorage.getItem('truckMessage')))
+          return
+        }
+        // 行车轨迹信息
+        trajectory(params).then(data => {
+          if (data) {
+            // if (data.length === 1) { // 单辆车轨迹
+            let lineData = data[0]
+            localStorage.setItem('truckMessage', JSON.stringify(lineData))
+            fn(lineData)
+
+            // }else { // 多辆车轨迹
+            // this.isShowTable = false
+            // }
+          }
+        })
+      }
+
+    },
+    tomap() { // 转高德坐标
+      const _this = this
+      const map = _this.map
+      const AMap = window.AMap
+      const AMapUI = window.AMapUI
+      let lnglat = []
+      let m2
+
+      // 坐标转换
+      let convertFrom = (lnglat, row, type) => {
+        AMap.convertFrom(lnglat, type, function(status, result) {
+          if (result.info === 'ok') {
+            var resLnglat = result.locations[0];
+            m2 = new AMap.Marker({
+              position: resLnglat
+            })
+            map.add(m2)
+            // 设置标签
+            m2.setLabel({
+              offset: new AMap.Pixel(20, 20),
+              content: row.address
+            })
+          }
+        })
+      }
+      if (_this.realTimeTrucks.length) {
+        _this.realTimeTrucks.forEach((e, index) => {
+          lnglat[index] = [e.longitude, e.latitude]
+          convertFrom(lnglat[index], e)
+        })
+        console.log('实时车辆定位：：', this.realTimeTrucks, lnglat, _this.map)
+      }
     },
     exportData() { // 导出数据表格
       this.$message.warning('功能尚在开发中 ~')
@@ -359,11 +401,16 @@ export default {
         case 'start':
           this.getNavg()
           break
-        case 'end':
+        case 'refresh':
+        this.refreshNavg()
           break
       }
     },
-    getNavg() {
+    refreshNavg () {
+      this.searchQuery.currentPage = 1
+      this.dataList = this.orgPageDataList[this.searchQuery.currentPage-1]
+    },
+    getNavg() { // 绘制轨迹
       const _this = this
       const AMapUI = window.AMapUI
       const map = _this.map
@@ -391,17 +438,31 @@ export default {
           }
         })
         window.pathSimplifierIns = pathSimplifierIns
-        //设置数据
-        pathSimplifierIns.setData(_this.setDataLine())
-        //对第一条线路（即索引 0）创建一个巡航器
-        var navg1 = pathSimplifierIns.createPathNavigator(0, {
-          loop: false, //循环播放
-          speed: 1000000 //巡航速度，单位千米/小时
-        })
-        navg1.start()
+        let fn = () => {
+          //设置数据
+          pathSimplifierIns.setData(_this.setDataLine())
+          //对第一条线路（即索引 0）创建一个巡航器
+          let navg1 = pathSimplifierIns.createPathNavigator(0, {
+            loop: false, //循环播放
+            speed: 1200000 //巡航速度，单位千米/小时
+          })
+          navg1.start()
+          _this.handlePageChange({
+            pageNum: _this.searchQuery.currentPage + 1,
+            pageSize: _this.searchQuery.pageSize
+          })
+         setTimeout(() => {
+           if (_this.searchQuery.currentPage < _this.totalPageSize) {
+            fn() // 运行一条轨迹
+          }
+         }, 1000)
+        }
+        if (_this.searchQuery.currentPage < _this.totalPageSize) {
+          fn() // 运行一条轨迹
+        }
       })
     },
-    setDataLine() { // 设置经纬度数据
+    setDataLine() { // 设置轨迹需要的经纬度数据
       let arr = []
       let obj = {
         name: '',
