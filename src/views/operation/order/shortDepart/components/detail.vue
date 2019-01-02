@@ -193,7 +193,7 @@ export default {
       },
       tableColumn: [],
       tableColumnArrival: [
-      {
+        {
           label: '序号',
           prop: 'number',
           width: '100',
@@ -201,7 +201,7 @@ export default {
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, 
+        },
         {
           label: '运单号',
           prop: 'shipSn',
@@ -630,15 +630,15 @@ export default {
           this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         }
         postAddRepertory(50, this.newData).then(data => {
-            if (data.status === 200) {
-              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
-              this.$message({ type: 'success', message: '短驳入库操作成功' })
-              this.message = true
-            } else {
-              this.message = false
-            }
-            this.$emit('isSuccess', this.message)
-          })
+          if (data.status === 200) {
+            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
+            this.$message({ type: 'success', message: '短驳入库操作成功' })
+            this.message = true
+          } else {
+            this.message = false
+          }
+          this.$emit('isSuccess', this.message)
+        })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -650,8 +650,8 @@ export default {
       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-          if (data) {
-            this.detailList = (data.data || []).map(el => {
+        if (data) {
+          this.detailList = (data.data || []).map(el => {
               const start = (el.shipFromCityName || '').split(',')
               const end = (el.shipToCityName || '').split(',')
               el.shipFromCityName = start[2] || start[1] || start[0] || ''
@@ -659,9 +659,16 @@ export default {
 
               return el
             })
-            this.setData()
-            this.toggleAllRows()
-            this.$nextTick(() => {
+            /* if (location.href.indexOf('192.168.1') !== -1 && this.detailList.length && true) {
+              let mi = 30
+              while (mi--) {
+                this.detailList.push(this.detailList[0])
+              }
+            } */
+
+          this.setData()
+          this.toggleAllRows()
+          this.$nextTick(() => {
               console.log('isNeedArrival', this.isNeedArrival)
               this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
@@ -674,9 +681,9 @@ export default {
                 }
               })
             })
-            this.detailTableLoading = false
-          }
-        })
+          this.detailTableLoading = false
+        }
+      })
         .catch(error => {
           this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)

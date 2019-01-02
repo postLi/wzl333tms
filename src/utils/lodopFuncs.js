@@ -149,7 +149,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -262,13 +262,13 @@
        const _topMainStyle = {
          top: '14%',
          left: '1%',
-         width: '98%',
+         width: '97.5%',
          height: '78%'
        }
        const _mainStyle = {
          top: '1%',
          left: '1%',
-         width: '98%',
+         width: '97.5%',
          height: '98%'
        }
 
@@ -340,7 +340,7 @@
            le = to
            to = a
          }
-         LODOP.ADD_PRINT_TEXT('60mm', '20mm', 88, 22, '第#页/共&页')
+         LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
          LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
          LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
