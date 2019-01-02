@@ -155,7 +155,7 @@
     var arr = str.split('&')
     var query = new Object()
 
-    for (var i = 0; i < arr.length - 1; i++) {
+    for (var i = 0; i < arr.length; i++) {
       num = arr[i].indexOf("=");
       if (num > 0) {
         name = arr[i].substring(0, num);
@@ -179,13 +179,14 @@
   var formItemStr = ''
   var goodsInfoStr = ''
   var contractTimeStr = ''
+
   
   contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
-  contract_checkBillName.style.fontSize = data.heading_word_size + 'px'
-  document.body.style.fontSize = data.content_word_size + 'px'
+  contract_checkBillName.style.fontSize = (data.heading_word_size || 18) + 'px'
+  document.body.style.fontSize = (data.content_word_size || 14) + 'px'
   contract_title_number.innerHTML = 'NO.' + data.contractNo
   partA.innerHTML = data.orgName
-  contract_companyname.innerHTML = data.heading_content
+  contract_companyname.innerHTML = data.heading_content || ''
   partB.innerHTML = data.carrier
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
