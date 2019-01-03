@@ -1529,7 +1529,7 @@
 
    const tableId = 'dataTable' + String(new Date().getTime()) // 设置打印表格id
 
-   table.setAttribute('width', '100%')
+  //  table.setAttribute('width', '100%')
    table.setAttribute('border', '1')
    table.style.borderCollapse = 'collapse'
    table.style.fontSize = (printObj.content_word_size || '16') + 'px'
