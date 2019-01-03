@@ -96,11 +96,12 @@ export default {
   },
   data() {
     return {
+      allPathData: [], // 格式化后的轨迹数据
       isAllTable: false, // true-表格全屏
       isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
       isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
-      sliderStep: 520520,
+      sliderStep: 52013,
       popTreeVisible: false,
       gridData: [],
       tablekey: 0,
@@ -195,12 +196,15 @@ export default {
       pathSimplifierIns: {},
       map: {},
       isDrag: false,
+      initedPath: false,
       orgPageDataList: [],
       orgDataList: [],
       allList: [],
+      pathNavigs: [],
       totalPageSize: 0,
       realTimeTrucks: [], // 实时车辆信息
-      lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac']
+      lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac', '#409eff', '#008000', '#40E0D0', '#22aa99', '#9400D3', '#FFC0CB', '#0000FF', '#FFA500', '#B22222', '#808080', '#00FFFF', '#8A2BE2', '#5F9EA0', '#7FFF00', '#DAA520']
+      // lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac']
     }
   },
   watch: {
@@ -374,6 +378,7 @@ export default {
         let paramsData = Object.assign({}, this.searchQuery.vo)
         trajectory(paramsData).then(data => {
             if (data) {
+              _this.initedPath = false
               if (data.length === 1) { // 单辆车轨迹
                 let lineData = data[0]
                 fn(lineData)
@@ -433,7 +438,7 @@ export default {
     exportData() { // 导出数据表格
       this.$message.warning('功能尚在开发中 ~')
     },
-    getPathSimplifierIns() {
+    getPathSimplifierIns() { // 初始化轨迹配置信息
       const _this = this
       const AMapUI = window.AMapUI
       const map = _this.map
@@ -497,32 +502,23 @@ export default {
       const AMap = window.AMap
       const AMapUI = window.AMapUI
       const map = _this.map
-      let pathNavigs = []
       let pathSimplifierIns = window.pathSimplifierIns
-      if (!pathNavigs[pathIndex]) {
+      if (!_this.pathNavigs[pathIndex]) {
 
         //创建一个轨迹巡航器
         let navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
-          loop: true,
+          loop: false,
           speed: _this.sliderStep
-        })
-        console.log('navgtr', navgtr)
-        navgtr.marker = new AMap.Marker({
-          content: row ? row.truckIdNumber : '',
-          map: map
-        })
-        navgtr.on('move', function() {
-          navgtr.marker.setPosition(navgtr.getPosition())
         })
 
         navgtr.onDestroy(function() {
-          pathNavigs[pathIndex] = null
-          navgtr.marker.setMap(null)
+          _this.pathNavigs[pathIndex] = null
         })
 
         navgtr.on('start resume', function() {
           navgtr._startTime = Date.now()
           navgtr._startDist = this.getMovedDistance()
+          console.warn('msgInfo start', navgtr)
         })
 
         navgtr.on('stop pause', function() {
@@ -537,8 +533,8 @@ export default {
             '本段耗时': (navgtr._movedTime / 1000) + ' s',
             '本段实际速度': Math.round(navgtr._realSpeed) + ' km/h'
           }
-          console.log('msgInfo stop', msgInfo)
-          refreshNavgButtons()
+          console.warn('msgInfo stop', msgInfo, navgtr)
+          _this.refreshNavgButtons(pathIndex)
         })
 
         navgtr.on('move', function() {
@@ -547,18 +543,15 @@ export default {
             '设定速度': this.getSpeed() + ' km/h',
             '总行进距离': Math.round(this.getMovedDistance() / 1000) + ' km'
           }
-          console.log('msgInfo move', msgInfo)
         })
-        pathNavigs[pathIndex] = navgtr
+        _this.pathNavigs[pathIndex] = navgtr
       }
-      return pathNavigs[pathIndex]
-
+      console.log('getNavg pathIndex', pathIndex)
+      return _this.pathNavigs[pathIndex]
     },
     doLine(type) { // 轨迹控制器
-      this.getPathSimplifierIns()
       if (window.pathSimplifierIns) {
         let pathSimplifierIns = window.pathSimplifierIns
-
         let pathData = this.setDataLine() // 格式化数据
         pathSimplifierIns.setData(pathData) // 给巡航器设置数据
         console.log('pathData', pathData)
@@ -566,14 +559,28 @@ export default {
         pathData.forEach((row, pathIndex) => {
           let navg = this.getNavg(pathIndex, row) // 创建轨迹
           console.log('navg', navg)
-          // navg[type]()
+          navg[type]()
           this.refreshNavgButtons(pathIndex)
         })
+      } else {
+        if (!this.initedPath) {
+          this.getPathSimplifierIns()
+          this.initedPath = true
+        }
       }
-
     },
     refreshNavgButtons(pathIndex) {
-      
+      if (pathIndex < 0) {
+        return
+      }
+      let navgStatus = 'stop',
+        navgExists = !!this.pathNavigs[pathIndex]
+        console.log('navgExists', navgExists)
+      if (navgExists) {
+        navgStatus = this.pathNavigs[pathIndex].getNaviStatus()
+        console.log('navgStatus', navgStatus)
+      }
+
     },
     refreshNavg() {
       this.searchQuery.currentPage = 1
@@ -703,6 +710,7 @@ export default {
           arr.push(obj)
         }
       })
+      this.allPathData = arr
       return arr
     },
     exit() {
@@ -730,7 +738,9 @@ export default {
       this.bindKey()
     },
     loadMap() {
+      console.log('loadMap1', window.AMap)
       if (window.AMap) {
+        console.log('loadMap2', window.AMap)
         // 稍微延时下渲染，以改进展现质量
         // 如果不延时，地图对象所要绑定的DOM元素可能还没初始化好
         setTimeout(() => {
@@ -738,6 +748,7 @@ export default {
           this.onSubmit()
         }, 500)
       } else {
+        console.log('loadMap3', window.AMap)
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
           loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
             this.initMap()

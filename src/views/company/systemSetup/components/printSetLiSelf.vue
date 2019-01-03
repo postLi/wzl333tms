@@ -367,6 +367,7 @@ export default {
   // 销毁对象时，需清除绑定的事件
   destroyed() {
     this.unbindKey()
+    this.closeMe()
   },
   methods: {
     showCargoPlus() {
