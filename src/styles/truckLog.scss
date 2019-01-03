@@ -1,27 +1,39 @@
-#allmap {
-  height: 100%;
-  width: 100%;
-  box-shadow: 1px 1px 10px #ccc;
-  margin-bottom: 10px;
-}
-
-
 /**
  * 公用样式
  * 
  */
-
-
-/* 选择车弹出框 */
-
 $popItemLineHeight: 32px;
 $popItemHeight: 300px;
 $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
+$floatPanelBoxShoadow: 1px 1px 10px #ccc;
+
+#allmap {
+  height: 100%;
+  width: 100%;
+  box-shadow: $floatPanelBgcolor;
+  margin-bottom: 10px;
+}
+
+/* 选择车弹出框 */
 .truck-log {
   display: flex;
   flex-direction: column;
   position: relative;
   height: calc(100% - 0px) !important;
+  .popTimer{
+    position: absolute;
+    left: 70px;
+    top: 20px;
+    padding: 5px 5px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: $floatPanelBoxShoadow;
+    border-radius: 5px;
+    overflow: hidden;
+    clear: both;
+    font-size: 14px;
+    color: #fff;
+    z-index: 2;
+  }
   .popTree {
     position: absolute;
     width: 300px;
@@ -46,7 +58,7 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
         color: #409eff;
       }
     }
-    .popTree-group-item{
+    .popTree-group-item {
       cursor: pointer;
       color: #333;
       font-size: 14px;
@@ -76,7 +88,7 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
     .el-button {
       float: right;
       margin-top: 5px;
-      margin-left: 20px;
+      margin-left: 15px;
       font-size: 14px;
       &:hover {
         border-bottom: 3px solid #fff;
@@ -85,14 +97,15 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
     .el-button--text {
       color: #fff;
     }
+
     .control-panel {
       position: absolute;
       display: block;
       float: left;
-      width: 472px;
+      width: 500px;
       color: #333;
       background-color: $floatPanelBgcolor;
-      box-shadow: 1px 1px 10px #ccc;
+      box-shadow: $floatPanelBoxShoadow;
       border-radius: 5px;
       right: 10px;
       top: -65px;
@@ -102,6 +115,23 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
         color: #333;
         float: left;
         font-size: 20px;
+        transition: 0.3s;
+        &:hover {
+          transition: 0.3s;
+          color: #409eff;
+        }
+      }
+      .btn-stop {
+        padding-top: 11px;
+        &:before {
+          content: '=';
+          font-size: 30px;
+          line-height: 20px;
+          transform: rotate(90deg);
+          display: block;
+          padding: 0;
+          margin: 0;
+        }
       }
       span {
         margin-left: 5px;
@@ -130,7 +160,7 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
     }
   }
   .truck-log-info {
-    .info_tab{
+    .info_tab {
       margin-bottom: 40px;
     }
     .info_tab_footer {
@@ -161,7 +191,7 @@ $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
     right: 10px;
     top: 20px;
     z-index: 2;
-    box-shadow: 1px 1px 10px #ccc;
+    box-shadow: $floatPanelBoxShoadow;
     border-radius: 5px;
     .el-form {
       .el-form-item--mini.el-form-item,
