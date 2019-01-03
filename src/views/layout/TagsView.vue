@@ -3,7 +3,7 @@
     <div class="tags-view-scroll">
       <div class="scroll-container tags-view-wrapper" ref="scrollContainer" @wheel.prevent="handleScroll">
         <div class="scroll-wrapper" ref="scrollWrapper" :style="{left: left + 'px'}">
-          <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/dashboard">
+          <router-link class="tags-view-item" ref='tagIndex' :class="isActive(indexTag)?'active':''" to="/">
            <span class="el-icon-refresh" title="刷新" @click.prevent.stop="refreshSelectedTag(indexTag)"></span>
             首页
           </router-link>
@@ -23,7 +23,7 @@
         </ul>
         <div class="menu-line"></div>
         <ul class="contextmenu contextmenu-list">
-          <router-link tag="li" :class="isActive(indexTag)?'active-menu':''" to="/dashboard">
+          <router-link tag="li" :class="isActive(indexTag)?'active-menu':''" to="/">
             <i class="el-icon-check"></i> 首页
           </router-link>
           <router-link :class="isActive(tag, true)?'active-menu':''" tag="li" v-for="tag in Array.from(visitedViews)" :title="tag.title" :to="tag.fullPath" :key="tag.fullPath">
@@ -46,7 +46,7 @@ export default {
       left: 0,
       selectedTag: {},
       hideCloseCurrentMenu: false,
-      indexTag: { path: '/dashboard', fullPath: '/dashboard', name: '首页', lock: true }
+      indexTag: { path: '/', fullPath: '/', name: 'dashboard', lock: true }
     }
   },
   computed: {
@@ -121,7 +121,8 @@ export default {
       // const ison = route.tab ? (route.fullPath === this.$route.fullPath) : (route.path === this.$route.path)
       // const ison = route.path === this.$route.path
       const ison = route.fullPath === this.$route.fullPath
-      if (ison) {
+      const isindex = route.name === 'dashboard' && route.name === this.$route.name
+      if (ison || isindex) {
         this.selectedTag = route
         return true
       } else {
