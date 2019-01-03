@@ -652,13 +652,13 @@ export default {
       getSelectLoadDetailList(this.loadId).then(data => {
         if (data) {
           this.detailList = (data.data || []).map(el => {
-              const start = (el.shipFromCityName || '').split(',')
-              const end = (el.shipToCityName || '').split(',')
-              el.shipFromCityName = start[2] || start[1] || start[0] || ''
-              el.shipToCityName = end[2] || end[1] || end[0] || ''
+            const start = (el.shipFromCityName || '').split(',')
+            const end = (el.shipToCityName || '').split(',')
+            el.shipFromCityName = start[2] || start[1] || start[0] || ''
+            el.shipToCityName = end[2] || end[1] || end[0] || ''
 
-              return el
-            })
+            return el
+          })
             /* if (location.href.indexOf('192.168.1') !== -1 && this.detailList.length && true) {
               let mi = 30
               while (mi--) {
@@ -669,8 +669,8 @@ export default {
           this.setData()
           this.toggleAllRows()
           this.$nextTick(() => {
-              console.log('isNeedArrival', this.isNeedArrival)
-              this.detailList.forEach(e => {
+            console.log('isNeedArrival', this.isNeedArrival)
+            this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
                   if (e.warehouStatus !== 1) { // 部分入库
                     e.actualAmount = e.loadAmount
@@ -680,7 +680,7 @@ export default {
                 } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
                 }
               })
-            })
+          })
           this.detailTableLoading = false
         }
       })
@@ -729,14 +729,13 @@ export default {
       // column.property
       // column.label
       // 不处理序号跟选择列
-      if (column.label !== '序号') {
         /* this.columnWidthData = {
           prop: column.property,
           label: column.label,
           width: newWidth
         } */
-        const find = this.tableColumn.filter(el => el.prop === column.property)
-        if (find.length) {
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
           find[0].width = newWidth
 
           console.log('应该要显示保存框了')
@@ -746,7 +745,6 @@ export default {
             this.visible2 = false
           }, 10000)
         }
-      }
     },
     saveToTableSetup() {
       this.visible2 = false
