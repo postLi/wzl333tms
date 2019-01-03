@@ -13,10 +13,10 @@ export function realTimeLocation(id) {
 }
 
 /**
- * 车辆列表
+ * 车辆轨迹列表
  */
-export function trajectory(id) {
-	return fetch.get('/api-order/order/load/v1/trajectory/' + id).then(res => {
+export function trajectory(data) {
+	return fetch.post('/api-order/order/load/v1/trajectory', data).then(res => {
 		return res.data ? res.data : {}
 	})
 }
