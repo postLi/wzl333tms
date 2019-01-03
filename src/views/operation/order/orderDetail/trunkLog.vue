@@ -35,7 +35,7 @@
           <el-button :size="btnsize" type="text" icon="el-icon-caret-right" @click="doLine('start')"></el-button>
           <el-button :size="btnsize" type="text" icon="el-icon-refresh" @click="doLine('refresh')"></el-button>
           <span>速度:</span><i style="color: green;">慢 </i>
-          <el-slider v-model="sliderStep" class="slider-step"></el-slider>
+          <el-slider v-model="sliderStep" class="slider-step" :min="1000" :max="1000000"></el-slider>
           <i style="color: #409eff;">快 </i>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="progressPercentage" status="success"></el-progress>
         </div>
@@ -94,7 +94,7 @@ export default {
       isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
       isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
-      sliderStep: 0,
+      sliderStep: 1000,
       popTreeVisible: false,
       gridData: [],
       tablekey: 0,
@@ -191,8 +191,10 @@ export default {
       isDrag: false,
       orgPageDataList: [],
       orgDataList: [],
+      allList: [],
       totalPageSize: 0,
-      realTimeTrucks: [] // 实时车辆信息
+      realTimeTrucks: [], // 实时车辆信息
+      lineColor: ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac']
     }
   },
   watch: {
@@ -213,11 +215,11 @@ export default {
       if (this.totalPageSize) {
         if (this.searchQuery.currentPage === 1) {
           return 0
-        }else {
-          console.log('progressPercentage', this.searchQuery.currentPage, this.totalPageSize, Math.floor((this.searchQuery.currentPage / this.totalPageSize)*100))
-        return Math.floor((this.searchQuery.currentPage / this.totalPageSize)*100)
+        } else {
+          console.log('progressPercentage', this.searchQuery.currentPage, this.totalPageSize, Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100))
+          return Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100)
         }
-        
+
       } else {
         return 0
       }
@@ -317,46 +319,69 @@ export default {
           })
       } else {
 
-        let fn = (lineData) => {
+        let fn = (lineData, type) => {
           _this.orgPageDataList = []
           _this.orgDataList = []
           _this.dataList = []
-          _this.total = lineData.trajectoryList.length || 0
-          _this.totalPageSize = Math.floor(_this.total / this.searchQuery.pageSize) + 1
-          for (let i = 0; i < _this.totalPageSize; i++) {
-            _this.orgPageDataList[i] = []
+          if (type === 'multiple') {
+            lineData.forEach((em, emindex) => {
+              let emData = []
+              em.trajectoryList.forEach((el, index) => {
+                el.dirverMobile = em.dirverMobile
+                el.dirverName = em.dirverName
+                el.truckIdNumber = em.truckIdNumber
+                _this.orgDataList[index] = el
+                emData[index] = el
+              })
+              _this.allList[emindex] = emData
+            })
+          } else {
+            _this.total = lineData.trajectoryList.length || 0
+            _this.totalPageSize = Math.floor(_this.total / this.searchQuery.pageSize) + 1
+            for (let i = 0; i < _this.totalPageSize; i++) {
+              _this.orgPageDataList[i] = []
+            }
+
+            lineData.trajectoryList.forEach((el, index) => {
+              el.dirverMobile = lineData.dirverMobile
+              el.dirverName = lineData.dirverName
+              el.truckIdNumber = lineData.truckIdNumber
+              let _index = Math.floor(index / _this.searchQuery.pageSize)
+              _this.orgDataList[index] = el
+              _this.orgPageDataList[_index].push(el)
+            })
+            // 当前页面的数据
+            _this.dataList = _this.orgPageDataList[_this.searchQuery.currentPage]
           }
 
-          lineData.trajectoryList.forEach((el, index) => {
-            el.dirverMobile = lineData.dirverMobile
-            el.dirverName = lineData.dirverName
-            el.truckIdNumber = lineData.truckIdNumber
-            let _index = Math.floor(index / _this.searchQuery.pageSize)
-            _this.orgDataList[index] = el
-            _this.orgPageDataList[_index].push(el)
-          })
-          // 当前页面的数据
-          _this.isShowTable = true
-          _this.dataList = _this.orgPageDataList[_this.searchQuery.currentPage]
         }
 
-        if (localStorage.getItem('truckMessage')) {
-          fn(JSON.parse(localStorage.getItem('truckMessage')))
-          return
-        }
+        // if (localStorage.getItem('truckMessage')) {
+        //   fn(JSON.parse(localStorage.getItem('truckMessage')))
+        //   return
+        // }
         // 行车轨迹信息
         trajectory(params).then(data => {
-          if (data) {
-            // if (data.length === 1) { // 单辆车轨迹
-            let lineData = data[0]
-            localStorage.setItem('truckMessage', JSON.stringify(lineData))
-            fn(lineData)
-
-            // }else { // 多辆车轨迹
-            // this.isShowTable = false
-            // }
-          }
-        })
+            if (data) {
+              if (data.length === 1) { // 单辆车轨迹
+                let lineData = data[0]
+                fn(lineData)
+                _this.isShowTable = true
+              } else { // 多辆车轨迹
+                fn(data, 'multiple')
+                console.warn('多辆车格式化：', this.allList)
+                _this.isShowTable = false
+              }
+              _this.$notify({
+                title: '成功',
+                message: '查询成功',
+                type: 'success'
+              })
+            }
+          })
+          .catch(err => {
+            _this._handlerCatchMsg(err)
+          })
       }
 
     },
@@ -380,7 +405,7 @@ export default {
             // 设置标签
             m2.setLabel({
               offset: new AMap.Pixel(20, 20),
-              content: row.address
+              content: row.truckIdNumber
             })
           }
         })
@@ -402,18 +427,19 @@ export default {
           this.getNavg()
           break
         case 'refresh':
-        this.refreshNavg()
+          this.refreshNavg()
           break
       }
     },
-    refreshNavg () {
+    refreshNavg() {
       this.searchQuery.currentPage = 1
-      this.dataList = this.orgPageDataList[this.searchQuery.currentPage-1]
+      this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
     },
     getNavg() { // 绘制轨迹
       const _this = this
       const AMapUI = window.AMapUI
       const map = _this.map
+      let pathNavigs = []
       AMapUI.load(['ui/misc/PathSimplifier'], function(PathSimplifier) {
         if (!PathSimplifier.supportCanvas) {
           alert('当前环境不支持 Canvas！');
@@ -434,31 +460,70 @@ export default {
             return pathData.name + '，点数量' + pathData.path.length;
           },
           renderOptions: {
-            renderAllPointsIfNumberBelow: 100 //绘制路线节点，如不需要可设置为-1
+            pathLineStyle: {
+              dirArrowStyle: true
+            },
+            renderAllPointsIfNumberBelow: 100, //绘制路线节点，如不需要可设置为-1
+            getPathStyle: function(pathItem, zoom) {
+              console.log('getPathStyle', pathItem, zoom)
+              var color = _this.lineColor[pathItem.pathIndex],
+                lineWidth = Math.round(4 * Math.pow(1.1, zoom - 3));
+              return {
+                pathLineStyle: {
+                  strokeStyle: color,
+                  lineWidth: lineWidth
+                },
+                pathLineSelectedStyle: {
+                  lineWidth: lineWidth + 2
+                },
+                pathNavigatorStyle: {
+                  fillStyle: color
+                }
+              }
+            }
           }
         })
         window.pathSimplifierIns = pathSimplifierIns
-        let fn = () => {
-          //设置数据
-          pathSimplifierIns.setData(_this.setDataLine())
-          //对第一条线路（即索引 0）创建一个巡航器
-          let navg1 = pathSimplifierIns.createPathNavigator(0, {
-            loop: false, //循环播放
-            speed: 1200000 //巡航速度，单位千米/小时
-          })
-          navg1.start()
-          _this.handlePageChange({
-            pageNum: _this.searchQuery.currentPage + 1,
-            pageSize: _this.searchQuery.pageSize
-          })
-         setTimeout(() => {
-           if (_this.searchQuery.currentPage < _this.totalPageSize) {
+        if (_this.isShowTable) { // 单辆车
+          let fn = () => {
+            //设置数据
+            pathSimplifierIns.setData(_this.setDataLine())
+            //对第一条线路（即索引 0）创建一个巡航器
+            let navg1 = pathSimplifierIns.createPathNavigator(0, {
+              loop: false, //循环播放
+              speed: _this.sliderStep //巡航速度，单位千米/小时
+            })
+            navg1.start()
+            _this.handlePageChange({
+              pageNum: _this.searchQuery.currentPage + 1,
+              pageSize: _this.searchQuery.pageSize
+            })
+            setTimeout(() => {
+              if (_this.searchQuery.currentPage < _this.totalPageSize) {
+                fn() // 运行一条轨迹
+              }
+            }, 1000)
+          }
+          if (_this.searchQuery.currentPage < _this.totalPageSize) {
             fn() // 运行一条轨迹
           }
-         }, 1000)
-        }
-        if (_this.searchQuery.currentPage < _this.totalPageSize) {
-          fn() // 运行一条轨迹
+        } else { // 多辆车
+          console.log('多辆车', _this.allList)
+              pathSimplifierIns.setData(_this.setDataLine())
+          _this.allList.forEach((el, pathIndex) => {
+              //设置数据
+            if (!pathNavigs[pathIndex]) {
+              //对第一条线路（即索引 0）创建一个巡航器
+              let navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
+                loop: false, //循环播放
+                speed: 1200000 //巡航速度，单位千米/小时
+              })
+              
+              pathNavigs[pathIndex] = navgtr
+              navgtr.start()
+              console.log('pathNavigs', navgtr)
+            }
+          })
         }
       })
     },
@@ -468,13 +533,17 @@ export default {
         name: '',
         path: []
       }
-      this.dataList.forEach((e, index) => {
+      this.allList.forEach((row, pathIndex) => {
+        
+      row.forEach((e, index) => {
         let location = [Number(e.longitude), Number(e.latitude)]
         obj.name = e.truckIdNumber
         obj.path.push(location)
       })
+      console.log('obj', obj)
       arr.push(obj)
       console.log('setDataLine', arr)
+      })
       return arr
     },
     exit() {
