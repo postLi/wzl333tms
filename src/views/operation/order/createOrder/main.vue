@@ -79,7 +79,7 @@
               <div class="order-form-item showFormInfo">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipGoodsSn}">货号</span>
                 <el-form-item :error='shipFieldValueInfo.shipGoodsSn'>
-                  <el-input ref="tmsOrderShipGoodsSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
+                  <el-input ref="tmsOrderShipGoodsSn" size="mini" :maxlength="20" :disabled="!canChangeCargoNum" v-model="form.tmsOrderShip.shipGoodsSn" />
                 </el-form-item>
               </div>
             </el-col>

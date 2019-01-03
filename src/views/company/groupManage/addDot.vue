@@ -394,7 +394,7 @@
           ],
           networkCode: [
             { required: true, message: '请输入网点代码' },
-            { min: 2, message: '最少2个字符', trigger: 'blur' },
+            // { min: 2, message: '最少2个字符', trigger: 'blur' },
             { max: 10, message: '不可超过10个字符', trigger: 'blur' }
           ],
           city: [
