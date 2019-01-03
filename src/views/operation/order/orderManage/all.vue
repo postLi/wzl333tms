@@ -69,6 +69,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+              :prop="column.prop"
               sortable
               :label="column.label"
               v-else
@@ -150,14 +151,14 @@ export default {
         width: '70',
         fixed: true,
         slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
       }, {
-          'label': '运单号',
-          'prop': 'shipSn',
-          'width': '150',
-          'fixed': true
-        }, {
+        'label': '运单号',
+        'prop': 'shipSn',
+        'width': '150',
+        'fixed': true
+      }, {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
@@ -174,10 +175,10 @@ export default {
         'prop': 'fromOrgName',
         'width': '150'
       }, {
-        'label': '目的网点',
-        'prop': 'toOrgName',
-        'width': '150'
-      }, {
+          'label': '目的网点',
+          'prop': 'toOrgName',
+          'width': '150'
+        }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180',
@@ -751,10 +752,10 @@ export default {
       this.selected = selection
     },
     setTableWidth(newWidth, oldWidth, column, event) {
-      console.log('set table:', newWidth, oldWidth, column)
+      console.log('set table:', newWidth, oldWidth, column, this.tableColumn)
       // column.property
       // column.label
-      this.visible2 = true
+      /* this.visible2 = true
       this.columnWidthData = {
         prop: column.property,
         label: column.label,
@@ -763,11 +764,22 @@ export default {
       clearTimeout(this.tabletimer)
       this.tabletimer = setTimeout(() => {
         this.visible2 = false
-      }, 10000)
+      }, 10000) */
+
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
     },
     saveToTableSetup() {
       this.visible2 = false
-      this.eventBus.$emit('tablesetup.change', this.thecode, this.columnWidthData)
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     showSaveBox() {
       clearTimeout(this.tabletimer)
