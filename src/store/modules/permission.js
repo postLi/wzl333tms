@@ -2,10 +2,6 @@ import {
   asyncRouterMap,
   constantRouterMap
 } from '@/router/index'
-import {
-  getUserInfo
-} from '@/utils/auth'
-
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -13,7 +9,6 @@ import {
  * @param route
  */
 function hasPermission(roles, route) {
-  const userInfo = getUserInfo()
   if (route.meta && route.meta.code) {
     // if (route.path.indexOf('/finance/financeInfo') !== -1 || route.path.indexOf('/finance/certificationAudit') !== -1) {
     //   if (userInfo.systemSetup.financeSetting.voucher && userInfo.systemSetup.financeSetting.voucher !== '1') {
@@ -22,6 +17,7 @@ function hasPermission(roles, route) {
     // }
     return roles.some(role => route.meta.code === role.code)
   } else {
+    // console.log(route, route.name, route.path)
     return true
   }
 }
@@ -77,7 +73,23 @@ const permission = {
         } */
         // 暂时给于全部权限，等后台权限体系建立好再对接设置
         // accessedRouters = asyncRouterMap
+
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
+        // 修正首页权限问题
+        let homePage = accessedRouters.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
+        if (homePage.length) {
+          // 如果找到，将redirect指向第一个元素
+          const el = homePage[0]
+          el.redirect = el.children[0] ? el.children[0].path : ''
+        } else {
+          // 如果找不到
+          homePage = asyncRouterMap.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
+          const el = homePage[0]
+          el.redirect = '/flows'
+          el.children = el.children.filter(el => !el.meta.code)
+          accessedRouters.unshift(el)
+        }
+
         accessedRouters.map(el => {
           if (el.meta && el.meta.code === 'FINANCE') {
             el.children.forEach(ee => {
