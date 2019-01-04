@@ -38,10 +38,10 @@
       <transition name="el-zoom-in-center">
         <div class="control-panel" v-show="!isAllTable&& !isShowInlineTruckMap">
           <el-button :size="btnsize" type="text" icon="el-icon-caret-right" @click="doLine('start')" title="播放"></el-button>
-          <el-button :size="btnsize" type="text" @click="doLine('stop')" class="btn-stop" title="暂停"></el-button>
+          <el-button :size="btnsize" type="text" @click="doLine('pause')" class="btn-stop" title="暂停"></el-button>
           <el-button :size="btnsize" type="text" icon="el-icon-refresh" @click="doLine('destroy')" title="清空"></el-button>
           <span>速度:</span><i style="color: green;">慢 </i>
-          <el-slider v-model="sliderStep" class="slider-step" :min="1000" :max="1000000"></el-slider>
+          <el-slider v-model="speedSlider" class="slider-step" :min="1000" :max="1000000"></el-slider>
           <i style="color: #409eff;">快 </i>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="progressPercentage" status="success"></el-progress>
         </div>
@@ -96,12 +96,11 @@ export default {
   },
   data() {
     return {
-      allPathData: [], // 格式化后的轨迹数据
       isAllTable: false, // true-表格全屏
       isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
       isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
-      sliderStep: 52013,
+      speedSlider: 520130,
       popTreeVisible: false,
       gridData: [],
       tablekey: 0,
@@ -204,7 +203,6 @@ export default {
       totalPageSize: 0,
       realTimeTrucks: [], // 实时车辆信息
       lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac', '#409eff', '#008000', '#40E0D0', '#22aa99', '#9400D3', '#FFC0CB', '#0000FF', '#FFA500', '#B22222', '#808080', '#00FFFF', '#8A2BE2', '#5F9EA0', '#7FFF00', '#DAA520']
-      // lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac']
     }
   },
   watch: {
@@ -219,20 +217,42 @@ export default {
 
       },
       deep: true
+    },
+    speedSlider(newVal) {
+      if (newVal) {
+        if (this.pathNavigs.length) { // 更新轨迹播放速度
+          this.pathNavigs.forEach((el, index) => {
+            if (el) {
+              el.setSpeed(newVal)
+            }
+          })
+        }
+      }
     }
   },
   computed: {
     progressPercentage() {
-      if (this.totalPageSize) {
-        if (this.searchQuery.currentPage === 1) {
-          return 0
-        } else {
-          console.log('progressPercentage', this.searchQuery.currentPage, this.totalPageSize, Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100))
-          return Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100)
-        }
-      } else {
-        return 0
+      let max = 0
+      let mainPathIndex = 0
+      if (this.pathNavigs.length) {
+        this.pathNavigs.forEach((el, index) => {
+          if (el && max <= el.length) {
+            max = el.length
+            mainPathIndex = index
+          }
+        })
       }
+      return max
+      // if (this.totalPageSize) {
+      //   if (this.searchQuery.currentPage === 1) {
+      //     return 0
+      //   } else {
+      //     console.log('progressPercentage', this.searchQuery.currentPage, this.totalPageSize, Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100))
+      //     return Math.floor((this.searchQuery.currentPage / this.totalPageSize) * 100)
+      //   }
+      // } else {
+      //   return 0
+      // }
     }
   },
   mounted() {
@@ -342,36 +362,31 @@ export default {
           _this.orgPageDataList = []
           _this.orgDataList = []
           _this.dataList = []
-          if (type === 'multiple') { // 多辆车
-            lineData.forEach((em, emindex) => {
-              let emData = []
-              em.trajectoryList.forEach((el, index) => {
-                el.dirverMobile = em.dirverMobile
-                el.dirverName = em.dirverName
-                el.truckIdNumber = em.truckIdNumber
-                _this.orgDataList[index] = el
-                emData[index] = el
-              })
-              _this.allList[emindex] = emData
-            })
-          } else { // 单辆车
-            _this.total = lineData.trajectoryList.length || 0
-            _this.totalPageSize = Math.floor(_this.total / this.searchQuery.pageSize) + 1
-            for (let i = 0; i < _this.totalPageSize; i++) {
-              _this.orgPageDataList[i] = []
+          lineData.forEach((em, emindex) => {
+            let emData = []
+            if (type === 'simple') {
+              _this.total = em.trajectoryList.length || 0 // 设置总页数
+              _this.totalPageSize = Math.floor(_this.total / this.searchQuery.pageSize) + 1
+              for (let i = 0; i < _this.totalPageSize; i++) {
+                _this.orgPageDataList[i] = [] // 初始化分页数据(前端做简单分页)
+              }
             }
-
-            lineData.trajectoryList.forEach((el, index) => {
-              el.dirverMobile = lineData.dirverMobile
-              el.dirverName = lineData.dirverName
-              el.truckIdNumber = lineData.truckIdNumber
-              let _index = Math.floor(index / _this.searchQuery.pageSize)
+            em.trajectoryList.forEach((el, index) => {
+              el.dirverMobile = em.dirverMobile
+              el.dirverName = em.dirverName
+              el.truckIdNumber = em.truckIdNumber
               _this.orgDataList[index] = el
-              _this.orgPageDataList[_index].push(el)
+              emData[index] = el
+              if (type === 'simple') {
+                let _index = Math.floor(index / _this.searchQuery.pageSize)
+                _this.orgDataList[index] = el
+                _this.orgPageDataList[_index].push(el) // 填充分页数据数组
+              }
             })
+            _this.allList[emindex] = emData
             // 当前页面的数据
             _this.dataList = _this.orgPageDataList[_this.searchQuery.currentPage]
-          }
+          })
         }
         // 行车轨迹信息
         this.searchQuery.vo.shipId = this.orderdata.tmsOrderShipInfo.id
@@ -379,29 +394,27 @@ export default {
         trajectory(paramsData).then(data => {
             if (data) {
               _this.initedPath = false
-              if (data.length === 1) { // 单辆车轨迹
-                let lineData = data[0]
-                fn(lineData)
+              if (data.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
+                fn(data, 'simple')
+                console.warn('多辆车格式化（单辆车）：', this.allList)
                 _this.isShowTable = true
-                // _this.getNavg()
               } else { // 多辆车轨迹
-                fn(data, 'multiple')
-                console.warn('多辆车格式化：', this.allList)
+                fn(data)
+                console.warn('多辆车格式化（多辆车）：', this.allList)
                 _this.isShowTable = false
-                // _this.getNavg()
               }
               _this.$notify({
                 title: '成功',
                 message: '查询成功',
                 type: 'success'
               })
+              _this.getPathSimplifierIns() // 初始化轨迹基础信息
             }
           })
           .catch(err => {
             _this._handlerCatchMsg(err)
           })
       }
-
     },
     tomap() { // 转高德坐标
       const _this = this
@@ -447,6 +460,7 @@ export default {
           alert('当前环境不支持 Canvas！')
           return
         }
+
         let colors = _this.lineColor
         let pathSimplifierIns = new PathSimplifier({
           zIndex: 100,
@@ -494,6 +508,7 @@ export default {
             }
           }
         })
+        window.PathSimplifier = PathSimplifier
         window.pathSimplifierIns = pathSimplifierIns
       })
     },
@@ -504,11 +519,23 @@ export default {
       const map = _this.map
       let pathSimplifierIns = window.pathSimplifierIns
       if (!_this.pathNavigs[pathIndex]) {
+        function onload() {
+          pathSimplifierIns.renderLater();
+        }
 
+        function onerror(e) {
+          console.log(e, window.PathSimplifier, PathSimplifier)
+          _this.$message.info('巡航器图片加载失败！')
+        }
         //创建一个轨迹巡航器
         let navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
           loop: false,
-          speed: _this.sliderStep
+          speed: _this.speedSlider,
+          pathNavigatorStyle: {
+            width: 24,
+            height: 24,
+            content: window.PathSimplifier.Render.Canvas.getImageContent('./orderDetail/car.png', onload, onerror)
+          }
         })
 
         navgtr.onDestroy(function() {
@@ -546,8 +573,25 @@ export default {
         })
         _this.pathNavigs[pathIndex] = navgtr
       }
-      console.log('getNavg pathIndex', pathIndex)
       return _this.pathNavigs[pathIndex]
+    },
+    setDataLine() { // 设置轨迹需要的经纬度数据
+      let arr = []
+      this.allList.forEach((row, pathIndex) => {
+        if (row.length) {
+          let obj = {
+            name: '',
+            path: []
+          }
+          row.forEach((e, index) => {
+            let location = [Number(e.longitude), Number(e.latitude)]
+            obj.name = e.truckIdNumber
+            obj.path.push(location)
+          })
+          arr.push(obj)
+        }
+      })
+      return arr
     },
     doLine(type) { // 轨迹控制器
       if (window.pathSimplifierIns) {
@@ -555,7 +599,6 @@ export default {
         let pathData = this.setDataLine() // 格式化数据
         pathSimplifierIns.setData(pathData) // 给巡航器设置数据
         console.log('pathData', pathData)
-
         pathData.forEach((row, pathIndex) => {
           let navg = this.getNavg(pathIndex, row) // 创建轨迹
           console.log('navg', navg)
@@ -575,18 +618,17 @@ export default {
       }
       let navgStatus = 'stop',
         navgExists = !!this.pathNavigs[pathIndex]
-        console.log('navgExists', navgExists)
+      console.log('navgExists', navgExists)
       if (navgExists) {
         navgStatus = this.pathNavigs[pathIndex].getNaviStatus()
         console.log('navgStatus', navgStatus)
       }
-
     },
     refreshNavg() {
       this.searchQuery.currentPage = 1
       this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
     },
-    getNavgs(type) { // 绘制轨迹 demo
+    getNavgs(type) { // 绘制轨迹 demo(作废)
       const _this = this
       const AMapUI = window.AMapUI
       const map = _this.map
@@ -658,7 +700,7 @@ export default {
             //对第一条线路（即索引 0）创建一个巡航器
             let navg1 = pathSimplifierIns.createPathNavigator(0, {
               loop: false, //循环播放
-              speed: _this.sliderStep //巡航速度，单位千米/小时
+              speed: _this.speedSlider //巡航速度，单位千米/小时
             })
             navg1.start()
             _this.handlePageChange({
@@ -685,7 +727,7 @@ export default {
               //对第一条线路（即索引 0）创建一个巡航器
               let navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
                 loop: false, //循环播放
-                speed: _this.sliderStep //巡航速度，单位千米/小时
+                speed: _this.speedSlider //巡航速度，单位千米/小时
               })
               pathNavigs[pathIndex] = navgtr
               navgtr.start()
@@ -693,25 +735,6 @@ export default {
           })
         }
       })
-    },
-    setDataLine() { // 设置轨迹需要的经纬度数据
-      let arr = []
-      this.allList.forEach((row, pathIndex) => {
-        if (row.length) {
-          let obj = {
-            name: '',
-            path: []
-          }
-          row.forEach((e, index) => {
-            let location = [Number(e.longitude), Number(e.latitude)]
-            obj.name = e.truckIdNumber
-            obj.path.push(location)
-          })
-          arr.push(obj)
-        }
-      })
-      this.allPathData = arr
-      return arr
     },
     exit() {
       if (this.map && this.map.destroy && typeof this.map.destroy === 'function') {

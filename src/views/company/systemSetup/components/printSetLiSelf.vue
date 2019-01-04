@@ -152,7 +152,7 @@
         </div>
       </el-form>
     </div>
-    <div class="print_main">
+    <div class="print_main" @click="clickPanel">
       <div class="print_main_head">
         <b>预览展示:</b>
         <span> 纸张(宽×高)：{{this.formModel.paper.width+'(mm) × '+this.formModel.paper.height + '(mm)'}}</span>
@@ -591,6 +591,22 @@ export default {
           message: '【 ' + row.filedName + ' 】最多添加' + (row.filedValue === 'customFields' ? this.maxLabelSelf : this.maxLabel) + '次'
         })
       }
+    },
+    clickPanel(event) { // 点击画布其他地方去掉高亮
+      let count = 0
+      event.path.forEach((el, index) => {
+        if (el.className && el.className.indexOf('previewBlock') !== -1) {
+          count = count + 1
+        }
+      })
+      if (!count) {
+        this.dragDetailInfo = {}
+        this.classItem = []
+        this.showDragTips = []
+        this.showDragDetail = false
+        this.isHiddenDragDetail = true
+      }
+      count = 0
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}

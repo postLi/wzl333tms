@@ -36,7 +36,10 @@
           <label>发货人信息</label>
           <ul class="print_aside_content">
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===1" draggable='true' @dragstart='drag($event)' :data-fileName='item.filedValue' @click="addItemDrag(item, index)">
-              <el-tag type="info" :size="tagSize"><i class="el-icon-circle-check showLabel" v-if="item.isshow"></i> <b>{{item.filedName}}</b></el-tag>
+              <el-tag type="info" :size="tagSize">
+                <i class="el-icon-circle-check showLabel" v-if="item.isshow"></i>
+                <!-- <i class="showLabels" v-if="item.isshow">{{item.size}}</i> -->
+                <b>{{item.filedName}}</b></el-tag>
             </li>
           </ul>
           <label>收货人信息</label>
@@ -141,12 +144,11 @@
         <div class="prinit_aside_setpreview">
           <div class="prinit_aside_setpreview_head">
             <span><i class="el-icon-picture"></i> 打印背景图片效果预览</span>
-            <el-button @click="toggleShowBkimg" :icon="isShowBkimg ? 'el-icon-news' : 'el-icon-view'" :size="btnsize" style="float: right; margin-left: 10px;margin-top:5px;" v-if="imageUrl" >{{isShowBkimg ? '隐藏背景图' :'显示背景图'}}</el-button>
+            <el-button @click="toggleShowBkimg" :icon="isShowBkimg ? 'el-icon-news' : 'el-icon-view'" :size="btnsize" style="float: right; margin-left: 10px;margin-top:5px;" v-if="imageUrl">{{isShowBkimg ? '隐藏背景图' :'显示背景图'}}</el-button>
             <el-button @click="clearImgUrl" icon="el-icon-delete" :size="btnsize" style="float: right;margin-top:5px;" v-if="imageUrl">清除背景</el-button>
           </div>
           <Upload :title="'本地上传'" listtype="picture" v-model="imageUrl" />
-        
-         <!--  <div class="prinit_aside_setpreview_foot" v-if="imageUrl">
+          <!--  <div class="prinit_aside_setpreview_foot" v-if="imageUrl">
             <el-button size="mini" @click="setBg('zoomOut')" type="primary" title="放大" icon="el-icon-circle-plus-outline"></el-button>
             <el-button size="mini" @click="setBg('zoomIn')" type="primary" title="缩小" icon="el-icon-remove-outline"></el-button>
             <el-button size="mini" @mouseup.native="stopSetBg" @mousedown.native="startSetBg('moveLeft')" type="primary" title="向左移动" icon="el-icon-caret-left"></el-button>
@@ -161,7 +163,7 @@
         </div>
       </el-form>
     </div>
-    <div class="print_main">
+    <div class="print_main" @click="clickPanel">
       <div class="print_main_head">
         <b>预览展示:</b>
         <span> 纸张(宽×高)：{{this.formModel.paper.width+'(mm) × '+this.formModel.paper.height + '(mm)'}}</span>
@@ -175,7 +177,7 @@
           <el-button icon="el-icon-view" @click="print('preview', true)" size="mini" title="打印预览(包含背景图)">+ <i class="el-icon-picture-outline"></i></el-button>
         </div>
       </div>
-      <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)' @click="clickPanel">
+      <div class="print_main_content" :style="printPreviewContent" :key="viewKey" @drop='drop($event)' @dragover='allowDrop($event)'>
         <div draggable='true' :key="index" :data-fileName="item.filedValue" @dragstart='($event) => dragStart($event, item, index)' :data-index="item._index" @dragend="($event) => dragEnd($event, item, index)" v-for="(item, index) in labelListView" class="previewBlock" :style="{
           cursor: dragCursor,
           transform: 'translate(' + item.leftx+'px,'+item.topy + 'px)', 
@@ -352,11 +354,11 @@ export default {
       }
     },
     bgprop: {
-      handler (cval, oval) {
+      handler(cval, oval) {
         if (cval) {
-          if (this.imageUrl&& this.isShowBkimg) { // 有背景图片并且显示的时候才可以修改参数值
-            this.bgLabelObj.width =  Math.round(this.printPreviewContent.width.slice(0, -2) * this.prxvalue*this.bgprop.scale)
-            this.bgLabelObj.height =  Math.round(this.printPreviewContent.height.slice(0, -2) * this.prxvalue*this.bgprop.scale)
+          if (this.imageUrl && this.isShowBkimg) { // 有背景图片并且显示的时候才可以修改参数值
+            this.bgLabelObj.width = Math.round(this.printPreviewContent.width.slice(0, -2) * this.prxvalue * this.bgprop.scale)
+            this.bgLabelObj.height = Math.round(this.printPreviewContent.height.slice(0, -2) * this.prxvalue * this.bgprop.scale)
             this.bgLabelObj.leftx = cval.x
             this.bgLabelObj.topy = cval.y
           }
@@ -390,15 +392,14 @@ export default {
       return {}
     }
   },
-  mounted() {
-  },
+  mounted() {},
   // 销毁对象时，需清除绑定的事件
   destroyed() {
     this.unbindKey()
     this.closeMe()
   },
   methods: {
-    toggleShowBkimg () {
+    toggleShowBkimg() {
       if (this.imageUrl) {
         this.isShowBkimg = !this.isShowBkimg
       }
@@ -605,9 +606,6 @@ export default {
         this.isDrag = null
       }
     },
-    clickPanel (event) {
-      console.log(event)
-    },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
       console.log('skdofkwoefkosd  row::::', row)
       let len = this.labelListView.filter(e => {
@@ -656,6 +654,22 @@ export default {
         })
       }
 
+    },
+    clickPanel(event) { // 点击画布其他地方去掉高亮
+      let count = 0
+      event.path.forEach((el, index) => {
+        if (el.className && el.className.indexOf('previewBlock') !== -1) {
+          count = count + 1
+        }
+      })
+      if (!count) {
+        this.dragDetailInfo = {}
+        this.classItem = []
+        this.showDragTips = []
+        this.showDragDetail = false
+        this.isHiddenDragDetail = true
+      }
+      count = 0
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
@@ -1051,10 +1065,10 @@ export default {
                       this.bgLabelObj.height = em.height
                       this.bgLabelObj.topy = em.topy
                       this.bgLabelObj.leftx = em.leftx
-                      this.bgprop.scale = Math.round((em.width/this.formModel.paper.width))
+                      this.bgprop.scale = Math.round((em.width / this.formModel.paper.width))
                       this.bgprop.x = em.leftx
                       this.bgprop.y = em.topy
-                      console.log('放大%', Math.round((em.width/this.formModel.paper.width)))
+                      console.log('放大%', Math.round((em.width / this.formModel.paper.width)))
                     }
                   }
                 }
@@ -1250,7 +1264,6 @@ export default {
               return true
             }
           })
-          console.log(' 提交的时候 imageUrl2', this.imageUrl, bgImg)
           putSettingCompanyOrder(arr).then(data => {
               this.loading = false
               this.$message({ type: 'success', message: '运单打印设置成功！' })
