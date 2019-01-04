@@ -698,7 +698,7 @@ export default {
     }
     &.activetab{
       .dataico{
-        opacity: 1;
+        opacity: 0.4;
       }
     }
     .dataico{

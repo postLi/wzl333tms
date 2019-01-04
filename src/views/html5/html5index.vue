@@ -384,7 +384,7 @@ export default {
         ]
       })
     },
-    initYearChart(echart, shipArr, weightArr, volumeArr) {
+    initYearChart(echart, shipArr, weightArr, volumeArr, yearsArr) {
       const option3 = {
         title: {
           text: '运力对比图',
@@ -417,7 +417,7 @@ export default {
           {
             type: 'category',
             // '2018年\n\r1月'
-            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+            data: yearsArr || ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
           }
         ],
         yAxis: [
@@ -632,13 +632,18 @@ export default {
       const shipArr = []
       const weightArr = []
       const volumeArr = []
-      data.map(el => {
+      const yearsArr = []
+      data.map((el, index) => {
         shipArr.push(el.shipNum)
         weightArr.push(el.weight)
         volumeArr.push(el.volume)
+        const monArr = el.month.split('-')
+        const mon = parseInt(monArr[1], 10) || index
+
+        yearsArr.push(((mon === 1 && index > 0) ? monArr[0] + '年\n\r' : '') + mon + '月')
       })
 
-      this.initYearChart(myChart3, shipArr, weightArr, volumeArr)
+      this.initYearChart(myChart3, shipArr, weightArr, volumeArr, yearsArr)
     }).catch(err => {
       console.log('fetch err info:', err)
       const shipArr = [2.0, 4.9, 7.0, 10, 25.6, 76.7, 135.6, 162.2, '', '', '', '']
