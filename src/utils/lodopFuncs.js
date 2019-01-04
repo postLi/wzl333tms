@@ -965,6 +965,7 @@
          if (arr[item].filedValue === 'setting') {
            if (arr[item].filedName === '标签尺寸') {
              title = '标签打印'
+
            } else {
              title = '托运单打印'
            }
@@ -974,6 +975,8 @@
            // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
            // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
            LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
+
+
          }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
@@ -1013,7 +1016,13 @@
              // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
            }
          }
+         if (e.filedName === '标签尺寸') {
+           if (user.companyId === 270 || user.companyId === 271) {
+             LODOP.SET_PRINT_STYLEA(0, "AngleOfPageInside", 180)
+           }
+         }
        })
+
        LODOP.SET_PRINT_MODE('CATCH_PRINT_STATUS', true)
        if (printer) {
          LODOP.SET_PRINTER_INDEXA(printer)
