@@ -1016,10 +1016,8 @@
              // str += 'LODOP.SET_PRINT_STYLEA(0,"Alignment",' + e.alignment + ');'
            }
          }
-         if (e.filedName === '标签尺寸') {
-           if (user.companyId === 270 || user.companyId === 271) {
-             LODOP.SET_PRINT_STYLEA(0, "AngleOfPageInside", 180)
-           }
+         if (e.filedValue === 'settingRotate') {
+           LODOP.SET_PRINT_STYLEA(0, "AngleOfPageInside", Math.round(e.width * prxvalue))
          }
        })
 
