@@ -10,7 +10,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
 #allmap {
   height: 100%;
   width: 100%;
-  box-shadow: $floatPanelBgcolor;
+  box-shadow: $floatPanelBoxShoadow;
   margin-bottom: 10px;
 }
 
@@ -102,7 +102,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       position: absolute;
       display: block;
       float: left;
-      width: 500px;
+      width: 495px;
       color: #333;
       background-color: $floatPanelBgcolor;
       box-shadow: $floatPanelBoxShoadow;
@@ -111,7 +111,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       top: -65px;
       z-index: 2;
       .el-button--text {
-        margin: 2px 5px;
+        margin: 2px 3px;
         color: #333;
         float: left;
         font-size: 20px;
@@ -121,6 +121,9 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
           color: #409eff;
         }
       }
+      // .el-progress-bar__innerText{
+      //   color: rgba(0,0,0,0);
+      // }
       .btn-stop {
         padding-top: 11px;
         &:before {
@@ -152,7 +155,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       .el-progress {
         float: left;
         margin: 14px 10px 0;
-        width: 200px;
+        width: 180px;
         .el-progress-bar__outer {
           background-color: #ddd;
         }
@@ -162,6 +165,10 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
   .truck-log-info {
     .info_tab {
       margin-bottom: 40px;
+    }
+    .rowSelect {
+      // color: #fff;
+      background-color: #E6A23C;
     }
     .info_tab_footer {
       padding-left: 20px;
