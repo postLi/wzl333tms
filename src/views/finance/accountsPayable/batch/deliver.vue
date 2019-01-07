@@ -197,7 +197,7 @@ export default {
     }
   },
   mounted() {
-    this.fetchList()
+    // this.fetchList()
   },
   methods: {
     getSearchParam(obj) {

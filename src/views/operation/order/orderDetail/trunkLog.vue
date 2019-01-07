@@ -87,6 +87,7 @@ import orderManage from '@/api/operation/orderManage'
 import { loadJs, objectMerge2, pickerOptions2, parseTime } from '@/utils/'
 import Pager from '@/components/Pagination/index'
 import { realTimeLocation, trajectory } from '@/api/operation/truckLog'
+import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
     Pager
@@ -122,9 +123,6 @@ export default {
           label: '序号',
           prop: 'number',
           width: '55',
-          // slot: (scope) => {
-          //   return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          // },
           fixed: true
         }, {
           label: '车牌号码',
@@ -191,7 +189,7 @@ export default {
         x: 0,
         y: 0
       },
-      timer: 60,
+      timer: 5,
       isTimer: false,
       pathSimplifierIns: {},
       map: {},
@@ -288,11 +286,13 @@ export default {
       if (this.isTimer) { // 是否定时刷新
         this.timer = this.$options.data().timer
         let timer = setInterval(() => {
-          this.timer = this.timer - 1
-          if (this.timer <= 0) {
-            this.onSubmit()
-            this.timer = 60
-          }
+          this.timer--
+            if (this.timer <= 0) {
+              this.onSubmit()
+              setTimeout(() => {
+                this.timer = 60
+              }, 1000)
+            }
         }, 1000)
       }
     },
@@ -304,23 +304,23 @@ export default {
     conStart(event) {
       let eventY = event.pageY //鼠标当前位置的y坐标
       this.tableHeight.y = eventY
-      this.tableHeight.orgheight = this.tableHeight.height
+      this.tableHeight.orgheight = this.tableHeight.height || 0
+      this.truckLogHeight = this.$refs.truckLog.offsetHeight - 90
       if (!this.isShowTable) {
         this.isShowTable = true
         this.tableHeight.height = 36
       }
       this.isDrag = true
-      console.log('conStart eventY', eventY)
+      console.log('conStart eventY', eventY, this.truckLogHeight)
     },
     conMove(event) {
       if (this.isDrag) {
         let mapH = this.$refs.allmap.offsetHeight
-        let h = this.tableHeight.y - event.pageY
-        let height = this.tableHeight.orgheight + h
-        console.log('地图的高：', this.$refs.allmap.offsetHeight)
+        let h = event.pageY - this.tableHeight.y
+        let height = this.tableHeight.orgheight - h
         this.isShowTable = height >= 37
         this.isAllTable = this.$refs.allmap.offsetHeight < 240
-        this.tableHeight.height = height
+        this.tableHeight.height = height > this.truckLogHeight ? this.truckLogHeight : height
       }
     },
     conEnd(event) {
@@ -356,8 +356,6 @@ export default {
       this.popTreeVisible = !this.popTreeVisible
     },
     onSubmit() { // 查询
-      console.log('orderdata', this.orderdata)
-
       let _this = this
       _this.progressPercentage = 0
       _this.pathNavigs = []
@@ -474,7 +472,11 @@ export default {
       }
     },
     exportData() { // 导出数据表格
-      this.$message.warning('功能尚在开发中 ~')
+      SaveAsFile({
+        data: this.orgDataList,
+        columns: this.tableColumn,
+        name: '轨迹详情' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+      })
     },
     getPathSimplifierIns() { // 初始化轨迹配置信息
       console.log('初始化轨迹配置信息')
@@ -804,7 +806,7 @@ export default {
         this.thename = this.name
       } else {
         // 隐藏时，摧毁地图对象
-        // this.exit()
+        this.exit()
       }
 
       this.bindKey()
