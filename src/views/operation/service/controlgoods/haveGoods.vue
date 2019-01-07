@@ -520,10 +520,10 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgid = this.otherinfo.orgid
-    Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
+    /* Promise.all([this.fetchAllPutFh(this.otherinfo.orgid)]).then(resArr => {
       // this.loading = false
             // this.licenseTypes = resArr[1]
-    })
+    }) */
   },
             // this.fetchAllPutFh(this.otherinfo.orgid).then(res => {
                 // this.loading = false

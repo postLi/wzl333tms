@@ -220,8 +220,9 @@ export default {
     if (this.thecode) {
       this.fetchTableSetup()
       this.eventBus.$on('tablesetup.change', (code, data) => {
-        if (code && code === this.thecode) {
-            if (data.prop) {
+        if (code && code === this.thecode && !window['tablesetup' + this.thecode]) {
+          window['tablesetup' + this.thecode] = true
+          if (data.prop) {
             const find = this.showColumnData.filter(el => el.prop === data.prop)
             if (find.length) {
               find[0].width = data.width
@@ -231,12 +232,12 @@ export default {
             data.forEach(dat => {
               const find = this.showColumnData.filter(el => el.prop === dat.prop)
               if (find.length) {
-                  find[0].width = dat.width
-                }
+                find[0].width = dat.width
+              }
             })
             this.changeTableSetup()
           }
-          }
+        }
       })
     }
   },

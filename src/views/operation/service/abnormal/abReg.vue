@@ -231,10 +231,10 @@ export default {
   mounted() {
     this.loading = true
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
-            // this.licenseTypes = resArr[1]
-    })
+    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+    //   this.loading = false
+    //         // this.licenseTypes = resArr[1]
+    // })
   },
   data() {
     return {
