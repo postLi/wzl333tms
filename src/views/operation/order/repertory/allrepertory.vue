@@ -7,10 +7,24 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-menu" plain @click="doAction('colorpicker')" v-has:ORDER_COLOUR1>提醒颜色设置</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:ORDER_COLOURP1>打印</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:ORDER_COLOUREXP1>导出</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-popover
+            @mouseenter.native="showSaveBox"
+            @mouseout.native="hideSaveBox"
+            placement="top"
+            width="160"
+            trigger="manual"
+            v-model="visible2">
+            <p>表格宽度修改了，是否要保存？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+            </div>
+            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" 
+           >表格设置</el-button>
+          </el-popover>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @row-dblclick="showDetail" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :row-style="tableRowColor"
+        <el-table ref="multipleTable" @row-dblclick="showDetail" :data="repertoryArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" @header-dragend="setTableWidth" :row-style="tableRowColor"
         :summary-method="getSumLeft"
           show-summary
          :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
@@ -19,7 +33,7 @@
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -37,7 +51,7 @@
       <!-- 颜色设置弹出框 -->
       <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
       <!-- 表格设置弹出框 -->
-      <TableSetup code="ORDER_REPER_ALL" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :code="thecode" :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -60,6 +74,8 @@ export default {
   },
   data() {
     return {
+      thecode: 'ORDER_REPER_ALL',
+      visible2: false,
       isFix: false,
       total: 0,
       tablekey: '',
@@ -88,7 +104,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         label: '运单号',
         prop: 'shipSn',
         width: '120',
@@ -614,6 +630,34 @@ export default {
     setColumn(obj) {
       this.tableColumn = obj
       this.tablekey = Math.random()
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      // column.property
+      // column.label
+
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     }
   }
 }
