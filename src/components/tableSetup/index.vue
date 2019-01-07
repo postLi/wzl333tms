@@ -219,11 +219,11 @@ export default {
     // 如果有code值则请求处理
     if (this.thecode) {
       this.fetchTableSetup()
-      // if (!window.$tablesetupchangeBINDED) {
+      if (!window.$tablesetupchangeBINDED) {
         // window.$tablesetupchangeBINDED = true
-      this.eventBus.$on('tablesetup.change', (code, data) => {
+        this.eventBus.$on('tablesetup.change', (code, data) => {
         if (code && code === this.thecode) {
-            if (data.prop) {
+          if (data.prop) {
               const find = this.showColumnData.filter(el => el.prop === data.prop)
               if (find.length) {
                 find[0].width = data.width
@@ -238,9 +238,9 @@ export default {
               })
               this.changeTableSetup()
             }
-          }
+        }
       })
-      // }
+      }
     }
   },
   methods: {

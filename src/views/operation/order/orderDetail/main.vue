@@ -786,18 +786,18 @@ export default {
         if (cval) {
           console.log('shipSn', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
           // 判断是否注册过该事件
-          // if (!window.$startPrintBINDED) {
+          if (!window.$startPrintBINDED) {
             // window.$startPrintBINDED = true
-          this.eventBus.$on('startPrint', () => {
-              console.log('startPrint', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
-              if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
+            this.eventBus.$on('startPrint', () => {
+            console.log('startPrint', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+            if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
                 if (this.initStartPrint) {
                   this.initStartPrint = false
                   this.startPrint()
                 }
               }
-            })
-          // }
+          })
+          }
 
           this.initIndex()
         }
@@ -1105,10 +1105,10 @@ export default {
             const libData = Object.assign([], data)
             for (const item in this.printDataObject) {
               libData.forEach((e, index) => {
-                  if (e.filedValue === item) {
+                if (e.filedValue === item) {
                     e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
                   }
-                })
+              })
             }
             console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
             if (window.TMS_printOrderInfo) { // 不需要预览的可以设置份数的打印
@@ -1137,10 +1137,10 @@ export default {
               // console.log('打印设置运单 libData::', libData)
             for (const item in this.printDataObject) {
               libData.forEach((e, index) => {
-                  if (e.filedValue === item) {
+                if (e.filedValue === item) {
                     e['value'] = this.printDataObject[item] // 把页面数据存储到打印数组中
                   }
-                })
+              })
             }
             console.log('window.TMS_printOrderInfo', window.TMS_printOrderInfo)
             if (window.TMS_printOrderInfo) { // 不需要预览的打印
