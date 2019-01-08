@@ -332,12 +332,12 @@ export default {
   },
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+    /* this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
                 // this.loading = false
     }).catch((err) => {
       this.loading = false
       this._handlerCatchMsg(err)
-    })
+    }) */
   },
   data() {
     return {
@@ -531,7 +531,7 @@ export default {
         prop: 'recAddress',
         width: '120',
         fixed: false
-      },  {
+      }, {
         label: '到达省',
         prop: 'endProvince',
         width: '120',
@@ -555,7 +555,7 @@ export default {
         //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
         // },
         fixed: false
-      },]
+      } ]
     }
   },
   methods: {

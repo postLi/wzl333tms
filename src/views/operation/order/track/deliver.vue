@@ -100,7 +100,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         label: '送货批次',
         prop: 'batchNo',
         width: '110',
@@ -117,8 +117,8 @@ export default {
         prop: 'loadTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '完成时间',
@@ -188,10 +188,10 @@ export default {
         prop: 'weightLoadRate',
         width: '120'
       }, {
-          label: '体积装载率',
-          prop: 'volumeLoadRate',
-          width: '120'
-        },
+        label: '体积装载率',
+        prop: 'volumeLoadRate',
+        width: '120'
+      },
         // {
         //   label: "现付油卡",
         //   prop: "nowpayOilCard",
@@ -290,7 +290,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchList()
+    // this.fetchList()
   },
   methods: {
     getSumLeft(param, type) {

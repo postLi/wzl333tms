@@ -426,7 +426,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchAllOrderRepertory()
+    // this.fetchAllOrderRepertory()
   },
   methods: {
     getSumLeft(param, type) {

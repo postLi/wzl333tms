@@ -96,6 +96,18 @@
             </el-input>
           </el-form-item>
         </div>
+        <div class="prinit_aside_rotate">
+          <span><i class="el-icon-refresh"></i> 打印方向</span>
+          <br>
+          <el-form-item>
+            <el-radio-group v-model="printRotate.width" size="mini" @change="changePrintRotate">
+                  <el-radio-button v-for="item in printRotateRule" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
+                </el-radio-group>
+            <!-- <el-radio-group v-model="printRotate" size="mini" @change="changePrintRotate">
+              <el-radio-button v-for="item in printRotateRule" :key="item.value" :label="item.label">{{item.label}}</el-radio-button>
+            </el-radio-group> -->
+          </el-form-item>
+        </div>
         <el-collapse-transition>
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
@@ -232,6 +244,32 @@ export default {
           ship: ''
         }
       },
+      printRotate: {
+        width: 0,
+        filedValue: 'settingRotate'
+      }, // 打印方向 用width来存储
+      printRotateRule: [{
+        value: 0,
+        label: '还原'
+      },{
+        value: 90,
+        label: '顺时针90°'
+      }, {
+        value: 180,
+        label: '顺时针180°'
+      }, {
+        value: 270,
+        label: '顺时针270°'
+      }, {
+        value: -90,
+        label: '逆时针90°'
+      }, {
+        value: -180,
+        label: '逆时针180°'
+      }, {
+        value: -270,
+        label: '逆时针270°'
+      }],
       cargoLabelList: [
         [],
         [],
@@ -370,6 +408,10 @@ export default {
     this.closeMe()
   },
   methods: {
+    changePrintRotate(val) {
+      this.printRotate.width = val
+      console.log(val, this.printRotate)
+    },
     showCargoPlus() {
       console.log('cargoNum', this.cargoNum)
       if (this.cargoNum < this.maxCargo) {
@@ -398,6 +440,8 @@ export default {
     print(type) { // preview-打印预览 test-打印测试
       let labelList = objectMerge2([], this.labelListView)
       labelList.push(objectMerge2({}, this.formModel.paper))
+      labelList.push(objectMerge2({}, this.printRotate))
+
       labelList.forEach(e => {
 
         e.width = Math.round(e.width / this.prxvalue)
@@ -412,8 +456,6 @@ export default {
           e.fontsize = null
           e.alignment = null
           e.value = ''
-        } else {
-
         }
       })
       CreatePrintPageEnable({
@@ -942,7 +984,7 @@ export default {
           array.forEach(e => {
             labelList.forEach((el, index) => {
               if (el.filedValue === e.filedValue) {
-                if (!e.isshow && el.filedValue !== 'setting') {
+                if (!e.isshow && el.filedValue !== 'setting' && el.filedValue !== 'settingRotate') {
                   e.width = this.defaultLabelWidth
                   e.height = this.defaultLabelHeight
                 }
@@ -951,6 +993,7 @@ export default {
                   this.$set(this.formModel.labelList, index, e)
                   this.formModel.labelList[index] = e
                 }
+             
                 this.$set(e, 'type', el.type) // 给旧数据设置类型
                 if (e.type === 4) {
                   if (e.filedName.slice(-1) === '2') {
@@ -972,8 +1015,14 @@ export default {
           this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
           // 匹配完所有字段 初始化显示
           this.formModel.labelList.forEach((e, index) => {
+            if (e.filedValue === 'settingRotate') {
+
+            e.width = Math.round((e.width ? e.width : 0) * this.prxvalue)
+            }else {
+              
             e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
             e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
+            }
             if (e.filedValue === 'setting') { // 设置纸张
               const obj = Object.assign({}, e)
               if (!data) { // 新公司默认展示纸张大小
@@ -983,6 +1032,9 @@ export default {
               obj.leftx = Math.round(obj.leftx * this.prxvalue)
               obj.topy = Math.round(obj.topy * this.prxvalue)
               this.formModel.paper = obj
+            } else if (e.filedValue === 'settingRotate') { // 打印方向
+              console.log('sjkfiwjkeifjsid', e, e.width)
+              this.printRotate = Object.assign({}, e)
             } else { // 设置其他字段
               array.forEach(em => { // 重复字段处理
                 if (em.filedValue === e.filedValue) { // 显示项要在预览处初始化 
@@ -1163,6 +1215,13 @@ export default {
               modelNameSelf.isshow = false
               arr.push(modelNameSelf)
             }
+             if (e.filedValue === 'settingRotate') { // 打印方向
+                let rotate = objectMerge2({},e)
+                rotate.width = this.printRotate.width
+                rotate.isshow = false
+                arr.push(rotate)
+                console.log('rotate', rotate, this.printRotate)
+              }
           })
           if (this.imageUrl) {
             arr.push(bgImg)
@@ -1173,14 +1232,15 @@ export default {
               e.height = Math.round(e.height / this.prxvalue)
               e.isshow = e.isshow ? 1 : 0
               e.bold = e.bold ? 2 : 1
-              if (e.filedValue === 'setting') {
+              if (e.filedValue === 'setting') { // 纸张设置
                 console.log('this.formModel.paper::', this.formModel.paper, e)
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
               }
+             
             }
 
-            if (e.filedValue !== 'setting' && e.filedValue !== 'modelName') { // 【纸张设置】和【模板名称】不需要检验是否出界
+            if (e.filedValue !== 'setting' && e.filedValue !== 'modelName' && e.filedValue !== 'settingRotate') { // 【纸张设置】和【模板名称】和【打印方向】不需要检验是否出界
               if (Math.round(e.leftx * this.prxvalue) + e.width < 0 || Math.round(e.topy * this.prxvalue) + e.height < 0 || e.leftx > Math.round(this.formModel.paper.width / this.prxvalue) || e.topy > Math.round(this.formModel.paper.height / this.prxvalue)) {
                 return false
               } else {

@@ -64,14 +64,14 @@ export default {
   mounted() {
     this.loading = true
     this.searchQuery.vo.disposeOrgId = this.otherinfo.orgid
-    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      // this.loading = false
-      this.licenseTypes = resArr[1]
-      this.loading = false
-    }).catch(err => {
-      this._handlerCatchMsg(err)
-      this.loading = false
-    })
+    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+    //   // this.loading = false
+    //   this.licenseTypes = resArr[1]
+    //   this.loading = false
+    // }).catch(err => {
+    //   this._handlerCatchMsg(err)
+    //   this.loading = false
+    // })
   },
   data() {
     return {

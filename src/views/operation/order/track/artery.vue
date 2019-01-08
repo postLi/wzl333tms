@@ -91,7 +91,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         label: '发车批次',
         prop: 'batchNo',
         width: '110',
@@ -123,16 +123,16 @@ export default {
         prop: 'departureTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '配载时间',
         prop: 'loadTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '目的网点',
@@ -179,10 +179,10 @@ export default {
         prop: 'weightLoadRate',
         width: '120'
       }, {
-          label: '体积装载率',
-          prop: 'volumeLoadRate',
-          width: '120'
-        },
+        label: '体积装载率',
+        prop: 'volumeLoadRate',
+        width: '120'
+      },
       {
         label: '现付车费',
         prop: 'nowpayCarriage',
@@ -278,7 +278,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchList()
+    // this.fetchList()
   },
   methods: {
     getSumLeft(param, type) {
