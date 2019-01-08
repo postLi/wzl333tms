@@ -179,7 +179,7 @@
        return LODOP
      }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
-
+     LODOP.SET_LICENSES("", "917C869B415ADA72B3A20365731AF08D", "C94CEE276DB2187AE6B65D56B3FC2848", "");
      // ===========================================================
      return LODOP
    } catch (err) {
@@ -302,6 +302,7 @@
        console.log('tableId.innerHTML:', tableId.innerHTML)
        LODOP = getLodop()
        // PRINT_INITA(Top,Left,Width,Height,strPrintName)
+
        if (obj.appendTop) {
          pageStyle.intOrient = printObj.printing_direction || pageStyle.intOrient
          LODOP.PRINT_INITA(objp.t, objp.l, objp.w, objp.h, '订货单')
@@ -385,6 +386,7 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      const tableId = obj.id // 重新创建打印视图table
      LODOP = getLodop()
+
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
@@ -405,7 +407,9 @@
      try {
        const tableId = obj
        LODOP = getLodop()
+
        if (type === 'voucher') {
+
          LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
          LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
        } else {
@@ -473,6 +477,7 @@
    try {
      const tableId = createSettlement(obj) // 重新创建打印视图table
      LODOP = getLodop()
+
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
@@ -493,6 +498,7 @@
  export function CreatePrintPage(info) {
    try {
      LODOP = getLodop()
+
      // let info = "LODOP.PRINT_INITA(9,7,2400,1400,\"青春物流流托运单打印\");LODOP.ADD_PRINT_TEXT(41,488,100,19,\"180701404\");LODOP.ADD_PRINT_TEXT(57,47,100,25,\"云南省,\");LODOP.ADD_PRINT_TEXT(63,170,100,20,\"北京市,\");LODOP.ADD_PRINT_TEXT(85,93,81,20,\"发发\");LODOP.ADD_PRINT_TEXT(114,96,82,20,\"收收A\");LODOP.ADD_PRINT_TEXT(90,230,202,20,\"大街上\");LODOP.ADD_PRINT_TEXT(90,485,100,20,\"15920000002\");LODOP.ADD_PRINT_TEXT(116,234,204,20,\"收货address\");LODOP.ADD_PRINT_TEXT(112,486,100,20,\"15932145601\");LODOP.ADD_PRINT_TEXT(165,14,75,20,\"电脑\");LODOP.ADD_PRINT_TEXT(164,104,60,20,\"1807014043\");LODOP.ADD_PRINT_TEXT(163,184,29,20,\"56\");LODOP.ADD_PRINT_TEXT(269,323,58,20,\"34.00\");LODOP.ADD_PRINT_TEXT(324,177,166,20,\"\");LODOP.ADD_PRINT_TEXT(38,366,109,20,\"2018-07-31\" );"
      // info.replace(/^\"|\"$/g,"")
      info.replace(/[\\]/g, '')
@@ -915,6 +921,7 @@
        let copy = []
        const bkimg = info.bkimg || false
        LODOP = getLodop()
+
        console.log('print', info, printer, number)
        // 2.0：处理数据
        if (info.orderdata) {
@@ -1351,6 +1358,7 @@
        // let tableId = createTable(data, columns) // 重新创建打印视图table
        const tableId = createTable(obj) // 重新创建打印视图table
        LODOP = getLodop()
+
        LODOP.PRINT_INIT('数据表格')
        // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
        LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', tableId.innerHTML)
@@ -1377,6 +1385,7 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      const tableId = obj.id // 重新创建打印视图table、
      LODOP = getLodop()
+
      LODOP.PRINT_INIT('数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
@@ -1401,6 +1410,7 @@
  export function CheckIsInstall() {
    try {
      var LODOP = getLodop()
+
      if (LODOP.VERSION) {
        if (LODOP.CVERSION) {
          alert('当前有C-Lodop云打印可用!\n C-Lodop版本:' + LODOP.CVERSION + '(内含Lodop' + LODOP.VERSION + ')')

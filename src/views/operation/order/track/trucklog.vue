@@ -1,11 +1,11 @@
 <template>
-  <div class="orderinfo-manager truck-log" ref="truckLog" v-loading="loading">
+  <div class="track-truck-log" ref="truckLog" v-loading="loading">
     <transition name="el-zoom-in-center">
       <div class="search-card" v-if="showSearchCard && !isAllTable">
         <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
           <el-form-item label="选择车辆">
             <el-input :size='btnsize' v-model="searchQuery.vo.truckIdNumber" placeholder="请输入车牌号" maxlength="8" clearable>
-              <el-button slot="append" :icon="popTreeVisible?'el-icon-close':'el-icon-menu'" @click="handleTruck"></el-button>
+              <!-- <el-button slot="append" :icon="popTreeVisible?'el-icon-close':'el-icon-menu'" @click="handleTruck"></el-button> -->
             </el-input>
           </el-form-item>
           <el-form-item label="开始时间">
@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item class="staff_searchinfo--btn">
             <el-button type="primary" @click="onSubmit" icon="el-icon-search">查询</el-button>
-            <el-button :type="isShowInlineTruckMap?'success':'warning'" @click="mapTruck">查看{{isShowInlineTruckMap ? '车辆轨迹' : '实时车辆'}} <i :class="isShowInlineTruckMap ?'el-icon-share':'el-icon-location'"></i></el-button>
+            <!-- <el-button :type="isShowInlineTruckMap?'success':'warning'" @click="mapTruck">查看{{isShowInlineTruckMap ? '车辆轨迹' : '实时车辆'}} <i :class="isShowInlineTruckMap ?'el-icon-share':'el-icon-location'"></i></el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -86,7 +86,7 @@
 import orderManage from '@/api/operation/orderManage'
 import { loadJs, objectMerge2, pickerOptions2, parseTime } from '@/utils/'
 import Pager from '@/components/Pagination/index'
-import { realTimeLocation, trajectory } from '@/api/operation/truckLog'
+import { trajectoryByTruckIdNumber } from '@/api/operation/truckLog'
 import { SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
@@ -102,7 +102,7 @@ export default {
       isAllTable: false, // true-表格全屏
       isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
-      isShowInlineTruckMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
+      isShowInlineTruckMap: false, // true-实时车辆货物地图 false-车辆轨迹地图
       speedSlider: 520130,
       popTreeVisible: false,
       gridData: [],
@@ -179,9 +179,8 @@ export default {
         pageSize: 100,
         vo: {
           truckIdNumber: '陕YH0009',
-          startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
-          endTime: parseTime(new Date()),
-          shipId: ''
+          startTime: parseTime(new Date() - 60 * 24 * 60 * 4 * 1000),
+          endTime: parseTime(new Date())
         }
       },
       tableHeight: {
@@ -363,26 +362,8 @@ export default {
       if (window.pathSimplifierIns) {
         window.pathSimplifierIns.setData([]) // 给巡航器设置数据
       }
-      if (this.isShowInlineTruckMap) {
-        // 查询实时车辆定位信息
-        let params = _this.orderdata.tmsOrderShipInfo.id
-        realTimeLocation(params).then(data => {
-            if (data) {
-              this.realTimeTrucks = data
-              this.isShowTable = false
-              this.tomap() // 定位
-              _this.$notify({
-                title: '成功',
-                message: '实时车辆查询成功',
-                type: 'success'
-              })
-            }
-          })
-          .catch(err => {
-            this._handlerCatchMsg(err)
-          })
-      } else {
-        // 查询车辆轨迹数据
+      if (!this.isShowInlineTruckMap) { // 轨迹接口
+          // 查询车辆轨迹数据
         let fn = (lineData, type) => {
           if (!lineData) { return }
           _this.orgPageDataList = []
@@ -417,22 +398,18 @@ export default {
             })
           }
         }
-        // 行车轨迹信息
-        this.searchQuery.vo.shipId = this.orderdata.tmsOrderShipInfo.id
-        let paramsData = Object.assign({}, this.searchQuery.vo)
-        trajectory(paramsData).then(data => {
-            if (data && data.length) {
+
+        let query = objectMerge2({}, this.searchQuery.vo)
+        trajectoryByTruckIdNumber(query).then(data => {
+           if (data && data.trajectoryList.length) {
               _this.initedPath = false
-              if (data.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
-                fn(data, 'simple')
-                console.warn('多辆车格式化（单辆车）：', this.allList)
+              if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
+                fn([data], 'simple')
+                console.warn('格式化（单辆车）：', this.allList)
                 _this.initLine()
                 _this.isShowTable = true
-              } else { // 多辆车轨迹
-                fn(data)
-                console.warn('多辆车格式化（多辆车）：', this.allList)
-                _this.initLine()
-                _this.isShowTable = false
+              } else { 
+               
               }
               _this.$notify({
                 title: '成功',
@@ -442,9 +419,10 @@ export default {
             } else {
               this.$message.warning('暂无车辆轨迹数据！')
             }
+
           })
           .catch(err => {
-            _this._handlerCatchMsg(err)
+            this._handlerCatchMsg(err)
           })
       }
     },
@@ -467,7 +445,7 @@ export default {
           })
           marker.setLabel({
             offset: new AMap.Pixel(20, 20),
-            content: '<div class="markerContent"><h3>'+e.truckIdNumber+' <i>'+e.speed+'km/h</i></h3><p>'+e.dirverName+' <i>'+e.dirverMobile+'</i></p><p>'+e.address+'</p></div>'
+            content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
           })
           this.markers.push(marker)
           map.setFitView()
