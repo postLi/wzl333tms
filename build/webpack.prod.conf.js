@@ -25,7 +25,8 @@ var webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
-      extract: true
+      extract: true,
+      usePostCSS: true
     })
   },
  // devtool: config.build.productionSourceMap ? '#source-map' : false,
@@ -47,6 +48,10 @@ var webpackConfig = merge(baseWebpackConfig, {
       },
       sourceMap: false
     }), */
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('./vendor-manifest.json')
+    }),
     new ParallelUglifyPlugin({
       cacheDir: '.cache/',
       // sourceMap: env !== 'test' ? true : false,
