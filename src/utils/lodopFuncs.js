@@ -1060,6 +1060,7 @@
        }
      } catch (err) {
        reject('LODOP加载失败')
+       console.log(err)
        getLodop()
      }
    })

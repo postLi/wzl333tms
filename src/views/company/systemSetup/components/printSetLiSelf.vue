@@ -252,10 +252,10 @@ export default {
           value: 0,
           label: '还原'
         },
-        {
-          value: 90,
-          label: '逆时针90°'
-        },
+        // {
+        //   value: 90,
+        //   label: '逆时针90°'
+        // },
         {
           value: 180,
           label: '旋转180°'
