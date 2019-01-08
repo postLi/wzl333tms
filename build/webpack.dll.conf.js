@@ -15,11 +15,10 @@ const vendor = [
     'js-cookie',
     'axios',
     'vuex',
-    'echarts',
+    // 'echarts',
     'js-md5',
     'qrcode',
-    'vuedraggable',
-    'whatwg-fetch'
+    'vuedraggable'
 ];
 
 const webpackConfig = {
