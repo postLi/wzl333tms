@@ -252,22 +252,22 @@ export default {
         value: 0,
         label: '还原'
       },{
-        value: 90,
+        value: -90,
         label: '顺时针90°'
       }, {
-        value: 180,
+        value: -180,
         label: '顺时针180°'
       }, {
-        value: 270,
+        value: -270,
         label: '顺时针270°'
       }, {
-        value: -90,
+        value: 90,
         label: '逆时针90°'
       }, {
-        value: -180,
+        value: 180,
         label: '逆时针180°'
       }, {
-        value: -270,
+        value: 270,
         label: '逆时针270°'
       }],
       cargoLabelList: [
