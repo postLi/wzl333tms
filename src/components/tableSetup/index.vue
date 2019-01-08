@@ -229,8 +229,8 @@ export default {
               this.changeTableSetup()
             }
           }
-        })
-      }
+        }
+      })
     }
   },
   methods: {
