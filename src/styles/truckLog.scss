@@ -2,6 +2,7 @@
  * 公用样式
  * 
  */
+
 $popItemLineHeight: 32px;
 $popItemHeight: 300px;
 $floatPanelBgcolor: rgba(255, 255, 255, 0.85);
@@ -14,19 +15,40 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
   margin-bottom: 10px;
 }
 
+.track-truck-log {
+  height: calc(100% - 33px) !important;
+}
+
+.truck-log {
+  height: calc(100% - 0px) !important;
+}
+
 /* 选择车弹出框 */
+
+.track-truck-log,
 .truck-log {
   display: flex;
   flex-direction: column;
   position: relative;
-  height: calc(100% - 0px) !important;
-  .popTimer{
+  width: 100%;
+  padding: 10px;
+  .markerContent {
+    padding: 5px 5px 0 5px;
+    background-color: $floatPanelBgcolor;
+    border: none;
+    h3 {
+      margin-bottom: 5px;
+    }
+    p {
+      margin-bottom: 3px;
+    }
+  }
+  .popTimer {
     position: absolute;
     left: 70px;
     top: 20px;
-    padding: 5px 5px;
-    // background-color: rgba(64, 158, 255, 0.5);
-    background-color: rgba(0,0,0, 0.3);
+    padding: 5px 5px; // background-color: rgba(64, 158, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     box-shadow: $floatPanelBoxShoadow;
     border-radius: 5px;
     overflow: hidden;
@@ -122,9 +144,6 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
           color: #409eff;
         }
       }
-      // .el-progress-bar__innerText{
-      //   color: rgba(0,0,0,0);
-      // }
       .btn-stop {
         padding-top: 11px;
         &:before {

@@ -97,12 +97,12 @@
           </el-form-item>
         </div>
         <div class="prinit_aside_rotate">
-          <span><i class="el-icon-refresh"></i> 打印方向</span>
+          <span><i class="el-icon-refresh"></i> 内容-打印输出方向</span>
           <br>
           <el-form-item>
             <el-radio-group v-model="printRotate.width" size="mini" @change="changePrintRotate">
-                  <el-radio-button v-for="item in printRotateRule" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
-                </el-radio-group>
+              <el-radio-button v-for="item in printRotateRule" :key="item.value" :label="item.value" border>{{item.label}}</el-radio-button>
+            </el-radio-group>
             <!-- <el-radio-group v-model="printRotate" size="mini" @change="changePrintRotate">
               <el-radio-button v-for="item in printRotateRule" :key="item.value" :label="item.label">{{item.label}}</el-radio-button>
             </el-radio-group> -->
@@ -249,27 +249,18 @@ export default {
         filedValue: 'settingRotate'
       }, // 打印方向 用width来存储
       printRotateRule: [{
-        value: 0,
-        label: '还原'
-      },{
-        value: -90,
-        label: '顺时针90°'
-      }, {
-        value: -180,
-        label: '顺时针180°'
-      }, {
-        value: -270,
-        label: '顺时针270°'
-      }, {
-        value: 90,
-        label: '逆时针90°'
-      }, {
-        value: 180,
-        label: '逆时针180°'
-      }, {
-        value: 270,
-        label: '逆时针270°'
-      }],
+          value: 0,
+          label: '还原'
+        },
+        {
+          value: 90,
+          label: '逆时针90°'
+        },
+        {
+          value: 180,
+          label: '旋转180°'
+        }
+      ],
       cargoLabelList: [
         [],
         [],
@@ -993,7 +984,7 @@ export default {
                   this.$set(this.formModel.labelList, index, e)
                   this.formModel.labelList[index] = e
                 }
-             
+
                 this.$set(e, 'type', el.type) // 给旧数据设置类型
                 if (e.type === 4) {
                   if (e.filedName.slice(-1) === '2') {
@@ -1017,11 +1008,11 @@ export default {
           this.formModel.labelList.forEach((e, index) => {
             if (e.filedValue === 'settingRotate') {
 
-            e.width = Math.round((e.width ? e.width : 0) * this.prxvalue)
-            }else {
-              
-            e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
-            e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
+              e.width = Math.round((e.width ? e.width : 0) * this.prxvalue)
+            } else {
+
+              e.width = Math.round((e.width ? e.width : this.defaultLabelWidth) * this.prxvalue)
+              e.height = Math.round((e.height ? e.height : this.defaultLabelHeight) * this.prxvalue)
             }
             if (e.filedValue === 'setting') { // 设置纸张
               const obj = Object.assign({}, e)
@@ -1215,13 +1206,13 @@ export default {
               modelNameSelf.isshow = false
               arr.push(modelNameSelf)
             }
-             if (e.filedValue === 'settingRotate') { // 打印方向
-                let rotate = objectMerge2({},e)
-                rotate.width = this.printRotate.width
-                rotate.isshow = false
-                arr.push(rotate)
-                console.log('rotate', rotate, this.printRotate)
-              }
+            if (e.filedValue === 'settingRotate') { // 打印方向
+              let rotate = objectMerge2({}, e)
+              rotate.width = this.printRotate.width
+              rotate.isshow = false
+              arr.push(rotate)
+              console.log('rotate', rotate, this.printRotate)
+            }
           })
           if (this.imageUrl) {
             arr.push(bgImg)
@@ -1237,7 +1228,7 @@ export default {
                 e.leftx = Math.round(this.formModel.paper.leftx / this.prxvalue)
                 e.topy = Math.round(this.formModel.paper.topy / this.prxvalue)
               }
-             
+
             }
 
             if (e.filedValue !== 'setting' && e.filedValue !== 'modelName' && e.filedValue !== 'settingRotate') { // 【纸张设置】和【模板名称】和【打印方向】不需要检验是否出界
