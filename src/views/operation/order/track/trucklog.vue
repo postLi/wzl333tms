@@ -9,15 +9,15 @@
             </el-input>
           </el-form-item>
           <el-form-item label="开始时间">
-            <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptions2">
+            <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="结束时间">
-            <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptions2" placeholder="结束日期">
+            <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsSimple" placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
           <el-form-item class="staff_searchinfo--btn">
-            <el-button type="primary" @click="onSubmit" icon="el-icon-search">查询</el-button>
+            <el-button type="primary" @click="onSubmit" icon="el-icon-search" :loading="loadSearch">查询</el-button>
             <!-- <el-button :type="isShowInlineTruckMap?'success':'warning'" @click="mapTruck">查看{{isShowInlineTruckMap ? '车辆轨迹' : '实时车辆'}} <i :class="isShowInlineTruckMap ?'el-icon-share':'el-icon-location'"></i></el-button> -->
           </el-form-item>
         </el-form>
@@ -32,7 +32,10 @@
         </div>
       </el-card>
     </transition>
-    <div class="popTimer" v-if="isTimer"><i class="el-icon-time"></i> {{timer}}秒后刷新轨迹</div>
+    <div class="popTimer" v-if="isTimer">
+      <el-button @click="timerCon" size="mini" type="warning" :icon="isTimerOpen ? '' :'el-icon-time'">{{isTimerOpen ? '关闭' : '开启'}}自动刷新</el-button>
+      <span v-if="isTimerOpen"><i class="el-icon-time"></i> {{timer}}秒后刷新轨迹</span>
+    </div>
     <div id="allmap" ref="allmap"></div>
     <div class="truck-log-expand">
       <transition name="el-zoom-in-center">
@@ -84,7 +87,7 @@
 <script>
 // 请求接口
 import orderManage from '@/api/operation/orderManage'
-import { loadJs, objectMerge2, pickerOptions2, parseTime } from '@/utils/'
+import { loadJs, objectMerge2, pickerOptionsSimple, parseTime } from '@/utils/'
 import Pager from '@/components/Pagination/index'
 import { trajectoryByTruckIdNumber } from '@/api/operation/truckLog'
 import { SaveAsFile } from '@/utils/lodopFuncs'
@@ -98,7 +101,8 @@ export default {
   },
   data() {
     return {
-
+      loadSearch: false,
+      isTimerOpen: true, // true-开始自动刷新并显示文字 false-关闭自动刷新并隐藏文字
       isAllTable: false, // true-表格全屏
       isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
@@ -115,8 +119,8 @@ export default {
       thename: '',
       theobj: {},
       btnsize: 'mini',
-      pickerOptions2: {
-        shortcuts: pickerOptions2
+      pickerOptionsSimple: {
+        shortcuts: pickerOptionsSimple
       },
       groupList: [],
       tableColumn: [{
@@ -188,8 +192,8 @@ export default {
         x: 0,
         y: 0
       },
-      timer: 5,
-      isTimer: false,
+      timer: 60,
+      isTimer: true,
       pathSimplifierIns: {},
       map: {},
       allPathData: [],
@@ -233,6 +237,20 @@ export default {
         }
       }
     },
+     '$route': {
+      handler(to, from) {
+        if (this.isTimer) { // 添加自动刷新功能时
+          if (window.AMapUI) { // 开启自动刷新时
+            if (to.fullPath && to.fullPath.indexOf('/operation/order/track/trucklog') !== -1) {
+            } else {
+              this.isTimerOpen = false
+              clearInterval(this.timerOption)
+            }
+          }
+        }
+      },
+      immediate: true
+    },
     curCursor: {
       handler(cval, oval) {
         if (cval) {
@@ -266,11 +284,14 @@ export default {
       _this.hasLoadedMap = true
     }
     this.init(2222)
-    this.initTimer()
+  },
+  acivated () {
+    this.onSubmit()
   },
   // 关闭时清空地图数据
   destoryed() {
     this.exit()
+    clearInterval(this.timerOption)
   },
   methods: {
     classLineRed(row) { // 行样式
@@ -282,17 +303,26 @@ export default {
         }
       }
     },
-    initTimer() {
-      if (this.isTimer) { // 是否定时刷新
-        this.timer = this.$options.data().timer
-        let timer = setInterval(() => {
-          this.timer--
-            if (this.timer <= 0) {
-              this.onSubmit()
-              setTimeout(() => {
-                this.timer = 60
-              }, 1000)
-            }
+    timerCon() { // 用户控制是否需要自动刷新
+      if (this.isTimerOpen) { // 关闭自动刷新
+        this.isTimerOpen = false
+        clearInterval(this.timerOption)
+      } else { // 开启自动刷新
+        this.initTimer()
+      }
+    },
+    initTimer() { // 默认添加自动刷新功能
+      clearInterval(this.timerOption)
+      if (this.isTimer) {
+        const _this = this
+        _this.isTimerOpen = true
+        _this.timer = _this.$options.data().timer
+        this.timerOption = setInterval(() => {
+          _this.timer = _this.timer - 1
+          if (_this.timer <= 0) {
+            _this.onSubmit()
+            _this.timer = _this.$options.data().timer
+          }
         }, 1000)
       }
     },
@@ -305,7 +335,7 @@ export default {
       let eventY = event.pageY //鼠标当前位置的y坐标
       this.tableHeight.y = eventY
       this.tableHeight.orgheight = this.tableHeight.height || 0
-      this.truckLogHeight = this.$refs.truckLog.offsetHeight - 90
+      this.truckLogHeight = this.$refs.truckLog.offsetHeight - 100
       if (!this.isShowTable) {
         this.isShowTable = true
         this.tableHeight.height = 36
@@ -357,13 +387,15 @@ export default {
     },
     onSubmit() { // 查询
       let _this = this
+      _this.loadSearch = true
       _this.progressPercentage = 0
       _this.pathNavigs = []
+      clearInterval(_this.timerOption)
       if (window.pathSimplifierIns) {
         window.pathSimplifierIns.setData([]) // 给巡航器设置数据
       }
       if (!this.isShowInlineTruckMap) { // 轨迹接口
-          // 查询车辆轨迹数据
+        // 查询车辆轨迹数据
         let fn = (lineData, type) => {
           if (!lineData) { return }
           _this.orgPageDataList = []
@@ -401,15 +433,15 @@ export default {
 
         let query = objectMerge2({}, this.searchQuery.vo)
         trajectoryByTruckIdNumber(query).then(data => {
-           if (data && data.trajectoryList.length) {
+            if (data && data.trajectoryList.length) {
               _this.initedPath = false
               if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
                 fn([data], 'simple')
                 console.warn('格式化（单辆车）：', this.allList)
                 _this.initLine()
                 _this.isShowTable = true
-              } else { 
-               
+              } else {
+
               }
               _this.$notify({
                 title: '成功',
@@ -419,9 +451,11 @@ export default {
             } else {
               this.$message.warning('暂无车辆轨迹数据！')
             }
-
+            this.initTimer()
+            _this.loadSearch = false
           })
           .catch(err => {
+            _this.loadSearch = false
             this._handlerCatchMsg(err)
           })
       }
@@ -634,6 +668,12 @@ export default {
     },
     doLine(type) { // 轨迹控制器
       if (window.pathSimplifierIns) {
+         if (/(start|resume|pause)/.test(type)) {
+          clearInterval(this.timerOption)
+          this.isTimerOpen = false
+        }else {
+          this.initTimer()
+        }
         let pathSimplifierIns = window.pathSimplifierIns
         this.allPathData.forEach((row, pathIndex) => {
           let navg = this.getNavg(pathIndex, row) // 创建轨迹

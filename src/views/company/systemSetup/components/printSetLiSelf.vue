@@ -246,7 +246,8 @@ export default {
       },
       printRotate: {
         width: 0,
-        filedValue: 'settingRotate'
+        filedValue: 'settingRotate',
+        filedName: '打印方向'
       }, // 打印方向 用width来存储
       printRotateRule: [{
           value: 0,
