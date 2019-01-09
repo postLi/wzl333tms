@@ -504,14 +504,14 @@ export default {
         }
       },
       tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
             return scope.$index + 1
           }
-      }, {
+        }, {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '120',
@@ -527,18 +527,18 @@ export default {
           width: '120',
           fixed: false
         },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFee',
-        width: '100',
-        fixed: false
-      },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        },
         //   {
         //   label: '应到件数',
         //   prop: 'loadAmount',
@@ -556,22 +556,22 @@ export default {
         //   fixed: false
         // },
         // v-if="isAlFun"   入库前的
-      {
-        label: '实到件数',
-        prop: 'actualAmount',
-        width: '100',
-        isAlFun: true,
-        expand: true,
-        fixed: false,
-        checkfn: (row) => {
+        {
+          label: '实到件数',
+          prop: 'actualAmount',
+          width: '100',
+          isAlFun: true,
+          expand: true,
+          fixed: false,
+          checkfn: (row) => {
             return row.warehouStatus === 1
           },
 
-        slot: (scope) => {
+          slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
           }
-      }, {
+        }, {
           label: '实到重量(kg)',
           prop: 'actualWeight',
           width: '120',
@@ -626,12 +626,12 @@ export default {
         //   fixed: false
         // },
         //
-      {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      }, {
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
           label: '配载重量(kg)',
           prop: 'loadWeight',
           width: '120',
@@ -1061,22 +1061,22 @@ export default {
       for (const item in this.info) {
         obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
       }
-       let appendTopStr = '<style>body{width: 100%;}</style>'
+      let appendTopStr = '<style>body{width: 100%;}</style>'
       appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
-                   this.otherinfo.companyName +
-                   '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.orgName + '   →   ' + obj.endOrgName +
-                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.loadTime +
-                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.batchNo +
-                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.truckIdNumber +
-                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverName +
-                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverMobile +
-                   '</td></tr></table></body>'
+        this.otherinfo.companyName +
+        '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.orgName + '   →   ' + obj.endOrgName +
+        '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.loadTime +
+        '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.batchNo +
+        '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.truckIdNumber +
+        '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverName +
+        '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverMobile +
+        '</td></tr></table></body>'
 
       switch (type) {
         // 导出
@@ -1123,29 +1123,36 @@ export default {
           this.$emit('update:isModify', false)
           this.$emit('success')
           this.loading = false
-          // this.isHiddenBtn = false
         }).catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
         })
-        // this.closeMe()
       } else {
+        let countActual = 0
+        let countStatus = 0
         this.selected.forEach((value, index, array) => {
           if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
-            this.$message({
-              type: 'info',
-              message: '实到件数/实到重量/实到体积不能小于0'
-            })
-            return false
+            countStatus += 1
           }
           if (value.warehouStatus === 1) {
-            this.$message({
-              type: 'info',
-              message: '不能再次到车入库'
-            })
-            return false
-          } else {}
+            countStatus += 1
+          }
         })
+        if (countActual > 0) {
+          this.$message({
+            type: 'info',
+            message: '实到件数/实到重量/实到体积不能小于0'
+          })
+          return false
+        }
+        if (countStatus > 0) {
+          this.$message({
+            type: 'info',
+            message: '不能再次到车入库'
+          })
+          this.toggleAllRows()
+          return false
+        }
 
         if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
           this.formModel.arriveHandlingFee = 0
@@ -1569,6 +1576,7 @@ export default {
     }
   }
 }
+
 
 
 

@@ -444,7 +444,7 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" v-else-if="isFootFirst">
-      <el-button @click="closeMe" round type="warning" icon="el-icon-close">关闭</el-button>
+      <el-button @click="closeMe">关闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
       <template v-if="!activeECheckBillName">

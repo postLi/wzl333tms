@@ -180,6 +180,7 @@
      }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
      LODOP.SET_LICENSES("", "917C869B415ADA72B3A20365731AF08D", "C94CEE276DB2187AE6B65D56B3FC2848", "");
+     console.warn('LODOP::', JSON.stringify(LODOP))
      // ===========================================================
      return LODOP
    } catch (err) {
@@ -332,22 +333,23 @@
        if (obj.appendTop) {
          LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
          LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
+         if (printObj.print_page_num === '1') {
+          const le = objp.w - 20
+          const to = objp.h - 20
+          // 如果是横向，翻转宽高位置
+          if (printObj.printing_direction === '2') {
+            const a = le
+            le = to
+            to = a
+          }
+          LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
+          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
+          LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
+          LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
+        }
        }
 
-       if (printObj.print_page_num === '1') {
-         const le = objp.w - 20
-         const to = objp.h - 20
-         // 如果是横向，翻转宽高位置
-         if (printObj.printing_direction === '2') {
-           const a = le
-           le = to
-           to = a
-         }
-         LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
-         LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
-         LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
-         LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
-       }
+       
        console.log('printObj:', printObj)
 
        //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')

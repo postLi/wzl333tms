@@ -384,6 +384,7 @@ export default {
         },
         toolbox: {
           show: true,
+          right: 30,
           feature: {
             mark: { show: true },
             dataView: { show: false, readOnly: false },
