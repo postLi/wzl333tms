@@ -3,7 +3,9 @@
         var hm = document.createElement("script");
         hm.src = "https://hm.baidu.com/hm.js?6085308f371f1d5ecf1236cdb657301e";
         var s = document.getElementsByTagName("script")[0]; 
-        s.parentNode.insertBefore(hm, s);
+        if(location.href.indexOf('28tms.cn')!==-1){
+          s.parentNode.insertBefore(hm, s);
+        }
       })();</script><script>var modernBrowser = (
         'fetch' in window &&
         'assign' in Object
@@ -15,4 +17,4 @@
         scriptElement.async = false;
         scriptElement.src = '/polyfills.js';
         document.head.appendChild(scriptElement);
-      }</script><link rel="shortcut icon" href=/favicon.ico><link href=/static/css/all.974aa0dd6cc9d00c185d4d241d73c50e.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.f14ea04137c1a937c5f1.js></script><script type=text/javascript src=/static/js/app.7d264efd9c1d6535b4e6.js></script></body></html>
+      }</script><link rel="shortcut icon" href=/favicon.ico><link href=https://cdn.bootcss.com/element-ui/2.4.10/theme-chalk/index.css rel=stylesheet><link href=/static/css/all.761531f379adcd12055e717b92990831.css rel=stylesheet></head><body><div id=app></div><script src=/static/js/vendor.dll.js></script><script type=text/javascript src=https://cdn.bootcss.com/vue/2.5.16/vue.min.js></script><script type=text/javascript src=https://cdn.bootcss.com/element-ui/2.4.10/index.js></script><script type=text/javascript src=https://cdn.bootcss.com/element-ui/2.4.10/locale/zh-CN.min.js></script><script type=text/javascript src=/static/js/manifest.1d94e20d26af6e9ed98a.js></script><script type=text/javascript src=/static/js/vendor.914f13b29b2363e8fef8.js></script><script type=text/javascript src=/static/js/app.0f0786fa68279ee62bf3.js></script></body></html>
