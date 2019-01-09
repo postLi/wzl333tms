@@ -108,7 +108,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       chunks:['app'],
       // minChunks: Infinity,
       minChunks: function (module, count) {
-
+        console.log(module.resource,`引用次数${count}`);
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&
@@ -121,8 +121,13 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     // 提取公共模块
     new webpack.optimize.CommonsChunkPlugin({
+      name: 'client',
       children: true,
-      async: 'children-async'
+      async: 'chunk-vendor',
+      minChunks: (module, count) => {
+        // 被 3 个及以上 chunk 使用的共用模块提取出来
+        return count >= 3
+      }
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'polyfills',
