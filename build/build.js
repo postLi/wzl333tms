@@ -51,8 +51,8 @@ rm(path.join(config.build.assetsRootTemp, config.build.assetsSubDirectory), err 
     var copyTime = new Date()
    
     // 先清空原有文件
-    fs.emptyDir(path.join(config.build.assetsRoot), err => {
-      if (err) throw err
+    // fs.emptyDir(path.join(config.build.assetsRoot), err => {
+    //   if (err) throw err
       // 再迁移所有文件过去
       fs.move(path.join(config.build.assetsRootTemp), path.join(config.build.assetsRoot), { overwrite: true }, err => {
         if (err) return console.error(err)
@@ -100,7 +100,7 @@ rm(path.join(config.build.assetsRootTemp, config.build.assetsSubDirectory), err 
     
           // fse.copy(path.join(config.build.assetsRootTemp, config.build.assetsSubDirectory),path.join(config.build.assetsRoot, config.build.assetsSubDirectory))
           
-    })
+    // })
     
     
   })
