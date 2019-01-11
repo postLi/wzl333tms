@@ -1,6 +1,6 @@
 <template>
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
-    <template class="addCustomerPop-content" slot="content">
+    <template class="addCPop-content" slot="content">
       <!-- 实际到车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
@@ -153,7 +153,7 @@
                   </el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :row-class-name="classLineRed">
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
                       <!--有数据-->
@@ -564,7 +564,7 @@ export default {
           expand: true,
           fixed: false,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
 
           slot: (scope) => {
@@ -577,7 +577,7 @@ export default {
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
           slot: (scope) => {
@@ -590,7 +590,7 @@ export default {
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
 
@@ -808,7 +808,15 @@ export default {
     }
   },
   methods: {
-
+    classLineRed(row) { // 行样式
+      if (this.detailList.length) {
+        if (row.row.unloadSign === 1) {
+          return 'rowDisable'
+        } else {
+          return ''
+        }
+      }
+    },
     changeData(index, prop, newVal) { // 判断当行
       this.detailList[index][prop] = Number(newVal)
       const curAmount = this.detailList[index].actualAmount // 实到件数
@@ -948,8 +956,8 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          this.$refs.multipleTable.toggleRowSelection(e, true)
-          if (e.warehouStatus === 1) {
+          // this.$refs.multipleTable.toggleRowSelection(e, true)
+          if (e.warehouStatus === 1 || e.unloadSign === 1) {
             this.$refs.multipleTable.toggleRowSelection(e, false)
           } else {
             this.$refs.multipleTable.toggleRowSelection(e, true)
@@ -1202,9 +1210,20 @@ export default {
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
+      if (row.unloadSign !== 1) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      }
     },
     getSelection(selection) {
+      this.detailList.forEach((el, index) => {
+        selection.forEach((em, idx) => {
+          if (el.repertoryId === em.repertoryId) {
+            if (em.unloadSign === 1) {
+              this.$refs.multipleTable.toggleRowSelection(el, false)
+            }
+          }
+        })
+      })
       this.selected = selection
     },
     // 取消高亮样式
@@ -1290,6 +1309,19 @@ export default {
         }
         .unauth {
           color: #f00;
+        }
+      }
+      .rowDisable {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        .el-checkbox {
+          .el-checkbox__input {
+            cursor: not-allowed;
+          }
+          .el-checkbox__inner {
+            background-color: #ccc;
+          }
         }
       }
       .el-table td,
@@ -1580,6 +1612,8 @@ export default {
     }
   }
 }
+
+
 
 
 

@@ -41,7 +41,7 @@
         </el-form>
         <div class="discharge-table">
           <div class="btns_box">
-            <el-button :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('discharge')">卸货</el-button>
+            <el-button :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('discharge')" v-loading="loading">卸货</el-button>
             <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" trigger="manual" width="160" :value="visible2">
               <p>表格宽度修改了，是否要保存？</p>
               <div style="text-align: right; margin: 0">
@@ -54,7 +54,7 @@
             <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
           </div>
           <div class="detail-table">
-            <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" stripe>
+            <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;"  :row-class-name="classLineRed">
               <el-table-column fixed sortable type="selection" width="50"></el-table-column>
               <template v-for="column in tableColumn">
                 <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -233,17 +233,26 @@ export default {
   },
   methods: {
     init() {},
+    classLineRed(row) { // 行样式
+      if (this.dataList.length) {
+        if (row.row.unloadSign === 1) {
+          return 'rowDisable'
+        } else {
+          return ''
+        }
+      }
+    },
     doAction(type) {
       switch (type) {
         case 'discharge': // 卸货
-          if (this.info.unloadSignName === '未卸货') {
-            this.discharge()
-          } else {
-            this.$message.warning('该批次已经卸货~')
-          }
+          // if (this.info.unloadSignName === '未卸货') {
+          this.discharge()
+          // } else {
+          //   this.$message.warning('该批次已经卸货~')
+          // }
           break
         case 'export': // 导出
-         this.$message.warning('功能尚在开发中,敬请期待~')
+          this.$message.warning('功能尚在开发中,敬请期待~')
           // SaveAsFile({
           //   data: this.dataList,
           //   columns: this.tableColumn,
@@ -251,7 +260,7 @@ export default {
           // })
           break
         case 'print': // 打印
-         this.$message.warning('功能尚在开发中,敬请期待~')
+          this.$message.warning('功能尚在开发中,敬请期待~')
           // PrintInFullPage({
           //   data: this.dataList,
           //   columns: this.tableColumn
@@ -266,19 +275,24 @@ export default {
       }
       let selectList = []
       this.selectList.forEach((el, index) => {
-        selectList.push(el.id)
+        if (el.unloadSign !== 1) {
+          selectList.push(el.id)
+        } else {}
       })
       this.$confirm('请核对好卸货的运单哦！不要卸错货物~', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.loading = true
         unload(selectList).then(data => {
             this.$message.success('卸货成功!')
             this.$emit('success')
+            this.loading = false
             this.closeMe()
           })
           .catch(err => {
+            this.loading = false
             this._handlerCatchMsg(err)
           })
       }).catch(() => {
@@ -317,7 +331,7 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.dataList.forEach((e, index) => {
-          this.$refs.multipleTable.toggleRowSelection(e, true)
+          // this.$refs.multipleTable.toggleRowSelection(e, true)
           if (e.shipToOrgid === this.otherinfo.orgid && e.unloadSign !== 1) {
             this.$refs.multipleTable.toggleRowSelection(e, true)
           } else {
@@ -353,10 +367,22 @@ export default {
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     getSelection(list) {
+      this.dataList.forEach((el, index) => {
+        list.forEach((em, idx) => {
+          if (el.repertoryId === em.repertoryId) {
+            if (em.unloadSign === 1) {
+              this.$refs.multipleTable.toggleRowSelection(el, false)
+            }
+          }
+        })
+      })
+      console.log('list', list)
       this.selectList = Object.assign([], list)
     },
     clickDetails(row) {
-      this.$refs.multipleTable.toggleRowSelection(row)
+      if (row.unloadSign !== 1) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      }
     },
     setTable() {
       this.$message.warning('功能尚在开发中,敬请期待~')
@@ -428,6 +454,19 @@ $backgroundColor:#E9F3FA;
       height: calc(100% - 120px);
       display: flex;
       flex-direction: column;
+      .rowDisable {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        .el-checkbox {
+          .el-checkbox__input {
+            cursor: not-allowed;
+          }
+          .el-checkbox__inner {
+            background-color: #ccc;
+          }
+        }
+      }
       .btns_box {
         height: 28px;
         margin-bottom: 10px;
