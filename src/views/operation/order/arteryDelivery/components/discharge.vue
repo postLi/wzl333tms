@@ -269,13 +269,17 @@ export default {
       }
     },
     discharge() { // 卸货
+      if (this.info.batchTypeId !== 53) {
+        this.$message.warning('批次【在途中】才可以卸货~')
+        return false
+      }
       if (this.selectList.length < 1) {
         this.$message.warning('请选择需要卸货的运单')
         return false
       }
       let selectList = []
       this.selectList.forEach((el, index) => {
-        if (el.unloadSign !== 1) {
+        if (e.warehouStatus !== 1 ||el.unloadSign !== 1) {
           selectList.push(el.id)
         } else {}
       })
@@ -332,7 +336,7 @@ export default {
       this.$nextTick(() => {
         this.dataList.forEach((e, index) => {
           // this.$refs.multipleTable.toggleRowSelection(e, true)
-          if (e.shipToOrgid === this.otherinfo.orgid && e.unloadSign !== 1) {
+          if (e.shipToOrgid === this.otherinfo.orgid && e.unloadSign !== 1 && e.warehouStatus !== 1) {
             this.$refs.multipleTable.toggleRowSelection(e, true)
           } else {
             this.$refs.multipleTable.toggleRowSelection(e, false)
@@ -371,7 +375,7 @@ export default {
       this.dataList.forEach((el, index) => {
         list.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
-            if (em.unloadSign === 1) {
+            if (e.warehouStatus === 1 ||em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
             }else {
               arr.push(em)

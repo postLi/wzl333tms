@@ -230,7 +230,7 @@ export default {
           this.selectInfo = selected
           this.dischargeVisible = true
         } else {
-          this.$message.warning('【在途中】才可以卸货~')
+          this.$message.warning('批次【在途中】才可以卸货~')
           this.$refs.multipleTable.clearSelection()
         }
       } else {
@@ -267,11 +267,11 @@ export default {
             })
           })
         } else {
-          this.$message.warning('【在途中】才可以取消卸货~')
+          this.$message.warning('批次【在途中】才可以取消卸货~')
           this.$refs.multipleTable.clearSelection()
         }
       } else {
-        this.$message.warning('【已卸货】才可以取消卸货~')
+        this.$message.warning('批次【已卸货】才可以取消卸货~')
         this.$refs.multipleTable.clearSelection()
       }
     },
