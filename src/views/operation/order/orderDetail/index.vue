@@ -13,7 +13,7 @@
       <el-tab-pane name="six" label="运单轨迹">
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
-      <el-tab-pane v-if="viewLog()" name="seven" label="行车轨迹">
+      <el-tab-pane name="seven" label="行车轨迹">
         <trunkLog v-if="activeTab.seven" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
@@ -66,7 +66,7 @@ export default {
         // this.init()
       }
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/orderDetail') !== -1) {
         // 当前页面为弹窗时，不响应链接变化
         if (!this.orderid) {
@@ -116,7 +116,7 @@ export default {
     }
   },
   methods: {
-    viewLog(){
+    viewLog() {
       return location.href.indexOf('28tms.cn') === -1 && location.href.indexOf('192.168.1') !== -1
     },
     // 获取运单数据
@@ -172,7 +172,7 @@ export default {
       this.activeIndex = 'one'
       this.initindex++
         // setTimeout(() => {
-        this.getOrderInfo(this.output.orderid).then(res => {
+      this.getOrderInfo(this.output.orderid).then(res => {
           if (!res.data) {
             if (this.initindex > 3) {
               this.$message.alert('获取信息失败，请尝试刷新页面。')
