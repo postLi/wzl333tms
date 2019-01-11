@@ -22,9 +22,8 @@
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
-                  <!-- <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}"> -->
-                  <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId!==40" class="formItemTextDanger">
-                    <div class="select-network-list" v-if="loadTypeId === 39">
+                  <el-form-item label="到达网点" v-if="loadTypeId===39" class="formItemTextDanger">
+                    <div class="select-network-list">
                       <span class="network-list-node">{{otherinfo.orgName}} — </span>
                       <draggable v-model="networkList" class="draggable-list">
                         <SelectTree v-for="(item, index) in networkList" :placeholder="'网点'+(index+1)" :key="index" v-model="item.id" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery|| item.id === otherinfo.orgid"></SelectTree>
@@ -33,7 +32,9 @@
                         <i class="el-icon-plus plusBtn" @click="addNetWork"></i>
                       </el-tooltip>
                     </div>
-                    <SelectTree v-else v-model="formModel.arriveOrgid" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
+                  </el-form-item>
+                  <el-form-item label="到达网点" prop="arriveOrgid" v-if="loadTypeId=== 38" class="formItemTextDanger" :rules="{required: !isDirectDelivery, trigger: 'change', message: '不能为空'}">
+                    <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
                   </el-form-item>
                 </div>
                 <div>
@@ -879,19 +880,24 @@ export default {
       console.log(this.formModel, this.formFee)
       this.$refs['formModel'].validate((valid) => {
         if (valid && this.loadTypeId === 39) {
-          this.$refs['formFee'].validate((validFee) => {
-            if (validFee) {
-              if (this.loadTableInfo.length < 1) {
-                this.submitvalidate = false
-                this.$message({ type: 'warning', message: '右边数据表格不能为空' })
+          if (this.networkList.filter(e => { return e.id }).length === 0) {
+            this.$message.warning('到达网点不能为空~')
+            this.submitvalidate = false
+          } else {
+            this.$refs['formFee'].validate((validFee) => {
+              if (validFee) {
+                if (this.loadTableInfo.length < 1) {
+                  this.submitvalidate = false
+                  this.$message({ type: 'warning', message: '右边数据表格不能为空' })
+                } else {
+                  this.submitvalidate = true
+                }
               } else {
-                this.submitvalidate = true
+                this.$message({ type: 'warning', message: '请填写完整费用表单' })
+                this.submitvalidate = false
               }
-            } else {
-              this.$message({ type: 'warning', message: '请填写完整费用表单' })
-              this.submitvalidate = false
-            }
-          })
+            })
+          }
         } else if (valid && this.loadTypeId !== 39) {
           this.submitvalidate = true
         } else {
@@ -1078,17 +1084,18 @@ export default {
         this.$set(this.formModel, 'contractNo', this.contractNo)
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
-      }
-      let networkList = []
-      objectMerge2([], this.networkList).forEach(e => {
-        if (e.id) {
-          networkList.push(e.id)
-        }
-      })
 
-      this.$set(this.formModel, 'wayOrgid', networkList.length > 1 ? networkList.slice(0, -1).join(',') : '') // 途径网点
-      this.$set(this.formModel, 'arriveOrgid', networkList[networkList.length - 1])
-      console.log('setData 途径网点', this.formModel, this.formModel.wayOrgid, this.formModel.arriveOrgid, networkList)
+        let networkList = []
+        objectMerge2([], this.networkList).forEach(e => {
+          if (e.id) {
+            networkList.push(e.id)
+          }
+        })
+
+        this.$set(this.formModel, 'wayOrgid', networkList.length > 1 ? networkList.slice(0, -1).join(',') : '') // 途径网点
+        this.$set(this.formModel, 'arriveOrgid', networkList[networkList.length - 1])
+        console.log('setData 途径网点', this.formModel, this.formModel.wayOrgid, this.formModel.arriveOrgid, networkList)
+      }
       delete this.formFee.oilCardNumber
       delete this.formFee.sealNumber
 
