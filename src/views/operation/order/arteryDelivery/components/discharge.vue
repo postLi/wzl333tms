@@ -367,17 +367,20 @@ export default {
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     getSelection(list) {
+      let arr = []
       this.dataList.forEach((el, index) => {
         list.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
             if (em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
+            }else {
+              arr.push(em)
             }
           }
         })
       })
-      console.log('list', list)
-      this.selectList = Object.assign([], list)
+      console.log('list', arr)
+      this.selectList = Object.assign([], arr)
     },
     clickDetails(row) {
       if (row.unloadSign !== 1) {
