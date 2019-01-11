@@ -2019,6 +2019,7 @@ export default {
       if (/deliveryFee/.test(name)) {
         const val = parseFloat(event.target.value, 10) || 0
         if (val > 0) {
+          this.form.tmsOrderShip.shipDeliveryMethod = 69
           /* this.$notify.info({
             title: '消息',
             message: '您设置了送货费，'
