@@ -229,11 +229,13 @@ export default {
     viewDetails(row) {
       row = row || []
       console.log('row:', row.map(el => { console.log('11') }).join(','))
+      const data = objectMerge2(this.searchQuery)
+      data.vo.ascriptionOrgId = data.vo.shipFromOrgid
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
           tab: '月结核销',
-          searchQuery: JSON.stringify(this.searchQuery),
+          searchQuery: JSON.stringify(data),
           currentPage: 'month',
          // id: row.map(el => el.shipId).join(','),
           selectListShipSns:JSON.stringify( row.map(el => el.shipSn))
