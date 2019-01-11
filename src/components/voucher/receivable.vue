@@ -74,7 +74,7 @@
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
-import { parseTime } from '@/utils/'
+import { parseTime, objectMerge2 } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import { loadVerification } from '@/api/finance/accountsPayable'
@@ -99,7 +99,6 @@ export default {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
-
           this.init()
         }
       },
@@ -133,7 +132,7 @@ export default {
     feeId() {
       console.log('info', this.info)
       if (this.$route.query.currentPage === 'handleFee') {
-        let ids = []
+        const ids = []
         this.info.orderList.forEach(e => {
           if (e.loadTypeName === '干线') {
             ids.push(33)
@@ -148,8 +147,7 @@ export default {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
         return JSON.parse(this.$route.query.searchQuery).vo.feeType
       }
-
-    },
+    }
   },
   data() {
     const numberAndWordValid = function(rule, value, callback) {
@@ -225,7 +223,7 @@ export default {
       this.$set(this.baseQuery, 'dataSrc', 0)
       this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
-          if (data) {
+        if (data) {
             this.subjectOne = data.subOneList || []
             this.subjectTwo = data.subTwoList || []
             this.subjectThree = data.subThreeList || []
@@ -240,7 +238,7 @@ export default {
             }
             // this.initSubject()
           }
-        })
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -250,7 +248,7 @@ export default {
       this.getFinanceSubjects().then(() => { // 获取一级科目
         if (this.formModel.subjectOneId) {
           if (!this.checkSubject(1)) {
-            for (let item in this.formModel) {
+            for (const item in this.formModel) {
               if (/^subject/.test(item)) {
                 this.formModel[item] = ''
               }
@@ -260,7 +258,7 @@ export default {
           this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => { // 获取二级科目
             if (this.formModel.subjectTwoId) {
               if (!this.checkSubject(2)) {
-                for (let item in this.formModel) {
+                for (const item in this.formModel) {
                   if (/(Four|Three|Two)/.test(item)) {
                     this.formModel[item] = ''
                   }
@@ -270,7 +268,7 @@ export default {
               this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => { // 获取三级科目
                 if (this.formModel.subjectThreeId) {
                   if (!this.checkSubject(3)) {
-                    for (let item in this.formModel) {
+                    for (const item in this.formModel) {
                       if (/(Four|Three)/.test(item)) {
                         this.formModel[item] = ''
                       }
@@ -393,7 +391,7 @@ export default {
         if (valid) {
           this.btnLoading = true
           if (this.$route.query.currentPage === 'handleFee') { // 操作费调另一个接口
-            let handleFeeInfo = Object.assign({}, this.formModel)
+            const handleFeeInfo = Object.assign({}, this.formModel)
             if (this.info.settlementTypeSign) {
               this.$set(handleFeeInfo, 'settlementTypeSign', this.info.settlementTypeSign)
             }
@@ -409,21 +407,21 @@ export default {
 
             console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
             loadVerification(handleFeeInfo).then(data => {
-                this.$message({ type: 'success', message: '保存成功' })
-                setTimeout(() => {
+              this.$message({ type: 'success', message: '保存成功' })
+              setTimeout(() => {
                   this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
                 }, 500)
-                this.closeMe()
-              })
+              this.closeMe()
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
                 this.btnLoading = false
               })
           } else {
-            let dataInfo = Object.assign({}, this.formModel)
+            const dataInfo = Object.assign({}, this.formModel)
             this.$set(dataInfo, 'orderList', this.info.orderList)
             this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
             delete dataInfo.verificationList
@@ -431,21 +429,21 @@ export default {
               dataInfo.certTime = new Date()
             }
             this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
-            let query = {
+            const query = {
               receivableFees: dataInfo.orderList,
               tmsFinanceBillRecordDto: dataInfo
             }
             delete query.tmsFinanceBillRecordDto.orderList
             accountApi.postCreateFee(this.orgId, query).then(data => {
-                this.$message({ type: 'success', message: '保存成功' })
-                this.closeMe()
-                setTimeout(() => {
+              this.$message({ type: 'success', message: '保存成功' })
+              this.closeMe()
+              setTimeout(() => {
                   this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
                 }, 500)
-              })
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
                 this.btnLoading = false
@@ -465,7 +463,7 @@ export default {
       this.searchQuerySub.orgId = this.orgId
 
       return getFinanceSubjects(this.searchQuerySub).then(data => {
-          switch (subjectLevel) {
+        switch (subjectLevel) {
             case 2:
               this.subjectTwo = data
               this.subjectThree = []
@@ -489,9 +487,9 @@ export default {
               console.log('科目一: ', this.subjectOne)
               break
           }
-          this.loading = false
-          console.log('科目: ', subjectLevel, data)
-        })
+        this.loading = false
+        console.log('科目: ', subjectLevel, data)
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -506,7 +504,7 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(2, obj.id)
-          for (let item in this.formModel) {
+          for (const item in this.formModel) {
             if (/^subject/.test(item)) {
               this.formModel[item] = ''
             }
@@ -520,7 +518,7 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(3, obj.id)
-          for (let item in this.formModel) {
+          for (const item in this.formModel) {
             if (/(Four|Three)/.test(item)) {
               this.formModel[item] = ''
             }
