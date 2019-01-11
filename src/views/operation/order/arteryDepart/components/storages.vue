@@ -146,13 +146,7 @@
                   </el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单
                   </el-button>
-                  <el-popover
-                    @mouseenter.native="showSaveBox"
-                    @mouseout.native="hideSaveBox"
-                    placement="top"
-                    width="160"
-                    trigger="manual"
-                    v-model="visible2">
+                  <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
                     <p>表格宽度修改了，是否要保存？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
@@ -164,14 +158,14 @@
                 <div class="infos_tab">
                   <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed type="selection" width="50"></el-table-column>
-                   <!--  <el-table-column fixed label="序号" prop="number" width="50">
+                    <!--  <el-table-column fixed label="序号" prop="number" width="50">
                     <template slot-scope="scope">
                       {{scope.$index + 1}}
                     </template>
                   </el-table-column> -->
                     <template v-for="column in tableColumn">
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop" :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -422,6 +416,7 @@
           </el-tab-pane>
         </el-tabs>
       </div>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </template>
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootSecond">
       <el-form inline :model="formModelTrack" :rules="ruleForm" ref="formModelTrack">
@@ -452,15 +447,15 @@
         </el-button>
         <el-button @click="editCheckBillName" icon="el-icon-edit-outline" type="info" round v-if="activeName === 'third'">修改
         </el-button>
-        <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third' || activeName === 'first'">关闭
+        <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third'">关闭
         </el-button>
       </template>
       <template v-else>
         <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </div>
+    
   </pop-right>
 </template>
 <script>
@@ -504,7 +499,7 @@ export default {
       ruleForm: {},
       loading: false,
       isFootEdit: false,
-      isFootFirst: false,
+      isFootFirst: true,
       isFootSecond: false,
       isFootThird: false,
       isFootOther: false,
@@ -587,24 +582,24 @@ export default {
         width: '100',
         fixed: true,
         slot: (scope) => {
-            return scope.$index + 1
-          }
+          return scope.$index + 1
+        }
       }, {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '150',
-          fixed: true
-        }, {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        }, {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '180',
-          fixed: false
-        }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '150',
+        fixed: true
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '180',
+        fixed: false
+      }, {
           label: '到付(元)',
           prop: 'shipArrivepayFee',
           width: '100',
@@ -616,21 +611,21 @@ export default {
         width: '100',
         fixed: false
       }, {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '120',
-          fixed: false
-        }, {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      }, {
           label: '运单件数',
           prop: 'cargoAmount',
           width: '100',
@@ -986,18 +981,18 @@ export default {
       }
       let appendTopStr = '<style>body{width: 100%;}</style>'
       appendTopStr += '<body width="100%"><table width="100%" style="{font-size: {content_word_size}px;}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.orgName + '   →   ' + obj.arriveOrgName +
-                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.loadTime +
-                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.batchNo +
-                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.truckIdNumber +
-                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverName +
-                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverMobile +
-                   '</td></tr></table></body>'
+        obj.orgName + '   →   ' + obj.arriveOrgName +
+        '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.loadTime +
+        '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.batchNo +
+        '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.truckIdNumber +
+        '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverName +
+        '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverMobile +
+        '</td></tr></table></body>'
       const columnArr = objectMerge2([], this.tableColumn)
       // columnArr.unshift({
       //   label: '序号',
@@ -1176,6 +1171,10 @@ export default {
           td {
             text-align: center;
           }
+          th {
+            color: #606266;
+            font-weight: 400;
+          }
         }
         .unauth {
           color: #f00;
@@ -1185,19 +1184,22 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
-      .el-table .cell,.el-table th,.el-table td{
+      .el-table .cell,
+      .el-table th,
+      .el-table td {
         overflow: visible;
         text-overflow: clip;
         color: #000;
       }
-      .el-table td{
+      .el-table td {
         overflow: hidden;
       }
-      
-      .el-table th{
+
+      .el-table th {
         font-weight: bold;
       }
-      .el-table th div,.el-table .cell{
+      .el-table th div,
+      .el-table .cell {
         padding: 0;
         text-align: center;
       }
@@ -1299,6 +1301,7 @@ export default {
     }
   }
 }
+
 
 
 /*批次详情*/

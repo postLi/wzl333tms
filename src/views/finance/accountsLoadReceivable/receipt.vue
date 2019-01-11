@@ -82,7 +82,7 @@
       </div>
     </transferTable>
     <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId ||  otherinfo.orgid" :btnLoading="btnLoading"></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
   </div>
@@ -109,7 +109,7 @@ export default {
   },
   data() {
     return {
-       btnLoading: false,
+      btnLoading: false,
       infoTable: {
         amount: 0,
         orderList: []
@@ -160,11 +160,11 @@ export default {
         width: '120'
       },
       {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
       {
         label: '发货人',
         prop: 'shipSenderName',
@@ -187,19 +187,19 @@ export default {
         'label': '已核销回单付',
         width: '100',
         'prop': 'finishReceiptpayFee',
-          slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
-        }
+        slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+          }
 
       }, {
         'label': '未核销回单付',
-         width: '100',
+        width: '100',
         'prop': 'notReceiptpayFee',
-          slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
-        }
+        slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+          }
       },
       {
         label: '实际核销回单付',
@@ -289,8 +289,8 @@ export default {
       return this.rightTable.length
     }
   },
-   watch: {
-    '$route.query': {
+  watch: {
+     '$route.query': {
       handler(cval, oval) {
         if (cval) {
           this.getList()
@@ -298,7 +298,7 @@ export default {
       },
       deep: true
     }
-  },
+   },
   mounted() {
     this.getList()
   },
@@ -386,15 +386,15 @@ export default {
       }))
       if (this.rightTable[index].notReceiptpayFee !== newVal) {
         this.textChangeDanger[index] = true
-      }else {
+      } else {
         this.textChangeDanger[index] = false
       }
-       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notReceiptpayFee) {
-        this.isGoReceipt = true
-        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
-      }else {
-        this.isGoReceipt = false
-      }
+      if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notReceiptpayFee) {
+         this.isGoReceipt = true
+         this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
+       } else {
+         this.isGoReceipt = false
+       }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未核销费用名
