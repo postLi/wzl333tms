@@ -279,7 +279,7 @@ export default {
       }
       let selectList = []
       this.selectList.forEach((el, index) => {
-        if (e.warehouStatus !== 1 ||el.unloadSign !== 1) {
+        if (el.warehouStatus !== 1 ||el.unloadSign !== 1) {
           selectList.push(el.id)
         } else {}
       })
@@ -375,7 +375,7 @@ export default {
       this.dataList.forEach((el, index) => {
         list.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
-            if (e.warehouStatus === 1 ||em.unloadSign === 1) {
+            if (em.warehouStatus === 1 ||em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
             }else {
               arr.push(em)
