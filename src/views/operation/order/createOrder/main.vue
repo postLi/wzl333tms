@@ -93,25 +93,25 @@
               <div class="order-form-item">
                 <span :class="{'required': shipFieldValue.shipSenderId}" class="order-form-label">发货方</span>
                 <el-form-item :error='shipFieldValueInfo.shipSenderUnit'>
-                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdercustomerUnit" search="customerUnit" type="sender" valuekey="customerUnit" v-model="form.sender.customerUnit" @change="setSender" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderName}">发 货 人</span>
                 <el-form-item :error='shipFieldValueInfo.shipSenderName'>
-                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdercustomerName" suffix="el-icon-search" search="customerName" type="sender" valuekey="customerName" v-model="form.sender.customerName" @change="setSender" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
                 <el-form-item :error='shipFieldValueInfo.shipSenderMobile'>
-                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
                 <el-form-item :error='shipFieldValueInfo.shipSenderAddress'>
-                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="50" ref="tmsOrderdetailedAddress" search="detailedAddress" type="sender" valuekey="detailedAddress" v-model="form.sender.detailedAddress" @change="setSender" />
                 </el-form-item>
               </div>
             </div>
@@ -122,25 +122,25 @@
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverId}">收货方</span>
                 <el-form-item :error='shipFieldValueInfo.shipReceiverUnit'>
-                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverUnit" search="customerUnit" type="receiver" valuekey="customerUnit" v-model="form.receiver.customerUnit" @change="setReceiver" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverName}">收 货 人</span>
                 <el-form-item :error='shipFieldValueInfo.shipReceiverName'>
-                  <querySelect :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverName" suffix="el-icon-search" search="customerName" type="receiver" valuekey="customerName" v-model="form.receiver.customerName" @change="setReceiver" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
                 <el-form-item :error='shipFieldValueInfo.shipReceiverMobile'>
-                  <querySelect :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
                 </el-form-item>
               </div>
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
                 <el-form-item :error='shipFieldValueInfo.shipReceiverAddress'>
-                  <querySelect :key="customkey" :maxlength="50" ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="50" ref="tmsOrdershipReceiverAddress" search="detailedAddress" type="receiver" valuekey="detailedAddress" v-model="form.receiver.detailedAddress" @change="setReceiver" />
                 </el-form-item>
               </div>
             </div>
@@ -2019,6 +2019,7 @@ export default {
       if (/deliveryFee/.test(name)) {
         const val = parseFloat(event.target.value, 10) || 0
         if (val > 0) {
+          this.form.tmsOrderShip.shipDeliveryMethod = 69
           /* this.$notify.info({
             title: '消息',
             message: '您设置了送货费，'

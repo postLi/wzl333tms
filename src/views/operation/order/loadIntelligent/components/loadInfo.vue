@@ -92,9 +92,9 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="司机电话"  :key="changeMobileKey" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: mobileError, trigger: ['blur', 'change']}" class="formItemTextDanger">
+                        <el-form-item label="司机电话" :key="changeMobileKey" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: mobileError, trigger: ['blur', 'change']}" class="formItemTextDanger">
                           <!-- <input type="text" class="nativeinput" v-numberOnly:point :value="item.dirverMobile" @change="(e)=>changeLoadNum(e.target.value, item._index, 'dirverMobile')" ref="dirverMobile" :maxlength="11" placeholder="司机电话" /> -->
-                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11" placeholder="司机电话"  @change="(e)=>changeLoadNum(e, item._index, 'dirverMobile')"></el-input>
+                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11" placeholder="司机电话" @change="(e)=>changeLoadNum(e, item._index, 'dirverMobile')"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
                           <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" prefix-icon="el-icon" placeholder="预计到达时间">
@@ -513,8 +513,7 @@ export default {
     this.converToCn()
     this.init()
     this.getSystemTime()
-    if (this.modify) {
-    } else {
+    if (this.modify) {} else {
       this.intelligentLeftData.arriveOrgid = this.orgid
     }
   },
@@ -1211,6 +1210,11 @@ export default {
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.intelligentData.dataList[0])
         this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
+          }, 300)
+        })
       }
     },
     removeTab(targetName) { // 删除当前方案
@@ -1239,12 +1243,12 @@ export default {
       }
     },
     handleFeeAll(type, fee) { // 操作费
+      console.log('操作费 handleFeeAll', type, fee)
       if (!fee) {
         this.$set(this.intelligentLeftData, 'apportionTypeId', type)
       }
       let feeAll = this.intelligentData.dataList[this.currentIndex].handlingFeeAll
       if (feeAll) {
-
         this.$emit('handlingFeeInfo', {
           index: this.currentIndex,
           apportionTypeId: Number(type),
@@ -1255,7 +1259,7 @@ export default {
     changeLoadNum(val, index, type) {
       this.$set(this.intelligentData.dataList[index], type, val)
       if (type === 'dirverMobile') {
-        this.mobileError= '手机号码不能为空~'
+        this.mobileError = '手机号码不能为空~'
         if (!REGEX.MOBILE.test(val)) {
           this.$set(this.intelligentData.dataList[index], type, undefined)
           this.mobileError = '请填写正确的手机号码格式~'
@@ -1281,11 +1285,11 @@ export default {
       this.showCurrenFormStyle[index] = true
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
-      // this.$nextTick(() => {
-      //   setTimeout(() => {
-      //     this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
-      //   }, 300)
-      // })
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
+        }, 300)
+      })
     },
     delCurTruck(index, item) {
       this.currentIndex = index - 1
@@ -1584,8 +1588,10 @@ export default {
                     color: #ef0000;
                   }
                 }
-                .el-form-item.is-error .el-form-item__content > input, .nativeinput.is-error, .nativeinput-border.is-error{
-                  border-color:#f56c6c;
+                .el-form-item.is-error .el-form-item__content>input,
+                .nativeinput.is-error,
+                .nativeinput-border.is-error {
+                  border-color: #f56c6c;
                 }
                 .el-form-item {
                   width: 100%;

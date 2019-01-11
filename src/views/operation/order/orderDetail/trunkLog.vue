@@ -182,7 +182,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          truckIdNumber: '陕YH0009',
+          truckIdNumber: '', // 陕YH0009
           startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
           endTime: parseTime(new Date()),
           shipId: ''
@@ -279,6 +279,7 @@ export default {
     }
   },
   mounted() {
+    console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
       _this.initMap()
@@ -488,17 +489,19 @@ export default {
       // 坐标转换
       if (this.realTimeTrucks.length) {
         this.realTimeTrucks.forEach((e, index) => {
-          lnglat[index] = [e.longitude, e.latitude]
-          marker = new AMap.Marker({
-            map: map,
-            position: lnglat[index]
-          })
-          marker.setLabel({
-            offset: new AMap.Pixel(20, 20),
-            content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
-          })
-          this.markers.push(marker)
-          map.setFitView()
+          if (e.longitude !== null && e.latitude !== null) {
+            lnglat[index] = [e.longitude, e.latitude]
+            marker = new AMap.Marker({
+              map: map,
+              position: lnglat[index]
+            })
+            marker.setLabel({
+              offset: new AMap.Pixel(20, 20),
+              content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
+            })
+            this.markers.push(marker)
+            map.setFitView()
+          }
         })
         console.log('实时车辆定位：：', this.realTimeTrucks, lnglat, this.map)
       }
@@ -687,7 +690,7 @@ export default {
         if (/(start|resume|pause)/.test(type)) {
           clearInterval(this.timerOption)
           this.isTimerOpen = false
-        }else {
+        } else {
           this.initTimer()
         }
         let pathSimplifierIns = window.pathSimplifierIns

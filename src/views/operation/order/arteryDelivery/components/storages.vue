@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
-    <template class="addCustomerPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPopDelivery" v-loading="loading">
+    <template class="addCPop-content" slot="content">
       <!-- 实际到车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
@@ -153,7 +153,7 @@
                   </el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :row-class-name="classLineRed">
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
                       <!--有数据-->
@@ -360,7 +360,6 @@
                     <span>乙方签章:</span>
                   </div>
                 </div>
-                <div class="pact_bottom"></div>
               </el-form>
             </div>
           </el-tab-pane>
@@ -564,7 +563,7 @@ export default {
           expand: true,
           fixed: false,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
 
           slot: (scope) => {
@@ -577,7 +576,7 @@ export default {
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
           slot: (scope) => {
@@ -590,7 +589,7 @@ export default {
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
 
@@ -808,7 +807,15 @@ export default {
     }
   },
   methods: {
-
+    classLineRed(row) { // 行样式
+      if (this.detailList.length) {
+        if (row.row.unloadSign === 1) {
+          return 'rowDisable'
+        } else {
+          return ''
+        }
+      }
+    },
     changeData(index, prop, newVal) { // 判断当行
       this.detailList[index][prop] = Number(newVal)
       const curAmount = this.detailList[index].actualAmount // 实到件数
@@ -948,8 +955,8 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          this.$refs.multipleTable.toggleRowSelection(e, true)
-          if (e.warehouStatus === 1) {
+          // this.$refs.multipleTable.toggleRowSelection(e, true)
+          if (e.warehouStatus === 1 || e.unloadSign === 1) {
             this.$refs.multipleTable.toggleRowSelection(e, false)
           } else {
             this.$refs.multipleTable.toggleRowSelection(e, true)
@@ -1202,10 +1209,24 @@ export default {
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
+      if (row.unloadSign !== 1) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      }
     },
     getSelection(selection) {
-      this.selected = selection
+      let arr = []
+      this.detailList.forEach((el, index) => {
+        selection.forEach((em, idx) => {
+          if (el.repertoryId === em.repertoryId) {
+            if (em.unloadSign === 1) {
+              this.$refs.multipleTable.toggleRowSelection(el, false)
+            }else {
+              arr.push(em)
+            }
+          }
+        })
+      })
+      this.selected = arr
     },
     // 取消高亮样式
     offThisActive(e) {
@@ -1283,9 +1304,26 @@ export default {
           td {
             text-align: center;
           }
+          th {
+            color: #606266;
+            font-weight: 400;
+          }
         }
         .unauth {
           color: #f00;
+        }
+      }
+      .rowDisable {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        .el-checkbox {
+          .el-checkbox__input {
+            cursor: not-allowed;
+          }
+          .el-checkbox__inner {
+            background-color: #ccc;
+          }
         }
       }
       .el-table td,
@@ -1570,29 +1608,18 @@ export default {
   .infos_table {
     .el-input.is-disabled .el-input__inner {
       background-color: #fff;
-      /*border-color: #e4e7ed;*/
-      /*color: #c0c4cc;*/
-      /*cursor: not-allowed;*/
     }
   }
 }
-
-
-
-
-
-
-
-
 /*批次详情*/
 
-.storagesPop {
+.storagesPopDelivery {
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 1100px;
   max-width: 1100px;
-  height: 100%;
+  // height: 100%;
   .el-tabs {
     height: 100%;
     .el-tabs__content {
@@ -1602,17 +1629,12 @@ export default {
       }
     }
   }
-  /*z-index: 1001 !important;*/
   .el-input.is-disabled {
     .el-input__inner {
-      /*color:#3e9ff1;*/
       background-color: transparent;
-      /*border-top-color: transparent;*/
-      /*border-left-color: transparent;*/
-      /*border-right-color: transparent;*/
     }
   }
-}
+
 
 .batchTypeNo {
   width: 100%;
@@ -1643,9 +1665,6 @@ export default {
 }
 
 .storagesInfoPop_content {
-  // width: 100%;
-  // display: flex;
-  // flex-direction: column;
   height: 100%;
   .tab-card {
     .el-tabs__content {
@@ -1661,10 +1680,6 @@ export default {
     background-color: #ffffff;
     width: 100%;
   }
-  /*.el-tabs--border-card>.el-tabs__content{*/
-  /*padding: 0 !important;*/
-  /*}*/
-  /*padding: 0 10px 0 10px;*/
   .tab_descript {}
   .info {
     background-color: rgb(238, 241, 246);
@@ -1685,91 +1700,17 @@ export default {
   .itemRecharge {
     background-color: rgb(238, 241, 246);
     padding: 10px;
-  } // .tab_box {
-  //   padding-left: 10px;
-  //   display: flex;
-  //   flex-direction: row;
-  // .stepItem_title {
-  //   margin: 10px 0 10px 10px;
-  //   font-size: 14px;
-  //   width: 165%;
-  // }
-  //   .stepItem {
-  //     font-size: 14px;
-  //     color: #666;
-  //     margin-bottom: 20px;
-  //     width: 160%;
-  //     p {
-  //       word-wrap: break-word;
-  //       word-break: normal;
-  //       display: block;
-  //     }
-  //   }
-  // }
-  // .tab_box {
-  //   position: relative;
-  //   .tab_box_item {
-  //     .stepItem_title {
-  //       font-size: 14px;
-  //       color: #333;
-  //       width: 110%;
-  //       height: 36px;
-  //       line-height: 36px;
-  //     }
-  //     .el-step.is-vertical {
-  //       padding-left: 20px;
-  //       .stepItem {
-  //         width: 110%;
-  //         color: #666;
-  //         font-size: 14px;
-  //         padding: 10px;
-  //         margin: 0 0 3px 0;
-  //         background-color: #ffffff;
-  //         box-shadow: 0px 0px 10px #eaeaea;
-  //         transition: 0.4s;
-  //       }
-  //       .stepItem:hover {
-  //         transition: 0.2s;
-  //         background-color: #E9F3FA;
-  //       }
-  //     }
-  //   }
-  // }
-  //   .stepFrom {
-  //   display:block;
-  //   width:100%;
-  //   height:100%;
-  //   padding-top: 15px;
-  //   .el-form--inline .el-form-item{
-  //     margin-right:0;
-  //     float:left;
-  //     display:flex;
-  //     width:28%;
-  //   }
-  //   .el-date-editor.el-input,
-  //   .el-date-editor.el-input__inner {
-  //     width: 100%;
-  //   }
-  //   .el-form-item__label {
-  //     font-size: 12px;
-  //   }
-  //   .el-form-item__content {
-  //     flex: 1;
-  //   }
-  //   .el-button--primary{
-  //     position: absolute;
-  //     top:23px;
-  //     right:10px;
-  //   }
-  // }
+  } 
   /*货物运输合同*/
   .pact {
     padding: 0 10px;
+    margin-top: 85px;
+    height: calc(100% - 85px);
+    overflow: auto;
     .pact_top {
-
       position: relative;
       height: 40px;
-      margin-top: 85px;
+      margin-top: 20px;
       margin-bottom: 10px;
       h3 {
         text-align: center;
@@ -1916,8 +1857,6 @@ export default {
         }
       }
     }
-
-    .pact_bottom {}
   }
 }
 
@@ -1928,5 +1867,5 @@ export default {
 .p_table .el-input--mini .el-input__inner {
   width: 200px;
 }
-
+}
 </style>

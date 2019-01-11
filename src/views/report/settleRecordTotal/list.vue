@@ -12,11 +12,13 @@
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
+        <div class="dragger-line"></div>
         <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
               <th rowspan="2" bgcolor="dimGray" width="50px">
                 <font color="white" size="3">序号</font>
+                <!-- <div class="split-trigger"></div> -->
               </th>
               <th rowspan="2" bgcolor="dimGray" width="100px">
                 <font color="white" size="2">费用项目</font>
@@ -107,65 +109,65 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '序号',
-          prop: 'id',
-          textAlign: 'center',
-          width: '50'
-        },
-        {
-          label: '费用项目',
-          prop: 'feeName',
-          textAlign: 'center',
-          width: '100'
-        },
-        {
-          label: '应收合计',
-          prop: 'totalreceivableFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '已收',
-          prop: 'receivableFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '未收',
-          prop: 'receivableUnpaidFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '数量',
-          prop: 'receivableCount',
-          textAlign: 'center',
-          width: '70'
-        },
-        {
-          label: '应付合计',
-          prop: 'totalpayableFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '已付',
-          prop: 'payableFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '未付',
-          prop: 'payableUnpaidFee',
-          textAlign: 'right',
-          width: '100'
-        },
-        {
-          label: '数量',
-          prop: 'payableCount',
-          textAlign: 'center',
-          width: '70'
-        }
+        label: '序号',
+        prop: 'id',
+        textAlign: 'center',
+        width: '50'
+      },
+      {
+        label: '费用项目',
+        prop: 'feeName',
+        textAlign: 'center',
+        width: '100'
+      },
+      {
+        label: '应收合计',
+        prop: 'totalreceivableFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '已收',
+        prop: 'receivableFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '未收',
+        prop: 'receivableUnpaidFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '数量',
+        prop: 'receivableCount',
+        textAlign: 'center',
+        width: '70'
+      },
+      {
+        label: '应付合计',
+        prop: 'totalpayableFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '已付',
+        prop: 'payableFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '未付',
+        prop: 'payableUnpaidFee',
+        textAlign: 'right',
+        width: '100'
+      },
+      {
+        label: '数量',
+        prop: 'payableCount',
+        textAlign: 'center',
+        width: '70'
+      }
       ],
       countCol: [ // 需要合计的-列
         'totalreceivableFee',
@@ -210,7 +212,7 @@ export default {
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
     },
-     handleBottom(e) {
+    handleBottom(e) {
       const el = e.target
       const top = el.scrollTop
       const width = el.offsetWidth
@@ -230,7 +232,7 @@ export default {
       footel.style.bottom = 'auto'
       footel.style.top = (calctop > this.maxheight ? this.maxheight : calctop) + 'px'
       const cloneel = document.getElementById('tableClone')
-      cloneel.style.top = top+ 'px'
+      cloneel.style.top = top + 'px'
     },
     reportSettleRecordTotal() {
       this.loading = true
@@ -239,8 +241,7 @@ export default {
         const countColVal = []
         this.loading = false
         const table = document.getElementById('report_settleRecordTotal_table')
-        
-        
+
         if (!table) {
           return
         }
@@ -250,7 +251,6 @@ export default {
           table.removeChild(tbodyLen[0])
           table.removeChild(tfootLen[0])
         }
-       
 
         const tbody = document.createElement('tbody')
         const tfoot = document.createElement('tfoot')
@@ -268,6 +268,7 @@ export default {
         tableClone.setAttribute('id', 'tableClone')
         tableClone.setAttribute('refs', 'tableClone')
         tableClone.className = 'tableCloneHead'
+
         console.log('tableClone', tableClone)
         div.appendChild(tableClone)
 
@@ -341,8 +342,6 @@ export default {
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
-        
-
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -419,6 +418,7 @@ export default {
     left: 0;
     z-index: 2;
     th {
+      
     }
   }
 
@@ -432,6 +432,7 @@ export default {
       background-color: #FFF;
       transition: 0.5s;
     }
+    
     tbody tr:hover {
       background-color: #ccc;
       transition: 0.3s;

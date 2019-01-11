@@ -269,16 +269,57 @@ export default {
       }]
     }, {
       path: '/operation/order/arteryDelivery',
-      icon: 'yygl7_daoche',
+      icon: 'yygl6_fache',
       name: 'arteryDelivery',
+      redirect: '/operation/order/arteryDelivery/sender',
       component: _import('operation/order/arteryDelivery/index'),
       meta: {
         role: ['admin'],
         title: '干线到车',
         noCache: false,
         'code': 'ORDER_DELIY'
-      }
-    }, {
+      },
+      children: [{
+        path: '/operation/order/arteryDelivery/sender',
+        icon: 'QQ',
+        name: '干线到车列表',
+        component: _import('operation/order/arteryDelivery/sender'),
+        meta: {
+          role: ['admin'],
+          ptitle: '干线到车',
+          title: '干线到车列表',
+          noCache: true,
+          istab: true,
+          code: 'ORDER_DELIY'
+        }
+      }, {
+        path: '/operation/order/arteryDelivery/channel',
+        icon: 'QQ',
+        name: '途径卸货',
+        component: _import('operation/order/arteryDelivery/channel'),
+        meta: {
+          role: ['admin'],
+          ptitle: '干线到车',
+          title: '途径卸货',
+          noCache: true,
+          istab: true,
+          code: ''
+        }
+      }]
+    },
+    // {
+    //   path: '/operation/order/arteryDelivery',
+    //   icon: 'yygl7_daoche',
+    //   name: 'arteryDelivery',
+    //   component: _import('operation/order/arteryDelivery/index'),
+    //   meta: {
+    //     role: ['admin'],
+    //     title: '干线到车',
+    //     noCache: false,
+    //     'code': 'ORDER_DELIY'
+    //   }
+    // },
+    {
       path: '/operation/order/deliverManage',
       icon: 'yygl8_songhuo',
       name: 'deliverManage',
@@ -553,73 +594,71 @@ export default {
         'code': 'ORDER_TRACK'
       },
       children: [{
-          path: '/operation/order/track/artery',
-          icon: 'QQ',
-          name: '干线跟踪',
-          component: _import('operation/order/track/artery'),
-          meta: {
-            role: ['admin'],
-            ptitle: '在途跟踪',
-            title: '干线跟踪',
-            noCache: true,
-            istab: true,
-            code: 'LOADTRACK1'
-          }
-        }, {
-          path: '/operation/order/track/short',
-          icon: 'QQ',
-          name: '短驳跟踪',
-          component: _import('operation/order/track/short'),
-          meta: {
-            role: ['admin'],
-            ptitle: '在途跟踪',
-            title: '短驳跟踪',
-            noCache: true,
-            istab: true,
-            code: 'LOADTRACK2'
-          }
-        }, {
-          path: '/operation/order/track/deliver',
-          icon: 'QQ',
-          name: '送货跟踪',
-          component: _import('operation/order/track/deliver'),
-          meta: {
-            role: ['admin'],
-            ptitle: '在途跟踪',
-            title: '送货跟踪',
-            noCache: true,
-            istab: true,
-            code: 'LOADTRACK3'
-          }
-        }, {
-          path: '/operation/order/track/transfer',
-          icon: 'QQ',
-          name: '中转跟踪',
-          component: _import('operation/order/track/transfer'),
-          meta: {
-            role: ['admin'],
-            ptitle: '在途跟踪',
-            title: '中转跟踪',
-            noCache: true,
-            istab: true,
-            code: 'LOADTRACK4'
-          }
-        },
-        // {
-        //   path: '/operation/order/track/trucklog',
-        //   icon: 'QQ',
-        //   name: '车辆跟踪',
-        //   component: _import('operation/order/track/trucklog'),
-        //   meta: {
-        //     role: ['admin'],
-        //     ptitle: '在途跟踪',
-        //     title: '车辆跟踪',
-        //     noCache: true,
-        //     istab: true,
-        //     code: ''
-        //   }
-        // }
-      ]
+        path: '/operation/order/track/artery',
+        icon: 'QQ',
+        name: '干线跟踪',
+        component: _import('operation/order/track/artery'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '干线跟踪',
+          noCache: true,
+          istab: true,
+          code: 'LOADTRACK1'
+        }
+      }, {
+        path: '/operation/order/track/short',
+        icon: 'QQ',
+        name: '短驳跟踪',
+        component: _import('operation/order/track/short'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '短驳跟踪',
+          noCache: true,
+          istab: true,
+          code: 'LOADTRACK2'
+        }
+      }, {
+        path: '/operation/order/track/deliver',
+        icon: 'QQ',
+        name: '送货跟踪',
+        component: _import('operation/order/track/deliver'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '送货跟踪',
+          noCache: true,
+          istab: true,
+          code: 'LOADTRACK3'
+        }
+      }, {
+        path: '/operation/order/track/transfer',
+        icon: 'QQ',
+        name: '中转跟踪',
+        component: _import('operation/order/track/transfer'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '中转跟踪',
+          noCache: true,
+          istab: true,
+          code: 'LOADTRACK4'
+        }
+      }, {
+        path: '/operation/order/track/trucklog',
+        icon: 'QQ',
+        name: '车辆跟踪',
+        component: _import('operation/order/track/trucklog'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '车辆跟踪',
+          noCache: true,
+          istab: true,
+          code: ''
+        }
+      }]
     },
 
     {

@@ -182,7 +182,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          truckIdNumber: '陕YH0009',
+          truckIdNumber: '', // 陕YH0009
           startTime: parseTime(new Date() - 60 * 24 * 60 * 4 * 1000),
           endTime: parseTime(new Date())
         }
@@ -237,12 +237,11 @@ export default {
         }
       }
     },
-     '$route': {
+    '$route': {
       handler(to, from) {
         if (this.isTimer) { // 添加自动刷新功能时
           if (window.AMapUI) { // 开启自动刷新时
-            if (to.fullPath && to.fullPath.indexOf('/operation/order/track/trucklog') !== -1) {
-            } else {
+            if (to.fullPath && to.fullPath.indexOf('/operation/order/track/trucklog') !== -1) {} else {
               this.isTimerOpen = false
               clearInterval(this.timerOption)
             }
@@ -278,15 +277,13 @@ export default {
     }
   },
   mounted() {
+    console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
       _this.initMap()
       _this.hasLoadedMap = true
     }
     this.init(2222)
-  },
-  acivated () {
-    this.onSubmit()
   },
   // 关闭时清空地图数据
   destoryed() {
@@ -430,34 +427,52 @@ export default {
             })
           }
         }
+        if (this.validate()) {
+          let query = objectMerge2({}, this.searchQuery.vo)
+          trajectoryByTruckIdNumber(query).then(data => {
+              if (data && data.trajectoryList.length) {
+                _this.initedPath = false
+                if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
+                  fn([data], 'simple')
+                  console.warn('格式化（单辆车）：', this.allList)
+                  _this.initLine()
+                  _this.isShowTable = true
+                } else {
 
-        let query = objectMerge2({}, this.searchQuery.vo)
-        trajectoryByTruckIdNumber(query).then(data => {
-            if (data && data.trajectoryList.length) {
-              _this.initedPath = false
-              if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
-                fn([data], 'simple')
-                console.warn('格式化（单辆车）：', this.allList)
-                _this.initLine()
-                _this.isShowTable = true
+                }
+                _this.$notify({
+                  title: '成功',
+                  message: '车辆轨迹查询成功',
+                  type: 'success'
+                })
               } else {
-
+                this.$message.warning('暂无车辆轨迹数据！')
               }
-              _this.$notify({
-                title: '成功',
-                message: '车辆轨迹查询成功',
-                type: 'success'
-              })
-            } else {
-              this.$message.warning('暂无车辆轨迹数据！')
-            }
-            this.initTimer()
-            _this.loadSearch = false
-          })
-          .catch(err => {
-            _this.loadSearch = false
-            this._handlerCatchMsg(err)
-          })
+              this.initTimer()
+              _this.loadSearch = false
+            })
+            .catch(err => {
+              _this.loadSearch = false
+              this._handlerCatchMsg(err)
+            })
+        } else {
+          _this.loadSearch = false
+        }
+      }
+    },
+    validate() {
+      let query = objectMerge2({}, this.searchQuery.vo)
+      let count = 0
+      for(let e in query) {
+         if (query[e]==='' || !query[e]) {
+          count += 1
+        }
+      }
+      if (count) {
+        this.$message.warning('请填写完整搜索信息~')
+        return false
+      } else {
+        return true
       }
     },
     tomap() { // 转高德坐标
@@ -472,17 +487,19 @@ export default {
       // 坐标转换
       if (this.realTimeTrucks.length) {
         this.realTimeTrucks.forEach((e, index) => {
-          lnglat[index] = [e.longitude, e.latitude]
-          marker = new AMap.Marker({
-            map: map,
-            position: lnglat[index]
-          })
-          marker.setLabel({
-            offset: new AMap.Pixel(20, 20),
-            content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
-          })
-          this.markers.push(marker)
-          map.setFitView()
+          if (e.longitude !== null && e.latitude !== null) {
+            lnglat[index] = [e.longitude, e.latitude]
+            marker = new AMap.Marker({
+              map: map,
+              position: lnglat[index]
+            })
+            marker.setLabel({
+              offset: new AMap.Pixel(20, 20),
+              content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
+            })
+            this.markers.push(marker)
+            map.setFitView()
+          }
         })
         console.log('实时车辆定位：：', this.realTimeTrucks, lnglat, this.map)
       }
@@ -668,10 +685,10 @@ export default {
     },
     doLine(type) { // 轨迹控制器
       if (window.pathSimplifierIns) {
-         if (/(start|resume|pause)/.test(type)) {
+        if (/(start|resume|pause)/.test(type)) {
           clearInterval(this.timerOption)
           this.isTimerOpen = false
-        }else {
+        } else {
           this.initTimer()
         }
         let pathSimplifierIns = window.pathSimplifierIns
@@ -737,7 +754,7 @@ export default {
         setTimeout(() => {
           this.initMap()
           this.getPathSimplifierIns()
-          this.onSubmit()
+          // this.onSubmit()
         }, 500)
       } else {
         console.log('loadMap3', window.AMap)
@@ -745,7 +762,7 @@ export default {
           loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
             this.initMap()
             this.getPathSimplifierIns()
-            this.onSubmit()
+            // this.onSubmit()
             console.log('window.AMap', window.AMap)
             console.log('window.AMapUI', window.AMapUI)
             console.log('this.map', this.map)

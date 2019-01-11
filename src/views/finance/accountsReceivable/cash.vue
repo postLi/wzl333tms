@@ -230,13 +230,16 @@ export default {
       this.selected.forEach((e, index) => {
         list.push(e.shipSn)
       })
+       const data = objectMerge2(this.searchQuery)
+      data.vo.ascriptionOrgId = data.vo.shipFromOrgid
+      
       console.log('传给核销页面的数据:::query', this.searchQuery, list)
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
           tab: '现付核销',
           currentPage: 'cash',
-          searchQuery: JSON.stringify(this.searchQuery),
+          searchQuery: JSON.stringify(data),
           selectListShipSns: JSON.stringify(list)
         }
       })
