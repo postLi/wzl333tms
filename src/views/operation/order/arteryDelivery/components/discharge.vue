@@ -243,17 +243,19 @@ export default {
           }
           break
         case 'export': // 导出
-          SaveAsFile({
-            data: this.dataList,
-            columns: this.tableColumn,
-            name: '途径卸货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
-          })
+         this.$message.warning('功能尚在开发中,敬请期待~')
+          // SaveAsFile({
+          //   data: this.dataList,
+          //   columns: this.tableColumn,
+          //   name: '途径卸货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          // })
           break
         case 'print': // 打印
-          PrintInFullPage({
-            data: this.dataList,
-            columns: this.tableColumn
-          })
+         this.$message.warning('功能尚在开发中,敬请期待~')
+          // PrintInFullPage({
+          //   data: this.dataList,
+          //   columns: this.tableColumn
+          // })
           break
       }
     },
@@ -282,7 +284,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消'
         })
       })
 
@@ -451,7 +453,7 @@ $backgroundColor:#E9F3FA;
     }
   }
   .discharge-footer {
-    background-color: $backgroundColor;
+    // background-color: $backgroundColor;
   }
 }
 

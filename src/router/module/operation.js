@@ -283,7 +283,7 @@ export default {
         path: '/operation/order/arteryDelivery/sender',
         icon: 'QQ',
         name: '干线到车列表',
-        component: _import('operation/order/arteryDepart/sender'),
+        component: _import('operation/order/arteryDelivery/sender'),
         meta: {
           role: ['admin'],
           ptitle: '干线到车',

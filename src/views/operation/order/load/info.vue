@@ -1432,7 +1432,7 @@ export default {
             padding: 8px;
           }
           .el-input {
-            width: 85px;
+            width: 83px;
             margin-right: 2px;
           }
           .el-icon-arrow-up:before {
