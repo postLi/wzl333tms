@@ -334,22 +334,22 @@
          LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
          LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
          if (printObj.print_page_num === '1') {
-          const le = objp.w - 20
-          const to = objp.h - 20
-          // 如果是横向，翻转宽高位置
-          if (printObj.printing_direction === '2') {
-            const a = le
-            le = to
-            to = a
-          }
-          LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
-          LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
-          LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
-          LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
-        }
+           const le = objp.w - 20
+           const to = objp.h - 20
+           // 如果是横向，翻转宽高位置
+           if (printObj.printing_direction === '2') {
+             const a = le
+             le = to
+             to = a
+           }
+           LODOP.ADD_PRINT_TEXT('70mm', '25mm', 88, 22, '第#页/共&页')
+           LODOP.SET_PRINT_STYLEA(0, 'ItemType', 2)
+           LODOP.SET_PRINT_STYLEA(0, 'Horient', 1)
+           LODOP.SET_PRINT_STYLEA(0, 'Vorient', 1)
+         }
        }
 
-       
+
        console.log('printObj:', printObj)
 
        //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
@@ -388,6 +388,8 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      const tableId = obj.id // 重新创建打印视图table
      LODOP = getLodop()
+     let str = document.getElementById(tableId).innerHTML
+     str = str.replace(/(bgcolor="dimGray"|color="white"|bgcolor="gainsboro")/g, '')
 
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
@@ -395,7 +397,7 @@
      // LODOP.SET_PRINT_STYLE("Bold", 1);
      LODOP.SET_PRINT_PAGESIZE(0, 0, 0, 'A4')
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', document.getElementById(tableId).innerHTML)
+     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', str)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
