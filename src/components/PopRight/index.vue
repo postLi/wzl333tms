@@ -4,7 +4,7 @@
       <slot name="title">{{title}}</slot>
       <i class="el-icon-close" @click="close" title="关闭"></i>
     </div>
-    <div v-if="shouldRender" class="popRight-content arteryDelivery_lrl">
+    <div v-if="shouldRender" class="popRight-content">
       <slot name="content">内容</slot>
     </div>
     <div class="popRight-footer">

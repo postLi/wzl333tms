@@ -1,29 +1,27 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100">
-    <keep-alive>
-      <component v-bind:is="component"></component>
+  <!-- <div class="customer-manager tab-wrapper tab-wrapper-100"> -->
+  <div class="tab-wrapper">
+     <div class="eltab clearfix">
+      <router-link to="/operation/order/arteryDelivery/sender" class="tab-label">干线到货</router-link>
+      <router-link to="/operation/order/arteryDelivery/channel" class="tab-label" >途径卸货</router-link>
+    </div>
+     <keep-alive>
+      <router-view></router-view>
     </keep-alive>
   </div>
 </template>
 
 <script>
-import Sender from './sender'
-
 export default {
   name: 'arteryDelivery',
-  components: {
-    Sender
-  },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
+   methods: {
+    visitedViews() {
+      console.log('visitedViews : ', this.$store.state.tagsView.visitedViews)
+      return this.$store.state.tagsView.visitedViews
     }
   },
-  data() {
-    return {
-      component: 'Sender'
-    }
+  activated() {
+    this.visitedViews()
   }
 }
 </script>

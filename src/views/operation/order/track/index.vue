@@ -18,7 +18,7 @@ export default {
   name: 'ordertrack',
   methods: {
     viewLog() {
-      return location.href.indexOf('28tms.cn') === -1
+      return location.href.indexOf('28tms.cn') === -1 && location.href.indexOf('192.168.1') !== -1
     }
   }
 }

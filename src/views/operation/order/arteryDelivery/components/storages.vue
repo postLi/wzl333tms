@@ -1283,6 +1283,10 @@ export default {
           td {
             text-align: center;
           }
+          th {
+            color: #606266;
+            font-weight: 400;
+          }
         }
         .unauth {
           color: #f00;
@@ -1576,6 +1580,8 @@ export default {
     }
   }
 }
+
+
 
 
 

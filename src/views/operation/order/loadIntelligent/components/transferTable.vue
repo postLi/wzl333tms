@@ -49,8 +49,8 @@
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <template v-for="column in tableColumnRight">
-            <el-table-column :key="column.id" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
+          <template v-for="(column, cindex) in tableColumnRight">
+            <el-table-column :key="cindex" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
             </el-table-column>
           </template>
         </el-table>
@@ -275,10 +275,10 @@ export default {
   watch: {
     handlingFeeInfo: {
       handler(cval, oval) {
-        console.log('-----获取操作费 obj 2------', cval, oval)
-        if (cval) {
+        console.warn('-----获取操作费 obj 2------', cval, oval)
+        // if (cval) {
           this.countHandingFee()
-        }
+        // }
       },
       deep: true
     },
@@ -292,7 +292,6 @@ export default {
             arr.push(e.tmsOrderLoadDetailsList)
           })
           this.orgRightTable = Object.assign([], arr)
-          console.log('jsdifjisdjfisjdifjsifjiwjeifjsdijf', this.orgLeftTable, this.orgRightTable)
           // this.initTable()
         }
       }
@@ -441,18 +440,14 @@ export default {
         this.leftTable = objectMerge2([], this.orgLeftTable)
       }
       if (arr.length) {
-        console.log('#$%#$%#$1 initTable 1', arr.length)
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
-          console.log('#$%#$%#$1 initTable 2', this.leftTable)
           this.leftTable = this.leftTable.filter(em => {
             return em.repertoryId !== e.repertoryId
           })
           this.orgLeftTable = Object.assign([], this.leftTable)
-          console.log('#$%#$%#$1 initTable 3', this.orgLeftTable )
         })
       } else {
         this.leftTable = Object.assign([], this.orgLeftTable)
-        console.log('#$%#$%#$1 initTable 4',  this.leftTable )
       }
       this.$nextTick(() => {
         this.setSort() // 右边列表行拖拽

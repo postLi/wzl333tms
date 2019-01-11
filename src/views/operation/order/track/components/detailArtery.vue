@@ -360,6 +360,8 @@ export default {
             color: #666;
             width: 12%;
             height: 36px;
+            color: #606266;
+            font-weight: 400;
           }
           td {
             width: 21.3%;

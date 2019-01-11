@@ -237,12 +237,11 @@ export default {
         }
       }
     },
-     '$route': {
+    '$route': {
       handler(to, from) {
         if (this.isTimer) { // 添加自动刷新功能时
           if (window.AMapUI) { // 开启自动刷新时
-            if (to.fullPath && to.fullPath.indexOf('/operation/order/track/trucklog') !== -1) {
-            } else {
+            if (to.fullPath && to.fullPath.indexOf('/operation/order/track/trucklog') !== -1) {} else {
               this.isTimerOpen = false
               clearInterval(this.timerOption)
             }
@@ -285,7 +284,7 @@ export default {
     }
     this.init(2222)
   },
-  acivated () {
+  acivated() {
     this.onSubmit()
   },
   // 关闭时清空地图数据
@@ -472,17 +471,19 @@ export default {
       // 坐标转换
       if (this.realTimeTrucks.length) {
         this.realTimeTrucks.forEach((e, index) => {
-          lnglat[index] = [e.longitude, e.latitude]
-          marker = new AMap.Marker({
-            map: map,
-            position: lnglat[index]
-          })
-          marker.setLabel({
-            offset: new AMap.Pixel(20, 20),
-            content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
-          })
-          this.markers.push(marker)
-          map.setFitView()
+          if (e.longitude !== null && e.latitude !== null) {
+            lnglat[index] = [e.longitude, e.latitude]
+            marker = new AMap.Marker({
+              map: map,
+              position: lnglat[index]
+            })
+            marker.setLabel({
+              offset: new AMap.Pixel(20, 20),
+              content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + e.address + '</p></div>'
+            })
+            this.markers.push(marker)
+            map.setFitView()
+          }
         })
         console.log('实时车辆定位：：', this.realTimeTrucks, lnglat, this.map)
       }
@@ -668,10 +669,10 @@ export default {
     },
     doLine(type) { // 轨迹控制器
       if (window.pathSimplifierIns) {
-         if (/(start|resume|pause)/.test(type)) {
+        if (/(start|resume|pause)/.test(type)) {
           clearInterval(this.timerOption)
           this.isTimerOpen = false
-        }else {
+        } else {
           this.initTimer()
         }
         let pathSimplifierIns = window.pathSimplifierIns

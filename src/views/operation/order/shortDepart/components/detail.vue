@@ -192,8 +192,7 @@ export default {
         truckIdNumber: ''
       },
       tableColumn: [],
-      tableColumnArrival: [
-        {
+      tableColumnArrival: [{
           label: '序号',
           prop: 'number',
           width: '100',
@@ -630,15 +629,15 @@ export default {
           this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         }
         postAddRepertory(50, this.newData).then(data => {
-          if (data.status === 200) {
-            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
-            this.$message({ type: 'success', message: '短驳入库操作成功' })
-            this.message = true
-          } else {
-            this.message = false
-          }
-          this.$emit('isSuccess', this.message)
-        })
+            if (data.status === 200) {
+              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
+              this.$message({ type: 'success', message: '短驳入库操作成功' })
+              this.message = true
+            } else {
+              this.message = false
+            }
+            this.$emit('isSuccess', this.message)
+          })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -650,15 +649,15 @@ export default {
       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-        if (data) {
-          this.detailList = (data.data || []).map(el => {
-            const start = (el.shipFromCityName || '').split(',')
-            const end = (el.shipToCityName || '').split(',')
-            el.shipFromCityName = start[2] || start[1] || start[0] || ''
-            el.shipToCityName = end[2] || end[1] || end[0] || ''
+          if (data) {
+            this.detailList = (data.data || []).map(el => {
+              const start = (el.shipFromCityName || '').split(',')
+              const end = (el.shipToCityName || '').split(',')
+              el.shipFromCityName = start[2] || start[1] || start[0] || ''
+              el.shipToCityName = end[2] || end[1] || end[0] || ''
 
-            return el
-          })
+              return el
+            })
             /* if (location.href.indexOf('192.168.1') !== -1 && this.detailList.length && true) {
               let mi = 30
               while (mi--) {
@@ -666,11 +665,11 @@ export default {
               }
             } */
 
-          this.setData()
-          this.toggleAllRows()
-          this.$nextTick(() => {
-            console.log('isNeedArrival', this.isNeedArrival)
-            this.detailList.forEach(e => {
+            this.setData()
+            this.toggleAllRows()
+            this.$nextTick(() => {
+              console.log('isNeedArrival', this.isNeedArrival)
+              this.detailList.forEach(e => {
                 if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
                   if (e.warehouStatus !== 1) { // 部分入库
                     e.actualAmount = e.loadAmount
@@ -680,10 +679,10 @@ export default {
                 } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
                 }
               })
-          })
-          this.detailTableLoading = false
-        }
-      })
+            })
+            this.detailTableLoading = false
+          }
+        })
         .catch(error => {
           this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)
@@ -729,22 +728,22 @@ export default {
       // column.property
       // column.label
       // 不处理序号跟选择列
-        /* this.columnWidthData = {
-          prop: column.property,
-          label: column.label,
-          width: newWidth
-        } */
+      /* this.columnWidthData = {
+        prop: column.property,
+        label: column.label,
+        width: newWidth
+      } */
       const find = this.tableColumn.filter(el => el.prop === column.property)
       if (find.length) {
-          find[0].width = newWidth
+        find[0].width = newWidth
 
-          console.log('应该要显示保存框了')
-          this.visible2 = true
-          clearTimeout(this.tabletimer)
-          this.tabletimer = setTimeout(() => {
-            this.visible2 = false
-          }, 10000)
-        }
+        console.log('应该要显示保存框了')
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
     },
     saveToTableSetup() {
       this.visible2 = false
@@ -787,6 +786,8 @@ export default {
             color: #999;
             width: 12%;
             height: 34px;
+            color: #606266;
+            font-weight: 400;
           }
           td {
             width: 21.3%;
