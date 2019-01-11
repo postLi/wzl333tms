@@ -120,7 +120,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       }
     }),
     // 提取公共模块
-    new webpack.optimize.CommonsChunkPlugin({
+    /* new webpack.optimize.CommonsChunkPlugin({
       name: 'client',
       children: true,
       async: 'chunk-vendor',
@@ -128,7 +128,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         // 被 3 个及以上 chunk 使用的共用模块提取出来
         return count >= 3
       }
-    }),
+    }), */
     new webpack.optimize.CommonsChunkPlugin({
       name: 'polyfills',
       filename: 'polyfills.js',
