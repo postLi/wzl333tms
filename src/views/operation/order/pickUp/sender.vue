@@ -82,7 +82,7 @@
   import PickupRelevance from './components/pickupRelevance'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import { objectMerge2, getSummaries, operationPropertyCalc,parseTime } from '@/utils/index'
+  import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
@@ -168,11 +168,11 @@
           width: '120',
           fixed: false
         }, {
-            label: '手机号',
-            prop: 'customerMobile',
-            width: '130',
-            fixed: false
-          }, {
+          label: '手机号',
+          prop: 'customerMobile',
+          width: '130',
+          fixed: false
+        }, {
             label: '提货地址',
             prop: 'detailedAddress',
             width: '170',

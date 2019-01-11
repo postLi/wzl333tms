@@ -158,8 +158,12 @@
         wrap.className='show_old_msg';
       } else {
         // Don't show the msg in chrome or qq browser
-        if(/Safari\/\S+$/i.test(ua)===false && /QQBrowser/i.test(ua)===false){
-          wrap.className='show_old_msg old_msg_modern';
+        // 判断是否为chrome浏览器，非chrome浏览器进入判断
+        if(/Safari\/\S+$/i.test(ua)===false){
+          // 判断是否为qq浏览器，非qq浏览器进入判断
+          if(/QQBrowser/i.test(ua)===false){
+            wrap.className='show_old_msg old_msg_modern';
+          }
         }
       }
 
