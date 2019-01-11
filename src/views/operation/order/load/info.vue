@@ -558,7 +558,8 @@ export default {
         loadTable: {
           left: this.repertoryList,
           right: this.loadTableInfo
-        }
+        },
+        networkList: this.networkList
       }
       if (issave) {
         // save data 离开配载页面时需要缓存当前配载页面的数据进sessionStorage
@@ -569,6 +570,7 @@ export default {
         this.apportionTypeList = []
         this.formFee = objectMerge2({}, this.$options.data().orgData)
         this.formModel = objectMerge2({}, this.$options.data().formModel)
+        this.networkList = objectMerge2([], this.$options.data().networkList)
         this.$nextTick(() => {
           this.$refs['formModel'].resetFields()
         })
@@ -595,6 +597,7 @@ export default {
             this.apportionTypeList = data.apportionTypeList
             this.truckMessage = data.truckMessage // 批次号
             this.contractNo = data.contractNo // 合同编号
+            this.networkList = data.networkList // 途径网点
           } else {
             this.isRestorage = false
             // normal render
@@ -697,6 +700,7 @@ export default {
             if (data) {
               this.orgData = objectMerge2({}, data.list[0])
               this.setAfterOrgData()
+
             }
           })
           break
@@ -724,6 +728,7 @@ export default {
       data.orgid = this.orgData.orgid
       data.batchNo = this.orgData.batchNo
       data.arriveOrgid = this.orgData.arriveOrgid
+
       data.loadTypeId = this.loadTypeId
       data.batchTypeId = this.batchTypeIdFinish
       data.apportionTypeId = this.orgData.apportionTypeId
@@ -760,11 +765,26 @@ export default {
       dataFee.oilCardNumber = this.orgData.oilCardNumber
       this.formFee = objectMerge2({}, dataFee)
       // 途径网点
-
+      this.initNetwork()
     },
-    initNetwork() {
+    initNetwork() { // 初始化途径网点
       if (this.isEdit) { // 编辑时
-
+        console.log('这里是初始化网点', this.orgData)
+        console.log('编辑')
+        this.networkList = []
+        let wayOrgid = this.orgData.wayOrgid
+        if (wayOrgid) {
+          let arr = wayOrgid.split(',')
+          arr.forEach(e => {
+            this.networkList.push({
+              id: e
+            })
+          })
+        }
+        this.networkList.push({ // 添加到达网点
+          id: this.orgData.arriveOrgid
+        })
+        console.log('networkList', this.networkList)
       } else { // 新增时
         this.networkList = [] // 设置途径网点
         this.networkList.push({ id: '' })
@@ -773,9 +793,9 @@ export default {
     initIsEdit() {
       this.orgData = objectMerge2({}, this.$options.data().orgData)
       this.formFee = objectMerge2({}, this.$options.data().orgData)
-      if (this.$route.query.flag) {
+      if (this.$route.query.flag) { // 编辑时
         this.isEdit = true
-        this.initNetwork()
+
         return this.setOrgData()
       } else {
         this.orgData = objectMerge2({}, this.$options.data().orgData)
@@ -1059,16 +1079,16 @@ export default {
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
       }
-       let networkList = []
-        objectMerge2([], this.networkList).forEach(e => {
-          if (e.id) {
-            networkList.push(e.id)
-          }
-        })
+      let networkList = []
+      objectMerge2([], this.networkList).forEach(e => {
+        if (e.id) {
+          networkList.push(e.id)
+        }
+      })
 
-        this.$set(this.formModel, 'wayOrgid', networkList.length > 1 ? networkList.slice(0, -1).join(',') : '') // 途径网点
-        this.$set(this.formModel, 'arriveOrgid', networkList[networkList.length - 1])
-        console.log('setData 途径网点', this.formModel, this.formModel.wayOrgid, this.formModel.arriveOrgid, networkList)
+      this.$set(this.formModel, 'wayOrgid', networkList.length > 1 ? networkList.slice(0, -1).join(',') : '') // 途径网点
+      this.$set(this.formModel, 'arriveOrgid', networkList[networkList.length - 1])
+      console.log('setData 途径网点', this.formModel, this.formModel.wayOrgid, this.formModel.arriveOrgid, networkList)
       delete this.formFee.oilCardNumber
       delete this.formFee.sealNumber
 

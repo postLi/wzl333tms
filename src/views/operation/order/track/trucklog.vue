@@ -182,7 +182,7 @@ export default {
         currentPage: 1,
         pageSize: 100,
         vo: {
-          truckIdNumber: '陕YH0009',
+          truckIdNumber: '', // 陕YH0009
           startTime: parseTime(new Date() - 60 * 24 * 60 * 4 * 1000),
           endTime: parseTime(new Date())
         }
@@ -277,6 +277,7 @@ export default {
     }
   },
   mounted() {
+    console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
       _this.initMap()
