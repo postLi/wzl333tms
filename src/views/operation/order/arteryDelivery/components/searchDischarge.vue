@@ -68,7 +68,7 @@ export default {
         departureTimeStart: '',
         departureTimeEnd: '',
         userOrgid: '',
-        unloadSign: 405 // 405-全部 406-已卸货 407-未卸货
+        unloadSign: 407 // 405-全部 406-已卸货 407-未卸货
       },
       rules: {},
       pickerOptions2: {
@@ -83,7 +83,7 @@ export default {
   },
   mounted() {
     this.searchForm.userOrgid = this.otherinfo.orgid
-    this.searchForm.unloadSign = 405
+    this.searchForm.unloadSign = 407
     this.onSubmit()
   },
   methods: {
