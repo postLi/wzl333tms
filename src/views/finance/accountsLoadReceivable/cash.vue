@@ -310,7 +310,7 @@ export default {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.searchQuery.currentPage = 1
       this.searchQuery.pageSize = 100
-      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.getRouteInfo.vo.ascriptionOrgId)
       this.$set(this.searchQuery.vo, 'status', '')
       // if (!this.$route.query) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
@@ -337,7 +337,7 @@ export default {
     getList() {
       this.loading = true
       // this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
-      this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+      // this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
