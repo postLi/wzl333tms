@@ -153,7 +153,7 @@
       var wrap = d.getElementById('old_msg_wrapper');
       var ua = navigator.userAgent.toLowerCase();
 
-      if(/(chrome|Firefox|Trident\/7\.0|Edge)/i.test(ua)===false){
+      if(/(chrome|Firefox|Trident\/7\.0|Edge)/i.test(ua)===false || /MSIE/i.test(ua) ){
         //&& /qqbrowser/.test(ua)===false
         wrap.className='show_old_msg';
       } else {
