@@ -236,7 +236,7 @@ export default {
     doAction(type) {
       switch (type) {
         case 'discharge': // 卸货
-          if (this.info.unloadSignName !== '未卸货') {
+          if (this.info.unloadSignName === '未卸货') {
             this.discharge()
           } else {
             this.$message.warning('该批次已经卸货~')

@@ -515,7 +515,7 @@ export default {
     '$route': {
       handler(to, from) {
         const bothBool = false
-
+        console.log('$route', to, from)
         if (to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
           // 1
           // 3

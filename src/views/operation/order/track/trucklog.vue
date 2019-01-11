@@ -285,9 +285,6 @@ export default {
     }
     this.init(2222)
   },
-  acivated() {
-    this.onSubmit()
-  },
   // 关闭时清空地图数据
   destoryed() {
     this.exit()
@@ -430,34 +427,52 @@ export default {
             })
           }
         }
+        if (this.validate()) {
+          let query = objectMerge2({}, this.searchQuery.vo)
+          trajectoryByTruckIdNumber(query).then(data => {
+              if (data && data.trajectoryList.length) {
+                _this.initedPath = false
+                if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
+                  fn([data], 'simple')
+                  console.warn('格式化（单辆车）：', this.allList)
+                  _this.initLine()
+                  _this.isShowTable = true
+                } else {
 
-        let query = objectMerge2({}, this.searchQuery.vo)
-        trajectoryByTruckIdNumber(query).then(data => {
-            if (data && data.trajectoryList.length) {
-              _this.initedPath = false
-              if (data.trajectoryList.length === 1 || this.searchQuery.vo.truckIdNumber) { // 单辆车轨迹
-                fn([data], 'simple')
-                console.warn('格式化（单辆车）：', this.allList)
-                _this.initLine()
-                _this.isShowTable = true
+                }
+                _this.$notify({
+                  title: '成功',
+                  message: '车辆轨迹查询成功',
+                  type: 'success'
+                })
               } else {
-
+                this.$message.warning('暂无车辆轨迹数据！')
               }
-              _this.$notify({
-                title: '成功',
-                message: '车辆轨迹查询成功',
-                type: 'success'
-              })
-            } else {
-              this.$message.warning('暂无车辆轨迹数据！')
-            }
-            this.initTimer()
-            _this.loadSearch = false
-          })
-          .catch(err => {
-            _this.loadSearch = false
-            this._handlerCatchMsg(err)
-          })
+              this.initTimer()
+              _this.loadSearch = false
+            })
+            .catch(err => {
+              _this.loadSearch = false
+              this._handlerCatchMsg(err)
+            })
+        } else {
+          _this.loadSearch = false
+        }
+      }
+    },
+    validate() {
+      let query = objectMerge2({}, this.searchQuery.vo)
+      let count = 0
+      for(let e in query) {
+         if (query[e]==='' || !query[e]) {
+          count += 1
+        }
+      }
+      if (count) {
+        this.$message.warning('请填写完整搜索信息~')
+        return false
+      } else {
+        return true
       }
     },
     tomap() { // 转高德坐标
@@ -739,7 +754,7 @@ export default {
         setTimeout(() => {
           this.initMap()
           this.getPathSimplifierIns()
-          this.onSubmit()
+          // this.onSubmit()
         }, 500)
       } else {
         console.log('loadMap3', window.AMap)
@@ -747,7 +762,7 @@ export default {
           loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
             this.initMap()
             this.getPathSimplifierIns()
-            this.onSubmit()
+            // this.onSubmit()
             console.log('window.AMap', window.AMap)
             console.log('window.AMapUI', window.AMapUI)
             console.log('this.map', this.map)
