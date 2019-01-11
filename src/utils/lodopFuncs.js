@@ -151,7 +151,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -179,7 +179,7 @@
        return LODOP
      }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
-     LODOP.SET_LICENSES("", "917C869B415ADA72B3A20365731AF08D", "C94CEE276DB2187AE6B65D56B3FC2848", "");
+     LODOP.SET_LICENSES('', '917C869B415ADA72B3A20365731AF08D', 'C94CEE276DB2187AE6B65D56B3FC2848', '')
      console.warn('LODOP::', JSON.stringify(LODOP))
      // ===========================================================
      return LODOP
@@ -349,7 +349,6 @@
          }
        }
 
-
        console.log('printObj:', printObj)
 
        //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
@@ -389,15 +388,15 @@
      const tableId = obj.id // 重新创建打印视图table
      LODOP = getLodop()
      let str = document.getElementById(tableId).innerHTML
-     str = str.replace(/(bgcolor="dimGray"|color="white"|bgcolor="gainsboro")/g, '')
+     str = str.replace(/(bgcolor="[^"]*"|color="white")/g, '')
 
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
-     LODOP.SET_PRINT_PAGESIZE(0, 0, 0, 'A4')
+     LODOP.SET_PRINT_PAGESIZE(2, 0, 0, 'A4')
      // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
-     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '100%', str)
+     LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '98%', str)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
      LODOP.PREVIEW()
@@ -413,7 +412,6 @@
        LODOP = getLodop()
 
        if (type === 'voucher') {
-
          LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
          LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
        } else {
@@ -976,7 +974,6 @@
          if (arr[item].filedValue === 'setting') {
            if (arr[item].filedName === '标签尺寸') {
              title = '标签打印'
-
            } else {
              title = '托运单打印'
            }
@@ -986,8 +983,6 @@
            // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
            // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
            LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
-
-
          }
          if (arr[item].value === undefined || arr[item].value === null) {
            arr[item].value = ''
@@ -1028,7 +1023,7 @@
            }
          }
          if (e.filedValue === 'settingRotate') {
-           LODOP.SET_PRINT_STYLEA(0, "AngleOfPageInside", Math.round(e.width * prxvalue))
+           LODOP.SET_PRINT_STYLEA(0, 'AngleOfPageInside', Math.round(e.width * prxvalue))
          }
        })
 
