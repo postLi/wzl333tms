@@ -14,7 +14,7 @@
               </div> -->
               <!-- 基本信息 -->
               <div class="loadFrom-type-baseInfo">
-                <div :class="loadTypeId===39?'loadFrom-type-baseInfo-network':''">
+                <div :class="loadTypeId===39?'loadFrom-type-baseInfo-network baseInfoCol2':'baseInfoCol'">
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40" class="multipleInput">
                     <el-input size="mini" v-model="formModel.deliveryDetailFee" v-number-only:point :maxlength="8" placeholder="送货费">
                     </el-input>
@@ -24,7 +24,7 @@
                   </el-form-item>
                   <el-form-item label="到达网点" v-if="loadTypeId===39" class="formItemTextDanger">
                     <div class="select-network-list">
-                      <span class="network-list-node">{{otherinfo.orgName}} — </span>
+                      <div class="network-list-node">{{otherinfo.orgName+' -'}}</div>
                       <draggable v-model="networkList" class="draggable-list">
                         <SelectTree v-for="(item, index) in networkList" :placeholder="'网点'+(index+1)" :key="index" v-model="item.id" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery|| item.id === otherinfo.orgid"></SelectTree>
                       </draggable>
@@ -37,7 +37,7 @@
                     <SelectTree v-model="formModel.arriveOrgid" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery"></SelectTree>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="车牌号码" prop="truckIdNumber" class="formItemTextDanger" :key="truckKey">
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="车牌号码" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addTruck')"></i>
@@ -50,7 +50,7 @@
                     </el-autocomplete>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="司机名称" prop="dirverName" class="formItemTextDanger" :key="driverKey">
                     <el-autocomplete popper-class="my-autocomplete" v-model="formModel.dirverName" :fetch-suggestions="querySearch" placeholder="司机名称" size="mini" @select="handleSelect" auto-complete="off" :maxlength="10">
                       <i class="el-icon-plus el-input__icon" slot="suffix" @click="doAction('addDriver')"></i>
@@ -63,12 +63,12 @@
                     </el-autocomplete>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="司机电话" prop="dirverMobile" class="formItemTextDanger">
                     <el-input size="mini" v-model="formModel.dirverMobile" placeholder="司机电话" :maxlength="11"></el-input>
                   </el-form-item>
                 </div>
-                <div v-if="loadTypeId!==39">
+                <div v-if="loadTypeId!==39" class="baseInfoCol">
                   <el-form-item label="分摊方式" prop="apportionTypeId">
                     <el-select v-model="formModel.apportionTypeId" placeholder="请选择" @change="getApportionTypeId">
                       <el-option v-for="(item, index) in apportionTypeList" :key="index" :label="item.dictName" :value="item.id">
@@ -84,7 +84,7 @@
                 </div>
               </div>
               <div class="loadFrom-type-baseInfo">
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
                     <span class="input-append">元</span>
@@ -94,25 +94,25 @@
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="可载体积" prop="truckVolume">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckVolume" ref="truckVolume" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckVolume')" />
                     <span class="input-append">方</span>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item label="可载重量" prop="truckLoad">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
                     <span class="input-append" style="margin-left: -40px;">千克</span>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item prop="loadTime" :label="loadTimeFormName">
                     <el-date-picker size="mini" v-model="formModel.loadTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" :placeholder="loadTimeFormName">
                     </el-date-picker>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item prop="planArrivedTime" label="预计到达时间" v-if="loadTypeId===39">
                     <el-date-picker size="mini" v-model="formModel.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="预计到达时间">
                     </el-date-picker>
@@ -124,14 +124,14 @@
                 </div>
               </div>
               <div class="loadFrom-type-baseInfo">
-                <div>
-                  <el-form-item label="短驳费" prop="shortFee" v-if="loadTypeId===38">
+                <div class="baseInfoCol"  v-if="loadTypeId===38">
+                  <el-form-item label="短驳费" prop="shortFee">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.shortFee" ref="shortFee" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'shortFee')" />
                     <span class="input-append">元</span>
                     <!-- <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input> -->
                   </el-form-item>
                 </div>
-                <div v-if="loadTypeId===39">
+                <div v-if="loadTypeId===39" class="baseInfoCol">
                   <el-form-item label="分摊方式" prop="apportionTypeId">
                     <el-select v-model="formModel.apportionTypeId" placeholder="请选择" @change="getApportionTypeId">
                       <el-option v-for="(item, index) in apportionTypeList" :key="index" :label="item.dictName" :value="item.id">
@@ -145,12 +145,17 @@
                     </el-select>
                   </el-form-item>
                 </div>
-                <div>
+                <div class="baseInfoCol">
                   <el-form-item prop="remark" label="备注" v-if="loadTypeId !== 40">
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
+                <!--<div class="baseInfoCol"> </div>-->
+                <!--<div class="baseInfoCol"> </div>-->
+
+                <!--<div class="baseInfoCol"> </div>-->
               </div>
+
             </el-form>
             <!-- 费用参数 -->
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
@@ -1293,7 +1298,7 @@ export default {
 </script>
 <style lang="scss">
 .load-steup {
-  min-width: 1000px;
+  min-width: 900px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -1318,12 +1323,36 @@ export default {
     overflow-x: hidden;
     overflow-y: auto;
     padding: 10px 10px 0 10px;
+    width: 100%;
     height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
-
+      .el-collapse {
+        border: 2px solid #cdf;
+      }
+      .el-collapse-item__content {
+        padding: 0 10px;
+      }
+      .el-collapse-item__header {
+        border-bottom: 2px solid #cdf;
+        background-color: #FFFFFF;
+        padding: 0 0 0 20px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: #333;
+        position: relative;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .el-collapse-item__arrow {
+        position: absolute;
+        left: 20px;
+        top: 5px;
+      }
     .loadFrom {
+      width: 100%;
       margin-bottom: 10px;
       .loadFrom-type {
         position: absolute;
@@ -1336,34 +1365,29 @@ export default {
           color: #ef0000;
         }
       }
+      .el-form{
+        display: inline-block;
+        width: 100%;
+      }
     }
-    .el-collapse {
-      border: 2px solid #cdf;
-    }
-    .el-collapse-item__content {
-      padding: 0;
-    }
-    .el-collapse-item__header {
-      border-bottom: 2px solid #cdf;
-      background-color: #FFFFFF;
-      padding: 0 0 0 20px;
-      height: 40px;
-      line-height: 40px;
-      font-size: 16px;
-      color: #333;
-      position: relative;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .el-collapse-item__arrow {
-      position: absolute;
-      left: 20px;
-      top: 5px;
-    }
+
     .loadFrom-type-baseInfo {
       display: flex;
       flex-direction: row;
+      width: 100%;
       margin-bottom: -10px;
+     .baseInfoCol{
+       width: 20%;
+        }
+     .baseInfoCol2{
+       width: 40%;
+     }
+     .multipleInput{
+       .el-form-item__content{
+         display: flex;
+         flex-direction: row;
+       }
+     }
       .input-append {
         position: absolute;
         left: 100%;
@@ -1372,11 +1396,17 @@ export default {
         margin-left: -25px;
         color: #999;
       }
-      .el-input {
-        width: 210px;
+      .el-form-item{
+        width: 100%;
       }
+      .el-autocomplete,
+      .el-select,
+      .el-input {
+        width: 100%;
+      }
+
       .nativeinput {
-        width: 210px;
+        width: 100%;
         border: 1px solid #dcdfe6;
         border-radius: 4px;
       }
@@ -1384,40 +1414,52 @@ export default {
       .el-input-group__prepend {
         padding: 0 5px;
       }
-      .multipleInput {
-        .el-form-item__content {
-          display: flex;
-          flex-direction: row;
-        }
-        .el-input {
-          width: 105px;
-        }
-      }
+
       .loadFrom-type-baseInfo-network {
-        width: 640px;
         position: relative;
         .network-list-node {
-          float: left;
-          margin: 0 5px;
+          padding: 0 10px 0 5px;
           font-size: 12px;
           color: #222;
+          word-break: keep-all;
+          position: relative;
+          &:after{
+            content: '';
+            position: absolute;
+            width: 6px;
+             height: 1px;
+            background-color: #ccc;
+            right: 0px;
+            top: 13px;
+             z-index: 2;
+           }
         }
-        .el-form-item {
-          width: 640px;
-        }
-        .el-form-item__content {
-          // width: 100%;
-        }
-        .draggable-list {
-          float: left;
-        }
+
+
         .select-network-list {
           width: 100%;
           height: 28px;
           line-height: 28px;
           border: 1px solid #dcdfe6;
           border-radius: 4px;
-
+          display: flex;
+          flex-direction: row;
+          .draggable-list {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            .el-select{
+              width: 100%;
+            }
+            .el-input--suffix .el-input__inner{
+              padding-right: 15px;
+            }
+            .el-select:last-child{
+              .el-input__suffix{
+                display: none;
+              }
+            }
+          }
           .sortable-ghost {
             border: 1px dashed #f00;
             background: #ffe;
@@ -1428,15 +1470,13 @@ export default {
           }
           .plusBtn {
             font-size: 12px;
-            float: right;
             padding: 8px;
           }
           .el-input {
-            width: 83px;
-            margin-right: 2px;
+            width: 100%;
           }
           .el-icon-arrow-up:before {
-            content: '—';
+            content: '-';
           }
           .el-input__suffix {
             right: -2px;
@@ -1487,7 +1527,7 @@ export default {
 }
 
 ul.feeList_lyy {
-  margin: 10px 10px 5px 10px;
+  margin: 10px 0px 5px;
   border: 1px solid #d0d7e5;
   display: flex;
   li {
