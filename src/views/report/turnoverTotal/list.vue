@@ -7,17 +7,20 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:REPORT_PRINT_3 @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
-      </div>
-      <div class="tab_report">
-        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="right-end" width="160" trigger="manual" v-model="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+          <el-button slot="reference" type="text"></el-button>
+        </el-popover>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+      </div>
+      <div class="tab_report">
+        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true" :header-row-style="rowStyle" :summary-method="getSummary">
+          <el-table-column :label="tableTitle" class="tableTitle">
             <template v-for="column in columns">
               <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
               <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
@@ -26,8 +29,8 @@
                 </template>
               </el-table-column>
             </template>
-          </el-table>
-        </el-popover>
+          </el-table-column>
+        </el-table>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" style="display: none;" class="info_tab_report" id="report_turnoverTotal">
@@ -46,21 +49,25 @@
         </table>
       </div>
     </div>
+    <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
 import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
-import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2, getSummaries } from '@/utils/index'
 import SearchForm from './components/search'
 import { reportTurnoverTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm
+    SearchForm,
+    TableSetup
   },
   data() {
     return {
+      tableTitle: '',
       tablekey: 0,
       dataList: [],
       setupTableVisible: false,
@@ -82,50 +89,50 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-        label: '序号',
-        prop: 'number',
-        textAlign: 'center'
-      },
-      {
-        label: '开单网点',
-        prop: 'orgidName',
-        textAlign: 'center'
-      },
-      {
-        label: '总运费(元)',
-        prop: 'totalFee',
-        textAlign: 'right'
-      },
-      {
-        label: '实收费用(元)',
-        prop: 'shipTotalFee',
-        textAlign: 'right'
-      },
-      {
-        label: '回扣(元)',
-        prop: 'brokerageFee',
-        textAlign: 'right'
-      },
-      {
-        label: '现付(元)',
-        prop: 'nowPayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '到付(元)',
-        prop: 'arrivePayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '回单付(元)',
-        prop: 'receiptPayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '月结(元)',
-        prop: 'monthPayFee',
-        textAlign: 'right'
-      }
+          label: '序号',
+          prop: 'number',
+          textAlign: 'center'
+        },
+        {
+          label: '开单网点',
+          prop: 'orgidName',
+          textAlign: 'center'
+        },
+        {
+          label: '总运费(元)',
+          prop: 'totalFee',
+          textAlign: 'right'
+        },
+        {
+          label: '实收费用(元)',
+          prop: 'shipTotalFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回扣(元)',
+          prop: 'brokerageFee',
+          textAlign: 'right'
+        },
+        {
+          label: '现付(元)',
+          prop: 'nowPayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '到付(元)',
+          prop: 'arrivePayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回单付(元)',
+          prop: 'receiptPayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '月结(元)',
+          prop: 'monthPayFee',
+          textAlign: 'right'
+        }
       ],
       countCol: [ // 需要合计的-列
         'nowPayFee',
@@ -147,17 +154,20 @@ export default {
   },
   mounted() {
     this.getScrollWidth()
-   // 针对前端写的表格配置数据也进行简单的排序处理
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-        let str = ''
-        this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');" + '\n'
-        })
-        console.log(str)
-      }
   },
   methods: {
+    rowStyle({ row, rowIndex }) {
+      if (rowIndex === 0) {
+        if (this.query.createTimeStart && this.query.createTimeEnd) {
+          this.tableTitle = parseTime(this.query.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.query.createTimeEnd, '{y}年{m}月{d}日') + '营业额汇总表'
+        } else {
+          this.tableTitle = '营业额汇总表'
+        }
+        return {
+          fontSize: '16px'
+        }
+      }
+    },
     getScrollWidth() {
       var noScroll, scroll, oDiv = document.createElement('DIV')
       oDiv.style.cssText = 'position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;'
@@ -170,8 +180,14 @@ export default {
     report() {
       this.loading = true
       reportTurnoverTotal(this.query).then(res => {
+        if (res && res.list) {
+          res.list.forEach((e, index) => {
+            e.number = index + 1
+          })
+        }
         let data = res.list
-        this.dataList = res.list || []
+        let elDataList = data || []
+        this.dataList = elDataList
         const countColVal = []
         this.loading = false
         const div = document.getElementById('report_turnoverTotal')
@@ -249,15 +265,19 @@ export default {
             for (const t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
                 data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
+                elDataList = data
               }
             }
-            td.innerHTML = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+            let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+            td.innerHTML = tdVal
+             elDataList[k][this.columns[j].prop] = tdVal
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
             td.style.padding = '2px 5px'
             td.style.fontSize = '13px'
             td.style.width = (this.columns[j].width || 120) + 'px'
           }
         }
+        this.dataList = elDataList // 遍历完后才设置数据
         // 合计
         const dataList = res.list
         for (const t in this.countCol) {
@@ -386,12 +406,24 @@ export default {
     },
     saveToTableSetup() {
       this.visible2 = false
-
       this.eventBus.$emit('tablesetup.change', this.thecode, this.columns)
     },
     setColumn(obj) { // 重绘表格列表
       this.columns = obj
       this.tablekey = Math.random() // 刷新表格视图
+    },
+    getSummary(param) {
+      const { columns, data } = param
+      const sums = []
+      sums[0] = '合计'
+      columns.forEach((column, index) => {
+        for(let i in this.countColVal) {
+          if (column.property === i) {
+            sums[index] = this.countColVal[i] + ''
+          }
+        }
+      })
+      return sums
     }
   }
 }
@@ -414,6 +446,14 @@ export default {
   }
   .tab_report {
     height: 100%;
+    .tableTitle {}
+    .el-table thead th,
+    .el-table thead tr {
+      background: #666;
+    }
+    .el-table th .cell {
+      color: #fff;
+    }
   }
 }
 
@@ -422,6 +462,7 @@ export default {
   width: calc(100% - 20px);
   height: calc(100% - 100px);
 }
+
 .info_tab_report {
   height: 100%;
   padding-bottom: 60px;
@@ -437,41 +478,41 @@ export default {
     left: 0;
     z-index: 2;
     th {
-       width: 7%;
+      width: 7%;
       word-break: break-all;
     }
   }
 
   /*设置边框的*/
   .report_turnoverTotal_table {
-      width: 100%;
-      min-width: 1200px;
+    width: 100%;
+    min-width: 1200px;
 
-      tbody tr {
-        background-color: #FFF;
-        transition: 0.5s;
-      }
-      tbody tr:hover {
-        background-color: #ccc;
-        transition: 0.3s;
-      }
-      tbody tr td:hover {
-        background-color: #cdcdcd;
-        transition: 0.3s;
-      }
-      tbody {
-        color: #222;
-        line-height: 23px;
+    tbody tr {
+      background-color: #FFF;
+      transition: 0.5s;
+    }
+    tbody tr:hover {
+      background-color: #ccc;
+      transition: 0.3s;
+    }
+    tbody tr td:hover {
+      background-color: #cdcdcd;
+      transition: 0.3s;
+    }
+    tbody {
+      color: #222;
+      line-height: 23px;
+      font-size: 13px;
+      td {
         font-size: 13px;
-        td {
-          font-size: 13px;
-           width: 7%;
-          word-break: break-all;
-        }
+        width: 7%;
+        word-break: break-all;
       }
-      tfoot {
-        display: none;
-      }
+    }
+    tfoot {
+      display: none;
+    }
   }
 }
 
@@ -488,10 +529,11 @@ export default {
     font-size: 13px;
     td {
       font-size: 13px;
-       width: 7%;
+      width: 7%;
       border: 1px solid #bbb;
       word-break: break-all;
     }
   }
 }
+
 </style>

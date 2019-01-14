@@ -7,36 +7,36 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:REPORT_PRINT_1 @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
-        <el-button @click="setupTableVisible =true"></el-button>
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button> -->
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
-      </div>
-      <div class="tab_report">
-        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="right-end" width="160" trigger="manual" v-model="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
-            <template v-for="column in columns">
-              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope && !column.type"></el-table-column>
-              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="column.scope">
-                <template slot-scope="scope">
-                  <span v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-            <el-table-column label="应收汇总">
-              <el-table-column show-overflow-tooltip v-for="column in columns" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 1">
-              </el-table-column>
-            </el-table-column>
-            <el-table-column label="应付汇总">
-              <el-table-column show-overflow-tooltip v-for="column in columns" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 2">
-              </el-table-column>
-            </el-table-column>
-          </el-table>
+          <el-button type="text" slot="reference"></el-button>
         </el-popover>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button> -->
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+      </div>
+      <div class="tab_report">
+        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true" :summary-method="getSummary">
+          <template v-for="column in columns">
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope && !column.type"></el-table-column>
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="column.scope">
+              <template slot-scope="scope">
+                <span v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+          <el-table-column label="应收汇总">
+            <el-table-column show-overflow-tooltip v-for="(column,index) in columns" :key="index" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 1">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="应付汇总">
+            <el-table-column show-overflow-tooltip v-for="(column,index) in columns" :key="index" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 2">
+            </el-table-column>
+          </el-table-column>
+        </el-table>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" style="display: none;" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
@@ -99,7 +99,7 @@
         </table>
       </div>
     </div>
-     <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false"  @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -107,7 +107,7 @@ import { REGEX } from '@/utils/validate'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
 import querySelect from '@/components/querySelect/index'
-import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
+import { objectMerge2, parseTime, pickerOptions2, getSummaries } from '@/utils/index'
 import SearchForm from './components/search'
 import { getToken } from '@/utils/auth'
 import { reportSettleRecordTotal } from '@/api/report/report'
@@ -122,6 +122,7 @@ export default {
   },
   data() {
     return {
+      res: [],
       tablekey: 0,
       setupTableVisible: false,
       thecode: 'FINANCE_FeeAggregation',
@@ -148,10 +149,7 @@ export default {
           prop: 'number',
           textAlign: 'center',
           width: '50',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
+          fixed: true
         },
         {
           label: '费用项目',
@@ -281,12 +279,32 @@ export default {
       const cloneel = document.getElementById('tableClone')
       cloneel.style.top = top + 'px'
     },
-    reportSettleRecordTotal() {
-      this.loading = true
+    fetchData () {
       reportSettleRecordTotal(this.query).then(res => {
-        const data = res
+        if (res) {
+          res.forEach((e, index) => {
+            e.number = index + 1
+          })
+        }
+        this.res = res || []
+        this.setTableView()
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    setTableView() {
+      this.loading = true
+      // reportSettleRecordTotal(this.query).then(res => {
+      //   if (res) {
+      //     res.forEach((e, index) => {
+      //       e.number = index + 1
+      //     })
+      //   }
+        const data = this.res
         const countColVal = []
-        this.dataList = data || []
+        let elDataList = data || []
+        this.dataList = elDataList
         this.loading = false
         const table = document.getElementById('report_settleRecordTotal_table')
 
@@ -327,22 +345,26 @@ export default {
             for (const t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
                 data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
+                elDataList = data
               }
             }
-            td.innerHTML = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+            let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+            td.innerHTML = tdVal
+            elDataList[k][this.columns[j].prop] = tdVal
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
             td.style.padding = '2px 5px'
             td.style.fontSize = '13px'
             td.style.width = (this.columns[j].width || 120) + 'px'
           }
         }
+        this.dataList = elDataList // 遍历完后才设置数据
         // 合计
         for (const t in this.countCol) {
           let data = 0
           const label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < res.length; k++) {
-            if (this.unCountSum.join(',').indexOf(res[k].feeName) === -1) { // 排除不需要合计的费用项-行
-              data += res[k][label[0]] ? Number(res[k][label[0]]) : 0
+          for (let k = 0; k < this.res.length; k++) {
+            if (this.unCountSum.join(',').indexOf(this.res[k].feeName) === -1) { // 排除不需要合计的费用项-行
+              data += this.res[k][label[0]] ? Number(this.res[k][label[0]]) : 0
             }
           }
           if (data || data === 0) {
@@ -389,10 +411,11 @@ export default {
           td.setAttribute('bgcolor', 'gainsboro')
           td.setAttribute('color', 'white')
         }
-      }).catch((err) => {
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
+
+      // }).catch((err) => {
+      //   this.loading = false
+      //   this._handlerCatchMsg(err)
+      // })
     },
     doAction(type) {
       switch (type) {
@@ -417,7 +440,7 @@ export default {
     },
     getSearchParam(obj) {
       this.query = Object.assign({}, obj)
-      this.reportSettleRecordTotal()
+      this.fetchData()
     },
     showSaveBox() {
       clearTimeout(this.tabletimer)
@@ -438,16 +461,28 @@ export default {
           this.visible2 = false
         }, 10000)
       }
-      console.log('setTableWidth', newWidth, oldWidth, column, event, this.columns)
     },
     saveToTableSetup() {
       this.visible2 = false
-
       this.eventBus.$emit('tablesetup.change', this.thecode, this.columns)
     },
     setColumn(obj) { // 重绘表格列表
       this.columns = obj
       this.tablekey = Math.random() // 刷新表格视图
+      this.setTableView()
+    },
+    getSummary(param) {
+      const { columns, data } = param
+      const sums = []
+      sums[0] = '合计'
+      columns.forEach((column, index) => {
+        for (let i in this.countColVal) {
+          if (column.property === i) {
+            sums[index] = this.countColVal[i] + ''
+          }
+        }
+      })
+      return sums
     }
   }
 }
@@ -473,6 +508,12 @@ export default {
   }
   .tab_report {
     height: 100%;
+    .el-table thead.is-group th {
+      background: #666;
+    }
+    .el-table th .cell {
+      color: #fff;
+    }
   }
 }
 

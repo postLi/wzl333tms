@@ -7,33 +7,35 @@
       <div class="btns_box">
         <el-button type="primary" v-has:REPORT_PRINT_5 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
-      </div>
-      <div class="tab_report">
-        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="right-end" width="160" trigger="manual" v-model="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
-            <template v-for="column in columns">
-              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
-              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
-                <template slot-scope="scope">
-                  <span v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-          </el-table>
+          <el-button slot="reference" type="text"></el-button>
         </el-popover>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+      </div>
+      <div class="tab_report">
+        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+          <template v-for="column in columns">
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
+              <template slot-scope="scope">
+                <span v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
       </div>
       <!-- <h2>收入统计</h2> -->
       <div class="info_tab_report_incomeTotal" style="display: none;" id="report_incomeTotal">
         <table id="report_incomeTotal_table"></table>
       </div>
     </div>
+    <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -43,9 +45,11 @@ import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
 import { reportIncomeTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm
+    SearchForm,
+    TableSetup
   },
   data() {
     return {
@@ -111,21 +115,11 @@ export default {
       'otherinfo'
     ])
   },
-  mounted() {
-   // 针对前端写的表格配置数据也进行简单的排序处理
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-        let str = ''
-        this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');" + '\n'
-        })
-        console.log(str)
-      }
-  },
   methods: {
     report() {
       this.loading = true
       reportIncomeTotal(this.query).then(res => {
+
         let data = res
         this.dataList = []
         this.dataList.push(res)
@@ -255,11 +249,17 @@ export default {
     width: 100%;
     height: 100%;
     box-shadow: 1px 1px 10px #bbb;
-    overflow: hidden;
-    // scrolling: no;
+    overflow: hidden; // scrolling: no;
   }
   .tab_report {
     height: 100%;
+    .el-table thead th,
+    .el-table thead tr {
+      background: #666;
+    }
+    .el-table th .cell {
+      color: #fff;
+    }
   }
 }
 

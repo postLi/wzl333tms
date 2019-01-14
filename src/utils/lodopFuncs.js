@@ -151,7 +151,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -180,7 +180,6 @@
      }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
      LODOP.SET_LICENSES('', '917C869B415ADA72B3A20365731AF08D', 'C94CEE276DB2187AE6B65D56B3FC2848', '')
-     console.warn('LODOP::', JSON.stringify(LODOP))
      // ===========================================================
      return LODOP
    } catch (err) {
@@ -389,6 +388,7 @@
      LODOP = getLodop()
      let str = document.getElementById(tableId).innerHTML
      str = str.replace(/(bgcolor="[^"]*"|color="white")/g, '')
+     console.log('PrintInSamplePage', str)
 
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);

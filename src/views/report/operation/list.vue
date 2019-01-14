@@ -7,17 +7,20 @@
       <div class="btns_box">
         <el-button type="primary" v-has:REPORT_PRINT_4 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
-      </div>
-      <div class="tab_report">
-        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+         <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="right-end" width="160" trigger="manual" v-model="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+          <el-button slot="reference" type="text"></el-button>
+        </el-popover>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+      </div>
+      <div class="tab_report">
+       
+          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
             <template v-for="column in columns">
               <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
               <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
@@ -27,13 +30,13 @@
               </el-table-column>
             </template>
           </el-table>
-        </el-popover>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" style="display: none;" class="info_tab_report_operation" id="report_operation">
         <table id="report_operation_table"></table>
       </div>
     </div>
+    <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false"  @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -43,9 +46,11 @@ import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
 import { reportOperation } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm
+    SearchForm,
+    TableSetup
   },
   data() {
     return {
@@ -108,15 +113,6 @@ export default {
   },
   mounted() {
     this.getScrollWidth()
-   // 针对前端写的表格配置数据也进行简单的排序处理
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-        let str = ''
-        this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');" + '\n'
-        })
-        console.log(str)
-      }
   },
   methods: {
     getScrollWidth() {
@@ -131,8 +127,10 @@ export default {
     report() {
       this.loading = true
       reportOperation(this.query).then(res => {
+        
         let data = res
-        this.dataList = res || []
+        let elDataList = data || []
+        this.dataList = elDataList
         let countColVal = []
         this.loading = false
         const div = document.getElementById('report_operation')
@@ -190,15 +188,19 @@ export default {
             for (let t in this.countCol) { // 保留两位小数
               if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
                 data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
+                elDataList = data
               }
             }
-            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+            let tdVal = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+            td.innerHTML = tdVal
+            elDataList[k][this.columns[j].prop] = tdVal
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
             td.style.padding = '2px 5px'
             td.style.fontSize = '13px'
             td.style.width = (this.columns[j].width || 120) + 'px'
           }
         }
+        this.dataList = elDataList // 遍历完后才设置数据
       }).catch((err)=>{
         this.loading = false
         this._handlerCatchMsg(err)
@@ -293,6 +295,12 @@ export default {
   }
   .tab_report {
     height: 100%;
+    .el-table thead th, .el-table thead tr {
+      background: #666;
+    }
+    .el-table th .cell {
+      color: #fff;
+    }
   }
 }
 
