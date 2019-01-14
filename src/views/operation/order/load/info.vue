@@ -1455,7 +1455,7 @@ export default {
               padding-right: 15px;
             }
             .el-select:last-child{
-              .el-input__suffix{
+              .el-icon-arrow-up{
                 display: none;
               }
             }

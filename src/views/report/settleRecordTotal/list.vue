@@ -7,18 +7,45 @@
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" v-has:REPORT_PRINT_1 @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
-        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+        <el-button @click="setupTableVisible =true"></el-button>
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button> -->
+        <!-- <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
+      </div>
+      <div class="tab_report">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+            <template v-for="column in columns">
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope && !column.type"></el-table-column>
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="column.scope">
+                <template slot-scope="scope">
+                  <span v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+            <el-table-column label="应收汇总">
+              <el-table-column show-overflow-tooltip v-for="column in columns" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 1">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column label="应付汇总">
+              <el-table-column show-overflow-tooltip v-for="column in columns" :prop="column.prop" :label="column.label" :fixed="column.fixed" :width="column.width" v-if="column.type === 2">
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </el-popover>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
+      <div @scroll="handleBottom" style="display: none;" class="info_tab_report_settleRecord" id="report_settleRecordTotal">
         <div class="dragger-line"></div>
         <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
               <th rowspan="2" bgcolor="dimGray" width="50px">
                 <font color="white" size="3">序号</font>
-                <!-- <div class="split-trigger"></div> -->
               </th>
               <th rowspan="2" bgcolor="dimGray" width="100px">
                 <font color="white" size="2">费用项目</font>
@@ -72,6 +99,7 @@
         </table>
       </div>
     </div>
+     <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false"  @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -84,17 +112,24 @@ import SearchForm from './components/search'
 import { getToken } from '@/utils/auth'
 import { reportSettleRecordTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
     SelectTree,
     querySelect,
-    SearchForm
+    SearchForm,
+    TableSetup
   },
   data() {
     return {
+      tablekey: 0,
+      setupTableVisible: false,
+      thecode: 'FINANCE_FeeAggregation',
+      visible2: false,
       loading: true,
       chartIframe: '',
       hideiframe: 'hide',
+      dataList: [],
       query: {
         typeIds: ''
         // currentPage: 1,
@@ -109,65 +144,77 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-        label: '序号',
-        prop: 'id',
-        textAlign: 'center',
-        width: '50'
-      },
-      {
-        label: '费用项目',
-        prop: 'feeName',
-        textAlign: 'center',
-        width: '100'
-      },
-      {
-        label: '应收合计',
-        prop: 'totalreceivableFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '已收',
-        prop: 'receivableFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '未收',
-        prop: 'receivableUnpaidFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '数量',
-        prop: 'receivableCount',
-        textAlign: 'center',
-        width: '70'
-      },
-      {
-        label: '应付合计',
-        prop: 'totalpayableFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '已付',
-        prop: 'payableFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '未付',
-        prop: 'payableUnpaidFee',
-        textAlign: 'right',
-        width: '100'
-      },
-      {
-        label: '数量',
-        prop: 'payableCount',
-        textAlign: 'center',
-        width: '70'
-      }
+          label: '序号',
+          prop: 'number',
+          textAlign: 'center',
+          width: '50',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        },
+        {
+          label: '费用项目',
+          prop: 'feeName',
+          textAlign: 'center',
+          // width: '100'
+        },
+        {
+          label: '应收合计',
+          prop: 'totalreceivableFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 1
+        },
+        {
+          label: '已收',
+          prop: 'receivableFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 1
+        },
+        {
+          label: '未收',
+          prop: 'receivableUnpaidFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 1
+        },
+        {
+          label: '数量',
+          prop: 'receivableCount',
+          textAlign: 'center',
+          // width: '70',
+          type: 1
+        },
+        {
+          label: '应付合计',
+          prop: 'totalpayableFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 2
+        },
+        {
+          label: '已付',
+          prop: 'payableFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 2
+        },
+        {
+          label: '未付',
+          prop: 'payableUnpaidFee',
+          textAlign: 'right',
+          // width: '100',
+          type: 2
+        },
+        {
+          label: '数量',
+          prop: 'payableCount',
+          textAlign: 'center',
+          // width: '70',
+          type: 2
+        }
       ],
       countCol: [ // 需要合计的-列
         'totalreceivableFee',
@@ -239,6 +286,7 @@ export default {
       reportSettleRecordTotal(this.query).then(res => {
         const data = res
         const countColVal = []
+        this.dataList = data || []
         this.loading = false
         const table = document.getElementById('report_settleRecordTotal_table')
 
@@ -262,14 +310,13 @@ export default {
         table.setAttribute('border', '1')
         table.setAttribute('font', '12px')
 
-         // 固定表头
+        // 固定表头
         const div = document.getElementById('report_settleRecordTotal')
         const tableClone = table.cloneNode(true)
         tableClone.setAttribute('id', 'tableClone')
         tableClone.setAttribute('refs', 'tableClone')
         tableClone.className = 'tableCloneHead'
 
-        console.log('tableClone', tableClone)
         div.appendChild(tableClone)
 
         for (let k = 0; k < data.length; k++) {
@@ -282,7 +329,7 @@ export default {
                 data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
               }
             }
-            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+            td.innerHTML = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
             td.style.textAlign = this.columns[j].textAlign // 设置居中方式
             td.style.padding = '2px 5px'
             td.style.fontSize = '13px'
@@ -371,6 +418,36 @@ export default {
     getSearchParam(obj) {
       this.query = Object.assign({}, obj)
       this.reportSettleRecordTotal()
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      const find = this.columns.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth + ''
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+      console.log('setTableWidth', newWidth, oldWidth, column, event, this.columns)
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.columns)
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.columns = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
@@ -393,6 +470,9 @@ export default {
   }
   .tab_info {
     transform: translate(0, 0);
+  }
+  .tab_report {
+    height: 100%;
   }
 }
 
@@ -417,9 +497,7 @@ export default {
     top: 0;
     left: 0;
     z-index: 2;
-    th {
-      
-    }
+    th {}
   }
 
 
@@ -432,7 +510,7 @@ export default {
       background-color: #FFF;
       transition: 0.5s;
     }
-    
+
     tbody tr:hover {
       background-color: #ccc;
       transition: 0.3s;
@@ -447,7 +525,7 @@ export default {
       font-size: 13px;
       td {
         font-size: 13px;
-         word-break: break-all;
+        word-break: break-all;
       }
     }
     tfoot {

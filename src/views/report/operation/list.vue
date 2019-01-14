@@ -10,8 +10,27 @@
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
+      <div class="tab_report">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+            <template v-for="column in columns">
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
+                <template slot-scope="scope">
+                  <span v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table>
+        </el-popover>
+      </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" class="info_tab_report_operation" id="report_operation">
+      <div @scroll="handleBottom" style="display: none;" class="info_tab_report_operation" id="report_operation">
         <table id="report_operation_table"></table>
       </div>
     </div>
@@ -30,6 +49,11 @@ export default {
   },
   data() {
     return {
+      tablekey: 0,
+      dataList: [],
+      setupTableVisible: false,
+      thecode: 'FINANCE_findOperationReport',
+      visible2: false,
       loading: true,
       chartIframe: '',
       hideiframe: 'hide',
@@ -84,6 +108,15 @@ export default {
   },
   mounted() {
     this.getScrollWidth()
+   // 针对前端写的表格配置数据也进行简单的排序处理
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
+        let str = ''
+        this.columns.forEach(e => {
+          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '');" + '\n'
+        })
+        console.log(str)
+      }
   },
   methods: {
     getScrollWidth() {
@@ -96,10 +129,10 @@ export default {
       this.scrollwidth = noScroll - scroll
     },
     report() {
-      console.log('sdfsdf2347823748', this.query)
       this.loading = true
       reportOperation(this.query).then(res => {
         let data = res
+        this.dataList = res || []
         let countColVal = []
         this.loading = false
         const div = document.getElementById('report_operation')
@@ -147,7 +180,6 @@ export default {
         tableClone.setAttribute('id', 'tableClone')
         tableClone.setAttribute('refs', 'tableClone')
         tableClone.className = 'tableCloneHead'
-        console.log('tableClone', tableClone)
         div.appendChild(tableClone)
 
         for (let k = 0; k < data.length; k++) { // 填充内容数据
@@ -209,6 +241,36 @@ export default {
       }
       const cloneel = document.getElementById('tableClone')
       cloneel.style.top = top + 'px'
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      const find = this.columns.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth + ''
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+      console.log('setTableWidth', newWidth, oldWidth, column, event, this.columns)
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.columns)
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.columns = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
@@ -228,7 +290,9 @@ export default {
     height: 100%;
     box-shadow: 1px 1px 10px #bbb;
     overflow: hidden;
-    scrolling: no;
+  }
+  .tab_report {
+    height: 100%;
   }
 }
 

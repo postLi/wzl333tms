@@ -41,7 +41,7 @@
         </el-form>
         <div class="discharge-table">
           <div class="btns_box">
-            <el-button :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('discharge')" v-loading="loading">卸货</el-button>
+            <el-button :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('discharge')" v-loading="loading" v-has:GX_UNLOAD>卸货</el-button>
             <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" trigger="manual" width="160" :value="visible2">
               <p>表格宽度修改了，是否要保存？</p>
               <div style="text-align: right; margin: 0">
