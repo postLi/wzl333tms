@@ -11,7 +11,7 @@
         <SelectType v-model="searchForm.pickupStatus" type="pickup_status" />
       </el-form-item>
       <el-form-item label="提货批次">
-        <el-input v-numberOnly placeholder="" maxlength="15" v-model="searchForm.pickupBatchNumber" clearable>
+        <el-input v-numberOnly placeholder="" maxlength="15" v-model="searchForm.pickupBatchNumber" :key="formKey" clearable @clear="clearFormItem('pickupBatchNumber')">
         </el-input>
       </el-form-item>
       <el-form-item label="车牌号">
@@ -75,6 +75,7 @@ export default {
     }
 
     return {
+      formKey: 0,
       searchCreatTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
       searchForm: {
         pickupStatus: 235,
@@ -108,6 +109,10 @@ export default {
     this.onSubmit()
   },
   methods: {
+    clearFormItem (type) {
+      this.searchForm[type] = ''
+      this.formKey = new Date().getTime()
+    },
     getOrgid(id) {
       // this.searchForm.orgid = id
     },

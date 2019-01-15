@@ -75,8 +75,10 @@ export default {
       }
     }
   },
+  mounted () {
+    this.onSubmit()
+  },
   methods: {
-    getcity() {},
     onSubmit() {
       // if (this.searchForm.carrierName) {
       //   this.searchForm.carrierName = this.searchForm.carrierName.carrierName

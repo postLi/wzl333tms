@@ -162,7 +162,7 @@ export default {
         },
         {
           label: '实际短驳时间',
-          prop: 'departureTime',
+          prop: 'actualSendtime',
           width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`

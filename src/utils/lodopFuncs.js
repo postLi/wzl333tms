@@ -299,7 +299,7 @@
 
        console.log('print obj:', obj)
        const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
-       console.log('tableId.innerHTML:', tableId.innerHTML)
+       // console.log('tableId.innerHTML:', tableId.innerHTML)
        LODOP = getLodop()
        // PRINT_INITA(Top,Left,Width,Height,strPrintName)
 

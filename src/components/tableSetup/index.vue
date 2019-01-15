@@ -254,7 +254,7 @@ export default {
       //   console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
       //   let str = ''
       //   this.columns.forEach(e => {
-      //     str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
+      //     str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
       //   })
       //   console.log(str)
       // }

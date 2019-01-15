@@ -673,7 +673,7 @@ export default {
               this._handlerCatchMsg(err)
             })
           } else {
-            this.$message.warning('回单已接收不能取消~')
+            this.$message.warning('回单未寄出不可取消~')
           }
 
           break

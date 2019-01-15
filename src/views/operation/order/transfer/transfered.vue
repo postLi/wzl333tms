@@ -38,6 +38,7 @@
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               show-overflow-tooltip
               :label="column.label"
               :prop="column.prop"
               v-if="!column.slot"
@@ -48,6 +49,7 @@
               :fixed="column.fixed"
               sortable
               :label="column.label"
+               show-overflow-tooltip
               v-else
               :width="column.width">
               <template slot-scope="scope" v-html="true">

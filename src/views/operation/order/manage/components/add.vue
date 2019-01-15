@@ -22,7 +22,7 @@
             </li>
             <li>
               <el-form-item label="联系号码:" prop="customSend.customerMobile">
-                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" :maxlength="20"
+                <querySelect search="customerMobile" type="sender" valuekey="customerMobile" :maxlength="11"
                              v-model="form.customSend.customerMobile" @change="setSender" :disabled="isDbclick"/>
               </el-form-item>
             </li>

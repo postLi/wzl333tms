@@ -707,18 +707,22 @@ export default {
       })
     },
     isWareStatus(index, row) {
-      if (!this.isNeedArrival && row.warehouStatus === 1) {
+      if (this.isEditActual) { // true-发车
         return true
-      }
-      if (row.warehouStatus === 1) {
-        return true
+      } else { // fase-到车
+        if (!this.isNeedArrival && row.warehouStatus === 1) {
+          return true
+        }
+        if (row.warehouStatus === 1) {
+          return true
+        }
       }
     },
     setColumn(obj) { // 打开表格设置
       if (this.isEditActual) {
-        this.tableColumnDeiver = obj
+        this.tableColumnDeiver = obj // 发车
       } else {
-        this.tableColumnArrival = obj
+        this.tableColumnArrival = obj // 到车
       }
       this.setTableColumn()
       this.tablekey = Math.random()
