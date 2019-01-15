@@ -368,7 +368,7 @@
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
                     <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="sendContract.remark" :disabled="!editFn"></el-input>
+                      <el-input type="textarea" size="mini" v-model="sendContract.aboutLocal" :disabled="!editFn"></el-input>
                     </el-form-item>
                     <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
                     <p class="p_about">附：驾驶员、车辆登记</p>
@@ -793,7 +793,7 @@ export default {
         contractName: item.contractName,
         contractNo: item.contractNo,
         carrier: item.carrier,
-        remark: item.remark
+        aboutLocal: item.aboutLocal
       }
     },
     fetchGetLookContract() {
@@ -1065,7 +1065,7 @@ export default {
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
-      formModel.remark = this.sendContract.remark
+      formModel.remark = this.sendContract.aboutLocal
       for (const item in formModel) {
         str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }
