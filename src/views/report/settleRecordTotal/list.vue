@@ -44,10 +44,52 @@
         <table id="report_settleRecordTotal_table" class="report_settleRecordTotal_table" border="1px" style="border-collapse: collapse;">
           <thead border="1">
             <tr height="32px">
+              <th rowspan="2" bgcolor="dimGray">
+                <font color="white" size="3">序号</font>
+              </th>
+              <th rowspan="2" bgcolor="dimGray">
+                <font color="white" size="2">费用项目</font>
+              </th>
+              <th colspan="4" bgcolor="dimGray">
+                <font color="white" size="3">应收汇总</font>
+              </th>
+              <th colspan="4" bgcolor="dimGray">
+                <font color="white" size="3">应付汇总</font>
+              </th>
+            </tr>
+            <tr height="32px">
+              <th bgcolor="dimGray">
+                <font color="white" size="2">应收合计</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">已收</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">未收</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">数量</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">应付合计</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">已付</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">未付</font>
+              </th>
+              <th bgcolor="dimGray">
+                <font color="white" size="2">数量</font>
+              </th>
+            </tr>
+          </thead>
+          <!-- <thead border="1">
+            <tr height="32px">
               <th rowspan="2" bgcolor="dimGray" width="50px">
                 <font color="white" size="3">序号</font>
               </th>
-              <th rowspan="2" bgcolor="dimGray" width="100px">
+              <th rowspan="2" bgcolor="dimGray">
                 <font color="white" size="2">费用项目</font>
               </th>
               <th colspan="4" bgcolor="dimGray">
@@ -83,10 +125,10 @@
                 <font color="white" size="2">数量</font>
               </th>
             </tr>
-          </thead>
+          </thead> -->
         </table>
         <table ref="footTotalFee" class="footTotalFee_settleRecordTotal">
-          <colgroup width="50px"></colgroup>
+          <!--   <colgroup width="50px"></colgroup>
           <colgroup width="100px"></colgroup>
           <colgroup width="100px"></colgroup>
           <colgroup width="100px"></colgroup>
@@ -95,7 +137,7 @@
           <colgroup width="100px"></colgroup>
           <colgroup width="100px"></colgroup>
           <colgroup width="100px"></colgroup>
-          <colgroup width="70px"></colgroup>
+          <colgroup width="70px"></colgroup> -->
         </table>
       </div>
     </div>
@@ -279,7 +321,7 @@ export default {
       const cloneel = document.getElementById('tableClone')
       cloneel.style.top = top + 'px'
     },
-    fetchData () {
+    fetchData() {
       reportSettleRecordTotal(this.query).then(res => {
         if (res) {
           res.forEach((e, index) => {
@@ -301,116 +343,119 @@ export default {
       //       e.number = index + 1
       //     })
       //   }
-        const data = this.res
-        const countColVal = []
-        let elDataList = data || []
-        this.dataList = elDataList
-        this.loading = false
-        const table = document.getElementById('report_settleRecordTotal_table')
+      const data = this.res
+      const countColVal = []
+      let elDataList = data || []
+      this.dataList = elDataList
+      this.loading = false
+      const table = document.getElementById('report_settleRecordTotal_table')
 
-        if (!table) {
-          return
-        }
-        const tbodyLen = table.getElementsByTagName('tbody')
-        const tfootLen = table.getElementsByTagName('tfoot')
-        if (tbodyLen.length > 0) {
-          table.removeChild(tbodyLen[0])
-          table.removeChild(tfootLen[0])
-        }
+      if (!table) {
+        return
+      }
+      const tbodyLen = table.getElementsByTagName('tbody')
+      const tfootLen = table.getElementsByTagName('tfoot')
+      if (tbodyLen.length > 0) {
+        table.removeChild(tbodyLen[0])
+        table.removeChild(tfootLen[0])
+      }
 
-        const tbody = document.createElement('tbody')
-        const tfoot = document.createElement('tfoot')
+      const tbody = document.createElement('tbody')
+      const tfoot = document.createElement('tfoot')
 
-        table.appendChild(tbody)
-        table.appendChild(tfoot)
-        table.style.borderCollapse = 'collapse'
-        table.style.border = '1px solid #d0d7e5'
-        table.setAttribute('border', '1')
-        table.setAttribute('font', '12px')
+      table.appendChild(tbody)
+      table.appendChild(tfoot)
+      table.style.borderCollapse = 'collapse'
+      table.style.border = '1px solid #d0d7e5'
+      table.setAttribute('border', '1')
+      table.setAttribute('font', '12px')
 
-        // 固定表头
-        const div = document.getElementById('report_settleRecordTotal')
-        const tableClone = table.cloneNode(true)
-        tableClone.setAttribute('id', 'tableClone')
-        tableClone.setAttribute('refs', 'tableClone')
-        tableClone.className = 'tableCloneHead'
+      // 固定表头
+      const div = document.getElementById('report_settleRecordTotal')
+      const tableClone = table.cloneNode(true)
+      tableClone.setAttribute('id', 'tableClone')
+      tableClone.setAttribute('refs', 'tableClone')
+      tableClone.className = 'tableCloneHead'
 
-        div.appendChild(tableClone)
+      div.appendChild(tableClone)
 
-        for (let k = 0; k < data.length; k++) {
-          const tbodyTr = tbody.insertRow()
-          for (let j = 0; j < this.columns.length; j++) {
-            const td = tbodyTr.insertCell()
-            // 处理当列没有值、宽度设置等信息时，做默认值处理
-            for (const t in this.countCol) { // 保留两位小数
-              if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
-                elDataList = data
-              }
-            }
-            let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
-            td.innerHTML = tdVal
-            elDataList[k][this.columns[j].prop] = tdVal
-            td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-            td.style.padding = '2px 5px'
-            td.style.fontSize = '13px'
-            td.style.width = (this.columns[j].width || 120) + 'px'
-          }
-        }
-        this.dataList = elDataList // 遍历完后才设置数据
-        // 合计
-        for (const t in this.countCol) {
-          let data = 0
-          const label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < this.res.length; k++) {
-            if (this.unCountSum.join(',').indexOf(this.res[k].feeName) === -1) { // 排除不需要合计的费用项-行
-              data += this.res[k][label[0]] ? Number(this.res[k][label[0]]) : 0
+      for (let k = 0; k < data.length; k++) {
+        const tbodyTr = tbody.insertRow()
+        for (let j = 0; j < this.columns.length; j++) {
+          const td = tbodyTr.insertCell()
+          // 处理当列没有值、宽度设置等信息时，做默认值处理
+          for (const t in this.countCol) { // 保留两位小数
+            if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
+              data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : ''
+              elDataList = data
             }
           }
-          if (data || data === 0) {
-            if (label[1] && label[1] === 'integer') {
-              this.countColVal[label[0]] = data || ''
-            } else {
-              this.countColVal[label[0]] = data ? data.toFixed(2) : ''
-            }
-          }
-        }
-        // 生成底部合计行
-        const tfootTr = tfoot.insertRow()
-        for (const t in this.columns) {
-          const td = tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
+          let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+          td.innerHTML = tdVal
+          elDataList[k][this.columns[j].prop] = tdVal
+          td.style.textAlign = this.columns[j].textAlign // 设置居中方式
           td.style.padding = '2px 5px'
           td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
+          td.style.width = (this.columns[j].width || 120) + 'px'
+          td.style.wordBreak = 'break-all'
         }
+      }
+      this.dataList = elDataList // 遍历完后才设置数据
+      // 合计
+      for (const t in this.countCol) {
+        let data = 0
+        const label = this.countCol[t].split('|') // 取字段名
+        for (let k = 0; k < this.res.length; k++) {
+          if (this.unCountSum.join(',').indexOf(this.res[k].feeName) === -1) { // 排除不需要合计的费用项-行
+            data += this.res[k][label[0]] ? Number(this.res[k][label[0]]) : 0
+          }
+        }
+        if (data || data === 0) {
+          if (label[1] && label[1] === 'integer') {
+            this.countColVal[label[0]] = data || ''
+          } else {
+            this.countColVal[label[0]] = data ? data.toFixed(2) : ''
+          }
+        }
+      }
+      // 生成底部合计行
+      const tfootTr = tfoot.insertRow()
+      for (const t in this.columns) {
+        const td = tfootTr.insertCell()
+        td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+        td.style.textAlign = this.columns[t].textAlign
+        td.style.padding = '2px 5px'
+        td.style.fontSize = '13px'
+        td.setAttribute('bgcolor', 'gainsboro')
+        td.setAttribute('color', 'white')
+        td.style.wordBreak = 'break-all'
+      }
 
-        // 复制-生成多一个浮动的底部合计行
-        const totalTable = document.getElementsByClassName('footTotalFee_settleRecordTotal')[0]
-        const total_tfootLen = totalTable.getElementsByTagName('tfoot')
-        if (total_tfootLen.length > 0) {
-          totalTable.removeChild(total_tfootLen[0])
-        }
-        const total_tfoot = document.createElement('tfoot')
+      // 复制-生成多一个浮动的底部合计行
+      const totalTable = document.getElementsByClassName('footTotalFee_settleRecordTotal')[0]
+      const total_tfootLen = totalTable.getElementsByTagName('tfoot')
+      if (total_tfootLen.length > 0) {
+        totalTable.removeChild(total_tfootLen[0])
+      }
+      const total_tfoot = document.createElement('tfoot')
 
-        totalTable.appendChild(total_tfoot)
-        totalTable.style.borderCollapse = 'collapse'
-        totalTable.style.border = '1px solid #d0d7e5'
-        totalTable.setAttribute('border', '1')
-        totalTable.setAttribute('font', '12px')
-        // 生成底部合计行
-        const total_tfootTr = total_tfoot.insertRow()
-        for (const t in this.columns) {
-          const td = total_tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
-        }
+      totalTable.appendChild(total_tfoot)
+      totalTable.style.borderCollapse = 'collapse'
+      totalTable.style.border = '1px solid #d0d7e5'
+      totalTable.setAttribute('border', '1')
+      totalTable.setAttribute('font', '12px')
+      // 生成底部合计行
+      const total_tfootTr = total_tfoot.insertRow()
+      for (const t in this.columns) {
+        const td = total_tfootTr.insertCell()
+        td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+        td.style.textAlign = this.columns[t].textAlign
+        td.style.padding = '2px 5px'
+        td.style.fontSize = '13px'
+        td.setAttribute('bgcolor', 'gainsboro')
+        td.setAttribute('color', 'white')
+        td.style.wordBreak = 'break-all'
+      }
 
       // }).catch((err) => {
       //   this.loading = false
@@ -418,6 +463,7 @@ export default {
       // })
     },
     doAction(type) {
+      this.setTableView()
       switch (type) {
         case 'print':
           PrintInSamplePage({

@@ -388,7 +388,6 @@
      LODOP = getLodop()
      let str = document.getElementById(tableId).innerHTML
      str = str.replace(/(bgcolor="[^"]*"|color="white")/g, '')
-     console.log('PrintInSamplePage', str)
 
      LODOP.PRINT_INIT('订货单')
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
@@ -1385,8 +1384,7 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      const tableId = obj.id // 重新创建打印视图table、
      LODOP = getLodop()
-
-     LODOP.PRINT_INIT('数据表格')
+     LODOP.PRINT_INITA('0%', '0%', '100%', '100%', '数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML.replace(/(bgcolor="[^"]*"|color="white")/g, ''))
      // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
@@ -1397,7 +1395,7 @@
      LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
      // LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
      if (obj.name) {
-       LODOP.SAVE_TO_FILE(obj.name + '.xls')
+       LODOP.SAVE_TO_FILE(obj.name + '_' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}') + '.xls')
      } else {
        LODOP.SAVE_TO_FILE('新文件名.xls')
      }

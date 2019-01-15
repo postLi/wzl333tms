@@ -37,7 +37,7 @@
         <table id="report_turnoverTotal_table" class="report_turnoverTotal_table">
         </table>
         <table ref="footTotalFee" class="footTotalFee_turnoverTotal">
-          <colgroup width="65px"></colgroup>
+         <!--  <colgroup width="65px"></colgroup>
           <colgroup width="110px"></colgroup>
           <colgroup width="110px"></colgroup>
           <colgroup width="110px"></colgroup>
@@ -45,7 +45,7 @@
           <colgroup width="110px"></colgroup>
           <colgroup width="110px"></colgroup>
           <colgroup width="110px"></colgroup>
-          <colgroup width="110px"></colgroup>
+          <colgroup width="110px"></colgroup> -->
         </table>
       </div>
     </div>
@@ -67,6 +67,7 @@ export default {
   },
   data() {
     return {
+      res: {},
       tableTitle: '',
       tablekey: 0,
       dataList: [],
@@ -177,165 +178,174 @@ export default {
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
     },
-    report() {
-      this.loading = true
+    fetchData() {
       reportTurnoverTotal(this.query).then(res => {
         if (res && res.list) {
           res.list.forEach((e, index) => {
             e.number = index + 1
           })
         }
-        let data = res.list
-        let elDataList = data || []
-        this.dataList = elDataList
-        const countColVal = []
-        this.loading = false
-        const div = document.getElementById('report_turnoverTotal')
-        const table = document.getElementById('report_turnoverTotal_table')
-        if (!table) {
-          return
-        }
-        const theadLen = table.getElementsByTagName('thead')
-        const tbodyLen = table.getElementsByTagName('tbody')
-        const tfootLen = table.getElementsByTagName('tfoot')
-        if (theadLen.length > 0) {
-          table.removeChild(theadLen[0])
-          table.removeChild(tbodyLen[0])
-          table.removeChild(tfootLen[0])
-        }
-        const thead = document.createElement('thead')
-        const tbody = document.createElement('tbody')
-        const tfoot = document.createElement('tfoot')
-        const theadTr = document.createElement('tr')
-
-        // 添加表头
-        const theadTrTitle = document.createElement('tr')
-        const thTitle = document.createElement('th')
-        const fontTitle = document.createElement('font')
-        let thetitle = '营业额汇总表'
-        thTitle.setAttribute('colspan', this.columns.length)
-        thTitle.setAttribute('height', '32px')
-        thTitle.setAttribute('bgcolor', 'gray')
-        fontTitle.setAttribute('color', 'white')
-        if (this.timeobj.createTimeStart) {
-          thetitle = parseTime(this.timeobj.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.timeobj.createTimeEnd, '{y}年{m}月{d}日') + thetitle
-        }
-        fontTitle.innerHTML = thetitle
-
-        thTitle.appendChild(fontTitle)
-        theadTrTitle.appendChild(thTitle)
-        thead.appendChild(theadTrTitle)
-
-        table.appendChild(thead)
-        table.appendChild(tbody)
-        table.appendChild(tfoot)
-        thead.appendChild(theadTr)
-        table.style.borderCollapse = 'collapse'
-        table.style.border = '1px solid #d0d7e5'
-        table.setAttribute('border', '1')
-        table.setAttribute('font', '12px')
-        table.setAttribute('width', '780px')
-
-        theadTr.setAttribute('height', '32px')
-        theadTr.setAttribute('width', '100%')
-
-        for (let i = 0; i < this.columns.length; i++) { // 设置表头
-          const th = document.createElement('th')
-          const font = document.createElement('font')
-          font.innerHTML = this.columns[i].label
-          font.setAttribute('size', 2)
-          font.setAttribute('color', 'white')
-          th.setAttribute('border', 1)
-          th.setAttribute('bgcolor', 'dimGray')
-          th.appendChild(font)
-          theadTr.appendChild(th)
-        }
-        // 固定表头
-        const tableClone = table.cloneNode(true)
-        tableClone.setAttribute('id', 'tableClone')
-        tableClone.setAttribute('refs', 'tableClone')
-        tableClone.className = 'tableCloneHead'
-        div.appendChild(tableClone)
-
-        for (let k = 0; k < data.length; k++) { // 填充内容数据
-          const tbodyTr = tbody.insertRow()
-          for (let j = 0; j < this.columns.length; j++) {
-            const td = tbodyTr.insertCell()
-            // 处理当列没有值、宽度设置等信息时，做默认值处理
-            for (const t in this.countCol) { // 保留两位小数
-              if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
-                elDataList = data
-              }
-            }
-            let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
-            td.innerHTML = tdVal
-             elDataList[k][this.columns[j].prop] = tdVal
-            td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-            td.style.padding = '2px 5px'
-            td.style.fontSize = '13px'
-            td.style.width = (this.columns[j].width || 120) + 'px'
-          }
-        }
-        this.dataList = elDataList // 遍历完后才设置数据
-        // 合计
-        const dataList = res.list
-        for (const t in this.countCol) {
-          let data = 0
-          const label = this.countCol[t].split('|') // 取字段名
-          for (let k = 0; k < dataList.length; k++) {
-            data += dataList[k][label[0]] ? Number(dataList[k][label[0]]) : 0
-          }
-          if (data || data === 0) {
-            if (label[1] && label[1] === 'integer') {
-              this.countColVal[label[0]] = data || '0.00'
-            } else {
-              this.countColVal[label[0]] = data ? data.toFixed(2) : '0.00'
-            }
-          }
-        }
-        // 生成底部合计行
-        const tfootTr = tfoot.insertRow()
-        for (const t in this.columns) {
-          const td = tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
-        }
-
-        // 复制-生成多一个浮动的底部合计行
-        const totalTable = document.getElementsByClassName('footTotalFee_turnoverTotal')[0]
-        const total_tfootLen = totalTable.getElementsByTagName('tfoot')
-        if (total_tfootLen.length > 0) {
-          totalTable.removeChild(total_tfootLen[0])
-        }
-        const total_tfoot = document.createElement('tfoot')
-
-        totalTable.appendChild(total_tfoot)
-        totalTable.style.borderCollapse = 'collapse'
-        totalTable.style.border = '1px solid #d0d7e5'
-        totalTable.setAttribute('border', '1')
-        totalTable.setAttribute('font', '12px')
-        // 生成底部合计行
-        const total_tfootTr = total_tfoot.insertRow()
-        for (const t in this.columns) {
-          const td = total_tfootTr.insertCell()
-          td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
-          td.style.textAlign = this.columns[t].textAlign
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-          td.setAttribute('bgcolor', 'gainsboro')
-          td.setAttribute('color', 'white')
-        }
+        this.res = res || {list: []}
+        this.report()
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
+    report() {
+      this.loading = true
+      let data = this.res.list
+      let elDataList = data || []
+      this.dataList = elDataList
+      const countColVal = []
+      this.loading = false
+      const div = document.getElementById('report_turnoverTotal')
+      const table = document.getElementById('report_turnoverTotal_table')
+      if (!table) {
+        return
+      }
+      const theadLen = table.getElementsByTagName('thead')
+      const tbodyLen = table.getElementsByTagName('tbody')
+      const tfootLen = table.getElementsByTagName('tfoot')
+      if (theadLen.length > 0) {
+        table.removeChild(theadLen[0])
+        table.removeChild(tbodyLen[0])
+        table.removeChild(tfootLen[0])
+      }
+      const thead = document.createElement('thead')
+      const tbody = document.createElement('tbody')
+      const tfoot = document.createElement('tfoot')
+      const theadTr = document.createElement('tr')
+
+      // 添加表头
+      const theadTrTitle = document.createElement('tr')
+      const thTitle = document.createElement('th')
+      const fontTitle = document.createElement('font')
+      let thetitle = '营业额汇总表'
+      thTitle.setAttribute('colspan', this.columns.length)
+      thTitle.setAttribute('height', '32px')
+      thTitle.setAttribute('bgcolor', 'gray')
+      fontTitle.setAttribute('color', 'white')
+      if (this.timeobj.createTimeStart) {
+        thetitle = parseTime(this.timeobj.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.timeobj.createTimeEnd, '{y}年{m}月{d}日') + thetitle
+      }
+      fontTitle.innerHTML = thetitle
+
+      thTitle.appendChild(fontTitle)
+      theadTrTitle.appendChild(thTitle)
+      thead.appendChild(theadTrTitle)
+
+      table.appendChild(thead)
+      table.appendChild(tbody)
+      table.appendChild(tfoot)
+      thead.appendChild(theadTr)
+      table.style.borderCollapse = 'collapse'
+      table.style.border = '1px solid #d0d7e5'
+      table.setAttribute('border', '1')
+      table.setAttribute('font', '12px')
+      // table.setAttribute('width', '780px')
+
+      theadTr.setAttribute('height', '32px')
+      theadTr.setAttribute('width', '100%')
+
+      for (let i = 0; i < this.columns.length; i++) { // 设置表头
+        const th = document.createElement('th')
+        const font = document.createElement('font')
+        font.innerHTML = this.columns[i].label
+        font.setAttribute('size', 2)
+        font.setAttribute('color', 'white')
+        th.setAttribute('border', 1)
+        th.setAttribute('bgcolor', 'dimGray')
+        th.appendChild(font)
+        theadTr.appendChild(th)
+      }
+      // 固定表头
+      const tableClone = table.cloneNode(true)
+      tableClone.setAttribute('id', 'tableClone')
+      tableClone.setAttribute('refs', 'tableClone')
+      tableClone.className = 'tableCloneHead'
+      div.appendChild(tableClone)
+
+      for (let k = 0; k < data.length; k++) { // 填充内容数据
+        const tbodyTr = tbody.insertRow()
+        for (let j = 0; j < this.columns.length; j++) {
+          const td = tbodyTr.insertCell()
+          // 处理当列没有值、宽度设置等信息时，做默认值处理
+          for (const t in this.countCol) { // 保留两位小数
+            if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
+              data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? Number(data[k][this.columns[j].prop]).toFixed(2) : '0.00'
+              elDataList = data
+            }
+          }
+          let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+          td.innerHTML = tdVal
+          elDataList[k][this.columns[j].prop] = tdVal
+          td.style.textAlign = this.columns[j].textAlign // 设置居中方式
+          td.style.padding = '2px 5px'
+          td.style.fontSize = '13px'
+          td.style.width = (this.columns[j].width || 120) + 'px'
+          td.style.wordBreak = 'break-all'
+        }
+      }
+      this.dataList = elDataList // 遍历完后才设置数据
+      // 合计
+      const dataList = this.res.list
+      for (const t in this.countCol) {
+        let data = 0
+        const label = this.countCol[t].split('|') // 取字段名
+        for (let k = 0; k < dataList.length; k++) {
+          data += dataList[k][label[0]] ? Number(dataList[k][label[0]]) : 0
+        }
+        if (data || data === 0) {
+          if (label[1] && label[1] === 'integer') {
+            this.countColVal[label[0]] = data || '0.00'
+          } else {
+            this.countColVal[label[0]] = data ? data.toFixed(2) : '0.00'
+          }
+        }
+      }
+      // 生成底部合计行
+      const tfootTr = tfoot.insertRow()
+      for (const t in this.columns) {
+        const td = tfootTr.insertCell()
+        td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+        td.style.textAlign = this.columns[t].textAlign
+        td.style.padding = '2px 5px'
+        td.style.fontSize = '13px'
+        td.setAttribute('bgcolor', 'gainsboro')
+        td.setAttribute('color', 'white')
+        td.style.wordBreak = 'break-all'
+      }
+
+      // 复制-生成多一个浮动的底部合计行
+      const totalTable = document.getElementsByClassName('footTotalFee_turnoverTotal')[0]
+      const total_tfootLen = totalTable.getElementsByTagName('tfoot')
+      if (total_tfootLen.length > 0) {
+        totalTable.removeChild(total_tfootLen[0])
+      }
+      const total_tfoot = document.createElement('tfoot')
+
+      totalTable.appendChild(total_tfoot)
+      totalTable.style.borderCollapse = 'collapse'
+      totalTable.style.border = '1px solid #d0d7e5'
+      totalTable.setAttribute('border', '1')
+      totalTable.setAttribute('font', '12px')
+      // 生成底部合计行
+      const total_tfootTr = total_tfoot.insertRow()
+      for (const t in this.columns) {
+        const td = total_tfootTr.insertCell()
+        td.innerHTML = (this.columns[t].label === '序号' ? '合计' : (this.countColVal[this.columns[t].prop] ? this.countColVal[this.columns[t].prop] : '-'))
+        td.style.textAlign = this.columns[t].textAlign
+        td.style.padding = '2px 5px'
+        td.style.fontSize = '13px'
+        td.setAttribute('bgcolor', 'gainsboro')
+        td.setAttribute('color', 'white')
+        td.style.wordBreak = 'break-all'
+      }
+
+    },
     doAction(type) {
+      this.report()
       switch (type) {
         case 'print':
           PrintInSamplePage({
@@ -359,7 +369,7 @@ export default {
     getSearchParam(obj, timeobj) {
       this.query = Object.assign(this.query, obj)
       this.timeobj = timeobj
-      this.report()
+      this.fetchData()
     },
     handleBottom(e) {
       const el = e.target
@@ -417,7 +427,7 @@ export default {
       const sums = []
       sums[0] = '合计'
       columns.forEach((column, index) => {
-        for(let i in this.countColVal) {
+        for (let i in this.countColVal) {
           if (column.property === i) {
             sums[index] = this.countColVal[i] + ''
           }

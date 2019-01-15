@@ -53,6 +53,7 @@ export default {
   },
   data() {
     return {
+      res: {},
       tablekey: 0,
       dataList: [],
       setupTableVisible: false,
@@ -116,68 +117,74 @@ export default {
     ])
   },
   methods: {
-    report() {
-      this.loading = true
+    fetchData() {
       reportIncomeTotal(this.query).then(res => {
-
-        let data = res
-        this.dataList = []
-        this.dataList.push(res)
-        let countColVal = []
-        this.loading = false
-
-        let table = document.getElementById('report_incomeTotal_table')
-        if (!table) {
-          return
-        }
-        let theadLen = table.getElementsByTagName('thead')
-        let tbodyLen = table.getElementsByTagName('tbody')
-        if (theadLen.length > 0) {
-          table.removeChild(theadLen[0])
-          table.removeChild(tbodyLen[0])
-        }
-        let thead = document.createElement('thead')
-        let tbody = document.createElement('tbody')
-        let theadTr = document.createElement('tr')
-
-        table.appendChild(thead)
-        table.appendChild(tbody)
-        thead.appendChild(theadTr)
-        table.style.borderCollapse = 'collapse'
-        table.style.border = '1px solid #d0d7e5';
-        table.setAttribute('border', '1')
-        table.setAttribute('font', '12px')
-        table.setAttribute('width', '780px')
-
-        theadTr.setAttribute('height', '32px')
-        theadTr.setAttribute('width', '100%')
-
-        for (let i = 0; i < this.columns.length; i++) { // 设置表头
-          let th = document.createElement('th')
-          let font = document.createElement('font')
-          font.innerHTML = this.columns[i].label
-          font.setAttribute('size', 2)
-          font.setAttribute('color', 'white')
-          th.setAttribute('border', 1)
-          th.setAttribute('bgcolor', 'dimGray')
-          th.appendChild(font)
-          theadTr.appendChild(th)
-        }
-
-        const tbodyTr = tbody.insertRow()
-        for (let j in this.columns) {
-          const td = tbodyTr.insertCell()
-          td.innerHTML = data[this.columns[j].prop] ? Number(data[this.columns[j].prop]).toFixed(2) : '0.00'
-          td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-          td.style.padding = '2px 5px'
-          td.style.fontSize = '13px'
-        }
+        this.res = res || {}
+        this.report()
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
+    report() {
+      this.loading = true
+      let data = this.res
+      this.dataList = []
+      this.dataList.push(data)
+      let countColVal = []
+      this.loading = false
+      let table = document.getElementById('report_incomeTotal_table')
+      if (!table) {
+        return
+      }
+      let theadLen = table.getElementsByTagName('thead')
+      let tbodyLen = table.getElementsByTagName('tbody')
+      if (theadLen.length > 0) {
+        table.removeChild(theadLen[0])
+        table.removeChild(tbodyLen[0])
+      }
+      let thead = document.createElement('thead')
+      let tbody = document.createElement('tbody')
+      let theadTr = document.createElement('tr')
+
+      table.appendChild(thead)
+      table.appendChild(tbody)
+      thead.appendChild(theadTr)
+      table.style.borderCollapse = 'collapse'
+      table.style.border = '1px solid #d0d7e5';
+      table.setAttribute('border', '1')
+      table.setAttribute('font', '12px')
+      // table.setAttribute('width', '780px')
+
+      theadTr.setAttribute('height', '32px')
+      theadTr.setAttribute('width', '100%')
+
+      for (let i = 0; i < this.columns.length; i++) { // 设置表头
+        let th = document.createElement('th')
+        let font = document.createElement('font')
+        font.innerHTML = this.columns[i].label
+        font.setAttribute('size', 2)
+        font.setAttribute('color', 'white')
+        th.setAttribute('border', 1)
+        th.setAttribute('bgcolor', 'dimGray')
+        th.appendChild(font)
+        theadTr.appendChild(th)
+      }
+
+      const tbodyTr = tbody.insertRow()
+      for (let j in this.columns) {
+        const td = tbodyTr.insertCell()
+        td.innerHTML = data[this.columns[j].prop] ? Number(data[this.columns[j].prop]).toFixed(2) : '0.00'
+        td.style.textAlign = this.columns[j].textAlign // 设置居中方式
+        td.style.padding = '2px 5px'
+        td.style.fontSize = '13px'
+        td.style.wordBreak = 'break-all'
+        td.style.width = (this.columns[j].width || 120) + 'px'
+      }
+
+    },
     doAction(type) {
+      this.report()
       switch (type) {
         case 'print':
           PrintInSamplePage({
@@ -200,7 +207,7 @@ export default {
     },
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
-      this.report()
+      this.fetchData()
     },
     showSaveBox() {
       clearTimeout(this.tabletimer)
