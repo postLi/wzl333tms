@@ -421,7 +421,7 @@
            'engineNum', 'loadAmountall', 'loadWeightall', 'loadVolumeall', 'shipFeeAmount',
            'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage',
            'backpayOilCard', 'carloadInsuranceFee', 'departureTime', 'receivingTime', 'remark',
-           'heading_word_size', 'content_word_size', 'heading_content', '', '',
+           'heading_content',
          ]
          propArr.forEach(el => {
            str += el + '=' + (obj[el] === null ? '' : obj[el]) + '&'
