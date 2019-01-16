@@ -416,13 +416,14 @@ export default {
             this.$set(selectObj, 'checkBillName', contractObj.contractName)
             this.$set(selectObj, 'carrier', contractObj.carrier)
             this.$set(selectObj, 'orgName', contractObj.nomineeCompany)
-            console.log(data, selectObj)
-            let str = '?'
-            for (const item in selectObj) {
-              str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
-            }
-            const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
-            PrintContract(encodeURI(path))
+            selectObj.remark = contractObj.aboutLocal
+            // console.log('数据：',contractObj, selectObj)
+            // let str = '?'
+            // for (const item in selectObj) {
+            //   str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
+            // }
+            // const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
+            PrintContract(selectObj)
           }).catch(err => {
             this._handlerCatchMsg(err)
           })
