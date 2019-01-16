@@ -168,7 +168,6 @@ export default {
       // 传到子组件
     searchForm: {
       handler(cval, oval) {
-        console.log('searchForm:', this.searchObjs, cval, oval)
         this.searchObjs = Object.assign({}, cval)
         this.searchObjs.shipFromOrgid = this.searchForm.orgid
         this.searchObjs.shipStatus = this.searchForm.shipStatus
@@ -197,14 +196,12 @@ export default {
       this.searchForm[key] = value
     },
     validates(key) {
-      this.$set(this.searchForm, key, this.searchForm[key].replace(/[\W]/g, ''))
+      this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d|a-zA-Z|\-]/g, ''))
     },
     onSubmit() {
       const searchObj = objectMerge2({}, this.searchForm)
-
       searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
       searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
-
       this.$emit('change', searchObj)
     },
     clearForm() {

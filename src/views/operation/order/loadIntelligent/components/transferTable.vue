@@ -44,7 +44,7 @@
               {{scope.$index+1}}
             </template>
           </el-table-column>
-          <el-table-column fixed :render-header="setHeaderMinus" width="50">
+          <el-table-column fixed :render-header="setHeaderMinus" width="50" sortable>
             <template slot-scope="scope">
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
@@ -465,6 +465,7 @@ export default {
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
+        animation: 150, //动画参数
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')

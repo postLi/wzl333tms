@@ -1089,7 +1089,7 @@ export default {
         // 导出
         case 'export':
           SaveAsFile({
-            data: this.detailList,
+            data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
             name: '批次详情'
           })
@@ -1097,7 +1097,7 @@ export default {
           // 打印
         case 'printer':
           PrintInFullPage({
-            data: this.detailList,
+            data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
             name: '批次详情',
             appendTop: appendTopStr
@@ -1115,7 +1115,7 @@ export default {
       }
       if (type !== 'sure') {
         // 清除选中状态，避免影响下个操作
-        this.$refs.multipleTable.clearSelection()
+        // this.$refs.multipleTable.clearSelection()
       }
     },
     getActualTime(obj) {

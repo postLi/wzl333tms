@@ -22,6 +22,8 @@
         </el-table-column>
         <el-table-column prop="childShipSn" label="子运单号" width="120" fixed>
         </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
+        </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
@@ -44,8 +46,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="100">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="库存重量" width="100">
@@ -76,6 +77,8 @@
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="120">
+        </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="oddNumbers" sortable label="中转单号" width="120">
           <template slot-scope="scope">
@@ -136,8 +139,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
       </el-table>
