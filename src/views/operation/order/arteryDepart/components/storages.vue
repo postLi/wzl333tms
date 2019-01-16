@@ -1089,14 +1089,9 @@ export default {
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
       formModel.remark = this.sendContract.aboutLocal
-      for (const item in formModel) {
-        str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
-      }
+      
 
-      // JSON.stringify(this.formModel)
-      const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
-
-      PrintContract(encodeURI(path))
+      PrintContract(formModel)
       // console.log(path);
     },
     setColumn(obj) { // 重绘表格列表
@@ -1185,19 +1180,19 @@ export default {
         margin-right: 0;
       }
     }
+    .sortable-ghost.hover-row {
+
+        opacity: .8;
+        color: #fff !important;
+        background: #42b983 !important;
+      }
     .infos_tab {
       width: 100%;
       height: calc(100vh - 570px);
       flex-grow: 1;
       padding: 0 10px;
-      .hover-row {
-        background: rgba(0,0,0,0);
-      }
-      .sortable-ghost {
-        opacity: .8;
-        color: #fff !important;
-        background: #42b983 !important;
-      }
+
+      
       .el-table {
         table {
           th,

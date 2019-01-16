@@ -414,6 +414,24 @@
          LODOP.PRINT_INITA('0', '5mm', '218mm', '280mm', '现金记账凭证【出纳】')
          LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
        } else {
+         let str = '?'
+         let propArr = [
+           'checkBillName', 'contractNo', 'orgName', 'carrier', 'dirverName',
+           'frameNum', 'userName', 'driverCardid', 'dirverMobile', 'truckIdNumber',
+           'engineNum', 'loadAmountall', 'loadWeightall', 'loadVolumeall', 'shipFeeAmount',
+           'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage',
+           'backpayOilCard', 'carloadInsuranceFee', 'departureTime', 'receivingTime', 'remark',
+           'heading_content',
+         ]
+         propArr.forEach(el => {
+           str += el + '=' + (obj[el] === null ? '' : obj[el]) + '&'
+         })
+         /* for (const item in obj) {
+            str += item + '=' + (obj[item] === null ? '' : obj[item]) + '&'
+          }*/
+         // JSON.stringify(this.formModel)
+         obj = encodeURI(window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime())
+
          const objp = {
            w: printObj.paper_width,
            h: printObj.paper_height,
@@ -440,6 +458,7 @@
 
        // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
        console.log(obj)
+       // obj 长度需要小于2000
        LODOP.ADD_PRINT_HTM('1%', '1%', '98%', '98%', 'URL:' + obj)
        // LODOP.ADD_PRINT_HTM("1%", "1%", "98%", "100%", document.getElementById(tableId).innerHTML);
        // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
