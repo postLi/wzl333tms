@@ -25,8 +25,8 @@
                   <el-form-item label="到达网点" v-if="loadTypeId===39" class="formItemTextDanger">
                     <div class="select-network-list">
                       <div class="network-list-node">{{otherinfo.orgName+' -'}}</div>
-                      <draggable v-model="networkList" class="draggable-list">
-                        <SelectTree v-for="(item, index) in networkList" :placeholder="'网点'+(index+1)" :key="index" v-model="item.id" clearable size="mini" :disabledOption="[otherinfo.orgid]" :disabled="isDirectDelivery|| item.id === otherinfo.orgid"></SelectTree>
+                      <draggable v-model="networkList" class="draggable-list" @start="startDragNetwork">
+                        <SelectTree :visibleChange="visibleChange" v-for="(item, index) in networkList" :placeholder="'网点'+(index+1)" :key="index" v-model="item.id" clearable size="mini" :disabledOption="disOrgList" :disabled="isDirectDelivery|| item.id === otherinfo.orgid"></SelectTree>
                       </draggable>
                       <el-tooltip class="item" effect="dark" :content="networkList.length < 5 ?'点击添加途径网点':'最多添加5个途径网点,可拖拽置换顺序'" placement="top">
                         <i class="el-icon-plus plusBtn" @click="addNetWork"></i>
@@ -150,10 +150,6 @@
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
-                <!--<div class="baseInfoCol"> </div>-->
-                <!--<div class="baseInfoCol"> </div>-->
-
-                <!--<div class="baseInfoCol"> </div>-->
               </div>
 
             </el-form>
@@ -350,6 +346,8 @@ export default {
       }
     }
     return {
+      visibleChange: false,
+      disOrgList: [],
       networkList: [],
       handlingFeeInfo: {
         handlingFeeAll: null,
@@ -469,7 +467,6 @@ export default {
     ]),
     arriveOrgid(newVal) {
       this.$set(this.formModel, 'arriveOrgid', newVal)
-
       // this.formModel.arriveOrgid = newVal
     },
     orgid() {},
@@ -512,6 +509,7 @@ export default {
   },
   created() {
     this.setLoadTypeId()
+    this.disOrgList = [this.otherinfo.orgid]
   },
   mounted() {
     // this.getSelectType()
@@ -544,6 +542,18 @@ export default {
         }
       },
       immediate: true
+    },
+    networkList: {
+      handler (cval, oval) {
+        let arr = [this.otherinfo.orgid]
+        if (cval) {
+          cval.forEach(e => {
+            arr.push(e.id)
+          })
+        }
+        this.disOrgList = arr
+      },
+      deep: true
     }
   },
   methods: {
@@ -556,6 +566,12 @@ export default {
     },
     deleteNetwork(item, index) { // 删除途径网点
       console.log('删除', item, index)
+    },
+    startDragNetwork (event) {
+      this.visibleChange = true
+      setTimeout(() => {
+      this.visibleChange = false
+      }, 100)
     },
     switchUrl(path, issave) {
       const visited = this.visitedViews().filter(el => el.fullPath === path)

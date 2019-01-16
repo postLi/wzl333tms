@@ -100,11 +100,23 @@ export default {
     multiple: {
       type: Boolean,
       default: false
+    },
+    visibleChange: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
     value(newVal) {
       this.init()
+    },
+    visibleChange: {
+      handler (cval, oval) {
+        if (cval) {
+          this.$refs.myautocomplete.blur()
+        }
+      },
+      immediate: true
     }
   },
   mounted() {

@@ -90,6 +90,7 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        console.log('res', res, type, res[type])
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
