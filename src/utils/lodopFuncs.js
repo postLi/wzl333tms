@@ -1388,7 +1388,7 @@
 
      LODOP.PRINT_INIT('数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
-     LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML)
+     LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML.replace(/(bgcolor="[^"]*"|color="white")/g, ''))
      // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
      LODOP.SET_SAVE_MODE('Orientation', 1) // Excel文件的页面设置：横向打印   1-纵向,2-横向;
      LODOP.SET_SAVE_MODE('PaperSize', 9) // Excel文件的页面设置：纸张大小   9-对应A4
