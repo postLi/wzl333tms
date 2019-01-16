@@ -32,6 +32,7 @@
           <template v-for="column in tableColumn">
             <el-table-column
               :key="column.id"
+               show-overflow-tooltip
               :fixed="column.fixed"
               sortable
               :label="column.label"
@@ -42,6 +43,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+               show-overflow-tooltip
               sortable
               :label="column.label"
               v-else

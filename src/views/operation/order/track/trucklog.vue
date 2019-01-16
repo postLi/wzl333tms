@@ -686,7 +686,7 @@ export default {
     doLine(type) { // 轨迹控制器
       if (window.pathSimplifierIns) {
         if (/(start|resume|pause)/.test(type)) {
-          clearInterval(this.timerOption)
+          clearInterval(this.timerOption) // 停止自动刷新
           this.isTimerOpen = false
         } else {
           this.initTimer()
@@ -694,7 +694,7 @@ export default {
         let pathSimplifierIns = window.pathSimplifierIns
         this.allPathData.forEach((row, pathIndex) => {
           let navg = this.getNavg(pathIndex, row) // 创建轨迹
-          navg[type]()
+          navg[type]() // 执行控制器功能
           this.refreshNavgButtons(pathIndex)
         })
       } else {

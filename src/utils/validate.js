@@ -107,7 +107,7 @@ export const REGEX = {
   ONLY_NUMBER_AND_PUNCTUATION: /^[0-9~\!@#\$%\^\&\*\(\)_\+\{\}\|\:\"<>\?`\-\=\[\]\\;\',\.\/]+$/,
   // 同时包含字母数字和符号
   LETTER_AND_NUMBER_AND_PUNCTUATION: /^[a-zA-Z0-9~\!@#\$%\^\&\*\(\)_\+\{\}\|\:\"<>\?`\-\=\[\]\\;\',\.\/]+$/,
-//       LETTER_AND_NUMBER_AND_PUNCTUATION : /(^[a-zA-Z]+$)&(^[0-9]+$)(^[~\!@#\$%\^\&\*\(\)_\+\{\}\|\:\"<>\?`\-\=\[\]\\;\',\.\/]+$)/,
+  //       LETTER_AND_NUMBER_AND_PUNCTUATION : /(^[a-zA-Z]+$)&(^[0-9]+$)(^[~\!@#\$%\^\&\*\(\)_\+\{\}\|\:\"<>\?`\-\=\[\]\\;\',\.\/]+$)/,
   // 纯数字从1开始
   ONLY_NUMBER_GT: /^[1-9]\d*$/,
   // 限制输入10个字符
@@ -133,7 +133,7 @@ export const REGEX = {
   /**
    * 获取字符长度
    */
-  strlen: function (str) {
+  strlen: function(str) {
     var s = 0
     for (var i = 0; i < str.length; i++) {
       if (str.charAt(i).match(/[\u0391-\uFFE5]/)) {
@@ -145,4 +145,3 @@ export const REGEX = {
     return s
   }
 }
-

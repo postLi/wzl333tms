@@ -318,13 +318,18 @@ export default {
       }
     }
     const validateFormMobile = function(rule, value, callback) {
-      if (value === '' || value === null || !value || value === undefined) {
+       if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('不能为空'))
-      } else if (REGEX.MOBILE.test(value)) {
-        callback()
       } else {
-        callback(new Error('请输入有效的手机号码'))
+        callback()
       }
+      // if (value === '' || value === null || !value || value === undefined) {
+      //   callback(new Error('不能为空'))
+      // } else if (REGEX.MOBILE.test(value)) {
+      //   callback()
+      // } else {
+      //   callback(new Error('请输入有效的手机号码'))
+      // }
     }
     const validateStringEight = function(rule, value, callback) {
       if (value === '' || value === null || !value || value === undefined) {
@@ -1455,7 +1460,7 @@ export default {
               padding-right: 15px;
             }
             .el-select:last-child{
-              .el-input__suffix{
+              .el-icon-arrow-up{
                 display: none;
               }
             }

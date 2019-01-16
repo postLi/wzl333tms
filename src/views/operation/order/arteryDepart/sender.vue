@@ -167,7 +167,29 @@ export default {
           prop: 'orgName',
           width: '110',
           fixed: false
-        }, {
+        },  {
+          label: '途径网点一',
+          prop: 'wayOrgNameOne',
+          width: '110',
+          fixed: false
+        },{
+          label: '途径网点二',
+          prop: 'wayOrgNameTwo',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '途径网点三',
+          prop: 'wayOrgNameThree',
+          width: '110',
+          fixed: false
+        }, 
+        {
+          label: '途径网点四',
+          prop: 'wayOrgNameFour',
+          width: '110',
+          fixed: false
+        },{
           label: '到达网点',
           prop: 'arriveOrgName',
           width: '110',
@@ -318,7 +340,14 @@ export default {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
-
+        this.usersArr.forEach((el, index) => {
+          if (el.wayOrgName) {
+            el.wayOrgNameOne = el.wayOrgName.split(',')[0] || ''
+            el.wayOrgNameTwo = el.wayOrgName.split(',')[1] || ''
+            el.wayOrgNameThree = el.wayOrgName.split(',')[2] || ''
+            el.wayOrgNameFour = el.wayOrgName.split(',')[3] || ''
+          }
+        })
         this.total = data.total
         this.loading = false
       }).catch(err => {

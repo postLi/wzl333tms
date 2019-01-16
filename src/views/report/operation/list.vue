@@ -7,14 +7,35 @@
       <div class="btns_box">
         <el-button type="primary" v-has:REPORT_PRINT_4 :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印报表</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain>导出报表</el-button>
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="right-end" width="160" trigger="manual" v-model="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-button slot="reference" type="text"></el-button>
+        </el-popover>
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
+      <div class="tab_report">
+        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true">
+          <template v-for="column in columns">
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
+            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
+              <template slot-scope="scope">
+                <span v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" class="info_tab_report_operation" id="report_operation">
+      <div @scroll="handleBottom" style="display: none;" class="info_tab_report_operation" id="report_operation">
         <table id="report_operation_table"></table>
       </div>
     </div>
+    <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -24,12 +45,20 @@ import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
 import { reportOperation } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm
+    SearchForm,
+    TableSetup
   },
   data() {
     return {
+      res: {},
+      tablekey: 0,
+      dataList: [],
+      setupTableVisible: false,
+      thecode: 'FINANCE_findOperationReport',
+      visible2: false,
       loading: true,
       chartIframe: '',
       hideiframe: 'hide',
@@ -72,7 +101,7 @@ export default {
         }
       ],
       countCol: [ // 需要合计的-列
-        
+
       ],
       countColVal: [] // 存储底部合计值
     }
@@ -95,84 +124,95 @@ export default {
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
     },
-    report() {
-      console.log('sdfsdf2347823748', this.query)
-      this.loading = true
+    fetchData() {
       reportOperation(this.query).then(res => {
-        let data = res
-        let countColVal = []
-        this.loading = false
-        const div = document.getElementById('report_operation')
-       let table = document.getElementById('report_operation_table')
-       if (!table) {
-          return
-        }
-        let theadLen = table.getElementsByTagName('thead')
-        let tbodyLen = table.getElementsByTagName('tbody')
-        if (theadLen.length > 0) {
-          table.removeChild(theadLen[0])
-          table.removeChild(tbodyLen[0])
-        }
-        let thead = document.createElement('thead')
-        let tbody = document.createElement('tbody')
-        let theadTr = document.createElement('tr')
-
-        table.appendChild(thead)
-        table.appendChild(tbody)
-        thead.appendChild(theadTr)
-        table.style.borderCollapse = 'collapse'
-        table.style.border = '1px solid #d0d7e5';
-        table.setAttribute('border', '1')
-        table.setAttribute('font', '12px')
-        table.setAttribute('width', '780px')
-
-        theadTr.setAttribute('height', '32px')
-        theadTr.setAttribute('width', '100%')
-
-        for(let i = 0; i < this.columns.length; i++) { // 设置表头
-          let th = document.createElement('th')
-          let font = document.createElement('font')
-          font.innerHTML = this.columns[i].label
-          font.setAttribute('size', 2)
-          font.setAttribute('color', 'white')
-          th.setAttribute('border', 1)
-          th.setAttribute('bgcolor', 'dimGray')
-          th.appendChild(font)
-          th.setAttribute('width', (this.columns[i].width || 120) + 'px')
-          theadTr.appendChild(th)
-        }
-
-        // 固定表头
-        const tableClone = table.cloneNode(true)
-        tableClone.setAttribute('id', 'tableClone')
-        tableClone.setAttribute('refs', 'tableClone')
-        tableClone.className = 'tableCloneHead'
-        console.log('tableClone', tableClone)
-        div.appendChild(tableClone)
-
-        for (let k = 0; k < data.length; k++) { // 填充内容数据
-          const tbodyTr = tbody.insertRow()
-          for (let j = 0; j < this.columns.length; j++) {
-            const td = tbodyTr.insertCell()
-            // 处理当列没有值、宽度设置等信息时，做默认值处理
-            for (let t in this.countCol) { // 保留两位小数
-              if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
-                data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
-              }
-            }
-            td.innerHTML = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
-            td.style.textAlign = this.columns[j].textAlign // 设置居中方式
-            td.style.padding = '2px 5px'
-            td.style.fontSize = '13px'
-            td.style.width = (this.columns[j].width || 120) + 'px'
-          }
-        }
-      }).catch((err)=>{
+        this.res = res || []
+        this.report()
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
+    report() {
+      this.loading = true
+      let data = this.res
+      let elDataList = data || []
+      this.dataList = elDataList
+      let countColVal = []
+      this.loading = false
+      const div = document.getElementById('report_operation')
+      let table = document.getElementById('report_operation_table')
+      if (!table) {
+        return
+      }
+      let theadLen = table.getElementsByTagName('thead')
+      let tbodyLen = table.getElementsByTagName('tbody')
+      if (theadLen.length > 0) {
+        table.removeChild(theadLen[0])
+        table.removeChild(tbodyLen[0])
+      }
+      let thead = document.createElement('thead')
+      let tbody = document.createElement('tbody')
+      let theadTr = document.createElement('tr')
+
+      table.appendChild(thead)
+      table.appendChild(tbody)
+      thead.appendChild(theadTr)
+      table.style.borderCollapse = 'collapse'
+      table.style.border = '1px solid #d0d7e5';
+      table.setAttribute('border', '1')
+      table.setAttribute('font', '12px')
+      // table.setAttribute('width', '780px')
+
+      theadTr.setAttribute('height', '32px')
+      theadTr.setAttribute('width', '100%')
+
+      for (let i = 0; i < this.columns.length; i++) { // 设置表头
+        let th = document.createElement('th')
+        let font = document.createElement('font')
+        font.innerHTML = this.columns[i].label
+        font.setAttribute('size', 2)
+        font.setAttribute('color', 'white')
+        th.setAttribute('border', 1)
+        th.setAttribute('bgcolor', 'dimGray')
+        th.appendChild(font)
+        th.setAttribute('width', (this.columns[i].width || 120) + 'px')
+        theadTr.appendChild(th)
+      }
+
+      // 固定表头
+      const tableClone = table.cloneNode(true)
+      tableClone.setAttribute('id', 'tableClone')
+      tableClone.setAttribute('refs', 'tableClone')
+      tableClone.className = 'tableCloneHead'
+      div.appendChild(tableClone)
+
+      for (let k = 0; k < data.length; k++) { // 填充内容数据
+        const tbodyTr = tbody.insertRow()
+        for (let j = 0; j < this.columns.length; j++) {
+          const td = tbodyTr.insertCell()
+          // 处理当列没有值、宽度设置等信息时，做默认值处理
+          for (let t in this.countCol) { // 保留两位小数
+            if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
+              data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
+              elDataList = data
+            }
+          }
+          let tdVal = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+          td.innerHTML = tdVal
+          elDataList[k][this.columns[j].prop] = tdVal
+          td.style.textAlign = this.columns[j].textAlign // 设置居中方式
+          td.style.padding = '2px 5px'
+          td.style.fontSize = '13px'
+          td.style.width = (this.columns[j].width || 120) + 'px'
+          td.style.wordBreak = 'break-all'
+        }
+      }
+      this.dataList = elDataList // 遍历完后才设置数据
+
+    },
     doAction(type) {
+      this.report()
       switch (type) {
         case 'print':
           PrintInSamplePage({
@@ -195,7 +235,7 @@ export default {
     },
     getSearchParam(obj) {
       this.query = Object.assign(this.query, obj)
-      this.report()
+      this.fetchData()
     },
     handleBottom(e) {
       let el = e.target
@@ -209,6 +249,35 @@ export default {
       }
       const cloneel = document.getElementById('tableClone')
       cloneel.style.top = top + 'px'
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      const find = this.columns.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth + ''
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+      console.log('setTableWidth', newWidth, oldWidth, column, event, this.columns)
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.columns)
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.columns = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
@@ -228,7 +297,16 @@ export default {
     height: 100%;
     box-shadow: 1px 1px 10px #bbb;
     overflow: hidden;
-    scrolling: no;
+  }
+  .tab_report {
+    height: 100%;
+    .el-table thead th,
+    .el-table thead tr {
+      background: #666;
+    }
+    .el-table th .cell {
+      color: #fff;
+    }
   }
 }
 

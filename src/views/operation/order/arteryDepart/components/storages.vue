@@ -156,16 +156,11 @@
                   </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-                    <el-table-column fixed type="selection" width="50"></el-table-column>
-                    <!--  <el-table-column fixed label="序号" prop="number" width="50">
-                    <template slot-scope="scope">
-                      {{scope.$index + 1}}
-                    </template>
-                  </el-table-column> -->
+                  <el-table row-key="repertoryId" @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                    <el-table-column fixed type="selection" width="50" sortable></el-table-column>
                     <template v-for="column in tableColumn">
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop" :label="column.label" v-else :width="column.width">
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" sortable></el-table-column>
+                      <el-table-column sortable show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop" :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -368,7 +363,7 @@
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
                     <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="sendContract.remark" :disabled="!editFn"></el-input>
+                      <el-input type="textarea" size="mini" v-model="sendContract.aboutLocal" :disabled="!editFn"></el-input>
                     </el-form-item>
                     <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
                     <p class="p_about">附：驾驶员、车辆登记</p>
@@ -455,7 +450,6 @@
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
     </div>
-    
   </pop-right>
 </template>
 <script>
@@ -472,6 +466,7 @@ import { objectMerge2, parseTime, closest } from '@/utils/'
 import { PrintContract } from '@/utils/lodopFuncs'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
+import Sortable from 'sortablejs'
 
 export default {
   data() {
@@ -577,55 +572,55 @@ export default {
         }
       },
       tableColumn: [{
-        label: '序号',
-        prop: 'number',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      }, {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '150',
-        fixed: true
-      }, {
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: true
-      }, {
-        label: '子运单号',
-        prop: 'childShipSn',
-        width: '180',
-        fixed: false
-      }, {
+          label: '序号',
+          prop: 'number',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        }, {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '150',
+          fixed: true
+        }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: true
+        }, {
+          label: '子运单号',
+          prop: 'childShipSn',
+          width: '180',
+          fixed: false
+        }, {
           label: '到付(元)',
           prop: 'shipArrivepayFee',
           width: '100',
           fixed: false
         },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFee',
-        width: '100',
-        fixed: false
-      }, {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      }, {
-        label: '配载重量(kg)',
-        prop: 'loadWeight',
-        width: '120',
-        fixed: false
-      }, {
-        label: '配载体积(m³)',
-        prop: 'loadVolume',
-        width: '120',
-        fixed: false
-      }, {
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
+          label: '配载重量(kg)',
+          prop: 'loadWeight',
+          width: '120',
+          fixed: false
+        }, {
+          label: '配载体积(m³)',
+          prop: 'loadVolume',
+          width: '120',
+          fixed: false
+        }, {
           label: '运单件数',
           prop: 'cargoAmount',
           width: '100',
@@ -712,7 +707,9 @@ export default {
         carrier: '',
         remark: ''
       },
-
+      oldList: [],
+      newList: [],
+      sortable: null,
       carrierItem: []
     }
   },
@@ -763,6 +760,7 @@ export default {
         this.fetchSelectLoadMainInfoList()
         this.fetchGetLookContract()
         this.getBatchNo = this.info.batchNo
+        this.initSort()
       }
     },
     isModify(newVal) {},
@@ -786,6 +784,37 @@ export default {
     }
   },
   methods: {
+    initSort() {
+      // this.$nextTick(() => {
+      //   let obj = {
+      //     selector: '.infos_tab .el-table__body-wrapper > table > tbody',
+      //     sortable: this.sortable,
+      //   }
+      //   this.setSort(obj)
+      //   this.oldList = this.usersArr.map(v => v.repertoryId)
+      //   this.newList = this.oldList.slice()
+      // })
+    },
+    setSort(obj) { // 右边列表行拖拽
+      const el = document.querySelectorAll(obj.selector)[0]
+      obj.sortable = Sortable.create(el, {
+        animation: 150, //动画参数
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        setData: function(dataTransfer) {
+          dataTransfer.setData('Text', '')
+          // to avoid Firefox bug
+          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        },
+        onEnd: evt => {
+          const targetRow = this.usersArr.splice(evt.oldIndex, 1)[0]
+          this.usersArr.splice(evt.newIndex, 0, targetRow)
+
+          // for show the changes, you can delete in you code
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+        }
+      })
+    },
     comInfo(item) {
       this.sendContract = {
         loadId: item.loadId,
@@ -793,7 +822,7 @@ export default {
         contractName: item.contractName,
         contractNo: item.contractNo,
         carrier: item.carrier,
-        remark: item.remark
+        aboutLocal: item.aboutLocal
       }
     },
     fetchGetLookContract() {
@@ -871,15 +900,11 @@ export default {
 
           return el
         })
-        if (location.href.indexOf('192.168.1.') !== -1) {
-          /* let mock = 30
-          while (mock--) {
-            this.usersArr.push(this.usersArr[0])
-          } */
-        }
+
 
         this.loading = false
         this.toggleAllRows()
+
       })
     },
     getDetail() {
@@ -1007,24 +1032,22 @@ export default {
         // 导出数据table_import
         // 导出
         case 'export':
-
           PrintInFullPage({
-            data: this.usersArr,
+            data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr,
-            // appendTop: '<style>*{color:#f00;}</style>表格后面用<font color=blue>ADD_PRINT_HTM</font>附加其它备注'
             appendTop: appendTopStr
           })
           break
           // 打印
         case 'print':
           SaveAsFile({
-            data: this.usersArr,
+            data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr
           })
           break
       }
       // 清除选中状态，避免影响下个操作
-      this.$refs.multipleTable.clearSelection()
+      // this.$refs.multipleTable.clearSelection()
     },
     setTable() {
       this.setupTableVisible = true
@@ -1065,7 +1088,7 @@ export default {
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
-      formModel.remark = this.sendContract.remark
+      formModel.remark = this.sendContract.aboutLocal
       for (const item in formModel) {
         str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
       }
@@ -1079,6 +1102,7 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+      this.initSort()
     },
     setTableWidth(newWidth, oldWidth, column, event) {
       console.log('set table:', newWidth, oldWidth, column)
@@ -1103,6 +1127,7 @@ export default {
     },
     saveToTableSetup() {
       this.visible2 = false
+      this.initSort()
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     showSaveBox() {
@@ -1165,6 +1190,14 @@ export default {
       height: calc(100vh - 570px);
       flex-grow: 1;
       padding: 0 10px;
+      .hover-row {
+        background: rgba(0,0,0,0);
+      }
+      .sortable-ghost {
+        opacity: .8;
+        color: #fff !important;
+        background: #42b983 !important;
+      }
       .el-table {
         table {
           th,
@@ -1301,6 +1334,11 @@ export default {
     }
   }
 }
+
+
+
+
+
 
 
 

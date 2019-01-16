@@ -122,7 +122,7 @@ const permission = {
           if (el.meta && el.meta.code === 'REPORT') {
             let flag = true
             el.children.map(ee => {
-              console.log('ee:', ee.meta.code, ee.path)
+              // console.log('ee:', ee.meta.code, ee.path)
               if (ee.meta && ee.meta.code && flag) {
                 if (ee.children && ee.children.length) {
                   el.redirect = ee.children[0].path

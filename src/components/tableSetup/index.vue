@@ -250,14 +250,14 @@ export default {
     },
     initData(_data) {
       // 针对前端写的表格配置数据也进行简单的排序处理
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-        let str = ''
-        this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + e.fixed + '\n'
-        })
-        console.log(str)
-      }
+      // if (process.env.NODE_ENV !== 'production') {
+      //   console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
+      //   let str = ''
+      //   this.columns.forEach(e => {
+      //     str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
+      //   })
+      //   console.log(str)
+      // }
       let fedata = objectMerge2([], this.columns)
       fedata = this.sort(fedata)
       _data = _data || fedata
@@ -370,7 +370,6 @@ export default {
       return Promise.all([getOriginTableSetup(this.thecode), getTableSetup(this.otherinfo.orgid, this.thecode)]).then(resAll => {
         var orgData = resAll[0].data
         var data = resAll[1].data
-
         if (data && data.length) {
           if (Array.isArray(data[0])) {
             data = data[0]
@@ -423,6 +422,7 @@ export default {
             }).length
           // 如果找不到，表示需要插入
             if (len === 0) {
+            // if (true) {
               const userId = data[0].userId
               const orgId = data[0].orgId
               const companyId = data[0].companyId
@@ -442,7 +442,7 @@ export default {
               })
             } else if (diffTextWithSameProp !== '') {
             // 删除用户数据中重复的字段
-              data.splice(diffTextWithSameProp, 1)
+              // data.splice(diffTextWithSameProp, 1)
             }
           })
 

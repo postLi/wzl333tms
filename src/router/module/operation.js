@@ -277,7 +277,7 @@ export default {
         role: ['admin'],
         title: '干线到车',
         noCache: false,
-        'code': 'ORDER_DELIY'
+        'code': 'GX_ARRIVE_LIST'
       },
       children: [{
         path: '/operation/order/arteryDelivery/sender',
@@ -303,7 +303,7 @@ export default {
           title: '途径卸货',
           noCache: true,
           istab: true,
-          code: ''
+          code: 'GX_UNLOAD_LIST'
         }
       }]
     },
@@ -656,12 +656,10 @@ export default {
           title: '车辆跟踪',
           noCache: true,
           istab: true,
-          code: ''
+          code: 'LOADTRACK5'
         }
       }]
-    },
-
-    {
+    }, {
       path: '/operation/order/transfer',
       icon: 'yygl9_zhongzhuan',
       name: 'ordertransfer',

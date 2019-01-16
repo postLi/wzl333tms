@@ -151,7 +151,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -180,7 +180,6 @@
      }
      // ===如下空白位置适合调用统一功能(如注册语句、语言选择等):===
      LODOP.SET_LICENSES('', '917C869B415ADA72B3A20365731AF08D', 'C94CEE276DB2187AE6B65D56B3FC2848', '')
-     console.warn('LODOP::', JSON.stringify(LODOP))
      // ===========================================================
      return LODOP
    } catch (err) {
@@ -300,7 +299,7 @@
 
        console.log('print obj:', obj)
        const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
-       console.log('tableId.innerHTML:', tableId.innerHTML)
+       // console.log('tableId.innerHTML:', tableId.innerHTML)
        LODOP = getLodop()
        // PRINT_INITA(Top,Left,Width,Height,strPrintName)
 
@@ -1385,8 +1384,7 @@
      // let tableId = createTable(data, columns) // 重新创建打印视图table
      const tableId = obj.id // 重新创建打印视图table、
      LODOP = getLodop()
-
-     LODOP.PRINT_INIT('数据表格')
+     LODOP.PRINT_INITA('0%', '0%', '100%', '100%', '数据表格')
      // LODOP.ADD_PRINT_TABLE(0, 0, 350, 600, document.getElementById(tableId).innerHTML);
      LODOP.ADD_PRINT_TABLE('1%', '1%', '100%', '100%', document.getElementById(tableId).innerHTML.replace(/(bgcolor="[^"]*"|color="white")/g, ''))
      // LODOP.ADD_PRINT_TABLE(100,20,900,80,document.documentElement.innerHTML);
@@ -1397,7 +1395,7 @@
      LODOP.SET_SAVE_MODE('CenterVertically', true) // Excel文件的页面设置：页面垂直居中
      // LODOP.SET_SAVE_MODE("QUICK_SAVE",true);//快速生成（无表格样式,数据量较大时或许用到）
      if (obj.name) {
-       LODOP.SAVE_TO_FILE(obj.name + '.xls')
+       LODOP.SAVE_TO_FILE(obj.name + '_' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}') + '.xls')
      } else {
        LODOP.SAVE_TO_FILE('新文件名.xls')
      }

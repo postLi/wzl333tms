@@ -2,8 +2,8 @@
   <!-- <div class="customer-manager tab-wrapper tab-wrapper-100"> -->
   <div class="tab-wrapper">
      <div class="eltab clearfix">
-      <router-link to="/operation/order/arteryDelivery/sender" class="tab-label">干线到货</router-link>
-      <router-link to="/operation/order/arteryDelivery/channel" class="tab-label" >途径卸货</router-link>
+      <router-link to="/operation/order/arteryDelivery/sender" class="tab-label" v-has:ORDER_DELIY>干线到货</router-link>
+      <router-link to="/operation/order/arteryDelivery/channel" class="tab-label"  v-has:GX_UNLOAD_LIST>途径卸货</router-link>
     </div>
      <keep-alive>
       <router-view></router-view>

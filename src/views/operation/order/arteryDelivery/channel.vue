@@ -4,10 +4,10 @@
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('discharge')">卸货</el-button>
-        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain>取消卸货</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain>导出清单</el-button>
-        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain>打印清单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('discharge')" v-has:GX_UNLOAD>卸货</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-circle-close-outline" @click="doAction('cancel')" plain v-has:GX_CANCEL_UNLOAD>取消卸货</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:GX_CANCEL_UNLOAD_EXPORT>导出清单</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:GX_CANCEL_UNLOAD_PRINT>打印清单</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>

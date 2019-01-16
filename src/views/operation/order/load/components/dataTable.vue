@@ -23,6 +23,8 @@
         </el-table-column>
         <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
+        </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
         <el-table-column prop="shipTotalFee" sortable label="运费合计(元)" width="120">
@@ -49,8 +51,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="140">
@@ -84,6 +85,8 @@
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="130">
+        </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
@@ -142,8 +145,6 @@
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="140">
-        </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
       </el-table>
     </div>
