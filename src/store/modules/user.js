@@ -143,7 +143,7 @@ const user = {
           })
           const pro2 = getAllSetting({
             orgid: data.orgid,
-            type: 'financeSetting',
+            type: '',
             module: 'finance'
           })
           Promise.all([pro1, pro2]).then(resArr => {
