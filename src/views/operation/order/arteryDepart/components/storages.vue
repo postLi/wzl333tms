@@ -156,7 +156,7 @@
                   </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table row-key="repertoryId" @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table row-key="repertoryId" @header-dragend="setTableWidth" :key="tablekey" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
                     <el-table-column fixed type="selection" width="50" sortable></el-table-column>
                     <template v-for="column in tableColumn">
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" sortable></el-table-column>
@@ -785,15 +785,15 @@ export default {
   },
   methods: {
     initSort() {
-      // this.$nextTick(() => {
-      //   let obj = {
-      //     selector: '.infos_tab .el-table__body-wrapper > table > tbody',
-      //     sortable: this.sortable,
-      //   }
-      //   this.setSort(obj)
-      //   this.oldList = this.usersArr.map(v => v.repertoryId)
-      //   this.newList = this.oldList.slice()
-      // })
+      this.$nextTick(() => {
+        let obj = {
+          selector: '.infos_tab .el-table__body-wrapper > table > tbody',
+          sortable: this.sortable,
+        }
+        this.setSort(obj)
+        this.oldList = this.usersArr.map(v => v.repertoryId)
+        this.newList = this.oldList.slice()
+      })
     },
     setSort(obj) { // 右边列表行拖拽
       const el = document.querySelectorAll(obj.selector)[0]
@@ -1096,7 +1096,8 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
       this.initSort()
     },
     setTableWidth(newWidth, oldWidth, column, event) {

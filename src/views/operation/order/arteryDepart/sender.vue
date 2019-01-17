@@ -245,6 +245,11 @@ export default {
           width: '120',
           fixed: false
         }, {
+          label: '毛利(元)',
+          prop: 'grossMargin',
+          width: '110',
+          fixed: false
+        },{
           label: '现付车费(元)',
           prop: 'nowpayCarriage',
           width: '110',

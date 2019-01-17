@@ -193,6 +193,14 @@ export default {
         remark: ''
       },
       tableColumn: [{
+        'label': '序号',
+        'prop': 'number',
+        'width': '100',
+        'fixed': true,
+        slot: (scope)=> {
+          return scope.$index + 1
+        }
+      },{
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '100',

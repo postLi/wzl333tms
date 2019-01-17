@@ -534,7 +534,7 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
+     this.tablekey = new Date().getTime()
     },
     doAction(type) {
       switch (type) {
