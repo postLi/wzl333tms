@@ -1,61 +1,43 @@
 <template>
-    <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
-      <li
-        class="menu-item"
-        v-for="(route, index) in routes"
-        :key="route.path"
-        
-        v-if="!route.hidden"
-        :class="{'is-active': route.path === $route.path}" 
-        ref="sidebaritem"
-        >
-        <!-- 有子菜单但不展示 && 没有子菜单 -->
-        <router-link  v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name" >
-          <icon-svg v-if='route.icon' :icon-class="route.icon" /> 
-          <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-        </router-link>
-        <!-- 带子菜单展示 -->
-        <template v-if="isFolder(route)">
-          <span  class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav"  @click.stop="toggle($event)" >
+  <ul class="sidebar-menu" ref="sidebarMenu" @click.stop="showTab">
+    <li class="menu-item" v-for="(route, index) in routes" :key="route.path" :data-path="isFolder(route) ? route.path : ''" v-if="!route.hidden" :class="{'is-active': detectPActive(route)}" ref="sidebaritem">
+      <!-- 有子菜单但不展示 && 没有子菜单 -->
+      <router-link v-if="isFolder(route) ? route.noDropdown : (!route.tab && true)" :to="route.path" :key="route.name">
+        <icon-svg v-if='route.icon' :icon-class="route.icon" />
+        <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
+      </router-link>
+      <!-- 带子菜单展示 -->
+      <template v-if="isFolder(route)">
+        <span class="sidebar_menu_toggle" @mouseover="showSubNav" @mouseout="hideSubNav" @click.stop="toggle($event)">
             <icon-svg v-if='route.icon' :icon-class="route.icon" />
              <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-            <i class="el-icon-caret-bottom dropdownIcon" ></i>
-           </span>
-           <ul class='sidebar-submenu' @click.stop>
-            <!-- 暂时只展开二级菜单 -->
-            <li v-for="(item, index) in route.children"
-              v-if="!item.hidden"
-              :key="index"
-              :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}"
-              class="submenu-item">
-              <router-link :to="item.path" :index="item.path" :key="item.name">
-                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
-              </router-link>
-            </li>
-          </ul>
-        </template>
-        <!-- 带tab菜单展示 -->
-        <template  v-if="route.tab">
-          <span class="sidebar_menu_toggle"  @click.stop="toggle($event)" >
+        <i class="el-icon-caret-bottom dropdownIcon"></i>
+        </span>
+        <ul class='sidebar-submenu' @click.stop>
+          <!-- 暂时只展开二级菜单 -->
+          <li v-for="(item, index) in route.children" v-if="!item.hidden" :key="index" :class="{'is-active': detectActive(item, route)}" class="submenu-item">
+            <router-link :to="item.path" :index="item.path" :key="item.name">
+              <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </template>
+      <!-- 带tab菜单展示 -->
+      <template v-if="route.tab">
+        <span class="sidebar_menu_toggle" @click.stop="toggle($event)">
             <icon-svg v-if='route.icon' :icon-class="route.icon" /> <span class="sidebar-nav-title">{{ !sidebar.opened ? (route.meta.stitle||route.meta.title) : route.meta.title}}</span>
-            <i class="el-icon-caret-bottom dropdownIcon" ></i>
-           </span>
-           <ul class='sidebar-submenu' @click.stop>
-            <!-- 暂时只展开二级菜单 -->
-            <li v-for="(item, index) in route.tab"
-              v-if="!item.hidden"
-              :key="index"
-              :path="item.path"
-              :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}"
-              class="submenu-item submenu-item-tab">
-                <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
-            </li>
-          </ul>
-        </template>  
-      </li>
-    </ul>
+        <i class="el-icon-caret-bottom dropdownIcon"></i>
+        </span>
+        <ul class='sidebar-submenu' @click.stop>
+          <!-- 暂时只展开二级菜单 -->
+          <li v-for="(item, index) in route.tab" v-if="!item.hidden" :key="index" :path="item.path" :class="{'is-active': isFolder(item) ? item.meta.title === $route.meta.ptitle : item.path === $route.path}" class="submenu-item submenu-item-tab">
+            <!-- <icon-svg v-if='item.icon' :icon-class="item.icon" />  --><span class="sidebar-nav-title">{{ item.meta.title }}</span>
+          </li>
+        </ul>
+      </template>
+    </li>
+  </ul>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import { closest } from '@/utils/index'
@@ -73,12 +55,65 @@ export default {
       'sidebar'
     ])
   },
+  watch: {
+    routes: {
+      handler(cval, oval) {
+        if (cval) {
+          let reg = /(\/finance\/certificationAudit)/
+          cval.map((e, index) => { // 财务凭证 1-需要 2-不需要  不需要的时候 不显示财务初始化和核销凭证 菜单
+            if (reg.test(e.path)) {
+              if (this.otherinfo.systemSetup.financeSetting.voucher !== '1') {
+                this.$set(e, 'hidden', true)
+              } else {
+                this.$set(e, 'hidden', false)
+              }
+            }
+            if (e.path === '/finance/financeInfo') {
+              e.children.map(em => {
+                if (em.path !== '/finance/financeInfo/subjectDirection') {
+                  if (this.otherinfo.systemSetup.financeSetting.voucher !== '1') {
+                    this.$set(em, 'hidden', true)
+                  } else {
+                    this.$set(em, 'hidden', false)
+                  }
+                }
+              })
+            }
+          })
+        }
+      }
+    }
+  },
   data() {
     return {
       open: true
     }
   },
   methods: {
+    detectPActive(route) {
+      const flag = route.path === this.$route.path
+      // 如果有其它展开项，则将其隐藏
+      if (flag && this.isFolder(route) === false) {
+        Array.from(document.querySelectorAll('.isOpen') || []).forEach(el2 => {
+          el2.classList.remove('isOpen')
+        })
+      }
+      return flag
+    },
+    detectActive(item, route) {
+      const flag = this.isFolder(item) ? item.meta.title === this.$route.meta.ptitle : item.path === this.$route.path
+      if (flag) {
+        const path = route.path
+        // 稍微延时下，等dom结构渲染好
+        setTimeout(() => {
+          const el = document.querySelector('[data-path="' + path + '"]')
+          if (el) {
+            el.classList.add('isOpen')
+          }
+        }, 200)
+      }
+      return flag
+    },
     isFolder(item) {
       return item.children && item.children.length
     },
@@ -155,35 +190,36 @@ export default {
     }
   }
 }
-</script>
 
+</script>
 <style rel="stylesheet/scss" lang="scss">
 @import "src/styles/variate.scss";
 $backgroundColor: #333744;
 $hoverBackgroundColor: #00c1de;
 $sidebarBackgroundColor: #42485b;
 
-.sidebar-menu{
+.sidebar-menu {
   color: rgba(255, 255, 255, 0.8);
-  &>.menu-item,&>.sidebar-submenu{
+  &>.menu-item,
+  &>.sidebar-submenu {
     background: $sidebarBackgroundColor;
   }
-  &>.menu-item>a{
+  &>.menu-item>a {
     padding-left: 24px;
   }
-  .sidebar-submenu{
+  .sidebar-submenu {
     display: none;
   }
 
-  a{
+  a {
     display: block;
   }
 
-  .isOpen>.sidebar-submenu{
+  .isOpen>.sidebar-submenu {
     display: block;
   }
 
-  .menu-item{
+  .menu-item {
     height: 40px;
     line-height: 40px;
     font-size: $sidebarFontSize;
@@ -191,60 +227,65 @@ $sidebarBackgroundColor: #42485b;
     position: relative;
     transition: height 1s ease;
   }
-  .isOpen{
+  .isOpen {
     height: auto;
-    .dropdownIcon{
+    .dropdownIcon {
       transform-origin: center center;
       transform: rotate(180deg);
     }
   }
 
-  .sidebar-nav-title{
+  .sidebar-nav-title {
     display: inline-block;
   }
 
-  .sidebar-submenu .submenu-item{
+  .sidebar-submenu .submenu-item {
     min-width: 100%;
     padding-left: $sidebarFontSize * 1.2 + 34px;
     font-size: $sidebarFontSize - 2px;
   }
 
-  &>.is-active{
+  &>.is-active {
     background: $hoverBackgroundColor;
 
-    .is-active{
+    .is-active {
       border: none;
     }
   }
 
-   &>.isOpen{
+  &>.isOpen {
     background: $backgroundColor;
 
-    .is-active{
+    .is-active {
       border: none;
     }
   }
 
-  .is-active{
+  .is-active {
     &>a {
       color: #fff;
     }
   }
 
-  .sidebar_menu_toggle, .submenu-item-tab{
+  .sidebar_menu_toggle,
+  .submenu-item-tab {
     cursor: pointer;
     display: block;
     padding-left: 24px;
   }
 
-  .menu-item:focus, .menu-item:hover,.sidebar_menu_toggle:hover, .sidebar-submenu .submenu-item:hover, .submenu-item.is-active{
+  .menu-item:focus,
+  .menu-item:hover,
+  .sidebar_menu_toggle:hover,
+  .sidebar-submenu .submenu-item:hover,
+  .submenu-item.is-active {
     background: $hoverBackgroundColor;
   }
 
-  &>.isOpen:hover{
+  &>.isOpen:hover {
     background: $backgroundColor;
 
-    .is-active{
+    .is-active {
       border: none;
     }
   }
@@ -254,7 +295,7 @@ $sidebarBackgroundColor: #42485b;
     font-size: 1.2em;
     color: #fff;
   }
-  .dropdownIcon{
+  .dropdownIcon {
     position: absolute;
     top: 12px;
     right: 5px;
@@ -262,15 +303,21 @@ $sidebarBackgroundColor: #42485b;
     transition: transform .6s ease;
   }
 }
+
+
+
+
+
 /** 收缩边栏时的样式 **/
-.hideSidebar{
-  .sidebar-menu{
+
+.hideSidebar {
+  .sidebar-menu {
     position: relative;
     z-index: 99;
-    .sidebar_menu_toggle{
+    .sidebar_menu_toggle {
       text-align: center;
     }
-    .menu-item{
+    .menu-item {
       padding-top: 5px;
       padding-bottom: 25px;
       height: auto;
@@ -278,48 +325,49 @@ $sidebarBackgroundColor: #42485b;
       min-height: 40px;
       margin-bottom: 0px;
 
-      &>a>.sidebar-nav-title{
+      &>a>.sidebar-nav-title {
         line-height: 20px;
         min-height: auto;
       }
     }
-    .isOpen{
-      &:hover{
+    .isOpen {
+      &:hover {
         background: $hoverBackgroundColor;
       }
-      .sidebar-submenu{
+      .sidebar-submenu {
         display: none;
       }
     }
-    .menu-item:hover{
-      .sidebar-submenu{
+    .menu-item:hover {
+      .sidebar-submenu {
         background: $sidebarBackgroundColor;
         display: none;
       }
     }
-    .svg-icon{
+    .svg-icon {
       margin-left: -4px;
     }
-    .sidebar-submenu{
-      display: none;
-    }
-    
-    .el-menu--popup{
-      background: $sidebarBackgroundColor;
-    }
-    .el-submenu__icon-arrow{
+    .sidebar-submenu {
       display: none;
     }
 
-    a:hover{
+    .el-menu--popup {
+      background: $sidebarBackgroundColor;
+    }
+    .el-submenu__icon-arrow {
+      display: none;
+    }
+
+    a:hover {
       color: #3e9ff1;
     }
 
-    .dropdownIcon{
+    .dropdownIcon {
       display: none;
     }
 
-    .menu-item>a>.sidebar-nav-title,.sidebar_menu_toggle .sidebar-nav-title{
+    .menu-item>a>.sidebar-nav-title,
+    .sidebar_menu_toggle .sidebar-nav-title {
       position: absolute;
       left: 0;
       width: 100%;
@@ -330,30 +378,31 @@ $sidebarBackgroundColor: #42485b;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .el-menu-item, .sidebar-nav-title{
+    .el-menu-item,
+    .sidebar-nav-title {
       min-height: 44px;
       height: auto;
     }
-    .el-submenu{
+    .el-submenu {
       min-width: auto;
     }
-    
   }
-  
-  .sidebar-submenu{
+
+  .sidebar-submenu {
     width: 130px;
     background: $sidebarBackgroundColor;
 
-    .submenu-item{
+    .submenu-item {
       line-height: 40px;
       color: #fff;
       font-size: 12px;
 
-      a{
+      a {
         display: block;
         padding-left: 34px;
       }
-      &.is-active, &:hover{
+      &.is-active,
+      &:hover {
         background: $hoverBackgroundColor;
       }
     }
@@ -361,4 +410,3 @@ $sidebarBackgroundColor: #42485b;
 }
 
 </style>
-

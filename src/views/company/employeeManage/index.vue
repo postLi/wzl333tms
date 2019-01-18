@@ -30,13 +30,9 @@
         </div>
       </div>
     </div>
-    <transition name="slideInRight">
-      <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
-    </transition>
+    <AddEmployeer :isModify="isModify" :userInfo="theUser" :orgid="searchForm.orgid || otherinfo.orgid" :popVisible.sync="AddEmployeerVisible" @close="closeAddEmployeer" @success="fetchData" />
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" />
-    <transition name="slideInRight">
-      <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" v-if="showSetAuth" />
-    </transition>
+    <SetAuth :orgid="otherinfo.companyId" :popVisible.sync="SetAuthVisible" @close="closeAuth" @success="fetchData" :users="authUser" />
   </div>
 </template>
 <script type="text/javascript">
@@ -266,7 +262,7 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
     },
     openAddEmployeer() {
       this.showAddEmployeer = true
@@ -290,6 +286,7 @@ export default {
     },
     fetchData(orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
       this.loading = true
+      this.SetAuthVisible = false
       this.fetchAllUser(orgid, name, mobile).then(data => {
         this.loading = false
         this.usersArr = data.list

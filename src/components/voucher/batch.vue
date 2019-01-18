@@ -13,11 +13,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" 
-        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
-        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
-             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
+        <el-form-item label="一级科目" :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -70,7 +67,7 @@
     </el-form>
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
-          <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
+          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
   </el-dialog>
@@ -193,7 +190,7 @@ export default {
       }
     }
     return {
-      btnLoading:  false,
+      btnLoading: false,
       dialogTitle: '核销凭证',
       loading: true,
       btnsize: 'mini',
@@ -254,17 +251,24 @@ export default {
       this.baseQuery.amount = this.info.amount
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + ''
-      this.$set(this.baseQuery, 'dataSrc', 0) 
+      this.$set(this.baseQuery, 'dataSrc', 0)
+      this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
-          this.formModel = data
-          if (data.verificationList) {
-            this.veryficationList = data.verificationList
-            data.verificationList.forEach((el, index) => {
-              this.veryficationType[el.id] = el.verificationWay
-            })
+          if (data) {
+            this.subjectOne = data.subOneList || []
+            this.subjectTwo = data.subTwoList || []
+            this.subjectThree = data.subThreeList || []
+            this.subjectFour = data.subFourList || []
+            this.formModel = data
+            this.loading = false
+            if (data.verificationList) {
+              this.veryficationList = data.verificationList
+              data.verificationList.forEach((el, index) => {
+                this.veryficationType[el.id] = el.verificationWay
+              })
+            }
+            // this.initSubject()
           }
-          this.initSubject()
-          this.loading = false
         })
         .catch(err => {
           this.loading = false

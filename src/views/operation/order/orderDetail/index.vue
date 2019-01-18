@@ -4,14 +4,17 @@
       <el-tab-pane class="ordermaininfo" name="one" label="运单信息">
         <orderdetail :orderid="orderid" :orderdata="orderdata" />
       </el-tab-pane>
-      <!-- <el-tab-pane name="two" label="费用信息">
-        <fee orderid="output.orderid" v-if="activeTab.two" />
-      </el-tab-pane> -->
+      <el-tab-pane name="two" label="费用信息">
+        <fee :orderid="output.orderid" v-if="activeTab.two" />
+      </el-tab-pane>
       <el-tab-pane name="three" label="运单跟踪">
         <ordertrack v-if="activeTab.three" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="six" label="运单轨迹">
         <trunk v-if="activeTab.six" :orderdata="orderdata" :orderid="output.orderid" />
+      </el-tab-pane>
+      <el-tab-pane name="seven" label="行车轨迹">
+        <trunkLog v-if="activeTab.seven" :orderdata="orderdata" :orderid="output.orderid" />
       </el-tab-pane>
       <el-tab-pane name="four" label="异常记录">
         <abnormal :orderinfo="orderdata" v-if="activeTab.four" :shipsn="output.shipsn" :orderid="output.orderid" />
@@ -32,6 +35,7 @@ import ordertrack from './track'
 import abnormal from './abnormal'
 import log from './log'
 import trunk from './trunk'
+import trunkLog from './trunkLog'
 
 export default {
   name: 'orderDetail',
@@ -52,9 +56,11 @@ export default {
     ordertrack,
     abnormal,
     log,
-    trunk
+    trunk,
+    trunkLog
   },
   watch: {
+
     ispop(newVal) {
       if (newVal) {
         // this.init()
@@ -99,7 +105,8 @@ export default {
         'three': false,
         'four': false,
         'five': false,
-        'six': false
+        'six': false,
+        'seven': false
       },
       output: {
         orderid: '',
@@ -109,6 +116,9 @@ export default {
     }
   },
   methods: {
+    viewLog() {
+      return location.href.indexOf('28tms.cn') === -1 && location.href.indexOf('192.168.1') !== -1
+    },
     // 获取运单数据
     getOrderInfo(orderId) {
       return orderManage.getOrderInfoById(orderId)
@@ -161,9 +171,9 @@ export default {
     initOrder() {
       this.activeIndex = 'one'
       this.initindex++
-      // setTimeout(() => {
+        // setTimeout(() => {
       this.getOrderInfo(this.output.orderid).then(res => {
-        if (!res.data) {
+          if (!res.data) {
             if (this.initindex > 3) {
               this.$message.alert('获取信息失败，请尝试刷新页面。')
             } else {
@@ -174,9 +184,12 @@ export default {
             this.orderdata = res.data
             this.output.shipsn = this.orderdata.tmsOrderShipInfo.shipSn
             this.loading = false
-            this.eventBus.$emit('startPrint')
+            console.log('initOrder', res, this.orderid, this.orderdata)
+            this.$nextTick(() => {
+              this.eventBus.$emit('startPrint')
+            })
           }
-      }).catch(err => {
+        }).catch(err => {
           this.loading = false
           console.log('initOrderDetail err:', err)
           this.showError()

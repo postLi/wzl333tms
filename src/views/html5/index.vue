@@ -364,7 +364,7 @@ export default {
         this.$message.warning('查不到相关数据。')
       })
     },
-    initYearChart(echart, shipArr, volumeArr) {
+    initYearChart(echart, shipArr, volumeArr, yearsArr) {
       console.log('initYearChart:', shipArr, volumeArr)
       const option3 = {
         title: {
@@ -384,6 +384,7 @@ export default {
         },
         toolbox: {
           show: true,
+          right: 30,
           feature: {
             mark: { show: true },
             dataView: { show: false, readOnly: false },
@@ -398,7 +399,7 @@ export default {
             type: 'category',
             boundaryGap: false,
             // '2018年\n\r1月'
-            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+            data: yearsArr || ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
           }
         ],
         yAxis: [
@@ -463,11 +464,16 @@ export default {
       const shipArr = []
       const weightArr = []
       const volumeArr = []
-      data.map(el => {
+      const yearsArr = []
+      data.map((el, index) => {
         shipArr.push(el.amountCollect)
         weightArr.push(el.amountPay)
+        const monArr = el.month.split('-')
+        const mon = parseInt(monArr[1], 10) || index
+
+        yearsArr.push(((mon === 1 && index > 0) ? monArr[0] + '年\n\r' : '') + mon + '月')
       })
-      this.initYearChart(myChart3, shipArr, weightArr)
+      this.initYearChart(myChart3, shipArr, weightArr, yearsArr)
     })
     /* getHomeYearDetail().then(data => {
       data = data || []

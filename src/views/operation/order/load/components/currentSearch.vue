@@ -19,7 +19,7 @@
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       @keyup.enter.native="handleSelectAll"
-      @select="handleSelect">
+      >
       </el-autocomplete>
     </el-form-item>
   </el-form>
@@ -56,42 +56,49 @@ export default {
   methods: {
     querySearch(type, queryString, cb) {
       console.log(this.info)
-      let leftTable = this.info
+      const leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象
-      for (let item in this.searchForm) {
+      for (const item in this.searchForm) {
         if (this.searchForm[item] === undefined || this.searchForm[item] === '') {
           this.$emit('change', objectMerge2([], this.info)) // 如果输入框为空恢复右边数据列表
         }
       }
-      let results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
+
+      const results = queryString ? leftTable.filter(this.createFilter(queryString, type)) : leftTable
       cb(results)
-      let array = []
+      const array = []
       results.forEach(e => {
         array.push(e)
       })
-      this.resultList = Object.assign({}, array)
+      this.resultList = Object.assign([], array)
       this.$emit('change', array)
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
-        console.log('sdfjisjdfisjdifjsdifjsidfjisdj')
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
     handleSelect(obj) {
       this.searchForm[this.selectVal] = obj[this.selectVal]
       this.selectVal = ''
-      let array = []
+      const array = []
       array.push(obj)
       this.$emit('change', array)
     },
     clearSender(event) {
       this.searchForm = this.$options.data().searchForm
     },
-    handleSelectAll () {
-      this.$emit('keyupEneter')
-      this.searchForm = this.$options.data().searchForm
+    handleSelectAll() {
+      clearTimeout(this.ttimer)
+      this.ttimer = setTimeout(() => {
+        if (this.searchForm.shipSn || this.searchForm.shipToCityName) {
+          if (this.resultList.length) {
+            this.$emit('keyupEneter')
+            this.searchForm = this.$options.data().searchForm
+          }
+        }
+      }, 500)
     }
   }
 }

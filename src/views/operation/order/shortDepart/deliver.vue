@@ -17,16 +17,13 @@
       <div class="info_tab">
         <!-- 完成并发车：有发车时间和配载时间
             完成配载：只有配载时间 -->
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%"
-        :summary-method="getSumLeft"
-          show-summary
-           tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
-          <el-table-column fixed sortable type="selection" width="50">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" @cell-dblclick="truckDetail">
+          <el-table-column fixed sortable type="selection" width="70">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -118,6 +115,15 @@ export default {
         //     }
         //   },
         {
+          label: '序号',
+          prop: 'number',
+          width: '80',
+          fixed: true,
+          slot: (scope) => {
+          return ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
+        }
+        },
+        {
           label: '发车批次',
           prop: 'batchNo',
           width: '110'
@@ -156,7 +162,7 @@ export default {
         },
         {
           label: '实际短驳时间',
-          prop: 'departureTime',
+          prop: 'actualSendtime',
           width: '160',
           slot: (scope) => {
             return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
@@ -246,11 +252,6 @@ export default {
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
-  watch: {
-    '$route'(to, from) {
-      console.log('========route========', to, from)
-    }
-  },
   methods: {
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -283,7 +284,13 @@ export default {
           break
         case 'truck': // 发车
           if (isWork) {
-            this.timeInfoVisible = true
+            this.setData(47)
+            if (this.isBatch) {
+              this.timeInfoVisible = true
+            } else {
+              this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
+              this.clearData()
+            }
           }
           break
         case 'chanelTruck': // 取消发车
@@ -303,14 +310,14 @@ export default {
           SaveAsFile({
             data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
             columns: this.tableColumn,
-            name: '短驳发车'
+            name: '短驳发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print': // 打印
           PrintInFullPage({
             data: this.selectInfoList.length ? this.selectInfoList : this.dataList,
             columns: this.tableColumn,
-            name: '短驳发车'
+            name: '短驳发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }
@@ -325,6 +332,9 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
+      this.selected = []
+      this.selectedData = []
+      this.selectedList = []
       this.selectInfoList = Object.assign([], list)
       if (list.length === 1) {
         this.selected = Object.assign([], list)
@@ -338,6 +348,7 @@ export default {
         this.selectedList = Object.assign([], list)
       }
       this.isBatch = true
+      console.log('list', list.length, this.selected.length, this.selectedList.length)
     },
     handlePageChange(obj) {
       this.searchQueryData.currentPage = obj.pageNum
@@ -355,12 +366,12 @@ export default {
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
         if (data) {
-          this.dataList = data.list
-          this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
-        }
+            this.dataList = data.list
+            this.total = data.total
+            this.loading = false
+          } else {
+            this.loading = false
+          }
       })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -402,8 +413,9 @@ export default {
           }
         })
       }
+      console.log('data.loadIds', data.loadIds)
       data.loadIds = data.loadIds.join(',')
-      if (!data.loadIds) { // 如果id为空，即请求状态不对，拦截请求
+      if (!data.loadIds || data.loadIds.length === 0) { // 如果id为空，即请求状态不对，拦截请求
         this.isBatch = false
       }
       console.log('data', data)
@@ -411,29 +423,28 @@ export default {
       data = {}
     },
     getActualTime(obj) {
-      this.setData(47)
-      if (this.isBatch) {
-        console.log('发车', this.commonTruck)
-        const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
-        this.$set(this.commonTruck, 'actualSendtime', timer)
-        this.loading = true
-        putTruckDepart(this.commonTruck).then(data => {
-          if (data) {
+      // if (this.isBatch) {
+      const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
+      this.$set(this.commonTruck, 'actualSendtime', timer)
+      this.loading = true
+      console.log('发车', this.commonTruck)
+      putTruckDepart(this.commonTruck).then(data => {
+        if (data) {
             this.loading = false
             this.$message({ type: 'success', message: '发车成功！' })
             this.fetchAllShortDepartList()
             this.clearData()
           }
+      })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+          this.clearData()
         })
-          .catch(err => {
-            this.loading = false
-            this._handlerCatchMsg(err)
-            this.clearData()
-          })
-      } else {
-        this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
-        this.clearData()
-      }
+      // } else {
+      //   this.$message({ type: 'warning', message: '已装车状态才可以发车确认' })
+      //   this.clearData()
+      // }
     },
     chanelTruck() { // 取消发车
       this.setData(48)
@@ -447,11 +458,11 @@ export default {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
             if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '取消发车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
+                this.loading = false
+                this.$message({ type: 'success', message: '取消发车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
           })
             .catch(err => {
               this.loading = false
@@ -459,6 +470,7 @@ export default {
               this.clearData()
             })
         })
+        .catch(() => {})
       } else {
         this.$message({ type: 'warning', message: '短驳中状态才可以取消发车' })
         this.clearData()
@@ -476,11 +488,11 @@ export default {
           this.loading = true
           putTruckLoad(this.commonTruck).then(data => {
             if (data) {
-              this.loading = false
-              this.$message({ type: 'success', message: '取消装车操作成功！' })
-              this.fetchAllShortDepartList()
-              this.clearData()
-            }
+                this.loading = false
+                this.$message({ type: 'success', message: '取消装车操作成功！' })
+                this.fetchAllShortDepartList()
+                this.clearData()
+              }
           })
             .catch(err => {
               this.loading = false
@@ -488,6 +500,7 @@ export default {
               this.clearData()
             })
         })
+        .catch(() => {})
       } else {
         this.$message({ type: 'warning', message: '已装车状态才可以取消装车' })
         this.clearData()

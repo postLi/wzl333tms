@@ -170,7 +170,7 @@ export default {
     path: '/company/lineManage/create',
     icon: 'chengyunshang',
     hidden: true,
-    name: 'lineManageDetail',
+    name: 'lineManageDetailAdd',
     component: _import('company/lineManage/create'),
     meta: {
       title: '新增线路',
@@ -182,7 +182,7 @@ export default {
     path: '/company/lineManage/modify',
     icon: 'chengyunshang',
     hidden: true,
-    name: 'lineManageDetail',
+    name: 'lineManageDetailEdit',
     component: _import('company/lineManage/create'),
     meta: {
       title: '修改线路',

@@ -61,6 +61,10 @@ const tagsView = {
       }
     },
     DEL_OTHERS_VIEWS: (state, view) => {
+      // 针对首页特殊处理
+      if (view.name === 'dashboard') {
+        state.visitedViews = []
+      }
       for (const [i, v] of state.visitedViews.entries()) {
         if (v.fullPath === view.fullPath) {
           state.visitedViews = state.visitedViews.slice(i, i + 1)

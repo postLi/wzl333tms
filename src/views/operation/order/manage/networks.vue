@@ -18,7 +18,7 @@
         :summary-method="getSumLeft"
           show-summary
          tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
 
@@ -36,7 +36,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :key="mykey" :issender="true" :networkFlog="true"  :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
+    <TableSetup :code="code" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
@@ -66,6 +66,7 @@ export default {
   },
   data() {
     return {
+      code: 'ORDERMANAGER_NETWORKLIST',
       mykey: '',
       tablekey: 0,
       btnsize: 'mini',

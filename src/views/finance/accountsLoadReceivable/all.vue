@@ -83,7 +83,7 @@
         </div>
       </transferTable>
       <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId" :btnLoading="btnLoading"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId  ||  otherinfo.orgid" :btnLoading="btnLoading"></Voucher>
       <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
     </div>
   </div>
@@ -144,49 +144,49 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'totalStatusCn',
-          width: '100'
-        }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'totalStatusCn',
+        width: '100'
+      }, {
           label: '签收状态',
           prop: 'signStatus',
           width: '100',
           fixed: false
         },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
-        {
-          'label': '现付',
-          'prop': 'nowPayFee'
-        }, {
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
+      {
+        'label': '现付',
+        'prop': 'nowPayFee'
+      }, {
           'label': '现付核销状态',
           width: '120',
           'prop': 'nowPayStateCn'
@@ -264,19 +264,19 @@ export default {
             return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
           }
         },
-        {
-          label: '实际核销回单付',
-          prop: 'inputReceiptpayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
+      {
+        label: '实际核销回单付',
+        prop: 'inputReceiptpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
             return scope.row.inputReceiptpayFee
           }
-        },
-        {
-          'label': '月结',
-          'prop': 'monthpayFee'
-        }, {
+      },
+      {
+        'label': '月结',
+        'prop': 'monthpayFee'
+      }, {
           'label': '月结核销状态',
           width: '110',
           'prop': 'monthpayStateCn'
@@ -295,20 +295,20 @@ export default {
             return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
           }
         },
-        {
-          label: '实际核销月付',
-          prop: 'inputMonthpayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
+      {
+        label: '实际核销月付',
+        prop: 'inputMonthpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
             return scope.row.inputMonthpayFee
           }
-        },
+      },
 
-        {
-          'label': '异动',
-          'prop': 'changeFee'
-        }, {
+      {
+        'label': '异动',
+        'prop': 'changeFee'
+      }, {
           'label': '异动核销状态',
           width: '100',
           'prop': 'changeStateCn'
@@ -342,64 +342,64 @@ export default {
           'prop': 'receiverCustomerUnit'
         },
 
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
 
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
             return `${parseTime(scope.row.createTime)}`
           }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
-        }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
@@ -554,7 +554,7 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
+      this.tablekey = new Date().getTime()
     },
     doAction(type) {
       switch (type) {
@@ -701,7 +701,7 @@ export default {
             e.inputChangeFee,
           ).result()
 
-          let item = objectMerge2({}, e)
+          const item = objectMerge2({}, e)
           let count = 0
           if (e.inputNowPayFee && e.notNowPayFee > 0) {
             count++
@@ -762,7 +762,6 @@ export default {
             this.infoTable.orderList.push(item)
           }
 
-
           // let item = Object.assign({}, e)
           // if (e.inputNowPayFee && e.notNowPayFee > 0) {
           //   this.infoTable.orderList.push(Object.assign({
@@ -793,7 +792,7 @@ export default {
           //     dataName: '月结付',
           //     amount: e.notMonthpayFee,
           //     inputMonthpayFee: e.notMonthpayFee,
-          //     feeReceivableTypeId: e.monthpayFeeId 
+          //     feeReceivableTypeId: e.monthpayFeeId
           //   }, item))
           // }
           // if (e.inputChangeFee && e.notChangeFee > 0) {

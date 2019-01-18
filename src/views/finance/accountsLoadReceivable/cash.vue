@@ -81,7 +81,7 @@
         </div>
       </transferTable>
       <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.ascriptionOrgId  ||  otherinfo.orgid"></Voucher>
       <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
     </div>
   </div>
@@ -141,47 +141,47 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'totalStatusCn',
-          width: '120'
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '120',
-          fixed: false
-        },
-        {
-          'label': '现付',
-          'prop': 'nowPayFee'
-        }, {
-          'label': '现付核销状态',
-          'prop': 'nowPayStateCn'
-        }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'totalStatusCn',
+        width: '120'
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        'label': '现付',
+        'prop': 'nowPayFee'
+      }, {
+        'label': '现付核销状态',
+        'prop': 'nowPayStateCn'
+      }, {
           'label': '已核销现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
@@ -211,63 +211,63 @@ export default {
           'prop': 'receiverCustomerUnit'
         },
 
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime)}`
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime)}`
         }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
       // getRouteInfo: {
       //   vo: {
@@ -310,7 +310,7 @@ export default {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.searchQuery.currentPage = 1
       this.searchQuery.pageSize = 100
-      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.getRouteInfo.vo.ascriptionOrgId)
       this.$set(this.searchQuery.vo, 'status', '')
       // if (!this.$route.query) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
@@ -337,7 +337,7 @@ export default {
     getList() {
       this.loading = true
       // this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
-      this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
+      // this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
@@ -397,10 +397,10 @@ export default {
       } else {
         this.textChangeDanger[index] = false
       }
-       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notNowPayFee) {
+      if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notNowPayFee) {
         this.isGoReceipt = true
         this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
-      }else {
+      } else {
         this.isGoReceipt = false
       }
       return false
@@ -428,7 +428,7 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
+      this.tablekey = new Date().getTime()
     },
     doAction(type) {
       switch (type) {
@@ -448,7 +448,7 @@ export default {
           // 默认设置实际核销数量
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
-           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
+          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
             return em.shipSn !== e.shipSn
           })
           this.rightTable.push(e)

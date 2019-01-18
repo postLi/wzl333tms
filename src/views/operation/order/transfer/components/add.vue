@@ -24,9 +24,16 @@
       </el-form>
       <div class="btns_box clearfix">
           <el-button type="info" class="cancelBtn" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain>取消中转</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>打印清单</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>导出清单</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印清单</el-button>
+          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain>导出清单</el-button>
+          <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" trigger="manual" width="160" :value="visible2">
+            <p>表格宽度修改了，是否要保存？</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+              <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+            </div>
+            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        </el-popover>
       </div>
       <div class="table_wrapper">
         <el-table
@@ -34,6 +41,9 @@
           :data="usersArr"
           stripe
           border
+          @header-dragend="setTableWidth"
+          @row-click="clickDetails"
+          @selection-change="getSelection" 
           height="100%"
           tooltip-effect="dark"
           :default-sort = "{prop: 'id', order: 'ascending'}"
@@ -51,6 +61,7 @@
               :fixed="column.fixed"
               sortable
               :label="column.label"
+               show-overflow-tooltip
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
@@ -59,6 +70,7 @@
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               show-overflow-tooltip
               :label="column.label"
               v-else
               :width="column.width">
@@ -70,8 +82,10 @@
           </template>
         </el-table>
       </div>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="stepCode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </template>
     <div slot="footer" class="dialog-footer">
+      <el-button @click="closeMe">关闭</el-button>
     </div>
   </pop-right>
 </template>
@@ -81,17 +95,20 @@ import { postCustomer, putCustomer } from '@/api/company/customerManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
 import SelectTree from '@/components/selectTree/index'
-import { parseTime } from '@/utils/'
+import { parseTime, objectMerge2 } from '@/utils/'
 import * as transferManageApi from '@/api/operation/transfer'
 import { getSystemTime } from '@/api/common'
 import querySelect from '@/components/querySelect/index'
+import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import TableSetup from '@/components/tableSetup'
 
 export default {
   components: {
     popRight,
     Upload,
     SelectTree,
-    querySelect
+    querySelect,
+    TableSetup
   },
   props: {
     popVisible: {
@@ -159,9 +176,11 @@ export default {
     }
 
     return {
+      visible2: false,
+      stepCode: 'TRANSFER_LOAD-1',
+      setupTableVisible: false,
       btnsize: 'mini',
       usersArr: [],
-
       carrierName: '',
       phoneshort: '', // 固话区号
       phonelong: '', // 固话号码
@@ -174,6 +193,14 @@ export default {
         remark: ''
       },
       tableColumn: [{
+        'label': '序号',
+        'prop': 'number',
+        'width': '100',
+        'fixed': true,
+        slot: (scope)=> {
+          return scope.$index + 1
+        }
+      },{
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '100',
@@ -298,21 +325,21 @@ export default {
         'width': '100'
       }, {
         'label': '到达省',
-        'prop': 'shipToCityName',
+        'prop': 'endProvince',
         'width': '100',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
         }
       }, {
         'label': '到达市',
-        'prop': 'shipToCityName',
+        'prop': 'endCity',
         'width': '100',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
         }
       }, {
         'label': '到达县区',
-        'prop': 'shipToCityName',
+        'prop': 'endArea',
         'width': '100',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
@@ -477,8 +504,8 @@ export default {
       departments: [],
       groups: [],
       inited: false,
-      transferBatchNo: ''
-
+      transferBatchNo: '',
+      selectDetailList: []
     }
   },
   mounted() {
@@ -508,12 +535,34 @@ export default {
   },
   methods: {
     doAction(type) {
-      if (type === 'cancel') {
-        this.$emit('action', 'cancel', [this.transferBatchNo])
+      const columnArr = objectMerge2([], this.tableColumn)
+      switch (type) {
+        case 'cancel':
+         this.$emit('action', 'cancel', [this.transferBatchNo])
+        break
+        case 'print':
+        PrintInFullPage({
+            data: this.selectDetailList.length ? this.selectDetailList : this.usersArr,
+            columns: columnArr,
+            name: '中转-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}'),
+          })
+        break
+        case 'export':
+        SaveAsFile({
+            data: this.selectDetailList.length ? this.selectDetailList : this.usersArr,
+            columns: columnArr,
+            name: '中转-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
+        break
       }
     },
-    setTable() {
-
+   setColumn(obj) { // 打开表格设置
+      this.tableColumn = obj
+      this.setupTableVisible = false
+      this.tablekey = Math.random()
+    },
+    setTable () {
+      this.setupTableVisible = true
     },
     // 获取批次详细信息
     getUpdateTransferDetail(transferBatchNo) {
@@ -539,6 +588,12 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
+    clickDetails(row) {
+      this.$refs.multipleTable.toggleRowSelection(row)
+    },
+    getSelection(list) {
+      this.selectDetailList = Object.assign([], list)
+    },
     initInfo() {
       this.loading = false
     },
@@ -547,6 +602,30 @@ export default {
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
+    },
+    saveToTableSetup() {
+      this.visible2 = false
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+    },
+    setTableWidth(newWidth, oldWidth, column, event) {
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
+    },
+    showSaveBox() {
+      clearTimeout(this.tabletimer)
+    },
+    hideSaveBox() {
+      clearTimeout(this.tabletimer)
+      this.tabletimer = setTimeout(() => {
+        this.visible2 = false
+      }, 10000)
     },
     closeMe(done) {
       this.reset()

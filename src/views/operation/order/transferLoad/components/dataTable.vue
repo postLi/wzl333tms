@@ -8,7 +8,7 @@
     <!-- 左边表格区 -->
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn2">
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickAddItem" :summary-method="getSumRight" :show-overflow-tooltip="true" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary="true">
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed type="index" width="50" label="序号">
         </el-table-column>
         <el-table-column fixed :render-header="setHeader" width="50">
           <template slot-scope="scope">
@@ -21,6 +21,8 @@
         <el-table-column prop="shipSn" label="运单号" width="120" fixed>
         </el-table-column>
         <el-table-column prop="childShipSn" label="子运单号" width="120" fixed>
+        </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
         </el-table-column>
@@ -44,8 +46,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="100">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="库存重量" width="100">
@@ -65,7 +66,7 @@
     <!-- 右边表格区 -->
     <div style="height:100%;" slot="tableRight" class="tableHeadItemBtn2">
       <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" @row-dblclick="dclickMinusItem" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true'>
-        <el-table-column fixed type="index" width="50">
+        <el-table-column fixed type="index" width="50" label="序号">
         </el-table-column>
         <el-table-column fixed width="50" :render-header="setHeader2">
           <template slot-scope="scope">
@@ -76,6 +77,8 @@
         <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="120">
+        </el-table-column>
+        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="oddNumbers" sortable label="中转单号" width="120">
           <template slot-scope="scope">
@@ -136,8 +139,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="120">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
       </el-table>

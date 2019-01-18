@@ -44,13 +44,13 @@
               {{scope.$index+1}}
             </template>
           </el-table-column>
-          <el-table-column fixed :render-header="setHeaderMinus" width="50">
+          <el-table-column fixed :render-header="setHeaderMinus" width="50" sortable>
             <template slot-scope="scope">
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
           </el-table-column>
-          <template v-for="column in tableColumnRight">
-            <el-table-column :key="column.id" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
+          <template v-for="(column, cindex) in tableColumnRight">
+            <el-table-column :key="cindex" :prop="column.prop" :fixed="column.fixed" :label="column.label" :width="column.width" sortable>
             </el-table-column>
           </template>
         </el-table>
@@ -275,17 +275,18 @@ export default {
   watch: {
     handlingFeeInfo: {
       handler(cval, oval) {
-        console.log('-----获取操作费 obj 2------', cval, oval)
-        if (cval) {
-          this.countHandingFee()
-        }
+        console.warn('-----获取操作费 obj 2------', cval, oval)
+        // if (cval) {
+        this.countHandingFee()
+        this.$emit('loadCurTable', this.rightTable)
+        this.$emit('loadTable', this.orgRightTable)
+        // }
       },
       deep: true
     },
-    submitLoadNew: {
+    submitLoadNew: { // 计算配载后拿到的数据
       handler(cval, oval) {
         if (cval && cval.right) {
-          console.log('jsdifjisdjfisjdifjsifjiwjeifjsdijf', cval, oval)
           // this.orgLeftTable[this.truckIndex] = Object.assign([], cval)
           let arr = []
           this.orgLeftTable = Object.assign([], cval.left)
@@ -437,10 +438,13 @@ export default {
           })
         }
       })
+      if (this.orgLeftTable.length) {
+        this.leftTable = objectMerge2([], this.orgLeftTable)
+      }
       if (arr.length) {
         arr.forEach((e, index) => { // 左边剔除被配载的运单后还剩下的运单列表
           this.leftTable = this.leftTable.filter(em => {
-            return em.repertoryId != e.repertoryId
+            return em.repertoryId !== e.repertoryId
           })
           this.orgLeftTable = Object.assign([], this.leftTable)
         })
@@ -463,6 +467,7 @@ export default {
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
+        animation: 150, //动画参数
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')
@@ -610,9 +615,9 @@ export default {
       this.isChangeHandlingFee = true
       console.log('-----获取操作费 switch 3------ ')
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: //按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: //按运单车费占车费比例分摊 (运单-回扣）/（总车费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
-          let totalShipTotalFee = 0 // 总运费合计
+          let totalShipTotalFee = 0 // 总车费合计
           this.rightTable.forEach(e => {
             totalBrokerageFee = tmsMath._add(totalBrokerageFee, e.brokerageFee ? e.brokerageFee : 0)
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
@@ -694,6 +699,7 @@ export default {
       //   })
       // }
       this.orgRightTable[this.truckIndex] = this.rightTable
+      console.log('-------计算操作费后-------', this.orgRightTable, this.truckIndex, this.rightTable)
     },
     calc(n) {
       return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)

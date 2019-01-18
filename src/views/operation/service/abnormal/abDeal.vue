@@ -17,7 +17,7 @@
           :summary-method="getSumLeft"
           show-summary
            tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -31,7 +31,7 @@
         </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
         <Addabnormal :licenseTypes="licenseTypes" :issender="true" :isModify="isModify" :isCheck="isCheck" :isDeal="isDeal" :info="selectInfo" :id="id" :orgid="orgid" :companyId="otherinfo.companyId" :popVisible.sync="AddAbnormalVisible" @close="closeAddAbnormal" @success="fetchData"  />
-        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" code="ORDER_ABNO2"></TableSetup>
       </div>
     </div>
 </template>
@@ -64,14 +64,14 @@ export default {
   mounted() {
     this.loading = true
     this.searchQuery.vo.disposeOrgId = this.otherinfo.orgid
-    Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
-      // this.loading = false
-      this.licenseTypes = resArr[1]
-      this.loading = false
-    }).catch(err => {
-      this._handlerCatchMsg(err)
-      this.loading = false
-    })
+    // Promise.all([this.fetchAllreceipt(this.otherinfo.orgid)]).then(resArr => {
+    //   // this.loading = false
+    //   this.licenseTypes = resArr[1]
+    //   this.loading = false
+    // }).catch(err => {
+    //   this._handlerCatchMsg(err)
+    //   this.loading = false
+    // })
   },
   data() {
     return {
@@ -98,7 +98,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {

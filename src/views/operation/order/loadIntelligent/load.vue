@@ -25,20 +25,20 @@
       <div class="loadIntelligent_dataview_table" :style="viewTableStyle">
         <!-- 穿梭框 -->
         <transferTable 
+        @loadTable="getLoadTable" 
+        @loadCurTable="getLoadCurTable" 
+        @openParamSet="openlntelligent" 
+        @leftTable="getLeftTable" 
+        @showViewTable="showFullViewTable" 
         :truckIndex="truckIndex" 
         :getinfoed="getinfoed" 
         :loadTable="setLoadTableList" 
         :delData="delCurTruckData" 
-        @showViewTable="showFullViewTable" 
-        @loadTable="getLoadTable" 
-        @loadCurTable="getLoadCurTable" 
-        @openParamSet="openlntelligent" 
         :resetTuckLoad="resetTrucDelListLen" 
         :addOrgRightTable="isAddOrgRightTable" 
         :dofo="truckInfo" 
         :handlingFeeInfo="handlingFeeInfo"
         :schemeIndex="schemeIndex" 
-        @leftTable="getLeftTable" 
         :submitLoadNew="submitLoadNew"></transferTable>
       </div>
       <div class="loadIntelligent_dataview_chart" @transitionend.self="resizeChart" :style="viewChartStyle">
@@ -438,6 +438,7 @@ export default {
       this.submitLoadNew = {}
       this.$nextTick(() => {
         this.submitLoadNew = obj
+        console.log('getSubmitLoadNew::::::::::::::::', this.submitLoadNew, obj)
       })
     },
     getSchemeIndex(num) { // 获取当前方案下标index

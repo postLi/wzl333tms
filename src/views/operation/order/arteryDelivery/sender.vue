@@ -13,11 +13,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%"
-        :summary-method="getSumLeft"
-          show-summary
-         tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -109,41 +106,42 @@ export default {
         }
       },
       tableColumn: [{
-        label: '序号',
-        width: '70',
-        fixed: true,
-        slot: (scope) => {
-          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-        }
-      }, {
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFeeAll',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '110',
-        fixed: true
-      }, {
-        label: '发车网点',
-        prop: 'orgName',
-        width: '110',
-        fixed: false
-      }, {
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        }, {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFeeAll',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: true
+        }, {
+          label: '发车网点',
+          prop: 'orgName',
+          width: '110',
+          fixed: false
+        },{
           label: '目的网点',
           prop: 'endOrgName',
           width: '110',
@@ -229,23 +227,23 @@ export default {
           width: '120',
           fixed: false
         },
-      {
-        label: '油卡号',
-        prop: 'oilCardNumber',
-        width: '120',
-        fixed: false
-      }, {
-        label: '现付运费(元)',
-        prop: 'nowpayCarriage',
-        width: '110',
-        fixed: false
-      }, {
+        {
+          label: '油卡号',
+          prop: 'oilCardNumber',
+          width: '120',
+          fixed: false
+        }, {
+          label: '现付车费(元)',
+          prop: 'nowpayCarriage',
+          width: '110',
+          fixed: false
+        }, {
           label: '现付油卡(元)',
           prop: 'nowpayOilCard',
           width: '110',
           fixed: false
         }, {
-          label: '到付运费(元)',
+          label: '到付车费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
@@ -255,7 +253,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '回付运费(元)',
+          label: '回付车费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
@@ -265,17 +263,17 @@ export default {
           width: '110',
           fixed: false
         },
-      {
-        label: '运费合计(元)',
-        prop: 'totalFee',
-        width: '110',
-        fixed: false
-      }, {
-        label: '整车保险费(元)',
-        prop: 'carloadInsuranceFee',
-        width: '120',
-        fixed: false
-      }, {
+        {
+          label: '车费合计(元)',
+          prop: 'totalFee',
+          width: '110',
+          fixed: false
+        }, {
+          label: '整车保险费(元)',
+          prop: 'carloadInsuranceFee',
+          width: '120',
+          fixed: false
+        }, {
           label: '发站装卸费(元)',
           prop: 'leaveHandlingFee',
           width: '120',
@@ -386,7 +384,7 @@ export default {
               this.openAddCustomer()
               console.log('选中的数据1111111', this.selectInfo)
             } else {
-              this.$message.warning('批次【 ' + this.selected[0].batchNo + ' 】状态为：' + this.selected[0].bathStatusName + ', 不允许取消到车~')
+              this.$message.warning('批次【 ' + this.selected[0].batchNo + ' 】状态为：' + this.selected[0].bathStatusName + ', 不允许到车入库~')
               this.closeAddCustomer()
               this.$refs.multipleTable.clearSelection()
               return false

@@ -297,9 +297,9 @@ export default {
   },
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.featchAllpayment(this.otherinfo.orgid).then(res => {
-      // this.loading = false
-    })
+    // this.featchAllpayment(this.otherinfo.orgid).then(res => {
+    //   // this.loading = false
+    // })
   },
   data() {
     return {

@@ -7,7 +7,11 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
+const {externals, plugins} = require('./cdn')
+
 module.exports = {
+  externals,
+  plugins,
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js',

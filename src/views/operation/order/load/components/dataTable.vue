@@ -19,7 +19,9 @@
             <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
+         <el-table-column fixed prop="shipGoodsSn" sortable label="货号" width="140">
+        </el-table-column>
+        <el-table-column prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
@@ -49,8 +51,7 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
-        </el-table-column>
+        
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="140">
@@ -81,7 +82,9 @@
             <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column fixed prop="shipFromOrgName" label="开单网点" width="80">
+        <el-table-column fixed prop="shipGoodsSn" sortable label="货号" width="140">
+        </el-table-column>
+        <el-table-column prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="130">
         </el-table-column>
@@ -142,8 +145,6 @@
         <el-table-column prop="shipReceiverMobile" sortable label="收货人电话" width="120">
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="140">
-        </el-table-column>
-        <el-table-column prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
       </el-table>
     </div>
@@ -252,7 +253,7 @@ export default {
         return
       }
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: // 按运单运费占车费比例分摊 (运单-回扣）/（总运费-总回扣）*车费
+        case 45: // 按运单运费占运费比例分摊 (运单-回扣）/（总运费-总回扣）*运费
           let totalBrokerageFee = 0 // 总回扣
           let totalShipTotalFee = 0 // 总运费合计
           this.rightTable.forEach(e => {
@@ -268,12 +269,12 @@ export default {
             }
           })
           break
-        case 44: // 按票数分摊 车费/票数
+        case 44: // 按票数分摊 运费/票数
           this.rightTable.forEach((e, index) => {
             e.handlingFee = this.calc(tmsMath._div(this.handlingFeeInfo.handlingFeeAll, this.rightTable.length))
           })
           break
-        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*车费
+        case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*运费
           let totalWeight = 0
           this.rightTable.map(e => {
             totalWeight = tmsMath._add(totalWeight, e.loadWeight)
@@ -282,7 +283,7 @@ export default {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadWeight, totalWeight), this.handlingFeeInfo.handlingFeeAll))
           })
           break
-        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*车费
+        case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*运费
           let totalVolume = 0
           this.rightTable.map(e => {
             totalVolume = tmsMath._add(totalVolume, e.loadVolume)
@@ -291,7 +292,7 @@ export default {
             e.handlingFee = this.calc(tmsMath._mul(tmsMath._div(e.loadVolume, totalVolume), this.handlingFeeInfo.handlingFeeAll))
           })
           break
-        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*车费
+        case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*运费
           let totalAmount = 0
           this.rightTable.map(e => {
             totalAmount = tmsMath._add(totalAmount, e.loadAmount)
@@ -540,11 +541,11 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
+      const propsArr = ['_index|2|单', 'brokerageFee','shipTotalFee','shipArrivepayFee|', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const propsArr = ['_index|2|单', '_index|3|单', 'shipArrivepayFee|', 'handlingFee', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
+      const propsArr = ['_index|2|单', 'brokerageFee','shipTotalFee','shipArrivepayFee|', 'handlingFee', 'repertoryAmount|', 'repertoryWeight|', 'repertoryVolume|', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'loadAmount|', 'loadWeight|', 'loadVolume|']
       return getSummaries(param, propsArr)
     }
   }

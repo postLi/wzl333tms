@@ -102,7 +102,9 @@
     watch: {
       dotInfo(newVal) {
         this.treeData = this.dotInfo
-        this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
+        if (this.$refs.tree) {
+          this.$refs.tree.setCheckedKeys(expandGroups(this.treeData))
+        }
       },
       theUser(newVal) {
         if (this.isModify) {

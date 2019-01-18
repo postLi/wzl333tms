@@ -14,7 +14,7 @@
         :summary-method="getSumLeft"
           show-summary
          :row-style="tableRowColor" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
-          <el-table-column fixed sortable type="selection" width="35">
+          <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -37,7 +37,7 @@
       <!-- 颜色设置弹出框 -->
       <Colorpicker :popVisible="colorpickerVisible" :reportors="reportorSelect" @close="closeColorpicker" @success="setColumColor"></Colorpicker>
       <!-- 表格设置弹出框 -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :code="'ORDER_REPER_ARRIVE'" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
     </div>
   </div>
 </template>
@@ -81,6 +81,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         label: '运单号',
         prop: 'shipSn',
         width: '110',
@@ -122,7 +130,7 @@ export default {
         prop: 'createTime',
         width: '160',
         slot: (scope) => {
-          return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         }
       },
       {
@@ -361,13 +369,18 @@ export default {
         width: '90'
       },
       {
+        label: '毛利',
+        prop: 'grossProfit',
+        width: '90'
+      },
+      {
         label: '运输方式',
         prop: 'shipShippingTypeName',
         width: '100'
       },
       {
         label: '业务类型',
-        prop: 'shipBusinessType',
+        prop: 'shipBusinessTypeName',
         width: '100'
       },
       {
@@ -413,7 +426,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchAllOrderRepertory()
+    // this.fetchAllOrderRepertory()
   },
   methods: {
     getSumLeft(param, type) {
@@ -454,7 +467,7 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.repertoryArr,
             columns: this.tableColumn,
-            name: '到货库存'
+            name: '到货库存-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print': // 打印
@@ -462,7 +475,7 @@ export default {
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.repertoryArr,
             columns: this.tableColumn,
-            name: '到货库存'
+            name: '到货库存-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

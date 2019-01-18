@@ -476,7 +476,7 @@
           </el-table-column>
         </el-table> -->
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" :summary-method="getSumLeft" show-summary @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -496,7 +496,7 @@
     </div>
     <Addsign :isPick="isPick" :issender="true" :isDbclick="isDbclick" :repertoryId="repertoryId" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddSignVisible" @close="openAddSign" @success="fetchData" :id="id" :isDelivery="isDelivery"></Addsign>
     <Addbatch :issender="true" :dotInfo="dotInfo" :popVisible="popVisible" @close="closeAddBacth" @success="fetchData" :isModify="isModify" :isSongh="isSongh"></Addbatch>
-    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" :code="'ORDERSIGN2'"></TableSetup>
   </div>
 </template>
 <script>
@@ -570,7 +570,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {
@@ -735,29 +735,29 @@ export default {
         prop: 'signRemark',
         width: '120',
         fixed: false
-      }, {
+      },  {
         label: '到达省',
-        prop: 'shipToCityName1',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        // },
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName2',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        // },
         fixed: false
       }, {
         label: '到达县',
-        prop: 'shipToCityName3',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        // },
         fixed: false
       }, {
         label: '付款方式',
@@ -980,7 +980,7 @@ export default {
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
-            name: '送货签收'
+            name: '送货签收-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 签收

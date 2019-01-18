@@ -3,7 +3,7 @@
       <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_GETCANCEL>取消接收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP3>导出</el-button>
@@ -294,7 +294,7 @@
           :summary-method="getSumLeft"
           show-summary
            tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -309,7 +309,7 @@
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" :code="'RECEIPT3'"></TableSetup>
   </div>
 </template>
 <script>
@@ -339,12 +339,12 @@ export default {
   },
   mounted() {
         // this.searchQuery.vo.orgid = this.otherinfo.orgid
-    this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
+    /* this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
     // this.loading = false
     }).catch((err) => {
       this.loading = false
       this._handlerCatchMsg(err)
-    })
+    }) */
   },
   data() {
     return {
@@ -373,7 +373,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {
@@ -540,27 +540,27 @@ export default {
         fixed: false
       }, {
         label: '到达省',
-        prop: 'shipToCityName1',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        // },
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName2',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        // },
         fixed: false
       }, {
         label: '到达县',
-        prop: 'shipToCityName3',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        // },
         fixed: false
       }]
     }
@@ -695,7 +695,7 @@ export default {
               this._handlerCatchMsg(err)
             })
           } else {
-            this.$message.warning('回单已发放不能取消~~')
+            this.$message.warning('回单未接收不可取消~')
           }
 
           break

@@ -68,7 +68,7 @@ import SearchForm from './components/search'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
-import { getSummaries, parseTime } from '@/utils/'
+import { getSummaries, parseTime, objectMerge2 } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
 export default {
@@ -136,15 +136,15 @@ export default {
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      },{
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        }, {
-        'label': '发站',
-        'prop': 'shipFromCityName'
       }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
+          'label': '发站',
+          'prop': 'shipFromCityName'
+        }, {
         'label': '到站',
         'prop': 'shipToCityName'
       }, {
@@ -156,17 +156,17 @@ export default {
       }, {
         'label': '已核销到付',
         'prop': 'finishArrivepayFee',
-          slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
-        }
+        slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+          }
       }, {
         'label': '未核销到付',
         'prop': 'notArrivepayFee',
-          slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-        }
+        slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+          }
       }, {
         'label': '开单日期',
         'prop': 'createTime',
@@ -229,11 +229,14 @@ export default {
     viewDetails(row) {
       row = row || []
       console.log('row:', row.map(el => { console.log('11') }).join(','))
+      const data = objectMerge2(this.searchQuery)
+      data.vo.ascriptionOrgId = data.vo.shipFromOrgid
+
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
           tab: '到付核销',
-          searchQuery: JSON.stringify(this.searchQuery),
+          searchQuery: JSON.stringify(data),
           currentPage: 'arrive',
           selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }

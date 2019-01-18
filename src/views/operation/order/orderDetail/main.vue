@@ -284,7 +284,7 @@
             </el-col>
             <el-col :span="4">
               <div class="order-form-item">
-                <span class="order-form-label">制单员</span>
+                <span class="order-form-label">业务员</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.userName" disabled size="mini" />
                 </el-form-item>
@@ -595,7 +595,7 @@ import orderManage from '@/api/operation/orderManage'
 import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 获取打印位置参数接口
 // import { getPrintOrderItems, getPrintLibItems } from '@/api/operation/print'
-import { getEnableLibSetting, getEnableOrderSetting, getSettingCompanyLi, getSettingCompanyOrder } from '@/api/operation/print'
+import { getSettingCompanyLi, getSettingCompanyOrder } from '@/api/operation/print'
 // 阿拉伯数字转中文大写
 import { smalltoBIG } from '@/filters/'
 import { tmsMath, parseTime } from '@/utils/'
@@ -775,14 +775,30 @@ export default {
       // 打印数据
       printDataObject: {},
       // 付款方式
-      PAY_WAY: {}
+      PAY_WAY: {},
+      initStartPrint: true
     }
   },
   watch: {
-    orderdata(newVal) {
-      console.log('watch orderdata:', newVal)
-      if (newVal) {
-        this.initIndex()
+    orderdata: {
+      handler(cval, oval) {
+        console.log('watch orderdata:', cval)
+        if (cval) {
+          console.log('shipSn', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+          // 判断是否注册过该事件
+          this.eventBus.$on('startPrint', () => {
+              console.log('startPrint', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+              if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
+              if (this.initStartPrint) {
+                  this.initStartPrint = false
+                  this.startPrint()
+                }
+            }
+            })
+
+          this.initIndex()
+        }
+        this.initStartPrint = cval !== oval
       }
     },
     'form.shipFeeStatusDto.shipReceivableFeeStatus'(newVal) {
@@ -843,6 +859,7 @@ export default {
     }
   },
   activated() {
+
     // if (window.TMS_printOrderInfo) {
     //   const fn = () => {
     //     if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
@@ -859,15 +876,14 @@ export default {
     // }
   },
   mounted() {
-    this.eventBus.$on('startPrint', () => {
-      this.startPrint()
-    })
     this.loading = true
     this.initIndex()
   },
   methods: {
     startPrint() {
-      if (window.TMS_printOrderInfo) {
+      console.log('startPrint  111', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
+      if (window.TMS_printOrderInfo === this.orderdata.tmsOrderShipInfo.shipSn) {
+        console.log('startPrint 222', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
         const fn = () => {
           if (this.form.tmsOrderShipInfo.shipPrintLib && this.form.tmsOrderShipInfo.shipPrintLib > 0) {
             this.doAction('printLibkey').then(r => {
@@ -878,6 +894,7 @@ export default {
           } else {
             window.TMS_printOrderInfo = false
           }
+          console.log('startPrint 333', window.TMS_printOrderInfo, this.orderdata.tmsOrderShipInfo.shipSn)
         }
         this.doAction('printShipKey').then(fn).catch(fn)
       }
@@ -1019,6 +1036,13 @@ export default {
       this.receiver = {}
       this.form.tmsOrderShipInfo = this.resetObj(this.form.tmsOrderShipInfo)
       this.form.tmsOrderTransfer = this.resetObj(this.form.tmsOrderTransfer)
+
+      this.form.tmsOrderShipSign = {}
+      this.form.tmsOrderShipSignList = []
+      this.form.tmsShLoadsList = [{}]
+      this.form.tmsGxLoadsList = [{}]
+      this.form.tmsDbLoadsList = [{}]
+      this.form.tmsOrderTransferList = [{}]
       // this.setOrderDate()
     },
     // doAction(type) {
@@ -1042,6 +1066,7 @@ export default {
     //   }
     // },
     doAction(type) {
+      console.log('doAction', type, this.orderdata, this.form)
       const printObj = {
         orderdata: {
           tmsOrderShipInfo: this.orderdata.tmsOrderShipInfo,
@@ -1066,7 +1091,7 @@ export default {
           // console.log('系统所有打印可设置的数据 标签::', JSON.stringify(data))
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.label
-          return getEnableLibSetting().then(data => {
+          return getSettingCompanyLi().then(data => {
             printObj.printSetup = data
             printObj.type = 'lib'
             printObj.number = parseInt(this.orderdata.tmsOrderShipInfo.shipPrintLib, 10) || 0
@@ -1099,7 +1124,7 @@ export default {
           // console.log('系统所有打印可设置的数据 运单::', data)
           // })
           printObj.printer = this.otherinfo.systemSetup.printSetting.ship
-          return getEnableOrderSetting().then(data => {
+          return getSettingCompanyOrder().then(data => {
             printObj.printSetup = data
             printObj.type = 'order'
             CreatePrintPageEnable(printObj)

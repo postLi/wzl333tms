@@ -621,5 +621,25 @@ export default {
   // 获取上一次开单信息
   getLastOrderInfo() {
     return fetch.get('/api-order/order/v1/selectOrderByCreateTime')
+  },
+  // 获取运单的费用信息
+  getOrderFinanceInfo(id) {
+    return fetch.get('/api-order/order/v1/getOrderFinanceInfo/' + id)
+  },
+  /**
+   * 获取最近的到站信息
+   * @param {*} data
+   * {
+  "currentPage":1,
+  "pageSize":10,
+  "vo":{
+		"type":5,
+		"value":"青"
+
+  }
+}
+   */
+  getLastToCities(data) {
+    return fetch.post('/api-order/order/recently/v1/findRecentlyListByQuery', data)
   }
 }

@@ -8,7 +8,7 @@
           <el-form-item label="批次状态" prop="batchTypeId">
             <!-- <selectBatchType v-model="searchForm.batchTypeId" type="delivery_batch_type" clearable></selectBatchType> -->
   
-            <selectBatchType v-model="searchForm.batchTypeId" type="delivery_batch_type" clearable @keyup.enter.native="onSubmit"></selectBatchType>
+            <selectBatchType v-model="searchForm.batchTypeId" type="delivery_batch_type" @keyup.enter.native="onSubmit"></selectBatchType>
           </el-form-item>
           <el-form-item label="发车批次">
             <el-input v-model="searchForm.batchNo" :maxlength="15" auto-complete="off" placeholder="发车批次" clearable @keyup.enter.native="onSubmit"></el-input>
@@ -90,6 +90,7 @@ export default {
     }
   },
   mounted() {
+    this.searchForm.batchTypeId = this.$options.data().searchForm.batchTypeId
     this.onSubmit()
   },
   methods: {

@@ -68,38 +68,31 @@
     <div class="tab_infos">
       <div class="btns_box">
         <el-button v-if="info.endOrgName && isNeedArrival" :size="btnsize" type="warning" icon="el-icon-circle-plus" plain @click="doAction('add')">短驳入库</el-button>
-        <el-popover
-          @mouseenter.native="showSaveBox"
-          @mouseout.native="hideSaveBox"
-          placement="top"
-          trigger="manual"
-          width="160"
-          :value="visible2">
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" trigger="manual" width="160" :value="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" :code="code">表格设置</el-button>
         </el-popover>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
-        
       </div>
       <div class="detailinfo_tab">
-        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" tyle="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border :key="tablekey" height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
           <el-table-column fixed type="selection" width="50"></el-table-column>
-          <el-table-column fixed label="序号" prop="number" width="50">
+          <!-- <el-table-column fixed label="序号" prop="number" width="50">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <!-- 普通列 -->
           <template v-for="column in tableColumn">
-            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot" >
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-if="!column.slot">
             </el-table-column>
             <!-- 有返回值的列 -->
-            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else >
+            <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" :width="column.width" v-else>
               <template slot-scope="scope">
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
@@ -126,7 +119,7 @@
 <script>
 import { getSelectLoadDetailList } from '@/api/operation/load'
 import { postAddRepertory } from '@/api/operation/shortDepart'
-import { objectMerge2 } from '@/utils/index'
+import { objectMerge2, parseTime } from '@/utils/index'
 import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../../load/components/actualSendtimeDialog'
@@ -199,15 +192,16 @@ export default {
         truckIdNumber: ''
       },
       tableColumn: [],
-      tableColumnArrival: [/* {
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-        }, */ {
+      tableColumnArrival: [{
+          label: '序号',
+          prop: 'number',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
+            return scope.$index + 1
+          }
+        },
+        {
           label: '运单号',
           prop: 'shipSn',
           width: '130',
@@ -430,7 +424,7 @@ export default {
         this.isEditActual = true // 短驳发车
         break
       case 'arrival':
-        this.code = ''
+        this.code = 'ORDER_SHORT-3'
         this.isEditActual = false // 短驳到货
         this.tableColumn = this.$options.data().tableColumnArrival
         break
@@ -456,7 +450,7 @@ export default {
     },
     doAction(type) {
       const columnArr = objectMerge2([], this.tableColumn)
-      columnArr.unshift(this.xuhaodata)
+      // columnArr.unshift(this.xuhaodata)
       switch (type) {
         case 'add': // 短驳入库
           if (this.arrivalStatus === '短驳中') {
@@ -472,10 +466,8 @@ export default {
             obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
           }
           let appendTopStr = '<style>body{width: 100%;}</style>'
-          appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
-            this.otherinfo.companyName +
-            '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
-            obj.orgName + '   →   ' + obj.arriveOrgName +
+          appendTopStr += '<body width="100%"><table width="100%" style="font-size: {content_word_size}px;"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+            obj.orgName + '   →   ' + (obj.arriveOrgName || obj.endOrgName || '') +
             '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.loadTime +
             '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
@@ -490,7 +482,7 @@ export default {
           PrintInFullPage({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
             columns: columnArr,
-            name: '送货管理',
+            name: '短驳管理-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}'),
             appendTop: appendTopStr
           })
           break
@@ -499,7 +491,7 @@ export default {
           SaveAsFile({
             data: this.selectDetailList.length ? this.selectDetailList : this.detailList,
             columns: columnArr,
-            name: '送货管理'
+            name: '短驳管理-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }
@@ -637,15 +629,15 @@ export default {
           this.$set(this.newData.tmsOrderLoad, 'actualArrivetime', obj.actualArrivetime)
         }
         postAddRepertory(50, this.newData).then(data => {
-          if (data.status === 200) {
-            this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() }})
-            this.$message({ type: 'success', message: '短驳入库操作成功' })
-            this.message = true
-          } else {
-            this.message = false
-          }
-          this.$emit('isSuccess', this.message)
-        })
+            if (data.status === 200) {
+              this.$router.push({ path: '../shortDepart/arrival', query: { tableKey: Math.random() } })
+              this.$message({ type: 'success', message: '短驳入库操作成功' })
+              this.message = true
+            } else {
+              this.message = false
+            }
+            this.$emit('isSuccess', this.message)
+          })
           .catch(error => {
             this.$message.error(error.errorInfo || error.text)
             this.message = false
@@ -657,33 +649,40 @@ export default {
       this.detailTableLoading = true
       this.loadId = this.info.id
       getSelectLoadDetailList(this.loadId).then(data => {
-        if (data) {
-          this.detailList = (data.data || []).map(el => {
-            const start = (el.shipFromCityName || '').split(',')
-            const end = (el.shipToCityName || '').split(',')
-            el.shipFromCityName = start[2] || start[1] || start[0] || ''
-            el.shipToCityName = end[2] || end[1] || end[0] || ''
+          if (data) {
+            this.detailList = (data.data || []).map(el => {
+              const start = (el.shipFromCityName || '').split(',')
+              const end = (el.shipToCityName || '').split(',')
+              el.shipFromCityName = start[2] || start[1] || start[0] || ''
+              el.shipToCityName = end[2] || end[1] || end[0] || ''
 
-            return el
-          })
-          this.setData()
-          this.toggleAllRows()
-          this.$nextTick(() => {
-            console.log('isNeedArrival', this.isNeedArrival)
-            this.detailList.forEach(e => {
-              if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
-                if (e.warehouStatus !== 1) { // 部分入库
-                  e.actualAmount = e.loadAmount
-                  e.actualWeight = e.loadWeight
-                  e.actualVolume = e.loadVolume
-                }
-              } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
-              }
+              return el
             })
-          })
-          this.detailTableLoading = false
-        }
-      })
+            /* if (location.href.indexOf('192.168.1') !== -1 && this.detailList.length && true) {
+              let mi = 30
+              while (mi--) {
+                this.detailList.push(this.detailList[0])
+              }
+            } */
+
+            this.setData()
+            this.toggleAllRows()
+            this.$nextTick(() => {
+              console.log('isNeedArrival', this.isNeedArrival)
+              this.detailList.forEach(e => {
+                if (this.isNeedArrival) { // isNeedArrival true-未入库默认设置实到数量为配载数量
+                  if (e.warehouStatus !== 1) { // 部分入库
+                    e.actualAmount = e.loadAmount
+                    e.actualWeight = e.loadWeight
+                    e.actualVolume = e.loadVolume
+                  }
+                } else { // isNeedArrival false-已入库默认设置实到数量为列表中的实到数量
+                }
+              })
+            })
+            this.detailTableLoading = false
+          }
+        })
         .catch(error => {
           this.detailTableLoading = false
           this.$message.error(error.errorInfo || error.text)
@@ -708,18 +707,22 @@ export default {
       })
     },
     isWareStatus(index, row) {
-      if (!this.isNeedArrival && row.warehouStatus === 1) {
+      if (this.isEditActual) { // true-发车
         return true
-      }
-      if (row.warehouStatus === 1) {
-        return true
+      } else { // fase-到车
+        if (!this.isNeedArrival && row.warehouStatus === 1) {
+          return true
+        }
+        if (row.warehouStatus === 1) {
+          return true
+        }
       }
     },
     setColumn(obj) { // 打开表格设置
       if (this.isEditActual) {
-        this.tableColumnDeiver = obj
+        this.tableColumnDeiver = obj // 发车
       } else {
-        this.tableColumnArrival = obj
+        this.tableColumnArrival = obj // 到车
       }
       this.setTableColumn()
       this.tablekey = Math.random()
@@ -729,23 +732,21 @@ export default {
       // column.property
       // column.label
       // 不处理序号跟选择列
-      if (column.label !== '序号') {
-        /* this.columnWidthData = {
-          prop: column.property,
-          label: column.label,
-          width: newWidth
-        } */
-        const find = this.tableColumn.filter(el => el.prop === column.property)
-        if (find.length) {
-          find[0].width = newWidth
+      /* this.columnWidthData = {
+        prop: column.property,
+        label: column.label,
+        width: newWidth
+      } */
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
 
-          console.log('应该要显示保存框了')
-          this.visible2 = true
-          clearTimeout(this.tabletimer)
-          this.tabletimer = setTimeout(() => {
-            this.visible2 = false
-          }, 10000)
-        }
+        console.log('应该要显示保存框了')
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
       }
     },
     saveToTableSetup() {
@@ -789,6 +790,8 @@ export default {
             color: #999;
             width: 12%;
             height: 34px;
+            color: #606266;
+            font-weight: 400;
           }
           td {
             width: 21.3%;
@@ -822,18 +825,21 @@ export default {
       width: 100%;
       height: calc(100vh - 440px);
       flex-grow: 1;
-      .el-table .cell,.el-table th,.el-table td{
+      .el-table .cell,
+      .el-table th,
+      .el-table td {
         overflow: visible;
         text-overflow: clip;
         color: #000;
       }
-      .el-table th{
+      .el-table th {
         font-weight: bold;
       }
-      .el-table td{
+      .el-table td {
         overflow: hidden;
       }
-      .el-table th div,.el-table .cell{
+      .el-table th div,
+      .el-table .cell {
         padding: 0;
         text-align: center;
       }

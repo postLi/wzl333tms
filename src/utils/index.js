@@ -10,8 +10,10 @@ import {
 } from 'element-ui'
 
 export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方', 'repertoryAmount|件', 'repertoryWeight|kg', 'repertoryVolume|方', 'pickupAmount|件', 'pickupWeight|kg', 'realVolume|方', 'realWeight|kg', 'pickupVolume|方', 'differWeight|kg', 'differVolume|方', 'pickupFee', 'carriage', 'collectionFee', 'truckFee', 'handlingFeeAll', 'shortFee', 'loadAmountall|件', 'loadWeightall|kg', 'loadVolumeall|方', 'actualAmount|件', 'actualWeight|kg', 'actualVolume|方', 'amountall|件', 'weightall|kg', 'volumeall|方', 'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage', 'backpayOilCard', 'shipFeeAmount', 'carloadInsuranceFee', 'leaveHandlingFee', 'leaveOtherFee', 'totalFee', 'arriveHandlingFee', 'arriveOtherFee', 'shipFee', 'shipAmount|件', 'shipWeightall|kg', 'shipVolumeall|方', 'truckLoad|kg', 'truckVolume|方', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'codService', 'registerFee', 'abnormalAmount|件', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee', 'loadAmount|件', 'loadWeight|kg', 'loadVolume|方',
-// 一些自定义的字段
-  'shipTotalProfit'
+  // 一些自定义的字段
+  'shipTotalProfit', 'fee', 'closeFee', 'unpaidFee', 'paidFee',
+  'paidNowpayCarriage', 'unpaidNowpayCarriage', 'paidNowpayOilCard', 'unpaidNowpayOilCard', 'paidBackpayCarriage', 'unpaidBackpayCarriage', 'paidBackpayOilCard', 'unpaidBackpayOilCard', 'paidCarloadInsuranceFee', 'unpaidCarloadInsuranceFee', 'paidLeaveHandlingFee', 'unpaidLeaveHandlingFee', 'paidLeaveOtherFee', 'unpaidLeaveOtherFee',
+  'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'pandHandlingFeePay'
 ]
 /**
  * 根据列表数据计算合计值
@@ -54,7 +56,6 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
         prop = el
         return true
       }
-
       const propArr = el.split('|')
       if (propArr.length > 1) {
         // 前缀等于属性名
@@ -621,6 +622,35 @@ export const pickerOptions = [{
   }
 }]
 
+export const pickerOptionsSimple = [{
+  text: '今天',
+  onClick(picker) {
+    const date = new Date()
+    picker.$emit('pick', date)
+  }
+}, {
+  text: '一周前',
+  onClick(picker) {
+    const date = new Date()
+    date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+    picker.$emit('pick', date)
+  }
+}, {
+  text: '一个月前',
+  onClick(picker) {
+    const date = new Date()
+    date.setTime(date.getTime() - 3600 * 1000 * 24 * 30)
+    picker.$emit('pick', date)
+  }
+}, {
+  text: '三个月前',
+  onClick(picker) {
+    const date = new Date()
+    date.setTime(date.getTime() - 3600 * 1000 * 24 * 90)
+    picker.$emit('pick', date)
+  }
+}]
+
 export function getTime(type) {
   if (type === 'start') {
     return new Date().getTime() - 3600 * 1000 * 24 * 90
@@ -1022,7 +1052,7 @@ function setCacheDEVInfo(data, pfix) {
 
 export function handleErrorMsg(err, premsg = '') {
   console.error('catch error:', err)
-  const vmsg = '未知错误，请重试~'
+  const vmsg = '出现错误，请重试~'
   const msg = (err.errorInfo || err.text || vmsg)
   Message.error(premsg + msg)
 

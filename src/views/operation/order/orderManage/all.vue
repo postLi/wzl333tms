@@ -24,9 +24,9 @@
               <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
               <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
             </div>
-            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" 
+           >表格设置</el-button>
           </el-popover>
-          
       </div>
       <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
         <div slot="content">双击查看运单详情</div> -->
@@ -69,6 +69,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+              :prop="column.prop"
               sortable
               :label="column.label"
               v-else
@@ -83,7 +84,7 @@
       <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  code="ORDER_ALL" />
   </div>
 </template>
 <script>
@@ -145,6 +146,14 @@ export default {
       thecode: '', // 用来设置tablesetup的code值
       columnWidthData: {},
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         'label': '运单号',
         'prop': 'shipSn',
         'width': '150',
@@ -166,10 +175,10 @@ export default {
         'prop': 'fromOrgName',
         'width': '150'
       }, {
-        'label': '目的网点',
-        'prop': 'toOrgName',
-        'width': '150'
-      }, {
+          'label': '目的网点',
+          'prop': 'toOrgName',
+          'width': '150'
+        }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180',
@@ -604,6 +613,8 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
+            return false
           }
           var deleteItem = this.selected.filter(el => el.shipStatus === 59)
           console.log('delete:', deleteItem)
@@ -656,6 +667,8 @@ export default {
               message: '每次只能操作单条数据~',
               type: 'warning'
             })
+            this.$refs.multipleTable.clearSelection()
+            return false
           }
               // shipStatus 59 已入库
           var cancelItem = this.selected.filter(el => el.shipStatus === 59)
@@ -739,10 +752,10 @@ export default {
       this.selected = selection
     },
     setTableWidth(newWidth, oldWidth, column, event) {
-      console.log('set table:', newWidth, oldWidth, column)
+      console.log('set table:', newWidth, oldWidth, column, this.tableColumn)
       // column.property
       // column.label
-      this.visible2 = true
+      /* this.visible2 = true
       this.columnWidthData = {
         prop: column.property,
         label: column.label,
@@ -751,11 +764,22 @@ export default {
       clearTimeout(this.tabletimer)
       this.tabletimer = setTimeout(() => {
         this.visible2 = false
-      }, 10000)
+      }, 10000) */
+
+      const find = this.tableColumn.filter(el => el.prop === column.property)
+      if (find.length) {
+        find[0].width = newWidth
+
+        this.visible2 = true
+        clearTimeout(this.tabletimer)
+        this.tabletimer = setTimeout(() => {
+          this.visible2 = false
+        }, 10000)
+      }
     },
     saveToTableSetup() {
       this.visible2 = false
-      this.eventBus.$emit('tablesetup.change', this.thecode, this.columnWidthData)
+      this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     showSaveBox() {
       clearTimeout(this.tabletimer)

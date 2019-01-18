@@ -3,7 +3,9 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="开单时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期"
+          unlink-panels
+          :picker-options="pickerOptions2" end-placeholder="结束日期">
           </el-date-picker>
         </div>
       </el-form-item>
@@ -20,7 +22,7 @@
           <el-option label="货物名称" value="cargoName"></el-option>
           <el-option label="货号" value="shipGoodsSn"></el-option>
         </el-select>
-        <el-input v-model="searchForm.value" maxlength="15" @change="onSubmit" clearable>
+        <el-input v-model="searchForm.value" maxlength="15" @keyup.enter.native="onSubmit" clearable>
         </el-input>
       </el-form-item>
       <el-form-item label="运单状态">
@@ -69,7 +71,7 @@ export default {
   data() {
     return {
       searchCreatTime: [],
-      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d} {h}:{i}:{s}'), parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')],
       searchForm: {
         orgid: '',
         value: '',
@@ -107,8 +109,8 @@ export default {
         this.searchObjs = Object.assign({}, cval)
         this.searchObjs.shipFromOrgid = this.searchForm.orgid
         this.searchObjs.shipStatus = this.searchForm.shipStatus
-        this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-        this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+        this.searchObjs.startTime = this.searchCreatTime ? this.searchCreatTime[0] : ''
+        this.searchObjs.endTime = this.searchCreatTime ? this.searchCreatTime[1] : ''
         this.searchObjs[this.searchForm.type] = this.searchForm.value
       },
       deep: true
@@ -140,8 +142,8 @@ export default {
       const searchObj = {}
       searchObj.shipFromOrgid = this.searchForm.orgid
       searchObj.shipStatus = this.searchForm.shipStatus
-      searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] + ' 00:00:00' : ''
-      searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] + ' 23:59:59' : ''
+      searchObj.startTime = this.searchCreatTime ? this.searchCreatTime[0] : ''
+      searchObj.endTime = this.searchCreatTime ? this.searchCreatTime[1] : ''
       searchObj[this.searchForm.type] = this.searchForm.value
       searchObj.userid = this.searchForm.userid
       this.$emit('change', searchObj)

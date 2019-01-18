@@ -60,7 +60,7 @@
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix">
                   <ul>
                     <li>
-                      <p>现付运费</p>
+                      <p>现付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -72,7 +72,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>回付运费</p>
+                      <p>回付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -84,7 +84,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到付运费</p>
+                      <p>到付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
@@ -146,13 +146,7 @@
                   </el-button>
                   <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单
                   </el-button>
-                  <el-popover
-                    @mouseenter.native="showSaveBox"
-                    @mouseout.native="hideSaveBox"
-                    placement="top"
-                    width="160"
-                    trigger="manual"
-                    v-model="visible2">
+                  <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
                     <p>表格宽度修改了，是否要保存？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
@@ -162,16 +156,11 @@
                   </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table @header-dragend="setTableWidth" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-                    <el-table-column fixed type="selection" width="50"></el-table-column>
-                    <el-table-column fixed label="序号" prop="number" width="50">
-                    <template slot-scope="scope">
-                      {{scope.$index + 1}}
-                    </template>
-                  </el-table-column>
+                  <el-table row-key="repertoryId" @header-dragend="setTableWidth" :key="tablekey" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                    <el-table-column fixed type="selection" width="50" sortable></el-table-column>
                     <template v-for="column in tableColumn">
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed"  :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop"  :label="column.label" v-else :width="column.width">
+                      <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" sortable></el-table-column>
+                      <el-table-column sortable show-overflow-tooltip :key="column.id" :fixed="column.fixed" :prop="column.prop" :label="column.label" v-else :width="column.width">
                         <template slot-scope="scope">
                           <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                           <span v-else v-html="column.slot(scope)"></span>
@@ -331,7 +320,7 @@
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
                     <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
                     <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
@@ -342,23 +331,23 @@
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
-                      方,全程运费
+                      方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
-                      元，到付运费
+                      元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
                       ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
-                      元，回付运费
+                      元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
                       元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -374,7 +363,7 @@
                   <div class="p_cont">
                     <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
                     <el-form-item label="关于本车:" class="p_textarea">
-                      <el-input type="textarea" size="mini" v-model="sendContract.remark" :disabled="!editFn"></el-input>
+                      <el-input type="textarea" size="mini" v-model="sendContract.aboutLocal" :disabled="!editFn"></el-input>
                     </el-form-item>
                     <!--<p class="p_about">关于本车：直送致兴和樵鸿</p>-->
                     <p class="p_about">附：驾驶员、车辆登记</p>
@@ -422,6 +411,7 @@
           </el-tab-pane>
         </el-tabs>
       </div>
+      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </template>
     <div slot="footer" class="stepinfo-footer stepFrom" v-if="isFootSecond">
       <el-form inline :model="formModelTrack" :rules="ruleForm" ref="formModelTrack">
@@ -444,7 +434,7 @@
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" v-else-if="isFootFirst">
-      <el-button @click="closeMe" round type="warning" icon="el-icon-close">关闭</el-button>
+      <el-button @click="closeMe">关闭</el-button>
     </div>
     <div slot="footer" class="dialog-footer" v-else>
       <template v-if="!activeECheckBillName">
@@ -452,14 +442,13 @@
         </el-button>
         <el-button @click="editCheckBillName" icon="el-icon-edit-outline" type="info" round v-if="activeName === 'third'">修改
         </el-button>
-        <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third' || activeName === 'first'">关闭
+        <el-button @click="closeMe" round type="warning" icon="el-icon-close" v-if="activeName === 'third'">关闭
         </el-button>
       </template>
       <template v-else>
         <el-button @click="saveCheckBillName('formName')" round type="success" icon="el-icon-check">保存</el-button>
         <el-button @click="remCheckBillName" round type="" icon="el-icon-close">取消</el-button>
       </template>
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
     </div>
   </pop-right>
 </template>
@@ -477,6 +466,7 @@ import { objectMerge2, parseTime, closest } from '@/utils/'
 import { PrintContract } from '@/utils/lodopFuncs'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
+import Sortable from 'sortablejs'
 
 export default {
   data() {
@@ -504,7 +494,7 @@ export default {
       ruleForm: {},
       loading: false,
       isFootEdit: false,
-      isFootFirst: false,
+      isFootFirst: true,
       isFootSecond: false,
       isFootThird: false,
       isFootOther: false,
@@ -540,11 +530,11 @@ export default {
         // DateTimeFormat:'',//配载日期
         // requireArrivedTime:'',//要求到达日期：
         // remark:'',
-        //  nowpayCarriage:'',//现付运费
+        //  nowpayCarriage:'',//现付车费
         //  nowpayOilCard:'',//现付油卡
-        //  backpayCarriage:'',//回付运费
+        //  backpayCarriage:'',//回付车费
         //  backpayOilCard:'',//回付油卡
-        //  arrivepayCarriage:'',//到付运费
+        //  arrivepayCarriage:'',//到付车费
         //  arrivepayOilCard:'',//到付油卡
         //  carloadInsuranceFee:'',//整车保险费
         //  leaveHandlingFee:'',//发站装卸费
@@ -581,15 +571,15 @@ export default {
           'loadId': 1
         }
       },
-      tableColumn: [/* {
+      tableColumn: [{
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '100',
           fixed: true,
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, */ {
+        }, {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '150',
@@ -717,7 +707,9 @@ export default {
         carrier: '',
         remark: ''
       },
-
+      oldList: [],
+      newList: [],
+      sortable: null,
       carrierItem: []
     }
   },
@@ -768,6 +760,7 @@ export default {
         this.fetchSelectLoadMainInfoList()
         this.fetchGetLookContract()
         this.getBatchNo = this.info.batchNo
+        this.initSort()
       }
     },
     isModify(newVal) {},
@@ -791,6 +784,37 @@ export default {
     }
   },
   methods: {
+    initSort() {
+      this.$nextTick(() => {
+        let obj = {
+          selector: '.infos_tab .el-table__body-wrapper > table > tbody',
+          sortable: this.sortable,
+        }
+        this.setSort(obj)
+        this.oldList = this.usersArr.map(v => v.repertoryId)
+        this.newList = this.oldList.slice()
+      })
+    },
+    setSort(obj) { // 右边列表行拖拽
+      const el = document.querySelectorAll(obj.selector)[0]
+      obj.sortable = Sortable.create(el, {
+        animation: 150, //动画参数
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        setData: function(dataTransfer) {
+          dataTransfer.setData('Text', '')
+          // to avoid Firefox bug
+          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        },
+        onEnd: evt => {
+          const targetRow = this.usersArr.splice(evt.oldIndex, 1)[0]
+          this.usersArr.splice(evt.newIndex, 0, targetRow)
+
+          // for show the changes, you can delete in you code
+          const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
+          this.newList.splice(evt.newIndex, 0, tempIndex)
+        }
+      })
+    },
     comInfo(item) {
       this.sendContract = {
         loadId: item.loadId,
@@ -798,7 +822,7 @@ export default {
         contractName: item.contractName,
         contractNo: item.contractNo,
         carrier: item.carrier,
-        remark: item.remark
+        aboutLocal: item.aboutLocal
       }
     },
     fetchGetLookContract() {
@@ -876,12 +900,11 @@ export default {
 
           return el
         })
-        /* let mock = 20
-        while (mock--) {
-          this.usersArr.push(this.usersArr[0])
-        } */
+
+
         this.loading = false
         this.toggleAllRows()
+
       })
     },
     getDetail() {
@@ -982,53 +1005,49 @@ export default {
         obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
       }
       let appendTopStr = '<style>body{width: 100%;}</style>'
-      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
-                   this.otherinfo.companyName +
-                   '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.orgName + '   →   ' + obj.arriveOrgName +
-                   '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.loadTime +
-                   '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.batchNo +
-                   '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.truckIdNumber +
-                   '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverName +
-                   '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
-                   obj.dirverMobile +
-                   '</td></tr></table></body>'
+      appendTopStr += '<body width="100%"><table width="100%" style="{font-size: {content_word_size}px;}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.orgName + '   →   ' + obj.arriveOrgName +
+        '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.loadTime +
+        '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.batchNo +
+        '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.truckIdNumber +
+        '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverName +
+        '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverMobile +
+        '</td></tr></table></body>'
       const columnArr = objectMerge2([], this.tableColumn)
-      columnArr.unshift({
-        label: '序号',
-        prop: 'id',
-        width: '40',
-        fixed: true,
-        slot: (scope) => {
-          return scope.$index + 1
-        }
-      })
+      // columnArr.unshift({
+      //   label: '序号',
+      //   prop: 'number',
+      //   width: '40',
+      //   fixed: true,
+      //   slot: (scope) => {
+      //     return scope.$index + 1
+      //   }
+      // })
       switch (type) {
         // 导出数据table_import
         // 导出
         case 'export':
-
           PrintInFullPage({
-            data: this.usersArr,
+            data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr,
-            // appendTop: '<style>*{color:#f00;}</style>表格后面用<font color=blue>ADD_PRINT_HTM</font>附加其它备注'
             appendTop: appendTopStr
           })
           break
           // 打印
         case 'print':
           SaveAsFile({
-            data: this.usersArr,
+            data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr
           })
           break
       }
       // 清除选中状态，避免影响下个操作
-      this.$refs.multipleTable.clearSelection()
+      // this.$refs.multipleTable.clearSelection()
     },
     setTable() {
       this.setupTableVisible = true
@@ -1068,19 +1087,18 @@ export default {
       const formModel = Object.assign({}, this.formModel)
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
-      for (const item in formModel) {
-        str += item + '=' + (formModel[item] === null ? '' : formModel[item]) + '&'
-      }
+      formModel.contractNo = this.sendContract.contractNo
+      formModel.remark = this.sendContract.aboutLocal
+      
 
-      // JSON.stringify(this.formModel)
-      const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
-
-      PrintContract(encodeURI(path))
+      PrintContract(formModel)
       // console.log(path);
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
+      this.initSort()
     },
     setTableWidth(newWidth, oldWidth, column, event) {
       console.log('set table:', newWidth, oldWidth, column)
@@ -1105,6 +1123,7 @@ export default {
     },
     saveToTableSetup() {
       this.visible2 = false
+      this.initSort()
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     showSaveBox() {
@@ -1162,16 +1181,28 @@ export default {
         margin-right: 0;
       }
     }
+    .sortable-ghost.hover-row {
+
+        opacity: .8;
+        color: #fff !important;
+        background: #42b983 !important;
+      }
     .infos_tab {
       width: 100%;
       height: calc(100vh - 570px);
       flex-grow: 1;
       padding: 0 10px;
+
+      
       .el-table {
         table {
           th,
           td {
             text-align: center;
+          }
+          th {
+            color: #606266;
+            font-weight: 400;
           }
         }
         .unauth {
@@ -1182,19 +1213,22 @@ export default {
       .el-table th {
         padding: 5px 0;
       }
-      .el-table .cell,.el-table th,.el-table td{
+      .el-table .cell,
+      .el-table th,
+      .el-table td {
         overflow: visible;
         text-overflow: clip;
         color: #000;
       }
-      .el-table td{
+      .el-table td {
         overflow: hidden;
       }
-      
-      .el-table th{
+
+      .el-table th {
         font-weight: bold;
       }
-      .el-table th div,.el-table .cell{
+      .el-table th div,
+      .el-table .cell {
         padding: 0;
         text-align: center;
       }
@@ -1296,6 +1330,12 @@ export default {
     }
   }
 }
+
+
+
+
+
+
 
 
 /*批次详情*/

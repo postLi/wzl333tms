@@ -25,11 +25,8 @@
         <span class="dbclickTips">双击查看详情</span>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%"
-        :summary-method="getSumLeft"
-          show-summary
-         tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -50,7 +47,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
     <TableSetup code="ORDER_ARTER-1" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
     <AddLntelligent :popVisible.sync="lntelligentVisible" @close="openlntelligent" @success="fetchData" :dotInfo="selectInfo"></AddLntelligent>
-     <!-- 实际发车时间 弹出框 -->
+    <!-- 实际发车时间 弹出框 -->
     <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
   </div>
 </template>
@@ -69,7 +66,7 @@ import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
-import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
 // import AddLntelligent from './components/intelligentFreight'
@@ -137,23 +134,25 @@ export default {
         }
       },
       tableColumn: [{
-        label: '序号',
-        width: '70',
-        fixed: true,
-        slot: (scope) => {
-          return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
-        }
-      }, {
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '120',
-        fixed: true
-      }, {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      }, {
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },
+        {
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '120',
+          fixed: true
+        }, {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        }, {
           label: '操作费(元)',
           prop: 'handlingFeeAll',
           width: '100',
@@ -168,7 +167,29 @@ export default {
           prop: 'orgName',
           width: '110',
           fixed: false
-        }, {
+        },  {
+          label: '途径网点一',
+          prop: 'wayOrgNameOne',
+          width: '110',
+          fixed: false
+        },{
+          label: '途径网点二',
+          prop: 'wayOrgNameTwo',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '途径网点三',
+          prop: 'wayOrgNameThree',
+          width: '110',
+          fixed: false
+        }, 
+        {
+          label: '途径网点四',
+          prop: 'wayOrgNameFour',
+          width: '110',
+          fixed: false
+        },{
           label: '到达网点',
           prop: 'arriveOrgName',
           width: '110',
@@ -224,7 +245,12 @@ export default {
           width: '120',
           fixed: false
         }, {
-          label: '现付运费(元)',
+          label: '毛利(元)',
+          prop: 'grossMargin',
+          width: '110',
+          fixed: false
+        },{
+          label: '现付车费(元)',
           prop: 'nowpayCarriage',
           width: '110',
           fixed: false
@@ -234,7 +260,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '到付运费(元)',
+          label: '到付车费(元)',
           prop: 'arrivepayCarriage',
           width: '110',
           fixed: false
@@ -244,7 +270,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '回付运费(元)',
+          label: '回付车费(元)',
           prop: 'backpayCarriage',
           width: '110',
           fixed: false
@@ -254,7 +280,7 @@ export default {
           width: '110',
           fixed: false
         }, {
-          label: '运费合计(元)',
+          label: '车费合计(元)',
           prop: 'shipFeeAmount',
           width: '110',
           fixed: false
@@ -274,40 +300,40 @@ export default {
           width: '120',
           fixed: false
         },
-      {
-        label: '封签号',
-        prop: 'sealNumber',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '油卡号',
-        prop: 'oilCardNumber',
-        width: '120',
-        fixed: false
-      },
+        {
+          label: '封签号',
+          prop: 'sealNumber',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '油卡号',
+          prop: 'oilCardNumber',
+          width: '120',
+          fixed: false
+        },
         // {
         //   label: '配载时间',
         //   prop: 'loadTime',
         //   width: '160',
         //   fixed: false
         // },
-      {
-        label: '配载人',
-        prop: 'userName',
-        width: '90',
-        fixed: false
-      }, {
-        label: '发车人',
-        prop: 'truckUserName',
-        width: '120',
-        fixed: false
-      }, {
-        label: '备注',
-        prop: 'remark',
-        width: '150',
-        fixed: false
-      }
+        {
+          label: '配载人',
+          prop: 'userName',
+          width: '90',
+          fixed: false
+        }, {
+          label: '发车人',
+          prop: 'truckUserName',
+          width: '120',
+          fixed: false
+        }, {
+          label: '备注',
+          prop: 'remark',
+          width: '150',
+          fixed: false
+        }
       ]
     }
   },
@@ -319,7 +345,14 @@ export default {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
         this.usersArr = data.list
-
+        this.usersArr.forEach((el, index) => {
+          if (el.wayOrgName) {
+            el.wayOrgNameOne = el.wayOrgName.split(',')[0] || ''
+            el.wayOrgNameTwo = el.wayOrgName.split(',')[1] || ''
+            el.wayOrgNameThree = el.wayOrgName.split(',')[2] || ''
+            el.wayOrgNameFour = el.wayOrgName.split(',')[3] || ''
+          }
+        })
         this.total = data.total
         this.loading = false
       }).catch(err => {
@@ -368,14 +401,15 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '干线发车'
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 打印
         case 'print':
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: this.tableColumn
+            columns: this.tableColumn,
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 合同
@@ -387,20 +421,21 @@ export default {
             this.$set(selectObj, 'checkBillName', contractObj.contractName)
             this.$set(selectObj, 'carrier', contractObj.carrier)
             this.$set(selectObj, 'orgName', contractObj.nomineeCompany)
-            console.log(data, selectObj)
-            let str = '?'
-            for (const item in selectObj) {
-              str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
-            }
-            const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
-            PrintContract(encodeURI(path))
+            selectObj.remark = contractObj.aboutLocal
+            // console.log('数据：',contractObj, selectObj)
+            // let str = '?'
+            // for (const item in selectObj) {
+            //   str += item + '=' + (selectObj[item] === null ? '' : selectObj[item]) + '&'
+            // }
+            // const path = window.location.protocol + '//' + window.location.host + '/static/print/contract.html' + str + new Date().getTime()
+            PrintContract(selectObj)
           }).catch(err => {
             this._handlerCatchMsg(err)
           })
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' } }) // 38-短驳 39-干线 40-送货
           console.log(this.$router)
           break
           // 添加客户
@@ -433,9 +468,15 @@ export default {
                 type: 'warning'
               })
               return false
+            } else if (this.selected[0].unloadSign === 1) {
+              this.$message({
+                message: '已卸货不能修改~',
+                type: 'warning'
+              })
+              return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo }})
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo } })
             }
           }
           break
@@ -447,11 +488,20 @@ export default {
           break
           //  取消配载发车(批量)
         case 'deselectCar':
+
+          let count = this.selected.filter(e => {
+            return e.unloadSign === 1
+          }).length
+          if (count) {
+            this.$message.warning('已卸货不能取消发车~')
+            return false
+          }
           let ids = this.selected.filter(el => {
             return el.batchTypeName === '在途中'
           }).map(el => {
             return el.id
           })
+
           if (!ids.length) {
             const batchTypeName = this.selected[0].batchTypeName
             this.$message({
@@ -538,7 +588,7 @@ export default {
 
       }
       if (type !== 'depart') {
-      // 清除选中状态，避免影响下个操作
+        // 清除选中状态，避免影响下个操作
         this.$refs.multipleTable.clearSelection()
       }
     },
@@ -552,28 +602,28 @@ export default {
       if (!loadIds.length) {
         const batchTypeName = this.selected[0].batchTypeName
         this.$message({
-              message: '批次状态为：' + batchTypeName + '不允许发车~',
-              type: 'warning'
-            })
+          message: '批次状态为：' + batchTypeName + '不允许发车~',
+          type: 'warning'
+        })
         return false
       } else {
-            // =>todo 删除多个
+        // =>todo 删除多个
         loadIds = loadIds.join(',')
         const timer = obj.actualSendtime ? obj.actualSendtime : parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
         this.loading = true
         putLoadDepart(loadIds, 39, timer).then(res => {
-              if (res) {
-                this.loading = false
-                this.$message({
-                  type: 'success',
-                  message: '发车成功!'
-                })
-                this.fetchData()
-              }
-            }).catch(err => {
-              this.loading = false
-              this._handlerCatchMsg(err)
+          if (res) {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: '发车成功!'
             })
+            this.fetchData()
+          }
+        }).catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
       }
     },
     openlntelligent() {

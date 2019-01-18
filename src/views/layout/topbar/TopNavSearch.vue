@@ -1,5 +1,5 @@
 <template>
-  <div class="topNav-search" v-has:ORDER_ALL ref="topNavSearch">
+  <div class="topNav-search" v-has:ORDER_QUICKCHECKLIST ref="topNavSearch">
     <div class="topNavSearch-trigger" @click="showmini">
       <i class="el-icon-search"></i>
     </div>
@@ -18,7 +18,7 @@
       @blur="setShort"
       @select="handleSelect">
       <icon-svg icon-class="sousuo" slot="prefix" />
-      <icon-svg v-if="!topSearch.length" icon-class="shouqicaidan" slot="suffix" />
+      <icon-svg v-if="!topSearch.length" @click.native="openSearchBox" class="theQuickSearchBtn" icon-class="shouqicaidan" slot="suffix" />
       <i
         v-if="topSearch.length"
         class="el-icon-circle-close el-input__icon"
@@ -30,12 +30,22 @@
         <span class="val">{{ item.value }}</span>
       </template>
     </el-autocomplete>
+    <el-dialog top="0" :before-close="hidePopPage" width="1200px" modal-append-to-body append-to-body :close-on-click-modal="false" class="showSearchPop" v-if="showSearch" title="多条件查询" :visible.sync="showSearchVisible">
+        <SearchOrder v-if="showSearch" :query="query"  />
+    </el-dialog>
   </div>
 </template>
 <script>
+import SearchOrder from '@/views/operation/order/orderManage/pop'
+
 export default {
+  components: {
+    SearchOrder
+  },
   data() {
     return {
+      showSearch: false,
+      showSearchVisible: false,
       topSearch: '',
       searchListArr: [],
       searchList: [
@@ -74,10 +84,32 @@ export default {
           key: 'shipGoodsSn',
           value: ''
         }
-      ]
+      ],
+      query: {
+        key: '',
+        value: ''
+      }
     }
   },
+  mounted() {
+    this.eventBus.$on('hiddenSearchBox', () => {
+      this.showSearchVisible = false
+    })
+    this.eventBus.$on('openSearchBox', () => {
+      this.openSearchBox()
+    })
+  },
   methods: {
+    hidePopPage(done) {
+      this.showSearch = false
+      done && done()
+    },
+    openSearchBox() {
+      this.showSearch = true
+      this.showSearchVisible = true
+      // 清除掉原来绑定打开的url
+      this.eventBus.$emit('clearOpenSearchBoxUrl')
+    },
     // 显示小搜素框
     showmini() {
       this.$refs['topNavSearch'].classList.toggle('showMiniSearchBox')
@@ -101,11 +133,16 @@ export default {
       // this.$refs.topNavSearchComplete.blur()
     },
     handleSelect(index) {
-      this.$router.push({ path: '/operation/order/orderManage', query: {
+      /* this.$router.push({ path: '/operation/order/orderManage', query: {
         key: index.key,
         value: index.value
-      }})
-      console.log("this.$refs['topNavSearchComplete'].$refs['input']", this.$refs['topNavSearchComplete'].$refs['input'])
+      }}) */
+      this.query = {
+        key: index.key,
+        value: index.value
+      }
+      this.openSearchBox()
+
       if (this.$refs['topNavSearchComplete'].$refs['input'] && this.$refs['topNavSearchComplete'].$refs['input'].blur) {
         this.$refs['topNavSearchComplete'].$refs['input'].blur()
         this.$refs['topNavSearchComplete'].close()
@@ -113,6 +150,10 @@ export default {
     },
     clearinput() {
       this.topSearch = ''
+      this.query = {
+        key: '',
+        value: ''
+      }
       // 调用组件内部方法
       // 清除数据
       if (typeof this.$refs['topNavSearchComplete'].handleChange === 'function') {
@@ -136,6 +177,90 @@ export default {
 </script>
 <style lang="scss">
 @import "src/styles/variate.scss";
+.showSearchPop{
+    height: 100%;
+
+    .el-dialog__header{
+      padding: 0;
+      text-align: center;
+      line-height: 39px;
+      height: 39px;
+      background: rgb(244, 250, 253);
+      border-bottom: 1px solid #eee;
+      .el-dialog__title{
+        font-size: 16px;
+        line-height: 39px;
+        color: #333;
+      }
+      .el-dialog__headerbtn{
+        top: 10px;
+        right: 10px;
+      }
+    }
+
+    .el-dialog{
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        top: 5%;
+    }
+
+
+    .el-dialog__body{
+        padding:5px 10px 10px;
+        overflow: hidden;
+        flex: 1;
+    }
+
+    .tab-content{
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .tab_info{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .info_tab{
+          flex: 1;
+        }
+      }
+    }
+    .staff_searchinfo{
+      padding-right: 0;
+      .el-form-item{
+        margin-right: 20px;
+      }
+      .el-autocomplete input{
+        padding-right: 30px;
+      }
+    }
+    .staff_searchinfo--input{
+      float: none;
+      margin: 0 auto;
+    }
+    .staff_searchinfo .el-date-editor--daterange.el-input__inner{
+      width: 188px;
+    }
+    .order-pop-search-multi{
+      .el-input{
+        float: left;
+        width: 94px;
+      }
+    }
+    .btns_box{
+      padding-top: 5px;
+      padding-bottom: 5px;
+      height: 38px;
+      .table_setup{
+        float: right;
+      }
+    }
+    .info_tab_footer{
+      height: 20px;
+      line-height: 20px;
+    }
+}
+
 .topNav-search{
   position: absolute;
   top: 0;
@@ -174,6 +299,9 @@ export default {
       color: #333
     }
   }
+  .theQuickSearchBtn{
+    cursor: pointer;
+  }
 }
 .longSearchBox{
   .el-input__inner{
@@ -196,6 +324,7 @@ export default {
     padding-right: 3px;
     font-size: 14px;
   }
+  
 }
 @media screen and (max-width:1300px) {
   .my-topNav-search-input{

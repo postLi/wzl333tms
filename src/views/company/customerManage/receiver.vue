@@ -32,7 +32,8 @@
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
               <template slot-scope="scope">
-                <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
+                <el-button v-if="scope.row[column.prop]" v-showPicture size="mini" type="text" icon="el-icon-picture-outline"  :imgurl="scope.row[column.prop]">预览({{scope.row[column.prop].split(',').length}})</el-button>
+                <!-- <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span> -->
               </template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
@@ -307,7 +308,7 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

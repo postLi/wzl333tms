@@ -90,6 +90,7 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        console.log('res', res, type, res[type])
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
@@ -112,8 +113,11 @@ export default {
   margin-left: 5px;
   display: flex;
   flex-direction: row;
-  .el-input {
+  .el-select{
     width: 120px;
+  }
+  .el-input {
+    width: 120px !important;
     .el-input__inner {
       padding: 0 10px;
     }

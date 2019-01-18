@@ -17,236 +17,33 @@
           <!--<el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>-->
       </div>
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          :summary-method="getSumLeft"
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails"
+                  @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey"
+                  :summary-method="getSumLeft"
           show-summary
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="customerId"
-            label="序号"
-            width="80">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="orderSn"
-            label="订单号"
-            width="130">
-          </el-table-column>
-          <el-table-column
-            prop="orderStatus"
-            sortable
-            label="订单状态"
-            width="110">
-          </el-table-column>
-          <el-table-column
-            prop="shipSn"
-            sortable
-            label="关联运单号"
-            width="130">
-          </el-table-column>
-          <el-table-column
-            prop="orderEffective"
-            sortable
-            label="紧急度"
-            width="90">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="orderPickupMethod"
-            label="提货方式"
-            width="110">
-          </el-table-column>
-          <el-table-column
-            label="货品名"
-            prop="cargoName"
-            sortable
-            width="90"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="cargoAmount"
-            label="件数"
-            sortable
-            width="80"
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="idcard"
-            label="重量"
-            width="80">
-          </el-table-column>
-          <el-table-column
-            prop="bankName"
-            label="体积"
-            sortable
-            width="80"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="bankCardNumber"
-            label="包装"
-            sortable
-            width="80"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="description"
-            label="品种规格"
-            sortable
-            width="110"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="orderTotalFee"
-            label="运费"
-            sortable
-            width="80"
-            >
-          </el-table-column>
-          <el-table-column
-            prop="detailedAddress"
-            label="创建时间"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderSenderId"
-            label="发货人"
-            sortable
-            width="90"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="senderMobile;"
-            label="发货人电话"
-            sortable
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderReceiverId"
-            label="收货人"
-            sortable
-            width="100"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="receiverMobile"
-            label="收货人电话"
-            sortable
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="refuseReason"
-            label="拒绝原因"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderRemarks"
-            label="备注"
-            sortable
-            width="100"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderFromCityCode"
-            label="发站"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderToCityCode"
-            label="到站"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderFromOrgid"
-            label="开单网点"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderToOrgid"
-            label="目的网点"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="productPrice"
-            label="声明价值"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderAgencyFund"
-            label="代收款"
-            sortable
-            width="100"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="orderProcedureFee"
-            label="代收款手续费"
-            sortable
-            width="130"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="cargoAmount"
-            label="件数单价"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="weightFee"
-            label="重量单价"
-            sortable
-            width="110"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="volumeFee"
-            label="体积单价"
-            sortable
-            width="110"
-          >
-          </el-table-column>
+                  style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
+                             v-if="!column.slot" :width="column.width"></el-table-column>
+
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else
+                             :width="column.width">
+
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)"
+                      @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
+
       </div>
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddCustomer :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" @success="fetchData" :columns="columns"  />
+    <TableSetup :code="code" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn"  />
   </div>
 </template>
 <script>
@@ -286,6 +83,7 @@ export default {
   },
   data() {
     return {
+      code: 'ORDERMANAGER_IMPLIST',
       columns: [],
       btnsize: 'mini',
       usersArr: [],
@@ -314,7 +112,169 @@ export default {
         'vo': {
           'orgid': 1
         }
-      }
+      },
+      tableColumn: [
+        {
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: false,
+          slot: (scope) => {
+            return ((this.searchForms.currentPage - 1) * this.searchForms.pageSize) + scope.$index + 1
+          }
+        }, {
+          label: '订单号',
+          prop: 'orderSn',
+          width: '130',
+          fixed: true
+        }, {
+          label: '订单状态',
+          prop: 'orerStatusName',
+          width: '110',
+          fixed: true
+        }, {
+            label: '关联运单号',
+            prop: 'shipSn',
+            width: '130',
+            fixed: false
+          }, {
+            label: '紧急度',
+            prop: 'orderEffectiveName',
+            width: '100',
+            fixed: false
+          }, {
+            label: '提货方式',
+            prop: 'orderPickupMethodName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '货品名',
+            prop: 'cargoName',
+            width: '90',
+            fixed: false
+          }, {
+            label: '件数',
+            prop: 'cargoAmount',
+            width: '80',
+            fixed: false
+          }, {
+            label: '重量',
+            prop: 'cargoWeight',
+            width: '90',
+            fixed: false
+          }, {
+            label: '体积',
+            prop: 'cargoVolume',
+            width: '80',
+            fixed: false
+          }, {
+            label: '包装',
+            prop: 'cargoPack',
+            width: '80',
+            fixed: false
+          }, {
+            label: '品种规格',
+            prop: 'description',
+            width: '110',
+            fixed: false
+          }, {
+            label: '运费',
+            prop: 'shipFee',
+            width: '80',
+            fixed: false
+          }, {
+            label: '付款方式',
+            prop: 'orderPayWayName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '创建时间',
+            prop: 'createTime',
+            width: '160',
+            fixed: false
+          }, {
+            label: '发货人',
+            prop: 'senderName',
+            width: '150',
+            fixed: false
+          }, {
+            label: '发货人电话',
+            prop: 'senderMobile',
+            width: '130',
+            fixed: false
+          }, {
+            label: '收货人',
+            prop: 'receiverName',
+            width: '150',
+            fixed: false
+          }, {
+            label: '收货人电话',
+            prop: 'receiverMobile',
+            width: '130',
+            fixed: false
+          }, {
+            label: '拒绝原因',
+            prop: 'refuseReason',
+            width: '150',
+            fixed: false
+          }, {
+            label: '备注',
+            prop: 'orderRemarks',
+            width: '120',
+            fixed: false
+          }, {
+            label: '发站',
+            prop: 'orderFromCityName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '到站',
+            prop: 'orderToCityName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '开单网点',
+            prop: 'orderFromOrgName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '目的网点',
+            prop: 'orderToOrgName',
+            width: '110',
+            fixed: false
+          }, {
+            label: '声明价值',
+            prop: 'productPrice',
+            width: '110',
+            fixed: false
+          }, {
+            label: '代收款',
+            prop: 'agencyFund',
+            width: '90',
+            fixed: false
+          }, {
+            label: '代收款手续费',
+            prop: 'commissionFee',
+            width: '130',
+            fixed: false
+          }
+          // {
+          //   label: '件数单价',
+          //   prop: 'cargoAmount',
+          //   width: '110',
+          //   fixed: false
+          // }, {
+          //   label: '重量单价',
+          //   prop: 'weightFee',
+          //   width: '110',
+          //   fixed: false
+          // }, {
+          //   label: '体积单价',
+          //   prop: 'volumeFee',
+          //   width: '110',
+          //   fixed: false
+          // }
+      ]
     }
   },
   methods: {
@@ -388,14 +348,14 @@ export default {
               // this.isModify = true
           if (this.selected.length > 1) {
             this.$message({
-                  message: '每次只能修改单条数据~',
-                  type: 'warning'
-                })
+              message: '每次只能修改单条数据~',
+              type: 'warning'
+            })
           }
           this.selectInfo = this.selected[0]
           if (this.selectInfo.orderStatus == 1) {
 
-              }
+          }
           console.log(this.selectInfo)
             // this.openAddCustomer()
           break
@@ -413,21 +373,21 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-                    deleteSomeCustomerInfo(ids).then(res => {
-                      this.$message({
-                          type: 'success',
-                          message: '删除成功!'
-                        })
-                      this.fetchData()
-                    }).catch(err => {
-                        this._handlerCatchMsg(err)
-                      })
-                  }).catch(() => {
-                    this.$message({
-                      type: 'info',
-                      message: '已取消删除'
-                    })
-                  })
+            deleteSomeCustomerInfo(ids).then(res => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.fetchData()
+            }).catch(err => {
+              this._handlerCatchMsg(err)
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
           break
           // 导出数据
         case 'export':
@@ -436,9 +396,9 @@ export default {
           })
           getExportExcel(ids2.join(',')).then(res => {
             this.$message({
-                  type: 'success',
-                  message: '即将自动下载!'
-                })
+              type: 'success',
+              message: '即将自动下载!'
+            })
           })
           break
       }
@@ -462,6 +422,10 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
+    },
+    setColumn(obj) { // 重绘表格列表
+      this.tableColumn = obj
+      this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }

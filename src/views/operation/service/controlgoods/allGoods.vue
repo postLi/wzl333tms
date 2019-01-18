@@ -465,7 +465,7 @@
           :summary-method="getSumLeft"
           show-summary
            tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -478,7 +478,7 @@
           </el-table>
         </div>
         <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
-        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+        <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" code="CONTRO_All"></TableSetup>
       </div>
     </div>
 </template>
@@ -507,10 +507,10 @@ export default {
   mounted() {
     // this.searchQuery.vo.orgid = this.otherinfo.orgid
 
-    Promise.all([this.fetchAllPutFh()]).then(resArr => {
-      // this.loading = false
-            // this.licenseTypes = resArr[1]
-    })
+    // Promise.all([this.fetchAllPutFh()]).then(resArr => {
+    //   // this.loading = false
+    //         // this.licenseTypes = resArr[1]
+    // })
   },
   data() {
     return {
@@ -535,7 +535,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
+        prop: 'number',
         width: '60',
         fixed: true,
         slot: (scope) => {

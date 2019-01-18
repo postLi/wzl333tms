@@ -1,0 +1,235 @@
+/**
+ * 公用样式
+ * 
+ */
+
+$popItemLineHeight: 32px;
+$popItemHeight: 300px;
+$floatPanelBgcolor: rgba(255, 255, 255, 0.85);
+$floatPanelBoxShoadow: 1px 1px 10px #ccc;
+#trucklogmap,
+#allmap {
+  height: 100%;
+  width: 100%;
+  box-shadow: $floatPanelBoxShoadow;
+  margin-bottom: 10px;
+}
+
+.track-truck-log {
+  height: calc(100% - 33px) !important;
+}
+
+.truck-log {
+  height: calc(100% - 0px) !important;
+}
+
+
+/* 选择车弹出框 */
+
+.track-truck-log,
+.truck-log {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  .markerContent {
+    padding: 5px 5px 0 5px;
+    background-color: $floatPanelBgcolor;
+    border: none;
+    max-width: 300px;
+    h3,
+    p {
+      margin-bottom: 5px;
+      word-spacing: normal;
+      white-space: pre-wrap;
+    }
+  }
+  .popTimer {
+    position: absolute;
+    left: 70px;
+    top: 20px;
+    padding: 5px 5px; // background-color: rgba(64, 158, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: $floatPanelBoxShoadow;
+    border-radius: 5px;
+    overflow: hidden;
+    clear: both;
+    font-size: 14px;
+    color: #fff;
+    z-index: 2;
+  }
+  .popTree {
+    position: absolute;
+    width: 300px;
+    height: 310px;
+    right: 10px;
+    top: 65px;
+    padding: 10px 5px;
+    overflow: hidden;
+    clear: both;
+    z-index: 2;
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+    }
+    .popTree-group {
+      float: left;
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: auto;
+      .popTree-group-item.active {
+        color: #409eff;
+      }
+    }
+    .popTree-group-item {
+      cursor: pointer;
+      color: #333;
+      font-size: 14px;
+      &:hover {
+        color: #409eff;
+        background-color: #f2f2f2;
+      }
+      p {
+        margin: 0 5px;
+        line-height: $popItemLineHeight;
+        &:hover {}
+      }
+    }
+  }
+
+  .truck-log-expand {
+    background-color: #409eff;
+    height: 36px;
+    line-height: 36px;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 0 10px;
+    position: relative;
+    .control-bur {
+      cursor: n-resize;
+    }
+    .el-button {
+      float: right;
+      margin-top: 5px;
+      margin-left: 15px;
+      font-size: 14px;
+      &:hover {
+        border-bottom: 3px solid #fff;
+      }
+    }
+    .el-button--text {
+      color: #fff;
+    }
+
+    .control-panel {
+      position: absolute;
+      display: block;
+      float: left;
+      width: 495px;
+      color: #333;
+      background-color: $floatPanelBgcolor;
+      box-shadow: $floatPanelBoxShoadow;
+      border-radius: 5px;
+      right: 10px;
+      top: -65px;
+      z-index: 2;
+      .el-button--text {
+        margin: 2px 3px;
+        color: #333;
+        float: left;
+        font-size: 20px;
+        transition: 0.3s;
+        &:hover {
+          transition: 0.3s;
+          color: #409eff;
+        }
+      }
+      .btn-stop {
+        padding-top: 11px;
+        &:before {
+          content: '=';
+          font-size: 30px;
+          line-height: 20px;
+          transform: rotate(90deg);
+          display: block;
+          padding: 0;
+          margin: 0;
+        }
+      }
+      span {
+        margin-left: 5px;
+      }
+      i,
+      span {
+        float: left;
+        margin-top: 5px;
+      }
+      .slider-step {
+        float: left;
+        width: 100px;
+        margin: 5px 10px;
+        .el-slider__runway {
+          background-color: #ddd;
+        }
+      }
+      .el-progress {
+        float: left;
+        margin: 14px 10px 0;
+        width: 180px;
+        .el-progress-bar__outer {
+          background-color: #ddd;
+        }
+      }
+    }
+  }
+  .truck-log-info {
+    .info_tab {
+      margin-bottom: 40px;
+    }
+    .rowSelect {
+      // color: #fff;
+      background-color: #E6A23C;
+    }
+    .info_tab_footer {
+      padding-left: 20px;
+      background: #eee;
+      height: 40px;
+      line-height: 40px;
+      box-shadow: 0 -2px 2px rgba(0, 0, 0, .1);
+      position: relative;
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    .show_pager {
+      float: right;
+      line-height: 40px;
+      height: 40px;
+      overflow: hidden;
+    }
+  }
+  .search-card {
+    display: block;
+    background-color: $floatPanelBgcolor;
+    padding: 10px 10px 5px;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    z-index: 2;
+    box-shadow: $floatPanelBoxShoadow;
+    border-radius: 5px;
+    .el-form {
+      .el-form-item--mini.el-form-item,
+      .el-form-item--small.el-form-item {
+        margin-bottom: 8px;
+      }
+      .el-range-editor--mini.el-input__inner {
+        width: 213px;
+      }
+    }
+  }
+}

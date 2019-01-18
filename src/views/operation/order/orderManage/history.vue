@@ -61,7 +61,7 @@
       <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  :code="'ORDER_UP'" />
   </div>
 </template>
 <script>
@@ -123,6 +123,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },{
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -140,20 +148,24 @@ export default {
           return parseShipStatus(scope.row.shipIdentifying)
         }
       }, {
+        'label': '修改内容',
+        'prop': 'updateContent',
+        'width': '150'
+      }, {
         'label': '旧值',
-        'prop': 'old_value',
+        'prop': 'oldValue',
         'width': '150'
       }, {
         'label': '新值',
-        'prop': 'new_value',
+        'prop': 'newValue',
         'width': '150'
       }, {
         'label': '修改人',
-        'prop': 'name',
+        'prop': 'updateName',
         'width': '150'
       }, {
         'label': '修改日期',
-        'prop': 'update_time',
+        'prop': 'updateTime',
         'width': '150'
       }, {
         'label': '开单网点',
@@ -431,7 +443,7 @@ export default {
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '改单记录'
+            name: '改单记录-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }

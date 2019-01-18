@@ -19,7 +19,7 @@
         :summary-method="getSumLeft"
           show-summary
          :data="infoList" stripe border :default-sort="{prop: 'id', order: 'ascending'}">
-          <el-table-column fixed sortable type="selection" width="50">
+          <el-table-column fixed sortable type="selection" width="70">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -93,6 +93,7 @@ export default {
       },
       tableColumn: [{
         label: '序号',
+        prop: 'number',
         width: '80',
         fixed: true,
         slot: (scope) => {
@@ -331,14 +332,14 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.infoList,
             columns: this.tableColumn,
-            name: '短驳到货'
+            name: '短驳到货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'printList': // 打印
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.infoList,
             columns: this.tableColumn,
-            name: '短驳到货'
+            name: '短驳到货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
       }
@@ -435,7 +436,7 @@ export default {
       this.$set(data, 'id', this.selected[0].id)
       this.$set(data, 'loadType', 38) // 装载类型：短驳
       if (this.loadInfo.bathStatusName === '已入库' || this.loadInfo.bathStatusName === '部分入库') {
-        this.$confirm('此操作将短驳入库, 是否继续?', '提示', {
+        this.$confirm('此操作将取消短驳入库, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -491,7 +492,7 @@ export default {
       }
     },
     setColumn(obj) { // 重绘表格列表
-      // this.tableColumn = obj
+      this.tableColumn = obj
       this.tablekey = new Date().getTime() // 刷新表格视图
       console.log('setColumn', obj, this.tablekey)
     }

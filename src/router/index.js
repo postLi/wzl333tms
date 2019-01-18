@@ -39,7 +39,7 @@ export const constantRouterMap = [{
   path: '/404',
   component: _import('404'),
   hidden: true
-},
+}
   /*   {
       component: Layout,
       redirect: '/checklist/index',
@@ -56,85 +56,7 @@ export const constantRouterMap = [{
         }
       }]
     }, */
-{
-  path: '/',
-  component: Layout,
-  redirect: '/dashboard',
-  noDropdown: true,
-  icon: 'shouye',
-    // name: '首页',
-  name: 'dashboard',
-  meta: {
-    'code': 'HOME_PAGE'
-  },
-  hidden: true,
-  children: [{
-    path: '/dashboard',
-    component: _import('html5/html5index'),
-    name: 'dashboard',
-    icon: 'shouye',
-    meta: {
-        title: '运营控制台',
-        noCache: false,
-        'code': 'HOME_PAGE_1',
-        'proute': 'dashboard'
-      }
-  }, {
-      path: '/console',
-      component: _import('html5/index'),
-      name: 'console',
-      icon: 'baobiao',
-      meta: {
-        title: '财务控制台',
-        noCache: false,
-        'code': 'HOME_PAGE_4',
-        'proute': 'dashboard'
-      }
-    }, {
-      path: '/console2',
-      component: _import('html5/index2'),
-      name: 'console2',
-      icon: 'c',
-      meta: {
-        title: '运输控制台',
-        noCache: false,
-        'code': 'HOME_PAGE_5',
-        'proute': 'dashboard'
-      }
-    }, {
-      path: '/checklist/index',
-      component: _import('checklist/index'),
-      name: 'checklistpage',
-      icon: 'btn9_huidanhs',
-      meta: {
-        title: '系统体检',
-        noCache: false,
-        'code': 'HOME_PAGE_2',
-        'proute': 'dashboard'
-      }
-    }, {
-      path: '/flows',
-      name: 'flows',
-      icon: 'canzhao',
-      component: _import('dashboard/index'),
-      meta: {
-        title: '流程图',
-        noCache: true,
-        'code': 'HOME_PAGE_3',
-        'proute': 'dashboard'
-      }
-    }, {
-      path: '/company/myinfo',
-      icon: 'information',
-      hidden: true,
-      name: '个人中心',
-      component: _import('company/myinfo/index'),
-      meta: {
-        title: '个人中心',
-        noCache: true
-      }
-    }]
-}
+
 ]
 
 // 用来展示自定义组件、指令、过滤器等
@@ -151,6 +73,85 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    noDropdown: true,
+    icon: 'shouye',
+      // name: '首页',
+    name: 'dashboard',
+    meta: {
+      'code': 'HOME_PAGE'
+    },
+    hidden: true,
+    children: [{
+      path: '/dashboard',
+      component: _import('html5/html5index'),
+      name: 'dashboard',
+      icon: 'shouye',
+      meta: {
+        title: '运营控制台',
+        noCache: false,
+        'code': 'HOME_PAGE_1',
+        'proute': 'dashboard'
+      }
+    }, {
+      path: '/console',
+      component: _import('html5/index'),
+      name: 'console',
+      icon: 'baobiao',
+      meta: {
+        title: '财务控制台',
+        noCache: false,
+        'code': 'HOME_PAGE_4',
+        'proute': 'dashboard'
+      }
+    }, {
+      path: '/console2',
+      component: _import('html5/index2'),
+      name: 'console2',
+      icon: 'c',
+      meta: {
+          title: '运输控制台',
+          noCache: false,
+          'code': 'HOME_PAGE_5',
+          'proute': 'dashboard'
+        }
+    }, {
+        path: '/checklist/index',
+        component: _import('checklist/index'),
+        name: 'checklistpage',
+        icon: 'btn9_huidanhs',
+        meta: {
+          title: '系统体检',
+          noCache: false,
+          'code': 'HOME_PAGE_2',
+          'proute': 'dashboard'
+        }
+      }, {
+        path: '/flows',
+        name: 'flows',
+        icon: 'canzhao',
+        component: _import('dashboard/index'),
+        meta: {
+          title: '流程图',
+          noCache: true,
+          // 'code': 'HOME_PAGE_3',
+          'proute': 'dashboard'
+        }
+      }, {
+        path: '/company/myinfo',
+        icon: 'information',
+        hidden: true,
+        name: '个人中心',
+        component: _import('company/myinfo/index'),
+        meta: {
+          title: '个人中心',
+          noCache: true
+        }
+      }]
+  },
   Operation,
   Finance,
   Report,

@@ -306,7 +306,7 @@ export default {
           break
           // 删除客户
         case 'delete':
-          var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].driverName
+          var deleteItem = this.selected.length > 1 ? this.selected.length + '辆' : this.selected[0].truckIdNumber
                   // =>todo 删除多个
           var ids = this.selected.map(item => {
             return item.truckId
@@ -360,7 +360,7 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
     },
     openAddCustomer() {
       this.AddCustomerVisible = true

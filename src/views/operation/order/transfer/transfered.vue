@@ -31,13 +31,14 @@
             fixed
             sortable
             type="selection"
-            width="50">
+            width="70">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               show-overflow-tooltip
               :label="column.label"
               :prop="column.prop"
               v-if="!column.slot"
@@ -48,6 +49,7 @@
               :fixed="column.fixed"
               sortable
               :label="column.label"
+               show-overflow-tooltip
               v-else
               :width="column.width">
               <template slot-scope="scope" v-html="true">
@@ -60,7 +62,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddOrder :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn" code="TRANSFER_ALREADY"  />
   </div>
 </template>
 <script>
@@ -125,6 +127,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '150'
@@ -550,7 +560,7 @@ export default {
             }).catch((err) => {
               this.$message({
                 type: 'info',
-                message: '已取消:' + JSON.stringify(err)
+                message: '已取消'
               })
             })
           }

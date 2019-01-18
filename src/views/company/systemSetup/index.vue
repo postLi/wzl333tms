@@ -1,5 +1,5 @@
 <template>
-  <div class="system-setup-page">
+  <div class="system-setup-page" v-loading="loading">
     <div class="system-setup-table">
       <el-form :model="form" ref="ruleForm" :inline="true" label-position="right" size="mini">
         <el-collapse v-model="activeNames">
@@ -175,6 +175,26 @@
                     <i class="el-icon-question" slot="reference"></i>
                   </el-popover>
                 </el-form-item>
+                <el-form-item v-if="false">
+                  开单小数位
+                  <el-select v-model="form.shipPageFunc.decimalPlaces" placeholder="请选择">
+                    <el-option
+                      key="0"
+                      label="不保存"
+                      value="0">
+                    </el-option>
+                    <el-option
+                      key="1"
+                      label="保留一位"
+                      value="1">
+                    </el-option>
+                    <el-option
+                      key="2"
+                      label="保留俩位"
+                      value="2">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
               </div>
             </div>
             <!-- 运单权限 -->
@@ -200,7 +220,7 @@
             </div>
           </el-collapse-item>
           <el-collapse-item name="setup7" title="财务设置" v-has:SETTINGS_FINANCE>
-            <div class="clearfix setup-table">
+            <div class="clearfix setup-table setup-table-finance">
               <div class="setup-left">财务设置</div>
               <div class="setup-right">
                 <el-form-item>
@@ -209,6 +229,20 @@
                     <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item>
+                  毛利：运费合计
+                </el-form-item>
+                 <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;回扣</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.shipFeeAmount">-&nbsp;车费合计</el-checkbox>
+                  <el-popover placement="top" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                    <span>计算公式：毛利 = 运费合计{{(form.grossMargin.brokerageFee==='1' ? ' - 回扣':'') + (form.grossMargin.shipFeeAmount==='1'?' - 车费合计':'') }}</span>
+                    <i class="el-icon-question" slot="reference"></i>
+                  </el-popover>
+                </el-form-item>
+
               </div>
             </div>
           </el-collapse-item>
@@ -260,6 +294,12 @@
                 <el-form-item>
                   <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
                 </el-form-item>
+                <el-form-item>
+                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-document" type="primary" plain>打印配载单设置</el-button>
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="primary" plain>打印合同设置</el-button>
+                </el-form-item>
               </div>
             </div>
           </el-collapse-item>
@@ -282,8 +322,10 @@
     <div class="system-setup-footer">
       <el-button type="primary" @click="saveData" :disabled="nochange">保存</el-button>
     </div>
-    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="initOrder"></printSetOrder>
-    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="initOrder"></printSetLi>
+    <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
+    <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" ></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" ></printContract>
   </div>
 </template>
 <script>
@@ -294,13 +336,17 @@ import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrderSelf'
 import printSetLi from './components/printSetLiSelf'
+import printLoadInfo from './components/printLoadInfo'
+import printContract from './components/printContract'
 
 export default {
   name: 'systemSetup',
   components: {
     SelectType,
     printSetOrder,
-    printSetLi
+    printSetLi,
+    printLoadInfo,
+    printContract
   },
   computed: {
     ...mapGetters([
@@ -309,12 +355,15 @@ export default {
   },
   data() {
     return {
+      loading: true,
       // 表单项
       printers: [],
       shipNo: '',
       cargoNo: '',
       printSetOrderVisible: false,
       printSetLiVisible: false,
+      printLoadInfoVisible: false,
+      printContractVisible: false,
       nochange: true,
       tooltip1: false,
       tooltip2: false,
@@ -476,6 +525,10 @@ export default {
         'financeSetting': {
           'voucher': '2'
         },
+        'grossMargin': {
+          'shipFeeAmount': '1',
+          'brokerageFee': '1'
+        },
         'printSetting': {
           'ship': '0',
           'label': '0',
@@ -559,7 +612,8 @@ export default {
           'notifyCargoRule': '',
           'shipTimeRule': '',
           'shipFieldSign': '1',
-          orderName: '收发货凭证' // 开单页面标题
+          orderName: '收发货凭证', // 开单页面标题
+          decimalPlaces: '2' // 0,1,2
         },
         'loadSetting': {
           'carrier': 'driver'
@@ -575,13 +629,18 @@ export default {
     infoFinance() { // 初始化财务设置
       const params = {
         orgid: this.otherinfo.orgid,
-        type: 'financeSetting',
+        type: '',
         module: 'finance'
       }
       return getAllSetting(params).then(data => {
-        console.log('financeData', data)
+        console.log('financeSetting', data)
         if (data.financeSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
+        }
+        if (data.grossMargin) {
+          for(let item in data.grossMargin) {
+            this.$set(this.form.grossMargin, item, data.grossMargin[item])
+          }
         }
         this.loading = false
       }).catch((err) => {
@@ -616,6 +675,14 @@ export default {
           this.printSetLi()
           // this.$message({ type: 'warning', message: '功能尚在开发中' })
           break
+        case 'printLoadInfo': // 打印配载单设置
+          this.printLoadInfoVisible = true
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
+        case 'printContract': // 打印合同设置
+          this.printContractVisible = true
+          // this.$message({ type: 'warning', message: '功能尚在开发中' })
+          break
       }
     },
     printSetOrder() {
@@ -645,6 +712,10 @@ export default {
         }
         this.$set(this.form, 'financeSetting', {
           voucher: ''
+        })
+        this.$set(this.form, 'grossMargin', {
+          shipFeeAmount: '1',
+          brokerageFee: '1'
         })
 
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
@@ -693,7 +764,8 @@ export default {
       this.form.cargoNo.shipNoAndNumberOfUnits = '0'
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
-    saveData() {
+    saveData() { // 保存
+      this.loading = true
       // 转译一下打印的\\字符
       const formPrintSetting = Object.assign({}, this.form.printSetting)
       for (const item in formPrintSetting) {
@@ -702,10 +774,12 @@ export default {
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
 
+
       const finance = {
         orgid: form.orgid,
         module: 'finance',
-        financeSetting: form.financeSetting
+        financeSetting: form.financeSetting,
+        grossMargin: form.grossMargin
       }
       console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
@@ -714,6 +788,7 @@ export default {
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.initOrder()
+          this.loading = false
           // this.infoFinance()
         })
       })
@@ -721,6 +796,7 @@ export default {
     putSetting(query) {
       return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
+        console.log('other.systemSetup', this.otherinfo.systemSetup)
         this.$message({
           message: '保存成功',
           type: 'success'
@@ -729,6 +805,16 @@ export default {
         this.loading = false
         this._handlerCatchMsg(err)
       })
+    },
+    changeSystem(obj) {
+      if (obj.ship) {
+        this.$set(this.form.printSetting, 'ship', obj.ship)
+        this.saveData()
+      }
+      if (obj.label) {
+        this.$set(this.form.printSetting, 'label', obj.label)
+        this.saveData()
+      }
     },
     initField() {
       this.fieldSetup = []
@@ -855,6 +941,14 @@ export default {
       .setup-right {
         padding: 10px 16px;
         flex: 1;
+      }
+    }
+    .setup-table-finance{
+      .el-form--inline .el-form-item{
+        margin-right: 5px;
+      }
+      .el-checkbox__label{
+        padding-left: 5px;
       }
     }
   }

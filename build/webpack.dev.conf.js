@@ -15,14 +15,14 @@ function resolveApp(relativePath) {
 
 //获取内网ip
 // 其它方式 https://blog.csdn.net/binggoogle/article/details/52005847
-function getLocalIp(){
-  var map = [];  
+function getLocalIp() {
+  var map = [];
   var ifaces = os.networkInterfaces();
-  for (var dev in ifaces) {  
-      if(ifaces[dev][1].address.indexOf('192.168') != -1) {  
-          return ifaces[dev][1].address;  
-      }  
-  }    
+  for (var dev in ifaces) {
+    if (ifaces[dev][1].address.indexOf('192.168') != -1) {
+      return ifaces[dev][1].address;
+    }
+  }
   return map;
 }
 
@@ -32,7 +32,10 @@ function getLocalIp(){
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
+    rules: utils.styleLoaders({
+      sourceMap: config.dev.cssSourceMap,
+      usePostCSS: true
+    })
   },
   // cheap-module-eval-source-map is faster for development
   devtool: '#cheap-module-eval-source-map',
@@ -40,19 +43,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   devServer: {
     clientLogLevel: 'warning',
     historyApiFallback: {
-      rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
-      ],
+      rewrites: [{
+        from: /.*/,
+        to: path.posix.join(config.dev.assetsPublicPath, 'index.html')
+      }, ],
     },
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
-    host:  getLocalIp() || config.dev.host,
-    port:  config.dev.port,
+    host: getLocalIp() || config.dev.host,
+    // host: config.dev.host,
+    port: config.dev.port,
     open: config.dev.autoOpenBrowser,
-    overlay: config.dev.errorOverlay
-      ? { warnings: false, errors: true }
-      : false,
+    overlay: config.dev.errorOverlay ? {
+      warnings: false,
+      errors: true
+    } : false,
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
@@ -77,13 +83,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true
     }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.dev.assetsSubDirectory,
-        ignore: ['.*']
-      }
-    ])
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../static'),
+      to: config.dev.assetsSubDirectory,
+      ignore: ['.*']
+    }])
   ]
 })
 
@@ -99,9 +103,8 @@ module.exports = new Promise((resolve, reject) => {
     compilationSuccessInfo: {
       messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
     },
-    onErrors: config.dev.notifyOnErrors
-    ? utils.createNotifierCallback()
-    : undefined
+    onErrors: config.dev.notifyOnErrors ?
+      utils.createNotifierCallback() : undefined
   }))
 
   resolve(devWebpackConfig)

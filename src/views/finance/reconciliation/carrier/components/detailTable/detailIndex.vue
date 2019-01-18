@@ -76,9 +76,6 @@
       ...mapGetters([
         'otherinfo'
       ]),
-      orgid() {
-
-      }
     },
     mounted() {
       this.searchQuery.vo.orgid = this.$route.query.orgid
@@ -256,9 +253,10 @@
           this.usersArr = data.list
           this.total = data.total
           this.loading = false
+          // this.loading = false
         }).catch(err => {
           this._handlerCatchMsg(err)
-          this.loading = false
+          // this.loading = false
         })
       },
       fetchData() {
@@ -333,7 +331,6 @@
                 })
               }
             }
-
             break
           // 取消对账
           case 'cancelCom':
@@ -355,7 +352,7 @@
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '取消完成成功~'
                   })
                   this.fetchData()
                 }).catch(err => {
@@ -386,7 +383,7 @@
                   this.loading = false
                   this.$message({
                     type: 'success',
-                    message: '保存成功~'
+                    message: '删除成功~'
                   })
                   this.fetchData()
                 }).catch(err => {
@@ -400,7 +397,6 @@
                 })
               }
             }
-
             break
           // 导出数据
           case 'export':
@@ -464,4 +460,5 @@
       }
     }
   }
+
 </script>

@@ -2,6 +2,7 @@ import fetch from '../../utils/fetch'
 import CACHE from '@/utils/cache'
 import { getSelectType } from '@/api/common'
 import { getUserInfo } from '@/utils/auth'
+import md5 from 'js-md5'
 
 /**
  * 获取指定网点的所有下级节点
@@ -54,6 +55,7 @@ export function getOrgName(id) {
       find = find[0]
       return find.name
     }
+    return id
   } else {
     return id
   }
@@ -159,6 +161,7 @@ export function getOrgInfo(orgid) {
  * @param {*} data 要传输的数据
  */
 export function postEmployeer(data) {
+  data.password = md5(data.password)
   return fetch.post('/api-system/system/user/v1/', data)
 }
 /**
@@ -166,6 +169,7 @@ export function postEmployeer(data) {
  * @param {*} data 要传输的数据
  */
 export function putEmployeer(data) {
+  data.password = md5(data.password)
   return fetch.put('/api-system/system/user/v1/', data)
 }
 /**

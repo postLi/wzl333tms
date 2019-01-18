@@ -1,6 +1,6 @@
 <template>
-  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPop" v-loading="loading">
-    <template class="addCustomerPop-content" slot="content">
+  <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPopDelivery" v-loading="loading">
+    <template class="addCPop-content" slot="content">
       <!-- 实际到车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
@@ -61,7 +61,7 @@
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="80px" class="st_searchinfo clearfix" :model="formModel" :rules="ruleData">
                   <ul>
                     <li>
-                      <p>现付运费</p>
+                      <p>现付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.nowpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -73,7 +73,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>回付运费</p>
+                      <p>回付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.backpayCarriage" disabled></el-input>
                       </el-form-item>
@@ -85,7 +85,7 @@
                       </el-form-item>
                     </li>
                     <li>
-                      <p>到付运费</p>
+                      <p>到付车费</p>
                       <el-form-item prop="nowpayCarriage">
                         <el-input :maxlength="10" v-model="formModel.arrivepayCarriage" disabled></el-input>
                       </el-form-item>
@@ -153,7 +153,7 @@
                   </el-button>
                 </div>
                 <div class="infos_tab">
-                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :row-class-name="classLineRed">
                     <el-table-column fixed sortable type="selection" width="50"></el-table-column>
                     <template v-for="column in tableColumn">
                       <!--有数据-->
@@ -277,7 +277,7 @@
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
                     <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
                     <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
@@ -288,23 +288,23 @@
                       <el-input size="mini" disabled v-model="formModel.loadWeightall"></el-input>
                       千克
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
-                      方,全程运费
+                      方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付运费
+                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
-                      元，到付运费
+                      元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
                       ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
-                      元，回付运费
+                      元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
                       元，回付油卡
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；
+                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -360,7 +360,6 @@
                     <span>乙方签章:</span>
                   </div>
                 </div>
-                <div class="pact_bottom"></div>
               </el-form>
             </div>
           </el-tab-pane>
@@ -504,14 +503,14 @@ export default {
         }
       },
       tableColumn: [{
-        label: '序号',
-        prop: 'id',
-        width: '100',
-        fixed: true,
-        slot: (scope) => {
+          label: '序号',
+          prop: 'id',
+          width: '100',
+          fixed: true,
+          slot: (scope) => {
             return scope.$index + 1
           }
-      }, {
+        }, {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '120',
@@ -527,18 +526,18 @@ export default {
           width: '120',
           fixed: false
         },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '操作费(元)',
-        prop: 'handlingFee',
-        width: '100',
-        fixed: false
-      },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '操作费(元)',
+          prop: 'handlingFee',
+          width: '100',
+          fixed: false
+        },
         //   {
         //   label: '应到件数',
         //   prop: 'loadAmount',
@@ -556,28 +555,28 @@ export default {
         //   fixed: false
         // },
         // v-if="isAlFun"   入库前的
-      {
-        label: '实到件数',
-        prop: 'actualAmount',
-        width: '100',
-        isAlFun: true,
-        expand: true,
-        fixed: false,
-        checkfn: (row) => {
-            return row.warehouStatus === 1
+        {
+          label: '实到件数',
+          prop: 'actualAmount',
+          width: '100',
+          isAlFun: true,
+          expand: true,
+          fixed: false,
+          checkfn: (row) => {
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
 
-        slot: (scope) => {
+          slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
           }
-      }, {
+        }, {
           label: '实到重量(kg)',
           prop: 'actualWeight',
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
           slot: (scope) => {
@@ -590,7 +589,7 @@ export default {
           width: '120',
           expand: true,
           checkfn: (row) => {
-            return row.warehouStatus === 1
+            return row.warehouStatus === 1 || row.unloadSign === 1
           },
           fixed: false,
 
@@ -626,12 +625,12 @@ export default {
         //   fixed: false
         // },
         //
-      {
-        label: '配载件数',
-        prop: 'loadAmount',
-        width: '100',
-        fixed: false
-      }, {
+        {
+          label: '配载件数',
+          prop: 'loadAmount',
+          width: '100',
+          fixed: false
+        }, {
           label: '配载重量(kg)',
           prop: 'loadWeight',
           width: '120',
@@ -808,7 +807,15 @@ export default {
     }
   },
   methods: {
-
+    classLineRed(row) { // 行样式
+      if (this.detailList.length) {
+        if (row.row.unloadSign === 1) {
+          return 'rowDisable'
+        } else {
+          return ''
+        }
+      }
+    },
     changeData(index, prop, newVal) { // 判断当行
       this.detailList[index][prop] = Number(newVal)
       const curAmount = this.detailList[index].actualAmount // 实到件数
@@ -948,8 +955,8 @@ export default {
     toggleAllRows() {
       this.$nextTick(() => {
         this.detailList.forEach((e, index) => {
-          this.$refs.multipleTable.toggleRowSelection(e, true)
-          if (e.warehouStatus === 1) {
+          // this.$refs.multipleTable.toggleRowSelection(e, true)
+          if (e.warehouStatus === 1 || e.unloadSign === 1) {
             this.$refs.multipleTable.toggleRowSelection(e, false)
           } else {
             this.$refs.multipleTable.toggleRowSelection(e, true)
@@ -1057,11 +1064,32 @@ export default {
         })
         return false
       }
+      const obj = {}
+      for (const item in this.info) {
+        obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
+      }
+      let appendTopStr = '<style>body{width: 100%;}</style>'
+      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+        this.otherinfo.companyName +
+        '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.orgName + '   →   ' + obj.endOrgName +
+        '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.loadTime +
+        '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.batchNo +
+        '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.truckIdNumber +
+        '</td><td align="right">司机名称: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverName +
+        '</td><td align="right">联系电话: </td><td colspan="2" style="padding-left: 20px;">' +
+        obj.dirverMobile +
+        '</td></tr></table></body>'
+
       switch (type) {
         // 导出
         case 'export':
           SaveAsFile({
-            data: this.detailList,
+            data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
             name: '批次详情'
           })
@@ -1069,9 +1097,10 @@ export default {
           // 打印
         case 'printer':
           PrintInFullPage({
-            data: this.detailList,
+            data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
-            name: '批次详情'
+            name: '批次详情',
+            appendTop: appendTopStr
           })
           break
           // 添加客户
@@ -1086,7 +1115,7 @@ export default {
       }
       if (type !== 'sure') {
         // 清除选中状态，避免影响下个操作
-        this.$refs.multipleTable.clearSelection()
+        // this.$refs.multipleTable.clearSelection()
       }
     },
     getActualTime(obj) {
@@ -1101,29 +1130,36 @@ export default {
           this.$emit('update:isModify', false)
           this.$emit('success')
           this.loading = false
-          // this.isHiddenBtn = false
         }).catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
         })
-        // this.closeMe()
       } else {
+        let countActual = 0
+        let countStatus = 0
         this.selected.forEach((value, index, array) => {
           if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
-            this.$message({
-              type: 'info',
-              message: '实到件数/实到重量/实到体积不能小于0'
-            })
-            return false
+            countStatus += 1
           }
           if (value.warehouStatus === 1) {
-            this.$message({
-              type: 'info',
-              message: '不能再次到车入库'
-            })
-            return false
-          } else {}
+            countStatus += 1
+          }
         })
+        if (countActual > 0) {
+          this.$message({
+            type: 'info',
+            message: '实到件数/实到重量/实到体积不能小于0'
+          })
+          return false
+        }
+        if (countStatus > 0) {
+          this.$message({
+            type: 'info',
+            message: '不能再次到车入库'
+          })
+          this.toggleAllRows()
+          return false
+        }
 
         if (this.formModel.arriveHandlingFee === '' || this.formModel.arriveOtherFee === '') {
           this.formModel.arriveHandlingFee = 0
@@ -1173,10 +1209,24 @@ export default {
       this.AddCustomerVisible = false
     },
     clickDetails(row, event, column) {
-      this.$refs.multipleTable.toggleRowSelection(row)
+      if (row.unloadSign !== 1) {
+        this.$refs.multipleTable.toggleRowSelection(row)
+      }
     },
     getSelection(selection) {
-      this.selected = selection
+      let arr = []
+      this.detailList.forEach((el, index) => {
+        selection.forEach((em, idx) => {
+          if (el.repertoryId === em.repertoryId) {
+            if (em.unloadSign === 1) {
+              this.$refs.multipleTable.toggleRowSelection(el, false)
+            }else {
+              arr.push(em)
+            }
+          }
+        })
+      })
+      this.selected = arr
     },
     // 取消高亮样式
     offThisActive(e) {
@@ -1254,9 +1304,26 @@ export default {
           td {
             text-align: center;
           }
+          th {
+            color: #606266;
+            font-weight: 400;
+          }
         }
         .unauth {
           color: #f00;
+        }
+      }
+      .rowDisable {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        .el-checkbox {
+          .el-checkbox__input {
+            cursor: not-allowed;
+          }
+          .el-checkbox__inner {
+            background-color: #ccc;
+          }
         }
       }
       .el-table td,
@@ -1541,28 +1608,18 @@ export default {
   .infos_table {
     .el-input.is-disabled .el-input__inner {
       background-color: #fff;
-      /*border-color: #e4e7ed;*/
-      /*color: #c0c4cc;*/
-      /*cursor: not-allowed;*/
     }
   }
 }
-
-
-
-
-
-
-
 /*批次详情*/
 
-.storagesPop {
+.storagesPopDelivery {
   left: auto;
   top: 50px;
   bottom: auto;
   min-width: 1100px;
   max-width: 1100px;
-  height: 100%;
+  // height: 100%;
   .el-tabs {
     height: 100%;
     .el-tabs__content {
@@ -1572,17 +1629,12 @@ export default {
       }
     }
   }
-  /*z-index: 1001 !important;*/
   .el-input.is-disabled {
     .el-input__inner {
-      /*color:#3e9ff1;*/
       background-color: transparent;
-      /*border-top-color: transparent;*/
-      /*border-left-color: transparent;*/
-      /*border-right-color: transparent;*/
     }
   }
-}
+
 
 .batchTypeNo {
   width: 100%;
@@ -1613,9 +1665,6 @@ export default {
 }
 
 .storagesInfoPop_content {
-  // width: 100%;
-  // display: flex;
-  // flex-direction: column;
   height: 100%;
   .tab-card {
     .el-tabs__content {
@@ -1631,10 +1680,6 @@ export default {
     background-color: #ffffff;
     width: 100%;
   }
-  /*.el-tabs--border-card>.el-tabs__content{*/
-  /*padding: 0 !important;*/
-  /*}*/
-  /*padding: 0 10px 0 10px;*/
   .tab_descript {}
   .info {
     background-color: rgb(238, 241, 246);
@@ -1655,91 +1700,17 @@ export default {
   .itemRecharge {
     background-color: rgb(238, 241, 246);
     padding: 10px;
-  } // .tab_box {
-  //   padding-left: 10px;
-  //   display: flex;
-  //   flex-direction: row;
-  // .stepItem_title {
-  //   margin: 10px 0 10px 10px;
-  //   font-size: 14px;
-  //   width: 165%;
-  // }
-  //   .stepItem {
-  //     font-size: 14px;
-  //     color: #666;
-  //     margin-bottom: 20px;
-  //     width: 160%;
-  //     p {
-  //       word-wrap: break-word;
-  //       word-break: normal;
-  //       display: block;
-  //     }
-  //   }
-  // }
-  // .tab_box {
-  //   position: relative;
-  //   .tab_box_item {
-  //     .stepItem_title {
-  //       font-size: 14px;
-  //       color: #333;
-  //       width: 110%;
-  //       height: 36px;
-  //       line-height: 36px;
-  //     }
-  //     .el-step.is-vertical {
-  //       padding-left: 20px;
-  //       .stepItem {
-  //         width: 110%;
-  //         color: #666;
-  //         font-size: 14px;
-  //         padding: 10px;
-  //         margin: 0 0 3px 0;
-  //         background-color: #ffffff;
-  //         box-shadow: 0px 0px 10px #eaeaea;
-  //         transition: 0.4s;
-  //       }
-  //       .stepItem:hover {
-  //         transition: 0.2s;
-  //         background-color: #E9F3FA;
-  //       }
-  //     }
-  //   }
-  // }
-  //   .stepFrom {
-  //   display:block;
-  //   width:100%;
-  //   height:100%;
-  //   padding-top: 15px;
-  //   .el-form--inline .el-form-item{
-  //     margin-right:0;
-  //     float:left;
-  //     display:flex;
-  //     width:28%;
-  //   }
-  //   .el-date-editor.el-input,
-  //   .el-date-editor.el-input__inner {
-  //     width: 100%;
-  //   }
-  //   .el-form-item__label {
-  //     font-size: 12px;
-  //   }
-  //   .el-form-item__content {
-  //     flex: 1;
-  //   }
-  //   .el-button--primary{
-  //     position: absolute;
-  //     top:23px;
-  //     right:10px;
-  //   }
-  // }
+  } 
   /*货物运输合同*/
   .pact {
     padding: 0 10px;
+    margin-top: 85px;
+    height: calc(100% - 85px);
+    overflow: auto;
     .pact_top {
-
       position: relative;
       height: 40px;
-      margin-top: 85px;
+      margin-top: 20px;
       margin-bottom: 10px;
       h3 {
         text-align: center;
@@ -1886,8 +1857,6 @@ export default {
         }
       }
     }
-
-    .pact_bottom {}
   }
 }
 
@@ -1898,5 +1867,5 @@ export default {
 .p_table .el-input--mini .el-input__inner {
   width: 200px;
 }
-
+}
 </style>

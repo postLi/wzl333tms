@@ -556,7 +556,7 @@ export default {
       // 判断是否有选中项
       if (this.selected.length === 0 && type !== 'reg' && type !== 'export') {
         this.$message({
-          message: '请选择要操作的项1~',
+          message: '请选择要操作的项~',
           type: 'warning'
         })
         return false
@@ -615,11 +615,16 @@ export default {
           break
         // 删除
         case 'delete':
+          if (this.selected.length > 1) {
+            this.$message.warning('请选择一条数据~')
+            return false
+          }
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].shipSn
           // =>todo 删除多个
-          const ids = this.selected.map(item => {
-            return item.id
-          })
+          // const ids = this.selected.map(item => {
+          //   return item.id
+          // })
+          const ids = this.selected[0].id
           // ids = ids.join(',')
           console.log(ids + 'wzl')
           if (this.selected[0].status !== 'NOSETTLEMENT') {

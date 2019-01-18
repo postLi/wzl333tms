@@ -64,7 +64,7 @@
       <!-- </el-tooltip> -->
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  :code="'ORDER_DRAFT'" />
   </div>
 </template>
 <script>
@@ -126,6 +126,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+          label: '序号',
+          prop: 'number',
+          width: '70',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },{
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -223,7 +231,7 @@ export default {
         'width': '150'
       }, {
         'label': '等通知放货',
-        'prop': 'shipIsControll',
+        'prop': 'status',
         'width': '150',
         'slot': function(scope) {
           return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
@@ -460,7 +468,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print' ) {
         this.closeAddOrder()
         this.$message({
           message: '请选择要操作的项~',

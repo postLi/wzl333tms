@@ -6,7 +6,9 @@ import {
 import store from '@/store'
 import {
   getToken,
-  removeToken
+  removeToken,
+  getRefreshToken,
+  removeRefreshToken
 } from '@/utils/auth'
 // 引入事件对象
 import {
@@ -122,10 +124,29 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.warn('=============请求出错==============：', error)
+    console.warn('=============请求出错==============：', error, error.response)
     let err = error
     if (error.response) {
       const status = error.response.status
+
+      const response = error.response
+
+      const data = {
+        url: response.config.url,
+        method: response.config.method,
+        params: response.config.params,
+        data: response.config.data,
+        res: response.request.responseText
+      }
+      console.group('=============请求不对出错==============：')
+      console.warn('请求链接：', data.url)
+      console.warn('请求方法：', data.method)
+      console.warn('请求链接参数：', data.params)
+      console.warn('请求body参数：', data.data)
+      console.warn('请求结果：', response.request.responseText)
+      console.groupEnd('=============请求不对出错==============：')
+      // 如果是非正式环境，缓存最近30条信息
+      cacheDEVInfo('htt2p', data)
 
       if (status === 403) {
         err = {
@@ -155,6 +176,7 @@ service.interceptors.response.use(
         // 401:非法的token;Token 过期了;
         eventBus.$emit('hideSupcanChart')
         removeToken()
+
         MessageBox.alert('你已被登出，请重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
@@ -171,6 +193,7 @@ service.interceptors.response.use(
             location.href = '/login' // 为了重新实例化vue-router对象 避免bug
           })
         })
+
         return false
       } else {
         err = {

@@ -12,7 +12,7 @@
         :summary-method="getSumLeft"
           show-summary
          height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}">
-          <el-table-column fixed sortable type="selection" width="35">
+          <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -35,8 +35,7 @@
       <!-- 在途跟踪 -->
       <editInfo :orgid="orgid" :id='trackId' :info="trackInfo" :popVisible.sync="editInfoVisible" @close="closeMe" :detailType="'detailArtery'"></editInfo>
       <!-- 表格设置弹出框 -->
-      <!-- <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup> -->
-      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+      <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn" code="LOADTRACK1"></TableSetup>
     </div>
   </div>
 </template>
@@ -85,6 +84,14 @@ export default {
         }
       },
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         label: '发车批次',
         prop: 'batchNo',
         width: '110',
@@ -116,16 +123,16 @@ export default {
         prop: 'departureTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '配载时间',
         prop: 'loadTime',
         width: '160',
         slot: (scope) => {
-            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '目的网点',
@@ -172,12 +179,12 @@ export default {
         prop: 'weightLoadRate',
         width: '120'
       }, {
-          label: '体积装载率',
-          prop: 'volumeLoadRate',
-          width: '120'
-        },
+        label: '体积装载率',
+        prop: 'volumeLoadRate',
+        width: '120'
+      },
       {
-        label: '现付运费',
+        label: '现付车费',
         prop: 'nowpayCarriage',
         width: '120'
       },
@@ -187,7 +194,7 @@ export default {
         width: '120'
       },
       {
-        label: '到付运费',
+        label: '到付车费',
         prop: 'arrivepayCarriage',
         width: '120'
       },
@@ -202,12 +209,12 @@ export default {
         width: '120'
       },
       {
-        label: '回付运费',
+        label: '回付车费',
         prop: 'backpayCarriage',
         width: '120'
       },
         // {
-        //   label: "运费合计",
+        //   label: "车费合计",
         //   prop: "userName",
         //   width: "120"
         // },
@@ -271,7 +278,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchList()
+    // this.fetchList()
   },
   methods: {
     getSumLeft(param, type) {

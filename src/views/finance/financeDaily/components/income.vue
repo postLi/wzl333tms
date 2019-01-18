@@ -108,7 +108,7 @@
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
           <el-button type="success" @click="submitForm('formModel', 'print')" plain icon="el-icon-printer" :loading="btnLoading">保存并打印</el-button>
-          <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
+          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
   </el-dialog>
@@ -299,6 +299,7 @@ export default {
     },
     getBaseInfo() {
       this.$set(this.searchQuery, 'dataSrc', 1)
+      this.$set(this.searchQuery, 'companyId', this.otherinfo.companyId)
       return postVerificationBaseInfo(this.searchQuery).then(data => {
           if (data) {
             this.formModel = data
@@ -522,7 +523,6 @@ export default {
       }
     },
     submitForm(formName, type) {
-
       if (!this.formModel.certNo && this.formModel.isNeededVoucher === '1') {
         this.$message.error('缺少凭证编号')
         this.getBaseInfo()
@@ -552,7 +552,6 @@ export default {
             })
           }
           if (type) { // 打印
-            // this.$message.warning('暂无此功能~')
             this.print()
             this.loading = false
           }

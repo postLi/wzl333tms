@@ -20,7 +20,7 @@
 
     body {
       padding: 10px 20px;
-      font-size: 16px;
+      font-size: 15px;
     }
 
     .contract_title {
@@ -59,15 +59,13 @@
 
     .contract_form {
       width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: center;
+      float: left;
     }
 
     .contract_form_item {
-      width: 40%;
+      width: 48%;
       text-align: center;
+      float: left;
     }
 
     .contract_form_item ul {
@@ -101,7 +99,7 @@
     }
 
     .contract_atricle p {
-      padding: 8px 0;
+      padding: 6px 0;
     }
 
   </style>
@@ -157,7 +155,7 @@
     var arr = str.split('&')
     var query = new Object()
 
-    for (var i = 0; i < arr.length - 1; i++) {
+    for (var i = 0; i < arr.length; i++) {
       num = arr[i].indexOf("=");
       if (num > 0) {
         name = arr[i].substring(0, num);
@@ -182,12 +180,15 @@
   var goodsInfoStr = ''
   var contractTimeStr = ''
 
+  
   contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
-  contract_title_number.innerHTML = 'NO.' + data.batchNo
+  contract_checkBillName.style.fontSize = (data.heading_word_size || 18) + 'px'
+  document.body.style.fontSize = (data.content_word_size || 14) + 'px'
+  contract_title_number.innerHTML = 'NO.' + data.contractNo
   partA.innerHTML = data.orgName
-  contract_companyname.innerHTML = data.orgName
+  contract_companyname.innerHTML = data.heading_content || ''
+  contract_companyname.style.fontSize = (data.heading_word_size || 18) + 'px'
   partB.innerHTML = data.carrier
-  console.error(data)
   // 双方信息
   formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
     '<li><label>家庭住址</label><span></span></li>' +
@@ -220,7 +221,6 @@
   contract_time.innerHTML = contractTimeStr
   // 车辆备注
   remark.innerHTML = data.remark ? data.remark : ''
-  console.log('data', data)
 
 </script>
 </body>

@@ -14,49 +14,60 @@ export default {
   },
   noDropdown: true,
   children: [{
-    path: '/operation/order/manage',
-    redirect: '/operation/order/manage/service',
-    icon: 'yygl1_dingdan',
-    name: 'ordermanage',
-    component: _import('operation/order/manage/index'),
-    meta: {
-      role: ['admin'],
-      title: '预订单管理',
-      noCache: false,
-      'code': 'ORDER_MANGER'
-    },
-    children: [{
-      path: '/operation/order/manage/service',
-      icon: 'QQ',
-      name: '客服订单',
-      component: _import('operation/order/manage/sender'),
+      path: '/operation/index',
+      icon: 'information',
+      hidden: true,
+      name: '运营管理',
+      component: _import('operation/index'),
       meta: {
-        role: ['admin'],
-        ptitle: '订单管理',
-        title: '客服订单',
-        noCache: true,
-        istab: true,
-        code: 'ORDERMANAGER_LIST'
+        title: '运营管理',
+        stitle: '运营',
+        noCache: true
       }
     }, {
-      path: '/operation/order/manage/import',
-      icon: 'QQ',
-      name: '运单导入',
-      component: _import('operation/order/manage/receiver'),
+      path: '/operation/order/manage',
+      redirect: '/operation/order/manage/service',
+      icon: 'yygl1_dingdan',
+      name: 'ordermanage',
+      component: _import('operation/order/manage/index'),
       meta: {
         role: ['admin'],
-        ptitle: '订单管理',
-        title: '运单导入',
-        noCache: true,
-        istab: true,
-        code: 'ORDERMANAGER_IMPLIST'
-      }
-    }, {
-      path: '/operation/order/manage/networks',
-      icon: 'QQ',
-      name: '网络订单',
-      component: _import('operation/order/manage/networks'),
-      meta: {
+        title: '预订单管理',
+        noCache: false,
+        'code': 'ORDER_MANGER'
+      },
+      children: [{
+        path: '/operation/order/manage/service',
+        icon: 'QQ',
+        name: '客服订单',
+        component: _import('operation/order/manage/sender'),
+        meta: {
+          role: ['admin'],
+          ptitle: '订单管理',
+          title: '客服订单',
+          noCache: true,
+          istab: true,
+          code: 'ORDERMANAGER_LIST'
+        }
+      }, {
+        path: '/operation/order/manage/import',
+        icon: 'QQ',
+        name: '运单导入',
+        component: _import('operation/order/manage/receiver'),
+        meta: {
+          role: ['admin'],
+          ptitle: '订单管理',
+          title: '运单导入',
+          noCache: true,
+          istab: true,
+          code: 'ORDERMANAGER_IMPLIST'
+        }
+      }, {
+        path: '/operation/order/manage/networks',
+        icon: 'QQ',
+        name: '网络订单',
+        component: _import('operation/order/manage/networks'),
+        meta: {
           role: ['admin'],
           ptitle: '订单管理',
           title: '网络订单',
@@ -64,66 +75,68 @@ export default {
           istab: true,
           code: 'ORDERMANAGER_NETWORKLIST'
         }
-    }]
-  }, {
-    path: '/operation/order/pickUp',
-    icon: 'yygl4_tihuo',
-    name: 'orderpickUp',
-    component: _import('operation/order/pickUp/index'),
-    meta: {
-      role: ['admin'],
-      title: '提货管理',
-      noCache: false,
-      'code': 'ORDER_PICK'
-    }
-  }, {
-    path: '/operation/index',
-    icon: 'QQ',
-    hidden: true,
-    name: '运营管理',
-    component: _import('operation/index'),
-    meta: {
-      role: ['admin'],
-      title: '运营管理',
-      noCache: false
-    }
-  }, {
-    path: '/operation/order/createOrder',
-    hidden: true,
-    icon: 'yygl0_chuangjian',
-    name: 'createOrder22',
-    component: _import('operation/order/createOrder/index'),
-    meta: {
+      }]
+    }, {
+      path: '/operation/order/pickUp',
+      icon: 'yygl4_tihuo',
+      name: 'orderpickUp',
+      component: _import('operation/order/pickUp/index'),
+      meta: {
+        role: ['admin'],
+        title: '提货管理',
+        noCache: false,
+        'code': 'ORDER_PICK'
+      }
+    }, {
+      path: '/operation/index',
+      icon: 'QQ',
+      hidden: true,
+      name: '运营管理',
+      component: _import('operation/index'),
+      meta: {
+        role: ['admin'],
+        title: '运营管理',
+        noCache: false
+      }
+    }, {
+      path: '/operation/order/createOrder',
+      hidden: true,
+      icon: 'yygl0_chuangjian',
+      name: 'createOrder22',
+      component: _import('operation/order/createOrder/index'),
+      meta: {
         role: ['admin'],
         title: '创建运单',
         noCache: false,
         code: 'ORDER_MADD'
       }
-  }, /* {
-      path: '/operation/order/modifyOrder',
-      hidden: true,
-      icon: 'yygl0_chuangjian',
-      name: 'modifyOrder22',
-      component: _import('operation/order/createOrder/index'),
+    },
+    /* {
+         path: '/operation/order/modifyOrder',
+         hidden: true,
+         icon: 'yygl0_chuangjian',
+         name: 'modifyOrder22',
+         component: _import('operation/order/createOrder/index'),
+         meta: {
+           role: ['admin'],
+           title: '改单',
+           noCache: false,
+           code: 'ORDER_MEDIT5'
+         }
+     },  */
+    {
+      path: '/operation/order/orderManage',
+      redirect: '/operation/order/orderManage/All',
+      icon: 'yygl2_yundan',
+      name: 'orderManage',
+      component: _import('operation/order/orderManage/index'),
       meta: {
-        role: ['admin'],
-        title: '改单',
-        noCache: false,
-        code: 'ORDER_MEDIT5'
-      }
-  },  */{
-    path: '/operation/order/orderManage',
-    redirect: '/operation/order/orderManage/All',
-    icon: 'yygl2_yundan',
-    name: 'orderManage',
-    component: _import('operation/order/orderManage/index'),
-    meta: {
         role: ['admin'],
         title: '运单管理',
         noCache: true,
         'code': 'ORDER_LIST'
       },
-    children: [{
+      children: [{
         path: '/operation/order/orderManage/All',
         icon: 'QQ',
         name: '全部运单',
@@ -163,7 +176,7 @@ export default {
           code: 'ORDER_DRAFT'
         }
       }]
-  }, {
+    }, {
       path: '/operation/order/shortDepart',
       icon: 'yygl5_duanbo',
       name: 'shortDepart',
@@ -224,7 +237,8 @@ export default {
           ptitle: '干线发车',
           title: '干线发车列表',
           noCache: true,
-          istab: true, code: 'LOAD_GX_LIST'
+          istab: true,
+          code: 'LOAD_GX_LIST'
         }
       }, {
         path: '/operation/order/arteryDepart/loadList',
@@ -236,7 +250,8 @@ export default {
           ptitle: '干线发车',
           title: '智能配载列表',
           noCache: true,
-          istab: true, code: 'LOAD_GX_SMART_LIST'
+          istab: true,
+          code: 'LOAD_GX_SMART_LIST'
         }
       }, {
         path: '/operation/order/arteryDepart/allrepertory',
@@ -254,16 +269,57 @@ export default {
       }]
     }, {
       path: '/operation/order/arteryDelivery',
-      icon: 'yygl7_daoche',
+      icon: 'yygl6_fache',
       name: 'arteryDelivery',
+      redirect: '/operation/order/arteryDelivery/sender',
       component: _import('operation/order/arteryDelivery/index'),
       meta: {
         role: ['admin'],
         title: '干线到车',
         noCache: false,
-        'code': 'ORDER_DELIY'
-      }
-    }, {
+        'code': 'GX_ARRIVE_LIST'
+      },
+      children: [{
+        path: '/operation/order/arteryDelivery/sender',
+        icon: 'QQ',
+        name: '干线到车列表',
+        component: _import('operation/order/arteryDelivery/sender'),
+        meta: {
+          role: ['admin'],
+          ptitle: '干线到车',
+          title: '干线到车列表',
+          noCache: true,
+          istab: true,
+          code: 'ORDER_DELIY'
+        }
+      }, {
+        path: '/operation/order/arteryDelivery/channel',
+        icon: 'QQ',
+        name: '途径卸货',
+        component: _import('operation/order/arteryDelivery/channel'),
+        meta: {
+          role: ['admin'],
+          ptitle: '干线到车',
+          title: '途径卸货',
+          noCache: true,
+          istab: true,
+          code: 'GX_UNLOAD_LIST'
+        }
+      }]
+    },
+    // {
+    //   path: '/operation/order/arteryDelivery',
+    //   icon: 'yygl7_daoche',
+    //   name: 'arteryDelivery',
+    //   component: _import('operation/order/arteryDelivery/index'),
+    //   meta: {
+    //     role: ['admin'],
+    //     title: '干线到车',
+    //     noCache: false,
+    //     'code': 'ORDER_DELIY'
+    //   }
+    // },
+    {
       path: '/operation/order/deliverManage',
       icon: 'yygl8_songhuo',
       name: 'deliverManage',
@@ -504,45 +560,45 @@ export default {
     //   component: _import('operation/order/loadIntelligent/components/intelligentImg'),
     //   meta: { role: ['admin'], title: '智能配载', noCache: false }
     // },
-  {
-    path: '/operation/order/loadIntelligent/load',
-    icon: 'QQ',
-    hidden: true,
-    name: 'Load',
-    component: _import('operation/order/loadIntelligent/load'),
-    meta: {
-      role: ['admin'],
-      title: '智能配载',
-      noCache: false
-    }
-  }, {
-    path: '/operation/order/loadIntelligent/components/intelligentImg',
-    icon: 'QQ',
-    hidden: true,
-    name: 'intelligentImg',
-    component: _import('operation/order/loadIntelligent/components/intelligentImg'),
-    meta: {
-      role: ['admin'],
-      title: '智能配载',
-      noCache: false
-    }
-  }, {
-    path: '/operation/order/track',
-    icon: 'yygl12_genzong',
-    name: 'ordertrack',
-    component: _import('operation/order/track/index'),
-    meta: {
-      role: ['admin'],
-      title: '在途跟踪',
-      noCache: false,
-      'code': 'ORDER_TRACK'
-    },
-    children: [{
-      path: '/operation/order/track/artery',
+    {
+      path: '/operation/order/loadIntelligent/load',
       icon: 'QQ',
-      name: '干线跟踪',
-      component: _import('operation/order/track/artery'),
+      hidden: true,
+      name: 'Load',
+      component: _import('operation/order/loadIntelligent/load'),
       meta: {
+        role: ['admin'],
+        title: '智能配载',
+        noCache: false
+      }
+    }, {
+      path: '/operation/order/loadIntelligent/components/intelligentImg',
+      icon: 'QQ',
+      hidden: true,
+      name: 'intelligentImg',
+      component: _import('operation/order/loadIntelligent/components/intelligentImg'),
+      meta: {
+        role: ['admin'],
+        title: '智能配载',
+        noCache: false
+      }
+    }, {
+      path: '/operation/order/track',
+      icon: 'yygl12_genzong',
+      name: 'ordertrack',
+      component: _import('operation/order/track/index'),
+      meta: {
+        role: ['admin'],
+        title: '在途跟踪',
+        noCache: false,
+        'code': 'ORDER_TRACK'
+      },
+      children: [{
+        path: '/operation/order/track/artery',
+        icon: 'QQ',
+        name: '干线跟踪',
+        component: _import('operation/order/track/artery'),
+        meta: {
           role: ['admin'],
           ptitle: '在途跟踪',
           title: '干线跟踪',
@@ -550,7 +606,7 @@ export default {
           istab: true,
           code: 'LOADTRACK1'
         }
-    }, {
+      }, {
         path: '/operation/order/track/short',
         icon: 'QQ',
         name: '短驳跟踪',
@@ -589,81 +645,92 @@ export default {
           istab: true,
           code: 'LOADTRACK4'
         }
+      }, {
+        path: '/operation/order/track/trucklog',
+        icon: 'QQ',
+        name: '车辆跟踪',
+        component: _import('operation/order/track/trucklog'),
+        meta: {
+          role: ['admin'],
+          ptitle: '在途跟踪',
+          title: '车辆跟踪',
+          noCache: true,
+          istab: true,
+          code: 'LOADTRACK5'
+        }
       }]
-  },
-
-  {
-    path: '/operation/order/transfer',
-    icon: 'yygl9_zhongzhuan',
-    name: 'ordertransfer',
-    component: _import('operation/order/transfer/index'),
-    meta: {
-      role: ['admin'],
-      title: '中转管理',
-      noCache: false,
-      'code': 'ORDER_TRANSFER'
-    },
-    children: [{
-      path: '/operation/order/transfer/transfered',
-      icon: 'QQ',
-      name: '已中转运单',
-      component: _import('operation/order/transfer/transfered'),
+    }, {
+      path: '/operation/order/transfer',
+      icon: 'yygl9_zhongzhuan',
+      name: 'ordertransfer',
+      component: _import('operation/order/transfer/index'),
       meta: {
         role: ['admin'],
-        ptitle: '中转管理',
-        title: '已中转运单',
-        noCache: true,
-        istab: true,
-        code: 'TRANSFER_ALREADY'
+        title: '中转管理',
+        noCache: false,
+        'code': 'ORDER_TRANSFER'
+      },
+      children: [{
+        path: '/operation/order/transfer/transfered',
+        icon: 'QQ',
+        name: '已中转运单',
+        component: _import('operation/order/transfer/transfered'),
+        meta: {
+          role: ['admin'],
+          ptitle: '中转管理',
+          title: '已中转运单',
+          noCache: true,
+          istab: true,
+          code: 'TRANSFER_ALREADY'
+        }
+      }, {
+        path: '/operation/order/transfer/batch',
+        icon: 'QQ',
+        name: '中转批次',
+        component: _import('operation/order/transfer/batch'),
+        meta: {
+          role: ['admin'],
+          ptitle: '中转管理',
+          title: '中转批次',
+          noCache: true,
+          istab: true,
+          code: 'TRANSFER_LOAD'
+        }
+      }]
+    }, {
+      path: '/operation/order/transferLoad/',
+      icon: 'QQ',
+      hidden: true,
+      name: 'ordertransferLoad',
+      component: _import('operation/order/transferLoad/index'),
+      meta: {
+        role: ['admin'],
+        title: '中转外发',
+        noCache: false
       }
     }, {
-      path: '/operation/order/transfer/batch',
+      path: '/operation/order/pickClip',
+      hidden: true,
       icon: 'QQ',
-      name: '中转批次',
-      component: _import('operation/order/transfer/batch'),
+      name: 'orderpickClip',
+      component: _import('operation/order/pickClip/index'),
       meta: {
         role: ['admin'],
-        ptitle: '中转管理',
-        title: '中转批次',
-        noCache: true,
-        istab: true,
-        code: 'TRANSFER_LOAD'
+        title: '挑单夹',
+        noCache: false
       }
-    }]
-  }, {
-    path: '/operation/order/transferLoad/',
-    icon: 'QQ',
-    hidden: true,
-    name: 'ordertransferLoad',
-    component: _import('operation/order/transferLoad/index'),
-    meta: {
-      role: ['admin'],
-      title: '中转外发',
-      noCache: false
-    }
-  }, {
-    path: '/operation/order/pickClip',
-    hidden: true,
-    icon: 'QQ',
-    name: 'orderpickClip',
-    component: _import('operation/order/pickClip/index'),
-    meta: {
-      role: ['admin'],
-      title: '挑单夹',
-      noCache: false
-    }
-  }, {
-    path: '/operation/order/orderDetail',
-    hidden: true,
-    icon: 'QQ',
-    name: 'orderDetail',
-    component: _import('operation/order/orderDetail/index'),
-    meta: {
+    }, {
+      path: '/operation/order/orderDetail',
+      hidden: true,
+      icon: 'QQ',
+      name: 'orderDetail',
+      component: _import('operation/order/orderDetail/index'),
+      meta: {
         role: ['admin'],
         title: '订单详情',
         noCache: false
       }
-  }, {
+    }, {
       path: '/operation/service',
       redirect: '/operation/service/abnormal',
       component: _import('operation/service/index'),
@@ -677,75 +744,75 @@ export default {
         stitle: '客服'
       },
       children: [{
-        path: '/operation/service/abnormal',
-        redirect: '/operation/service/abnormal/abReg',
-        icon: 'QQ',
-        name: '异常管理',
-        component: _import('operation/service/abnormal/index'),
-        meta: {
-          role: ['admin'],
-          title: '异常管理',
-          noCache: true,
-          code: 'ORDER_ABNO'
-        },
-        children: [{
-          path: '/operation/service/abnormal/abReg',
+          path: '/operation/service/abnormal',
+          redirect: '/operation/service/abnormal/abReg',
           icon: 'QQ',
-          name: '异常登记',
-          component: _import('operation/service/abnormal/abReg'),
+          name: '异常管理',
+          component: _import('operation/service/abnormal/index'),
           meta: {
             role: ['admin'],
-            ptitle: '异常管理',
-            istab: true,
-            title: '异常登记',
-            noCache: false,
-            code: 'ORDER_ABNO1'
-          }
+            title: '异常管理',
+            noCache: true,
+            code: 'ORDER_ABNO'
+          },
+          children: [{
+            path: '/operation/service/abnormal/abReg',
+            icon: 'QQ',
+            name: '异常登记',
+            component: _import('operation/service/abnormal/abReg'),
+            meta: {
+              role: ['admin'],
+              ptitle: '异常管理',
+              istab: true,
+              title: '异常登记',
+              noCache: false,
+              code: 'ORDER_ABNO1'
+            }
+          }, {
+            path: '/operation/service/abnormal/abDeal',
+            icon: 'QQ',
+            name: '异常处理',
+            component: _import('operation/service/abnormal/abDeal'),
+            meta: {
+              role: ['admin'],
+              ptitle: '异常管理',
+              istab: true,
+              title: '异常处理',
+              noCache: false,
+              code: 'ORDER_ABNO2'
+            }
+          }]
         }, {
-          path: '/operation/service/abnormal/abDeal',
+          path: '/operation/service/controlgoods',
+          redirect: '/operation/service/controlgoods/allGoods',
           icon: 'QQ',
-          name: '异常处理',
-          component: _import('operation/service/abnormal/abDeal'),
+          name: '控货管理',
+          component: _import('operation/service/controlgoods/index'),
           meta: {
             role: ['admin'],
-            ptitle: '异常管理',
-            istab: true,
-            title: '异常处理',
-            noCache: false,
-            code: 'ORDER_ABNO2'
-          }
-        }]
-      }, {
-        path: '/operation/service/controlgoods',
-        redirect: '/operation/service/controlgoods/allGoods',
-        icon: 'QQ',
-        name: '控货管理',
-        component: _import('operation/service/controlgoods/index'),
-        meta: {
-          role: ['admin'],
-          title: '控货管理',
-          noCache: true,
-          code: 'ORDER_CONTRO'
-        },
-        children: [{
-          path: '/operation/service/controlgoods/allGoods',
-          icon: 'QQ',
-          name: '全部',
-          component: _import('operation/service/controlgoods/allGoods'),
-          meta: {
-            role: ['admin'],
-            ptitle: '控货管理',
-            istab: true,
-            title: '全部',
-            noCache: false,
-            code: 'CONTRO_All'
-          }
-        }, {
-          path: '/operation/service/controlgoods/noGoods',
-          icon: 'QQ',
-          name: '未放货',
-          component: _import('operation/service/controlgoods/noGoods'),
-          meta: {
+            title: '控货管理',
+            noCache: true,
+            code: 'ORDER_CONTRO'
+          },
+          children: [{
+            path: '/operation/service/controlgoods/allGoods',
+            icon: 'QQ',
+            name: '全部',
+            component: _import('operation/service/controlgoods/allGoods'),
+            meta: {
+              role: ['admin'],
+              ptitle: '控货管理',
+              istab: true,
+              title: '全部',
+              noCache: false,
+              code: 'CONTRO_All'
+            }
+          }, {
+            path: '/operation/service/controlgoods/noGoods',
+            icon: 'QQ',
+            name: '未放货',
+            component: _import('operation/service/controlgoods/noGoods'),
+            meta: {
               role: ['admin'],
               ptitle: '控货管理',
               istab: true,
@@ -753,7 +820,7 @@ export default {
               noCache: false,
               code: 'CONTRO_NO'
             }
-        }, {
+          }, {
             path: '/operation/service/controlgoods/haveGoods',
             icon: 'QQ',
             name: '已放货',
@@ -767,7 +834,7 @@ export default {
               code: 'CONTRO_YES'
             }
           }]
-      }
+        }
 
       ]
     }

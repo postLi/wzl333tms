@@ -36,7 +36,7 @@
                   :summary-method="getSumLeft"
           show-summary
                   style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
                              v-if="!column.slot" :width="column.width"></el-table-column>
@@ -62,7 +62,7 @@
     </div>
     <AddCustomer :key="mykey" :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo"
                  :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"/>
-    <TableSetup :code="$route.meta.code" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
+    <TableSetup :code="code"  :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn"
                 :columns="tableColumn"/>
   </div>
 </template>
@@ -97,6 +97,7 @@
     },
     data() {
       return {
+        code: 'ORDERMANAGER_LIST',
         mykey: '',
         tablekey: 0,
         btnsize: 'mini',

@@ -52,6 +52,7 @@ export default {
       'otherinfo'
     ]),
     myusers() {
+      console.log('users', this.users)
       this.form.users = {}
       this.users.map(el => {
         // 需要实现双向绑定
@@ -98,6 +99,7 @@ export default {
       })
     },
     submitForm() {
+      console.log('closeMe1')
       this.loading = true
       const data = []
       for (const i in this.form.users) {
@@ -117,6 +119,7 @@ export default {
       })
     },
     closeMe() {
+      console.log('closeMe2')
       this.form.users = {}
       this.$emit('update:popVisible', false)
     },

@@ -495,6 +495,7 @@ export default {
         },
         toolbox: {
           show: true,
+          right: 30,
           feature: {
             mark: { show: true },
             dataView: { show: false, readOnly: false },
@@ -698,7 +699,7 @@ export default {
     }
     &.activetab{
       .dataico{
-        opacity: 1;
+        opacity: 0.4;
       }
     }
     .dataico{

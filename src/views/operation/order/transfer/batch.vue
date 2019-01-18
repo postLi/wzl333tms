@@ -27,11 +27,12 @@
             fixed
             sortable
             type="selection"
-            width="50">
+            width="70">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column
               :key="column.id"
+               show-overflow-tooltip
               :fixed="column.fixed"
               sortable
               :label="column.label"
@@ -42,6 +43,7 @@
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+               show-overflow-tooltip
               sortable
               :label="column.label"
               v-else
@@ -58,7 +60,7 @@
       <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
     </div>
     <AddOrder @action="setAction" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddOrderVisible" @close="closeAddOrder" @success="fetchData"  />
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn" code="TRANSFER_LOAD" />
   </div>
 </template>
 <script>
@@ -125,6 +127,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },{
         'label': '中转批次',
         'prop': 'transferBatchNo',
         'width': '150',
@@ -249,7 +259,7 @@ export default {
       }).catch((err) => {
         this.$message({
             type: 'info',
-            message: '已取消:' + JSON.stringify(err)
+            message: '已取消'
           })
       })
     },

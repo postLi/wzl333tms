@@ -365,6 +365,7 @@ export default {
     activeName: {
       handler(cval, oval) {
         if (cval === 'second') {
+        console.log('activeName', cval)
           this.getList()
         }
       },

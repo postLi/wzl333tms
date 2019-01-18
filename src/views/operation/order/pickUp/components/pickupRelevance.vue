@@ -26,7 +26,7 @@
             border
             @row-click="clickDetails"
             @selection-change="getSelection"
-            height="160"
+            height="145"
             tooltip-effect="dark"
             :default-sort="{prop: 'id', order: 'ascending'}"
             style="width: 560px">
@@ -248,7 +248,10 @@
             this.loading = true
             this.sendId.pickupFee = this.formInline.pickupFee
             const pickupFee = this.sendId.pickupFee || ''
-            if(this.formInline.shipSn === '' && this.formInline.shipGoodsSn === ''){
+            console.log(this.formInline,'this.formInline');
+            let shipSn = this.formInline.shipSn === ''?this.formInline.shipSn === '':this.formInline.shipSn === undefined
+            let shipGoodsSn = this.formInline.shipGoodsSn === ''?this.formInline.shipGoodsSn === '':this.formInline.shipGoodsSn === undefined
+            if(shipSn && shipGoodsSn ){
               this.$message.error('运单号或货号必填其中一项')
               this.loading = false
               return false
@@ -322,7 +325,7 @@
   }
 
   .pick-maintain .popRight-content {
-    padding: 5px 10px 5px 10px;
+    padding: 5px 10px 0px 10px;
     box-sizing: border-box;
     .el-form--inline .el-form-item {
       margin-right: -8px;
@@ -333,7 +336,7 @@
 
     }
     .order_bottom {
-      padding-top: 5px;
+      padding-top: 8px;
       .el-form-item {
         margin-right: 0;
         margin-bottom: 0

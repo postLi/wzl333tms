@@ -37,7 +37,7 @@
                   :summary-method="getSumLeft"
           show-summary
                   style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
                              v-if="!column.slot" :width="column.width"></el-table-column>
@@ -63,7 +63,7 @@
     <AddCustomer :issender="true" :isModify="isModify" :isDbclick="isDbclick" :info="selectInfo" :orgid="orgid"
                  :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" :key="mykey"/>
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable"
-                @success="setColumn"></TableSetup>
+                @success="setColumn" :code="'ORDER_PICK'"></TableSetup>
     <PickupMain :popVisible.sync="pickMaintainisible" :isDepMain="isDepMain" @close="openpickMaintainisible"
                 @success="fetchData" :dotInfo="selectInfo"></PickupMain>
     <PickupRelevance :popVisible.sync="releMaintainisible" :isDepMain="isDepMain" @close="openpickReletainisible"
@@ -82,7 +82,7 @@
   import PickupRelevance from './components/pickupRelevance'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
+  import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
@@ -138,7 +138,7 @@
         },
         tableColumn: [{
           label: '序号',
-          prop: 'id',
+          prop: 'number',
           width: '70',
           fixed: true,
           slot: (scope) => {
@@ -168,11 +168,11 @@
           width: '120',
           fixed: false
         }, {
-            label: '手机号',
-            prop: 'customerMobile',
-            width: '130',
-            fixed: false
-          }, {
+          label: '手机号',
+          prop: 'customerMobile',
+          width: '130',
+          fixed: false
+        }, {
             label: '提货地址',
             prop: 'detailedAddress',
             width: '170',
@@ -343,7 +343,7 @@
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
               columns: this.tableColumn,
-              name: '提货'
+              name: '提货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
             })
             this.$refs.multipleTable.clearSelection()
             // if (this.selected.length === 0) {
@@ -356,7 +356,8 @@
           case 'print':
             PrintInFullPage({
               data: this.selected.length ? this.selected : this.usersArr,
-              columns: this.tableColumn
+              columns: this.tableColumn,
+              name: '提货-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
             })
             break
           // 新增

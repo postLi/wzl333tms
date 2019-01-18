@@ -63,7 +63,7 @@
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
       </div>
       <div class="info_tab">
-        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
+        <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark" :key="tablekey">
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -412,6 +412,8 @@ export default {
             color: #999;
             width: 12%;
             height: 36px;
+            color: #606266;
+            font-weight: 400;
           }
           td {
             width: 21.3%;

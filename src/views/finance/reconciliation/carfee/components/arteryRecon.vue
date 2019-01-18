@@ -246,7 +246,7 @@
           </el-table-column>
           <el-table-column
             prop="onSendPay"
-            label="现付运费"
+            label="现付车费"
             width="130"
             sortable
           >
@@ -260,7 +260,7 @@
           </el-table-column>
           <el-table-column
             prop="backSendPay"
-            label="回付运费"
+            label="回付车费"
             width="130"
             sortable
           >
@@ -274,7 +274,7 @@
           </el-table-column>
           <el-table-column
             prop="arrSendPay"
-            label="到付运费"
+            label="到付车费"
             width="130"
             sortable
           >
@@ -288,7 +288,7 @@
           </el-table-column>
           <el-table-column
             prop="totalPay"
-            label="运费合计"
+            label="车费合计"
             width="130"
             sortable
           >
@@ -408,7 +408,7 @@
           </el-table-column>
           <el-table-column
             prop="onSendPay"
-            label="现付运费"
+            label="现付车费"
             width="130"
             sortable
           >
@@ -422,7 +422,7 @@
           </el-table-column>
           <el-table-column
             prop="backSendPay"
-            label="回付运费"
+            label="回付车费"
             width="130"
             sortable
           >
@@ -436,7 +436,7 @@
           </el-table-column>
           <el-table-column
             prop="arrSendPay"
-            label="到付运费"
+            label="到付车费"
             width="130"
             sortable
           >
@@ -450,7 +450,7 @@
           </el-table-column>
           <el-table-column
             prop="totalPay"
-            label="运费合计"
+            label="车费合计"
             width="130"
             sortable
           >
@@ -1021,7 +1021,6 @@
             sums[index] = ''
           }
         })
-
         return sums
       },
       iconDelete(index) {
@@ -1030,7 +1029,6 @@
         })
         this.delCont()
       },
-      //
       iconDeleteAl(index) {
         this.alreadyPayInfo = this.alreadyPayInfo.filter((el, inx) => {
           return inx !== index
@@ -1106,7 +1104,6 @@
       },
       getDbClick(row, event) {
       }
-
     },
     getSelection(selection) {
       this.selected = selection

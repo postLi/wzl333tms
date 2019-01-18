@@ -92,9 +92,9 @@
                             </template>
                           </el-autocomplete>
                         </el-form-item>
-                        <el-form-item label="司机电话"  :key="changeMobileKey" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: mobileError, trigger: ['blur', 'change']}" class="formItemTextDanger">
+                        <el-form-item label="司机电话" :key="changeMobileKey" :prop="'dataList.'+index+'.dirverMobile'" :rules="{required: true, message: mobileError, trigger: ['blur', 'change']}" class="formItemTextDanger">
                           <!-- <input type="text" class="nativeinput" v-numberOnly:point :value="item.dirverMobile" @change="(e)=>changeLoadNum(e.target.value, item._index, 'dirverMobile')" ref="dirverMobile" :maxlength="11" placeholder="司机电话" /> -->
-                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11" placeholder="司机电话"  @change="(e)=>changeLoadNum(e, item._index, 'dirverMobile')"></el-input>
+                          <el-input v-model="item.dirverMobile" v-numberOnly :maxlength="11" placeholder="司机电话" @change="(e)=>changeLoadNum(e, item._index, 'dirverMobile')"></el-input>
                         </el-form-item>
                         <el-form-item label="到达日期">
                           <el-date-picker size="mini" v-model="item.planArrivedTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" prefix-icon="el-icon" placeholder="预计到达时间">
@@ -328,7 +328,7 @@ export default {
       currentIndex: 0,
       formModelRules: {},
       changeNumCN: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四'],
-      apportionTypeDescript: ['(运单 - 回扣）/（总运费 - 总回扣）* 操作费', '操作费 / 票数', '该单重量 / 本车总重量 * 操作费', '该单体积 / 本车总体积 * 操作费', '该单件数 / 本车总件数 * 操作费'],
+      apportionTypeDescript: ['(运单 - 回扣）/（总车费 - 总回扣）* 操作费', '操作费 / 票数', '该单重量 / 本车总重量 * 操作费', '该单体积 / 本车总体积 * 操作费', '该单件数 / 本车总件数 * 操作费'],
       dataList: [],
       pretruckDisable: true,
       nexttruckDisable: false,
@@ -513,8 +513,7 @@ export default {
     this.converToCn()
     this.init()
     this.getSystemTime()
-    if (this.modify) {
-    } else {
+    if (this.modify) {} else {
       this.intelligentLeftData.arriveOrgid = this.orgid
     }
   },
@@ -803,6 +802,7 @@ export default {
         })
     },
     setData(orgFirstScheme) { // 为存为配载单设置提交给后台的数据结构
+      console.log('setData', orgFirstScheme, this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList, this.intelligentData.dataList)
       this.loadDataObject = {
         schemeGroup: '',
         tmsLoadSchemeDetailDtoList: []
@@ -850,6 +850,7 @@ export default {
           em.loadVolume = em.repertoryVolume
         })
         if (orgFirstScheme) {
+          console.log('this.orgFirstScheme1111', this.orgFirstScheme)
           this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList.forEach((em, emindex) => {
             if (emindex === index) {
               this.$set(data, 'tmsOrderLoadDetailsList', em.carLoadDetail)
@@ -1111,7 +1112,7 @@ export default {
                   schemeGroup: this.tabInfo.object.schemeGroup,
                   orgid: this.otherinfo.orgid
                 }
-                deleteScheme(obj).then(data => {}).catch(err => { this._handlerCatchMsg(err) })
+                deleteScheme(obj).then(data => {}).catch(err => { this._handlerCatchMsg(err) }) // 删除当前方案
               }
               this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
               this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
@@ -1211,6 +1212,11 @@ export default {
         this.$emit('truckIndex', this.currentIndex)
         this.$emit('truckPrecent', this.intelligentData.dataList[0])
         this.$emit('schemeIndex', this.tabInfo.name) // 当前方案的下标
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
+          }, 300)
+        })
       }
     },
     removeTab(targetName) { // 删除当前方案
@@ -1239,12 +1245,12 @@ export default {
       }
     },
     handleFeeAll(type, fee) { // 操作费
+      console.log('操作费 handleFeeAll', type, fee)
       if (!fee) {
         this.$set(this.intelligentLeftData, 'apportionTypeId', type)
       }
       let feeAll = this.intelligentData.dataList[this.currentIndex].handlingFeeAll
       if (feeAll) {
-
         this.$emit('handlingFeeInfo', {
           index: this.currentIndex,
           apportionTypeId: Number(type),
@@ -1255,7 +1261,7 @@ export default {
     changeLoadNum(val, index, type) {
       this.$set(this.intelligentData.dataList[index], type, val)
       if (type === 'dirverMobile') {
-        this.mobileError= '手机号码不能为空~'
+        this.mobileError = '手机号码不能为空~'
         if (!REGEX.MOBILE.test(val)) {
           this.$set(this.intelligentData.dataList[index], type, undefined)
           this.mobileError = '请填写正确的手机号码格式~'
@@ -1281,11 +1287,11 @@ export default {
       this.showCurrenFormStyle[index] = true
       this.$emit('truckIndex', this.currentIndex)
       this.$emit('truckPrecent', this.intelligentData.dataList[this.currentIndex])
-      // this.$nextTick(() => {
-      //   setTimeout(() => {
-      //     this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
-      //   }, 300)
-      // })
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.handleFeeAll(this.intelligentLeftData.apportionTypeId, this.intelligentData.dataList[this.currentIndex].handleFeeAll) // 操作费
+        }, 300)
+      })
     },
     delCurTruck(index, item) {
       this.currentIndex = index - 1
@@ -1584,8 +1590,10 @@ export default {
                     color: #ef0000;
                   }
                 }
-                .el-form-item.is-error .el-form-item__content > input, .nativeinput.is-error, .nativeinput-border.is-error{
-                  border-color:#f56c6c;
+                .el-form-item.is-error .el-form-item__content>input,
+                .nativeinput.is-error,
+                .nativeinput-border.is-error {
+                  border-color: #f56c6c;
                 }
                 .el-form-item {
                   width: 100%;

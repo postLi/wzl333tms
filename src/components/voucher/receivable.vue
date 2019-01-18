@@ -13,11 +13,8 @@
         </el-form-item>
       </div>
       <div class="income_item">
-        <el-form-item label="一级科目" 
-        :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" 
-        :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
-          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)"
-             :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
+        <el-form-item label="一级科目" :prop="formModel.isNeededVoucher === '1' ?  'subjectOneId' : ''" :class="{formItemTextDanger: formModel.isNeededVoucher === '1'}">
+          <el-select v-model="formModel.subjectOneId" filterable placeholder="无数据" :size="btnsize" @change="val => selectSubject(val,1)" :disabled="formModel.isNeededVoucher !== '1'" @clear="initSubject">
             <el-option v-for="(item, index) in subjectOne" :key="index" :label="item.subjectName" :value="item.id">
             </el-option>
           </el-select>
@@ -70,14 +67,14 @@
     </el-form>
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
-          <el-button type="warning" @click="setting" plain icon="el-icon-setting">设置财务科目</el-button>
+          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'">设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
   </el-dialog>
 </template>
 <script>
 import { getSystemTime } from '@/api/common'
-import { parseTime } from '@/utils/'
+import { parseTime, objectMerge2 } from '@/utils/'
 import { postVerificationBaseInfo, getVeryficationList, getFinanceSubjects } from '@/api/finance/financeDaily'
 // import { postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import { loadVerification } from '@/api/finance/accountsPayable'
@@ -102,7 +99,6 @@ export default {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
-
           this.init()
         }
       },
@@ -134,8 +130,9 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     },
     feeId() {
+      console.log('info', this.info)
       if (this.$route.query.currentPage === 'handleFee') {
-        let ids = []
+        const ids = []
         this.info.orderList.forEach(e => {
           if (e.loadTypeName === '干线') {
             ids.push(33)
@@ -145,17 +142,12 @@ export default {
         })
         return this.uniqueArray(ids).join(',')
       } else if (this.$route.query.tab === '全部核销') {
-        // let ids = []
-        // // this.info.orderList.forEach(e => {
-        // //   ids.push(e.feeReceivableTypeId)
-        // // })
         return this.uniqueArray(this.info.feeIds).join(',')
       } else {
         console.log('JSON.parse(this.$route.query.searchQuery).vo.feeType', JSON.parse(this.$route.query.searchQuery).vo.feeType)
         return JSON.parse(this.$route.query.searchQuery).vo.feeType
       }
-
-    },
+    }
   },
   data() {
     const numberAndWordValid = function(rule, value, callback) {
@@ -216,16 +208,10 @@ export default {
     }
   },
   methods: {
-    // getVeryficationList () {
-    //   return getVeryficationList({orgId: this.orgId}).then(data => {
-    //     this.veryficationList = data
-    //   })
-    // },
     init() {
       this.baseQuery = this.$options.data().baseQuery
       this.postVerificationBaseInfo()
       this.formModel.amount = this.info.amount || 0
-      // this.getVeryficationList()
     },
     postVerificationBaseInfo() { // 新增时初始化数据
       this.loading = true
@@ -234,18 +220,25 @@ export default {
       console.log('getRouteInfo', this.getRouteInfo, this.feeId)
       this.baseQuery.feeIds = this.feeId + '' || ''
       console.log('baseQuery', this.baseQuery, this.orgId)
-      this.$set(this.baseQuery, 'dataSrc', 0) 
+      this.$set(this.baseQuery, 'dataSrc', 0)
+      this.$set(this.baseQuery, 'companyId', this.otherinfo.companyId)
       postVerificationBaseInfo(this.baseQuery).then(data => {
-          this.formModel = data
-          if (data.verificationList) {
-            this.veryficationList = data.verificationList
-            data.verificationList.forEach((el, index) => {
-              this.veryficationType[el.id] = el.verificationWay
-            })
+        if (data) {
+            this.subjectOne = data.subOneList || []
+            this.subjectTwo = data.subTwoList || []
+            this.subjectThree = data.subThreeList || []
+            this.subjectFour = data.subFourList || []
+            this.formModel = data
+            this.loading = false
+            if (data.verificationList) {
+              this.veryficationList = data.verificationList
+              data.verificationList.forEach((el, index) => {
+                this.veryficationType[el.id] = el.verificationWay
+              })
+            }
+            // this.initSubject()
           }
-          this.initSubject()
-          this.loading = false
-        })
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -255,7 +248,7 @@ export default {
       this.getFinanceSubjects().then(() => { // 获取一级科目
         if (this.formModel.subjectOneId) {
           if (!this.checkSubject(1)) {
-            for (let item in this.formModel) {
+            for (const item in this.formModel) {
               if (/^subject/.test(item)) {
                 this.formModel[item] = ''
               }
@@ -265,7 +258,7 @@ export default {
           this.getFinanceSubjects(2, this.formModel.subjectOneId).then(() => { // 获取二级科目
             if (this.formModel.subjectTwoId) {
               if (!this.checkSubject(2)) {
-                for (let item in this.formModel) {
+                for (const item in this.formModel) {
                   if (/(Four|Three|Two)/.test(item)) {
                     this.formModel[item] = ''
                   }
@@ -275,7 +268,7 @@ export default {
               this.getFinanceSubjects(3, this.formModel.subjectTwoId).then(() => { // 获取三级科目
                 if (this.formModel.subjectThreeId) {
                   if (!this.checkSubject(3)) {
-                    for (let item in this.formModel) {
+                    for (const item in this.formModel) {
                       if (/(Four|Three)/.test(item)) {
                         this.formModel[item] = ''
                       }
@@ -398,37 +391,37 @@ export default {
         if (valid) {
           this.btnLoading = true
           if (this.$route.query.currentPage === 'handleFee') { // 操作费调另一个接口
-            let handleFeeInfo = Object.assign({}, this.formModel)
-             if (this.info.settlementTypeSign) {
-            this.$set(handleFeeInfo, 'settlementTypeSign', this.info.settlementTypeSign)
-          }
-          this.$set(handleFeeInfo, 'tmsFinanceVerifiactionBillFees', this.info.orderList)
-          this.$set(handleFeeInfo, 'orgId', this.orgId)
-          this.$set(handleFeeInfo, 'paymentsType', this.paymentsType)
-          this.$set(handleFeeInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
-          if (!handleFeeInfo.certTime) {
-            handleFeeInfo.certTime = new Date()
-          }
-          this.$set(handleFeeInfo, 'certTime', parseTime(handleFeeInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
-          delete handleFeeInfo.verificationList
+            const handleFeeInfo = Object.assign({}, this.formModel)
+            if (this.info.settlementTypeSign) {
+              this.$set(handleFeeInfo, 'settlementTypeSign', this.info.settlementTypeSign)
+            }
+            this.$set(handleFeeInfo, 'tmsFinanceVerifiactionBillFees', this.info.orderList)
+            this.$set(handleFeeInfo, 'orgId', this.orgId)
+            this.$set(handleFeeInfo, 'paymentsType', this.paymentsType)
+            this.$set(handleFeeInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
+            if (!handleFeeInfo.certTime) {
+              handleFeeInfo.certTime = new Date()
+            }
+            this.$set(handleFeeInfo, 'certTime', parseTime(handleFeeInfo.certTime, '{y}-{m}-{d} {h}:{i}:{s}'))
+            delete handleFeeInfo.verificationList
 
-          console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
+            console.log('保存提交的参数handleFeeInfo', handleFeeInfo)
             loadVerification(handleFeeInfo).then(data => {
-                this.$message({ type: 'success', message: '保存成功' })
-                setTimeout(() => {
-                this.btnLoading = false
+              this.$message({ type: 'success', message: '保存成功' })
+              setTimeout(() => {
+                  this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
                 }, 500)
-                this.closeMe()
-              })
+              this.closeMe()
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
                 this.btnLoading = false
               })
           } else {
-            let dataInfo = Object.assign({}, this.formModel)
+            const dataInfo = Object.assign({}, this.formModel)
             this.$set(dataInfo, 'orderList', this.info.orderList)
             this.$set(dataInfo, 'dataSrc', 0) // (数据)来源 ,0  核销产生, 1 手工录入
             delete dataInfo.verificationList
@@ -436,21 +429,21 @@ export default {
               dataInfo.certTime = new Date()
             }
             this.$set(dataInfo, 'certTime', parseTime(dataInfo.certTime, '{y}-{m}-{d}') + ' 00:00:00')
-            let query = {
+            const query = {
               receivableFees: dataInfo.orderList,
               tmsFinanceBillRecordDto: dataInfo
             }
             delete query.tmsFinanceBillRecordDto.orderList
             accountApi.postCreateFee(this.orgId, query).then(data => {
-                this.$message({ type: 'success', message: '保存成功' })
-                this.closeMe()
-                setTimeout(() => {
-                this.btnLoading = false
+              this.$message({ type: 'success', message: '保存成功' })
+              this.closeMe()
+              setTimeout(() => {
+                  this.btnLoading = false
                   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable/' + this.$route.query.currentPage)
                   // 当添加结算时更新列表
                   this.eventBus.$emit('updateAccountsReceivableList')
                 }, 500)
-              })
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
                 this.btnLoading = false
@@ -470,7 +463,7 @@ export default {
       this.searchQuerySub.orgId = this.orgId
 
       return getFinanceSubjects(this.searchQuerySub).then(data => {
-          switch (subjectLevel) {
+        switch (subjectLevel) {
             case 2:
               this.subjectTwo = data
               this.subjectThree = []
@@ -494,9 +487,9 @@ export default {
               console.log('科目一: ', this.subjectOne)
               break
           }
-          this.loading = false
-          console.log('科目: ', subjectLevel, data)
-        })
+        this.loading = false
+        console.log('科目: ', subjectLevel, data)
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -511,7 +504,7 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(2, obj.id)
-          for (let item in this.formModel) {
+          for (const item in this.formModel) {
             if (/^subject/.test(item)) {
               this.formModel[item] = ''
             }
@@ -525,7 +518,7 @@ export default {
             return e.id === val
           })[0])
           this.getFinanceSubjects(3, obj.id)
-          for (let item in this.formModel) {
+          for (const item in this.formModel) {
             if (/(Four|Three)/.test(item)) {
               this.formModel[item] = ''
             }
