@@ -3,7 +3,7 @@
       <SearchForm :orgid="otherinfo.orgid" type="rec_status" title="回收" status="recStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('recycle')" v-has:RECE_BACK>回单回收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('recycle')" v-has:RECE_BACK>回单回收</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_CANCEL>取消回收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP>导出</el-button>

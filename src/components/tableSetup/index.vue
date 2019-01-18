@@ -509,7 +509,7 @@ export default {
         }
       }).catch(err => {
         this.fetchFail()
-        this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
+        // this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
       })
 
       /* return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {

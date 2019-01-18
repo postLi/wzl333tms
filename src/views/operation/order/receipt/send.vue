@@ -4,7 +4,7 @@
       <div class="tab_info">
         <div class="btns_box">
             <!-- <el-button type="primary" :size="btnsize"  plain @click="doAction('send')">加入挑单夹</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-up" plain @click="doAction('send')" v-has:RECE_SEND>回单寄出</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-goods" plain @click="doAction('send')" v-has:RECE_SEND>回单寄出</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline"  @click="doAction('cancel')" plain v-has:RECE_SENDCANL>取消寄出</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP2>导出</el-button>

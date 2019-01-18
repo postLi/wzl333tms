@@ -3,7 +3,7 @@
       <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sort-down" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
+            <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_GETCANCEL>取消接收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP3>导出</el-button>

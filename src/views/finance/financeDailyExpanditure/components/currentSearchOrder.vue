@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @clear="clearSearchSelect" @focus="clearSender">
+      <el-select v-model="senderSearch" placeholder="发货方|发货人" :size="btnsize" clearable @clear="clearSearchSelect" @focus="clearSender">
         <el-option label="发货方" value="unit"></el-option>
         <el-option label="发货人" value="customer"></el-option>
       </el-select>
@@ -112,6 +112,7 @@ export default {
   margin-left: 5px;
   display: flex;
   flex-direction: row;
+  
   .el-input {
     width: 120px;
     .el-input__inner {

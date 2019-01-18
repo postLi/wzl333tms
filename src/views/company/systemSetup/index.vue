@@ -233,12 +233,12 @@
                   毛利：运费合计
                 </el-form-item>
                  <el-form-item>
-                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.shipFeeAmount">-&nbsp;回扣</el-checkbox>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;回扣</el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;车费合计</el-checkbox>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.shipFeeAmount">-&nbsp;车费合计</el-checkbox>
                   <el-popover placement="top" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
-                    <span>计算公式：毛利 = 运费合计{{(form.grossMargin.shipFeeAmount==='1' ? ' - 回扣':'') + (form.grossMargin.brokerageFee==='1'?' - 车费合计':'') }}</span>
+                    <span>计算公式：毛利 = 运费合计{{(form.grossMargin.brokerageFee==='1' ? ' - 回扣':'') + (form.grossMargin.shipFeeAmount==='1'?' - 车费合计':'') }}</span>
                     <i class="el-icon-question" slot="reference"></i>
                   </el-popover>
                 </el-form-item>
