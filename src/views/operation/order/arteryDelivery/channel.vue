@@ -32,7 +32,7 @@
       </div>
     </div>
     <Discharge :popVisible.sync="dischargeVisible" :info="selectInfo" @success="fetchList"></Discharge>
-    <TableSetup code="" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
+    <TableSetup :code="thecode" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
   </div>
 </template>
 <script>
@@ -58,6 +58,7 @@ export default {
   },
   data() {
     return {
+      thecode: 'GX_UNLOAD_LIST',
       total: 0,
       tablekey: 0,
       loading: true,

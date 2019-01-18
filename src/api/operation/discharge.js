@@ -19,8 +19,8 @@ export function unloadList(data) {
  * 配载批次详情
  * 
  */
-export function selectLoadDetailList(loadId) {
-	return fetch.get('/api-order/order/load/v1/selectLoadDetailList?loadId=' + loadId).then(res => {
+export function selectLoadDetailList(data) {
+	return fetch.get('/api-order/order/load/v1/selectLoadDetailList?loadId=' + data.loadId + '&sortSign=' + data.sortSign).then(res => {
 		return res.data ? res.data : {}
 	})
 }

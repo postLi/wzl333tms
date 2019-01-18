@@ -1244,7 +1244,8 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      this.tablekey = Math.random() // 刷新表格视图
+      this.tablekey = new Date().getTime() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
     }
   }
   // }

@@ -48,13 +48,13 @@
                 <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
               </div>
-              <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" :code="code">表格设置</el-button>
+              <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
             </el-popover>
             <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_setup">导出清单</el-button>
             <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_setup">打印清单</el-button>
           </div>
           <div class="detail-table">
-            <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;"  :row-class-name="classLineRed">
+            <el-table ref="multipleTable" @header-dragend="setTableWidth" :reserve-selection="true" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :row-class-name="classLineRed">
               <el-table-column fixed sortable type="selection" width="50"></el-table-column>
               <template v-for="column in tableColumn">
                 <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
@@ -68,7 +68,7 @@
             </el-table>
           </div>
         </div>
-        <TableSetup code="" :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
+        <TableSetup :code="thecode" :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
       </div>
     </template>
     <div slot="footer">
@@ -103,8 +103,7 @@ export default {
   },
   data() {
     return {
-      code: '',
-      thecode: '',
+      thecode: 'GX_UNLOAD_LIST-1',
       btnsize: 'mini',
       loading: true,
       popTitle: '中途卸货',
@@ -129,7 +128,8 @@ export default {
           slot: (scope) => {
             return scope.$index + 1
           }
-        }, {
+        },
+        {
           label: '开单网点',
           prop: 'shipFromOrgName',
           width: '100'
@@ -221,7 +221,6 @@ export default {
     popVisible(cval, oval) {},
     info: {
       handler(cval, oval) {
-        this.loading = true
         this.fetchData()
         this.fetchBase()
       },
@@ -279,7 +278,7 @@ export default {
       }
       let selectList = []
       this.selectList.forEach((el, index) => {
-        if (el.warehouStatus !== 1 ||el.unloadSign !== 1) {
+        if (el.warehouStatus !== 1 || el.unloadSign !== 1) {
           selectList.push(el.id)
         } else {}
       })
@@ -308,17 +307,25 @@ export default {
 
     },
     fetchData() { // 清单列表
-      selectLoadDetailList(this.info.loadId).then(data => {
+      let query = {
+        loadId: this.info.loadId,
+        sortSign: 2 // sortSign 1干线发车/到车排序 2卸货排序
+      }
+        this.loading = true
+      selectLoadDetailList(query).then(data => {
           if (data) {
             this.dataList = data
             this.toggleAllRows()
           }
+          this.loading = false
         })
         .catch(err => {
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },
     fetchBase() { // 批次详情
+      this.loading = true
       this.searchQuery.vo.loadId = this.info.loadId
       selectLoadMainInfoList(this.searchQuery).then(data => {
           if (data && data.list.length) {
@@ -345,11 +352,9 @@ export default {
       })
     },
     setTableWidth(newWidth, oldWidth, column, event) {
-      console.log('set table:', newWidth, oldWidth, column)
       let find = this.tableColumn.filter(el => el.prop === column.property)
       if (find.length) {
         find[0].width = newWidth
-        console.log('应该要显示保存框了')
         this.visible2 = true
         clearTimeout(this.tabletimer)
         this.tabletimer = setTimeout(() => {
@@ -368,6 +373,7 @@ export default {
     },
     saveToTableSetup() {
       this.visible2 = false
+      this.initSort()
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     getSelection(list) {
@@ -375,15 +381,14 @@ export default {
       this.dataList.forEach((el, index) => {
         list.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
-            if (em.warehouStatus === 1 ||em.unloadSign === 1) {
+            if (em.warehouStatus === 1 || em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
-            }else {
+            } else {
               arr.push(em)
             }
           }
         })
       })
-      console.log('list', arr)
       this.selectList = Object.assign([], arr)
     },
     clickDetails(row) {
@@ -392,8 +397,8 @@ export default {
       }
     },
     setTable() {
-      this.$message.warning('功能尚在开发中,敬请期待~')
-      // this.setupTableVisible = true
+      // this.$message.warning('功能尚在开发中,敬请期待~')
+      this.setupTableVisible = true
     },
     closeSetupTable() {
       this.setupTableVisible = false
@@ -407,6 +412,7 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = new Date().getTime() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
     }
   }
 }
@@ -497,9 +503,6 @@ $backgroundColor:#E9F3FA;
         }
       }
     }
-  }
-  .discharge-footer {
-    // background-color: $backgroundColor;
   }
 }
 

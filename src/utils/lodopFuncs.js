@@ -298,6 +298,10 @@
        objp.h = objp.h - 5 - objp.t
 
        console.log('print obj:', obj)
+       let shipSn = obj.data.map(el => {
+         return el.shipSn
+       })
+       console.log('打印的数据shipSn', shipSn)
        const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
        // console.log('tableId.innerHTML:', tableId.innerHTML)
        LODOP = getLodop()
@@ -372,6 +376,7 @@
        data.forEach(el => {
          obj[el.fieldName] = el.fieldValue
        })
+       console.error('obj', obj)
        fn(obj)
      } else {
        console.error('获取打印信息失败')
@@ -1110,6 +1115,7 @@
 
  // 格式化数据
  function formatTableData(obj) {
+   console.warn('obj', obj)
    /*  obj.columns.sort((a, b) => {
       return a.fixed ? -1 : 0
     }) */
@@ -1120,11 +1126,6 @@
          el['index'] = k + 1
          el['id'] = k + 1
          el['number'] = k + 1
-         /* if (column.label === '序号') {
-
-         } else {
-
-         } */
        }
        if (typeof el[column.prop] === 'undefined' || el[column.prop] === null) {
          el[column.prop] = ''

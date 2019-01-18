@@ -34,7 +34,6 @@
           <tr>
             <th>分摊方式</th>
             <td>
-              <!-- {{info.truckLoad}} -->
               <el-input v-model="info.apportionTypeName" :size="btnsize" disabled></el-input>
             </td>
             <th>送货日期</th>
@@ -76,29 +75,6 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <el-table ref="multipleTable" :reserve-selection="true" :data="detailList" @row-click="clickDetails" @selection-change="getSelection" stripe border height="100%" style="height:100%;" :default-sort="{prop: 'id', order: 'ascending'}" tooltip-effect="dark">
-          <el-table-column fixed type="index" width="50">
-          </el-table-column>
-          <el-table-column fixed width="50" sortable type="selection"></el-table-column>
-          <el-table-column sortable width="120" prop="shipFromOrgName" label="开单网点"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSn" label="运单号"></el-table-column>
-          <el-table-column sortable width="120" prop="signStatus" label="签收状态"></el-table-column>
-          <el-table-column sortable width="120" prop="loadAmount" label="配载件数"></el-table-column>
-          <el-table-column sortable width="120" prop="loadWeight" label="配载重量"></el-table-column>
-          <el-table-column sortable width="120" prop="loadVolume" label="配载体积"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoAmount" label="运单件数"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoWeight" label="运单重量"></el-table-column>
-          <el-table-column sortable width="120" prop="cargoVolume" label="运单体积"></el-table-column>
-          <el-table-column sortable width="160" prop="shipFromCityName" label="发站"></el-table-column>
-          <el-table-column sortable width="160" prop="shipToCityName" label="到站"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSenderName" label="发货人"></el-table-column>
-          <el-table-column sortable width="120" prop="shipSenderMobile" label="发货人电话"></el-table-column>
-          <el-table-column sortable width="120" prop="shipReceiverName" label="收货人"></el-table-column>
-          <el-table-column sortable width="120" prop="shipReceiverMobile" label="收货人电话"></el-table-column>
-          <el-table-column sortable width="200" prop="cargoName" label="货品名"></el-table-column>
-          <el-table-column sortable width="120" prop="shipGoodsSn" label="货号"></el-table-column>
-          <el-table-column sortable width="120" prop="shipRemarks" label="运单备注"></el-table-column>
-        </el-table> -->
       </div>
     </div>
     <!-- 表格设置弹出框 -->
