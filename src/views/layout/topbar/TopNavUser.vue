@@ -92,7 +92,7 @@ export default {
       if (this.otherinfo.isTest === 0 && typeof this.otherinfo.associatedUsername === 'string') {
         const loginFormTest = {
           username: this.otherinfo.associatedUsername,
-          password: this.otherinfo.name + '#test#' + this.otherinfo.orgid
+          password: this.otherinfo.username + '#test#' + this.otherinfo.orgid
         }
         this.changeLogin(loginFormTest) // 切换到测试环境
       } else if (this.otherinfo.isTest === 1 && typeof this.otherinfo.associatedUsername === 'string') {

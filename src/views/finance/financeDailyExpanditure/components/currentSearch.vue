@@ -8,28 +8,28 @@
       </el-select>
     </el-form-item>
     <el-form-item v-if="senderSearch==='short'">
-      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect" popper-class="popperHide">
+      <el-autocomplete v-model="searchForm.shortBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'shortBatchNo',queryString, cb)" placeholder="短驳批次号搜索" @select="handleSelect" popper-class="popperHide" @focus="focusFormItm('shortBatchNo')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='load'">
-      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect"  popper-class="popperHide">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect"  popper-class="popperHide" @focus="focusFormItm('mainBatchNo')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='deliver'">
-      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect" popper-class="popperHide">
+      <el-autocomplete v-model="searchForm.sendBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'sendBatchNo',queryString, cb)" placeholder="送货批次号搜索" @select="handleSelect" popper-class="popperHide" @focus="focusFormItm('sendBatchNo')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.batchNo }}</div>
         </template>
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide">
+      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide" @focus="focusFormItm('truckIdNumber')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -91,6 +91,14 @@ export default {
     }
   },
   methods: {
+    focusFormItm (type) {
+      // 清空其他输入框
+        for(let item in this.searchForm) {
+        if (item !== type) {
+          this.$set(this.searchForm, item, '')
+        }
+      }
+    },
     initSettlementid() {
       let type = this.senderSearch
       this.settlementId = this.SETTLEMENT_TYPE[this.senderSearch]

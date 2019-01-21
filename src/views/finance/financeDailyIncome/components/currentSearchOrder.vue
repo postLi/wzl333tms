@@ -12,6 +12,7 @@
       v-model="searchForm.shipSenderName" 
        :maxlength="15"
       :size="btnsize" 
+      @focus="focusFormItm('shipSenderName')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -22,6 +23,7 @@
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
        :maxlength="15"
+       @focus="focusFormItm('shipSenderUnit')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -31,6 +33,7 @@
        popper-class="popperHide"
       v-model="searchForm.shipSn" 
       :size="btnsize" 
+      @focus="focusFormItm('shipSn')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       :maxlength="20"
@@ -54,7 +57,7 @@ export default {
       senderSearch: '',
       searchForm: {
         shipSenderName: '',
-        senderCustomerUnit: '',
+        shipSenderUnit: '',
         shipSn: ''
       },
       btnsize: 'mini',
@@ -70,6 +73,14 @@ export default {
   methods: {
     clearSearchSelect (obj) { // 如果选择框为空恢复右边数据列表
       this.$emit('change', objectMerge2([], this.info))
+    },
+    focusFormItm (type) {
+      // 清空其他输入框
+        for(let item in this.searchForm) {
+        if (item !== type) {
+          this.$set(this.searchForm, item, '')
+        }
+      }
     },
     querySearch(type, queryString, cb) {
       let leftTable = this.info

@@ -186,9 +186,10 @@ export default {
           }
         })
       })
+      .catch(() => {
+      })
     },
     handleClick() {
-      console.log('settlementId:::::::::::::::::::::::', this.settlementId)
       if (this.activeName === 'second') {
         this.settlementId = 178
       }else {
