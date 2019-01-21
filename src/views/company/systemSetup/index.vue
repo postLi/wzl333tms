@@ -229,20 +229,24 @@
                     <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
                   </el-select>
                 </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table setup-table-finance">
+              <div class="setup-left">毛利</div>
+              <div class="setup-right">
                 <el-form-item>
-                  毛利：运费合计
+                 运费合计
                 </el-form-item>
                  <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;回扣</el-checkbox>
                 </el-form-item>
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.shipFeeAmount">-&nbsp;车费合计</el-checkbox>
-                  <el-popover placement="top" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                  <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
                     <span>计算公式：毛利 = 运费合计{{(form.grossMargin.brokerageFee==='1' ? ' - 回扣':'') + (form.grossMargin.shipFeeAmount==='1'?' - 车费合计':'') }}</span>
                     <i class="el-icon-question" slot="reference"></i>
                   </el-popover>
                 </el-form-item>
-
               </div>
             </div>
           </el-collapse-item>
@@ -280,6 +284,17 @@
                   <el-select v-model="form.printSetting.inventory">
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table">
+              <div class="setup-left">列表模板设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                 <el-radio-group v-model="form.listTemplate.templateSign" size="mini">
+                  <el-radio label="0">使用网点模板</el-radio>
+                  <el-radio label="1">使用公司模板</el-radio>
+                </el-radio-group>
                 </el-form-item>
               </div>
             </div>
@@ -528,6 +543,9 @@ export default {
         'grossMargin': {
           'shipFeeAmount': '1',
           'brokerageFee': '1'
+        },
+        'listTemplate': {
+          'templateSign': '1'
         },
         'printSetting': {
           'ship': '0',

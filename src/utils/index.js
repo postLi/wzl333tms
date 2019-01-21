@@ -81,17 +81,29 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
       if (prop === '_index') {
         sums[index] = data.length + unit
       } else {
-        const values = data.map(item => Number(item[prop]))
-        sums[index] = values.reduce((prev, curr) => {
-          const value = Number(curr)
-          if (!isNaN(value)) {
-            // return prev + curr
-            return tmsMath._add(prev, curr)
-          } else {
-            return prev
+        // const values = data.map(item => Number(item[prop]))
+        let isAllEmpty = true
+        const values = data.map(item => {
+          if (item[prop] !== '') {
+            isAllEmpty = false
           }
-        }, 0)
-        sums[index] += ' ' + unit
+          return Number(item[prop])
+        })
+        if (isAllEmpty) {
+          sums[index] = defaultNoneString
+        } else {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              // return prev + curr
+              return tmsMath._add(prev, curr)
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] += ' ' + unit
+        }
+
       }
     } else {
       sums[index] = defaultNoneString

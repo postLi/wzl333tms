@@ -242,10 +242,8 @@ export default {
     },
     cancel() { // 取消卸货
       this.selected = this.selected.filter(e => {
-        console.log('e', e.unloadSignName)
         return e.unloadSignName === '已卸货'
       })
-      console.log('cancel2222', this.selected)
       if (this.selected.length > 0) { // 一次只能选择一条数据选择多条数据默认为第一条
         let selected = Object.assign({}, this.selected[0])
         if (selected.batchTypeId === 53 ) {
@@ -284,7 +282,6 @@ export default {
     },
     getSelection(selection) { // 更改选择项
       this.selected = selection
-      console.log('getSelection1111', this.selected)
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

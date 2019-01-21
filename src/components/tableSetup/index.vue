@@ -423,6 +423,7 @@ export default {
           // 如果找不到，表示需要插入
             if (len === 0) {
             // if (true) {
+            console.warn('data[0]', data[0])
               const userId = data[0].userId
               const orgId = data[0].orgId
               const companyId = data[0].companyId
