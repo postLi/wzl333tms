@@ -524,7 +524,7 @@ export default {
       handler(to, from) {
         const bothBool = false
         console.log('$route', to, from)
-        if (to.path && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+        if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
           // 1
           // 3
           if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
@@ -588,9 +588,10 @@ export default {
         },
         networkList: this.networkList
       }
+      console.log('switchUrl data', data)
       if (issave) {
         // save data 离开配载页面时需要缓存当前配载页面的数据进sessionStorage
-        console.log('save daTA::::::', path)
+        console.log('save daTA::::::', path, data)
         sessionStorage.setItem(path, JSON.stringify(data))
         this.loadTableInfo = []
         this.repertoryList = []
@@ -604,7 +605,6 @@ export default {
       } else {
         // read data
         if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
-          console.log('ssssssss22222222222222')
           data = sessionStorage.getItem(path)
           if (data) {
             data = JSON.parse(data)

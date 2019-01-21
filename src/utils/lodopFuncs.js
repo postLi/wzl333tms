@@ -385,6 +385,13 @@
 
    })
  }
+
+ function setShowMode() {
+   LODOP.SET_PRINT_MODE('RESELECT_ORIENT', 1) // 设置是否可以重新选择打印方向
+   LODOP.SET_PRINT_MODE('RESELECT_PRINTER', 1) // 设置是否可以重新选择打印机
+   LODOP.SET_PRINT_MODE('RESELECT_PAGESIZE', 1) // 设置是否可以重新选择纸张
+   LODOP.SET_PRINT_MODE('RESELECT_COPIES', 1) // 设置是否可以重新选择打印份数
+ }
  // 打印表格 普通table
  export function PrintInSamplePage(obj) {
    try {
@@ -395,6 +402,7 @@
      str = str.replace(/(bgcolor="[^"]*"|color="white")/g, '')
 
      LODOP.PRINT_INIT('订货单')
+
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
@@ -403,6 +411,7 @@
      LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '98%', str)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
+     setShowMode()
      LODOP.PREVIEW()
    } catch (err) {
      getLodop()
