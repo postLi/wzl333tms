@@ -308,10 +308,11 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
-      this.searchQuery.currentPage = 1
-      this.searchQuery.pageSize = 100
-      this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.getRouteInfo.vo.ascriptionOrgId)
-      this.$set(this.searchQuery.vo, 'status', '')
+      
+      // this.searchQuery.currentPage = 1
+      // this.searchQuery.pageSize = 100
+      // this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.getRouteInfo.vo.ascriptionOrgId)
+      // this.$set(this.searchQuery.vo, 'status', '')
       // if (!this.$route.query) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
       //   // this.$router.push({ path: './accountsPayable/waybill' })

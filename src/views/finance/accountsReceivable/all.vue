@@ -299,7 +299,6 @@ export default {
   methods: {
     viewDetails(row) {
       row = row || []
-      console.log('row:', row.map(el => { console.log('11') }).join(','))
       this.$router.push({
         path: '/finance/accountsLoadReceivable',
         query: {
@@ -310,6 +309,9 @@ export default {
           selectListShipSns: JSON.stringify(row.map(el => el.shipSn))
         }
       })
+      console.log('传到核销页面的参数：searchQuery', this.searchQuery)
+      console.log('传到核销页面的参数：currentPage', 'all')
+      console.log('传到核销页面的参数：selectListShipSns', JSON.stringify(row.map(el => el.shipSn)))
     },
     showDetail(order) {
       this.viewDetails([order])

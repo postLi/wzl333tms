@@ -308,9 +308,11 @@ export default {
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
-        this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
-        this.$set(this.searchQuery.vo, 'status', '')
+        this.searchQuery = Object.assign({}, this.getRouteInfo)
+        
+        // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+        // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
+        // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
       }
     },
