@@ -322,6 +322,7 @@ export default {
       cloneel.style.top = top + 'px'
     },
     fetchData() {
+      this.loading = true
       reportSettleRecordTotal(this.query).then(res => {
         if (res) {
           res.forEach((e, index) => {
