@@ -146,11 +146,18 @@ const user = {
             type: '',
             module: 'finance'
           })
-          Promise.all([pro1, pro2]).then(resArr => {
+          const pro3 = getAllSetting({
+            orgid: data.orgid,
+            type: 'uploadLogo',
+            module: 'base'
+          })
+          Promise.all([pro1, pro2, pro3]).then(resArr => {
             const res = resArr[0]
+            console.warn('resArr::::::', resArr)
 
             data.systemSetup = res
             data.systemSetup.financeSetting = resArr[1].financeSetting
+            data.systemSetup.uploadLogo = resArr[2].uploadLogo
             commit('SET_OTHERINFO', data)
 
             // 补充公司信息

@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="logo-panel">
-      <router-link to="/"><img src="../../../assets/logo.png" alt=""></router-link>
+      <router-link to="/"><img :src="systemLogo" alt=""></router-link>
     </div>
     <TopNavMenu />
 <!--     <router-link tag="div" class="pickClip" to="/order/pickClip"><icon-svg icon-class="tiaodanjia" />挑坕夹</router-link> -->
@@ -27,6 +27,15 @@ export default {
   },
   data() {
     return {
+      defaultLogo: require('../../../assets/logo.png')
+    }
+  },
+  computed:{
+    systemLogo() {
+      let logourl = this.otherinfo.systemSetup.uploadLogo.logoUrl
+      let falg = ( logourl=== 'null' || logourl === '')
+      console.log('this.otherinfo.systemSetup.uploadLogo', logourl)
+      return falg ? this.defaultLogo :logourl
     }
   }
 }

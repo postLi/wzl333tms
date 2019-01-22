@@ -178,20 +178,11 @@
                 <el-form-item v-if="false">
                   开单小数位
                   <el-select v-model="form.shipPageFunc.decimalPlaces" placeholder="请选择">
-                    <el-option
-                      key="0"
-                      label="不保存"
-                      value="0">
+                    <el-option key="0" label="不保存" value="0">
                     </el-option>
-                    <el-option
-                      key="1"
-                      label="保留一位"
-                      value="1">
+                    <el-option key="1" label="保留一位" value="1">
                     </el-option>
-                    <el-option
-                      key="2"
-                      label="保留俩位"
-                      value="2">
+                    <el-option key="2" label="保留俩位" value="2">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -235,9 +226,9 @@
               <div class="setup-left">毛利</div>
               <div class="setup-right">
                 <el-form-item>
-                 运费合计
+                  运费合计
                 </el-form-item>
-                 <el-form-item>
+                <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;回扣</el-checkbox>
                 </el-form-item>
                 <el-form-item>
@@ -291,10 +282,10 @@
               <div class="setup-left">列表模板设置</div>
               <div class="setup-right">
                 <el-form-item>
-                 <el-radio-group v-model="form.listTemplate.templateSign" size="mini">
-                  <el-radio label="0">使用网点模板</el-radio>
-                  <el-radio label="1">使用公司模板</el-radio>
-                </el-radio-group>
+                  <el-radio-group v-model="form.listTemplate.templateSign" size="mini">
+                    <el-radio label="0">使用网点模板</el-radio>
+                    <el-radio label="1">使用公司模板</el-radio>
+                  </el-radio-group>
                 </el-form-item>
               </div>
             </div>
@@ -331,6 +322,16 @@
               </div>
             </div>
           </el-collapse-item>
+          <el-collapse-item name="setup9" title="LOGO设置">
+            <div class="clearfix setup-table">
+              <div class="setup-left">系统LOGO</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <Upload :title="'本地上传'" :showFileList="true" :limit="1" listtype="picture" v-model="form.uploadLogo.logoUrl" />
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
         </el-collapse>
       </el-form>
     </div>
@@ -339,8 +340,8 @@
     </div>
     <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
     <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
-    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" ></printLoadInfo>
-    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" ></printContract>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false"></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false"></printContract>
   </div>
 </template>
 <script>
@@ -353,6 +354,7 @@ import printSetOrder from './components/printSetOrderSelf'
 import printSetLi from './components/printSetLiSelf'
 import printLoadInfo from './components/printLoadInfo'
 import printContract from './components/printContract'
+import Upload from '@/components/Upload/singleImage2'
 
 export default {
   name: 'systemSetup',
@@ -361,7 +363,8 @@ export default {
     printSetOrder,
     printSetLi,
     printLoadInfo,
-    printContract
+    printContract,
+    Upload
   },
   computed: {
     ...mapGetters([
@@ -384,143 +387,143 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8', 'setup9'],
       shipField: [{
-        key: 'shipFromCityName',
-        value: '0',
-        name: '发站'
-      },
-      {
-        key: 'shipToOrgid',
-        value: '0',
-        name: '目的网点'
-      },
-      {
-        key: 'shipGoodsSn',
-        value: '0',
-        name: '货号'
-      },
-      {
-        key: 'shipSenderId',
-        value: '0',
-        name: '发货方'
-      },
-      {
-        key: 'shipSenderName',
-        value: '0',
-        name: '发货人'
-      },
-      {
-        key: 'shipSenderMobile',
-        value: '0',
-        name: '发货人电话'
-      },
-      {
-        key: 'shipSenderAddress',
-        value: '0',
-        name: '发货地址'
-      },
-      {
-        key: 'shipReceiverId',
-        value: '0',
-        name: '收货方'
-      },
-      {
-        key: 'shipReceiverName',
-        value: '0',
-        name: '收货人'
-      },
-      {
-        key: 'shipReceiverMobile',
-        value: '0',
-        name: '收货人电话'
-      },
-      {
-        key: 'shipReceiverAddress',
-        value: '0',
-        name: '收货地址'
-      },
-      {
-        key: 'cargoWeight',
-        value: '0',
-        name: '重量'
-      },
-      {
-        key: 'cargoVolume',
-        value: '0',
-        name: '体积'
-      },
-      {
-        key: 'cargoPack',
-        value: '0',
-        name: '包装'
-      },
-      {
-        key: 'brokerageFee',
-        value: '0',
-        name: '回扣'
-      },
-      {
-        key: 'deliveryFee',
-        value: '0',
-        name: '送货费'
-      },
+          key: 'shipFromCityName',
+          value: '0',
+          name: '发站'
+        },
+        {
+          key: 'shipToOrgid',
+          value: '0',
+          name: '目的网点'
+        },
+        {
+          key: 'shipGoodsSn',
+          value: '0',
+          name: '货号'
+        },
+        {
+          key: 'shipSenderId',
+          value: '0',
+          name: '发货方'
+        },
+        {
+          key: 'shipSenderName',
+          value: '0',
+          name: '发货人'
+        },
+        {
+          key: 'shipSenderMobile',
+          value: '0',
+          name: '发货人电话'
+        },
+        {
+          key: 'shipSenderAddress',
+          value: '0',
+          name: '发货地址'
+        },
+        {
+          key: 'shipReceiverId',
+          value: '0',
+          name: '收货方'
+        },
+        {
+          key: 'shipReceiverName',
+          value: '0',
+          name: '收货人'
+        },
+        {
+          key: 'shipReceiverMobile',
+          value: '0',
+          name: '收货人电话'
+        },
+        {
+          key: 'shipReceiverAddress',
+          value: '0',
+          name: '收货地址'
+        },
+        {
+          key: 'cargoWeight',
+          value: '0',
+          name: '重量'
+        },
+        {
+          key: 'cargoVolume',
+          value: '0',
+          name: '体积'
+        },
+        {
+          key: 'cargoPack',
+          value: '0',
+          name: '包装'
+        },
+        {
+          key: 'brokerageFee',
+          value: '0',
+          name: '回扣'
+        },
+        {
+          key: 'deliveryFee',
+          value: '0',
+          name: '送货费'
+        },
 
         /*         {
                   key: 'productPrice',
                   value: '0',
                   name: '声明价值'
                 }, */
-      {
-        key: 'insuranceFee',
-        value: '0',
-        name: '保险费'
-      },
-      {
-        key: 'handlingFee',
-        value: '0',
-        name: '装卸费'
-      },
-      {
-        key: 'packageFee',
-        value: '0',
-        name: '包装费'
-      },
-      {
-        key: 'pickupFee',
-        value: '0',
-        name: '提货费'
-      },
-      {
-        key: 'amountFee',
-        value: '0',
-        name: '件数单价'
-      },
-      {
-        key: 'weightFee',
-        value: '0',
-        name: '重量单价'
-      },
-      {
-        key: 'volumeFee',
-        value: '0',
-        name: '体积单价'
-      },
-      {
-        key: 'shipReceiptSn',
-        value: '0',
-        name: '回单号'
-      },
-      {
-        key: 'shipCustomerNumber',
-        value: '0',
-        name: '客户单号'
-      },
-      {
-        key: 'shipUserid',
-        value: '0',
-        name: '业务员'
-      }
+        {
+          key: 'insuranceFee',
+          value: '0',
+          name: '保险费'
+        },
+        {
+          key: 'handlingFee',
+          value: '0',
+          name: '装卸费'
+        },
+        {
+          key: 'packageFee',
+          value: '0',
+          name: '包装费'
+        },
+        {
+          key: 'pickupFee',
+          value: '0',
+          name: '提货费'
+        },
+        {
+          key: 'amountFee',
+          value: '0',
+          name: '件数单价'
+        },
+        {
+          key: 'weightFee',
+          value: '0',
+          name: '重量单价'
+        },
+        {
+          key: 'volumeFee',
+          value: '0',
+          name: '体积单价'
+        },
+        {
+          key: 'shipReceiptSn',
+          value: '0',
+          name: '回单号'
+        },
+        {
+          key: 'shipCustomerNumber',
+          value: '0',
+          name: '客户单号'
+        },
+        {
+          key: 'shipUserid',
+          value: '0',
+          name: '业务员'
+        }
       ],
       vouchers: [{
         value: '1',
@@ -537,6 +540,9 @@ export default {
         label: '车牌号'
       }],
       form: {
+        'uploadLogo': {
+          'logoUrl': ''
+        },
         'financeSetting': {
           'voucher': '2'
         },
@@ -656,9 +662,27 @@ export default {
           this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
         }
         if (data.grossMargin) {
-          for(let item in data.grossMargin) {
+          for (let item in data.grossMargin) {
             this.$set(this.form.grossMargin, item, data.grossMargin[item])
           }
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    initBase() { // 系统logo
+      const params = {
+        orgid: this.otherinfo.orgid,
+        type: 'uploadLogo',
+        module: 'base'
+      }
+      return getAllSetting(params).then(data => {
+        console.log('uploadLogo', data)
+        if (data.uploadLogo) {
+           data.uploadLogo.logoUrl = data.uploadLogo.logoUrl ==='null' ? '' : data.uploadLogo.logoUrl
+          this.$set(this.form.uploadLogo, 'logoUrl',data.uploadLogo.logoUrl)
         }
         this.loading = false
       }).catch((err) => {
@@ -673,6 +697,7 @@ export default {
         this.initField()
         this.initPrinter()
         this.infoFinance()
+        this.initBase()
         // 加载好后才可以提交数据
         this.nochange = false
       })
@@ -734,6 +759,9 @@ export default {
         this.$set(this.form, 'grossMargin', {
           shipFeeAmount: '1',
           brokerageFee: '1'
+        })
+        this.$set(this.form, 'uploadLogo', {
+          logoUrl: ''
         })
 
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
@@ -799,15 +827,22 @@ export default {
         financeSetting: form.financeSetting,
         grossMargin: form.grossMargin
       }
+      const base = {
+        orgid: form.orgid,
+        module: 'base',
+        upLoadLogo: form.uploadLogo
+      }
       console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
-          this.initOrder()
-          this.loading = false
-          // this.infoFinance()
+          this.putSetting(base).then(() => {
+            this.initOrder()
+            this.loading = false
+            // this.infoFinance()
+          })
         })
       })
     },
@@ -959,13 +994,19 @@ export default {
       .setup-right {
         padding: 10px 16px;
         flex: 1;
+        .box_container_2 {
+          .el-upload-dragger {
+            width: 100%;
+            height: 100%;
+          }
+        }
       }
     }
-    .setup-table-finance{
-      .el-form--inline .el-form-item{
+    .setup-table-finance {
+      .el-form--inline .el-form-item {
         margin-right: 5px;
       }
-      .el-checkbox__label{
+      .el-checkbox__label {
         padding-left: 5px;
       }
     }
