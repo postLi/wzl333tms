@@ -1,17 +1,19 @@
 <template>
-    <div class="tab-content" @success="fetchAllreceipt" v-loading="loading">
-      <SearchForm :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
-      <div class="tab_info">
-        <div class="btns_box">
-            <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_GETCANCEL>取消接收</el-button>
-            <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
-            <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP3>导出</el-button>
-            <el-button type="primary" :size="btnsize"  icon="el-icon-printer"@click="doAction('print')" plain v-has:RECE_PRI3>打印</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
-        </div>
-        <div class="info_tab">
-          <!-- <el-table
+  <div class="tab-content" @success="fetchAllreceipt" v-loading="loading">
+    <SearchForm :component="'accept'" :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
+    <div class="tab_info">
+      <div class="btns_box">
+        <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('accept')" v-has:RECE_GET>回单接收</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_GETCANCEL>取消接收</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-sold-out" @click="doAction('aleary')" plain>回单已回</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('alearyCancel')" plain>取消已回</el-button>
+        <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
+        <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP3>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:RECE_PRI3>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+      </div>
+      <div class="info_tab">
+        <!-- <el-table
             ref="multipleTable"
             :data="dataset"
             stripe
@@ -290,31 +292,32 @@
               >
             </el-table-column>
           </el-table> -->
-          <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%"
-          :summary-method="getSumLeft"
-          show-summary
-           tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-            <el-table-column fixed sortable type="selection" width="70"></el-table-column>
-            <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
-                <template slot-scope="scope">
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-          </el-table>
-        </div>
+        <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span v-else v-html="column.slot(scope)"></span>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+    </div>
+    <div class="info_tab_footer">共计:{{ total }}
+      <div class="show_pager">
+        <Pager :total="total" @change="handlePageChange" />
+      </div>
+    </div>
     <AddMark :popVisible="popVisible" :issender="true" :dotInfo="dotInfo" :searchQuery="searchQuery" @close="closeAddDot" @success="fetchAllreceipt" :isModify="isModify" :isAccept="isAccept" />
-      <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" :code="'RECEIPT3'"></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn" :code="'RECEIPT3'"></TableSetup>
   </div>
 </template>
 <script>
 import SearchForm from './components/search'
-import { postReceipt, putUpdateCancelReceipt } from '@/api/operation/receipt'
+import { postReceipt, putUpdateCancelReceipt, acceptShips, cancelAcceptShips } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
 import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
@@ -333,12 +336,12 @@ export default {
       'otherinfo'
     ]),
     orgid() {
-            // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-            // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
+      // return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
-        // this.searchQuery.vo.orgid = this.otherinfo.orgid
+    // this.searchQuery.vo.orgid = this.otherinfo.orgid
     /* this.fetchAllreceipt(this.otherinfo.orgid).then(res => {
     // this.loading = false
     }).catch((err) => {
@@ -597,10 +600,10 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
-          // console.log(this.selection)
+      // console.log(this.selection)
     },
     doAction(type) {
-          // 判断是否有选中项
+      // 判断是否有选中项
       console.log(this.selected)
       if (!this.selected.length && type !== 'print' && type !== 'export') {
         this.$message({
@@ -652,7 +655,7 @@ export default {
             name: '回单接收'
           })
           break
-              // 回单接收
+          // 回单接收
         case 'accept':
           const ids = this.selected.filter(el => {
             return el.acceptStatus === 109
@@ -665,7 +668,7 @@ export default {
             this.dotInfo = ids
             this.popVisible = true
             this.isAccept = true
-                  // this.isModify = false
+            // this.isModify = false
           } else {
             this.$message.warning('请选择未接收项~')
           }
@@ -699,8 +702,74 @@ export default {
           }
 
           break
+        case 'aleary': // 回单已回
+
+          if (this.searchQuery.vo.acceptStatus !== '408') {
+            this.$message.warning('【未回回单】才可以操作哦~')
+          } else {
+            let idsss = objectMerge2([], this.selected).map(e => {
+              return e.shipId
+            }) || []
+            this.$confirm('确定回单已回？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+              }).then(() => {
+                this.loading = true
+                acceptShips(idsss.join(',')).then(data => {
+                    this.loading = false
+                    this.fetchAllreceipt()
+                    this.$message.success('回单已回操作成功~')
+                  })
+                  .catch(err => {
+                    this.loading = false
+                    this._handlerCatchMsg(err)
+                  })
+              })
+              .catch(() => {
+
+              })
+
+          }
+          break
+        case 'alearyCancel': // 取消已回
+          let countNoflag = 0
+          let idss = objectMerge2([], this.selected).filter(el => {
+            if ((el.backstatus < 242 || !el.backstatus) && el.rollbackStatus) {
+              return true
+            } else {
+              countNoflag += 1
+              return false
+            }
+          }).map(e => {
+            return e.shipId
+          }) || []
+          if (countNoflag > 0) {
+            this.$message.warning('回单未发放才可以取消回单已回~')
+            return false
+          }
+          if (idss && idss.length > 0) {
+            this.$confirm('确定取消已回？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+              }).then(() => {
+                this.loading = true
+                cancelAcceptShips(idss.join(',')).then(data => {
+                    this.loading = false
+                    this.fetchAllreceipt()
+                    this.$message.success('取消已回操作成功~')
+                  })
+                  .catch(err => {
+                    this.loading = false
+                    this._handlerCatchMsg(err)
+                  })
+              })
+              .catch(() => {
+
+              })
+          }
+          break
       }
-          // 清除选中状态，避免影响下个操作
+      // 清除选中状态，避免影响下个操作
       this.$refs.multipleTable.clearSelection()
     },
     setColumn(obj) { // 重绘表格列表
@@ -723,4 +792,5 @@ export default {
     getDbClick() {}
   }
 }
+
 </script>

@@ -24,7 +24,7 @@
           <!-- <el-option slot="head" label="全部" value=""></el-option>
           <selectType v-model="thestatus" :type="type" /> -->
           <selectType v-model="thestatus"  :type="type">
-            <el-option slot="head" label="全部" value="" ></el-option>
+            <el-option slot="head" label="全部" value="" v-if="component !== 'accept'"></el-option>
           </selectType>
         </el-form-item>
         <el-form-item label="运单号">
@@ -73,6 +73,10 @@ export default {
     },
     orgid: {
       type: Number
+    },
+    component: {
+      type: String,
+      default: ''
     },
     type: String,
     title: String,
@@ -125,6 +129,12 @@ export default {
   watch: {
     orgid(newVal) {
       this.searchForm.orgid = newVal
+    },
+    component: {
+      handler (cval, oval) {
+
+      },
+      deep: true
     },
     type: {
       handler(status) {

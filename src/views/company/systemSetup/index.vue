@@ -304,16 +304,16 @@
               <div class="setup-left">运单标签设置</div>
               <div class="setup-right">
                 <el-form-item>
-                  <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
+                  <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>运单-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
+                  <el-button @click="doAction('printSetLi')" icon="el-icon-news" type="success" plain>标签-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-document" type="primary" plain>打印配载单设置</el-button>
+                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-date" type="primary" plain>配载单-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="primary" plain>打印合同设置</el-button>
+                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="success" plain>合同-打印设置</el-button>
                 </el-form-item>
               </div>
             </div>
@@ -326,7 +326,7 @@
                   <el-button @click="downloadFile('lodop')" icon="el-icon-download" type="primary" plain>LODOP云打印插件下载</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="primary" plain>硕正报表插件下载</el-button>
+                  <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="success" plain>硕正报表插件下载</el-button>
                 </el-form-item>
               </div>
             </div>

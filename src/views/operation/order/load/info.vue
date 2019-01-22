@@ -124,7 +124,7 @@
                 </div>
               </div>
               <div class="loadFrom-type-baseInfo">
-                <div class="baseInfoCol"  v-if="loadTypeId===38">
+                <div class="baseInfoCol" v-if="loadTypeId===38">
                   <el-form-item label="短驳费" prop="shortFee">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.shortFee" ref="shortFee" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'shortFee')" />
                     <span class="input-append">元</span>
@@ -151,7 +151,6 @@
                   </el-form-item>
                 </div>
               </div>
-
             </el-form>
             <!-- 费用参数 -->
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
@@ -314,7 +313,7 @@ export default {
       }
     }
     const validateFormMobile = function(rule, value, callback) {
-       if (value === '' || value === null || !value || value === undefined) {
+      if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('不能为空'))
       } else {
         callback()
@@ -484,9 +483,7 @@ export default {
       get() {
         return Number(this.$route.query.loadTypeId)
       },
-      set() {
-
-      }
+      set() {}
     },
     totalFormFee: {
       get() {
@@ -544,7 +541,7 @@ export default {
       immediate: true
     },
     networkList: {
-      handler (cval, oval) {
+      handler(cval, oval) {
         let arr = [this.otherinfo.orgid]
         if (cval) {
           cval.forEach(e => {
@@ -567,10 +564,10 @@ export default {
     deleteNetwork(item, index) { // 删除途径网点
       console.log('删除', item, index)
     },
-    startDragNetwork (event) {
+    startDragNetwork(event) {
       this.visibleChange = true
       setTimeout(() => {
-      this.visibleChange = false
+        this.visibleChange = false
       }, 100)
     },
     switchUrl(path, issave) {
@@ -579,12 +576,12 @@ export default {
       let data = {
         truckMessage: this.truckMessage,
         contractNo: this.contractNo,
-        formModel: this.formModel,
-        formFee: this.formFee,
-        apportionTypeList: this.apportionTypeList,
+        formModel: objectMerge2({}, this.formModel),
+        formFee: objectMerge2({}, this.formFee),
+        apportionTypeList: objectMerge2([], this.apportionTypeList),
         loadTable: {
-          left: this.repertoryList,
-          right: this.loadTableInfo
+          left: objectMerge2([], this.repertoryList),
+          right: objectMerge2([], this.loadTableInfo)
         },
         networkList: this.networkList
       }
@@ -1349,29 +1346,29 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-      .el-collapse {
-        border: 2px solid #cdf;
-      }
-      .el-collapse-item__content {
-        padding: 0 10px;
-      }
-      .el-collapse-item__header {
-        border-bottom: 2px solid #cdf;
-        background-color: #FFFFFF;
-        padding: 0 0 0 20px;
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
-        color: #333;
-        position: relative;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      .el-collapse-item__arrow {
-        position: absolute;
-        left: 20px;
-        top: 5px;
-      }
+    .el-collapse {
+      border: 2px solid #cdf;
+    }
+    .el-collapse-item__content {
+      padding: 0 10px;
+    }
+    .el-collapse-item__header {
+      border-bottom: 2px solid #cdf;
+      background-color: #FFFFFF;
+      padding: 0 0 0 20px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      color: #333;
+      position: relative;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .el-collapse-item__arrow {
+      position: absolute;
+      left: 20px;
+      top: 5px;
+    }
     .loadFrom {
       width: 100%;
       margin-bottom: 10px;
@@ -1386,7 +1383,7 @@ export default {
           color: #ef0000;
         }
       }
-      .el-form{
+      .el-form {
         display: inline-block;
         width: 100%;
       }
@@ -1397,18 +1394,18 @@ export default {
       flex-direction: row;
       width: 100%;
       margin-bottom: -10px;
-     .baseInfoCol{
-       width: 20%;
+      .baseInfoCol {
+        width: 20%;
+      }
+      .baseInfoCol2 {
+        width: 40%;
+      }
+      .multipleInput {
+        .el-form-item__content {
+          display: flex;
+          flex-direction: row;
         }
-     .baseInfoCol2{
-       width: 40%;
-     }
-     .multipleInput{
-       .el-form-item__content{
-         display: flex;
-         flex-direction: row;
-       }
-     }
+      }
       .input-append {
         position: absolute;
         left: 100%;
@@ -1417,7 +1414,7 @@ export default {
         margin-left: -25px;
         color: #999;
       }
-      .el-form-item{
+      .el-form-item {
         width: 100%;
       }
       .el-autocomplete,
@@ -1444,16 +1441,16 @@ export default {
           color: #222;
           word-break: keep-all;
           position: relative;
-          &:after{
+          &:after {
             content: '';
             position: absolute;
             width: 6px;
-             height: 1px;
+            height: 1px;
             background-color: #ccc;
             right: 0px;
             top: 13px;
-             z-index: 2;
-           }
+            z-index: 2;
+          }
         }
 
 
@@ -1469,14 +1466,14 @@ export default {
             display: flex;
             flex-direction: row;
             width: 100%;
-            .el-select{
+            .el-select {
               width: 100%;
             }
-            .el-input--suffix .el-input__inner{
+            .el-input--suffix .el-input__inner {
               padding-right: 15px;
             }
-            .el-select:last-child{
-              .el-icon-arrow-up{
+            .el-select:last-child {
+              .el-icon-arrow-up {
                 display: none;
               }
             }
