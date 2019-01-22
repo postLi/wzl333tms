@@ -744,7 +744,7 @@ export default {
             return e.shipId
           }) || []
           if (countNoflag > 0) {
-            this.$message.warning('回单未发放才可以取消回单已回~')
+            this.$message.warning('所选的回单都已寄出或不是通过回单已回操作的,不能取消~')
             return false
           }
           if (idss && idss.length > 0) {

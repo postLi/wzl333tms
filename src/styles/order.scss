@@ -1,15 +1,16 @@
 $bordercolor: #d4d4d4;
 $backgroundcolor: #cbe1f7;
+$mainFontSize: 14px;
 
   .createOrder-main{
-    margin-left: 12px;
-    margin-right: 12px;
+    margin: 12px auto;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.47);
     padding-top: 34px;
     padding-left: 26px;
     padding-right: 26px;
     padding-bottom: 58px;
     font-size: 12px;
+    max-width: 1300px;
     // max-height: 100%;
     min-width: 1100px;
     display: flex;
@@ -165,6 +166,7 @@ $backgroundcolor: #cbe1f7;
 
     .order-form-label{
       color: #666;
+      font-size: $mainFontSize;
     }
 
     .order-form-item{
@@ -197,6 +199,7 @@ $backgroundcolor: #cbe1f7;
       }
       .el-input__inner{
         vertical-align: 1px;
+        font-size: $mainFontSize;
       }
       .el-form-item.is-error .el-input__inner{
         border-color: #f56c6c;
@@ -459,6 +462,7 @@ $backgroundcolor: #cbe1f7;
       width: 100%;
       line-height: 22px;
       margin-top: 5px;
+      text-align: left;
     }
     .line-info-tip{
       display: inline-block;
