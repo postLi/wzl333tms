@@ -32,10 +32,12 @@ export default {
   },
   computed:{
     systemLogo() {
-      let logourl = this.otherinfo.systemSetup.uploadLogo.logoUrl
+      let logourl = this.otherinfo.systemSetup.uploadLogo ? this.otherinfo.systemSetup.uploadLogo.logoUrl : this.defaultLogo
       let falg = ( logourl=== 'null' || logourl === '')
       console.log('this.otherinfo.systemSetup.uploadLogo', logourl)
-      return falg ? this.defaultLogo :logourl
+      let uuuu = falg ? this.defaultLogo :logourl
+      console.log('uuuu', uuuu)
+      return uuuu
     }
   }
 }
