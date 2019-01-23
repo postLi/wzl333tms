@@ -681,7 +681,8 @@ export default {
       return getAllSetting(params).then(data => {
         console.log('uploadLogo', data)
         if (data.uploadLogo) {
-           data.uploadLogo.logoUrl = data.uploadLogo.logoUrl ==='null' ? '' : data.uploadLogo.logoUrl
+
+           data.uploadLogo.logoUrl = (data.uploadLogo.logoUrl ==='null' || !data.uploadLogo.logoUrl) ? '' : data.uploadLogo.logoUrl
           this.$set(this.form.uploadLogo, 'logoUrl',data.uploadLogo.logoUrl)
         }
         this.loading = false
