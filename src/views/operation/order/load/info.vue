@@ -506,7 +506,7 @@ export default {
   },
   created() {
     this.setLoadTypeId()
-    this.disOrgList = [this.otherinfo.orgid]
+    this.disOrgList = [this.otherinfo.orgid] // 禁止选择的网点列表
   },
   mounted() {
     // this.getSelectType()

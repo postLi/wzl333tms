@@ -212,13 +212,15 @@
           </el-collapse-item>
           <el-collapse-item name="setup7" title="财务设置" v-has:SETTINGS_FINANCE>
             <div class="clearfix setup-table setup-table-finance">
-              <div class="setup-left">财务设置</div>
+              <div class="setup-left">财务凭证</div>
               <div class="setup-right">
                 <el-form-item>
-                  财务凭证
-                  <el-select v-model="form.financeSetting.voucher">
+                  <el-radio-group v-model="form.financeSetting.voucher" size="mini">
+                    <el-radio v-for="(item, index) in vouchers" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                  <!-- <el-select v-model="form.financeSetting.voucher">
                     <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
               </div>
             </div>
@@ -243,13 +245,15 @@
           </el-collapse-item>
           <el-collapse-item name="setup8" title="配载设置" v-has:SETTINGS_LOAD>
             <div class="clearfix setup-table">
-              <div class="setup-left">配载设置</div>
+              <div class="setup-left">发车合同承运方</div>
               <div class="setup-right">
                 <el-form-item>
-                  发车合同承运方
-                  <el-select v-model="form.loadSetting.carrier">
+                  <el-radio-group v-model="form.loadSetting.carrier" size="mini">
+                    <el-radio v-for="(item, index) in deliverContacts" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                 <!--  <el-select v-model="form.loadSetting.carrier">
                     <el-option v-for="(item, index) in deliverContacts" :key="index" :value="item.value" :label="item.label"></el-option>
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
               </div>
             </div>
@@ -327,7 +331,8 @@
               <div class="setup-left">系统LOGO</div>
               <div class="setup-right">
                 <el-form-item>
-                  <Upload :title="'本地上传'" :showFileList="true" :limit="1" listtype="picture" v-model="form.uploadLogo.logoUrl" />
+                  <upload :title="'本地上传'" v-model="form.uploadLogo.logoUrl" />
+                  <!-- <Upload :title="'本地上传'" :showFileList="true" :limit="1" listtype="picture" v-model="form.uploadLogo.logoUrl" /> -->
                 </el-form-item>
               </div>
             </div>
@@ -354,7 +359,7 @@ import printSetOrder from './components/printSetOrderSelf'
 import printSetLi from './components/printSetLiSelf'
 import printLoadInfo from './components/printLoadInfo'
 import printContract from './components/printContract'
-import Upload from '@/components/Upload/singleImage2'
+import Upload from '@/components/Upload/singleImage'
 
 export default {
   name: 'systemSetup',
@@ -972,6 +977,17 @@ export default {
     .el-form-item__content>.el-input {
       width: 100px;
     }
+    .el-form-item__content{
+      .upload-container{
+        width: 200px;
+        .image-preview-action{
+          line-height: 125px;
+        }
+        .el-button{
+          margin-top: 0px;
+        }
+      }
+    }
 
     .el-form-item--mini.el-form-item {
       margin-bottom: 5px;
@@ -995,12 +1011,7 @@ export default {
       .setup-right {
         padding: 10px 16px;
         flex: 1;
-        .box_container_2 {
-          .el-upload-dragger {
-            width: 100%;
-            height: 100%;
-          }
-        }
+      
       }
     }
     .setup-table-finance {
