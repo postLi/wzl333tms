@@ -57,7 +57,7 @@
               <div class="order-form-item">
                 <span class="order-form-label" :class="{'required': shipFieldValue.shipToOrgid}">目的网点</span>
                 <el-form-item :error='shipFieldValueInfo.shipToOrgid'>
-                  <SelectTree ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="changeToOrg" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
+                  <SelectTree2 ref="tmsOrderShipToOrgid" @keydown.enter.native="goNextInput" @change="changeToOrg" size="mini" v-model="form.tmsOrderShip.shipToOrgid" />
                 </el-form-item>
               </div>
             </el-col>
@@ -475,6 +475,7 @@ import { getOrgId } from '@/api/company/groupManage'
 // 外部公用组件
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
+import SelectTree2 from '@/components/selectTree/index2'
 import SelectCity from '@/components/selectCity/index'
 import querySelect from '@/components/querySelect/index'
 import queryCity from '@/components/querySelect/city'
@@ -494,6 +495,7 @@ export default {
     FooterBtns,
     SelectType,
     SelectTree,
+    SelectTree2,
     SelectCity,
     querySelect,
     ManageRemarks,
