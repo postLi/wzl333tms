@@ -44,7 +44,7 @@ export default {
       this.timerOption = setInterval(() => {
         _this.timer = _this.timer - 1
         if (_this.timer <= 0) {
-          _this.$router.push({path: '/dashboard'})
+          _this.$router.push({path: '/'})
           clearInterval(_this.timerOption)
         }
       }, 1000)

@@ -40,7 +40,8 @@
         </router-link>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content"><!-- 功能：发货方，承运方之间凭证。 -->功能：将运单转给第三方承运商
+        <div slot="content">
+          <!-- 功能：发货方，承运方之间凭证。 -->功能：将运单转给第三方承运商
           <!-- <br/>操作：首页，运单列表，创建运单。 -->
         </div>
         <router-link to="/operation/order/transfer/transfered" class="flowitem send-04zhongzhuan">
@@ -154,10 +155,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'dashboard',
-
   computed: {
     ...mapGetters([
       'name',
@@ -177,6 +176,8 @@ export default {
     line-height: 46px;
   }
 }
+
+
 
 .index-flow {
   width: 1171px;

@@ -251,7 +251,7 @@
                   <el-radio-group v-model="form.loadSetting.carrier" size="mini">
                     <el-radio v-for="(item, index) in deliverContacts" :key="index" :label="item.value">{{item.label}}</el-radio>
                   </el-radio-group>
-                 <!--  <el-select v-model="form.loadSetting.carrier">
+                  <!--  <el-select v-model="form.loadSetting.carrier">
                     <el-option v-for="(item, index) in deliverContacts" :key="index" :value="item.value" :label="item.label"></el-option>
                   </el-select> -->
                 </el-form-item>
@@ -326,13 +326,22 @@
               </div>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="setup9" title="LOGO设置">
+          <el-collapse-item name="setup9" title="基础设置">
+            <div class="clearfix setup-table">
+               <div class="setup-left">切换其他网点</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio-group v-model="form.switchUser.canSwitch" size="mini">
+                    <el-radio v-for="(item, index) in canSwitchs" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </div>
+            </div>
             <div class="clearfix setup-table">
               <div class="setup-left">系统LOGO</div>
               <div class="setup-right">
                 <el-form-item>
                   <upload :title="'本地上传'" v-model="form.uploadLogo.logoUrl" />
-                  <!-- <Upload :title="'本地上传'" :showFileList="true" :limit="1" listtype="picture" v-model="form.uploadLogo.logoUrl" /> -->
                 </el-form-item>
               </div>
             </div>
@@ -537,6 +546,14 @@ export default {
         value: '2',
         label: '不需要'
       }],
+      canSwitchs: [
+      {
+        value: '0',
+        label: '不可以'
+      },{
+        value: '1',
+        label: '可以'
+      }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -545,6 +562,9 @@ export default {
         label: '车牌号'
       }],
       form: {
+        'switchUser': {
+          'canSwitch': ''
+        },
         'uploadLogo': {
           'logoUrl': ''
         },
@@ -680,15 +700,17 @@ export default {
     initBase() { // 系统logo
       const params = {
         orgid: this.otherinfo.orgid,
-        type: 'uploadLogo',
+        type: '',
         module: 'base'
       }
       return getAllSetting(params).then(data => {
         console.log('uploadLogo', data)
         if (data.uploadLogo) {
-
-           data.uploadLogo.logoUrl = (data.uploadLogo.logoUrl ==='null' || !data.uploadLogo.logoUrl) ? '' : data.uploadLogo.logoUrl
-          this.$set(this.form.uploadLogo, 'logoUrl',data.uploadLogo.logoUrl)
+          data.uploadLogo.logoUrl = (data.uploadLogo.logoUrl === 'null' || !data.uploadLogo.logoUrl) ? '' : data.uploadLogo.logoUrl
+          this.$set(this.form.uploadLogo, 'logoUrl', data.uploadLogo.logoUrl)
+        }
+        if (data.switchUser) {
+          this.$set(this.form.switchUser, 'canSwitch', data.switchUser.canSwitch)
         }
         this.loading = false
       }).catch((err) => {
@@ -752,23 +774,27 @@ export default {
         type,
         module
       }).then(data => {
-        this.form = data
+        for(let item in data) {
+          this.form[item] = data[item]
+        }
+        // this.form = data
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
         for (const item in this.form.printSetting) {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
           console.log(this.form.printSetting[item])
         }
-        this.$set(this.form, 'financeSetting', {
-          voucher: ''
-        })
-        this.$set(this.form, 'grossMargin', {
-          shipFeeAmount: '1',
-          brokerageFee: '1'
-        })
-        this.$set(this.form, 'uploadLogo', {
-          logoUrl: ''
-        })
+        console.log('data:::::::::::::', data)
+        // this.$set(this.form, 'financeSetting', {
+        //   voucher: ''
+        // })
+        // this.$set(this.form, 'grossMargin', {
+        //   shipFeeAmount: '1',
+        //   brokerageFee: '1'
+        // })
+        // this.$set(this.form, 'uploadLogo', {
+        //   logoUrl: ''
+        // })
 
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form, 'loadSetting', {
@@ -836,9 +862,10 @@ export default {
       const base = {
         orgid: form.orgid,
         module: 'base',
-        upLoadLogo: form.uploadLogo
+        upLoadLogo: form.uploadLogo,
+        switchUser: form.switchUser
       }
-      console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
+     console.warn('提交 form,finance,base', form, finance, base)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
@@ -977,13 +1004,13 @@ export default {
     .el-form-item__content>.el-input {
       width: 100px;
     }
-    .el-form-item__content{
-      .upload-container{
+    .el-form-item__content {
+      .upload-container {
         width: 200px;
-        .image-preview-action{
+        .image-preview-action {
           line-height: 125px;
         }
-        .el-button{
+        .el-button {
           margin-top: 0px;
         }
       }
@@ -1011,7 +1038,6 @@ export default {
       .setup-right {
         padding: 10px 16px;
         flex: 1;
-      
       }
     }
     .setup-table-finance {

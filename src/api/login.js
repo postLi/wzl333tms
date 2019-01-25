@@ -91,3 +91,45 @@ export function refreshToken() {
     }
   })
 }
+/**
+ * 获得所有网点及网点下用户信息
+ */
+export function getOrgAndFollowingUser() {
+  return fetch.get('/api-system/system/user/v1/getOrgAndFollowingUser').then(res => {
+    return res.data || {}
+  })
+}
+/**
+ * 获得所有网点及网点下用户信息
+ */
+export function loginOhter(params) {
+  return fetch.request({
+    url: '/api-uaa/tmslogin/token',
+    method: 'post',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      'authorization': 'Basic d2ViQXBwOndlYkFwcA=='
+    },
+    params: {
+      grant_type: params.grant_type,
+      switch_username: params.switch_username,
+      access_token: params.access_token
+    }
+  })
+}
+/**
+ * 查询是否需要提示
+ */
+export function checkPrompt() {
+  return fetch.get('/api-system/system/user/v1/initializationCheckPrompt').then(res => {
+    return res.data
+  })
+}
+/**
+ * 更改为不再提示
+ */
+export function updatePrompt() {
+  return fetch.get('/api-system/system/user/v1/updateCheckPrompt').then(res => {
+    return res.data
+  })
+}
