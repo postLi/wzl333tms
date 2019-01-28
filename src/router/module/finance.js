@@ -253,7 +253,7 @@ export default {
             title: '终端送货费',
             noCache: true,
             istab: true,
-            code: ''
+            code: 'SHIP_PAYLIST7'
           }
         }]
       }, {

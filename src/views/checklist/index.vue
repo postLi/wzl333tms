@@ -378,7 +378,6 @@ export default {
           this.cancelAni = !this.cancelAni
           if (this.cancelAni) {
             clearInterval(this.timer)
-            console.log()
           } else {
             var idx = 0
             var arr = this.countList
