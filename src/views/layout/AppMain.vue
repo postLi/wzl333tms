@@ -2,7 +2,7 @@
   <section class="app-main">
     <!-- <transition name="fade" mode="out-in"> -->
     <el-alert v-if="isShowtips" show-icon :title="msg" type="warning" close-text="关闭" class="warnalert">
-      <router-link to="/checklist/index">系统体检</router-link>
+      <router-link to="/checklist/index" v-if="isCodeCheck">系统体检</router-link>
       <el-checkbox v-model="noTips" @change="updatePrompt">不再提示</el-checkbox>
     </el-alert>
     <keep-alive :include="cachedViews">

@@ -6,7 +6,7 @@
           <el-input v-model.trim="form.driverName" :maxlength="10" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" prop="driverMobile">
-          <el-input v-numberOnly v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model="form.driverMobile" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="归属网点" prop="orgid">
           <SelectTree v-model="form.orgid" :orgid="otherinfo.orgid" />
@@ -110,6 +110,15 @@ export default {
     ])
   },
   data() {
+    const validateFormMobile = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (REGEX.MOBILE.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入有效的手机号码'))
+      }
+    }
     const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -169,19 +178,14 @@ export default {
       formLabelWidth: '100px',
       tooltip: false,
       rules: {
-        driverName: [
-          { required: true, message: '请输入司机名称' }
-        ],
-        orgid: [
-          { required: true, message: '请选择所属机构' }
-        ],
-        driverMobile: [
-          { required: true, message: '请输入11位手机号码', pattern: REGEX.MOBILE }
-          // { validator: validateFormNumber, trigger: 'change' }
-        ],
-        driverCardid: [
-          { pattern: REGEX.ONLY_NUMBER_AND_LETTER, message: '身份证号码只能输入字母和数字' }
-        ]
+        driverName: [{ required: true, message: '请输入司机名称' }],
+        orgid: [{ required: true, message: '请选择所属机构' }],
+        driverMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }],
+        driverCardid: [{ pattern: REGEX.ONLY_NUMBER_AND_LETTER, message: '身份证号码只能输入字母和数字' }]
+        // driverMobile: [
+        //   // { required: true, message: '请输入11位手机号码', pattern: REGEX.MOBILE }
+        //   // { validator: validateFormNumber, trigger: 'change' }
+        // ],
       },
       popTitle: '新增司机',
       orgArr: [],

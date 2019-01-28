@@ -774,28 +774,25 @@ export default {
         type,
         module
       }).then(data => {
-        for(let item in data) {
-          this.form[item] = data[item]
-        }
-        // this.form = data
+        this.form = data
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
         for (const item in this.form.printSetting) {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
-          console.log(this.form.printSetting[item])
         }
-        console.log('data:::::::::::::', data)
-        // this.$set(this.form, 'financeSetting', {
-        //   voucher: ''
-        // })
-        // this.$set(this.form, 'grossMargin', {
-        //   shipFeeAmount: '1',
-        //   brokerageFee: '1'
-        // })
-        // this.$set(this.form, 'uploadLogo', {
-        //   logoUrl: ''
-        // })
-
+        this.$set(this.form, 'switchUser',{
+          canSwitch: ''
+        })
+        this.$set(this.form, 'financeSetting', {
+          voucher: ''
+        })
+        this.$set(this.form, 'grossMargin', {
+          shipFeeAmount: '1',
+          brokerageFee: '1'
+        })
+        this.$set(this.form, 'uploadLogo', {
+          logoUrl: ''
+        })
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form, 'loadSetting', {
             carrier: ''

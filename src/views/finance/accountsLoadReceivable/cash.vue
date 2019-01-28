@@ -19,7 +19,7 @@
               </template>
             </el-table-column>
             <el-table-column fixed :render-header="setHeader" width="50">
-              <template slot-scope="scope" >
+              <template slot-scope="scope">
                 <el-button class="tableItemBtn" size="mini" @click="addItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -55,7 +55,7 @@
               </template>
             </el-table-column>
             <el-table-column :render-header="setHeader2" fixed width="50">
-              <template slot-scope="scope" >
+              <template slot-scope="scope">
                 <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
               </template>
             </el-table-column>
@@ -91,7 +91,7 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 // import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
@@ -141,47 +141,47 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '核销状态',
-        prop: 'totalStatusCn',
-        width: '120'
-      },
-      {
-        label: '签收状态',
-        prop: 'signStatus',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '120',
-        fixed: false
-      },
-      {
-        'label': '现付',
-        'prop': 'nowPayFee'
-      }, {
-        'label': '现付核销状态',
-        'prop': 'nowPayStateCn'
-      }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '核销状态',
+          prop: 'totalStatusCn',
+          width: '120'
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '120',
+          fixed: false
+        },
+        {
+          'label': '现付',
+          'prop': 'nowPayFee'
+        }, {
+          'label': '现付核销状态',
+          'prop': 'nowPayStateCn'
+        }, {
           'label': '已核销现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
@@ -211,63 +211,63 @@ export default {
           'prop': 'receiverCustomerUnit'
         },
 
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单时间',
-        prop: 'createTime',
-        width: '150',
-        fixed: false,
-        slot: (scope) => {
-          return `${parseTime(scope.row.createTime)}`
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单时间',
+          prop: 'createTime',
+          width: '150',
+          fixed: false,
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime)}`
+          }
+        },
+        {
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
         }
-      },
-      {
-        label: '发站',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到站',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '件数',
-        prop: 'cargoAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '重量',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '体积',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }
       ]
       // getRouteInfo: {
       //   vo: {
@@ -308,7 +308,7 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
-      
+
       // this.searchQuery.currentPage = 1
       // this.searchQuery.pageSize = 100
       // this.$set(this.searchQuery.vo, 'ascriptionOrgId', this.getRouteInfo.vo.ascriptionOrgId)
@@ -586,11 +586,24 @@ export default {
         }
       }
     },
+
     getSumRight(param) { // 右边表格合计-自定义显示
-      return getSummaries(param)
+      let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      return getSummaries(param)
+      let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     setHeader(h, { column }) {
       return h('el-button', {
@@ -633,4 +646,5 @@ export default {
     position: static;
   }
 }
+
 </style>

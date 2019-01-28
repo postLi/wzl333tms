@@ -16,11 +16,14 @@
               <div class="loadFrom-type-baseInfo">
                 <div :class="loadTypeId===39?'loadFrom-type-baseInfo-network baseInfoCol2':'baseInfoCol'">
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40" class="multipleInput">
-                    <el-input size="mini" v-model="formModel.deliveryDetailFee" v-number-only:point :maxlength="8" placeholder="送货费">
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.deliveryDetailFee" ref="truckVolume" :maxlength="8" placeholder="送货费" @change="(e)=>changeHandlingFeeAll(e.target.value,'deliveryDetailFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.deliveryHandlingFee" ref="truckVolume" :maxlength="8" placeholder="装卸费" @change="(e)=>changeHandlingFeeAll(e.target.value, 'deliveryHandlingFee')" />
+                    <span class="input-append">元</span>
+                    <!-- <el-input size="mini" v-model="formModel.deliveryDetailFee" v-number-only:point :maxlength="8" placeholder="送货费">
                     </el-input>
                     <el-input size="mini" v-model="formModel.deliveryHandlingFee" v-number-only:point :maxlength="8" placeholder="装卸费">
                       <template slot="append">元</template>
-                    </el-input>
+                    </el-input> -->
                   </el-form-item>
                   <el-form-item label="到达网点" v-if="loadTypeId===39" class="formItemTextDanger">
                     <div class="select-network-list">
@@ -88,7 +91,6 @@
                   <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
                     <span class="input-append">元</span>
-                    <!-- <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input> -->
                   </el-form-item>
                   <el-form-item prop="remark" label="备注" v-else>
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
@@ -103,7 +105,7 @@
                 <div class="baseInfoCol">
                   <el-form-item label="可载重量" prop="truckLoad">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
-                    <span class="input-append" style="margin-left: -40px;">千克</span>
+                    <span class="input-append" style="margin-left: -30px;">千克</span>
                   </el-form-item>
                 </div>
                 <div class="baseInfoCol">
@@ -128,7 +130,6 @@
                   <el-form-item label="短驳费" prop="shortFee">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.shortFee" ref="shortFee" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'shortFee')" />
                     <span class="input-append">元</span>
-                    <!-- <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input> -->
                   </el-form-item>
                 </div>
                 <div v-if="loadTypeId===39" class="baseInfoCol">
@@ -350,7 +351,11 @@ export default {
       networkList: [],
       handlingFeeInfo: {
         handlingFeeAll: null,
-        apportionTypeId: null
+        apportionTypeId: null,
+        deliveryHandlingFee: null,
+        value: null,
+        params: 'handlingFee', // 列表计算的字段
+        reParams: 'handlingFeeAll' // 列表返回的字段
       },
       searchQueryData: {
         pageSize: 100,
@@ -450,14 +455,7 @@ export default {
         // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
-      },
-      apportionTypeDescript: [
-        '(运单 - 回扣）/（总车费 - 总回扣）* 操作费',
-        '操作费 / 票数',
-        '该单重量 / 本车总重量 * 操作费',
-        '该单体积 / 本车总体积 * 操作费',
-        '该单件数 / 本车总件数 * 操作费'
-      ]
+      }
     }
   },
   computed: {
@@ -515,6 +513,7 @@ export default {
   },
   activated() {
     this.getSystemTime()
+
   },
   watch: {
     '$route': {
@@ -656,6 +655,8 @@ export default {
         console.log('isEdit', this.isEdit)
         this.getSelectAddLoadRepertoryList()
       })
+       // 分摊费用  送货-deliveryFee(送货费) 短驳干线-handlingFee(操作费)
+      this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
 
       if (!this.inited) {
         this.inited = true
@@ -1276,12 +1277,13 @@ export default {
         }
       })
     },
-    getSelectType() {
+    getSelectType() { // 分摊方式 + 说明
       getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
           if (data) {
             this.apportionTypeList = data
-            this.apportionTypeList.forEach((e, index) => {
-              this.$set(e, 'descript', this.apportionTypeDescript[index])
+            this.apportionTypeList.forEach((el, index) => {
+              let descript = this.$const.APPORTION_TYPE_DESCRIPT[el.id]
+              this.$set(this.apportionTypeList[index], 'descript', this.loadTypeId === 40 ? descript.replace(/(操作费)/g, '送货费') : descript)
             })
           }
         })
@@ -1295,16 +1297,31 @@ export default {
     changeLoadNum(val, type) {
       this.$set(this.formFee, type, val)
     },
-    changeHandlingFeeAll(val) {
-      this.$set(this.handlingFeeInfo, 'handlingFeeAll', Number(val))
-      this.$set(this.formModel, 'handlingFeeAll', Number(val))
+    changeHandlingFeeAll(val, type) {
+      let fee = 0
+      if (type) { // 送货-送货费
+        this.$set(this.formModel, type, Number(val))
+        fee = tmsMath._add(this.formModel.deliveryDetailFee || 0, this.formModel.deliveryHandlingFee || 0)
+        this.$set(this.handlingFeeInfo, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
+      } else { // 短驳干线-操作费
+        fee = Number(val)
+        this.$set(this.formModel, 'handlingFeeAll', Number(val))
+      }
+      this.$set(this.handlingFeeInfo, 'handlingFeeAll', fee)
+      this.$set(this.handlingFeeInfo, 'params', (this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'))
+      this.$set(this.handlingFeeInfo, 'reParams', (this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'))
     },
     getApportionTypeId(value) { // 选择分摊方式
-      console.log('getApportionTypeId', value, this.formModel.apportionTypeId)
       this.handlingFeeInfo.apportionTypeId = value
+      this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
+      this.handlingFeeInfo.reParams = this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'
     },
-    getHandingFeeAll(value) {
-      this.$set(this.formModel, 'handlingFeeAll', value)
+    getHandingFeeAll(info) {
+      this.handlingFeeInfo = info
+      this.$set(this.formModel, info.reParams, info.value)
+      if (this.loadTypeId === 40) {
+        this.$set(this.formModel, 'deliveryHandlingFee', info.deliveryHandlingFee)
+      }
     },
     resetHandlingFeeInfo(value) {
       this.$set(this.formModel, 'apportionTypeId', value.apportionTypeId)
@@ -1405,13 +1422,30 @@ export default {
           display: flex;
           flex-direction: row;
         }
+        .el-form-item__content>input,
+        .nativeinput,
+        .nativeinput-border {
+          padding: 0 5px;
+        }
+        input::-webkit-input-placeholder {
+          color: #bbb;
+        }
+        input:-moz-placeholder {
+          color: #bbb;
+        }
+        input::-moz-placeholder {
+          color: #bbb;
+        }
+        input:-ms-input-placeholder {
+          color: #bbb;
+        }
       }
       .input-append {
         position: absolute;
         left: 100%;
-        top: 0;
-        font-size: 14px;
-        margin-left: -25px;
+        top: 1px;
+        font-size: 12px;
+        margin-left: -18px;
         color: #999;
       }
       .el-form-item {

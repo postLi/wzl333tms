@@ -55,7 +55,7 @@
           <el-button :size="btnsize" plain type="warning" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
         </div>
         <!-- 穿梭框 -->
-        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit"  @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
+        <dataTable @loadTable="getLoadTable" :orgId="getRouteInfo" :setLoadTable="setLoadTableList" :key="tableKey" :countNum="countNum" :isModify="isEdit" @feeName="getFeeName" :countSuccessList="countSuccessList"></dataTable>
         <!-- 智能核销弹出框 -->
         <Count :popVisible="countVisible" @close="countVisible = false" @success="countSuccess"></Count>
       </div>
@@ -117,6 +117,18 @@ export default {
         arrNoPayName: [],
         arrPayNameActual: [],
         arrhadPayName: []
+      },
+      FINANCE_WAY: {
+        280: '银行卡',
+        281: '支付宝',
+        282: '微信',
+        283: '现金',
+        284: '支票',
+        '银行卡': 280,
+        '支付宝': 281,
+        '微信': 282,
+        '现金': 283,
+        '支票': 284
       }
     }
   },
@@ -154,7 +166,7 @@ export default {
           this.formModel.financialWay = data.szDtoList[0].financialWay
           this.formModel.bankAccount = data.szDtoList[0].bankAccount
           this.formModel.remark = data.remark
-          
+
         })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -183,11 +195,11 @@ export default {
     },
     setData() { // 设置传给后台的数据结构
       if (typeof this.formModel.financialWay === 'string') {
-        this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
+        this.formModel.financialWayId = this.FINANCE_WAY[this.formModel.financialWay]
         this.formModel.financialWay = this.formModel.financialWay
       } else {
         this.formModel.financialWayId = this.formModel.financialWay
-        this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
+        this.formModel.financialWay = this.FINANCE_WAY[this.formModel.financialWay]
       }
       this.loadTable.forEach(e => {
         this.feeName.arrPayName.forEach((el, index) => {
@@ -211,14 +223,14 @@ export default {
       this.setData()
       this.loading = true
       postAddIncome(this.addIncomeInfo).then(data => { // 保存
-        this.loading =false
+          this.loading = false
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
-          this.$router.push({ path: './settleLog', query:{ pageKey: new Date().getTime()  } })
+          this.$router.push({ path: './settleLog', query: { pageKey: new Date().getTime() } })
         })
         .catch(err => {
-          this.loading =false
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },
@@ -253,7 +265,7 @@ export default {
     },
     getOrgFirstFinancialWay() { // 获取收支方式
       let obj = {
-        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
+        financialWay: this.FINANCE_WAY[this.formModel.financialWay], // 转中文
         orgId: this.getRouteInfo
       }
       getOrgFirstFinancialWay(obj).then(data => {
@@ -267,7 +279,7 @@ export default {
           this.formModel.wechatAccount = ''
           this.formModel.alipayAccount = ''
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

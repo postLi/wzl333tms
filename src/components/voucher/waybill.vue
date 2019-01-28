@@ -91,11 +91,7 @@ export default {
     info: {
       type: [Object, Array],
       default: () => []
-    },
-    // btnLoading: {
-    //   type: Boolean,
-    //   default: false
-    // }
+    }
   },
   watch: {
     popVisible: {
@@ -152,6 +148,8 @@ export default {
           return '异常理赔'
         case 'waybillUnusual':
           return '异动费用核销'
+        case 'waybillTerminal':
+          return '终端送货费'
       }
     },
     getRouteInfo() {

@@ -242,6 +242,19 @@ export default {
             istab: true,
             code: 'SHIP_PAYLIST6'
           }
+        }, {
+          path: '/finance/accountsPayable/waybill/terminal',
+          icon: 'QQ',
+          name: '终端送货费',
+          component: _import('finance/accountsPayable/waybill/terminal'),
+          meta: {
+            role: ['admin'],
+            ptitle: '运单核销',
+            title: '终端送货费',
+            noCache: true,
+            istab: true,
+            code: ''
+          }
         }]
       }, {
         path: '/finance/accountsPayable/batch',

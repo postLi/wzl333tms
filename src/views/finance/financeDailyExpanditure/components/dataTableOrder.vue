@@ -120,6 +120,18 @@
             <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
           </template>
         </el-table-column> -->
+         <el-table-column prop="deliveryPay" sortable label="终端送货费" width="120">
+        </el-table-column>
+        <el-table-column prop="noDeliveryPay" sortable label="未核销终端送货费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.deliveryPay, scope.row.hadDeliveryPay, scope.row.noDeliveryPay, scope.row.noDeliveryPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadDeliveryPay" sortable label="已核销终端送货费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.deliveryPay, scope.row.hadDeliveryPay, scope.row.noDeliveryPay, scope.row.hadDeliveryPay)"></span>
+          </template>
+        </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipFromCityName')}}
@@ -278,6 +290,20 @@
         </el-table-column>
         <el-table-column prop="operationPayActual" sortable label="实际核销操作费" width="120">
         </el-table-column> -->
+        <el-table-column prop="deliveryPay" sortable label="终端送货费" width="120">
+        </el-table-column>
+        <el-table-column prop="noDeliveryPay" sortable label="未核销终端送货费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.deliveryPay, scope.row.hadDeliveryPay, scope.row.noDeliveryPay, scope.row.noDeliveryPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="hadDeliveryPay" sortable label="已核销终端送货费" width="120">
+          <template slot-scope="scope">
+            <span v-html="_setTextColor(scope.row.deliveryPay, scope.row.hadDeliveryPay, scope.row.noDeliveryPay, scope.row.hadDeliveryPay)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="deliveryPayActual" sortable label="实际核销终端送货费" width="120">
+        </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">
             {{ _processTableSlot(scope, 'shipFromCityName')}}
@@ -722,11 +748,13 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal']
+      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 
+      'deliveryPay','deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'cargoVolume', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 'kickBackPayActual', 'transferPayActual', 'unusualPayActual', 'exceptionPayActual', 'pickPuPayActual', 'othePayActual']
+      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'cargoVolume', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 'kickBackPayActual', 'transferPayActual', 'unusualPayActual', 'exceptionPayActual', 'pickPuPayActual', 'othePayActual', 
+      'deliveryPay','deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
       return getSummaries(param, propsArr)
     }
   }

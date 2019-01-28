@@ -21,6 +21,7 @@ import waybillOther from './waybillOther' // 其他费用支出
 import waybillTransfer from './waybillTransfer' // 中转费
 import waybillAbnormal from './waybillAbnormal' // 异常理赔
 import waybillUnusual from './waybillUnusual' // 异动费用
+import waybillTerminal from './waybillTerminal' // 终端送货费
 import handleFee from './handleFee' // 操作费核销
 export default {
   name: 'accountsLoad',
@@ -40,6 +41,7 @@ export default {
     waybillTransfer,
     waybillAbnormal,
     waybillUnusual,
+    waybillTerminal,
     handleFee
   },
   props: {
@@ -69,7 +71,8 @@ export default {
         'waybillTransfer': '中转费',
         'waybillAbnormal': '异常理赔',
         'waybillUnusual': '异动费用',
-        'handleFee': '操作费核销'
+        'waybillTerminal': '终端送货费',
+        'handleFee': '操作费核销',
       }
     }
   },

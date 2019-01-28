@@ -80,7 +80,7 @@
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
