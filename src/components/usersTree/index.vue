@@ -60,7 +60,6 @@ export default {
       this.fetchData()
     },
     append(data, node) {
-      console.log('data', data)
       const query = {
         switch_username: data.username,
         grant_type: 'access_token',

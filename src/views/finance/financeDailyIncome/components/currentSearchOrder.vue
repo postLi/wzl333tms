@@ -101,7 +101,10 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        if (res[type]) {
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }
+        // return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
       }
     },
     handleSelect(obj) {
@@ -125,6 +128,9 @@ export default {
   flex-direction: row;
   .el-select{
     width: 120px;
+  }
+   .el-form-item{
+    margin-right: 10px !important;
   }
   .el-input {
     width: 120px !important;

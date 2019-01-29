@@ -15,7 +15,7 @@
       </el-autocomplete>
     </el-form-item>
     <el-form-item v-if="senderSearch==='load'">
-      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect"  popper-class="popperHide" @focus="focusFormItm('mainBatchNo')">
+      <el-autocomplete v-model="searchForm.mainBatchNo" :maxlength="20" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'mainBatchNo',queryString, cb)" placeholder="干线批次号搜索" @select="handleSelect" popper-class="popperHide" @focus="focusFormItm('mainBatchNo')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.batchNo }}</div>
         </template>
@@ -29,7 +29,7 @@
       </el-autocomplete>
     </el-form-item>
     <el-form-item label="车牌号">
-      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect"  popper-class="popperHide" @focus="focusFormItm('truckIdNumber')">
+      <el-autocomplete v-model="searchForm.truckIdNumber" :maxlength="8" :size="btnsize" :fetch-suggestions="(queryString, cb) => querySearch( 'truckIdNumber',queryString, cb)" placeholder="车牌号搜索" @select="handleSelect" popper-class="popperHide" @focus="focusFormItm('truckIdNumber')">
         <template slot-scope="{ item }">
           <div class="name">{{ item.truckIdNumber }}</div>
         </template>
@@ -79,7 +79,7 @@ export default {
         if (cval) {
           this.isSender = true
           this.settlementId = cval // 弹出框选择后 就根据选择切换
-          this.senderSearch = cval === 179?'load' : cval === 180 ? 'short' : 'deliver'
+          this.senderSearch = cval === 179 ? 'load' : cval === 180 ? 'short' : 'deliver'
         }
       },
       deep: true
@@ -91,9 +91,9 @@ export default {
     }
   },
   methods: {
-    focusFormItm (type) {
+    focusFormItm(type) {
       // 清空其他输入框
-        for(let item in this.searchForm) {
+      for (let item in this.searchForm) {
         if (item !== type) {
           this.$set(this.searchForm, item, '')
         }
@@ -141,11 +141,17 @@ export default {
     createFilter(queryString, type) {
       return (res) => { // 过滤
         if (type !== 'truckIdNumber') {
-          return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
-        }else {
-          return (res.truckIdNumber.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+          if (res.batchNo) {
+            return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+          }
+          // return (res.batchNo.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        } else {
+          if (res.truckIdNumber) {
+            return (res.truckIdNumber.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+          }
+          // return (res.truckIdNumber.toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
         }
-        
+
       }
     },
     handleSelect(obj) {
@@ -174,6 +180,7 @@ export default {
       padding: 0 10px;
     }
   }
+
   .clearfix:after {
     content: "";
     display: block;
@@ -183,8 +190,8 @@ export default {
     display: none !important;
     background-color: rgba(0, 0, 0, 0);
   }
-  .el-autocomplete-suggestion .el-popper{
-    display:none;
+  .el-autocomplete-suggestion .el-popper {
+    display: none;
   }
 }
 

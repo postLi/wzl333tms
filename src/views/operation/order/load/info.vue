@@ -1410,7 +1410,7 @@ export default {
       display: flex;
       flex-direction: row;
       width: 100%;
-      margin-bottom: -10px;
+      margin-bottom: -6px;
       .baseInfoCol {
         width: 20%;
       }
