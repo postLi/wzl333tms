@@ -216,6 +216,7 @@ export default {
       // 4 其余情况则直接处理
       this.convertData()
     }
+    console.log('this.thecode', this.thecode)
     // 如果有code值则请求处理
     if (this.thecode) {
 
@@ -490,25 +491,27 @@ export default {
           })
 
           // 2.合并本地剩余的数据
-          this.columns.forEach(el => {
-            // 将本地剩余的项塞到后面
-            const find = copy.filter(_el => _el.prop === el.prop)
-            if (find.length === 0) {
-              const find2 = copy.filter(_el => _el.label === find[0].label)
-              console.log('本地项，需要后台添加：', el)
-              if (find2.length === 0) {
-                copy.push(el)
-              }
-            }
-          })
+          // this.columns.forEach(el => {
+          //   // 将本地剩余的项塞到后面
+          //   const find = copy.filter(_el => _el.prop === el.prop)
+          //   if (find.length === 0) {
+          //     const find2 = copy.filter(_el => _el.label === find[0].label)
+          //     console.log('本地项，需要后台添加：', el, el.label)
+          //     if (find2.length === 0) {
+          //       copy.push(el)
+          //     }
+          //   }
+          // })
 
           copy = this.sort(copy)
 
           this.convertData(copy)
         } else {
+          console.log('fetchList1111')
           this.fetchFail()
         }
       }).catch(err => {
+        console.log('fetchList222222', err)
         this.fetchFail()
         // this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
       })
@@ -523,6 +526,7 @@ export default {
       }) */
     },
     changeTableSetup() {
+      console.log('this.thecode222222', this.thecode)
       if (this.thecode) {
         return putChangeTableSetup(this.otherinfo.orgid, this.thecode, this.formatColumn(this.showColumnData)).then(res => {
           this.$message.info('保存成功')
@@ -792,6 +796,7 @@ export default {
     },
     submitForm() {
       // 判断是否要保存数据
+      console.log('code', this.thecode)
       if (this.thecode) {
         if (!this.isloading) {
           this.isloading = true
