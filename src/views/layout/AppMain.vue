@@ -77,14 +77,16 @@ export default {
   .warnalert {
     position: fixed;
     width: calc(100% - 50px);
-    z-index: 2;
+    z-index: 3;
+    
   }
 }
 
 .warnalert {
   position: fixed;
   width: calc(100% - 165px);
-  z-index: 2;
+  z-index: 3;
+  opacity: 0.9;
   a{
     color: #409eff;
     font-size: 14px;
