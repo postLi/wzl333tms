@@ -360,6 +360,7 @@
 </template>
 <script>
 import { getAllSetting, putSetting, putResetSetting } from '@/api/company/systemSetup'
+import { objectMerge2 } from '@/utils/'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
@@ -403,141 +404,141 @@ export default {
       fieldSetup: [],
       activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8', 'setup9'],
       shipField: [{
-          key: 'shipFromCityName',
-          value: '0',
-          name: '发站'
-        },
-        {
-          key: 'shipToOrgid',
-          value: '0',
-          name: '目的网点'
-        },
-        {
-          key: 'shipGoodsSn',
-          value: '0',
-          name: '货号'
-        },
-        {
-          key: 'shipSenderId',
-          value: '0',
-          name: '发货方'
-        },
-        {
-          key: 'shipSenderName',
-          value: '0',
-          name: '发货人'
-        },
-        {
-          key: 'shipSenderMobile',
-          value: '0',
-          name: '发货人电话'
-        },
-        {
-          key: 'shipSenderAddress',
-          value: '0',
-          name: '发货地址'
-        },
-        {
-          key: 'shipReceiverId',
-          value: '0',
-          name: '收货方'
-        },
-        {
-          key: 'shipReceiverName',
-          value: '0',
-          name: '收货人'
-        },
-        {
-          key: 'shipReceiverMobile',
-          value: '0',
-          name: '收货人电话'
-        },
-        {
-          key: 'shipReceiverAddress',
-          value: '0',
-          name: '收货地址'
-        },
-        {
-          key: 'cargoWeight',
-          value: '0',
-          name: '重量'
-        },
-        {
-          key: 'cargoVolume',
-          value: '0',
-          name: '体积'
-        },
-        {
-          key: 'cargoPack',
-          value: '0',
-          name: '包装'
-        },
-        {
-          key: 'brokerageFee',
-          value: '0',
-          name: '回扣'
-        },
-        {
-          key: 'deliveryFee',
-          value: '0',
-          name: '送货费'
-        },
+        key: 'shipFromCityName',
+        value: '0',
+        name: '发站'
+      },
+      {
+        key: 'shipToOrgid',
+        value: '0',
+        name: '目的网点'
+      },
+      {
+        key: 'shipGoodsSn',
+        value: '0',
+        name: '货号'
+      },
+      {
+        key: 'shipSenderId',
+        value: '0',
+        name: '发货方'
+      },
+      {
+        key: 'shipSenderName',
+        value: '0',
+        name: '发货人'
+      },
+      {
+        key: 'shipSenderMobile',
+        value: '0',
+        name: '发货人电话'
+      },
+      {
+        key: 'shipSenderAddress',
+        value: '0',
+        name: '发货地址'
+      },
+      {
+        key: 'shipReceiverId',
+        value: '0',
+        name: '收货方'
+      },
+      {
+        key: 'shipReceiverName',
+        value: '0',
+        name: '收货人'
+      },
+      {
+        key: 'shipReceiverMobile',
+        value: '0',
+        name: '收货人电话'
+      },
+      {
+        key: 'shipReceiverAddress',
+        value: '0',
+        name: '收货地址'
+      },
+      {
+        key: 'cargoWeight',
+        value: '0',
+        name: '重量'
+      },
+      {
+        key: 'cargoVolume',
+        value: '0',
+        name: '体积'
+      },
+      {
+        key: 'cargoPack',
+        value: '0',
+        name: '包装'
+      },
+      {
+        key: 'brokerageFee',
+        value: '0',
+        name: '回扣'
+      },
+      {
+        key: 'deliveryFee',
+        value: '0',
+        name: '送货费'
+      },
 
         /*         {
                   key: 'productPrice',
                   value: '0',
                   name: '声明价值'
                 }, */
-        {
-          key: 'insuranceFee',
-          value: '0',
-          name: '保险费'
-        },
-        {
-          key: 'handlingFee',
-          value: '0',
-          name: '装卸费'
-        },
-        {
-          key: 'packageFee',
-          value: '0',
-          name: '包装费'
-        },
-        {
-          key: 'pickupFee',
-          value: '0',
-          name: '提货费'
-        },
-        {
-          key: 'amountFee',
-          value: '0',
-          name: '件数单价'
-        },
-        {
-          key: 'weightFee',
-          value: '0',
-          name: '重量单价'
-        },
-        {
-          key: 'volumeFee',
-          value: '0',
-          name: '体积单价'
-        },
-        {
-          key: 'shipReceiptSn',
-          value: '0',
-          name: '回单号'
-        },
-        {
-          key: 'shipCustomerNumber',
-          value: '0',
-          name: '客户单号'
-        },
-        {
-          key: 'shipUserid',
-          value: '0',
-          name: '业务员'
-        }
+      {
+        key: 'insuranceFee',
+        value: '0',
+        name: '保险费'
+      },
+      {
+        key: 'handlingFee',
+        value: '0',
+        name: '装卸费'
+      },
+      {
+        key: 'packageFee',
+        value: '0',
+        name: '包装费'
+      },
+      {
+        key: 'pickupFee',
+        value: '0',
+        name: '提货费'
+      },
+      {
+        key: 'amountFee',
+        value: '0',
+        name: '件数单价'
+      },
+      {
+        key: 'weightFee',
+        value: '0',
+        name: '重量单价'
+      },
+      {
+        key: 'volumeFee',
+        value: '0',
+        name: '体积单价'
+      },
+      {
+        key: 'shipReceiptSn',
+        value: '0',
+        name: '回单号'
+      },
+      {
+        key: 'shipCustomerNumber',
+        value: '0',
+        name: '客户单号'
+      },
+      {
+        key: 'shipUserid',
+        value: '0',
+        name: '业务员'
+      }
       ],
       vouchers: [{
         value: '1',
@@ -547,13 +548,13 @@ export default {
         label: '不需要'
       }],
       canSwitchs: [
-      {
-        value: '0',
-        label: '不可以'
-      },{
-        value: '1',
-        label: '可以'
-      }],
+        {
+          value: '0',
+          label: '不可以'
+        }, {
+          value: '1',
+          label: '可以'
+        }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -687,7 +688,7 @@ export default {
           this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
         }
         if (data.grossMargin) {
-          for (let item in data.grossMargin) {
+          for (const item in data.grossMargin) {
             this.$set(this.form.grossMargin, item, data.grossMargin[item])
           }
         }
@@ -774,13 +775,14 @@ export default {
         type,
         module
       }).then(data => {
-        this.form = data
+        // 复制一份副本数据，避免数据操作互相影响
+        this.form = objectMerge2({}, data)
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
         for (const item in this.form.printSetting) {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
         }
-        this.$set(this.form, 'switchUser',{
+        this.$set(this.form, 'switchUser', {
           canSwitch: ''
         })
         this.$set(this.form, 'financeSetting', {
@@ -849,7 +851,6 @@ export default {
       const form = Object.assign({}, this.form)
       form.printSetting = Object.assign({}, formPrintSetting)
 
-
       const finance = {
         orgid: form.orgid,
         module: 'finance',
@@ -862,7 +863,7 @@ export default {
         upLoadLogo: form.uploadLogo,
         switchUser: form.switchUser
       }
-     console.warn('提交 form,finance,base', form, finance, base)
+      console.warn('提交 form,finance,base', form, finance, base)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
