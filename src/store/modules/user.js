@@ -3,7 +3,8 @@ import {
   login,
   logout,
   getInfo,
-  refreshToken
+  refreshToken,
+  loginOhter
 } from '@/api/login'
 import Cookies from 'js-cookie'
 import {
@@ -101,6 +102,41 @@ const user = {
         })
       })
     },
+    OtherLogin({
+      commit
+    }, userInfo) {
+      const username = userInfo.switch_username.trim()
+      return new Promise((resolve, reject) => {
+        loginOhter(userInfo).then(response => {
+          const data = response
+          console.log('OtherLogin data', data)
+          if (location.href.indexOf('192.168.1') !== -1) {
+            const token = data.access_token
+            window.localStorage.ANFA_tms_login = JSON.stringify(data)
+            const obj = localStorage.lastTmsToken || ''
+            const arr = obj.split(',')
+            if (arr.length < 5) {
+              arr.push(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
+            } else {
+              arr.unshift(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
+              arr.splice(4, 1)
+            }
+            localStorage.lastTmsToken = arr.join(',')
+          }
+
+          setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
+          setUsername(username)
+          setOrgId(userInfo.accNum)
+          commit('SET_TOKEN', data.access_token)
+          commit('SET_USERNAME', username)
+          Cookies.set(refreshTimeKey, +new Date())
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
 
     // 前端设置token信息
     FeLogin({
@@ -143,14 +179,22 @@ const user = {
           })
           const pro2 = getAllSetting({
             orgid: data.orgid,
-            type: 'financeSetting',
+            type: '',
             module: 'finance'
           })
-          Promise.all([pro1, pro2]).then(resArr => {
+          const pro3 = getAllSetting({
+            orgid: data.orgid,
+            type: '',
+            module: 'base'
+          })
+          Promise.all([pro1, pro2, pro3]).then(resArr => {
             const res = resArr[0]
+            console.warn('resArr::::::', resArr)
 
             data.systemSetup = res
             data.systemSetup.financeSetting = resArr[1].financeSetting
+            data.systemSetup.uploadLogo = resArr[2].uploadLogo
+            data.systemSetup.switchUser = resArr[2].switchUser
             commit('SET_OTHERINFO', data)
 
             // 补充公司信息

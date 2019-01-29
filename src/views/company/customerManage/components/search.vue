@@ -6,7 +6,7 @@
         </el-form-item>
         <el-form-item :label="title+'货人'">
             <el-input
-                :placeholder="title+'货方或/'+title+'货人'"
+                :placeholder="title+'货方或'+title+'货人'"
                 v-model="searchForm.name"
                 maxlength="15"
                 clearable>
@@ -22,7 +22,6 @@
             </el-input>
         </el-form-item>
       </div>
-      
       <el-form-item class="staff_searchinfo--btn">
           <el-button type="primary" @click="onSubmit">查询</el-button><el-button type="info" @click="clearForm" plain>清空</el-button>
       </el-form-item>

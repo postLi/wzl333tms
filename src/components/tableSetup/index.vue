@@ -31,7 +31,7 @@
           },
           setColumn(obj) { // 重绘表格列表
             this.tableColumn = obj
-            this.tablekey = Math.random() // 刷新表格视图
+            this.tablekey = new Date().getTime() // 刷新表格视图
           }
         }
      }
@@ -218,6 +218,7 @@ export default {
     }
     // 如果有code值则请求处理
     if (this.thecode) {
+
       this.fetchTableSetup()
       if (!window['tablesetup' + this.thecode]) {
         window['tablesetup' + this.thecode] = true
@@ -324,7 +325,6 @@ export default {
       const getColumnListLen = _ => {
         return _data.length
       }
-
       this.orgColumnData = generateData()
       this.columnData = generateData()
       this.orgShowColumnData = generateRightData()
@@ -423,6 +423,7 @@ export default {
           // 如果找不到，表示需要插入
             if (len === 0) {
             // if (true) {
+            console.warn('data[0]', data[0])
               const userId = data[0].userId
               const orgId = data[0].orgId
               const companyId = data[0].companyId
@@ -509,6 +510,7 @@ export default {
         }
       }).catch(err => {
         this.fetchFail()
+        // this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
       })
 
       /* return getTableSetup(this.otherinfo.orgid, this.thecode).then(res => {

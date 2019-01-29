@@ -802,6 +802,7 @@ export default {
         })
     },
     setData(orgFirstScheme) { // 为存为配载单设置提交给后台的数据结构
+      console.log('setData', orgFirstScheme, this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList, this.intelligentData.dataList)
       this.loadDataObject = {
         schemeGroup: '',
         tmsLoadSchemeDetailDtoList: []
@@ -849,6 +850,7 @@ export default {
           em.loadVolume = em.repertoryVolume
         })
         if (orgFirstScheme) {
+          console.log('this.orgFirstScheme1111', this.orgFirstScheme)
           this.orgFirstScheme[0].tmsLoadSchemeDetailDtoList.forEach((em, emindex) => {
             if (emindex === index) {
               this.$set(data, 'tmsOrderLoadDetailsList', em.carLoadDetail)
@@ -1110,7 +1112,7 @@ export default {
                   schemeGroup: this.tabInfo.object.schemeGroup,
                   orgid: this.otherinfo.orgid
                 }
-                deleteScheme(obj).then(data => {}).catch(err => { this._handlerCatchMsg(err) })
+                deleteScheme(obj).then(data => {}).catch(err => { this._handlerCatchMsg(err) }) // 删除当前方案
               }
               this.$router.push({ path: '/operation/order/arteryDepart', query: { pageKey: new Date().getTime() } })
               this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')

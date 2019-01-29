@@ -31,7 +31,7 @@
             fixed
             sortable
             type="selection"
-            width="50">
+            width="70">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column

@@ -7,162 +7,173 @@
         <div slot="content">功能：安排车辆上门提货
           <!-- <br/>操作：提货管理-新增提货 -->
         </div>
-        <router-link to="/operation/order/pickUp" class="flowitem send-01tihuo">
+        <a @click="gotoPage('/operation/order/pickUp', 'ORDER_PICK')" class="flowitem send-01tihuo">
           <i class="flowicon tihuo"></i>
           <p>提货</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
         <div slot="content">功能：批量导入运单。
           <!-- <br/>操作：订单管理-批量开单 -->
         </div>
-        <router-link to="/operation/order/manage/import" class="flowitem send-02daoru">
+        <a @click="gotoPage('/operation/order/manage/import', 'ORDERMANAGER_IMPLIST')" class="flowitem send-02daoru">
           <i class="flowicon daoru"></i>
           <p>运单导入</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
         <div slot="content">功能：客户通过网络，电话下单。
           <!-- <br/>操作：订单管理-客服，网络订单 -->
         </div>
-        <router-link to="/operation/order/manage/service" class="flowitem send-03dingdna">
+        <a @click="gotoPage('/operation/order/manage/service', 'ORDERMANAGER_LIST')" class="flowitem send-03dingdna">
           <i class="flowicon dingdna"></i>
           <p>客户订单</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
         <div slot="content">功能：发货方，承运方之间的凭证
           <!-- <br/>操作：订单管理-预开单 -->
         </div>
-        <router-link to="/operation/order/orderManage/All" class="flowitem send-04yundan">
+        <a @click="gotoPage('/operation/order/orderManage/All', 'ORDER_ALL')" class="flowitem send-04yundan">
           <i class="flowicon yundan"></i>
           <p>正式运单</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
-        <div slot="content"><!-- 功能：发货方，承运方之间凭证。 -->功能：将运单转给第三方承运商
+        <div slot="content">
+          <!-- 功能：发货方，承运方之间凭证。 -->功能：将运单转给第三方承运商
           <!-- <br/>操作：首页，运单列表，创建运单。 -->
         </div>
-        <router-link to="/operation/order/transfer/transfered" class="flowitem send-04zhongzhuan">
+        <a @click="gotoPage('/operation/order/transfer/transfered', 'TRANSFER_ALREADY')" class="flowitem send-04zhongzhuan">
           <i class="flowicon zhongzhuan"></i>
           <p>中转外发</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
         <div slot="content">功能：开单收货，网点到货形成库存
           <!-- <br/>操作：运营管理-库存管理。 -->
         </div>
-        <router-link to="/operation/order/repertory/deliver" class="flowitem send-06fahuokc">
+        <a @click="gotoPage('/operation/order/repertory/deliver', 'ORDER_REPER_SEND')" class="flowitem send-06fahuokc">
           <i class="flowicon fahuokc"></i>
           <p>发货库存</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip placement="top">
         <div slot="content">功能：同个区域不同网点货物配载到分拨中心。
           <!-- <br/>操作：运营管理-短驳管理。 -->
         </div>
-        <router-link to="/operation/order/shortDepart/arrival" class="flowitem send-07duanbo">
+        <a @click="gotoPage('/operation/order/shortDepart/arrival', 'LOAD_DBARRIVAL')" class="flowitem send-07duanbo">
           <i class="flowicon duanbo"></i>
           <p>短驳接收</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：在公司网点间走货运输" placement="top">
-        <router-link to="/operation/order/arteryDepart" class="flowitem send-08peizai">
+        <a @click="gotoPage('/operation/order/arteryDepart', 'ORDER_ARTER')" class="flowitem send-08peizai">
           <i class="flowicon peizai"></i>
           <p>配载发车</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <!-- 中间 -->
       <el-tooltip content="中转跟踪" placement="top">
-        <router-link to="/operation/order/track/transfer" class="flow-add-1">中转跟踪</router-link>
+        <a @click="gotoPage('/operation/order/track/transfer', 'LOADTRACK4')" class="flow-add-1">中转跟踪</a>
       </el-tooltip>
       <el-tooltip content="智能在途跟踪" placement="top">
-        <router-link to="/operation/order/track/artery" class="flow-add-2">智能在途跟踪</router-link>
+        <a @click="gotoPage('/operation/order/track/artery', 'LOADTRACK1')" class="flow-add-2">智能在途跟踪</a>
       </el-tooltip>
       <!-- 第二块 -->
       <!-- <h3 class="thetitle">收货网点</h3> -->
       <el-tooltip content="功能：接收其他网点发运到本网点的货物，以车为单位" placement="top">
-        <router-link to="/operation/order/arteryDelivery" class="flowitem receive-09daohuo">
+        <a @click="gotoPage('/operation/order/arteryDelivery', 'GX_ARRIVE_LIST')" class="flowitem receive-09daohuo">
           <i class="flowicon daohuo"></i>
           <p>到车/到货</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：将运单转给第三方承运商" placement="top">
-        <router-link to="/operation/order/transfer/transfered" class="flowitem receive-04zhongzhuan">
+        <a @click="gotoPage('/operation/order/transfer/transfered', 'TRANSFER_ALREADY')" class="flowitem receive-04zhongzhuan">
           <i class="flowicon zhongzhuan"></i>
           <p>中转外发</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：开单,网点接货,并未配载出库" placement="top">
-        <router-link to="/operation/order/repertory/arrival" class="flowitem receive-10kucun">
+        <a @click="gotoPage('/operation/order/repertory/arrival', 'ORDER_REPER_ARRIVE')" class="flowitem receive-10kucun">
           <i class="flowicon kucun"></i>
           <p>到货库存</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：通过短驳把货物运输到配送网点" placement="top">
-        <router-link to="/operation/order/shortDepart/deliver" class="flowitem receive-11duobofache">
+        <a @click="gotoPage('/operation/order/shortDepart/deliver', 'ORDER_SHORT')" class="flowitem receive-11duobofache">
           <i class="flowicon duobofache"></i>
           <p>短驳发车</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：对自提运单进行签收" placement="top">
-        <router-link to="/operation/order/sign/Pick" class="flowitem receive-12ziti">
+        <a @click="gotoPage('/operation/order/sign/Pick', 'ORDERSIGN1')" class="flowitem receive-12ziti">
           <i class="flowicon ziti"></i>
           <p>自提</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：目的网点对需要送货上门的运单安排送货" placement="top">
-        <router-link to="/operation/order/deliverManage" class="flowitem receive-13songhuosm">
+        <a @click="gotoPage('/operation/order/deliverManage', 'ORDER_DELIVER')" class="flowitem receive-13songhuosm">
           <i class="flowicon songhuosm"></i>
           <p>送货上门</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：对自提，送货上门，中转外发运单进行签收" placement="top">
-        <router-link to="/operation/order/sign/Pick" class="flowitem receive-14qianshou">
+        <a @click="gotoPage('/operation/order/sign/Pick', 'ORDERSIGN1')" class="flowitem receive-14qianshou">
           <i class="flowicon qianshou"></i>
           <p>签收</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <!-- 第三块 -->
       <!-- <h3 class="thetitle">回单管理</h3> -->
       <el-tooltip content="功能：开单网点把回单发放给客户" placement="bottom">
-        <router-link to="/operation/order/receipt/Grant" class="flowitem receipt-18fafang">
+        <a @click="gotoPage('/operation/order/receipt/Grant', 'RECEIPT4')" class="flowitem receipt-18fafang">
           <i class="flowicon fafang"></i>
           <p>回单发放</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：对目的网点寄回的回单做接收" placement="top">
-        <router-link to="/operation/order/receipt/Accept" class="flowitem receipt-17jieshou">
+        <a @click="gotoPage('/operation/order/receipt/Accept', 'RECEIPT3')" class="flowitem receipt-17jieshou">
           <i class="flowicon jieshou"></i>
           <p>回单接收</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：目的网点把回单寄到开单网点" placement="bottom">
-        <router-link to="/operation/order/receipt/Send" class="flowitem receipt-16jichu">
+        <a @click="gotoPage('/operation/order/receipt/Send', 'RECEIPT2')" class="flowitem receipt-16jichu">
           <i class="flowicon jichu"></i>
           <p>回单寄出</p>
-        </router-link>
+        </a>
       </el-tooltip>
       <el-tooltip content="功能：从收货人处回收回单" placement="top">
-        <router-link to="/operation/order/receipt/Recycle" class="flowitem receipt-15huishou">
+        <a @click="gotoPage('/operation/order/receipt/Recycle', 'RECEIPT1')" class="flowitem receipt-15huishou">
           <i class="flowicon huishou"></i>
           <p>回单回收</p>
-        </router-link>
+        </a>
       </el-tooltip>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'dashboard',
-
   computed: {
     ...mapGetters([
       'name',
       'roles'
     ])
+  },
+  methods: {
+    gotoPage (path, code) {
+      if (code) {
+       if (!this.$_has_permission(code) ){
+        this.$message.warning('您没有权限，请联系管理员！')
+        this.$router.push({path: '/'})
+        return false
+       }
+      }
+      this.$router.push({path: path})
+    }
   }
 }
 
@@ -177,6 +188,8 @@ export default {
     line-height: 46px;
   }
 }
+
+
 
 .index-flow {
   width: 1171px;

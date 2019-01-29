@@ -381,7 +381,7 @@ export default {
         this.form.signCocumentTypeId = 96
       }
 
-      this.form.signName = this.repertoryId.receiver_customer_name
+      this.form.signName = this.repertoryId.signName || this.repertoryId.receiver_customer_name
     },
     reset() {
       this.$refs['ruleForm'].resetFields()

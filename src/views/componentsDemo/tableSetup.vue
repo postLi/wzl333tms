@@ -48,7 +48,7 @@
 	    &nbsp;&nbsp;&nbsp;&nbsp;}, <br>
 	    &nbsp;&nbsp;&nbsp;&nbsp;setColumn(obj) { // 重绘表格列表 <br>
 	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.tableColumn = obj <br>
-	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.tablekey = Math.random() // 刷新表格视图 <br>
+	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.tablekey = new Date().getTime() // 刷新表格视图 <br>
 	    &nbsp;&nbsp;&nbsp;&nbsp;} <br>
 	    &nbsp;&nbsp;} <br>
 	     } <br>

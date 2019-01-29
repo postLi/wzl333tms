@@ -229,18 +229,21 @@ export default {
     // 保存上传
     handleUpload(options) {
       return new Promise((resolve, reject) => {
-        lrz(options.file, {
-          width: 1024
-        }).then(rst => {
-          const form = new FormData()
-          const url = this.uploadUrl
+         var name = options.file.name;
+      name = !name ? Math.random()+'.jpg' : name;
+      // 表单域 file 必须为最后一个表单域；
+      var type = name.match(/([^\.]+)$/);
+      type = type ? '.' + type[1] : ''
 
+      let fn = (file)=>{
+        const form = new FormData()
+          const url = this.uploadUrl
           form.append('key', this.upload.key)
           form.append('success_action_status', '201')
           form.append('OSSAccessKeyId', this.upload.OSSAccessKeyId)
           form.append('policy', this.upload.policy)
           form.append('signature', this.upload.signature)
-          form.append('file', rst.file)
+          form.append('file', file)
 
           fetch.post(url, form, {
             headers: { 'Content-Type': 'multipart/form-data' }
@@ -250,10 +253,19 @@ export default {
             reject(err)
             this._handlerCatchMsg(err, '上传失败:')
           })
+      }
+      if(/\.jpe?g/.test(type)){
+        lrz(options.file, {
+          width: 1024
+        }).then(rst => {
+          fn(rst.file)
         }).catch(err => {
           reject(err)
           this._handlerCatchMsg(err, '上传失败：')
         })
+         } else {
+          fn(options.file)
+      }
       })
     },
     beforeUpload(file) {

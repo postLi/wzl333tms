@@ -1,5 +1,7 @@
 import fetch from '@/utils/fetch'
-import { resolve } from 'url'
+import {
+  resolve
+} from 'url'
 /**
  * 请求的参数
  * {

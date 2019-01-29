@@ -12,7 +12,7 @@
           <el-input v-model.trim="form.carrierName" :maxlength="20" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="承运商电话" prop="carrierMobile">
-          <el-input v-numberOnly v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model="form.carrierMobile"  :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="负责人" prop="liableName">
           <el-input v-model="form.liableName" :maxlength="25" auto-complete="off"></el-input>
@@ -101,6 +101,7 @@ export default {
     ])
   },
   data() {
+
     const _this = this
     var validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -113,20 +114,28 @@ export default {
       }
     }
 
-    const validateFormMobile = function(rule, value, callback) {
-      if (REGEX.MOBILE.test(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (REGEX.MOBILE.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
     const validateFormNumber = function(rule, value, callback) {
       console.log('rule:', rule)
       _this.form[rule.field] = value.replace(REGEX.NO_NUMBER, '')
       callback()
     }
-
+    const validateFormMobile = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (REGEX.MOBILE.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入有效的手机号码'))
+      }
+    }
     return {
       form: {
         'carrierAddr': '', // 地址 50
@@ -151,9 +160,10 @@ export default {
         orgid: [
           { required: true, message: '请选择所属机构' }
         ],
-        carrierMobile: [
-          { required: true, message: '请输入承运商电话' }
-        ],
+        carrierMobile: [{ required: true, trigger: 'change', validator: validateFormMobile }],
+        // carrierMobile: [
+        //   { required: true, message: '请输入承运商电话' }
+        // ],
         liablePhone: [
           // { required: true, message: '请输入负责人手机号码' }
           // { validator: validateFormNumber, trigger: 'change'}

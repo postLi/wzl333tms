@@ -641,5 +641,19 @@ export default {
    */
   getLastToCities(data) {
     return fetch.post('/api-order/order/recently/v1/findRecentlyListByQuery', data)
+  },
+  // 获取置顶的网点
+  getFixedOrg(orgId) {
+    return fetch.post('/api-system/system/tmssystemorgtop/v1.5/list', {
+      orgId
+    })
+  },
+  // 新增置顶的网点
+  postFixedOrg(orgid) {
+    return fetch.post('/api-system/system/tmssystemorgtop/v1.5/' + orgid)
+  },
+  // 删除置顶的网点
+  deleteFixedOrg(id) {
+    return fetch.delete('/api-system/system/tmssystemorgtop/v1.5/' + id)
   }
 }

@@ -93,7 +93,7 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 // import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
@@ -144,49 +144,49 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '运单号',
-        prop: 'shipSn',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '开单网点',
-        prop: 'shipFromOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '核销状态',
-        prop: 'totalStatusCn',
-        width: '100'
-      }, {
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '开单网点',
+          prop: 'shipFromOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '核销状态',
+          prop: 'totalStatusCn',
+          width: '100'
+        }, {
           label: '签收状态',
           prop: 'signStatus',
           width: '100',
           fixed: false
         },
-      {
-        label: '发货人',
-        prop: 'shipSenderName',
-        width: '80',
-        fixed: false
-      },
-      {
-        label: '收货人',
-        prop: 'shipReceiverName',
-        width: '80',
-        fixed: false
-      },
-      {
-        label: '签收状态',
-        prop: 'signStatus',
-        width: '100',
-        fixed: false
-      },
-      {
-        'label': '现付',
-        'prop': 'nowPayFee'
-      }, {
+        {
+          label: '发货人',
+          prop: 'shipSenderName',
+          width: '80',
+          fixed: false
+        },
+        {
+          label: '收货人',
+          prop: 'shipReceiverName',
+          width: '80',
+          fixed: false
+        },
+        {
+          label: '签收状态',
+          prop: 'signStatus',
+          width: '100',
+          fixed: false
+        },
+        {
+          'label': '现付',
+          'prop': 'nowPayFee'
+        }, {
           'label': '现付核销状态',
           width: '120',
           'prop': 'nowPayStateCn'
@@ -264,19 +264,19 @@ export default {
             return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
           }
         },
-      {
-        label: '实际核销回单付',
-        prop: 'inputReceiptpayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        {
+          label: '实际核销回单付',
+          prop: 'inputReceiptpayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.inputReceiptpayFee
           }
-      },
-      {
-        'label': '月结',
-        'prop': 'monthpayFee'
-      }, {
+        },
+        {
+          'label': '月结',
+          'prop': 'monthpayFee'
+        }, {
           'label': '月结核销状态',
           width: '110',
           'prop': 'monthpayStateCn'
@@ -295,20 +295,20 @@ export default {
             return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
           }
         },
-      {
-        label: '实际核销月付',
-        prop: 'inputMonthpayFee',
-        fixed: false,
-        expand: true,
-        slot: (scope) => {
+        {
+          label: '实际核销月付',
+          prop: 'inputMonthpayFee',
+          fixed: false,
+          expand: true,
+          slot: (scope) => {
             return scope.row.inputMonthpayFee
           }
-      },
+        },
 
-      {
-        'label': '异动',
-        'prop': 'changeFee'
-      }, {
+        {
+          'label': '异动',
+          'prop': 'changeFee'
+        }, {
           'label': '异动核销状态',
           width: '100',
           'prop': 'changeStateCn'
@@ -342,70 +342,71 @@ export default {
           'prop': 'receiverCustomerUnit'
         },
 
-      {
-        label: '货号',
-        prop: 'shipGoodsSn',
-        width: '120',
-        fixed: false
-      },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '120',
+          fixed: false
+        },
 
-      {
-        label: '开单时间',
-        prop: 'createTime',
-        width: '150',
-        fixed: false,
-        slot: (scope) => {
+        {
+          label: '开单时间',
+          prop: 'createTime',
+          width: '150',
+          fixed: false,
+          slot: (scope) => {
             return `${parseTime(scope.row.createTime)}`
           }
-      },
-      {
-        label: '发站',
-        prop: 'shipFromCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '到站',
-        prop: 'shipToCityName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '件数',
-        prop: 'cargoAmount',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '重量',
-        prop: 'cargoWeight',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '体积',
-        prop: 'cargoVolume',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '运单备注',
-        prop: 'shipRemarks',
-        width: '120',
-        fixed: false
-      }
+        },
+        {
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '重量',
+          prop: 'cargoWeight',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '体积',
+          prop: 'cargoVolume',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '运单备注',
+          prop: 'shipRemarks',
+          width: '120',
+          fixed: false
+        }
       ]
     }
   },
   computed: {
     getRouteInfo() {
       if (this.$route.query.searchQuery) {
+        console.log('核销页面接收到的参数：searchQuery', JSON.parse(this.$route.query.searchQuery))
         return JSON.parse(this.$route.query.searchQuery)
       } else {
 
@@ -442,9 +443,10 @@ export default {
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
-        this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
-        this.$set(this.searchQuery.vo, 'status', '')
+        this.searchQuery = Object.assign({}, this.getRouteInfo)
+        // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+        // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
+        // this.$set(this.searchQuery.vo, 'status', this.getRouteInfo.vo.status)
         this.isFresh = false
       }
     },
@@ -475,6 +477,7 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       if (!this.isFresh) {
+        console.log('getList:', this.searchQuery)
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
@@ -554,7 +557,7 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-      this.tablekey = Math.random()
+      this.tablekey = new Date().getTime()
     },
     doAction(type) {
       switch (type) {
@@ -861,10 +864,22 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      return getSummaries(param)
+      let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      return getSummaries(param)
+      let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     setHeader(h, { column }) {
       return h('el-button', {

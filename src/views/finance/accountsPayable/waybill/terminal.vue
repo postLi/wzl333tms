@@ -1,20 +1,19 @@
 <template>
-  <!-- 回扣 -->
+  <!-- 终端送货费 -->
   <div class="tab-content" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :isTerminal="true" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:HANDLING_PAY2>核销</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:HANDLING_PRINT2>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:HANDLING_EXPORT2>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:SHIP_PAYLIST7>核销</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:SHIP_PAYLIST7_PRINT>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:SHIP_PAYLIST7_EXPORT>导出</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;"
-         :show-summary="true" :summary-method="getSummaries">
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail" :show-summary="true" :summary-method="getSummaries">
           <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -46,7 +45,7 @@ import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { payListByHandlingFee } from '@/api/finance/accountsPayable'
+import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
@@ -58,13 +57,12 @@ export default {
   data() {
     return {
       btnsize: 'mini',
-      selectListBatchNos: [],
+      feeType: 49,
+      selectListShipSns: [],
       searchQuery: {
         currentPage: 1,
         pageSize: 100,
-        vo: {
-          sign: 4
-        }
+        vo: {}
       },
       tablekey: 0,
       total: 0,
@@ -73,127 +71,166 @@ export default {
       setupTableVisible: false,
       tableColumn: [{
           label: '序号',
-          prop: 'id',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '150',
+          prop: 'number',
+          width: '60',
+          slot: (scope)=> {
+             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          },
+          fixed: true
+        },{
+          label: '运单号',
+          prop: 'shipSn',
+          width: '120',
           fixed: true
         },
         {
-          label: '发车类型',
-          prop: 'loadTypeName',
+          label: '开单日期',
+          prop: 'createTime',
+          width: '160',
+          slot: (scope) => {
+            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          },
+          fixed: false
+        },
+        {
+          label: '货号',
+          prop: 'shipGoodsSn',
+          width: '150',
+          fixed: false
+        },
+        {
+          label: '核销状态',
+          prop: 'statusName',
           width: '90',
           fixed: true
         },
         {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '操作费',
+          label: '终端送货费',
           prop: 'fee',
-          width: '110',
-          slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
-          },
-          fixed: false
-        },
-        {
-          label: '已核销操作费',
-          prop: 'paidFee',
-          width: '110',
-          slot: (scope) => {
-            const row = scope.row
-            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-            return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
-          },
-          fixed: false
-        },
-        {
-          label: '未核销操作费',
-          prop: 'unpaidFee',
-          width: '110',
-          slot: (scope) => {
-            const row = scope.row
-            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-            return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
-            // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
-          fixed: false
-        },
-        {
-          label: '已付（应付）',
-          prop: 'pandHandlingFeePay',
           width: '120',
-          slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
-          },
           fixed: false
         },
         {
-          label: '备注',
-          prop: 'remark',
+          label: '已核销终端送货费',
+          prop: 'closeFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+          }
+        },
+        {
+          label: '未核销终端送货费',
+          prop: 'unpaidFee',
+          width: '120',
+          fixed: false,
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+          }
+        },
+        {
+          label: '实收送货费',
+          prop: 'fee',
+          width: '120',
+          fixed: false
+        },
+         {
+          label: '实付送货费',
+          prop: 'deliveryFeeToPay',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '差额',
+          prop: 'deliveryFeeDiffer',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '发站',
+          prop: 'shipFromCityName',
+          width: '140',
+          fixed: false
+        },
+        {
+          label: '到站',
+          prop: 'shipToCityName',
+          width: '140',
+          fixed: false
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '件数',
+          prop: 'cargoAmount',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '重量(kg)',
+          prop: 'cargoWeight',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '体积(方)',
+          prop: 'cargoVolume',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '运单状态',
+          prop: 'shipStatusName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '送货车牌',
+          prop: 'truckIdNumber',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '送货时间',
+          prop: 'deliveryTime',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '送货司机',
+          prop: 'driverName',
+          width: '100',
           fixed: false
         }
       ],
-      selectedDataList: []
+      selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
-    getSearchParam(obj) { // 获取搜索条件
+    getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType) // 8-应付终端送货费 10-实际提货费 13-其他费用支出 49-终端送货费
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
-    handlePageChange(obj) { // 翻页
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
-    fetchList() { // 调列表接口
+    fetchList() {
+      this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.loading = true
-      this.searchQuery.vo.sign = this.$options.data().searchQuery.vo.sign
-      return payListByHandlingFee(this.searchQuery).then(data => {
+      return postFindListByFeeType(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
-          this.dataList.forEach((e, index) => {
-            e.fee = e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay
-            e.paidFee = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
-            e.unpaidFee = e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay
-            e.pandHandlingFeePay = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
-          })
           this.total = data.total
         }
         this.loading = false
@@ -202,6 +239,7 @@ export default {
         this._handlerCatchMsg(err)
       })
     },
+    setTable() {},
     doAction(type) {
       switch (type) {
         case 'count':
@@ -211,26 +249,26 @@ export default {
           SaveAsFile({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '应付账款-操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-终端送货费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
-            name: '应付账款-操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+            name: '运单核销-终端送货费'
           })
           break
       }
     },
     count() {
       this.$router.push({
-        path: '/finance/accountsLoad',
+        path: '../../accountsLoad',
         query: {
-          tab: '操作费核销',
-          currentPage: 'handleFee', // 本页面标识符
+          tab: '终端送货费核销',
+          currentPage: 'waybillTerminal', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
-          selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo
+          selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo
         }
       })
     },
@@ -238,11 +276,14 @@ export default {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
     getSelection(list) {
-      this.selectListBatchNos = []
+      this.selectListShipSns = []
       this.selectedDataList = list
       list.forEach((e, index) => {
-        this.selectListBatchNos.push(e.batchNo)
+        this.selectListShipSns.push(e.shipSn)
       })
+    },
+    showDetail(order) {
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
     },
     setTable() {
       this.setupTableVisible = true
@@ -254,7 +295,7 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    getSummaries (param) {
+    getSummaries(param) {
       return getSummaries(param)
     }
   }

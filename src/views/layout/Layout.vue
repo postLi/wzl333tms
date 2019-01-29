@@ -2,7 +2,7 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <div class="navbar-wrapper">
         <navbar></navbar>
-        <img src="../../assets/png/ce.png" v-show="otherinfo.isTest===1" class="navbar-wrapper-ce">
+        <img :src="defaultce" v-show="otherinfo.isTest===1" class="navbar-wrapper-ce">
     </div>
     <div class="sidebar-wrapper">
       <sidebar></sidebar>
@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      defaultce: require('../../assets/png/ce.png'),
       theRefreshKey: '',
       orderid: '',
       orderobj: {

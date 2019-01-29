@@ -3,7 +3,7 @@
       <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" status="giveoutStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
-            <el-button type="primary" :size="btnsize"  icon="el-icon-sort-up" plain @click="doAction('grant')" v-has:RECE_SENSUCCESS>回单发放</el-button>
+            <el-button type="primary" :size="btnsize"  icon="el-icon-goods" plain @click="doAction('grant')" v-has:RECE_SENSUCCESS>回单发放</el-button>
             <!-- <el-button type="primary" :size="btnsize"  @click="doAction('cancel')" plain>取消发放</el-button> -->
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP4>导出</el-button>
@@ -287,7 +287,7 @@
           :summary-method="getSumLeft"
           show-summary
            :default-sort="{prop: 'id', order: 'ascending'}" stripe>
-            <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+            <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
               <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">

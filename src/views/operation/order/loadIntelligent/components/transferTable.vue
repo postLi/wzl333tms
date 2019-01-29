@@ -277,7 +277,9 @@ export default {
       handler(cval, oval) {
         console.warn('-----获取操作费 obj 2------', cval, oval)
         // if (cval) {
-          this.countHandingFee()
+        this.countHandingFee()
+        this.$emit('loadCurTable', this.rightTable)
+        this.$emit('loadTable', this.orgRightTable)
         // }
       },
       deep: true
@@ -697,6 +699,7 @@ export default {
       //   })
       // }
       this.orgRightTable[this.truckIndex] = this.rightTable
+      console.log('-------计算操作费后-------', this.orgRightTable, this.truckIndex, this.rightTable)
     },
     calc(n) {
       return tmsMath._div(Math.round(tmsMath._mul(n, 100)), 100)

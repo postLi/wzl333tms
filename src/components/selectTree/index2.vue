@@ -1,5 +1,17 @@
 <template>
-  <el-select @visible-change="getData" collapse-tags popper-class="selectTreePop" :multiple="multiple"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+  <el-select @visible-change="getData" collapse-tags popper-class="selectTreePop selectTreePop2" :multiple="multiple"  ref="myautocomplete" :filterable="filterable" :filter-method="makefilter" :disabled="disabled" v-model="aid" class="select-tree" @change="change" @focus="focus" @blur="blur" v-bind="$attrs">
+        <el-option
+        v-if="!listdata.length"
+        v-for="item in fixeddata"
+        class="theFiexdOrgData"
+        :key="item.id"
+        :label="item.orgName"
+        :value="item.topOrgId"
+         :disabled="disabledOption.indexOf(item.topOrgId) !== -1"
+        >
+        <div class="topoption">{{ item.orgName }} <i class="el-icon-circle-close" title="取消置顶该网点" @click.prevent.stop="deleteFixed(item)"></i> </div>
+        </el-option>
+
         <el-option
         v-if="!listdata.length"
         v-for="item in openGroups"
@@ -8,7 +20,7 @@
         :value="item.id"
         :disabled="disabledOption.indexOf(item.id) !== -1"
         >
-        <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span></div>
+        <div :class="'indent indent'+item.index"><span class="query-input-myautocomplete" v-html="highLight(item,'name')"> </span><i title="置顶该网点" @click.stop.prevent="setToFixed(item)" class="el-icon-upload2"></i></div>
         </el-option>
         <el-option
         v-if="listdata.length"
@@ -26,6 +38,7 @@
 // 引入事件对象
 import { eventBus } from '@/eventBus'
 import { getAllOrgInfo } from '@/api/company/employeeManage'
+import orderManage from '@/api/operation/orderManage'
 import { mapGetters } from 'vuex'
 /**
  * 将多层级树结构展开为扁平数组，并对每个元素添加层级值index
@@ -34,6 +47,7 @@ function expandGroups(data, i) {
   let res = []
   data.map(el => {
     el.index = i
+    el.isFixedTop = false
     res.push(el)
     if (el.children) {
       res = res.concat(expandGroups(el.children, i + 1))
@@ -111,7 +125,7 @@ export default {
       this.init()
     },
     visibleChange: {
-      handler (cval, oval) {
+      handler(cval, oval) {
         if (cval) {
           this.$refs.myautocomplete.blur()
         }
@@ -142,8 +156,7 @@ export default {
     openGroups() {
       // 用来标记是第几层
       const index = 1
-      let res
-      res = expandGroups(this.groups, index)
+      const res = expandGroups(this.groups, index)
       return res
     }
   },
@@ -152,7 +165,8 @@ export default {
       groups: [],
       aid: '',
       query: '',
-      listdata: []
+      listdata: [],
+      fixeddata: []
     }
   },
   methods: {
@@ -181,13 +195,39 @@ export default {
       }
       this.eventBus.$emit('hideSupcanChart')
     },
+    getFixedData() {
+      orderManage.getFixedOrg(this.otherinfo.orgid).then(res => {
+        const data = res.data
+        this.fixeddata = data
+        console.log('fixed orgid:', data)
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
     fetchData() {
+      this.getFixedData()
       getAllOrgInfo(this.orgid || this.otherinfo.companyId).then(data => {
         this.groups = data
         this.listdata = []
       }).catch(err => {
         this._handlerCatchMsg(err)
         // this.loading = false
+      })
+    },
+    setToFixed(item) {
+      orderManage.postFixedOrg(item.id).then(res => {
+        item.isFixedTop = true
+        this.getFixedData()
+      }).catch(err => {
+        this._handlerCatchMsg(err)
+      })
+    },
+    deleteFixed(item) {
+      orderManage.deleteFixedOrg(item.id).then(res => {
+        item.isFixedTop = true
+        this.getFixedData()
+      }).catch(err => {
+        this._handlerCatchMsg(err)
       })
     },
     getData(type) {
@@ -240,6 +280,28 @@ export default {
 </script>
 
 <style lang="scss">
+.selectTreePop2{
+  .theFiexdOrgData{
+    border-bottom: 1px solid #eee;
+  }
+  .indent, .topoption{
+    position: relative;
+    &:hover{
+      .el-icon-upload2,.el-icon-circle-close{
+        display: block;
+      }
+    }
+  }
+  .el-icon-upload2,.el-icon-circle-close{
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    color: #fe0000;
+    &:hover{
+    }
+  }
+}
 .selectTreePop{
   iframe{
       position: absolute;

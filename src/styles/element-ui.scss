@@ -1,267 +1,321 @@
  //覆盖一些element-ui样式 覆盖css样式可在这里添加
-.el-upload {
-  input[type="file"] {
-    display: none !important;
-  }
-}
+ .el-upload {
+   input[type="file"] {
+     display: none !important;
+   }
+ }
 
-.el-upload__input {
-  display: none;
-}
+ .el-upload__input {
+   display: none;
+ } //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+ .el-dialog {
+   transform: none;
+   left: 0;
+   position: relative;
+   margin: 0 auto;
+ }
+ /** 空白信息提示调整 **/
 
-//暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
-.el-dialog {
-  transform: none;
-  left: 0;
-  position: relative;
-  margin: 0 auto;
-}
-/** 空白信息提示调整 **/
-.el-table__empty-text{
-  left: 500px;
-  font-size: 16px;
-}
-/* .el-table__fixed{
+ .el-table__empty-text {
+   left: 500px;
+   font-size: 16px;
+ }
+ /* .el-table__fixed{
   height: calc( 100% - 10px) !important;
 }
 .el-table__footer-wrapper~.el-table__fixed{
 
 } */
-/** 表格样式覆盖 ***/
-$bodercolor: #d0d7e5;
-.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,.el-table--border, .el-table--group,.el-table td, .el-table th.is-leaf{
-  border-color: $bodercolor;
-}
-.el-table--border::after, .el-table--group::after, .el-table::before{
-  background: $bodercolor;
-}
-.el-table--striped .el-table__body tr.el-table__row--striped.current-row td, .el-table__body tr.current-row>td, .el-table__body tr.hover-row.current-row>td, .el-table__body tr.hover-row.el-table__row--striped.current-row>td, .el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td{
-  background: #bcd6f5;
-}
+ /** 表格样式覆盖 ***/
 
-.el-table__column-resize-proxy{
-  border-left: 1px solid #409EFF;
-}
+ $bodercolor: #d0d7e5;
+ .el-table--border td,
+ .el-table--border th,
+ .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed,
+ .el-table--border,
+ .el-table--group,
+ .el-table td,
+ .el-table th.is-leaf {
+   border-color: $bodercolor;
+ }
 
-.el-table{
-  table{
-      th,td{
-          text-align:center;
-      }
-  }
-  .unauth, .red{
-      color: #ef0000;
-  }
-}
-.el-table td, .el-table th{
-  padding: 3px 0;
-}
-.el-table{
-  color: #222;
-}
-.el-table .cell{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.el-table th .cell{
-  color: #333;
-}
-.el-table .caret-wrapper{
-  height: 23px;
-}
-.el-table .sort-caret.ascending{
-  top: 0;
-}
-.el-table .sort-caret.descending{
-  bottom: 1px;
-}
-//element ui upload
-.upload-container {
-  height: 116px;
-  .el-upload {
-    width: 100%;
-    height: 100%;
-    .el-upload-dragger {
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
+ .el-table--border::after,
+ .el-table--group::after,
+ .el-table::before {
+   background: $bodercolor;
+ }
 
-.el-table thead th, .el-table thead tr{
-  background-color: #eaf0ff;  
-}
-.el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
-  background-color: #eaf0ff;
-}
-/* 手风琴样式 */
-.el-collapse-item__header{
-  background: #E9F3FA;
-  text-align: left;
-  text-indent: 40px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 12px;
-  color: #333;
-  position: relative;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.el-collapse-item__arrow{
-  position: absolute;
-  left: 12px;
-  top: 0;
-  line-height: 30px;
-  text-indent: 0;
-}
-.el-collapse-item__content{
-  padding-bottom: 10px;
-}
-// 按钮样式
-.el-button--danger.is-plain:focus,
-.el-button--danger.is-plain:active,
-.el-button--danger.is-plain{
-  color: #f56c6c;
-  background: #fff;
-  border-color: #f56c6c;
-}
-.el-button--primary.is-plain:focus,
-.el-button--primary.is-plain:active,
-.el-button--primary.is-plain{
-  color: #3e9ff1;
-  background: #fff;
-  border-color: #3e9ff1;
-}
-.el-button--success.is-plain:focus,
-.el-button--success.is-plain:active,
-.el-button--success.is-plain{
-  color:#67c23a;
-  background:#fff;
-  border-color:#67c23a;
-}
-.el-button--warning.is-plain:focus,
-.el-button--warning.is-plain:active,
-.el-button--warning.is-plain{
-  color:#e6a23c;
-  background:#fff;
-  border-color:#e6a23c;
-}
-.el-button--info.is-plain:focus,
-.el-button--info.is-plain:active,
-.el-button--info.is-plain{
-  color:#909399;
-  background:#fff;
-  border-color:#909399;
-}
-.el-form-item__label{ 
-  padding-right: 5px;
-}
-/**原生input **/
-.el-form-item__content>input, .nativeinput,.nativeinput-border{
-  -webkit-appearance: none;
-  background-color: #fff;
-  background-image: none;
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  color: #606266;
-  display: inline-block;
-  font-size: inherit;
-  height: 40px;
-  line-height: 40px;
-  outline: 0;
-  padding: 0 10px;
-  -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
-  width: 100%;
-  border-color: transparent;
-  border-radius: 0;
-  height: 28px;
-  line-height: 28px;
+ .el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+ .el-table__body tr.current-row>td,
+ .el-table__body tr.hover-row.current-row>td,
+ .el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+ .el-table__body tr.hover-row.el-table__row--striped>td,
+ .el-table__body tr.hover-row>td {
+   background: #bcd6f5;
+ }
 
-  &:hover{
-    border-color: #c0c4cc;
-  }
-  
-  &:focus{
-    border-color: #409EFF;
-    outline: 0;
-  }
-  
-}
-.is-error{
-  .nativeinput{
-    border-color: #f56c6c;
-  }
-}
-.el-form-item--mini{
-  .nativeinput{
-    font-size: 12px;
-    height: 28px;
-    line-height: 28px;
-  }
-}
-.el-input-group .nativeinput{
-  border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-.nativeinput-border{
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-}
-.el-form-item.is-error .el-form-item__content>input, .nativeinput.is-error,.nativeinput-border.is-error{
-  border-color: #f56c6c;
-}
-.el-input-group .nativeinput{
-  border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
+ .el-table__column-resize-proxy {
+   border-left: 1px solid #409EFF;
+ }
 
-.el-input-group__append, .el-input-group__prepend{
-  padding: 0 10px;
-}
-.el-input__inner{
-  padding: 0 10px;
-}
+ .el-table {
+   table {
+     th,
+     td {
+       text-align: center;
+     }
+   }
+   .unauth,
+   .red {
+     color: #ef0000;
+   }
+ }
 
-/*修改全局绿色输入框*/
-// anfa-tms\src\styles\addDot.css
-.el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus, .el-form-item.is-success .el-textarea__inner, .el-form-item.is-success .el-textarea__inner:focus {
-  border-color: #dcdfe6;
-}
-//anfa-tms\src\styles\login-index.css
-.el-input-group__prepend{
-  padding: 0;
-}
-// anfa-tms\src\styles\login-index.css
-.el-form-item__content:focus{
-  border-color:#409eff ;
-}
-// anfa-tms\src\views\operation\service\abnormal\components\search.vue
-.el-range-editor--mini.el-input__inner{
-  height: 28px;
-  width: 200px;
-}
-// anfa-tms\src\views\operation\service\controlgoods\components\search.vue
-.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
-  width:200px;
-}
+ .el-table td,
+ .el-table th {
+   padding: 3px 0;
+ }
 
-.el-tabs--border-card>.el-tabs__content{
-  padding: 10px;
-}
+ .el-table {
+   color: #222;
+ }
 
-/**
+ .el-table .cell {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+
+ .el-table th .cell {
+   color: #333;
+ }
+
+ .el-table .caret-wrapper {
+   height: 23px;
+ }
+
+ .el-table .sort-caret.ascending {
+   top: 0;
+ }
+
+ .el-table .sort-caret.descending {
+   bottom: 1px;
+ } //element ui upload
+ .upload-container {
+   height: 116px;
+   .el-upload {
+     width: 100%;
+     height: 100%;
+     .el-upload-dragger {
+       width: 100%;
+       height: 100%;
+     }
+   }
+ }
+
+ .el-table thead th,
+ .el-table thead tr {
+   background-color: #eaf0ff;
+ }
+
+ .el-select-dropdown__item.hover,
+ .el-select-dropdown__item:hover {
+   background-color: #eaf0ff;
+ }
+ /* 手风琴样式 */
+
+ .el-collapse-item__header {
+   background: #E9F3FA;
+   text-align: left;
+   text-indent: 40px;
+   height: 30px;
+   line-height: 30px;
+   font-size: 12px;
+   color: #333;
+   position: relative;
+   font-weight: bold;
+   margin-bottom: 10px;
+ }
+
+ .el-collapse-item__arrow {
+   position: absolute;
+   left: 12px;
+   top: 0;
+   line-height: 30px;
+   text-indent: 0;
+ }
+
+ .el-collapse-item__content {
+   padding-bottom: 10px;
+ } // 按钮样式
+ .el-button--danger.is-plain:focus,
+ .el-button--danger.is-plain:active,
+ .el-button--danger.is-plain {
+   color: #f56c6c;
+   background: #fff;
+   border-color: #f56c6c;
+ }
+
+ .el-button--primary.is-plain:focus,
+ .el-button--primary.is-plain:active,
+ .el-button--primary.is-plain {
+   color: #3e9ff1;
+   background: #fff;
+   border-color: #3e9ff1;
+ }
+
+ .el-button--success.is-plain:focus,
+ .el-button--success.is-plain:active,
+ .el-button--success.is-plain {
+   color: #67c23a;
+   background: #fff;
+   border-color: #67c23a;
+ }
+
+ .el-button--warning.is-plain:focus,
+ .el-button--warning.is-plain:active,
+ .el-button--warning.is-plain {
+   color: #e6a23c;
+   background: #fff;
+   border-color: #e6a23c;
+ }
+
+ .el-button--info.is-plain:focus,
+ .el-button--info.is-plain:active,
+ .el-button--info.is-plain {
+   color: #909399;
+   background: #fff;
+   border-color: #909399;
+ }
+
+ .el-form-item__label {
+   padding-right: 5px;
+ }
+ /**原生input **/
+
+ .el-form-item__content>input,
+ .nativeinput,
+ .nativeinput-border {
+   -webkit-appearance: none;
+   background-color: #fff;
+   background-image: none;
+   border-radius: 4px;
+   border: 1px solid #dcdfe6;
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+   color: #606266;
+   display: inline-block;
+   font-size: inherit;
+   height: 40px;
+   line-height: 40px;
+   outline: 0;
+   padding: 0 10px;
+   -webkit-transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+   transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+   width: 100%;
+   border-color: transparent;
+   border-radius: 0;
+   height: 28px;
+   line-height: 28px;
+
+   &:hover {
+     border-color: #c0c4cc;
+   }
+
+   &:focus {
+     border-color: #409EFF;
+     outline: 0;
+   }
+ }
+
+ .is-error {
+   .nativeinput {
+     border-color: #f56c6c;
+   }
+ }
+
+ .el-form-item--mini {
+   .nativeinput {
+     font-size: 12px;
+     height: 28px;
+     line-height: 28px;
+   }
+ }
+
+ .el-input-group .nativeinput {
+   border-top-right-radius: 0;
+   border-bottom-right-radius: 0;
+ }
+
+ .nativeinput-border {
+   border-radius: 4px;
+   border: 1px solid #dcdfe6;
+ }
+
+ .el-form-item.is-error .el-form-item__content>input,
+ .nativeinput.is-error,
+ .nativeinput-border.is-error {
+   border-color: #f56c6c;
+ }
+
+ .el-input-group .nativeinput {
+   border-top-right-radius: 0;
+   border-bottom-right-radius: 0;
+ }
+
+ .el-input-group__append,
+ .el-input-group__prepend {
+   padding: 0 10px;
+ }
+
+ .el-input__inner {
+   padding: 0 10px;
+ }
+ /*修改全局绿色输入框*/
+
+ // anfa-tms\src\styles\addDot.css
+ .el-form-item.is-success .el-input__inner,
+ .el-form-item.is-success .el-input__inner:focus,
+ .el-form-item.is-success .el-textarea__inner,
+ .el-form-item.is-success .el-textarea__inner:focus {
+   border-color: #dcdfe6;
+ } //anfa-tms\src\styles\login-index.css
+ .el-input-group__prepend {
+   padding: 0;
+ } // anfa-tms\src\styles\login-index.css
+ .el-form-item__content:focus {
+   border-color: #409eff;
+ } // anfa-tms\src\views\operation\service\abnormal\components\search.vue
+ .el-range-editor--mini.el-input__inner {
+   height: 28px;
+   width: 200px;
+ } // anfa-tms\src\views\operation\service\controlgoods\components\search.vue
+ .el-date-editor--datetimerange.el-input,
+ .el-date-editor--datetimerange.el-input__inner {
+   width: 200px;
+ }
+
+ .el-tabs--border-card>.el-tabs__content {
+   padding: 10px;
+ }
+ /**
 滚动条调整
 **/
-.el-table__fixed{
-  pointer-events: none;
-}
-.el-table__fixed-body-wrapper,.el-table__fixed-header-wrapper,.el-table__fixed-footer-wrapper{
-  pointer-events: all;
-}
-/**
+
+ .el-table__fixed {
+   pointer-events: none;
+ }
+
+ .el-table__fixed-body-wrapper,
+ .el-table__fixed-header-wrapper,
+ .el-table__fixed-footer-wrapper {
+   pointer-events: all;
+ }
+ /**
  * 日期选择控件
  */
+ /**
+ * 表格固定行样式
+ */
+
+

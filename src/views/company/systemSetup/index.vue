@@ -178,20 +178,11 @@
                 <el-form-item v-if="false">
                   开单小数位
                   <el-select v-model="form.shipPageFunc.decimalPlaces" placeholder="请选择">
-                    <el-option
-                      key="0"
-                      label="不保存"
-                      value="0">
+                    <el-option key="0" label="不保存" value="0">
                     </el-option>
-                    <el-option
-                      key="1"
-                      label="保留一位"
-                      value="1">
+                    <el-option key="1" label="保留一位" value="1">
                     </el-option>
-                    <el-option
-                      key="2"
-                      label="保留俩位"
-                      value="2">
+                    <el-option key="2" label="保留俩位" value="2">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -220,27 +211,49 @@
             </div>
           </el-collapse-item>
           <el-collapse-item name="setup7" title="财务设置" v-has:SETTINGS_FINANCE>
-            <div class="clearfix setup-table">
-              <div class="setup-left">财务设置</div>
+            <div class="clearfix setup-table setup-table-finance">
+              <div class="setup-left">财务凭证</div>
               <div class="setup-right">
                 <el-form-item>
-                  财务凭证
-                  <el-select v-model="form.financeSetting.voucher">
+                  <el-radio-group v-model="form.financeSetting.voucher" size="mini">
+                    <el-radio v-for="(item, index) in vouchers" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                  <!-- <el-select v-model="form.financeSetting.voucher">
                     <el-option v-for="(item, index) in vouchers" :key="index" :value="item.value" :label="item.label"></el-option>
-                  </el-select>
+                  </el-select> -->
+                </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table setup-table-finance">
+              <div class="setup-left">毛利</div>
+              <div class="setup-right">
+                <el-form-item>
+                  运费合计
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.brokerageFee">-&nbsp;回扣</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox true-label="1" false-label="0" v-model="form.grossMargin.shipFeeAmount">-&nbsp;车费合计</el-checkbox>
+                  <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
+                    <span>计算公式：毛利 = 运费合计{{(form.grossMargin.brokerageFee==='1' ? ' - 回扣':'') + (form.grossMargin.shipFeeAmount==='1'?' - 车费合计':'') }}</span>
+                    <i class="el-icon-question" slot="reference"></i>
+                  </el-popover>
                 </el-form-item>
               </div>
             </div>
           </el-collapse-item>
           <el-collapse-item name="setup8" title="配载设置" v-has:SETTINGS_LOAD>
             <div class="clearfix setup-table">
-              <div class="setup-left">配载设置</div>
+              <div class="setup-left">发车合同承运方</div>
               <div class="setup-right">
                 <el-form-item>
-                  发车合同承运方
-                  <el-select v-model="form.loadSetting.carrier">
+                  <el-radio-group v-model="form.loadSetting.carrier" size="mini">
+                    <el-radio v-for="(item, index) in deliverContacts" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                  <!--  <el-select v-model="form.loadSetting.carrier">
                     <el-option v-for="(item, index) in deliverContacts" :key="index" :value="item.value" :label="item.label"></el-option>
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
               </div>
             </div>
@@ -269,22 +282,33 @@
                 </el-form-item>
               </div>
             </div>
+            <div class="clearfix setup-table">
+              <div class="setup-left">列表模板设置</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio-group v-model="form.listTemplate.templateSign" size="mini">
+                    <el-radio label="0">使用网点模板</el-radio>
+                    <el-radio label="1">使用公司模板</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </div>
+            </div>
           </el-collapse-item>
           <el-collapse-item name="setup5" title="打印模板设置" v-has:SETTINGS_TEMPLATE>
             <div class="clearfix setup-table">
               <div class="setup-left">运单标签设置</div>
               <div class="setup-right">
                 <el-form-item>
-                  <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>打印运单设置</el-button>
+                  <el-button @click="doAction('printSetOrder')" icon="el-icon-tickets" type="primary" plain>运单-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printSetLi')" icon="el-icon-document" type="primary" plain>打印标签设置</el-button>
+                  <el-button @click="doAction('printSetLi')" icon="el-icon-news" type="success" plain>标签-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-document" type="primary" plain>打印配载单设置</el-button>
+                  <el-button @click="doAction('printLoadInfo')" icon="el-icon-date" type="primary" plain>配载单-打印设置</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="primary" plain>打印合同设置</el-button>
+                  <el-button @click="doAction('printContract')" icon="el-icon-document" type="success" plain>合同-打印设置</el-button>
                 </el-form-item>
               </div>
             </div>
@@ -297,7 +321,27 @@
                   <el-button @click="downloadFile('lodop')" icon="el-icon-download" type="primary" plain>LODOP云打印插件下载</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="primary" plain>硕正报表插件下载</el-button>
+                  <el-button @click="downloadFile('supcan')" icon="el-icon-download" type="success" plain>硕正报表插件下载</el-button>
+                </el-form-item>
+              </div>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item name="setup9" title="基础设置">
+            <div class="clearfix setup-table">
+               <div class="setup-left">切换其他网点</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio-group v-model="form.switchUser.canSwitch" size="mini">
+                    <el-radio v-for="(item, index) in canSwitchs" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table">
+              <div class="setup-left">系统LOGO</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <upload :title="'本地上传'" v-model="form.uploadLogo.logoUrl" />
                 </el-form-item>
               </div>
             </div>
@@ -310,12 +354,13 @@
     </div>
     <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
     <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
-    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" ></printLoadInfo>
-    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" ></printContract>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false"></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false"></printContract>
   </div>
 </template>
 <script>
 import { getAllSetting, putSetting, putResetSetting } from '@/api/company/systemSetup'
+import { objectMerge2 } from '@/utils/'
 import SelectType from '@/components/selectType/index'
 import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
@@ -324,6 +369,7 @@ import printSetOrder from './components/printSetOrderSelf'
 import printSetLi from './components/printSetLiSelf'
 import printLoadInfo from './components/printLoadInfo'
 import printContract from './components/printContract'
+import Upload from '@/components/Upload/singleImage'
 
 export default {
   name: 'systemSetup',
@@ -332,7 +378,8 @@ export default {
     printSetOrder,
     printSetLi,
     printLoadInfo,
-    printContract
+    printContract,
+    Upload
   },
   computed: {
     ...mapGetters([
@@ -355,7 +402,7 @@ export default {
       tooltip2: false,
       tooltip3: false,
       fieldSetup: [],
-      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8'],
+      activeNames: ['setup1', 'setup2', 'setup3', 'setup4', 'setup5', 'setup6', 'setup7', 'setup8', 'setup9'],
       shipField: [{
         key: 'shipFromCityName',
         value: '0',
@@ -500,6 +547,14 @@ export default {
         value: '2',
         label: '不需要'
       }],
+      canSwitchs: [
+        {
+          value: '0',
+          label: '不可以'
+        }, {
+          value: '1',
+          label: '可以'
+        }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -508,8 +563,21 @@ export default {
         label: '车牌号'
       }],
       form: {
+        'switchUser': {
+          'canSwitch': ''
+        },
+        'uploadLogo': {
+          'logoUrl': ''
+        },
         'financeSetting': {
           'voucher': '2'
+        },
+        'grossMargin': {
+          'shipFeeAmount': '1',
+          'brokerageFee': '1'
+        },
+        'listTemplate': {
+          'templateSign': '1'
         },
         'printSetting': {
           'ship': '0',
@@ -611,13 +679,39 @@ export default {
     infoFinance() { // 初始化财务设置
       const params = {
         orgid: this.otherinfo.orgid,
-        type: 'financeSetting',
+        type: '',
         module: 'finance'
       }
       return getAllSetting(params).then(data => {
-        console.log('financeData', data)
+        console.log('financeSetting', data)
         if (data.financeSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form.financeSetting, 'voucher', data.financeSetting.voucher)
+        }
+        if (data.grossMargin) {
+          for (const item in data.grossMargin) {
+            this.$set(this.form.grossMargin, item, data.grossMargin[item])
+          }
+        }
+        this.loading = false
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
+    initBase() { // 系统logo
+      const params = {
+        orgid: this.otherinfo.orgid,
+        type: '',
+        module: 'base'
+      }
+      return getAllSetting(params).then(data => {
+        console.log('uploadLogo', data)
+        if (data.uploadLogo) {
+          data.uploadLogo.logoUrl = (data.uploadLogo.logoUrl === 'null' || !data.uploadLogo.logoUrl) ? '' : data.uploadLogo.logoUrl
+          this.$set(this.form.uploadLogo, 'logoUrl', data.uploadLogo.logoUrl)
+        }
+        if (data.switchUser) {
+          this.$set(this.form.switchUser, 'canSwitch', data.switchUser.canSwitch)
         }
         this.loading = false
       }).catch((err) => {
@@ -632,6 +726,7 @@ export default {
         this.initField()
         this.initPrinter()
         this.infoFinance()
+        this.initBase()
         // 加载好后才可以提交数据
         this.nochange = false
       })
@@ -680,17 +775,26 @@ export default {
         type,
         module
       }).then(data => {
-        this.form = data
+        // 复制一份副本数据，避免数据操作互相影响
+        this.form = objectMerge2({}, data)
         this.form.shipPageFunc.shipTimeRule = parseInt(this.form.shipPageFunc.shipTimeRule, 10)
         this.form.shipPageFunc.notifyCargoRule = parseInt(this.form.shipPageFunc.notifyCargoRule, 10)
         for (const item in this.form.printSetting) {
           this.form.printSetting[item] = this.form.printSetting[item].replace(/%\^/g, '\\')
-          console.log(this.form.printSetting[item])
         }
+        this.$set(this.form, 'switchUser', {
+          canSwitch: ''
+        })
         this.$set(this.form, 'financeSetting', {
           voucher: ''
         })
-
+        this.$set(this.form, 'grossMargin', {
+          shipFeeAmount: '1',
+          brokerageFee: '1'
+        })
+        this.$set(this.form, 'uploadLogo', {
+          logoUrl: ''
+        })
         if (!this.form.loadSetting) { // 老公司没有这个设置 所以要判断一下
           this.$set(this.form, 'loadSetting', {
             carrier: ''
@@ -737,7 +841,7 @@ export default {
       this.form.cargoNo.shipNoAndNumberOfUnits = '0'
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
-    saveData() {
+    saveData() { // 保存
       this.loading = true
       // 转译一下打印的\\字符
       const formPrintSetting = Object.assign({}, this.form.printSetting)
@@ -750,17 +854,26 @@ export default {
       const finance = {
         orgid: form.orgid,
         module: 'finance',
-        financeSetting: form.financeSetting
+        financeSetting: form.financeSetting,
+        grossMargin: form.grossMargin
       }
-      console.log('saveData', form, finance, form.shipPageFunc.insurancePremiumIsDeclaredValue)
+      const base = {
+        orgid: form.orgid,
+        module: 'base',
+        upLoadLogo: form.uploadLogo,
+        switchUser: form.switchUser
+      }
+      console.warn('提交 form,finance,base', form, finance, base)
       if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
-          this.initOrder()
-          this.loading = false
-          // this.infoFinance()
+          this.putSetting(base).then(() => {
+            this.initOrder()
+            this.loading = false
+            // this.infoFinance()
+          })
         })
       })
     },
@@ -889,6 +1002,17 @@ export default {
     .el-form-item__content>.el-input {
       width: 100px;
     }
+    .el-form-item__content {
+      .upload-container {
+        width: 200px;
+        .image-preview-action {
+          line-height: 125px;
+        }
+        .el-button {
+          margin-top: 0px;
+        }
+      }
+    }
 
     .el-form-item--mini.el-form-item {
       margin-bottom: 5px;
@@ -912,6 +1036,14 @@ export default {
       .setup-right {
         padding: 10px 16px;
         flex: 1;
+      }
+    }
+    .setup-table-finance {
+      .el-form--inline .el-form-item {
+        margin-right: 5px;
+      }
+      .el-checkbox__label {
+        padding-left: 5px;
       }
     }
   }

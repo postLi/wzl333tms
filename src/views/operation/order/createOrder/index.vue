@@ -59,6 +59,7 @@ export default {
 <style lang="scss">
 .createOrder-page{
   position: relative;
+  text-align: center;
   width: 100%;
   height: 100%;
   padding-top: 24px;

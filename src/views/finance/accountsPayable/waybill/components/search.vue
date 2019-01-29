@@ -5,15 +5,19 @@
         <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="开单网点" prop="shipFromOrgid">
+      <el-form-item label="送货时间" v-if="isTerminal">
+        <el-date-picker v-model="searchSendTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="开单网点" prop="shipFromOrgid" v-else>
         <SelectTree v-model="searchForm.shipFromOrgid" v-if="isTransferSel || isAbnormal"></SelectTree>
         <SelectTree v-model="searchForm.shipFromOrgid" :orgid="otherinfo.orgid" v-else></SelectTree>
       </el-form-item>
-      <el-form-item label="中转网点" prop="transferOrgid" v-if="isTransferSel">
+      <el-form-item label="中转网点" prop="transferOrgid" v-if="isTransferSel && !isTerminal">
         <SelectTree v-model="searchForm.transferOrgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
-      <el-form-item label="核销网点" prop="orgid" v-if="isAbnormal">
+      <el-form-item label="核销网点" prop="orgid" v-if="isAbnormal && !isTerminal">
         <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
@@ -23,21 +27,24 @@
         </el-select>
       </el-form-item>
       <el-form-item label="运单号" prop="shipSn">
-        <el-input v-model="searchForm.shipSn" maxlength="15" clearable @keyup.native="validates('shipSn')"></el-input>
+        <el-input v-model="searchForm.shipSn" :maxlength="isTerminal? 25: 15" clearable @keyup.native="validates('shipSn')"></el-input>
       </el-form-item>
-      <el-form-item label="发货方" prop="senderUnit">
+      <el-form-item label="货号" prop="shipGoodsSn" v-if="isTerminal">
+        <el-input v-model="searchForm.shipGoodsSn" :maxlength="isTerminal? 25: 15" clearable @keyup.native="validates('shipGoodsSn')"></el-input>
+      </el-form-item>
+      <el-form-item label="发货方" prop="senderUnit" v-if="!isTerminal">
         <el-input v-model="searchForm.senderUnit" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="发货人" prop="senderName">
+      <el-form-item label="发货人" prop="senderName" v-if="!isTerminal">
         <el-input v-model="searchForm.senderName" clearable :maxlength="maxlength"></el-input>
       </el-form-item>
       <el-form-item label="发站">
-        <el-input v-model="searchForm.shipFromCityName" clearable :maxlength="maxlength"></el-input>
+        <el-input v-model="searchForm.shipFromCityName" clearable :maxlength="isTerminal? 15: maxlength"></el-input>
       </el-form-item>
       <el-form-item label="到站">
-        <el-input v-model="searchForm.shipToCityName" clearable :maxlength="maxlength"></el-input>
+        <el-input v-model="searchForm.shipToCityName" clearable :maxlength="isTerminal? 15: maxlength"></el-input>
       </el-form-item>
-      <el-form-item label="签收状态" prop="signStatus">
+      <el-form-item label="签收状态" prop="signStatus" v-if="!isTerminal">
         <selectType v-model="searchForm.signStatus" type="sign_status">
           <el-option slot="head" label="全部" value=""></el-option>
         </selectType>
@@ -79,7 +86,11 @@ export default {
     isAbnormal: {
       type: Boolean,
       default: false
-    }
+    },
+   isTerminal: {
+    type: Boolean,
+    default: false
+   }
   },
   data() {
     const orgidIdentifier = (rule, value, callback) => {
@@ -112,6 +123,7 @@ export default {
         // shipLoadId: 0,
         // shipLoadIdType: 0,
         shipSn: '',
+        shipGoodsSn: '',
         // shipToCityCode: '',
         // startTime: '',
         status: ''
@@ -123,6 +135,7 @@ export default {
         // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
+      searchSendTime: '',
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
@@ -161,10 +174,11 @@ export default {
     }
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
+    console.log(JSON.stringify(this.otherinfo.permissionTrees))
   },
   methods: {
     validates (key) {
-      this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d]/g,'')) // 只能输入数字
+       this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d|a-zA-Z|\-]/g, ''))
     },
     getDataObj(obj) {
       this.searchTime = [obj.startTime, obj.endTime]
@@ -176,6 +190,10 @@ export default {
       if (this.searchTime) {
         this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
+      }
+      if (this.searchSendTime && this.isTerminal) {
+        this.$set(searchObj, 'deliveryStartTime', parseTime(this.searchSendTime[0], '{y}-{m}-{d} ') + '00:00:00')
+        this.$set(searchObj, 'deliveryEndTime', parseTime(this.searchSendTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
       this.$emit('change', searchObj)
     },

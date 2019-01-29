@@ -8,7 +8,7 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" :data="dataList" border height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" stripe>
-          <el-table-column label="序号" width="50">
+          <el-table-column label="序号" width="70">
             <template slot-scope="scope">
               {{ ((searchQuery.currentPage - 1) * searchQuery.pageSize) + scope.$index + 1 }}
             </template>

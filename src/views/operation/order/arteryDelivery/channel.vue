@@ -13,7 +13,7 @@
       </div>
       <div class="info_tab">
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" stripe>
-          <el-table-column fixed sortable type="selection" width="50"></el-table-column>
+          <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <Discharge :popVisible.sync="dischargeVisible" :info="selectInfo" @success="fetchList"></Discharge>
-    <TableSetup code="" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
+    <TableSetup :code="thecode" :popVisible="setupTableVisible" @close="closeSetupTable" @success="setColumn" :columns="tableColumn" />
   </div>
 </template>
 <script>
@@ -58,6 +58,7 @@ export default {
   },
   data() {
     return {
+      thecode: 'GX_UNLOAD_LIST',
       total: 0,
       tablekey: 0,
       loading: true,
@@ -241,10 +242,8 @@ export default {
     },
     cancel() { // 取消卸货
       this.selected = this.selected.filter(e => {
-        console.log('e', e.unloadSignName)
         return e.unloadSignName === '已卸货'
       })
-      console.log('cancel2222', this.selected)
       if (this.selected.length > 0) { // 一次只能选择一条数据选择多条数据默认为第一条
         let selected = Object.assign({}, this.selected[0])
         if (selected.batchTypeId === 53 ) {
@@ -283,7 +282,6 @@ export default {
     },
     getSelection(selection) { // 更改选择项
       this.selected = selection
-      console.log('getSelection1111', this.selected)
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

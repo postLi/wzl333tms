@@ -52,7 +52,7 @@
             </li>
             <li class="marginTop_10">
               <el-form-item label="联系号码:" prop="customRece.customerMobile">
-                <querySelect search="customerMobile" type="receiver" valuekey="customerMobile"
+                <querySelect search="customerMobile" type="receiver" valuekey="customerMobile" :maxlength="11"
                              v-model="form.customRece.customerMobile" @change="setReceiver" :disabled="isDbclick"/>
               </el-form-item>
             </li>
