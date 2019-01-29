@@ -200,7 +200,7 @@ export default {
         },
         {
           label: '实付送货费',
-          prop: 'shipStatusName',
+          prop: 'deliveryFeeToPay',
           width: '120',
           fixed: false
         },
@@ -330,7 +330,7 @@ export default {
         },
         {
           label: '实付送货费',
-          prop: 'shipStatusName',
+          prop: 'deliveryFeeToPay',
           width: '120',
           fixed: false
         },

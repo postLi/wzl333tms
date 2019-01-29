@@ -135,7 +135,7 @@ export default {
         // shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
       },
       searchTime: [parseTime(new Date() - 60 * 24 * 60 * 60 * 1000), parseTime(new Date())],
-      searchSendTime: [parseTime(new Date() - 60 * 24 * 60 * 30 * 1000), parseTime(new Date())],
+      searchSendTime: '',
       defaultTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickerOptions: {
         shortcuts: pickerOptions2
@@ -174,10 +174,11 @@ export default {
     }
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
+    console.log(JSON.stringify(this.otherinfo.permissionTrees))
   },
   methods: {
     validates (key) {
-      this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d]/g,'')) // 只能输入数字
+       this.$set(this.searchForm, key, this.searchForm[key].replace(/[^\d|a-zA-Z|\-]/g, ''))
     },
     getDataObj(obj) {
       this.searchTime = [obj.startTime, obj.endTime]
