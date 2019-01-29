@@ -36,15 +36,15 @@
             <li v-for="(item, index) in countList" :key="index">
               <p v-if="item.value > 0">
                 <i :class="item.value > 0 ? 'el-icon-success ' : ''"></i>{{item.title}}: {{item.message ? item.message + '，' : ''}}{{item.message2}}
-                <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx1">{{item.button1}}</el-button>
+                <el-button type="primary" plain @click="doAction(item.label, item)" class="btn_qx1">{{item.button1}}</el-button>
               </p>
               <p v-else-if="item.value < 1 && item.label==='orgCount' && iscompany">
                 <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
-                <el-button type="error" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
+                <el-button type="error" plain @click="doAction(item.label, item)" class="btn_qx">{{item.button2}}</el-button>
               </p>
               <p v-else-if="item.value < 1 && item.label!=='orgCount'">
                 <i class="el-icon-warning"></i>{{item.title}}：{{item.message1}}。
-                <el-button type="primary" plain @click="doAction(item.label)" class="btn_qx">{{item.button2}}</el-button>
+                <el-button type="primary" plain @click="doAction(item.label, item)" class="btn_qx">{{item.button2}}</el-button>
               </p>
             </li>
             <div class="btn_content">
@@ -171,7 +171,8 @@ export default {
         message1: '你还没有添加网点，请点击右边添加按钮',
         message2: '需要增加点击右边增加按钮',
         button1: '增加',
-        button2: '添加'
+        button2: '添加',
+        code: 'ORGTREELIST_ADD'
       }, {
           value: 0,
           label: 'userCount',
@@ -180,7 +181,8 @@ export default {
           message1: '你还没有添加员工，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'ORGTREELIST_ADD'
         }, {
           value: 0,
           label: 'senderCustomerCount',
@@ -189,7 +191,8 @@ export default {
           message1: '你还没有添加发货客户，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'SENDER_ADD'
         }, {
           value: 0,
           label: 'receiverCustomerCount',
@@ -198,7 +201,8 @@ export default {
           message1: '你还没有添加收货客户，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'REVER_ADD'
         }, {
           value: 0,
           label: 'driverCount',
@@ -207,7 +211,8 @@ export default {
           message1: '你还没有添加司机，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'DRIVER_ADD'
         }, {
           value: 0,
           label: 'truckCount',
@@ -216,7 +221,8 @@ export default {
           message1: '你还没有添加车辆，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'TUNK_ADD'
         }, {
           value: 0,
           label: 'carrierCount',
@@ -225,7 +231,8 @@ export default {
           message1: '你还没有添加承运商，请点击右边添加按钮',
           message2: '需要增加点击右边增加按钮',
           button1: '增加',
-          button2: '添加'
+          button2: '添加',
+          code: 'CARRIER_ADD'
         }, {
           value: 0,
           label: 'settingCount',
@@ -234,7 +241,8 @@ export default {
           message2: '打印机连接已连接，需要设置点击右边设置按钮',
           message1: '打印机连接还没连接，请点击右边设置按钮',
           button1: '设置',
-          button2: '设置'
+          button2: '设置',
+          code: 'SETTING'
         }, {
           value: 0,
           label: 'smsTemplateCount',
@@ -243,7 +251,8 @@ export default {
           message1: '你还没有维护短信模板，请点击右边设置按钮',
           message2: '需要设置点击右边设置按钮',
           button1: '设置',
-          button2: '设置'
+          button2: '设置',
+          code: 'SMS'
         },
       {
         value: 0,
@@ -253,7 +262,8 @@ export default {
         message1: '你还没有维护财务科目，请点击右边设置按钮',
         message2: '需要设置点击右边设置按钮',
         button1: '设置',
-        button2: '设置'
+        button2: '设置',
+        code: 'INIT_SUBJECT_DEFINE'
       }
       ],
       contTitleNull: false
@@ -369,7 +379,14 @@ export default {
       this.popVisible = false
       // this.printSetOrderVisible = false
     },
-    doAction(type) {
+    doAction(type, item) {
+      if (item) { // 判断是否有权限添加信息
+        let isCode = this.$_has_permission(item.code)
+        if (!isCode) {
+          this.$message.warning('您没有权限，请联系管理员！')
+          return false
+        }
+      }
       switch (type) {
         case 'init':
           this.initSystem()

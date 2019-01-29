@@ -45,7 +45,6 @@ export default {
   methods: {
     init() {
       this.isCodeCheck = this.$_has_permission('HOME_PAGE_2')
-      console.log('isCodeCheck', this.isCodeCheck)
       this.msg = this.isCodeCheck ? this.$options.data().msg : '您的系统基本信息还没有维护，为了保证系统正常使用，您没有权限，请联系管理员！'
       if (this.otherinfo.firstLogin === 1) { // 第一次登录的创建者要进入【系统检测页面】
         this.$router.push({ path: '/checklist/index' })
