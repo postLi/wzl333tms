@@ -15,7 +15,7 @@
         :key="index"
         :label="item.queryKey"
         :value="item.id">
-        {{item.queryKey}} <i class="el-icon-circle-close-outline" @click.stop.prevent="deleteItem(item.id)"></i>
+        {{item.queryKey}} <i class="el-icon-circle-close-outline" @click.stop.prevent="deleteItem(item)"></i>
       </el-option>
     </el-select>
     <el-button plain  @click="Custom">保存自定义</el-button>
@@ -69,7 +69,6 @@ export default {
   },
   watch: {
     value(n) {
-      console.log('nnn:', n)
       // 清除选定项
       if (n === '') {
         this.datalist = ''
@@ -77,15 +76,11 @@ export default {
     },
     searchObj: {
       handler(cval, oval) {
-        this.$nextTick(() => {
-          console.log('searchAll_cval', cval, oval)
-        })
       },
       deep: true
     }
   },
   mounted() {
-    // this.fetchAllloadAll()
   },
   methods: {
     initdata() {
@@ -97,9 +92,13 @@ export default {
         })
       }
     },
-    deleteItem(id) {
-      deleteQueryLogListById(id).then(res => {
+    deleteItem(item) {
+
+      deleteQueryLogListById(item.id).then(res => {
         this.fetchAllloadAll()
+        if (this.datalist === item.queryKey) {
+          this.datalist = ''
+        }
       }).catch(err => {
         this._handlerCatchMsg(err)
       })
@@ -116,8 +115,8 @@ export default {
       this.querySearch.vo.userId = this.otherinfo.userId
       this.querySearch.vo.menuCode = this.code || this.$route.meta.code
       return postQueryLogList(this.querySearch).then(data => {
-        this.dataset = data.list
-        this.options4 = data.list
+        this.dataset = data.list || []
+        this.options4 = data.list || []
       })
     },
     querySearchAsync(queryString, cb) {

@@ -160,7 +160,6 @@ export default {
           this.$set(this.searchObjs, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
           this.$set(this.searchObjs, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
         }
-        console.log(this.searchObjs, cval, oval)
       },
       deep: true
     }
@@ -174,7 +173,6 @@ export default {
     }
     this.searchForm.shipFromOrgid = this.orgid
     this.onSubmit()
-    console.log(JSON.stringify(this.otherinfo.permissionTrees))
   },
   methods: {
     validates (key) {

@@ -101,7 +101,7 @@ export default {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
       }, {
-        label: '发货批次',
+        label: '发车批次',
         prop: 'batchNo',
         width: '110',
         fixed: true

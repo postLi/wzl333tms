@@ -101,7 +101,9 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        if (res[type]) {
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }
       }
     },
     handleSelect(obj) {
@@ -126,6 +128,7 @@ export default {
   .el-select{
     width: 120px;
   }
+
   .el-input {
     width: 120px !important;
     .el-input__inner {
@@ -140,6 +143,9 @@ export default {
   .hidePopper {
     display: none !important;
     background-color: rgba(0, 0, 0, 0);
+  }
+    .el-form--inline .el-form-item{
+      margin-right: 10px !important;
   }
 }
 
