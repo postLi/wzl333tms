@@ -486,7 +486,6 @@ export default {
                 break
               }
             }
-
             copy.push(_el)
           })
 
@@ -502,8 +501,26 @@ export default {
           //     }
           //   }
           // })
+          // 
+          // this.columns.forEach(el => {
+          //   // 将本地剩余的项塞到后面
+          //   const find = copy.filter(_el => _el.prop === el.prop)
+          //   console.log('%cfind', 'color:green', find, find[0]?find[0].label:'')
+          //   if (find.length === 0) {
+          //     const find2 = copy.filter((_el, _index) => {
+          //       if (_el.label === el.label) {
+          //         return true
+          //       }
+          //     })
+          //     console.log('本地项，需要后台添加：', el, el.label)
+          //     if (find2.length === 0) {
+          //       copy.push(el)
+          //     }
+          //   }
+          // })
 
           copy = this.sort(copy)
+          console.log('%ccopy','color:orange',copy)
 
           this.convertData(copy)
         } else {

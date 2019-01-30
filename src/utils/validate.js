@@ -71,7 +71,7 @@ export const REGEX = {
   // 中英文
   CHINESE_AND_ENGLISH: /^[\u4E00-\u9FA5a-zA-Z]+$/,
   // 手机
-  MOBILE: /^[1][3-8]\d{9}$/,
+  MOBILE: /^[1][3-9]\d{9}$/,
   // MOBILE: /^(13[0-9]|14[57]|15[01-37-9]|18[0235-9])\d{8}$/,
   // 身份证
   ID_CARD: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
@@ -128,6 +128,8 @@ export const REGEX = {
   // 支持百分比
   NUM_PERCENTAGE: /^([1-9]{1}[0-9]{0,1}|0|100)(.\d{1,2}){0,1}%$/,
   FNumber: /^\d{4}$/,
+  // 11位数字
+  ELEVENNUMBER: /^\d{11}$/,
   // FNumber: /^[1-9]\d{5}$/,
 
   /**

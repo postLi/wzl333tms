@@ -848,36 +848,36 @@
       li {
         float: left;
         .el-form-item {
-          margin-right: -23px;
-          width: 90%;
+          // margin-right: -10px;
+          width: 100%;
           display: flex;
-          margin-left: 7px
+          // margin-left: 7px
         }
       }
       li:last-of-type {
         width: 100%;
         .el-form-item--mini {
           .el-form-item__content {
-            width: 146%;
+            // width: 146%;
             .el-autocomplete {
-              width: 106%;
+              width: 94%;
             }
           }
         }
 
       }
-      li:nth-of-type(1) {
-        .el-input__inner {
-          width: 94%;
-        }
-      }
-      li:nth-of-type(2) {
-        .el-input__inner {
-          width: 88%;
-        }
-      }
+      // li:nth-of-type(1) {
+      //   .el-input__inner {
+      //     width: 94%;
+      //   }
+      // }
+      // li:nth-of-type(2) {
+      //   .el-input__inner {
+      //     width: 88%;
+      //   }
+      // }
       .el-autocomplete {
-        width: 146%;
+        // width: 146%;
       }
     }
   }

@@ -411,6 +411,7 @@
       }
     },
     mounted() {
+
     },
     methods: {
       fetchData() {
@@ -520,6 +521,7 @@
               }
               this.popTitle = '新增网点'
               this.loading = false
+              this.$emit('update:isModify', false)
             }).catch(err => {
               this._handlerCatchMsg(err)
               this.loading = false

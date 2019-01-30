@@ -214,7 +214,7 @@
         </div>
       </div>
       <AddDot :dotInfo="getform" :orgid="getOrgId || otherinfo.orgid" :companyId="otherinfo.companyId"
-              :isModify="isModify" :getCheckedKeyId="getCheckedKeyId" @success="updateSuccess"
+              :isModify.sync="isModify" :getCheckedKeyId="getCheckedKeyId" @success="updateSuccess"
               :popVisible="addDoTotVisible" @close="closeAddDot"/>
       <AddPeople :popVisible.sync="addPeopleVisible" @close="closeAddPeople" :orgid="getOrgId || otherinfo.orgid"
                  @success="fetchOrgId(getOrgId)"/>

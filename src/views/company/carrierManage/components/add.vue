@@ -61,7 +61,7 @@
   </pop-right>
 </template>
 <script>
-import { REGEX } from '@/utils/validate'
+import { REGEX, validateMobile } from '@/utils/validate'
 import { postCarrier, putCarrier, getCarrierSn } from '@/api/company/carrierManage'
 import popRight from '@/components/PopRight/index'
 import Upload from '@/components/Upload/singleImage'
@@ -133,7 +133,7 @@ export default {
       } else if (REGEX.MOBILE.test(value)) {
         callback()
       } else {
-        callback(new Error('请输入有效的手机号码'))
+        callback(new Error('请输11位手机号码'))
       }
     }
     return {
