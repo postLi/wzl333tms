@@ -13,7 +13,7 @@ export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'age
   // 一些自定义的字段
   'shipTotalProfit', 'fee', 'closeFee', 'unpaidFee', 'paidFee', 'grossMargin',
   'paidNowpayCarriage', 'unpaidNowpayCarriage', 'paidNowpayOilCard', 'unpaidNowpayOilCard', 'paidBackpayCarriage', 'unpaidBackpayCarriage', 'paidBackpayOilCard', 'unpaidBackpayOilCard', 'paidCarloadInsuranceFee', 'unpaidCarloadInsuranceFee', 'paidLeaveHandlingFee', 'unpaidLeaveHandlingFee', 'paidLeaveOtherFee', 'unpaidLeaveOtherFee',
-  'deliveryFee', 'deliveryPay', 'deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay',
+  'deliveryFee', 'deliveryPay', 'deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay', 'deliveryFeeToPay', 'deliveryFeeDiffer',
   'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'pandHandlingFeePay'
 ]
 /**
