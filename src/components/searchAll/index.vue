@@ -96,7 +96,8 @@ export default {
 
       deleteQueryLogListById(item.id).then(res => {
         this.fetchAllloadAll()
-        if (this.datalist === item.queryKey) {
+        // if (this.datalist === item.queryKey) {
+        if (this.datalist) {
           this.datalist = ''
         }
       }).catch(err => {
