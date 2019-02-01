@@ -37,10 +37,13 @@ router.beforeEach((to, from, next) => {
           // Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
+          // 如果在登录页面时，因为跳转到的还是/login页，会导致右上角一直在转动加载条
+
           next({ path: '/login', query: {
             // 删除access_token，避免重复循环
             tourl: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1')
           }})
+          NProgress.done()
         })
       } else {
         const title = to.meta.title || to.name || ''
