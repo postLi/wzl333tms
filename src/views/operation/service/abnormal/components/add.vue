@@ -99,7 +99,7 @@
           <div class="titles">
             <h4 class="h4">异常处理</h4>
           </div>
-          <el-form-item required  label="处理结果：" prop="disposeResult" >
+          <el-form-item  label="处理结果：" prop="disposeResult"  :rules="{required: true, trigger: 'change', message: '必选'}">
               <SelectType v-model="form.disposeResult" type="dispose_result" :disabled="isCheck ? true : false"/>
             </el-form-item>
           <el-form-item label="处理时间" prop="disposeTime">

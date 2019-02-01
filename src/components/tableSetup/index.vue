@@ -515,7 +515,7 @@ export default {
           this.columns.forEach(el => {
             // 将本地剩余的项塞到后面
             const find = copy.filter(_el => _el.prop === el.prop)
-            console.log('%cfind', 'color:green', find, find[0] ? find[0].label : '')
+            // console.log('%cfind', 'color:green', find, find[0] ? find[0].label : '')
             if (find.length === 0) {
               const find2 = copy.filter((_el, _index) => {
                 if (_el.label === el.label) {
@@ -531,16 +531,16 @@ export default {
           })
 
           copy = this.sort(copy)
-          console.log('%ccopy', 'color:orange', copy)
-          console.log('%ccolumns', 'color:purple', this.columns)
+          // console.log('%ccopy', 'color:orange', copy)
+          // console.log('%ccolumns', 'color:purple', this.columns)
 
           this.convertData(copy)
         } else {
-          console.log('fetchList1111')
+          // console.log('fetchList1111')
           this.fetchFail()
         }
       }).catch(err => {
-        console.log('fetchList222222', err)
+        console.log('%c错误信息', 'color:purple', err)
         this.fetchFail()
         // this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
       })
