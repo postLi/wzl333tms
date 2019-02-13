@@ -186,17 +186,17 @@ export default {
   mounted() {
     this.form.orgid = this.orgid
     console.log('orgid2222::::::', this.orgid)
-    if (!this.inited) {
-      this.inited = true
-      this.initInfo()
-    }
+    // if (!this.inited) {
+    //   this.inited = true
+    //   this.initInfo()
+    // }
   },
   watch: {
     popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
+      // if (!this.inited) {
+        // this.inited = true
         this.initInfo()
-      }
+      // }
     },
     orgid(newVal) {
       console.log('orgid::::::', newVal)
