@@ -1002,33 +1002,33 @@ export default {
   },
   mounted() {
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn('模板设置字段：', this.form)
-      console.warn('-----------开始分割线--------------')
+    // if (process.env.NODE_ENV !== 'production') {
+    //   console.warn('模板设置字段：', this.form)
+    //   console.warn('-----------开始分割线--------------')
 
-      let str = ''
-      let count = 0
-      let sort = 0
-      for (let item in this.form) {
-        if (/(cargoList|customerList|tmsOrderTransfer|tmsOrderPre)/.test(item) === false) {
-          count += 1
-          sort += 1
-          console.warn('>>>>>模块>>>>', typeof this.form[item], item, this.form[item])
-          str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + item + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
+    //   let str = ''
+    //   let count = 0
+    //   let sort = 0
+    //   for (let item in this.form) {
+    //     if (/(cargoList|customerList|tmsOrderTransfer|tmsOrderPre)/.test(item) === false) {
+    //       count += 1
+    //       sort += 1
+    //       console.warn('>>>>>模块>>>>', typeof this.form[item], item, this.form[item])
+    //       str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + item + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
 
-          if (this.form[item]) {
-            for (let kk in this.form[item]) {
-              if (kk) {
-                sort += 1
-                str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + kk + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
-              }
-            }
-          }
-        }
-      }
-      console.log(str)
-      console.warn('-----------结束分割线--------------')
-    }
+    //       if (this.form[item]) {
+    //         for (let kk in this.form[item]) {
+    //           if (kk) {
+    //             sort += 1
+    //             str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + kk + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   console.log(str)
+    //   console.warn('-----------结束分割线--------------')
+    // }
     // this.getSelectType()
     // this.getShipPayWay()
     // this.getReceiptType()

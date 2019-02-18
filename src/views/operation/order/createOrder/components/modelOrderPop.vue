@@ -2,83 +2,101 @@
 <template>
   <el-dialog :title="'运单模板'+(isModify?'-编辑':'-详情')" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="close" :key="modelKey">
     <!-- 修改界面 -->
-    <draggable class="model-list" v-if="isModify">
-      <div class="model-item item-1">
+    <draggable class="model-list" @start="startDragModel" @end="endDragModel" v-if="isModify">
+      <div class="model-item item-1" data-name="tmsOrderShipTop" :data-index="m_index.tmsOrderShipTop">
         <span class="el-icon-d-caret sortBtn"></span>
         <draggable v-model="dataList">
-          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.type === 1">
-            <el-checkbox v-model="item.show" :label="item.name"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
+          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShipTop'">
+            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
           <div style="clear:both;"></div>
         </draggable>
       </div>
-      <div class="model-item item-1">
+      <div class="model-item item-1" data-name="customerInfo" :data-index="m_index.customerInfo">
         <span class="el-icon-d-caret sortBtn"></span>
-        <div class="model-item item-1 customerTitle">
+        <div class="item-1 customerTitle">
           <div class="item-2">发货方</div>
           <div class="item-2">收货方</div>
         </div>
         <draggable v-model="dataList" class="item-2">
-          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.type === 2">
-            <el-checkbox v-model="item.show" :label="item.name"></el-checkbox> <i class="el-icon-d-caret"></i></div>
+          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.templateType ==='senderCustomer' && /(Sender)/.test(item.fieldProperty)">
+            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> <i class="el-icon-d-caret"></i></div>
           <div style="clear:both"></div>
         </draggable>
         <draggable v-model="dataList" class="item-2">
-          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.type === 3">
-            <el-checkbox v-model="item.show" :label="item.name"></el-checkbox> <i class="el-icon-d-caret"></i></div>
+          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.templateType === 'receiverCustomer' && /(Receiver)/.test(item.fieldProperty)">
+            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> <i class="el-icon-d-caret"></i></div>
           <div style="clear:both"></div>
         </draggable>
         <div style="clear:both"></div>
       </div>
-      <div class="model-item item-1" style="cursor:default;">
+      <div class="model-item item-1" style="cursor:default;" data-name="tmsOrderCargoList" :data-index="m_index.tmsOrderCargoList">
         <span class="el-icon-d-caret sortBtn"></span>
-        <div class="model-cell" v-for="(item, index) in dataList" v-if="item.type === 4">{{item.name}}</div>
+        <div class="model-cell" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderCargoList'">
+          <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
+        </div>
         <div style="clear:both"></div>
       </div>
-      <div class="model-item item-1">
+      <div class="model-item item-1" data-name="tmsOrderShip" :data-index="m_index.tmsOrderShip">
         <span class="el-icon-d-caret sortBtn"></span>
         <draggable v-model="dataList">
-          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.type === 5">
-            <el-checkbox v-model="item.show" :label="item.name"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
+          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip'" :style="{
+            width: item.fieldProperty==='shipOther' ? '33.32%' : (item.fieldProperty==='shipRemarks'? '100%' : '16.66%'),
+            borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
+          }">
+            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
+            <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i>
+          </div>
           <div style="clear:both"></div>
         </draggable>
       </div>
     </draggable>
     <!-- 详情界面 -->
     <div class="model-list" v-else>
-      <div class="model-item item-1">
+      <div class="model-item item-1" data-name="tmsOrderShipTop" :data-index="m_index.tmsOrderShipTop">
         <div v-model="dataList">
-          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.type === 1 && item.show">{{item.name}}</div>
+          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShipTop' && item.hide">{{item.fieldName}}</div>
           <div style="clear:both;"></div>
         </div>
       </div>
-      <div class="model-item item-1">
-        <div class="model-item item-1 customerTitle">
+      <div class="model-item item-1" data-name="customerInfo" :data-index="m_index.customerInfo">
+        <div class="item-1 customerTitle">
           <div class="item-2">发货方</div>
           <div class="item-2">收货方</div>
         </div>
-        <div v-model="dataList" class="item-2">
-          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.type === 2 && item.show">{{item.name}}</div>
+        <div class="item-2">
+          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.templateType === 'senderCustomer' && /(Sender)/.test(item.fieldProperty)&& item.hide">
+            {{item.fieldName}}</div>
           <div style="clear:both"></div>
         </div>
-        <div v-model="dataList" class="item-2">
-          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.type === 3 && item.show">{{item.name}}</div>
+        <div class="item-2">
+          <div class="model-cell cell-12" v-for="(item, index) in dataList" v-if="item.templateType === 'receiverCustomer' && /(Receiver)/.test(item.fieldProperty)&& item.hide">
+            {{item.fieldName}}</div>
           <div style="clear:both"></div>
         </div>
         <div style="clear:both"></div>
       </div>
-      <div class="model-item item-1" style="cursor:default;">
-        <div class="model-cell" v-for="(item, index) in dataList" v-if="item.type === 4">{{item.name}}</div>
+      <div class="model-item item-1" style="cursor:default;" data-name="tmsOrderCargoList" :data-index="m_index.tmsOrderCargoList">
+        <div class="model-cell" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderCargoList'">{{item.fieldName}}</div>
         <div style="clear:both"></div>
       </div>
-      <div class="model-item item-1">
+      <div class="model-item item-1" data-name="tmsOrderShip" :data-index="m_index.tmsOrderShip">
         <div v-model="dataList">
-          <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.type === 5 && item.show">{{item.name}}</div>
+          <div>
+            <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip' && item.hide" :style="{
+            width: item.fieldProperty==='shipOther' ? '33.32%' : (item.fieldProperty==='shipRemarks'? '100%' : '16.66%'),
+            borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
+          }">
+              {{item.fieldName}}
+            </div>
+            <div style="clear:both"></div>
+          </div>
           <div style="clear:both"></div>
         </div>
       </div>
     </div>
     <div class="model-foot">
-      <el-button type="info" icon="el-icon-back" @click="doAction('back')">返回</el-button>
+      <el-button type="info" icon="el-icon-back" @click="doAction('close')" v-if="isClose">关闭</el-button>
+      <el-button type="info" icon="el-icon-back" @click="doAction('back')" v-if="!isClose">返回</el-button>
       <el-button type="primary" icon="el-icon-edit-outline" v-if="!isModify" @click="doAction('edit')">编辑模板</el-button>
       <el-button type="success" icon="el-icon-document" v-if="isModify" @click="doAction('save')">保存</el-button>
       <el-button type="warning" icon="el-icon-view" v-if="isModify" @click="doAction('preview')">预览</el-button>
@@ -86,7 +104,10 @@
   </el-dialog>
 </template>
 <script>
+let dom = ''
 import draggable from 'vuedraggable'
+import { objectMerge2 } from '@/utils/index'
+import orderManage from '@/api/operation/orderManage'
 export default {
   components: {
     draggable
@@ -97,190 +118,123 @@ export default {
       default: false
     }
   },
+  watch: {
+    popVisible: {
+      handler(cval, oval) {
+        if (cval) {
+          this.isModify = false
+          this.fetchData()
+        }
+      },
+      deep: true
+    },
+    isModify: {
+      handler(cval, oval) {
+        this.sortModel()
+      }
+    }
+  },
   data() {
     return {
+      isClose: true,
       isModify: false,
       modelKey: 0,
       loading: false,
-      dataList: [{
-          id: 1,
-          name: '开单网点',
-          prop: 'createOrgid',
-          type: 1,
-          show: true
-        },
-        {
-          id: 2,
-          name: '发站',
-          prop: 'sendP',
-          type: 1,
-          show: false
-        },
-        {
-          id: 3,
-          name: '到站',
-          prop: 'arrivalP',
-          type: 1,
-          show: false
-        },
-        {
-          id: 3,
-          name: '目的网点',
-          prop: 'arrivalP',
-          type: 1,
-          show: false
-        },
-        {
-          id: 3,
-          name: '交接方式',
-          prop: 'arrivalP',
-          type: 1,
-          show: false
-        },
-        {
-          id: 3,
-          name: '货号',
-          prop: 'arrivalP',
-          type: 1,
-          show: false
-        },
-        {
-          id: 1,
-          name: '发货方',
-          prop: 'createOrgid',
-          type: 2,
-          show: false
-        },
-        {
-          id: 2,
-          name: '发货人',
-          prop: 'sendP',
-          type: 2,
-          show: true
-        },
-        {
-          id: 3,
-          name: '联系电话',
-          prop: 'arrivalP',
-          type: 2,
-          show: false
-        },
-        {
-          id: 1,
-          name: '发货地址',
-          prop: 'createOrgid',
-          type: 2,
-          show: false
-        },
-        {
-          id: 2,
-          name: '收货方',
-          prop: 'sendP',
-          type: 3,
-          show: false
-        },
-        {
-          id: 3,
-          name: '收货人',
-          prop: 'arrivalP',
-          type: 3,
-          show: true
-        },
-        {
-          id: 1,
-          name: '联系电话',
-          prop: 'createOrgid',
-          type: 3,
-          show: true
-        },
-        {
-          id: 2,
-          name: '收货地址',
-          prop: 'sendP',
-          type: 3,
-          show: true
-        },
-        {
-          id: 3,
-          name: '到站3',
-          prop: 'arrivalP',
-          type: 4,
-          show: true
-        },
-        {
-          id: 1,
-          name: '开单网点4',
-          prop: 'createOrgid',
-          type: 4,
-          show: false
-        },
-        {
-          id: 2,
-          name: '发站4',
-          prop: 'sendP',
-          type: 4,
-          show: true
-        },
-        {
-          id: 3,
-          name: '运费合计',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '付款方式',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '现付',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '到付',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '运费合计',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '付款方式',
-          prop: 'arrivalP',
-          type: 5,
-          show: false
-        },
-        {
-          id: 3,
-          name: '现付',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-        {
-          id: 3,
-          name: '到付',
-          prop: 'arrivalP',
-          type: 5,
-          show: true
-        },
-      ]
+      orgDataList: [],
+      dataList: [],
+      org_m_index: {
+        tmsOrderShipTop: 1,
+        customerInfo: 2,
+        tmsOrderCargoList: 3,
+        tmsOrderShip: 4
+      },
+      m_index: {
+        tmsOrderShipTop: 1,
+        customerInfo: 2,
+        tmsOrderCargoList: 3,
+        tmsOrderShip: 4
+      }
     }
   },
+  mounted() {
+    this.sortModel()
+  },
   methods: {
+    initModelIndex() { // 初始化模块排序
+      if (this.dataList) {
+        this.dataList.forEach((el, index) => {
+          if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+            this.m_index.customerInfo = el.typeOrder
+          } else {
+            this.m_index[el.templateType] = el.typeOrder
+          }
+        })
+        this.org_m_index = objectMerge2({}, this.m_index)
+        console.log('init m_index', JSON.stringify(this.m_index))
+      }
+    },
+    sortModel() {
+      this.$nextTick(() => {
+        if (this.dataList) {
+          let list = document.querySelectorAll('.model-item')
+          let arr = Array.prototype.slice.call(list)
+          arr.sort(function(a, b) {
+            return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
+          })
+          let modelDiv = document.querySelectorAll('.model-list')[0]
+          for (let i = 0; i < arr.length; i++) {
+            modelDiv.appendChild(arr[i])
+            let name = arr[i].getAttribute('data-name')
+            let index = arr[i].getAttribute('data-index')
+          }
+        }
+      })
+    },
+    startDragModel(event) {
+      dom = event.item
+      const modelName = dom.getAttribute('data-name')
+      const modelIndex = Number(dom.getAttribute('data-index'))
+      console.log('start', event, modelName, modelIndex)
+    },
+    endDragModel(event) {
+      dom = Array.prototype.slice.call(event.target.children)
+      console.log('end', event, dom)
+      dom.forEach((el, index) => {
+        const modelName = el.getAttribute('data-name')
+        this.m_index[modelName] = index + 1
+      })
+
+      if (this.dataList) {
+        this.dataList.forEach((el, index) => {
+          if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+            el.typeOrder = this.m_index.customerInfo
+          } else {
+            el.typeOrder = this.m_index[el.templateType]
+          }
+        })
+        console.log('end m_index', JSON.stringify(this.m_index))
+      }
+    },
+    fetchData() {
+      return orderManage.getOrderModel().then(data => {
+          if (data) {
+            this.dataList = data
+            this.setData()
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
+    setData() {
+      // 格式化数据
+      this.dataList.forEach((el, index) => {
+        el.hide = el.hide === 1 ? true : false
+      })
+      this.orgDataList = objectMerge2([], this.dataList)
+      // 初始化模块排序
+      this.initModelIndex()
+    },
     close(done) {
       this.$emit('update:popVisible', false)
       this.$emit('close')
@@ -291,15 +245,64 @@ export default {
     getFeeSetup() {},
     doAction(type) {
       switch (type) {
-        case 'back':
+        case 'close':
           if (this.isModify) {
-            this.isModify = false
+            let str = JSON.stringify(objectMerge2([], this.dataList))
+            let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+            if (str === orgstr) {
+              this.close()
+            } else {
+              this.$confirm('模板已修改, 是否保存?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.updateModel()
+                this.isModify = false
+                this.isClose = false
+              }).catch(() => {
+                this.dataList = objectMerge2([], this.orgDataList)
+                this.initModelIndex()
+                this.sortModel()
+                this.isModify = false
+              })
+            }
           } else {
             this.close()
           }
           break
+        case 'back':
+          if (this.isModify) {
+            let str = JSON.stringify(objectMerge2([], this.dataList))
+            let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+            if (str === orgstr) {
+              this.isClose = true
+              this.isModify = false
+            } else {
+              this.$confirm('模板已修改, 是否保存?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.updateModel()
+                this.isClose = true
+                this.isModify = false
+              }).catch(() => {
+                this.dataList = objectMerge2([], this.orgDataList)
+                this.initModelIndex()
+                this.sortModel()
+                this.isClose = true
+                this.isModify = false
+              })
+            }
+          } else {
+            this.isClose = false
+            this.isModify = true
+          }
+          break
         case 'edit':
           this.isModify = true
+          this.isClose = false
           break
         case 'save':
           const h = this.$createElement
@@ -319,14 +322,12 @@ export default {
               if (action === 'confirm') {
                 instance.confirmButtonLoading = true
                 instance.confirmButtonText = '执行中...'
-                setTimeout(() => {
-                  done()
-                  setTimeout(() => {
-                    instance.confirmButtonLoading = false
-                    this.$message.success('保存成功！')
-                  }, 300)
-                }, 3000)
+                this.updateModel()
+                instance.confirmButtonLoading = false
+                done()
               } else {
+                this.m_index = objectMerge2({}, this.org_m_index)
+                this.dataList = objectMerge2([], this.orgDataList)
                 done()
               }
             }
@@ -336,8 +337,31 @@ export default {
           break
         case 'preview':
           this.isModify = false
+          this.isClose = false
           break
       }
+    },
+    updateModel() {
+      return new Promise((resolve, reject) => {
+        try {
+          let dataList = objectMerge2([], this.dataList)
+          dataList.forEach((el, index) => {
+            el.fieldOrder = index + 1
+            el.hide = el.hide ? 1 : 0
+          })
+          return orderManage.putOrderModel(dataList).then(data => {
+              this.$message.success('保存成功！')
+              this.fetchData()
+              resolve()
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
+              reject(err)
+            })
+        } catch (err) {
+          reject(err)
+        }
+      })
     }
   }
 }
@@ -366,6 +390,7 @@ $cellHoverHeightColor: #409eff;
       margin-bottom: 10px;
       width: 100%;
       position: relative;
+      min-height: $cellHeight;
       clear: both;
       .sortBtn {
         position: absolute;
@@ -394,7 +419,8 @@ $cellHoverHeightColor: #409eff;
           transition: 0.5s;
           float: right;
           margin-top: 7px;
-          color: #999; // display: none;
+          color: #999;
+          display: none;
         }
         &:hover {
           i {
@@ -410,7 +436,7 @@ $cellHoverHeightColor: #409eff;
           height: $cellHeight;
           background-color: $borderLineColor;
           top: -2px;
-          right: 0;
+          right: 0px;
         }
         &:after {
           content: '';
@@ -427,6 +453,13 @@ $cellHoverHeightColor: #409eff;
       }
       .cell-12 {
         width: 100%;
+        &:before {
+          content: '';
+          position: absolute;
+          background-color: rgba(0, 0, 0, 0);
+          top: -2px;
+          right: 0px;
+        }
       }
     }
     .item-1 {
@@ -438,6 +471,7 @@ $cellHoverHeightColor: #409eff;
     .item-2 {
       width: 50%;
       float: left;
+      border-left: 1px solid $borderLineColor;
     }
   }
 
@@ -448,7 +482,6 @@ $cellHoverHeightColor: #409eff;
     text-align: center;
     .item-2 {
       background-color: #cbe1f7;
-      border-right: 1px solid $borderLineColor;
     }
   }
   .model-foot {
