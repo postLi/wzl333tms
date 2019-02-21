@@ -19,7 +19,7 @@
         <el-dropdown-item command="personalSetup">个人设置</el-dropdown-item>
         <el-dropdown-item command="orderSetup">运单设置</el-dropdown-item>
         <el-dropdown-item command="openInNewWindow">独立窗口</el-dropdown-item>
-        <el-dropdown-item command="openModelPop">模板设置</el-dropdown-item>
+        <!-- <el-dropdown-item command="openModelPop">模板设置</el-dropdown-item> -->
       </el-dropdown-menu>
     </el-dropdown>
   </div>

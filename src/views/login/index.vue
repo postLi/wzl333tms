@@ -51,7 +51,7 @@
           </div>
           <div class="rember">
             <el-checkbox v-model="checked">记住密码</el-checkbox>
-            <!-- <p class="rember-tit" @click="forgetPsw">忘记密码</p> -->
+            <!-- <p class="rember-tit" @click="forgetPwd">忘记密码</p> -->
           </div>
         </el-form>
       </div>
@@ -72,6 +72,7 @@
       </div>
     </div>
     <setApiUrl />
+    <!-- <ForgetPwd :popVisible.sync="popVisibleDialog" /> -->
   </div>
 </template>
 <script>
@@ -80,11 +81,13 @@ import { requestFullScreen } from '@/utils/fullScreen'
 import setApiUrl from '@/components/changeApiUrl/index'
 import { objectMerge2 } from '@/utils/index'
 import md5 from 'js-md5'
+import ForgetPwd from './components/forgetPwd'
 
 export default {
   name: 'login',
   components: {
-    setApiUrl
+    setApiUrl,
+    ForgetPwd
   },
   data() {
     // const validateUsername = (rule, value, callback) => {
@@ -109,6 +112,7 @@ export default {
       }
     }
     return {
+      popVisibleDialog: false,
       holder: {
         accNum: '公司ID',
         username: '账号',
@@ -211,9 +215,11 @@ export default {
         }
       })
     },
-    forgetPsw() {
+    forgetPwd() {
+      this.popVisibleDialog = true
+      
       // this.$router.push({ path: '/' })
-      // console.log(5555)
+      console.log(5555)
     },
     accNum() {
       // this.holder = ''
