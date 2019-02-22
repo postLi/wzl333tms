@@ -161,6 +161,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
+          console.warn('用户信息', data)
           // data.rolesIdList = data.rolesId.split(',')
           commit('SET_ROLES', data.rolesIdList)
           commit('SET_NAME', data.username)
@@ -168,7 +169,7 @@ const user = {
           setUsername(data.username)
           commit('SET_COMPANY', data.orgName)
           setOrgId(data.orgid)
-          commit('SET_AVATAR', require('../../assets/role.png'))
+          commit('SET_AVATAR', data.sexFlag === '1' ? require('../../assets/gril.png') : require('../../assets/boy.png'))
           data.roleTree = JSON.parse(data.jsonTree) || null
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
