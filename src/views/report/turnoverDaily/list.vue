@@ -96,7 +96,7 @@ export default {
       hideiframe: 'hide',
       query: {
         currentPage: 1,
-        pageSize: 500
+        pageSize: 1000
         // senderCustomerName: '',
         // shipFromOrgid: '',
         // createTimeStart: '',
