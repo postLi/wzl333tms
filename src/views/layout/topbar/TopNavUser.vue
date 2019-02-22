@@ -26,6 +26,7 @@
           </el-button-group>
         </el-col>
       </el-row>
+      
       <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
     </el-popover>
     <div class="avatar-wrapper" v-popover:popoveruser>
