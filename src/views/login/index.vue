@@ -33,7 +33,7 @@
           </div>
           <div class="rember">
             <el-checkbox v-model="checked">记住密码</el-checkbox>
-            <!-- <p class="rember-tit" @click="forgetPwd">忘记密码</p> -->
+            <p class="rember-tit" @click="forgetPwd">忘记密码</p>
           </div>
         </el-form>
       </div>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <setApiUrl />
-    <!-- <ForgetPwd :popVisible.sync="popVisibleDialog" /> -->
+    <ForgetPwd :popVisible.sync="popVisibleDialog" :info="this.loginForm" />
     
   </div>
 </template>
@@ -231,6 +231,11 @@ export default {
 @import "../../styles/login-index.css";
 .hoverLink:hover {
   border-bottom: 1px solid #eee;
+}
+.rember-tit{
+  &:hover{
+    color: #409eff;
+  }
 }
 
 </style>

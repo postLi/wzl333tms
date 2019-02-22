@@ -152,7 +152,7 @@ export function checkUsername(params) {
  * 根据用户名和电话获取验证码 2
  */
 export function getUserValidate(params) {
-  return fetch.get('/api-system/system/user/v1/getValidate/' + params.username + '/' + params.mobile).then(res => {
+  return fetch.get('/api-system/system/user/v1/getValidate/' + params.username + '/' + params.phone).then(res => {
     return res.data
   })
 }
@@ -160,7 +160,7 @@ export function getUserValidate(params) {
  * 根据用户名和验证码校验验证码 3
  */
 export function checkUserValidate(params) {
-  return fetch.get('/api-system/system/user/v1/checkValidate/' + params.username + '/' + params.mobile + '/' + params.validate).then(res => {
+  return fetch.get('/api-system/system/user/v1/checkValidate/' + params.username + '/' + params.code).then(res => {
     return res.data
   })
 }
