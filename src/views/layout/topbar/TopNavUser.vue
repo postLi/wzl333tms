@@ -7,7 +7,7 @@
         </el-col>
         <el-col :span="16">
           <div class="popoveruser_info_lyy">
-            <p>{{ otherinfo.name }}</p>
+            <p>{{ otherinfo.name }} <img :src="vipIcon" v-if="otherinfo.openAccountType===1"></p>
             <p>{{ company }}</p>
             <p v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'生产环境':'测试环境'}}
               <br>
@@ -64,7 +64,8 @@ export default {
     return {
       popperHide: false,
       showit: false,
-      usersVisible: false
+      usersVisible: false,
+      vipIcon: require('../../../assets/vip.png')
     }
   },
   methods: {
@@ -169,6 +170,10 @@ export default {
     p {
       line-height: 32px;
       font-size: 16px;
+    }
+    img{
+      width: 15px;
+      vertical-align: middle;
     }
   }
   iframe {
