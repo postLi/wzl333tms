@@ -50,10 +50,10 @@
                     <el-input :value="formModel.planArrivedTime " :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                   <el-form-item label="追货宝:">
+                 <!--   <el-form-item label="追货宝:">
                     <el-input v-model="formModel.terminalNo" :maxlength="15" clearable disabled>
                     </el-input>
-                  </el-form-item>
+                  </el-form-item> -->
                   <el-form-item label="备注:" class="art_remk">
                     <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea" disabled>
                     </el-input>

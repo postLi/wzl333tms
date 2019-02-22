@@ -109,7 +109,7 @@ export default {
           label: '序号',
           prop: 'number',
           textAlign: 'center',
-          fixed: true
+          // fixed: true
           // width: '70'
         },
         { // 表头
@@ -117,7 +117,7 @@ export default {
           prop: 'shipGoodsSn',
           textAlign: 'center',
           width: '150',
-          fixed: true
+          // fixed: true
         },
         {
           label: '开单网点',
