@@ -66,6 +66,7 @@
         </table>
       </div>
     </div>
+    
     <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>

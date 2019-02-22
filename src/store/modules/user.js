@@ -157,6 +157,7 @@ const user = {
       commit,
       state
     }) {
+
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
