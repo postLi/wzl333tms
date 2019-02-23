@@ -18,7 +18,7 @@
         <!-- <el-button type="primary" :size="btnsize" icon="el-icon-view" @click="doAction('preview')" plain>打印预览</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
-      <div class="tab_report">
+      <div class="tab_report_daily">
         <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true" :summary-method="getSummary">
           <template v-for="column in columns">
             <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
@@ -29,6 +29,12 @@
             </el-table-column>
           </template>
         </el-table>
+      </div>
+      <div class="info_tab_footer">
+        共计:{{ total }}
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange" :defaultSize="query.pageSize" :sizes="[100, 200, 500, 1000, 2000]" />
+        </div>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
       <div @scroll="handleBottom" style="display: none;" class="info_tab_report" id="report_turnoverDaily">
@@ -78,14 +84,17 @@ import SearchForm from './components/search'
 import { reportTurnoverDaily } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
 import TableSetup from '@/components/tableSetup'
+import Pager from '@/components/Pagination/index'
 export default {
   components: {
     SearchForm,
-    TableSetup
+    TableSetup,
+    Pager
   },
   data() {
     return {
       res: {},
+      total: 0,
       tablekey: 0,
       dataList: [],
       setupTableVisible: false,
@@ -211,6 +220,11 @@ export default {
     this.getScrollWidth()
   },
   methods: {
+    handlePageChange(obj) {
+      this.query.currentPage = obj.pageNum
+      this.query.pageSize = obj.pageSize
+      this.fetchData()
+    },
     getScrollWidth() {
       var noScroll, scroll, oDiv = document.createElement('DIV')
       oDiv.style.cssText = 'position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;'
@@ -224,10 +238,13 @@ export default {
       reportTurnoverDaily(this.query).then(res => {
         if (res.list) {
           res.list.forEach((e, index) => {
-            e.number = index + 1
+            // ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
+            e.number = ((this.query.currentPage-1) * this.query.pageSize) + index + 1
+            console.log(e.number)
           })
         }
         this.res = res || { list: [] }
+        this.total = res.total
         this.report()
       }).catch((err) => {
         this.loading = false
@@ -303,7 +320,8 @@ export default {
               elDataList = data
             }
           }
-          const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+          let propNo = (this.query.currentPage - 1)*this.query.pageSize + k + 1
+          const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? propNo : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
           td.style.textAlign = this.columns[j].textAlign // 设置居中方式
@@ -481,8 +499,8 @@ export default {
   .tab_info {
     transform: translate(0, 0);
   }
-  .tab_report {
-    height: 100%;
+  .tab_report_daily {
+    height: calc(100% - 40px);
     .el-table thead th,
     .el-table thead tr {
       background: #666;

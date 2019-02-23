@@ -54,13 +54,17 @@
 <script>
 export default {
   props: {
-    sizes: {
+    sizes: { // picker 
       type: Array,
       default: () => [100, 200, 300, 400]
     },
-    total: {
+    total: { // 总计
       type: Number,
       default: 0
+    },
+    defaultSize: { // 默认数量
+      type: Number,
+      default: 100
     }
   },
   computed: {
@@ -77,7 +81,7 @@ export default {
     }
   },
   mounted() {
-    this.size = this.sizes[0]
+    this.size = this.defaultSize
   },
   data() {
     return {
