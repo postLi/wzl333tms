@@ -1,6 +1,12 @@
 <!-- 弹出框-创建运单模板设置 -->
 <template>
-  <el-dialog :title="'运单模板'+(isModify?'-编辑':'-详情')" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="close" :key="modelKey">
+  <el-dialog :title="'运单模板'+(isModify?'-编辑':(isClose ? '-详情':'-预览'))" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="close" :key="modelKey" center>
+    <div class="modelDialog-tips">
+      <i class="el-icon-question"></i> 操作提示：
+      <el-tag size="mini" type="warning"><i class="el-icon-check"></i> 打勾为显示, 不打勾为隐藏</el-tag>
+      <el-tag size="mini" type="warning"> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i> 可左右拖拽移动 </el-tag>
+      <el-tag size="mini" type="warning"> <i class="el-icon-d-caret"></i> 可上下拖拽移动</el-tag>
+    </div>
     <!-- 修改界面 -->
     <draggable class="model-list" @start="startDragModel" @end="endDragModel" v-if="isModify">
       <div class="model-item item-1" data-name="tmsOrderShipTop" :data-index="m_index.tmsOrderShipTop">
@@ -45,6 +51,7 @@
           }">
             <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
             <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i>
+            <i class="el-icon-d-caret" v-if="item.fieldProperty!=='shipRemarks'"></i>
           </div>
           <div style="clear:both"></div>
         </draggable>
@@ -383,6 +390,9 @@ $cellHoverHeightColor: #409eff;
   .sortable-ghost {
     border: 2px dotted #409eff;
   }
+  .modelDialog-tips {
+    margin-bottom: 10px;
+  }
 
   .model-list {
     border: 2px solid $borderLineColor;
@@ -402,7 +412,7 @@ $cellHoverHeightColor: #409eff;
         height: $cellHeight;
         background-color: #eee;
         color: #666;
-        cursor: pointer;
+        cursor: move;
       }
 
       .model-cell {
@@ -413,7 +423,7 @@ $cellHoverHeightColor: #409eff;
         min-width: 100px;
         position: relative;
         padding: 0 5px;
-        cursor: pointer;
+        cursor: move;
         transition: 0.5s;
         i {
           transition: 0.5s;

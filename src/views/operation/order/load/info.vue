@@ -146,14 +146,14 @@
                     </el-select>
                   </el-form-item>
                 </div>
-               <!--  <div class="baseInfoCol">
+                <div class="baseInfoCol">
                   <el-form-item prop="remark" label="追货宝">
                     <el-select v-model="formModel.terminalNo" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="changeTerminal" :loading="searchLoading">
                       <el-option v-for="(item, index) in Terminals" :key="index" :value="item.terminalNo">
                       </el-option>
                     </el-select>
                   </el-form-item>
-                </div> -->
+                </div>
                 <div class="baseInfoCol">
                   <el-form-item prop="remark" label="备注" v-if="loadTypeId !== 40">
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>

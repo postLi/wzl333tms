@@ -57,10 +57,10 @@
             <td>
               <el-input v-model="info.truckLoad" :size="btnsize" disabled></el-input>
             </td>
-          <!--   <th>追货宝</th>
+            <th>追货宝</th>
             <td>
               <el-input v-model="info.terminalNo" :size="btnsize" disabled></el-input>
-            </td> -->
+            </td>
             <th>备注</th>
             <td colspan="5">
               <el-input v-model="info.remark" :size="btnsize" disabled></el-input>

@@ -880,6 +880,7 @@ export default {
       },
       RECEIPT_TYPE: {}, // 回单类型中文
       dialogVisibleModel: false, // 
+      modelList: [] // 模板设置列表
     }
   },
   computed: {
@@ -1044,6 +1045,20 @@ export default {
     }
   },
   methods: {
+    fetchModel() { // 获取模板信息
+      return orderManage.getOrderModel().then(data => {
+          if (data) {
+            this.modelList = data
+            this.modelList.forEach((el, index) => {
+              
+            })
+            console.warn('模板信息 modelList', this.modelList)
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
     // 公共工具函数
     showMessage(msg) {
       if (this.isChecked && !this.isCheckedShow) {
@@ -1506,6 +1521,7 @@ export default {
       this.loading = true
 
       this.reset()
+      this.fetchModel()
       this.getBaseSetting().then(res => {
         let param
         if (this.ispop) {
@@ -1537,6 +1553,8 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
+
+
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
