@@ -298,6 +298,10 @@
        objp.h = objp.h - 5 - objp.t
 
        console.log('print obj:', obj)
+       let shipSn = obj.data.map(el => {
+         return el.shipSn
+       })
+       console.log('打印的数据shipSn', shipSn)
        const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
        // console.log('tableId.innerHTML:', tableId.innerHTML)
        LODOP = getLodop()
@@ -372,6 +376,7 @@
        data.forEach(el => {
          obj[el.fieldName] = el.fieldValue
        })
+       console.error('obj', obj)
        fn(obj)
      } else {
        console.error('获取打印信息失败')
@@ -379,6 +384,13 @@
    }).catch(err => {
 
    })
+ }
+
+ function setShowMode() {
+   LODOP.SET_PRINT_MODE('RESELECT_ORIENT', 1) // 设置是否可以重新选择打印方向
+   LODOP.SET_PRINT_MODE('RESELECT_PRINTER', 1) // 设置是否可以重新选择打印机
+   LODOP.SET_PRINT_MODE('RESELECT_PAGESIZE', 1) // 设置是否可以重新选择纸张
+   LODOP.SET_PRINT_MODE('RESELECT_COPIES', 1) // 设置是否可以重新选择打印份数
  }
  // 打印表格 普通table
  export function PrintInSamplePage(obj) {
@@ -390,6 +402,7 @@
      str = str.replace(/(bgcolor="[^"]*"|color="white")/g, '')
 
      LODOP.PRINT_INIT('订货单')
+
      // LODOP.SET_PRINT_STYLE("FontSize", 10);
      // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
      // LODOP.SET_PRINT_STYLE("Bold", 1);
@@ -398,6 +411,7 @@
      LODOP.ADD_PRINT_TABLE('1%', '1%', '98%', '98%', str)
      // LODOP.SET_PREVIEW_WINDOW(0, 0, 0, 800, 600, "");
      LODOP.SET_SHOW_MODE('LANDSCAPE_DEFROTATED', 1) // 横向时的正向显示
+     setShowMode()
      LODOP.PREVIEW()
    } catch (err) {
      getLodop()
@@ -421,7 +435,7 @@
            'engineNum', 'loadAmountall', 'loadWeightall', 'loadVolumeall', 'shipFeeAmount',
            'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage',
            'backpayOilCard', 'carloadInsuranceFee', 'departureTime', 'receivingTime', 'remark',
-           'heading_content',
+           'heading_content', 'actualSendtime'
          ]
          propArr.forEach(el => {
            str += el + '=' + (obj[el] === null ? '' : obj[el]) + '&'
@@ -1110,6 +1124,7 @@
 
  // 格式化数据
  function formatTableData(obj) {
+   console.warn('obj', obj)
    /*  obj.columns.sort((a, b) => {
       return a.fixed ? -1 : 0
     }) */
@@ -1120,11 +1135,6 @@
          el['index'] = k + 1
          el['id'] = k + 1
          el['number'] = k + 1
-         /* if (column.label === '序号') {
-
-         } else {
-
-         } */
        }
        if (typeof el[column.prop] === 'undefined' || el[column.prop] === null) {
          el[column.prop] = ''

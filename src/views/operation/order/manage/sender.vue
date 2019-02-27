@@ -24,6 +24,7 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
                    v-has:ORDERMANGER_EXP>导出
         </el-button>
+        
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
           表格设置
         </el-button>

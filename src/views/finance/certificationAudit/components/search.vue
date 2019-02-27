@@ -3,7 +3,7 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="凭证时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" type="daterange" align="right" :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
+          <el-date-picker v-model="searchCreatTime" type="daterange" unlink-panels align="right" :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
           </el-date-picker>
         </div>
       </el-form-item>

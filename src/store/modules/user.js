@@ -3,7 +3,8 @@ import {
   login,
   logout,
   getInfo,
-  refreshToken
+  refreshToken,
+  loginOhter
 } from '@/api/login'
 import Cookies from 'js-cookie'
 import {
@@ -101,6 +102,41 @@ const user = {
         })
       })
     },
+    OtherLogin({
+      commit
+    }, userInfo) {
+      const username = userInfo.switch_username.trim()
+      return new Promise((resolve, reject) => {
+        loginOhter(userInfo).then(response => {
+          const data = response
+          console.log('OtherLogin data', data)
+          if (location.href.indexOf('192.168.1') !== -1) {
+            const token = data.access_token
+            window.localStorage.ANFA_tms_login = JSON.stringify(data)
+            const obj = localStorage.lastTmsToken || ''
+            const arr = obj.split(',')
+            if (arr.length < 5) {
+              arr.push(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
+            } else {
+              arr.unshift(new Date().toLocaleString() + '|' + username + '|' + token + '|' + data.expires_in)
+              arr.splice(4, 1)
+            }
+            localStorage.lastTmsToken = arr.join(',')
+          }
+
+          setToken(data.access_token)
+          setRefreshToken(data.refresh_token)
+          setUsername(username)
+          setOrgId(userInfo.accNum)
+          commit('SET_TOKEN', data.access_token)
+          commit('SET_USERNAME', username)
+          Cookies.set(refreshTimeKey, +new Date())
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
 
     // 前端设置token信息
     FeLogin({
@@ -124,6 +160,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
+          console.warn('用户信息', data)
           // data.rolesIdList = data.rolesId.split(',')
           commit('SET_ROLES', data.rolesIdList)
           commit('SET_NAME', data.username)
@@ -131,7 +168,7 @@ const user = {
           setUsername(data.username)
           commit('SET_COMPANY', data.orgName)
           setOrgId(data.orgid)
-          commit('SET_AVATAR', require('../../assets/role.png'))
+          commit('SET_AVATAR', data.sexFlag === '1' ? require('../../assets/gril.png') : require('../../assets/boy.png'))
           data.roleTree = JSON.parse(data.jsonTree) || null
 
           // 如果有访问系统设置的权限，则先获取下系统设置信息，有利于后面的操作
@@ -146,11 +183,19 @@ const user = {
             type: '',
             module: 'finance'
           })
-          Promise.all([pro1, pro2]).then(resArr => {
+          const pro3 = getAllSetting({
+            orgid: data.orgid,
+            type: '',
+            module: 'base'
+          })
+          Promise.all([pro1, pro2, pro3]).then(resArr => {
             const res = resArr[0]
+            console.warn('resArr::::::', resArr)
 
             data.systemSetup = res
             data.systemSetup.financeSetting = resArr[1].financeSetting
+            data.systemSetup.uploadLogo = resArr[2].uploadLogo
+            data.systemSetup.switchUser = resArr[2].switchUser
             commit('SET_OTHERINFO', data)
 
             // 补充公司信息

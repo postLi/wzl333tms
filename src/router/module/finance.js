@@ -12,17 +12,17 @@ export default {
   },
   icon: 'caiwu',
   children: [{
-      path: '/finance/index',
-      icon: 'QQ',
-      hidden: true,
-      name: '财务管理',
-      component: _import('finance/index'),
-      meta: {
+    path: '/finance/index',
+    icon: 'QQ',
+    hidden: true,
+    name: '财务管理',
+    component: _import('finance/index'),
+    meta: {
         role: ['admin'],
         title: '财务管理',
         noCache: true
       }
-    }, {
+  }, {
       path: '/finance/accountsReceivable',
       icon: 'caiwugl1_yingshou',
       name: 'accountsReceivable',
@@ -242,6 +242,19 @@ export default {
             istab: true,
             code: 'SHIP_PAYLIST6'
           }
+        }, {
+          path: '/finance/accountsPayable/waybill/terminal',
+          icon: 'QQ',
+          name: '终端送货费',
+          component: _import('finance/accountsPayable/waybill/terminal'),
+          meta: {
+            role: ['admin'],
+            ptitle: '运单核销',
+            title: '终端送货费',
+            noCache: true,
+            istab: true,
+            code: 'SHIP_PAYLIST7'
+          }
         }]
       }, {
         path: '/finance/accountsPayable/batch',
@@ -394,7 +407,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '财务日记账',
-        'code': 'FINANCE_FLOW',
+        'code': 'FINANCE_BILLRECORD',
         stitle: '日记账',
         noCache: false
       }
@@ -407,7 +420,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '财务日记账明细',
-        'code': 'FINANCE_FLOW',
+        'code': 'BILLRECORD_DETAIL',
         stitle: '日记账',
         noCache: false
       }
@@ -427,13 +440,13 @@ export default {
     //   component: _import('finance/settleLog/index'),
     //   meta: { role: ['admin'], title: '资金流水明细', code: 'FINANCE_FLOW', noCache: false }
     // },
-    {
-      path: '/finance/reconciliation',
-      icon: 'caiwugl6_caiwudz',
-      redirect: '/finance/reconciliation/carrier',
-      name: 'reconciliation',
-      component: _import('finance/reconciliation/index'),
-      meta: {
+  {
+    path: '/finance/reconciliation',
+    icon: 'caiwugl6_caiwudz',
+    redirect: '/finance/reconciliation/carrier',
+    name: 'reconciliation',
+    component: _import('finance/reconciliation/index'),
+    meta: {
         role: ['admin'],
         title: '财务对账',
         noCache: false,
@@ -441,7 +454,7 @@ export default {
         istab: true,
         code: 'FINANCE_verification'
       },
-      children: [{
+    children: [{
         path: '/finance/reconciliation/carrier',
         icon: 'QQ',
         name: '承运商对账',
@@ -527,7 +540,7 @@ export default {
           }
         }]
       }]
-    }, {
+  }, {
       path: '/finance/unusual',
       icon: 'cwgl_ydfy',
       name: 'financeunusual',
@@ -703,20 +716,20 @@ export default {
     //     'code': 'FINANCE_IOMANAGE',
     //     noCache: false
     //   }
-    // }, 
-    {
-      path: '/finance/financeInfo',
-      icon: 'caiwugl3_shouzhifs',
-      name: 'financeInfo',
-      component: _import('finance/financeInfo/index'),
-      meta: {
+    // },
+  {
+    path: '/finance/financeInfo',
+    icon: 'caiwugl3_shouzhifs',
+    name: 'financeInfo',
+    component: _import('finance/financeInfo/index'),
+    meta: {
         role: ['admin'],
         title: '财务初始化',
         stitle: '财务初始化',
         'code': 'FINANCE_INIT',
         noCache: false
       },
-      children: [{
+    children: [{
         path: '/finance/financeInfo/subjectInfo',
         icon: 'QQ',
         name: '科目定义',
@@ -749,8 +762,8 @@ export default {
           noCache: false,
           code: 'INIT_VERIFY_DIRECTION'
         }
-      }, ]
-    }, {
+      }]
+  }, {
       path: '/finance/certificationAudit',
       icon: 'caiwugl3_shouzhifs',
       name: 'certificationAudit',
@@ -764,19 +777,19 @@ export default {
       }
     },
 
-    {
-      path: '/finance/reconciliation/carrier/detailTable',
-      icon: 'QQ',
-      hidden: true,
-      name: '承运商对账明细',
-      component: _import('finance/reconciliation/carrier/components/detailTable/index'),
-      meta: {
+  {
+    path: '/finance/reconciliation/carrier/detailTable',
+    icon: 'QQ',
+    hidden: true,
+    name: '承运商对账明细',
+    component: _import('finance/reconciliation/carrier/components/detailTable/index'),
+    meta: {
         role: ['admin'],
         title: '承运商对账',
         noCache: true,
         code: 'FINANCE_CARRIERDETAIL'
       }
-    }, {
+  }, {
       path: '/finance/reconciliation/group/detailTable',
       icon: 'QQ',
       hidden: true,
@@ -802,18 +815,18 @@ export default {
       }
     },
     // 承运商对账-创建对账
-    {
-      path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '承运商创建对账单',
-      component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'),
-      meta: {
+  {
+    path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '承运商创建对账单',
+    component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'),
+    meta: {
         role: ['admin'],
         title: '创建对账单',
         noCache: false
       }
-    }, {
+  }, {
       path: '/finance/reconciliation/group/detailTable/groupRecon',
       icon: 'QQ',
       hidden: true,
@@ -826,56 +839,56 @@ export default {
       }
     },
     // //客户对账-创建对账 customerRecon
-    {
-      path: '/finance/reconciliation/customer/detailTable/customerRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '创建对账明细',
-      component: _import('finance/reconciliation/customer/components/detailTable/components/customerRecon'),
-      meta: {
+  {
+    path: '/finance/reconciliation/customer/detailTable/customerRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '创建对账明细',
+    component: _import('finance/reconciliation/customer/components/detailTable/components/customerRecon'),
+    meta: {
         role: ['admin'],
         title: '创建对账单',
         noCache: false
       }
-    },
+  },
     // 车辆-干线
-    {
-      path: '/finance/reconciliation/carfee/components/arteryRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '干线对账明细',
-      component: _import('finance/reconciliation/carfee/components/arteryRecon'),
-      meta: {
+  {
+    path: '/finance/reconciliation/carfee/components/arteryRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '干线对账明细',
+    component: _import('finance/reconciliation/carfee/components/arteryRecon'),
+    meta: {
         role: ['admin'],
         title: '创建对账单',
         noCache: false
       }
-    },
+  },
     // 车辆-短驳
-    {
-      path: '/finance/reconciliation/carfee/components/shortRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '短驳对账明细',
-      component: _import('finance/reconciliation/carfee/components/shortRecon'),
-      meta: {
+  {
+    path: '/finance/reconciliation/carfee/components/shortRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '短驳对账明细',
+    component: _import('finance/reconciliation/carfee/components/shortRecon'),
+    meta: {
         role: ['admin'],
         title: '创建对账单',
         noCache: false
       }
-    },
+  },
     // 车辆-送货
-    {
-      path: '/finance/reconciliation/carfee/components/deliverRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '送货对账明细',
-      component: _import('finance/reconciliation/carfee/components/deliverRecon'),
-      meta: {
+  {
+    path: '/finance/reconciliation/carfee/components/deliverRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '送货对账明细',
+    component: _import('finance/reconciliation/carfee/components/deliverRecon'),
+    meta: {
         role: ['admin'],
         title: '创建对账单',
         noCache: false
       }
-    }
+  }
   ]
 }

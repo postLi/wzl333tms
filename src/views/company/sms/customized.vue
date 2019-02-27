@@ -31,7 +31,7 @@
           </el-table-column>
           <el-table-column sortable label="发送状态" width="120" prop="sendStatus">
             <template slot-scope="scope">
-              <el-switch v-model="scope.row.sendStatus" active-color="#67c23a" :active-text="scope.row.sendStatus?'开':'关'" @change="(newVal) => handleEnable(newVal, scope.row)"></el-switch>
+              <el-switch v-model="scope.row.sendStatus" active-color="#67c23a" :active-text="scope.row.sendStatus?'开':'关'" @dblclick.stop.prevent.native @change="(newVal) => handleEnable(newVal, scope.row)"></el-switch>
             </template>
           </el-table-column>
         </el-table>

@@ -837,7 +837,17 @@ export default {
         }
 
       ]
+    }, {
+      path: '/operation/order/trucklog',
+      icon: 'yygl8_songhuo',
+      name: 'trucklog',
+      component: _import('operation/order/trucklog/index'),
+      meta: {
+        role: ['admin'],
+        title: '轨迹跟踪',
+        noCache: false,
+        'code': ''
+      }
     }
-
   ]
 }

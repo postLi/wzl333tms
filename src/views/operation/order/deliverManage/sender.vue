@@ -149,7 +149,7 @@ export default {
       },
       {
         label: '批次状态',
-        prop: 'batchTypeName',
+        prop: 'bathStatusName',
         width: '120'
       },
       {
@@ -246,6 +246,9 @@ export default {
       }
       return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
         this.infoList = data.list
+        this.infoList.forEach((el, index) =>{
+          el.bathStatusName = el.batchTypeName
+        })
         this.total = data.total
         this.loading = false
       })

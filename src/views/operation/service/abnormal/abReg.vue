@@ -470,7 +470,7 @@ export default {
           break
         // 删除
         case 'delete':
-          const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
+          // const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].id
           // =>todo 删除多个
           // ids = ids.join(',')
           // const ids = this.selected.filter(el => {
@@ -478,12 +478,14 @@ export default {
           // }).map(el => {
           //   return el.id
           // })
-          const ids = this.selected.map(item => {
-            return item.id
-          })
+          if (this.selected.length > 1) {
+            this.$message.warning('请选择一条数据~')
+            return false
+          }
+          const ids = this.selected[0].id
           // console.log(ids)
           if (this.selected[0].abnormalStatus === 118) {
-            this.$confirm('确定要删除 ' + deleteItem + ' 订单异常信息吗？', '提示', {
+            this.$confirm('确定要删除订单异常信息吗？', '提示', {
               confirmButtonText: '删除',
               cancelButtonText: '取消',
               type: 'warning'

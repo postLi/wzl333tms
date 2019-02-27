@@ -402,7 +402,7 @@
             { required: true, message: '请选择城市' }
           ],
           accountName: [
-            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME_NOUP },
             { max: 15, message: '不能超过15个字符', trigger: 'blur' }
           ]
         },
@@ -411,6 +411,7 @@
       }
     },
     mounted() {
+
     },
     methods: {
       fetchData() {
@@ -520,6 +521,7 @@
               }
               this.popTitle = '新增网点'
               this.loading = false
+              this.$emit('update:isModify', false)
             }).catch(err => {
               this._handlerCatchMsg(err)
               this.loading = false

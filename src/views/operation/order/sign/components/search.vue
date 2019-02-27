@@ -6,7 +6,7 @@
             <el-date-picker
               v-model="searchCreatTime"
               :default-value="defaultTime"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               popper-class='searchCreatTime'
               value-format="yyyy-MM-dd"

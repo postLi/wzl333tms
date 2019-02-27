@@ -5,14 +5,12 @@
       <el-form-item label="配载时间">
         <el-date-picker
           v-model="searchCreatTime"
-          type="daterange"
+          type="daterange" unlink-panels
           align="right"
-          unlink-panels
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions2"
           value-format="timestamp"
-
           >
         </el-date-picker>
       </el-form-item>
@@ -46,7 +44,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="发车网点">
-        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid" clearable></SelectTree>
+        <SelectTree v-model="searchForm.orgId" :orgid="otherinfo.orgid"></SelectTree>
       </el-form-item>
       <el-form-item label="到车网点">
         <SelectTree v-model="searchForm.arriveOrgid" clearable></SelectTree>

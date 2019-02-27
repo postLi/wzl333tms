@@ -50,6 +50,10 @@
                     <el-input :value="formModel.planArrivedTime " :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
+                   <el-form-item label="追货宝:">
+                    <el-input v-model="formModel.terminalNo" :maxlength="15" clearable disabled>
+                    </el-input>
+                  </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
                     <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea" disabled>
                     </el-input>
@@ -142,9 +146,9 @@
               </div>
               <div class="tab_info artDepart_table ">
                 <div class="btns_box_send">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain class="table_print">打印清单
+                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_print">打印清单
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('print')" plain class="table_import">导出清单
+                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出清单
                   </el-button>
                   <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
                     <p>表格宽度修改了，是否要保存？</p>
@@ -156,7 +160,7 @@
                   </el-popover>
                 </div>
                 <div class="infos_tab">
-                  <el-table row-key="repertoryId" @header-dragend="setTableWidth" :key="tablekey" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
+                  <el-table :class="hideFixTable" row-key="repertoryId" @header-dragend="setTableWidth" :key="tablekey" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" stripe>
                     <el-table-column fixed type="selection" width="50" sortable></el-table-column>
                     <template v-for="column in tableColumn">
                       <el-table-column show-overflow-tooltip :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" sortable></el-table-column>
@@ -353,9 +357,9 @@
                   <div class="p_input">
                     <span></span>
                     <el-form-item label="六、本次发车时间为">
-                      <el-input size="mini" disabled :value="formModel.departureTime "></el-input>
+                      <el-input size="mini" disabled :value="formModel.actualSendtime"></el-input>
                       ，到达时间为
-                      <el-input size="mini" disabled :value="formModel.receivingTime "></el-input>
+                      <el-input size="mini" disabled :value="formModel.receivingTime"></el-input>
                       。
                     </el-form-item>
                     <p class="p_salf">司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>
@@ -465,7 +469,7 @@ import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 import { PrintContract } from '@/utils/lodopFuncs'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import { getLookContract, getEditContract } from '@/api/operation/arteryDepart'
+import { getLookContract, getEditContract, updateLoadSort } from '@/api/operation/arteryDepart'
 import Sortable from 'sortablejs'
 
 export default {
@@ -584,7 +588,8 @@ export default {
           prop: 'shipFromOrgName',
           width: '150',
           fixed: true
-        }, {
+        },
+        {
           label: '运单号',
           prop: 'shipSn',
           width: '120',
@@ -710,7 +715,8 @@ export default {
       oldList: [],
       newList: [],
       sortable: null,
-      carrierItem: []
+      carrierItem: [],
+      hideFixTable: ''
     }
   },
   components: {
@@ -788,7 +794,7 @@ export default {
       this.$nextTick(() => {
         let obj = {
           selector: '.infos_tab .el-table__body-wrapper > table > tbody',
-          sortable: this.sortable,
+          sortable: this.sortable
         }
         this.setSort(obj)
         this.oldList = this.usersArr.map(v => v.repertoryId)
@@ -799,21 +805,50 @@ export default {
       const el = document.querySelectorAll(obj.selector)[0]
       obj.sortable = Sortable.create(el, {
         animation: 150, //动画参数
-        ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
+        ghostClass: 'sortables-ghost',
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')
-          // to avoid Firefox bug
-          // Detail see : https://github.com/RubaXa/Sortable/issues/1012
+        },
+        onStart: evt => {
+          console.log('sdfsfw')
+          this.hideFixTable = 'hideFixTable'
         },
         onEnd: evt => {
           const targetRow = this.usersArr.splice(evt.oldIndex, 1)[0]
           this.usersArr.splice(evt.newIndex, 0, targetRow)
-
-          // for show the changes, you can delete in you code
           const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
           this.newList.splice(evt.newIndex, 0, tempIndex)
+          this.putUpdateLoadSort()
+          this.hideFixTable = ''
         }
       })
+    },
+    putUpdateLoadSort() {
+      let arr = this.usersArr.map(el => {
+        if (el) {
+          return el.id
+        }
+      })
+      let shipSn = []
+      this.usersArr.forEach(el => {
+        shipSn.push(el.shipSn)
+      })
+      console.log('列表shipSn', shipSn)
+      updateLoadSort(arr).then(data => {
+          this.$message.success('排序保存成功！')
+          let selected = []
+          this.usersArr.forEach(el => {
+            this.selected.forEach(e => {
+              if (e.repertoryId === el.repertoryId) {
+                selected.push(e)
+              }
+            })
+          })
+          this.selected = objectMerge2([], selected)
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     comInfo(item) {
       this.sendContract = {
@@ -1032,17 +1067,21 @@ export default {
         // 导出数据table_import
         // 导出
         case 'export':
-          PrintInFullPage({
+          SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr,
-            appendTop: appendTopStr
+            name: '干线发车-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
           // 打印
         case 'print':
-          SaveAsFile({
+          let shipSns = []
+          this.usersArr.forEach(el => { shipSns.push(el.shipSn) })
+          console.log('this.usersArr', shipSns, this.usersArr)
+          PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
-            columns: columnArr
+            columns: columnArr,
+            appendTop: appendTopStr
           })
           break
       }
@@ -1089,16 +1128,16 @@ export default {
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
       formModel.remark = this.sendContract.aboutLocal
-      
-
+      console.log('formModel',formModel)
       PrintContract(formModel)
-      // console.log(path);
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = new Date().getTime() // 刷新表格视图
       this.$refs.multipleTable.doLayout()
-      this.initSort()
+      setTimeout(() => {
+        this.initSort()
+      }, 300)
     },
     setTableWidth(newWidth, oldWidth, column, event) {
       console.log('set table:', newWidth, oldWidth, column)
@@ -1123,8 +1162,8 @@ export default {
     },
     saveToTableSetup() {
       this.visible2 = false
-      this.initSort()
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
+      this.initSort()
     },
     showSaveBox() {
       clearTimeout(this.tabletimer)
@@ -1183,17 +1222,17 @@ export default {
     }
     .sortable-ghost.hover-row {
 
-        opacity: .8;
-        color: #fff !important;
-        background: #42b983 !important;
-      }
+      opacity: .8;
+      color: #fff !important;
+      background: #42b983 !important;
+    }
     .infos_tab {
       width: 100%;
       height: calc(100vh - 570px);
       flex-grow: 1;
       padding: 0 10px;
 
-      
+
       .el-table {
         table {
           th,
@@ -1272,17 +1311,29 @@ export default {
         margin-right: 0;
       }
       .el-form-item.art_remk {
-        width: 100%;
-        .el-form-item__content {
-          width: 88%;
+        width: 53%;
+        .el-form-item__content{
+          width: 82%;
         }
+        .el-input--mini{
+          width: 100%;
+        }
+        // .el-form-item__content {
+        //   width: 88%;
+        // }
       }
     }
   }
+  .hideFixTable{
+      .el-table__body tr.hover-row > td{
+        background:#fff;
+      }
+    }
   .infos_table {
     padding: 0 10px 10px 10px;
     margin-top: 10px;
     border-color: #dcdfe6;
+
     .st_searchinfo {
       border-left: 1px solid #d4d4d4;
       border-right: 1px solid #d4d4d4;
@@ -1330,6 +1381,11 @@ export default {
     }
   }
 }
+
+
+
+
+
 
 
 

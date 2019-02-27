@@ -4,7 +4,7 @@
       <div class="tab_info">
         <div class="btns_box">
             <el-button type="primary" :size="btnsize" icon="el-icon-sold-out" plain @click="doAction('recycle')" v-has:RECE_BACK>回单回收</el-button>
-            <el-button type="primary" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_CANCEL>取消回收</el-button>
+            <el-button type="warning" :size="btnsize" icon="el-icon-remove-outline" @click="doAction('cancel')" plain v-has:RECE_CANCEL>取消回收</el-button>
             <!-- <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain>删除</el-button> -->
             <el-button type="primary" :size="btnsize" icon="el-icon-upload2" @click="doAction('export')" plain v-has:RECE_EXP>导出</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:RECE_PRI>打印</el-button>
@@ -598,7 +598,7 @@ export default {
     doAction(type) {
           // 判断是否有选中项
       console.log(this.selected)
-      if (!this.selected.length && type !== 'exprot' && type !== 'print') {
+      if (!this.selected.length && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'

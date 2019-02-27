@@ -162,3 +162,13 @@ export function getRepertoryInfo(arriveOrgid) {
     return res.data
   })
 }
+
+
+/**
+ * 详情列表排序
+ */
+export function updateLoadSort(data) {
+  return fetch.put('/api-order/order/load/v1/updateLoadSort', data).then(res => {
+    return res.data
+  })
+}

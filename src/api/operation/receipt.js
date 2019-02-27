@@ -13,8 +13,11 @@ import fetch from '../../utils/fetch'
  */
 export function postReceipt(params) {
   return fetch.post('/api-order/order/receipt/v1/list', params).then(res => {
-                // console.log(res);
-    return res.data || { list: [], totalCount: 0 }
+    // console.log(res);
+    return res.data || {
+      list: [],
+      totalCount: 0
+    }
   })
 }
 
@@ -30,5 +33,17 @@ export function putUpdateReceipt(params) {
  * @param {*} params
  */
 export function putUpdateCancelReceipt(params) {
-  return fetch.put('/api-order/order/receipt/v1/updateCancelReceipt/',params)
+  return fetch.put('/api-order/order/receipt/v1/updateCancelReceipt/', params)
+}
+/**
+ * 根据ids做批量回单已回
+ */
+export function acceptShips(params) {
+  return fetch.put('/api-order/order/receipt/v1/accept/' + params)
+}
+/**
+ * 根据ids做批量取消已回
+ */
+export function cancelAcceptShips(params) {
+  return fetch.put('/api-order/order/receipt/v1/cancelAccept/' + params)
 }

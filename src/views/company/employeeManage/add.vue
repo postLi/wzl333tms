@@ -6,11 +6,11 @@
           <el-input v-model="form.name" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobilephone">
-          <el-input v-numberOnly v-model="form.mobilephone" :maxlength="11" auto-complete="off"></el-input>
+          <el-input v-model="form.mobilephone" :maxlength="11" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
-            <div slot="content">账号可以由字母、数字组成<br/>长度范围2~30个字符</div>
+            <div slot="content">账号可以由小写字母、数字组成<br/>长度范围2~30个字符</div>
             <!-- <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input> -->
             <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="30" v-onlyNumberAndLetter class="nativeinput">
           </el-tooltip>
@@ -94,6 +94,15 @@ export default {
     ])
   },
   data() {
+    const validateFormMobile = function(rule, value, callback) {
+      if (value === '' || value === null || !value || value === undefined) {
+        callback(new Error('不能为空'))
+      } else if (REGEX.MOBILE.test(value)) {
+        callback()
+      } else {
+        callback(new Error('请输入有效的手机号码'))
+      }
+    }
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -105,21 +114,13 @@ export default {
       }
     }
 
-    const validateFormMobile = function(rule, value, callback) {
-      if (validateMobile(value)) {
-        callback()
-      } else {
-        callback(new Error('请输入有效的手机号码'))
-      }
-    }
-
-    const validateusername = function(rule, value, callback) {
-      if (isvalidUsername(value)) {
-        callback()
-      } else {
-        callback(new Error('用户名只能由中文，数字，字母组成'))
-      }
-    }
+    // const validateFormMobile = function(rule, value, callback) {
+    //   if (validateMobile(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('请输入有效的手机号码'))
+    //   }
+    // }
 
     return {
       querykey: '11',
@@ -145,14 +146,15 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
-        mobilephone: [
-          { required: true, message: '请输入手机号码', pattern: REGEX.MOBILE }
-        ],
+        mobilephone: [{ required: true, trigger: 'change', validator: validateFormMobile }],
+        // mobilephone: [
+        //   { required: true, message: '请输入手机号码', pattern: REGEX.MOBILE }
+        // ],
         orgid: [
           { required: true, message: '请选择归属网点' }
         ],
         username: [
-          { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+          { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME_NOUP },
           { max: 30, message: '不能超过30个字符', trigger: 'blur' }
         ],
         position: [
@@ -176,17 +178,17 @@ export default {
   mounted() {
     this.form.orgid = this.orgid
     console.log('orgid2222::::::', this.orgid)
-    if (!this.inited) {
-      this.inited = true
-      this.initInfo()
-    }
+    // if (!this.inited) {
+    //   this.inited = true
+    //   this.initInfo()
+    // }
   },
   watch: {
     popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
+      // if (!this.inited) {
+        // this.inited = true
         this.initInfo()
-      }
+      // }
     },
     orgid(newVal) {
       console.log('orgid::::::', newVal)

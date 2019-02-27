@@ -122,11 +122,11 @@ export default {
         },
         {
           label: '短驳时间',
-          prop: 'departureTime',
+          prop: 'actualSendtime',
           width: '160',
           fixed: false,
           slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           }
         },
         {

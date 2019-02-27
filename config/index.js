@@ -80,7 +80,7 @@ module.exports = {
         changeOrigin: true
       },
       '/lingzhiying': {
-        target: 'http://192.168.1.34:7010',
+        target: 'http://192.168.1.55:7010',
         pathRewrite: {
           '^/lingzhiying': ''
         },

@@ -68,7 +68,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange"  @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :key="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -137,6 +137,18 @@ export default {
         arrNoPayName: [],
         arrPayNameActual: [],
         arrhadPayName: []
+      },
+      FINANCE_WAY: {
+        280: '银行卡',
+        281: '支付宝',
+        282: '微信',
+        283: '现金',
+        284: '支票',
+        '银行卡': 280,
+        '支付宝': 281,
+        '微信': 282,
+        '现金': 283,
+        '支票': 284
       }
     }
   },
@@ -160,7 +172,7 @@ export default {
     getSystemTime() {
       getSystemTime().then(data => {
         this.formModel.settlementTime = parseTime(data)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -174,7 +186,7 @@ export default {
           this.formModel.settlementSn = data.settlementSn
           // this.formModel.agent = data.szDtoList[0].agent
           this.formModel.agent = this.otherinfo.name
-          this.formModel.financialWay = this.$const.FINANCE_WAY[data.szDtoList[0].financialWay]
+          this.formModel.financialWay = this.FINANCE_WAY[data.szDtoList[0].financialWay]
           this.formModel.bankAccount = data.szDtoList[0].bankAccount
           this.formModel.wechatAccount = data.szDtoList[0].wechatAccount
           this.formModel.alipayAccount = data.szDtoList[0].alipayAccount
@@ -219,13 +231,13 @@ export default {
     },
     setData() { // 设置传给后台的数据结构
       if (typeof this.formModel.financialWay === 'string') {
-        this.formModel.financialWayId = this.$const.FINANCE_WAY[this.formModel.financialWay]
+        this.formModel.financialWayId = this.FINANCE_WAY[this.formModel.financialWay]
         this.formModel.financialWay = this.formModel.financialWay
       } else {
         this.formModel.financialWayId = this.formModel.financialWay
-        this.formModel.financialWay = this.$const.FINANCE_WAY[this.formModel.financialWay]
+        this.formModel.financialWay = this.FINANCE_WAY[this.formModel.financialWay]
       }
-       this.loadTable.forEach(e => {
+      this.loadTable.forEach(e => {
         this.feeName.arrPayName.forEach((el, index) => {
           e[el] = e[this.feeName.arrPayNameActual[index]]
         })
@@ -254,11 +266,11 @@ export default {
       this.setData()
       this.loading = true
       postAddIncome(this.addIncomeInfo).then(data => {
-        this.loading =false
+          this.loading = false
           this.$message({ type: 'success', message: '保存成功！' })
           this.getFeeInfo()
           this.tableKey = new Date().getTime()
-          this.$router.push({ path: './settleLog' , query:{ pageKey: new Date().getTime()  }})
+          this.$router.push({ path: './settleLog', query: { pageKey: new Date().getTime() } })
         })
         .catch(err => {
           this.loading = false
@@ -317,7 +329,7 @@ export default {
     },
     getOrgFirstFinancialWay() { // 获取收支方式
       let obj = {
-        financialWay: this.$const.FINANCE_WAY[this.formModel.financialWay], // 转中文
+        financialWay: this.FINANCE_WAY[this.formModel.financialWay], // 转中文
         orgId: this.getRouteInfo
       }
       getOrgFirstFinancialWay(obj).then(data => {
@@ -331,7 +343,7 @@ export default {
           this.formModel.wechatAccount = ''
           this.formModel.alipayAccount = ''
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

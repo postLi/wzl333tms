@@ -1,7 +1,7 @@
 <template>
   <el-form ref="searchForm" inline label-position="right" :model="searchForm" label-width="60px" class="tableHeadItemForm">
     <el-form-item>
-      <el-select v-model="senderSearch" placeholder="发货方|发货人" :size="btnsize" clearable @clear="clearSearchSelect" @focus="clearSender">
+      <el-select v-model="senderSearch" placeholder="发货方或发货人" :size="btnsize" clearable @clear="clearSearchSelect" @focus="clearSender">
         <el-option label="发货方" value="unit"></el-option>
         <el-option label="发货人" value="customer"></el-option>
       </el-select>
@@ -12,6 +12,7 @@
       v-model="searchForm.shipSenderName" 
        :maxlength="15"
       :size="btnsize" 
+       @focus="focusFormItm('shipSenderName')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderName',queryString, cb)" placeholder="发货人搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -22,6 +23,7 @@
       v-model="searchForm.shipSenderUnit" 
       :size="btnsize" 
        :maxlength="15"
+        @focus="focusFormItm('shipSenderUnit')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSenderUnit',queryString, cb)" placeholder="发货方搜索" 
       @select="handleSelect">
       </el-autocomplete>
@@ -31,6 +33,7 @@
        popper-class="popperHide"
       v-model="searchForm.shipSn" 
       :size="btnsize" 
+       @focus="focusFormItm('shipSn')"
       :fetch-suggestions="(queryString, cb) => querySearch( 'shipSn',queryString, cb)" 
       placeholder="运单号搜索" 
       :maxlength="20"
@@ -54,7 +57,7 @@ export default {
       senderSearch: '',
       searchForm: {
         shipSenderName: '',
-        senderCustomerUnit: '',
+        shipSenderUnit: '',
         shipSn: ''
       },
       btnsize: 'mini',
@@ -68,6 +71,14 @@ export default {
     }
   },
   methods: {
+    focusFormItm (type) {
+      // 清空其他输入框
+        for(let item in this.searchForm) {
+        if (item !== type) {
+          this.$set(this.searchForm, item, '')
+        }
+      }
+    },
     clearSearchSelect (obj) { // 如果选择框为空恢复右边数据列表
       this.$emit('change', objectMerge2([], this.info))
     },
@@ -90,7 +101,9 @@ export default {
     },
     createFilter(queryString, type) {
       return (res) => { // 过滤
+        if (res[type]) {
         return (res[type].toLowerCase().indexOf(queryString.toLowerCase()) !== -1)
+        }
       }
     },
     handleSelect(obj) {
@@ -112,9 +125,12 @@ export default {
   margin-left: 5px;
   display: flex;
   flex-direction: row;
-  
-  .el-input {
+  .el-select{
     width: 120px;
+  }
+
+  .el-input {
+    width: 120px !important;
     .el-input__inner {
       padding: 0 10px;
     }
@@ -127,6 +143,9 @@ export default {
   .hidePopper {
     display: none !important;
     background-color: rgba(0, 0, 0, 0);
+  }
+    .el-form--inline .el-form-item{
+      margin-right: 10px !important;
   }
 }
 

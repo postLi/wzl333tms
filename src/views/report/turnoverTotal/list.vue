@@ -90,50 +90,50 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '序号',
-          prop: 'number',
-          textAlign: 'center'
-        },
-        {
-          label: '开单网点',
-          prop: 'orgidName',
-          textAlign: 'center'
-        },
-        {
-          label: '总运费(元)',
-          prop: 'totalFee',
-          textAlign: 'right'
-        },
-        {
-          label: '实收费用(元)',
-          prop: 'shipTotalFee',
-          textAlign: 'right'
-        },
-        {
-          label: '回扣(元)',
-          prop: 'brokerageFee',
-          textAlign: 'right'
-        },
-        {
-          label: '现付(元)',
-          prop: 'nowPayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '到付(元)',
-          prop: 'arrivePayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '回单付(元)',
-          prop: 'receiptPayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '月结(元)',
-          prop: 'monthPayFee',
-          textAlign: 'right'
-        }
+        label: '序号',
+        prop: 'number',
+        textAlign: 'center'
+      },
+      {
+        label: '开单网点',
+        prop: 'orgidName',
+        textAlign: 'center'
+      },
+      {
+        label: '总运费(元)',
+        prop: 'totalFee',
+        textAlign: 'right'
+      },
+      {
+        label: '实收费用(元)',
+        prop: 'shipTotalFee',
+        textAlign: 'right'
+      },
+      {
+        label: '回扣(元)',
+        prop: 'brokerageFee',
+        textAlign: 'right'
+      },
+      {
+        label: '现付(元)',
+        prop: 'nowPayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '到付(元)',
+        prop: 'arrivePayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '回单付(元)',
+        prop: 'receiptPayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '月结(元)',
+        prop: 'monthPayFee',
+        textAlign: 'right'
+      }
       ],
       countCol: [ // 需要合计的-列
         'nowPayFee',
@@ -185,7 +185,7 @@ export default {
             e.number = index + 1
           })
         }
-        this.res = res || {list: []}
+        this.res = res || { list: [] }
         this.report()
       }).catch((err) => {
         this.loading = false
@@ -194,7 +194,7 @@ export default {
     },
     report() {
       this.loading = true
-      let data = this.res.list
+      const data = this.res.list
       let elDataList = data || []
       this.dataList = elDataList
       const countColVal = []
@@ -277,7 +277,7 @@ export default {
               elDataList = data
             }
           }
-          let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+          const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
           td.style.textAlign = this.columns[j].textAlign // 设置居中方式
@@ -342,7 +342,6 @@ export default {
         td.setAttribute('color', 'white')
         td.style.wordBreak = 'break-all'
       }
-
     },
     doAction(type) {
       this.report()
@@ -369,6 +368,7 @@ export default {
     getSearchParam(obj, timeobj) {
       this.query = Object.assign(this.query, obj)
       this.timeobj = timeobj
+      this.tableTitle = parseTime(this.query.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.query.createTimeEnd, '{y}年{m}月{d}日') + '营业额汇总表'
       this.fetchData()
     },
     handleBottom(e) {
@@ -427,7 +427,7 @@ export default {
       const sums = []
       sums[0] = '合计'
       columns.forEach((column, index) => {
-        for (let i in this.countColVal) {
+        for (const i in this.countColVal) {
           if (column.property === i) {
             sums[index] = this.countColVal[i] + ''
           }

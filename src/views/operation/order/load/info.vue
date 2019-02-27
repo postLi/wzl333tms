@@ -16,11 +16,14 @@
               <div class="loadFrom-type-baseInfo">
                 <div :class="loadTypeId===39?'loadFrom-type-baseInfo-network baseInfoCol2':'baseInfoCol'">
                   <el-form-item label="送货费" prop="deliveryFee" v-if="loadTypeId===40" class="multipleInput">
-                    <el-input size="mini" v-model="formModel.deliveryDetailFee" v-number-only:point :maxlength="8" placeholder="送货费">
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.deliveryDetailFee" ref="truckVolume" :maxlength="8" placeholder="送货费" @change="(e)=>changeHandlingFeeAll(e.target.value,'deliveryDetailFee')" />
+                    <input type="text" class="nativeinput" v-number-only:point :value="formModel.deliveryHandlingFee" ref="truckVolume" :maxlength="8" placeholder="装卸费" @change="(e)=>changeHandlingFeeAll(e.target.value, 'deliveryHandlingFee')" />
+                    <span class="input-append">元</span>
+                    <!-- <el-input size="mini" v-model="formModel.deliveryDetailFee" v-number-only:point :maxlength="8" placeholder="送货费">
                     </el-input>
                     <el-input size="mini" v-model="formModel.deliveryHandlingFee" v-number-only:point :maxlength="8" placeholder="装卸费">
                       <template slot="append">元</template>
-                    </el-input>
+                    </el-input> -->
                   </el-form-item>
                   <el-form-item label="到达网点" v-if="loadTypeId===39" class="formItemTextDanger">
                     <div class="select-network-list">
@@ -88,7 +91,6 @@
                   <el-form-item label="操作费" prop="handlingFeeAll" v-if="loadTypeId!==40">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.handlingFeeAll" ref="handlingFeeAll" :maxlength="8" @change="(e)=>changeHandlingFeeAll(e.target.value)" />
                     <span class="input-append">元</span>
-                    <!-- <el-input size="mini" v-model="formModel.handlingFeeAll" v-number-only:point clearable :maxlength="8" @change="changeHandlingFeeAll"></el-input> -->
                   </el-form-item>
                   <el-form-item prop="remark" label="备注" v-else>
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
@@ -103,7 +105,7 @@
                 <div class="baseInfoCol">
                   <el-form-item label="可载重量" prop="truckLoad">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.truckLoad" ref="truckLoad" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'truckLoad')" />
-                    <span class="input-append" style="margin-left: -40px;">千克</span>
+                    <span class="input-append" style="margin-left: -30px;">千克</span>
                   </el-form-item>
                 </div>
                 <div class="baseInfoCol">
@@ -124,11 +126,10 @@
                 </div>
               </div>
               <div class="loadFrom-type-baseInfo">
-                <div class="baseInfoCol"  v-if="loadTypeId===38">
+                <div class="baseInfoCol" v-if="loadTypeId===38">
                   <el-form-item label="短驳费" prop="shortFee">
                     <input type="text" class="nativeinput" v-number-only:point :value="formModel.shortFee" ref="shortFee" :maxlength="8" @change="(e)=>changeTruckNum(e.target.value, 'shortFee')" />
                     <span class="input-append">元</span>
-                    <!-- <el-input size="mini" v-model="formModel.shortFee" clearable :maxlength="8"></el-input> -->
                   </el-form-item>
                 </div>
                 <div v-if="loadTypeId===39" class="baseInfoCol">
@@ -146,12 +147,19 @@
                   </el-form-item>
                 </div>
                 <div class="baseInfoCol">
+                  <el-form-item prop="remark" label="追货宝">
+                    <el-select v-model="formModel.terminalNo" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="changeTerminal" :loading="searchLoading">
+                      <el-option v-for="(item, index) in Terminals" :key="index" :value="item.terminalNo">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="baseInfoCol">
                   <el-form-item prop="remark" label="备注" v-if="loadTypeId !== 40">
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
                 </div>
               </div>
-
             </el-form>
             <!-- 费用参数 -->
             <el-form label-width="0px" :model="formFee" :rules="formFeeRules" ref="formFee" v-if="loadTypeId===39">
@@ -281,7 +289,7 @@ import draggable from 'vuedraggable'
 import { REGEX } from '@/utils/validate'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers } from '@/api/operation/load'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
@@ -314,7 +322,7 @@ export default {
       }
     }
     const validateFormMobile = function(rule, value, callback) {
-       if (value === '' || value === null || !value || value === undefined) {
+      if (value === '' || value === null || !value || value === undefined) {
         callback(new Error('不能为空'))
       } else {
         callback()
@@ -346,12 +354,17 @@ export default {
       }
     }
     return {
+      searchLoading: false,
       visibleChange: false,
       disOrgList: [],
       networkList: [],
       handlingFeeInfo: {
         handlingFeeAll: null,
-        apportionTypeId: null
+        apportionTypeId: null,
+        deliveryHandlingFee: null,
+        value: null,
+        params: 'handlingFee', // 列表计算的字段
+        reParams: 'handlingFeeAll' // 列表返回的字段
       },
       searchQueryData: {
         pageSize: 100,
@@ -381,7 +394,8 @@ export default {
         dirverName: '',
         dirverMobile: '',
         truckIdNumber: '',
-        arriveOrgid: ''
+        arriveOrgid: '',
+        terminalNo: '' // 追货宝
         // truckLoad: '',
         // truckVolume: ''
       },
@@ -424,6 +438,7 @@ export default {
       cacheTruckList: {},
       Drivers: [],
       Trucks: [],
+      Terminals: [], // 跟车宝终端列表
       submitvalidate: false,
       // loadTypeId: 38,
       batchTypeIdFinish: 47,
@@ -451,14 +466,7 @@ export default {
         // leaveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveHandlingFee: [{ trigger: 'blur', validator: validateBigDecimal }],
         // arriveOtherFee: [{ trigger: 'blur', validator: validateBigDecimal }]
-      },
-      apportionTypeDescript: [
-        '(运单 - 回扣）/（总车费 - 总回扣）* 操作费',
-        '操作费 / 票数',
-        '该单重量 / 本车总重量 * 操作费',
-        '该单体积 / 本车总体积 * 操作费',
-        '该单件数 / 本车总件数 * 操作费'
-      ]
+      }
     }
   },
   computed: {
@@ -484,9 +492,7 @@ export default {
       get() {
         return Number(this.$route.query.loadTypeId)
       },
-      set() {
-
-      }
+      set() {}
     },
     totalFormFee: {
       get() {
@@ -509,7 +515,7 @@ export default {
   },
   created() {
     this.setLoadTypeId()
-    this.disOrgList = [this.otherinfo.orgid]
+    this.disOrgList = [this.otherinfo.orgid] // 禁止选择的网点列表
   },
   mounted() {
     // this.getSelectType()
@@ -518,13 +524,14 @@ export default {
   },
   activated() {
     this.getSystemTime()
+
   },
   watch: {
     '$route': {
       handler(to, from) {
         const bothBool = false
         console.log('$route', to, from)
-        if (to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+        if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
           // 1
           // 3
           if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
@@ -544,7 +551,7 @@ export default {
       immediate: true
     },
     networkList: {
-      handler (cval, oval) {
+      handler(cval, oval) {
         let arr = [this.otherinfo.orgid]
         if (cval) {
           cval.forEach(e => {
@@ -567,10 +574,10 @@ export default {
     deleteNetwork(item, index) { // 删除途径网点
       console.log('删除', item, index)
     },
-    startDragNetwork (event) {
+    startDragNetwork(event) {
       this.visibleChange = true
       setTimeout(() => {
-      this.visibleChange = false
+        this.visibleChange = false
       }, 100)
     },
     switchUrl(path, issave) {
@@ -579,18 +586,19 @@ export default {
       let data = {
         truckMessage: this.truckMessage,
         contractNo: this.contractNo,
-        formModel: this.formModel,
-        formFee: this.formFee,
-        apportionTypeList: this.apportionTypeList,
+        formModel: objectMerge2({}, this.formModel),
+        formFee: objectMerge2({}, this.formFee),
+        apportionTypeList: objectMerge2([], this.apportionTypeList),
         loadTable: {
-          left: this.repertoryList,
-          right: this.loadTableInfo
+          left: objectMerge2([], this.repertoryList),
+          right: objectMerge2([], this.loadTableInfo)
         },
         networkList: this.networkList
       }
+      console.log('switchUrl data', data)
       if (issave) {
         // save data 离开配载页面时需要缓存当前配载页面的数据进sessionStorage
-        console.log('save daTA::::::', path)
+        console.log('save daTA::::::', path, data)
         sessionStorage.setItem(path, JSON.stringify(data))
         this.loadTableInfo = []
         this.repertoryList = []
@@ -604,7 +612,6 @@ export default {
       } else {
         // read data
         if (visited) { // 如果tab列表里面有当前配载页 就从sessionStorage恢复页面数据
-          console.log('ssssssss22222222222222')
           data = sessionStorage.getItem(path)
           if (data) {
             data = JSON.parse(data)
@@ -659,6 +666,8 @@ export default {
         console.log('isEdit', this.isEdit)
         this.getSelectAddLoadRepertoryList()
       })
+      // 分摊费用  送货-deliveryFee(送货费) 短驳干线-handlingFee(操作费)
+      this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
 
       if (!this.inited) {
         this.inited = true
@@ -1193,7 +1202,7 @@ export default {
     closeAddTruckVisible() {
       this.addTruckVisible = false
     },
-    initInfo() { // 初始化车辆和司机下拉信息
+    initInfo() { // 初始化车辆和司机下拉信息 初始化跟车宝终端信息
       this.loading = false
       this.truckKey = new Date().getTime()
       this.driverKey = new Date().getTime()
@@ -1204,6 +1213,35 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
+      this.getTerminal()
+    },
+    changeTerminal(val) {
+      if (val) {
+        this.getTerminal(val)
+      }
+    },
+    getTerminal(terminalNo = '') {
+      let companyId = this.otherinfo.companyId
+      if (process.env.NODE_ENV !== 'production') {
+        companyId = 1
+      }
+      let query = {
+        currentPage: 1,
+        pageSize: 100,
+        vo: {
+          companyId: companyId, // 公司id
+          terminalNo: terminalNo ? terminalNo : this.formModel.terminalNo // 设备号 模糊搜索
+        }
+      }
+      getOrdertrailterminal(query).then(data => {
+          if (data) {
+            console.log('Terminals', data)
+            this.Terminals = data.list
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     getDrivers(orgid) {
       if (this.cacheDriverList[orgid]) {
@@ -1247,6 +1285,9 @@ export default {
       // this.formModel.truckLoad = item.truckLoad
       // this.formModel.truckVolume = item.truckVolume
     },
+    handleSelectTerminal(item) {
+      console.warn('选择追货宝', item)
+    },
     querySearch(queryString, cb) {
       const driverList = this.Drivers
       const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
@@ -1257,6 +1298,12 @@ export default {
       const truckList = this.Trucks
       const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
       // 调用 callback 返回车辆列表的数据
+      cb(results)
+    },
+    querySearchTerminal(queryString, cb) {
+      const terminalList = this.Terminals
+      const results = queryString ? terminalList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'terminalNo')) : terminalList
+      // 调用 callback 返回追货宝列表的数据
       cb(results)
     },
     createFilter(queryString, prop) {
@@ -1279,12 +1326,13 @@ export default {
         }
       })
     },
-    getSelectType() {
+    getSelectType() { // 分摊方式 + 说明
       getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
           if (data) {
             this.apportionTypeList = data
-            this.apportionTypeList.forEach((e, index) => {
-              this.$set(e, 'descript', this.apportionTypeDescript[index])
+            this.apportionTypeList.forEach((el, index) => {
+              let descript = this.$const.APPORTION_TYPE_DESCRIPT[el.id]
+              this.$set(this.apportionTypeList[index], 'descript', this.loadTypeId === 40 ? descript.replace(/(操作费)/g, '送货费') : descript)
             })
           }
         })
@@ -1298,16 +1346,31 @@ export default {
     changeLoadNum(val, type) {
       this.$set(this.formFee, type, val)
     },
-    changeHandlingFeeAll(val) {
-      this.$set(this.handlingFeeInfo, 'handlingFeeAll', Number(val))
-      this.$set(this.formModel, 'handlingFeeAll', Number(val))
+    changeHandlingFeeAll(val, type) {
+      let fee = 0
+      if (type) { // 送货-送货费
+        this.$set(this.formModel, type, Number(val))
+        fee = tmsMath._add(this.formModel.deliveryDetailFee || 0, this.formModel.deliveryHandlingFee || 0)
+        this.$set(this.handlingFeeInfo, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
+      } else { // 短驳干线-操作费
+        fee = Number(val)
+        this.$set(this.formModel, 'handlingFeeAll', Number(val))
+      }
+      this.$set(this.handlingFeeInfo, 'handlingFeeAll', fee)
+      this.$set(this.handlingFeeInfo, 'params', (this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'))
+      this.$set(this.handlingFeeInfo, 'reParams', (this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'))
     },
     getApportionTypeId(value) { // 选择分摊方式
-      console.log('getApportionTypeId', value, this.formModel.apportionTypeId)
       this.handlingFeeInfo.apportionTypeId = value
+      this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
+      this.handlingFeeInfo.reParams = this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'
     },
-    getHandingFeeAll(value) {
-      this.$set(this.formModel, 'handlingFeeAll', value)
+    getHandingFeeAll(info) {
+      this.handlingFeeInfo = info
+      this.$set(this.formModel, info.reParams, info.value)
+      if (this.loadTypeId === 40) {
+        this.$set(this.formModel, 'deliveryHandlingFee', info.deliveryHandlingFee)
+      }
     },
     resetHandlingFeeInfo(value) {
       this.$set(this.formModel, 'apportionTypeId', value.apportionTypeId)
@@ -1349,29 +1412,29 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-      .el-collapse {
-        border: 2px solid #cdf;
-      }
-      .el-collapse-item__content {
-        padding: 0 10px;
-      }
-      .el-collapse-item__header {
-        border-bottom: 2px solid #cdf;
-        background-color: #FFFFFF;
-        padding: 0 0 0 20px;
-        height: 40px;
-        line-height: 40px;
-        font-size: 16px;
-        color: #333;
-        position: relative;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      .el-collapse-item__arrow {
-        position: absolute;
-        left: 20px;
-        top: 5px;
-      }
+    .el-collapse {
+      border: 2px solid #cdf;
+    }
+    .el-collapse-item__content {
+      padding: 0 10px;
+    }
+    .el-collapse-item__header {
+      border-bottom: 2px solid #cdf;
+      background-color: #FFFFFF;
+      padding: 0 0 0 20px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      color: #333;
+      position: relative;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .el-collapse-item__arrow {
+      position: absolute;
+      left: 20px;
+      top: 5px;
+    }
     .loadFrom {
       width: 100%;
       margin-bottom: 10px;
@@ -1386,7 +1449,7 @@ export default {
           color: #ef0000;
         }
       }
-      .el-form{
+      .el-form {
         display: inline-block;
         width: 100%;
       }
@@ -1396,28 +1459,45 @@ export default {
       display: flex;
       flex-direction: row;
       width: 100%;
-      margin-bottom: -10px;
-     .baseInfoCol{
-       width: 20%;
+      margin-bottom: -6px;
+      .baseInfoCol {
+        width: 20%;
+      }
+      .baseInfoCol2 {
+        width: 40%;
+      }
+      .multipleInput {
+        .el-form-item__content {
+          display: flex;
+          flex-direction: row;
         }
-     .baseInfoCol2{
-       width: 40%;
-     }
-     .multipleInput{
-       .el-form-item__content{
-         display: flex;
-         flex-direction: row;
-       }
-     }
+        .el-form-item__content>input,
+        .nativeinput,
+        .nativeinput-border {
+          padding: 0 5px;
+        }
+        input::-webkit-input-placeholder {
+          color: #bbb;
+        }
+        input:-moz-placeholder {
+          color: #bbb;
+        }
+        input::-moz-placeholder {
+          color: #bbb;
+        }
+        input:-ms-input-placeholder {
+          color: #bbb;
+        }
+      }
       .input-append {
         position: absolute;
         left: 100%;
-        top: 0;
-        font-size: 14px;
-        margin-left: -25px;
+        top: 1px;
+        font-size: 12px;
+        margin-left: -18px;
         color: #999;
       }
-      .el-form-item{
+      .el-form-item {
         width: 100%;
       }
       .el-autocomplete,
@@ -1444,16 +1524,16 @@ export default {
           color: #222;
           word-break: keep-all;
           position: relative;
-          &:after{
+          &:after {
             content: '';
             position: absolute;
             width: 6px;
-             height: 1px;
+            height: 1px;
             background-color: #ccc;
             right: 0px;
             top: 13px;
-             z-index: 2;
-           }
+            z-index: 2;
+          }
         }
 
 
@@ -1469,14 +1549,14 @@ export default {
             display: flex;
             flex-direction: row;
             width: 100%;
-            .el-select{
+            .el-select {
               width: 100%;
             }
-            .el-input--suffix .el-input__inner{
+            .el-input--suffix .el-input__inner {
               padding-right: 15px;
             }
-            .el-select:last-child{
-              .el-icon-arrow-up{
+            .el-select:last-child {
+              .el-icon-arrow-up {
                 display: none;
               }
             }

@@ -14,7 +14,7 @@
         <div class="smsedit_list clearfix">
           <p v-if="isEmptySearch">暂无数据</p>
           <ul>
-            <li v-for="(item, index) in smsColumn" :key="item.id" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)" v-if="item.isShow === 0">
+            <li v-for="(item, index) in smsColumn" :key="item.colCode" draggable='true' @dragstart='drag($event)' :data-fileName='item.colName' @click="addTemplate(item.colName, item,index)" v-if="item.isShow === 0">
               <el-tag :type="item.colName.indexOf(currentSearch)!==-1?(currentSearch ? 'danger':'info'):'info'" size="mini">{{item.colName}}</el-tag>
             </li>
           </ul>
@@ -69,10 +69,13 @@ export default {
       }
     },
     popVisible(newVal) {},
-    smsColumn(newVal) {
-      if (newVal) {
-        this.smsColumnLen = newVal.length
-      }
+    smsColumn: {
+      handler(cval, oval) {
+        if (cval) {
+          this.smsColumnLen = cval.length
+        }
+      },
+      deep: true
     }
   },
   computed: {
@@ -80,10 +83,10 @@ export default {
       let signName = this.info.sign ? this.info.sign.length : 0
       return this.smsTemplate.length + signName + 2
     },
-    isEmptySearch () {
+    isEmptySearch() {
       console.log(this.smsColumnLen)
       if (this.smsColumnLen === 0) {
-       return true
+        return true
       } else {
         return false
       }
@@ -116,12 +119,18 @@ export default {
     },
     drop(event) {
       event.preventDefault()
-      const strName = dom.getAttribute('data-fileName')
-      this.smsColumn.forEach((e, index) => {
-        if (e.colName === strName) {
-          this.addTemplate(strName, e, index)
-        }
-      })
+      console.log('dom', dom)
+      if (dom) { // 字段框
+        const strName = dom.getAttribute('data-fileName')
+        this.smsColumn.forEach((e, index) => {
+          if (e.colName === strName) {
+            this.addTemplate(strName, e, index)
+          }
+        })
+        dom = null
+      }else { // 内容框
+
+      }
     },
     allowDrop(event) {
       event.preventDefault() // preventDefault() 方法阻止元素发生默认的行为（例如，当点击提交按钮时阻止对表单的提交）
@@ -130,6 +139,7 @@ export default {
       const newStrName = '(' + strName + ')'
       const tx = document.getElementById('templateContent')
       const pos = this.$const.cursorPosition.get(tx)
+      console.log('pos', pos)
       if (this.contentLen < 250) {
         this.$const.cursorPosition.add(tx, pos, newStrName)
         // 文字区域添加相关字段， 字段区域减去相关字段]
@@ -369,7 +379,7 @@ export default {
   overflow: hidden;
   .smsedit_tite {
     line-height: 28px;
-    padding: 0 0 10px 0;
+    padding: 0 0 4px 0;
     b {
       font-style: normal;
       font-weight: 400;
@@ -391,7 +401,7 @@ export default {
     height: calc(100% - 250px);
     padding: 10px;
     border: 1px solid #dcdfe6;
-    p{
+    p {
       text-align: center;
       margin-top: 10px;
       color: #999;

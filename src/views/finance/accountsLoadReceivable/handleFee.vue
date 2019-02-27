@@ -80,7 +80,7 @@
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
@@ -281,7 +281,9 @@ export default {
         this.isFresh = true // 是否手动刷新页面
       } else {
         this.searchQuery.vo = Object.assign({}, this.getRouteInfo.vo)
-        this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+        if (this.searchQuery.vo.status === '' || /(ALLSETTLEMENT)/.test(this.searchQuery.vo.status)) {
+         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+        }
         this.isFresh = false
       }
     },
@@ -308,6 +310,7 @@ export default {
 
       this.initLeftParams() // 设置searchQuery
       if (!this.isFresh) {
+        console.log('getList::::', this.searchQuery)
         payListByHandlingFee(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据

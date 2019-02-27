@@ -92,7 +92,7 @@ import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
-import { objectMerge2, parseTime, getSummaries, tmsMath } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
 // import Receipt from './components/receipt'
 import Pager from '@/components/Pagination/index'
@@ -313,9 +313,11 @@ export default {
         // this.$router.push({ path: './accountsPayable/waybill' })
         this.isFresh = true // 是否手动刷新页面
       } else {
-        this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
-        this.$set(this.searchQuery.vo, 'status', '')
+        this.searchQuery = Object.assign({}, this.getRouteInfo)
+        
+        // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
+        // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
+        // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
       }
     },
@@ -585,10 +587,22 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      return getSummaries(param)
+       let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      return getSummaries(param)
+       let arr = objectMerge2([], operationPropertyCalc)
+      arr.forEach((el, index) => {
+        if (el === '_index|1|单') {
+          arr[index] = '_index|2|单'
+        }
+      })
+      return getSummaries(param, arr)
     },
     setHeader(h, { column }) {
       return h('el-button', {

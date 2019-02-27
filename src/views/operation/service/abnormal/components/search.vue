@@ -22,7 +22,7 @@
             <el-date-picker
               v-model="searchCreatTime"
               :default-value="defaultTime"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               value-format="yyyy-MM-dd"
               start-placeholder="开始日期"
