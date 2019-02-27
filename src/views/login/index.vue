@@ -164,7 +164,7 @@ export default {
       }
     },
     handleLogin() {
-      requestFullScreen()
+      // requestFullScreen()
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -173,7 +173,6 @@ export default {
           }
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-
             // 获取登录前的页面地址
             // 有可能会出现前一个页面是现在登录账号没有权限访问的？
             // const nexturl = this.$route.query.tourl

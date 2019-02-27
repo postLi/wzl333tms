@@ -10,7 +10,7 @@ import fetch, {
  * 运单号 id
  */
 export function realTimeLocation(data) {
-	return fetch.post('/api-order/order/load/v1/realTimeLocation/?type=zhiYun', data).then(res => {
+	return fetch.post('/api-order/order/load/v1/realTimeLocation/?type=', data).then(res => {
 		return res.data ? res.data : {}
 	})
 }

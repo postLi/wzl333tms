@@ -283,8 +283,7 @@ export default {
       handler(to, from) {
         if (this.isTimer) { // 添加自动刷新功能时
           if (window.AMapUI) { // 开启自动刷新时
-            if (to.fullPath && to.fullPath.indexOf('/operation/order/orderDetail?orderid=') !== -1) {
-            } else {
+            if (to.fullPath && to.fullPath.indexOf('/operation/order/orderDetail?orderid=') !== -1) {} else {
               this.isTimerOpen = false
               clearInterval(this.timerOption)
             }
@@ -463,7 +462,41 @@ export default {
       })
       this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
     },
+    validateForm(type) { // 表单验证
+      let flag = true
+
+       if (type !== 'location') { // 查定位的不需要传时间
+          if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.shipId) {
+            this.$message.warning('请选择开始时间和结束时间~')
+            flag = false
+          }
+        }
+
+      if (this.isShowInlineOrderMap) { // 运单查询界面
+        if (this.searchShipSn && !this.searchQuery.vo.shipId) {
+          this.$message.warning('请输入运单号后下拉选择运单！')
+          flag = false
+        }
+        if (!this.searchQuery.vo.shipId) {
+          this.$message.warning('请选择运单号~')
+          flag = false
+        }
+      } else { // 车辆查询界面
+        if (!this.searchQuery.vo.truckIdNumber) {
+          this.$message.warning('请选择车牌号~')
+          flag = false
+        }
+      }
+      return flag
+    },
     onSubmit(type) {
+      let _this = this
+      _this.loadSearch = true
+      if (!this.validateForm(type)) { // 判断输入
+        _this.loadSearch = false
+        return false
+      }
+
       // 查询定位及轨迹
       // 0、清空定时刷新， 清空巡航器
       // 1、获取查询数据，this.isShowInlineOrderMap判断是查询运单true[2.1]还是车辆false[2.2]
@@ -477,8 +510,7 @@ export default {
       // 4、格式化获取到的数据，否则提示“暂无车辆轨迹数据！”
       // 5、设置巡航器， 绘制轨迹及定位
       // 6、设置刷新定时器
-      let _this = this
-      _this.loadSearch = true
+
       _this.progressPercentage = 0
       _this.pathNavigs = []
       _this.activeTruckItem = []
@@ -516,6 +548,7 @@ export default {
           })
         }
       }
+
 
       // fetch 判断请求接口 运单&车牌号
       let fetch = _this.isShowInlineOrderMap ? trajectoryOrder : trajectoryTruck
@@ -605,10 +638,10 @@ export default {
             })
             marker.setLabel({
               offset: new AMap.Pixel(20, 20),
-              content: '<div class="markerContent"><h3>' 
-              + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' 
-              + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' 
-              + (e.address || '') + '</p></div>'
+              content: '<div class="markerContent"><h3>' +
+                e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' +
+                e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' +
+                (e.address || '') + '</p></div>'
             })
             this.markers.push(marker)
             map.setFitView()
@@ -874,14 +907,14 @@ export default {
         setTimeout(() => {
           this.initMap()
           this.getPathSimplifierIns()
-          this.onSubmit()
+          // this.onSubmit()
         }, 500)
       } else {
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
           loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
             this.initMap()
             this.getPathSimplifierIns()
-            this.onSubmit()
+            // this.onSubmit()
             console.log('window.AMap', window.AMap)
             console.log('window.AMapUI', window.AMapUI)
             console.log('this.map', this.map)

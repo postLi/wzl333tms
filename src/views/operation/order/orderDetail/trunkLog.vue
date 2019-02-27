@@ -186,7 +186,7 @@ export default {
           startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
           endTime: parseTime(new Date()),
           shipId: '',
-          type: 'zhiYun'
+          type: ''
         }
       },
       tableHeight: {
