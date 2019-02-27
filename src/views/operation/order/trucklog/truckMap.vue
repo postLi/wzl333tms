@@ -1,5 +1,5 @@
 <template>
-  <div class="orderinfo-manager truck-page-log heightvhPoptree" ref="truckLog" v-loading="loading">
+  <div class="orderinfo-manager truck-page-log heightvhPoptree" v-loading="loading">
     <transition name="el-zoom-in-bottom">
       <div class="truck-log-info" v-if="activeTruckItem.length">
         <div class="info-btns">
@@ -30,17 +30,16 @@
         </div>
       </div>
     </transition>
-    <div id="trucklogmap" ref="trucklogmap">
+    <div id="trucklogmap">
       <div class="popTimer" v-if="isTimer">
         <el-button @click="timerCon" size="mini" type="warning" :icon="isTimerOpen ? '' :'el-icon-time'">{{isTimerOpen ? '关闭' : '开启'}}自动刷新</el-button>
         <span v-if="isTimerOpen"><i class="el-icon-time"></i> {{timer}}秒后刷新轨迹</span>
       </div>
     </div>
     <div class="search-card">
-      <el-tabs type="border-card" @tab-click="handleMap">
-        <el-tab-pane>
-          <span slot="label"><i class="el-icon-date"></i> 运单跟踪</span>
-          <transition name="el-zoom-in-top">
+      <el-tabs type="border-card" @tab-click="handleSearchView" v-model="activeName">
+        <el-tab-pane label="运单跟踪" name="1">
+          <transition name="el-zoom-in-center">
             <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
               <el-form-item label="运单查询">
                 <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchShipSn" search="shipSn" type="order" @change="getShipSn" />
@@ -60,22 +59,14 @@
             </el-form>
           </transition>
         </el-tab-pane>
-        <el-tab-pane label="车辆跟踪">
-          <transition name="el-zoom-in-top">
-            <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
+        <el-tab-pane label="车辆跟踪" name="2">
+          <transition name="el-zoom-in-center">
+            <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
               <el-form-item label="选择车辆">
-                <!-- <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号"  maxlength="8" clearable>
-                  <el-option
-                    v-for="(item, index) in realTimeTrucks"
-                    :key="index"
-                    :label="item.truckIdNumber"
-                    :value="item.truckIdNumber">
+                <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
+                  <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
                   </el-option>
-                </el-select> -->
-
-                <el-input :size='btnsize' v-model="searchQuery.vo.truckIdNumber" placeholder="请输入车牌号" maxlength="8" clearable>
-                  <el-button slot="append" :icon="popTreeVisible?'el-icon-close':'el-icon-menu'" @click="handleTruck"></el-button>
-                </el-input>
+                </el-select>
               </el-form-item>
               <el-form-item label="开始时间">
                 <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
@@ -155,6 +146,7 @@ export default {
   },
   data() {
     return {
+      activeName: '1',
       realTimeLocateList: [], // 实时定位列表
       tableStyle: false,
       activeTruckItem: [], // 当前展示的车辆列表
@@ -166,7 +158,6 @@ export default {
       isTimerOpen: true, // true-开始自动刷新并显示文字 false-关闭自动刷新并隐藏文字
       loadSearch: false,
       isAllTable: false, // true-表格全屏
-      isShowTable: false, // true-显示table false-隐藏table
       showSearchCard: true, // true-显示搜索框 false-隐藏搜索框
       isShowInlineOrderMap: true, // true-实时车辆货物地图 false-车辆轨迹地图
       speedSlider: 520130,
@@ -241,18 +232,12 @@ export default {
           shipId: ''
         }
       },
-      tableHeight: {
-        height: 300,
-        x: 0,
-        y: 0
-      },
       timer: 60,
       isTimer: true, // 是否需要添加自动刷新功能
       pathSimplifierIns: {},
       map: {},
       allPathData: [],
       imgurl: require('../../../../assets/truck_log/car.png'),
-      isDrag: false,
       initedPath: false,
       orgPageDataList: [],
       orgDataList: [],
@@ -299,7 +284,6 @@ export default {
         if (this.isTimer) { // 添加自动刷新功能时
           if (window.AMapUI) { // 开启自动刷新时
             if (to.fullPath && to.fullPath.indexOf('/operation/order/orderDetail?orderid=') !== -1) {
-              console.log('回到了运单详情页')
             } else {
               this.isTimerOpen = false
               clearInterval(this.timerOption)
@@ -312,7 +296,7 @@ export default {
     curCursor: {
       handler(cval, oval) {
         if (cval) {
-          if (this.pathNavigs.length === 1) { // 单辆车的时候 才显示进度条
+          if (this.pathNavigs[0]) { // 单辆车的时候 才显示进度条
             let idx = cval.idx
             let total = this.allPathData[0].path.length
             let num = Math.floor(idx / total * 100)
@@ -346,11 +330,11 @@ export default {
     console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
-      _this.initMap()
+      // _this.initMap()
       _this.hasLoadedMap = true
     }
     this.init(2222)
-
+    this.fetchTruck() // 获取公司车辆信息
   },
   // 关闭时清空地图数据
   destoryed() {
@@ -362,8 +346,6 @@ export default {
       console.log('运单选择item', item)
       this.searchQuery.vo.shipId = item.id
       this.searchShipSn = item.shipSn
-      console.log('searchQuery', this.searchQuery.vo)
-      console.log('searchShipSn', this.searchShipSn)
     },
     classLineRed(row) { // 行样式
       if (this.allPathData.length) {
@@ -397,55 +379,21 @@ export default {
         }, 1000)
       }
     },
-    conStart(event) {
-      let eventY = event.pageY //鼠标当前位置的y坐标
-      this.tableHeight.y = eventY
-      this.tableHeight.orgheight = this.tableHeight.height || 0
-      this.truckLogHeight = this.$refs.truckLog.offsetHeight - 90
-      if (!this.isShowTable) {
-        this.isShowTable = true
-        this.tableHeight.height = 36
-      }
-      this.isDrag = true
-      console.log('conStart eventY', eventY, this.truckLogHeight)
-    },
-    conMove(event) {
-      if (this.isDrag) {
-        let mapH = this.$refs.trucklogmap.offsetHeight
-        let h = event.pageY - this.tableHeight.y
-        let height = this.tableHeight.orgheight - h
-        this.isShowTable = height >= 37
-        this.isAllTable = this.$refs.trucklogmap.offsetHeight < 240
-        this.tableHeight.height = height > this.truckLogHeight ? this.truckLogHeight : height
-      }
-    },
-    conEnd(event) {
-      if (this.isDrag) {
-        this.tableHeight.y = event.pageY
-        this.isDrag = false
-      }
-    },
-    bindKey() {
-      document.addEventListener('mousemove', this.conMove, true)
-      document.addEventListener('mouseup', this.conEnd, true)
-    },
-    unbindKey() {
-      document.addEventListener('mousemove', this.conMove)
-      document.addEventListener('mouseup', this.conEnd)
-    },
-    handleMap() { // 修改视图
+    handleSearchView() { // 修改视图
       if (this.isShowInlineOrderMap) {
-
+        this.org_order_realTimeTrucks = objectMerge2([], this.realTimeTrucks)
+        this.realTimeTrucks = objectMerge2([], this.org_truck_realTimeTrucks)
+      } else {
+        this.org_truck_realTimeTrucks = objectMerge2([], this.realTimeTrucks)
+        this.realTimeTrucks = objectMerge2([], this.org_order_realTimeTrucks)
+        this.fetchTruck()
       }
       this.isShowInlineOrderMap = !this.isShowInlineOrderMap
 
-      // this.showSearchCard = false
-      // setTimeout(() => {
-      //   this.showSearchCard = true
-      // }, 300)
-    },
-    hideTable() {
-      this.isShowTable = !this.isShowTable
+      this.showSearchCard = false
+      setTimeout(() => {
+        this.showSearchCard = true
+      }, 300)
     },
     handlePageChange(obj) {
       console.log('handlePageChange', obj)
@@ -470,7 +418,7 @@ export default {
     fetchTruck() {
       let truckQuery = { "currentPage": 1, "pageSize": 100, "vo": { "orgid": this.otherinfo.orgid, "truckIdNumber": "", "truckSource": "" } }
       getAllTrunk(truckQuery).then(data => {
-          this.realTimeTrucks = data.list
+          this.TruckList = data.list
         })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -514,7 +462,6 @@ export default {
         this.orgPageDataList[_index].push(el) // 填充分页数据数组
       })
       this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
-      console.warn('this.dadtaList', this.dataList, this.orgPageDataList)
     },
     onSubmit(type) {
       // 查询定位及轨迹
@@ -579,8 +526,6 @@ export default {
       } else {
         delete params.shipId
       }
-      console.warn('type', type)
-
       if (type === 'location') { // 查定位
         if (params) {
           this.getRealTimeLocate(_this.isShowInlineOrderMap ? 'order' : 'truck')
@@ -588,17 +533,14 @@ export default {
         } else {
           _this.loadSearch = false
         }
-
       } else { // 查轨迹及定位  默认查轨迹及定位
         if (params) {
           fetch(params).then(data => {
-              if (data) {
+              if (data && data.length > 0) {
                 // 格式化数据
                 fn(data)
                 // 初始化轨迹
                 _this.initLine()
-                // 获取定位
-                // this.getRealTimeLocate(_this.isShowInlineOrderMap ? 'order' : 'truck')
               } else {
                 this.$message.warning('暂无轨迹跟踪数据！')
               }
@@ -624,7 +566,7 @@ export default {
       if (flag) {
         let params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
         fetch(params).then(data => {
-            if (data) {
+            if (data && data.length > 0) {
               if (isOrder) {
                 this.realTimeLocateList = data
               } else {
@@ -634,6 +576,8 @@ export default {
               this.loadSearch = false
               // 转高德坐标
               this.tomap()
+            } else {
+              this.$message.warning('暂无车辆定位数据！')
             }
           })
           .catch(err => {
@@ -661,7 +605,10 @@ export default {
             })
             marker.setLabel({
               offset: new AMap.Pixel(20, 20),
-              content: '<div class="markerContent"><h3>' + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' + (e.address || '') + '</p></div>'
+              content: '<div class="markerContent"><h3>' 
+              + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' 
+              + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' 
+              + (e.address || '') + '</p></div>'
             })
             this.markers.push(marker)
             map.setFitView()
@@ -810,7 +757,6 @@ export default {
     },
     setDataLine() { // 设置轨迹需要的经纬度数据
       let arr = []
-      console.log('setDataLine 111: allList', this.allList)
       this.allList.forEach((row, pathIndex) => {
         if (row.length) {
           let obj = {
@@ -823,7 +769,6 @@ export default {
             for (let item in this.activeTruckItem) {
               flagIndex = Number(item)
             }
-            console.log('pathIndex', pathIndex, flagIndex)
             if (pathIndex === flagIndex) {
               // 选择所有车
               row.forEach((e, index) => {
@@ -845,7 +790,6 @@ export default {
         }
       })
       this.allPathData = arr
-      console.log('setDataLine 222: 设置轨迹需要的经纬度数据', this.allPathData)
       return arr
     },
     initLine() { // 初始化轨迹
@@ -922,8 +866,6 @@ export default {
         // 隐藏时，摧毁地图对象
         this.exit()
       }
-
-      this.bindKey()
     },
     loadMap() {
       if (window.AMap) {
@@ -962,139 +904,9 @@ export default {
       // 地图加载
       _this.map = new AMap.Map('trucklogmap', {
         resizeEnable: true,
-        zoom: 3,
+        zoom: 6,
         // mapStyle: "amap://styles/darkblue"
       })
-
-      const map = this.map
-      // 输入提示
-      var autoOptions = {
-        input: 'tipinput'
-      }
-      var auto = new AMap.Autocomplete(autoOptions)
-      // 初始化搜索框信息
-      var placeSearch = new AMap.PlaceSearch({
-        map: map,
-        extensions: 'base' // all base
-        // type: '商务住宅|生活服务|公司企业|地名地址信息'
-      })
-      const name = this.name
-      if (name) {
-        this.$refs['tipinput'].value = name.replace('市辖区', '')
-        placeSearch.search(name)
-      }
-      /* AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
-          var map = new AMap.Map('container', {
-            zoom: 16
-          })
-          var positionPicker = new PositionPicker({
-            mode: 'dragMap', // 设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
-            map: map// 依赖地图对象
-          })
-      // TODO:事件绑定、结果处理等
-          positionPicker.on('success', function(positionResult) {
-            console.log('success:', positionResult)
-          })
-          positionPicker.on('fail', function(positionResult) {
-            console.log('fail:', positionResult)
-          })
-          // start方法可以接受一个经纬度参数作为，拖拽的起始点
-          positionPicker.start()
-        }) */
-
-      var infoWindow = new AMap.InfoWindow({
-        offset: new AMap.Pixel(0, -30),
-        content: '' // 使用默认信息窗体框样式，显示信息内容
-      })
-      var geocoder = new AMap.Geocoder({
-        radius: 1000 // 范围，默认：500
-      })
-      // infoWindow.open(map, map.getCenter())
-      var contextMenu = new AMap.ContextMenu()
-      var contextMenuPositon = []
-      var marker
-
-      function clearMarker() {
-        if (marker) {
-          marker.setMap(null)
-          marker = null
-        }
-      }
-      // 右键添加Marker标记
-      contextMenu.addItem('添加标记', function(e) {
-        // 删除上一个标记
-        clearMarker()
-        // 清除搜素结果
-        placeSearch.clear()
-        // 关闭上一个信息窗口
-        infoWindow.close()
-
-        findInfo(contextMenuPositon)
-      }, 3)
-
-      function findInfo(pos) {
-        console.log('2222', pos)
-        geocoder.getAddress(pos, function(status, result) {
-          if (status === 'complete' && result.info === 'OK') {
-            geocoder_CallBack(result, pos)
-          } else {
-            clearMarker()
-            alert('获取不到当前位置的地址信息~')
-          }
-        })
-      }
-
-      // 地图绑定鼠标右击事件——弹出右键菜单
-      map.on('rightclick', function(e) {
-        console.log('right click:', e)
-        var pos = e.lnglat
-
-        contextMenu.open(map, pos)
-        contextMenuPositon = pos
-      })
-
-      function geocoder_CallBack(data, pos) {
-        var haspx = !!pos.lat
-
-        var addr = data.regeocode.formattedAddress
-        if (haspx) {
-          marker = new AMap.Marker({
-            map: map,
-            position: pos // 基点位置
-          })
-
-          marker.on('click', function(e) {
-            infoWindow.open(map, e.target.getPosition())
-          })
-          marker.emit('click', {
-            target: marker
-          })
-          infoWindow.setContent(addr)
-        }
-
-        _this.setData(haspx ? pos.lng + ',' + pos.lat : pos, addr, data.regeocode)
-      }
-
-      map.on('click', function(e) {
-        console.log('e:', e)
-      })
-      // 构造地点查询类
-      map.plugin(['AMap.ToolBar'], function() {
-        map.addControl(new AMap.ToolBar())
-      })
-      AMap.event.addListener(auto, 'select', select) // 注册监听，当选中某条记录时会触发
-      AMap.event.addListener(placeSearch, 'markerClick', function(e) {
-        const loc = e.data.location
-        findInfo(loc)
-        // findInfo(loc)
-      })
-
-      function select(e) {
-        console.log('select e:', e)
-        placeSearch.setCity(e.poi.adcode)
-        //
-        placeSearch.search(e.poi.name) // 关键字查询查询
-      }
     },
     // 设置获取到的信息
     setData(pos, addr, obj) {

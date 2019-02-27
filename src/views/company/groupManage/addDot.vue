@@ -402,7 +402,7 @@
             { required: true, message: '请选择城市' }
           ],
           accountName: [
-            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
+            { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME_NOUP },
             { max: 15, message: '不能超过15个字符', trigger: 'blur' }
           ]
         },

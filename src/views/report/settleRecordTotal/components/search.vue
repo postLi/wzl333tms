@@ -3,7 +3,7 @@
     <div class="staff_searchinfo--input">
       
       <el-form-item label="时间">
-        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" unlink-panels align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="网点" prop="orgId">

@@ -2,7 +2,7 @@
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="创建时间">
-        <el-date-picker v-model="searchCreatTime" :picker-options="pickerOptions2" type="daterange" align="right" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-date-picker v-model="searchCreatTime" :picker-options="pickerOptions2" type="daterange" unlink-panels align="right" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="到达网点">

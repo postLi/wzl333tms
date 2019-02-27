@@ -1,24 +1,30 @@
 <template>
-  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="80px" class="staff_searchinfo clearfix">
+  <el-form ref="searchForm" :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="开单时间">
-        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
+        <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" unlink-panels align="right" value-format="yyyy-MM-dd" start-placeholder="开始日期" :picker-options="pickerOptions" end-placeholder="结束日期" @focus="hideIframe(true)" @blur="hideIframe(false)">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="开单网点" prop="shipFromOrgid">
-       <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" :orgid="otherinfo.orgid">
+        <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="(val, obj)=>{hideIframe(falseval, obj, 'from')}" :orgid="otherinfo.orgid">
+        </SelectTree>
+      </el-form-item>
+      <el-form-item label="到达网点" prop="shipToOrgid">
+        <SelectTree v-model="searchForm.shipToOrgid" :focus="()=>{hideIframe(true)}" @change="(val, obj)=>{hideIframe(false, val, obj, 'to')}" clearable>
         </SelectTree>
       </el-form-item>
       <el-form-item label="发货人" prop="senderCustomerName">
         <el-input v-model="searchForm.senderCustomerName"></el-input>
-        <!-- <querySelect search="customerMobile" v-model="searchForm.senderCustomerName" type="sender" label="customerName" valuekey="customerName"  @focus="()=>{hideIframe(true)}" @change="()=>{hideIframe(false)}" clearable>
-          <template slot-scope="{item}">
-            {{ item.customerName }}
-          </template>
-        </querySelect> -->
+      </el-form-item>
+      <el-form-item label="发站" prop="shipFromCityName">
+        <el-input v-model="searchForm.shipFromCityName"></el-input>
+        <!-- <querySelectCity filterable show="select" @change="(city) => getCity(city, 'shipFromCityName')" search="longAddr" valuekey="longAddr" type="city" v-model="searchForm.shipFromCityName" :remote="true" clearable/> -->
+      </el-form-item>
+      <el-form-item label="到站" prop="shipToCityName">
+        <el-input v-model="searchForm.shipToCityName"></el-input>
+        <!-- <querySelectCity filterable show="select" @change="(city) => getCity(city, 'shipToCityName')" search="longAddr" valuekey="longAddr" type="city" v-model="searchForm.shipToCityName" :remote="true" clearable/> -->
       </el-form-item>
     </div>
-    
     <el-form-item class="staff_searchinfo--btn">
       <el-button type="primary" @click="onSubmit">查询</el-button>
       <el-button type="info" @click="clearForm('searchForm')" plain>清空</el-button>
@@ -28,12 +34,14 @@
 <script>
 import { REGEX } from '@/utils/validate'
 import SelectTree from '@/components/selectTree/index'
+import querySelectCity from '@/components/querySelect/city'
 import querySelect from '@/components/querySelect/index'
 import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 export default {
   components: {
     SelectTree,
-    querySelect
+    querySelect,
+    querySelectCity
   },
   props: {
     btnsize: {
@@ -60,9 +68,17 @@ export default {
         shipFromOrgid: '',
         // currentPage: 1,
         // pageSize: 100,
-        senderCustomerName: ''
+        senderCustomerName: '',
+        shipFromOrgid: '',
+        shipToOrgid: '',
+        shipToCityName: '',
+        shipFromCityName: ''
         // createTimeStart: '',
         // createTimeEnd: ''
+      },
+      orgName: {
+        from: '',
+        to: ''
       },
       rules: {
         shipSn: [{ validator: orgidIdentifier, tigger: 'blur' }]
@@ -76,9 +92,14 @@ export default {
   },
   mounted() {
     this.searchForm.shipFromOrgid = this.orgid
+    this.orgName.from = this.orgid
+    this.$emit('orgName', this.orgName)
     this.onSubmit()
   },
   methods: {
+    getCity(city, type) {
+      this.searchForm[type] = city ? city.longAddr : city
+    },
     onSubmit() {
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
@@ -87,8 +108,13 @@ export default {
       }
       this.$emit('change', searchObj)
     },
-    hideIframe(status) {
+    hideIframe(status, val, obj, type) {
       this.$emit('hideIframe', status)
+      console.log(val, obj, type)
+      if (type) {
+        this.orgName[type] = obj.name
+        this.$emit('orgName', this.orgName)
+      } 
     },
     clearForm(formName) {
       this.$nextTick(() => {
@@ -98,7 +124,7 @@ export default {
         console.log(this.searchForm)
         this.searchForm.shipFromOrgid = this.orgid
         // this.searchForm.senderCustomerName = ''
-        
+
       })
     }
   }

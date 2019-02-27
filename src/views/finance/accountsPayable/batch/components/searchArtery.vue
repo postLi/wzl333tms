@@ -4,7 +4,7 @@
       <el-form-item label="发车时间">
         <el-date-picker
               v-model="searchTime"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               value-format="yyyy-MM-dd HH:mm:ss"
               start-placeholder="开始日期"

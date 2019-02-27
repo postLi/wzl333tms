@@ -66,6 +66,8 @@ export function validateMobile(mobile) {
 export const REGEX = {
   // 用户名
   USERNAME: /^([0-9a-zA-Z]|[\u0391-\uFFE5]){2,}$/,
+  // 用户名 不包含大写字母
+  USERNAME_NOUP: /^([0-9a-z]|[\u0391-\uFFE5]){2,}$/,
   // 中文
   ONLY_CHINESE: /^[\u4E00-\u9FA5]+$/,
   // 中英文

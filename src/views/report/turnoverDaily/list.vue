@@ -1,7 +1,7 @@
 <template>
   <div class="tab-content chartSender">
     <!-- 搜索 -->
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
+    <SearchForm @orgName="handleOrgName" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info" v-loading="loading">
       <div class="btns_box">
@@ -19,15 +19,17 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="doAction('setting')" plain>打印设置</el-button> -->
       </div>
       <div class="tab_report_daily">
-        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true" :summary-method="getSummary">
-          <template v-for="column in columns">
-            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
-            <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
-              <template slot-scope="scope">
-                <span v-html="column.slot(scope)"></span>
-              </template>
-            </el-table-column>
-          </template>
+        <el-table :key="tablekey" @header-dragend="setTableWidth" slot="reference" :data="dataList" style="width: 100%" :show-summary="true" height="100%" border ref="multipleTableRight" tooltip-effect="dark" triped :show-overflow-tooltip="true" :header-row-style="rowStyle" :summary-method="getSummary">
+          <el-table-column :label="tableTitle" class="tableTitle">
+            <template v-for="column in columns">
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-if="!column.scope"></el-table-column>
+              <el-table-column show-overflow-tooltip :prop="column.prop" :label="column.label" :width="column.width" :fixed="column.fixed" v-else>
+                <template slot-scope="scope">
+                  <span v-html="column.slot(scope)"></span>
+                </template>
+              </el-table-column>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div class="info_tab_footer">
@@ -37,7 +39,10 @@
         </div>
       </div>
       <!-- <h2>应收应付汇总表</h2> -->
-      <div @scroll="handleBottom" style="display: none;" class="info_tab_report" id="report_turnoverDaily">
+      <!-- <div @scroll="handleBottom" style="display: none;" class="info_tab_report" id="report_turnoverDaily"> -->
+      <div @scroll="handleBottom"  style="display: none;" class="info_tab_report" id="report_turnoverDaily">
+        <div id="tableTitle" style="text-align: center;">
+        </div>
         <table id="report_turnoverDaily_table" class="report_turnoverDaily_table">
           <!-- <colgroup width="58px"></colgroup>
           <colgroup width="130px"></colgroup>
@@ -72,7 +77,6 @@
         </table>
       </div>
     </div>
-    
     <TableSetup :popVisible="setupTableVisible" :columns="columns" :code="thecode" @close="setupTableVisible = false" @success="setColumn"></TableSetup>
   </div>
 </template>
@@ -93,6 +97,13 @@ export default {
   },
   data() {
     return {
+      tableTitle: '',
+      titleObj: {
+        title: '',
+        time: '',
+        arrive: '',
+        area: ''
+      },
       res: {},
       total: 0,
       tablekey: 0,
@@ -116,87 +127,99 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-        label: '序号',
-        prop: 'number',
-        textAlign: 'center'
+          label: '序号',
+          prop: 'number',
+          textAlign: 'center'
           // width: '70'
-      },
-      { // 表头
-        label: '货号',
-        prop: 'shipGoodsSn',
-        textAlign: 'center',
-        width: '150'
+        },
+        { // 表头
+          label: '货号',
+          prop: 'shipGoodsSn',
+          textAlign: 'center',
+          width: '150'
           // fixed: true
-      },
-      {
-        label: '开单网点',
-        prop: 'orgidName',
-        textAlign: 'center'
+        },
+        {
+          label: '开单网点',
+          prop: 'orgidName',
+          textAlign: 'center'
           // width: '130'
-      },
-      {
-        label: '签收网点',
-        prop: 'signOrgidName',
-        textAlign: 'center'
+        },
+        {
+          label: '签收网点',
+          prop: 'signOrgidName',
+          textAlign: 'center'
           // width: '130'
-      },
-      {
-        label: '到站',
-        prop: 'shipToCityName',
-        textAlign: 'center'
+        },
+        {
+          label: '开单时间',
+          prop: 'createTime',
+          textAlign: 'center'
+          // width: '150'
+        },
+        {
+          label: '发站',
+          prop: 'shipFromCityName',
+          textAlign: 'center'
+          // width: '130'
+        },
+        {
+          label: '到站',
+          prop: 'shipToCityName',
+          textAlign: 'center'
           // width: '200'
-      },
-      {
-        label: '发货人',
-        prop: 'senderCustomerName',
-        textAlign: 'center'
+        },
+        {
+          label: '发货人',
+          prop: 'senderCustomerName',
+          textAlign: 'center'
           // width: '140'
-      },
-      {
-        label: '货品名',
-        prop: 'cargoName',
-        textAlign: 'center'
-      },
-      {
-        label: '现付(元)',
-        prop: 'shipNowpayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '回单付(元)',
-        prop: 'shipReceiptpayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '月结(元)',
-        prop: 'shipMonthpayFee',
-        textAlign: 'right'
-      },
-      {
-        label: '运费合计(元)',
-        prop: 'totalFee',
-        textAlign: 'right'
-      },
-      {
-        label: '回扣(元)',
-        prop: 'brokerageFee',
-        textAlign: 'right'
-      },
-      {
-        label: '代收货款(元)',
-        prop: 'agencyFund',
-        textAlign: 'right'
-      },
-      {
-        label: '实收金额(元)',
-        prop: 'amountCollected',
-        textAlign: 'right'
-      }
+        },
+        {
+          label: '货品名',
+          prop: 'cargoName',
+          textAlign: 'center'
+        },
+        {
+          label: '现付(元)',
+          prop: 'shipNowpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回单付(元)',
+          prop: 'shipReceiptpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '月结(元)',
+          prop: 'shipMonthpayFee',
+          textAlign: 'right'
+        },
+        {
+          label: '运费合计(元)',
+          prop: 'totalFee',
+          textAlign: 'right'
+        },
+        {
+          label: '回扣(元)',
+          prop: 'brokerageFee',
+          textAlign: 'right'
+        },
+        {
+          label: '代收货款(元)',
+          prop: 'agencyFund',
+          textAlign: 'right'
+        },
+        {
+          label: '实收金额(元)',
+          prop: 'amountCollected',
+          textAlign: 'right'
+        }
       ],
       countCol: [ // 需要合计的-列
         'shipNowpayFee',
@@ -208,7 +231,11 @@ export default {
         'agencyFund',
         'amountCollected'
       ],
-      countColVal: [] // 存储底部合计值
+      countColVal: [], // 存储底部合计值
+      getOrgName: {
+        from: '',
+        to: ''
+      }
     }
   },
   computed: {
@@ -220,6 +247,53 @@ export default {
     this.getScrollWidth()
   },
   methods: {
+    handleOrgName(obj) {
+      this.getOrgName = Object.assign({}, obj)
+    },
+    rowStyle({ row, rowIndex }) {
+      if (rowIndex === 0) {
+        if (this.query.createTimeStart && this.query.createTimeEnd) {
+          this.tableTitle = parseTime(this.query.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.query.createTimeEnd, '{y}年{m}月{d}日') + '营业额汇总表'
+        } else {
+          this.tableTitle = '营业额汇总表'
+        }
+        return {
+          fontSize: '16px'
+        }
+      }
+    },
+    setTableTitle() {
+      let obj = {
+        title: parseTime(this.query.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.query.createTimeEnd, '{y}年{m}月{d}日') + '营业额汇总表',
+        starttime: parseTime(this.query.createTimeStart, '{y}-{m}-{d}'),
+        endtime: parseTime(this.query.createTimeEnd, '{y}-{m}-{d}'),
+        area: '',
+        shipToName: this.getOrgName.to
+      }
+
+      let arr = objectMerge2([], this.dataList)
+      if (this.dataList.length) {
+        let area = this.dataList[0].shipFromCityName + '—' + this.dataList[0].shipToCityName
+        let flag = arr.every(item => (item.shipFromCityName + '—' + item.shipToCityName) === area)
+        if (flag) {
+          obj.area = area
+        } else {
+          obj.area = '存在多个区间'
+        }
+      } else {
+        obj.area = ''
+      }
+
+      let str = '<div><h3>' + obj.title + '</h3>\n' +
+        '<div style="text-align: left;margin: 10px;">' +
+        '<span style="margin:0 10px;">开单时间：' + obj.starttime + '至' + obj.endtime + '</span>' +
+        '<span style="margin:0 10px;' + (!obj.shipToName ? 'display:none' : '') + '"> 收货网点：' + obj.shipToName + '</span>' +
+        '<span style="margin：0 10px;' + (!obj.area ? 'display:none' : '') + '">区间：' + obj.area + '</span>' +
+        '</div></div>'
+
+      return str
+
+    },
     handlePageChange(obj) {
       this.query.currentPage = obj.pageNum
       this.query.pageSize = obj.pageSize
@@ -239,8 +313,7 @@ export default {
         if (res.list) {
           res.list.forEach((e, index) => {
             // ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
-            e.number = ((this.query.currentPage-1) * this.query.pageSize) + index + 1
-            console.log(e.number)
+            e.number = ((this.query.currentPage - 1) * this.query.pageSize) + index + 1
           })
         }
         this.res = res || { list: [] }
@@ -277,6 +350,20 @@ export default {
       const tfoot = document.createElement('tfoot')
       const theadTr = document.createElement('tr')
 
+      const titleDiv = this.setTableTitle()
+      const theadTrTitle = document.createElement('tr')
+      const thTitle = document.createElement('th')
+      const fontTitle = document.createElement('font')
+      let thetitle = '营业额汇总表'
+      thTitle.setAttribute('colspan', this.columns.length)
+      fontTitle.innerHTML = titleDiv
+
+      thTitle.appendChild(fontTitle)
+      theadTrTitle.appendChild(thTitle)
+      thead.appendChild(theadTrTitle)
+
+
+
       table.appendChild(thead)
       table.appendChild(tbody)
       table.appendChild(tfoot)
@@ -309,6 +396,8 @@ export default {
       tableClone.className = 'tableCloneHead'
       div.appendChild(tableClone)
 
+
+
       for (let k = 0; k < data.length; k++) { // 填充内容数据
         const tbodyTr = tbody.insertRow()
         for (let j = 0; j < this.columns.length; j++) {
@@ -320,7 +409,7 @@ export default {
               elDataList = data
             }
           }
-          let propNo = (this.query.currentPage - 1)*this.query.pageSize + k + 1
+          let propNo = (this.query.currentPage - 1) * this.query.pageSize + k + 1
           const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? propNo : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
@@ -386,9 +475,11 @@ export default {
         td.setAttribute('color', 'white')
         td.style.wordBreak = 'break-all'
       }
+
     },
     doAction(type) {
       this.report()
+
       switch (type) {
         case 'print':
           PrintInSamplePage({

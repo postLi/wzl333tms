@@ -230,7 +230,7 @@ export default {
       row = row || []
       console.log('row:', row.map(el => { console.log('11') }).join(','))
       const data = objectMerge2(this.searchQuery)
-      data.vo.ascriptionOrgId = data.vo.shipFromOrgid
+      // data.vo.ascriptionOrgId = data.vo.shipFromOrgid
 
       this.$router.push({
         path: '/finance/accountsLoadReceivable',

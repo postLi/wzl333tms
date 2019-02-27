@@ -8,12 +8,11 @@
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               :picker-options="pickerOptions2"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              unlink-panels
             >
             </el-date-picker>
           </div>

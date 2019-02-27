@@ -10,7 +10,7 @@
         <li>
           <el-date-picker
             v-model="pickerDate"
-            type="daterange"
+            type="daterange" unlink-panels
             align="right"
             range-separator="至"
             start-placeholder="开始日期"
