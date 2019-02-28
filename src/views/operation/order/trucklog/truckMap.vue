@@ -83,8 +83,7 @@
             </el-form>
           </transition>
         </el-tab-pane>
-        <el-tab-pane label="监控中心" name="3">
-        </el-tab-pane>
+        <!-- <el-tab-pane label="监控中心" name="3"></el-tab-pane> -->
         </transition>
       </el-tabs>
       <transition name="el-zoom-in-top">
