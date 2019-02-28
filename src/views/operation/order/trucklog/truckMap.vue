@@ -576,7 +576,11 @@ export default {
       } else { // 查轨迹及定位  默认查轨迹及定位
         if (params) {
           fetch(params).then(data => {
+              // 定时刷新
+              _this.initTimer()
               if (data && data.length > 0) {
+                // 定时刷新
+                _this.initTimer()
                 // 格式化数据
                 fn(data)
                 // 初始化轨迹
@@ -917,8 +921,7 @@ export default {
           // this.onSubmit()
         }, 500)
       } else {
-        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-        })
+        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {})
       }
 
     },
