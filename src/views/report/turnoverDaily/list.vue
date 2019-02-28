@@ -268,7 +268,7 @@ export default {
         starttime: parseTime(this.query.createTimeStart, '{y}-{m}-{d}'),
         endtime: parseTime(this.query.createTimeEnd, '{y}-{m}-{d}'),
         area: '',
-        shipToName: this.getOrgName.to
+        shipToName: this.getOrgName.from
       }
 
       let arr = objectMerge2([], this.dataList)

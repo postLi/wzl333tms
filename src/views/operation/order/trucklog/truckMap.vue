@@ -83,6 +83,8 @@
             </el-form>
           </transition>
         </el-tab-pane>
+        <el-tab-pane label="监控中心" name="3">
+        </el-tab-pane>
         </transition>
       </el-tabs>
       <transition name="el-zoom-in-top">
@@ -264,7 +266,6 @@ export default {
     orderdata: {
       handler() {
         this.init(333)
-
       },
       deep: true
     },
@@ -329,8 +330,15 @@ export default {
     console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
-      // _this.initMap()
-      _this.hasLoadedMap = true
+      loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+        _this.initMap()
+        _this.hasLoadedMap = true
+        _this.getPathSimplifierIns()
+        // this.onSubmit()
+        console.log('window.AMap', window.AMap)
+        console.log('window.AMapUI', window.AMapUI)
+        console.log('this.map', this.map)
+      })
     }
     this.init(2222)
     this.fetchTruck() // 获取公司车辆信息
@@ -465,12 +473,12 @@ export default {
     validateForm(type) { // 表单验证
       let flag = true
 
-       if (type !== 'location') { // 查定位的不需要传时间
-          if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.shipId) {
-            this.$message.warning('请选择开始时间和结束时间~')
-            flag = false
-          }
+      if (type !== 'location') { // 查定位的不需要传时间
+        if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.shipId) {
+          this.$message.warning('请选择开始时间和结束时间~')
+          flag = false
         }
+      }
 
       if (this.isShowInlineOrderMap) { // 运单查询界面
         if (this.searchShipSn && !this.searchQuery.vo.shipId) {
@@ -911,14 +919,6 @@ export default {
         }, 500)
       } else {
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-          loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
-            this.initMap()
-            this.getPathSimplifierIns()
-            // this.onSubmit()
-            console.log('window.AMap', window.AMap)
-            console.log('window.AMapUI', window.AMapUI)
-            console.log('this.map', this.map)
-          })
         })
       }
 

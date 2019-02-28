@@ -6,7 +6,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="开单网点" prop="shipFromOrgid">
-        <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="(val, obj)=>{hideIframe(falseval, obj, 'from')}" :orgid="otherinfo.orgid">
+        <SelectTree v-model="searchForm.shipFromOrgid" :focus="()=>{hideIframe(true)}" @change="(val, obj)=>{hideIframe(false,val, obj, 'from')}" :orgid="otherinfo.orgid">
         </SelectTree>
       </el-form-item>
       <el-form-item label="到达网点" prop="shipToOrgid">
@@ -92,7 +92,7 @@ export default {
   },
   mounted() {
     this.searchForm.shipFromOrgid = this.orgid
-    this.orgName.from = this.orgid
+    this.orgName.from = this.otherinfo.orgName
     this.$emit('orgName', this.orgName)
     this.onSubmit()
   },
