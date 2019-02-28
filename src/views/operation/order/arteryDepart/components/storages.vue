@@ -50,6 +50,10 @@
                     <el-input :value="formModel.planArrivedTime " :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
+                   <el-form-item label="追货宝:">
+                    <el-input v-model="formModel.terminalNo" :maxlength="15" clearable disabled>
+                    </el-input>
+                  </el-form-item>
                   <el-form-item label="备注:" class="art_remk">
                     <el-input v-model="formModel.remark" clearable :maxlength="300" auto-complete="off" type="textarea" disabled>
                     </el-input>
@@ -1307,10 +1311,16 @@ export default {
         margin-right: 0;
       }
       .el-form-item.art_remk {
-        width: 100%;
-        .el-form-item__content {
-          width: 88%;
+        width: 53%;
+        .el-form-item__content{
+          width: 82%;
         }
+        .el-input--mini{
+          width: 100%;
+        }
+        // .el-form-item__content {
+        //   width: 88%;
+        // }
       }
     }
   }

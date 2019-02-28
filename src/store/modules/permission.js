@@ -2,7 +2,7 @@ import {
   asyncRouterMap,
   constantRouterMap
 } from '@/router/index'
-
+const checkRouterList = []
 /**
  * 通过meta.role判断是否与当前用户权限匹配
  * @param roles
@@ -15,7 +15,15 @@ function hasPermission(roles, route) {
     //     route.hidden = true
     //   }
     // }
-    return roles.some(role => route.meta.code === role.code)
+    const flag = roles.some(role => route.meta.code === role.code)
+    if (!flag) {
+      checkRouterList.push({
+        code: route.meta.code,
+        title: route.meta.title || ''
+      })
+    }
+
+    return flag
   } else {
     // console.log(route, route.name, route.path)
     return true
@@ -75,6 +83,20 @@ const permission = {
         // accessedRouters = asyncRouterMap
 
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
+        if (process.NODE_ENV !== 'production') {
+          // 如果是在非正式环境下，检测路由信息是否正常
+          console.info('不在权限表里的路由信息：')
+          console.table(checkRouterList)
+          const routerlists = []
+          // 检索所有的路由信息列出来
+          roles.forEach(el => {
+            if (el.type === '0') {
+              routerlists.push(el)
+            }
+          })
+          console.info('该角色下的所有路由信息：')
+          console.table(routerlists)
+        }
         // 修正首页权限问题
         let homePage = accessedRouters.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
         if (homePage.length) {

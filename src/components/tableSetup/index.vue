@@ -160,6 +160,11 @@ export default {
   computed: {
     isShow: {
       get() {
+        if (this.popVisible) {
+          console.log('popVisible', this.popVisible)
+          this.searchLeft = ''
+          this.searchRight = ''
+        }
         return this.popVisible
       },
       set() {}
@@ -167,6 +172,7 @@ export default {
   },
   data() {
     return {
+      stepKey: 0,
       orgColumnData: [],
       columnData: [],
       orgShowColumnData: [],
@@ -193,59 +199,62 @@ export default {
     }
   },
   mounted() {
-    // 进来先隐藏全部
-    // this.$emit('success', [])
-
-    const code = this.code
-    let rcode = this.$route.meta.code
-
-    // 先不从链接上拿数据
-    rcode = ''
-    this.thecode = ''
-
-    // 1 如果显示声明不用请求服务器则不作处理
-    if (code === 'NOSET') {
-      this.convertData() // 打开页面就开启表格设置
-    } else if (code) {
-      // 2 指定显示的code值
-      this.thecode = code
-    } else if (rcode) {
-      // 3 如果有从链接上拿到code值
-      this.thecode = rcode
-    } else {
-      // 4 其余情况则直接处理
-      this.convertData()
-    }
-    console.log('this.thecode', this.thecode)
-    // 如果有code值则请求处理
-    if (this.thecode) {
-
-      this.fetchTableSetup()
-      if (!window['tablesetup' + this.thecode]) {
-        window['tablesetup' + this.thecode] = true
-        this.eventBus.$on('tablesetup.change', (code, data) => {
-          if (code && code === this.thecode) {
-            if (data.prop) {
-              const find = this.showColumnData.filter(el => el.prop === data.prop)
-              if (find.length) {
-                find[0].width = data.width
-                this.changeTableSetup()
-              }
-            } else {
-              data.forEach(dat => {
-                const find = this.showColumnData.filter(el => el.prop === dat.prop)
-                if (find.length) {
-                  find[0].width = dat.width
-                }
-              })
-              this.changeTableSetup()
-            }
-          }
-        })
-      }
-    }
+    this.initStep()
   },
   methods: {
+    initStep() {
+
+      // 进来先隐藏全部
+      // this.$emit('success', [])
+
+      const code = this.code
+      let rcode = this.$route.meta.code
+
+      // 先不从链接上拿数据
+      rcode = ''
+      this.thecode = ''
+
+      // 1 如果显示声明不用请求服务器则不作处理
+      if (code === 'NOSET') {
+        this.convertData() // 打开页面就开启表格设置
+      } else if (code) {
+        // 2 指定显示的code值
+        this.thecode = code
+      } else if (rcode) {
+        // 3 如果有从链接上拿到code值
+        this.thecode = rcode
+      } else {
+        // 4 其余情况则直接处理
+        this.convertData()
+      }
+      // 如果有code值则请求处理
+      if (this.thecode) {
+
+        this.fetchTableSetup()
+        if (!window['tablesetup' + this.thecode]) {
+          window['tablesetup' + this.thecode] = true
+          this.eventBus.$on('tablesetup.change', (code, data) => {
+            if (code && code === this.thecode) {
+              if (data.prop) {
+                const find = this.showColumnData.filter(el => el.prop === data.prop)
+                if (find.length) {
+                  find[0].width = data.width
+                  this.changeTableSetup()
+                }
+              } else {
+                data.forEach(dat => {
+                  const find = this.showColumnData.filter(el => el.prop === dat.prop)
+                  if (find.length) {
+                    find[0].width = dat.width
+                  }
+                })
+                this.changeTableSetup()
+              }
+            }
+          })
+        }
+      }
+    },
     convertData(data) {
       this.initData(data)
       this.callback()
@@ -382,26 +391,26 @@ export default {
             return false
           }
           // 所有不在右边列表的数据，都给个默认值
-        // 默认隐藏
-        /* {
-          "id":635,
-          "lable":"序号",
-          "prop":"number",
-          "titleModule":"ORDER_PICK"
-        } */
-        /* {
-          "id": "1076059305649635328",
-          "lable": "重量",
-          "prop": "pickupWeight",
-          "width": "150",
-          "hidden": true,
-          "fixed": false,
-          "titleOrder": 10,
-          "titleModule": "ORDER_PICK",
-          "userId": 217,
-          "orgId": 1,
-          "companyId": 1
-        } */
+          // 默认隐藏
+          /* {
+            "id":635,
+            "lable":"序号",
+            "prop":"number",
+            "titleModule":"ORDER_PICK"
+          } */
+          /* {
+            "id": "1076059305649635328",
+            "lable": "重量",
+            "prop": "pickupWeight",
+            "width": "150",
+            "hidden": true,
+            "fixed": false,
+            "titleOrder": 10,
+            "titleModule": "ORDER_PICK",
+            "userId": 217,
+            "orgId": 1,
+            "companyId": 1
+          } */
           let len2 = data.length
           const copydata = []
           const copyflag = {}
@@ -415,16 +424,16 @@ export default {
           orgData.forEach(el => {
             let diffTextWithSameProp = ''
             const len = data.filter((el2, inx) => {
-            // 文案描述相同，字段不同
+              // 文案描述相同，字段不同
               if (el2.lable === el.lable && el.prop !== el2.prop) {
                 diffTextWithSameProp = inx
               }
               return el.prop === el2.prop
             }).length
-          // 如果找不到，表示需要插入
+            // 如果找不到，表示需要插入
             if (len === 0) {
-            // if (true) {
-            console.warn('data[0]', data[0])
+              // if (true) {
+              console.warn('data[0]', data[0])
               const userId = data[0].userId
               const orgId = data[0].orgId
               const companyId = data[0].companyId
@@ -443,7 +452,7 @@ export default {
                 'companyId': companyId
               })
             } else if (diffTextWithSameProp !== '') {
-            // 删除用户数据中重复的字段
+              // 删除用户数据中重复的字段
               // data.splice(diffTextWithSameProp, 1)
             }
           })
@@ -486,7 +495,6 @@ export default {
                 break
               }
             }
-
             copy.push(_el)
           })
 
@@ -502,16 +510,37 @@ export default {
           //     }
           //   }
           // })
+          // 
+
+          this.columns.forEach(el => {
+            // 将本地剩余的项塞到后面
+            const find = copy.filter(_el => _el.prop === el.prop)
+            // console.log('%cfind', 'color:green', find, find[0] ? find[0].label : '')
+            if (find.length === 0) {
+              const find2 = copy.filter((_el, _index) => {
+                if (_el.label === el.label) {
+
+                  return true
+                }
+              })
+              console.log('本地项，需要后台添加：', el, el.label)
+              if (find2.length === 0) {
+                copy.push(el)
+              }
+            }
+          })
 
           copy = this.sort(copy)
+          // console.log('%ccopy', 'color:orange', copy)
+          // console.log('%ccolumns', 'color:purple', this.columns)
 
           this.convertData(copy)
         } else {
-          console.log('fetchList1111')
+          // console.log('fetchList1111')
           this.fetchFail()
         }
       }).catch(err => {
-        console.log('fetchList222222', err)
+        console.log('%c错误信息', 'color:purple', err)
         this.fetchFail()
         // this.$message.warning('获取不到表格设置信息，请刷新页面重试。')
       })
@@ -619,23 +648,42 @@ export default {
         this.$message({ type: 'warning', message: '列表最多只能显示' + this.maxLen + '个字段。' })
         return false
       }
+      console.log('checkListLeft 左边->右边', this.checkListLeft)
       this.columnData = this.columnData.filter(el => {
-        if (this.checkListLeft.indexOf(el) === -1) {
-          return true
-        } else {
-          el.fixed = false
-          this.showColumnData.push(el)
-          return false
-        }
+        this.checkListLeft.forEach(em => {
+          if (em.prop !== el.prop) {
+            return true
+          } else {
+            el.fixed = false
+            this.showColumnData.push(el)
+            return false
+          }
+        })
+        // if (this.checkListLeft.indexOf(el) === -1) {
+        //   return true
+        // } else {
+        //   el.fixed = false
+        //   this.showColumnData.push(el)
+        //   return false
+        // }
       })
       this.orgColumnData = this.orgColumnData.filter(el => {
-        if (this.checkListLeft.indexOf(el) === -1) {
-          return true
-        } else {
-          el.fixed = false
-          this.orgShowColumnData.push(el)
-          return false
-        }
+        this.checkListLeft.forEach(em => {
+          if (em.prop !== el.prop) {
+            return true
+          } else {
+            el.fixed = false
+            this.orgShowColumnData.push(el)
+            return false
+          }
+        })
+        // if (this.checkListLeft.indexOf(el) === -1) {
+        //   return true
+        // } else {
+        //   el.fixed = false
+        //   this.orgShowColumnData.push(el)
+        //   return false
+        // }
       })
       this.checkListLeft = [] // 清空左边勾选列表
       this.setColumnLen()
@@ -643,17 +691,39 @@ export default {
       this.reRenderData()
     },
     goLeft() { // 将显示列勾选的项转移到隐藏列（右边->左边）
+      console.log('checkListRight 右边->左边', this.checkListRight)
       this.checkListRight.forEach((e, index) => {
         this.columnData.push(e) // 将右边勾选的数据项返回到左边
         this.orgColumnData.push(e) // 搜索源数据
-        const item = this.showColumnData.indexOf(e)
-        if (item !== -1) { // 源数据减去被穿梭的数据
-          this.showColumnData.splice(item, 1)
-        }
-        const orgItem = this.orgShowColumnData.indexOf(e)
-        if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
-          this.orgShowColumnData.splice(item, 1)
-        }
+
+        // const item = this.showColumnData.indexOf(e)
+        // if (item !== -1) { // 源数据减去被穿梭的数据
+        //   this.showColumnData.splice(item, 1)
+        // }
+        this.showColumnData = objectMerge2([], this.showColumnData).filter(el => {
+          this.showColumnData.forEach(em => {
+            if (em.prop !== el.prop) {
+              return true
+            }
+          })
+          // if (this.showColumnData.indexOf(el) === -1) {
+          //   return true
+          // }
+        })
+        // const orgItem = this.orgShowColumnData.indexOf(e)
+        // if (orgItem !== -1) { // 搜索源数据减去被穿梭的数据
+        //   this.orgShowColumnData.splice(item, 1)
+        // }
+        this.orgShowColumnData = objectMerge2([], this.orgShowColumnData).filter(el => {
+          this.orgShowColumnData.forEach(em => {
+            if (em.prop !== el.prop) {
+              return true
+            }
+          })
+          // if (this.orgShowColumnData.indexOf(el) === -1) {
+          //   return true
+          // }
+        })
       })
       // this.sort(this.columnData)
       this.checkListRight = [] // 清空右边勾选列表
@@ -669,16 +739,20 @@ export default {
       row.fixed = false
       this.showColumnData.push(row)
       this.orgShowColumnData.push(row)
-      this.columnData.splice(index, 1)
-      this.orgColumnData.splice(index, 1)
+      this.columnData = objectMerge2([], this.columnData).filter((_el, _index) => _el.prop !== row.prop)
+      this.orgColumnData = objectMerge2([], this.orgColumnData).filter((_el, _index) => _el.prop !== row.prop)
+      // this.columnData.splice(index, 1)
+      // this.orgColumnData.splice(index, 1)
       this.setColumnLen()
       this.reRenderData()
     },
     dbCheckItemRight(row, index, event) { // 双击-右边列表选择项（右边->左边）
       this.columnData.push(row)
       this.orgColumnData.push(row)
-      this.showColumnData.splice(index, 1)
-      this.orgShowColumnData.splice(index, 1)
+      this.showColumnData = objectMerge2([], this.showColumnData).filter((_el, _index) => _el.prop !== row.prop)
+      this.orgShowColumnData = objectMerge2([], this.orgShowColumnData).filter((_el, _index) => _el.prop !== row.prop)
+      // this.showColumnData.splice(index, 1)
+      // this.orgShowColumnData.splice(index, 1)
       this.setColumnLen()
       // this.sort(this.columnData)
       this.reRenderData()
@@ -796,7 +870,6 @@ export default {
     },
     submitForm() {
       // 判断是否要保存数据
-      console.log('code', this.thecode)
       if (this.thecode) {
         if (!this.isloading) {
           this.isloading = true

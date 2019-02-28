@@ -185,7 +185,8 @@ export default {
           truckIdNumber: '', // 陕YH0009
           startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
           endTime: parseTime(new Date()),
-          shipId: ''
+          shipId: '',
+          type: ''
         }
       },
       tableHeight: {
@@ -397,7 +398,9 @@ export default {
       if (this.isShowInlineTruckMap) {
         // 查询实时车辆定位信息
         let params = _this.orderdata.tmsOrderShipInfo.id
-        realTimeLocation(params).then(data => {
+        realTimeLocation({
+          shipId: params
+        }).then(data => {
             if (data) {
               this.realTimeTrucks = data
               this.isShowTable = false
@@ -787,138 +790,138 @@ export default {
       // 地图加载
       _this.map = new AMap.Map('trucklogmap', {
         resizeEnable: true,
-        zoom: 3
+        zoom: 6
       })
 
-      const map = this.map
-      // 输入提示
-      var autoOptions = {
-        input: 'tipinput'
-      }
-      var auto = new AMap.Autocomplete(autoOptions)
-      // 初始化搜索框信息
-      var placeSearch = new AMap.PlaceSearch({
-        map: map,
-        extensions: 'base' // all base
-        // type: '商务住宅|生活服务|公司企业|地名地址信息'
-      })
-      const name = this.name
-      if (name) {
-        this.$refs['tipinput'].value = name.replace('市辖区', '')
-        placeSearch.search(name)
-      }
-      /* AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
-        var map = new AMap.Map('container', {
-          zoom: 16
-        })
-        var positionPicker = new PositionPicker({
-          mode: 'dragMap', // 设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
-          map: map// 依赖地图对象
-        })
-    // TODO:事件绑定、结果处理等
-        positionPicker.on('success', function(positionResult) {
-          console.log('success:', positionResult)
-        })
-        positionPicker.on('fail', function(positionResult) {
-          console.log('fail:', positionResult)
-        })
-        // start方法可以接受一个经纬度参数作为，拖拽的起始点
-        positionPicker.start()
-      }) */
+    //   const map = this.map
+    //   // 输入提示
+    //   var autoOptions = {
+    //     input: 'tipinput'
+    //   }
+    //   var auto = new AMap.Autocomplete(autoOptions)
+    //   // 初始化搜索框信息
+    //   var placeSearch = new AMap.PlaceSearch({
+    //     map: map,
+    //     extensions: 'base' // all base
+    //     // type: '商务住宅|生活服务|公司企业|地名地址信息'
+    //   })
+    //   const name = this.name
+    //   if (name) {
+    //     this.$refs['tipinput'].value = name.replace('市辖区', '')
+    //     placeSearch.search(name)
+    //   }
+    //   /* AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
+    //     var map = new AMap.Map('container', {
+    //       zoom: 16
+    //     })
+    //     var positionPicker = new PositionPicker({
+    //       mode: 'dragMap', // 设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+    //       map: map// 依赖地图对象
+    //     })
+    // // TODO:事件绑定、结果处理等
+    //     positionPicker.on('success', function(positionResult) {
+    //       console.log('success:', positionResult)
+    //     })
+    //     positionPicker.on('fail', function(positionResult) {
+    //       console.log('fail:', positionResult)
+    //     })
+    //     // start方法可以接受一个经纬度参数作为，拖拽的起始点
+    //     positionPicker.start()
+    //   }) */
 
-      var infoWindow = new AMap.InfoWindow({
-        offset: new AMap.Pixel(0, -30),
-        content: '' // 使用默认信息窗体框样式，显示信息内容
-      })
-      var geocoder = new AMap.Geocoder({
-        radius: 1000 // 范围，默认：500
-      })
-      // infoWindow.open(map, map.getCenter())
-      var contextMenu = new AMap.ContextMenu()
-      var contextMenuPositon = []
-      var marker
+    //   var infoWindow = new AMap.InfoWindow({
+    //     offset: new AMap.Pixel(0, -30),
+    //     content: '' // 使用默认信息窗体框样式，显示信息内容
+    //   })
+    //   var geocoder = new AMap.Geocoder({
+    //     radius: 1000 // 范围，默认：500
+    //   })
+    //   // infoWindow.open(map, map.getCenter())
+    //   var contextMenu = new AMap.ContextMenu()
+    //   var contextMenuPositon = []
+    //   var marker
 
-      function clearMarker() {
-        if (marker) {
-          marker.setMap(null)
-          marker = null
-        }
-      }
-      // 右键添加Marker标记
-      contextMenu.addItem('添加标记', function(e) {
-        // 删除上一个标记
-        clearMarker()
-        // 清除搜素结果
-        placeSearch.clear()
-        // 关闭上一个信息窗口
-        infoWindow.close()
+    //   function clearMarker() {
+    //     if (marker) {
+    //       marker.setMap(null)
+    //       marker = null
+    //     }
+    //   }
+    //   // 右键添加Marker标记
+    //   contextMenu.addItem('添加标记', function(e) {
+    //     // 删除上一个标记
+    //     clearMarker()
+    //     // 清除搜素结果
+    //     placeSearch.clear()
+    //     // 关闭上一个信息窗口
+    //     infoWindow.close()
 
-        findInfo(contextMenuPositon)
-      }, 3)
+    //     findInfo(contextMenuPositon)
+    //   }, 3)
 
-      function findInfo(pos) {
-        console.log('2222', pos)
-        geocoder.getAddress(pos, function(status, result) {
-          if (status === 'complete' && result.info === 'OK') {
-            geocoder_CallBack(result, pos)
-          } else {
-            clearMarker()
-            alert('获取不到当前位置的地址信息~')
-          }
-        })
-      }
+    //   function findInfo(pos) {
+    //     console.log('2222', pos)
+    //     geocoder.getAddress(pos, function(status, result) {
+    //       if (status === 'complete' && result.info === 'OK') {
+    //         geocoder_CallBack(result, pos)
+    //       } else {
+    //         clearMarker()
+    //         alert('获取不到当前位置的地址信息~')
+    //       }
+    //     })
+    //   }
 
-      // 地图绑定鼠标右击事件——弹出右键菜单
-      map.on('rightclick', function(e) {
-        console.log('right click:', e)
-        var pos = e.lnglat
+    //   // 地图绑定鼠标右击事件——弹出右键菜单
+    //   map.on('rightclick', function(e) {
+    //     console.log('right click:', e)
+    //     var pos = e.lnglat
 
-        contextMenu.open(map, pos)
-        contextMenuPositon = pos
-      })
+    //     contextMenu.open(map, pos)
+    //     contextMenuPositon = pos
+    //   })
 
-      function geocoder_CallBack(data, pos) {
-        var haspx = !!pos.lat
+    //   function geocoder_CallBack(data, pos) {
+    //     var haspx = !!pos.lat
 
-        var addr = data.regeocode.formattedAddress
-        if (haspx) {
-          marker = new AMap.Marker({
-            map: map,
-            position: pos // 基点位置
-          })
+    //     var addr = data.regeocode.formattedAddress
+    //     if (haspx) {
+    //       marker = new AMap.Marker({
+    //         map: map,
+    //         position: pos // 基点位置
+    //       })
 
-          marker.on('click', function(e) {
-            infoWindow.open(map, e.target.getPosition())
-          })
-          marker.emit('click', {
-            target: marker
-          })
-          infoWindow.setContent(addr)
-        }
+    //       marker.on('click', function(e) {
+    //         infoWindow.open(map, e.target.getPosition())
+    //       })
+    //       marker.emit('click', {
+    //         target: marker
+    //       })
+    //       infoWindow.setContent(addr)
+    //     }
 
-        _this.setData(haspx ? pos.lng + ',' + pos.lat : pos, addr, data.regeocode)
-      }
+    //     _this.setData(haspx ? pos.lng + ',' + pos.lat : pos, addr, data.regeocode)
+    //   }
 
-      map.on('click', function(e) {
-        console.log('e:', e)
-      })
-      // 构造地点查询类
-      map.plugin(['AMap.ToolBar'], function() {
-        map.addControl(new AMap.ToolBar())
-      })
-      AMap.event.addListener(auto, 'select', select) // 注册监听，当选中某条记录时会触发
-      AMap.event.addListener(placeSearch, 'markerClick', function(e) {
-        const loc = e.data.location
-        findInfo(loc)
-        // findInfo(loc)
-      })
+    //   map.on('click', function(e) {
+    //     console.log('e:', e)
+    //   })
+    //   // 构造地点查询类
+    //   map.plugin(['AMap.ToolBar'], function() {
+    //     map.addControl(new AMap.ToolBar())
+    //   })
+    //   AMap.event.addListener(auto, 'select', select) // 注册监听，当选中某条记录时会触发
+    //   AMap.event.addListener(placeSearch, 'markerClick', function(e) {
+    //     const loc = e.data.location
+    //     findInfo(loc)
+    //     // findInfo(loc)
+    //   })
 
-      function select(e) {
-        console.log('select e:', e)
-        placeSearch.setCity(e.poi.adcode)
-        //
-        placeSearch.search(e.poi.name) // 关键字查询查询
-      }
+    //   function select(e) {
+    //     console.log('select e:', e)
+    //     placeSearch.setCity(e.poi.adcode)
+    //     //
+    //     placeSearch.search(e.poi.name) // 关键字查询查询
+    //   }
     },
     // 设置获取到的信息
     setData(pos, addr, obj) {

@@ -40,7 +40,7 @@
       <span class="last-page"></span>
     </span>
     <span class="tms-pagination__sizes">
-      <el-select class="page-select" @change="sizesChange" v-model="size" placeholder="请选择">
+      <el-select class="page-select" @change="sizesChange" v-model="size" placeholder="请选择" :size="btnsize">
         <el-option
           v-for="(item,index) in sizes"
           :key="index"
@@ -54,13 +54,21 @@
 <script>
 export default {
   props: {
-    sizes: {
+    sizes: { // picker 
       type: Array,
       default: () => [100, 200, 300, 400]
     },
-    total: {
+    total: { // 总计
       type: Number,
       default: 0
+    },
+    defaultSize: { // 默认数量
+      type: Number,
+      default: 100
+    },
+    btnsize: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -77,7 +85,7 @@ export default {
     }
   },
   mounted() {
-    this.size = this.sizes[0]
+    this.size = this.defaultSize
   },
   data() {
     return {

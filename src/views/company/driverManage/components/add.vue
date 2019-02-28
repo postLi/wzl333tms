@@ -27,7 +27,7 @@
           <el-input :maxlength="20" v-model="form.openBank" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="驾驶证有效期" prop="validityDate" class="blockInput">
-          <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" end-placeholder="结束日期">
+          <el-date-picker v-model="searchTime" type="daterange" unlink-panels align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" end-placeholder="结束日期">
           </el-date-picker>
           <!-- <el-date-picker
             v-model="form.validityDate"

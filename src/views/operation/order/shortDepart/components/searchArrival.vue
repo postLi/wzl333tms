@@ -3,7 +3,7 @@
 
         <div class="staff_searchinfo--input">
           <el-form-item label="短驳时间">
-            <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+            <el-date-picker v-model="searchTime" :default-value="defaultTime" type="daterange" unlink-panels align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="批次状态" prop="batchTypeId">

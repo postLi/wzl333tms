@@ -3,8 +3,7 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="开单时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期"
-          unlink-panels
+          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" unlink-panels type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期"
           :picker-options="pickerOptions2" end-placeholder="结束日期">
           </el-date-picker>
         </div>

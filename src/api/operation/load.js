@@ -92,3 +92,11 @@ export function getDrivers() {
     return data
   })
 }
+/**
+ * 获取终端
+ */
+export function getOrdertrailterminal(params) {
+  return fetch.post('/api-order/order/tmsordertrailterminal/v1/list', params).then(data => {
+    return data.data
+  })
+}

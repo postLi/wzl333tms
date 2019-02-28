@@ -5,9 +5,8 @@
       <el-form-item label="配载时间">
         <el-date-picker
           v-model="searchCreatTime"
-          type="daterange"
+          type="daterange" unlink-panels
           align="right"
-          unlink-panels
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           :picker-options="pickerOptions2"

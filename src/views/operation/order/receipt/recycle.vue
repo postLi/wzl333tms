@@ -598,7 +598,7 @@ export default {
     doAction(type) {
           // 判断是否有选中项
       console.log(this.selected)
-      if (!this.selected.length && type !== 'exprot' && type !== 'print') {
+      if (!this.selected.length && type !== 'export' && type !== 'print') {
         this.$message({
           message: '请选择要操作的项~',
           type: 'warning'

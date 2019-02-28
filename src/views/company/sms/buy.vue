@@ -1,28 +1,32 @@
 <template>
   <!-- 短信购买 -->
   <div class="sms">
-    <div class="sms_top">
-      <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
-        <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:SMS_BUY_1>充值</el-button>
-      </p>
+    <div v-if="isShowData">
+      <div class="sms_top">
+        <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
+          <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:SMS_BUY_1>充值</el-button>
+        </p>
+      </div>
+      <div class="sms_content">
+        <el-row :gutter="10">
+          <el-col :span="4" v-for="(item, index) in dataList" :key="item.id">
+            <el-card shadow="hover" class="smsCard">
+              <div slot="header" class="clearfix">
+                <span>套餐{{changeNumCN[index]}}</span>
+              </div>
+              <div class="smsCard_content">
+                <p>{{item.amount}}条短信</p>
+                <h3>{{item.fee}}元</h3>
+                <h4>{{item.price}}元/条</h4>
+                <el-button v-has:SMS_BUY_2 type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
     </div>
-    <div class="sms_content">
-      <el-row :gutter="10">
-        <el-col :span="4" v-for="(item, index) in dataList" :key="item.id">
-          <el-card shadow="hover" class="smsCard">
-            <div slot="header" class="clearfix">
-              <span>套餐{{changeNumCN[index]}}</span>
-            </div>
-            <div class="smsCard_content">
-              <p>{{item.amount}}条短信</p>
-              <h3>{{item.fee}}元</h3>
-              <h4>{{item.price}}元/条</h4>
-              <el-button v-has:SMS_BUY_2 type="danger" class="smsCard_footbtn" round icon="el-icon-goods" @click="goBuy(item)">立即购买</el-button>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
+    <el-alert v-else title="未获取到数据，请稍后重试~" type="warning" show-icon>
+    </el-alert>
     <buyTips :info="handleBuyArr" :popVisible="popVisibleTips" @close="closeTips" @success="getSearchSmsSurplus"></buyTips>
     <Recharge :popVisible.sync="popVisibleRecharge" @success="getSearchSmsSurplus"></Recharge>
   </div>
@@ -35,6 +39,7 @@ import { objectMerge2 } from '@/utils/index'
 export default {
   data() {
     return {
+      isShowData: true,
       dataList: [],
       changeNumCN: [],
       packageInfo: {},
@@ -72,20 +77,31 @@ export default {
     },
     getSearchSmsSurplus() {
       getSearchSmsSurplus().then(data => {
-        this.packageInfo = data
-      })
+          if (data) {
+            this.packageInfo = data
+            this.isShowData = true
+          } else {
+            this.$message.warning('未获取到数据，请稍后重试~')
+            this.isShowData = false
+          }
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
     getSmspackages() {
       return getSmspackages().then(data => {
-        this.dataList = data
-        this.dataList.forEach(e => {
-          let count = 0
-          count = (Number(e.fee) / Number(e.amount)).toFixed(2)
-          this.$set(e, 'price', count)
-        })
+        if (data) {
+          this.dataList = data
+          this.dataList.forEach(e => {
+            let count = 0
+            count = (Number(e.fee) / Number(e.amount)).toFixed(2)
+            this.$set(e, 'price', count)
+          })
+        }
+      })
+      .catch(err => {
+         this._handlerCatchMsg(err)
       })
     },
     goBuy(obj) {
@@ -96,10 +112,10 @@ export default {
       } else {
         const h = this.$createElement
         this.$confirm('钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。', '购买失败', {
-          distinguishCancelAndClose: true,
-          confirmButtonText: '充值',
-          cancelButtonText: '取消'
-        })
+            distinguishCancelAndClose: true,
+            confirmButtonText: '充值',
+            cancelButtonText: '取消'
+          })
           .then(() => {
             this.popVisibleRecharge = true
             this.popVisibleTips = false
@@ -107,20 +123,6 @@ export default {
           .catch(() => {
             this.popVisibleTips = false
           })
-        // this.$confirm({
-        //     title: '购买失败',
-        //     message: h('div', { style: 'text-align: center' }, [
-        //       h('p', { style: 'font-size: 16px' }, '钱包余额不足，当前余额 ' + this.packageInfo.balance + ' 元，先充值再购买。')
-        //     ]),
-        //     confirmButtonText: '充值',
-        //     cancelButtonText: '取消'
-        //   })
-        //   .then(() => {
-        //     this.popVisibleTips = true
-        //   })
-        //   .catch(() => {
-        //     this.popVisibleTips = false
-        //   })
       }
     },
     closeTips() {
@@ -156,7 +158,7 @@ export default {
           font-weight: 700;
           padding: 20px 0;
         }
-        h3{
+        h3 {
           font-size: 18px;
           font-weight: 700;
           margin-bottom: 10px;

@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item label="登录账号" :label-width="formLabelWidth" prop="username">
           <el-tooltip class="item" effect="dark" placement="top" :enterable="false" :manual="true" :value="tooltip" tabindex="-1">
-            <div slot="content">账号可以由字母、数字组成<br/>长度范围2~30个字符</div>
+            <div slot="content">账号可以由小写字母、数字组成<br/>长度范围2~30个字符</div>
             <!-- <el-input v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false"></el-input> -->
             <input type="text" v-model.trim="form.username" auto-complete="off" @focus="tooltip = true" @blur="tooltip = false" maxlength="30" v-onlyNumberAndLetter class="nativeinput">
           </el-tooltip>
@@ -122,14 +122,6 @@ export default {
     //   }
     // }
 
-    const validateusername = function(rule, value, callback) {
-      if (isvalidUsername(value)) {
-        callback()
-      } else {
-        callback(new Error('用户名只能由中文，数字，字母组成'))
-      }
-    }
-
     return {
       querykey: '11',
       form: {
@@ -162,8 +154,8 @@ export default {
           { required: true, message: '请选择归属网点' }
         ],
         username: [
-          { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME },
-          { max: 30, message: '不能超过30个字符', trigger: 'blur' }
+          { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME_NOUP },
+          { max: 30, message: '不能超过30个字符', trigger: 'change' }
         ],
         position: [
           { max: 10, message: '不能超过10个字符', trigger: 'blur' }
@@ -186,17 +178,17 @@ export default {
   mounted() {
     this.form.orgid = this.orgid
     console.log('orgid2222::::::', this.orgid)
-    if (!this.inited) {
-      this.inited = true
-      this.initInfo()
-    }
+    // if (!this.inited) {
+    //   this.inited = true
+    //   this.initInfo()
+    // }
   },
   watch: {
     popVisible(newVal, oldVal) {
-      if (!this.inited) {
-        this.inited = true
+      // if (!this.inited) {
+        // this.inited = true
         this.initInfo()
-      }
+      // }
     },
     orgid(newVal) {
       console.log('orgid::::::', newVal)

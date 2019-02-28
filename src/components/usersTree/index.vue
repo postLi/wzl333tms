@@ -114,6 +114,7 @@ export default {
   .el-dialog__body {
     max-height: 500px;
     overflow: auto;
+    padding: 20px;
   }
   .custom-tree-node {
     flex: 1;
@@ -122,6 +123,31 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
+  }
+  .el-tree-node {
+    .el-tree-node__content {
+      background-color: #f2f2f2;
+      .custom-tree-node {
+        color: #333;
+        font-weight: 900;
+      }
+    }
+    .el-tree-node__children {
+      .el-tree-node {
+        .el-tree-node__content {
+          background-color: #fff;
+            transition: 0.5s;
+          &:hover {
+            transition: 0.2s;
+            background-color: #ddd;
+          }
+          .custom-tree-node {
+            color: #333;
+            font-weight: 400;
+          }
+        }
+      }
+    }
   }
 }
 

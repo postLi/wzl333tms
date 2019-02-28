@@ -9,26 +9,9 @@
       <!-- 产品官网链接 -->
     </div>
     <div class="login-wrapper clearfix">
-      <!-- <div class="container-left">
-      <img src="../../assets/login_images/left.png" alt="">
-      </div> -->
       <div class="container-right">
-        <!--  <div class="logo">
-          <img  class="logo-img" src="../../assets/login_images/logo.png" alt="">
-        </div> -->
         <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px" class="card-box login-form">
           <h3 class="title">会员登录</h3>
-          <!--<div v-if="errInfo">-->
-          <!--<span>{{errInfo}}</span>-->
-          <!--</div>-->
-          <!-- <el-form-item prop="accNum"> -->
-          <!--<span class="svg-container svg-container_login">-->
-          <!--<icon-svg icon-class="yonghuming" />-->
-          <!--</span>-->
-          <!-- <el-input name="accNum" type="text" v-model="loginForm.accNum" autoComplete="off" :placeholder="holder.accNum" @focus='accNum()'   clearable >
-          <template slot="prepend">公司ID</template>
-         </el-input>
-        </el-form-item> -->
           <el-form-item prop="username">
             <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="30" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
@@ -40,7 +23,6 @@
                 <i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i>
                 <!-- 两种写法都可以 -->
                 <i @click="isview = !isview" :class="{ 'icon_zy': isview , 'icon_by':!isview}"></i>
-                <!-- <i @click="isview = !isview" :class="[isview ? 'icon_by':'icon_zy']"></i> -->
               </template>
             </el-input>
           </el-form-item>
@@ -51,12 +33,10 @@
           </div>
           <div class="rember">
             <el-checkbox v-model="checked">记住密码</el-checkbox>
-            <!-- <p class="rember-tit" @click="forgetPsw">忘记密码</p> -->
+            <p class="rember-tit" @click="forgetPwd">忘记密码</p>
           </div>
         </el-form>
       </div>
-      <!-- </div>
-    <div class="login-wrapper clearfix"> -->
       <div class="button-cont">
         <ul>
           <li><a href="http://www.anfanet.com" target="_blank">广州市安发网络科技有限公司</a></li>
@@ -72,6 +52,8 @@
       </div>
     </div>
     <setApiUrl />
+    <ForgetPwd :popVisible.sync="popVisibleDialog" :info="this.loginForm" />
+    
   </div>
 </template>
 <script>
@@ -80,11 +62,13 @@ import { requestFullScreen } from '@/utils/fullScreen'
 import setApiUrl from '@/components/changeApiUrl/index'
 import { objectMerge2 } from '@/utils/index'
 import md5 from 'js-md5'
+import ForgetPwd from './components/forgetPwd'
 
 export default {
   name: 'login',
   components: {
-    setApiUrl
+    setApiUrl,
+    ForgetPwd
   },
   data() {
     // const validateUsername = (rule, value, callback) => {
@@ -109,6 +93,7 @@ export default {
       }
     }
     return {
+      popVisibleDialog: false,
       holder: {
         accNum: '公司ID',
         username: '账号',
@@ -151,7 +136,6 @@ export default {
   },
   methods: {
     setLocalStorage() {
-      console.log(this.checked)
       if (this.checked) {
         let form = {}
         form.username = this.loginForm.username
@@ -180,9 +164,8 @@ export default {
       }
     },
     handleLogin() {
-      requestFullScreen()
+      // requestFullScreen()
       this.$refs.loginForm.validate(valid => {
-        console.log(valid)
         if (valid) {
           this.loading = true
           if (this.checked) {
@@ -190,7 +173,6 @@ export default {
           }
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-
             // 获取登录前的页面地址
             // 有可能会出现前一个页面是现在登录账号没有权限访问的？
             // const nexturl = this.$route.query.tourl
@@ -206,14 +188,14 @@ export default {
           })
         } else {
           this.loginError = true
-          console.log('error submit!!')
           return false
         }
       })
     },
-    forgetPsw() {
+    forgetPwd() {
+      this.popVisibleDialog = true
       // this.$router.push({ path: '/' })
-      // console.log(5555)
+      console.log(5555)
     },
     accNum() {
       // this.holder = ''
@@ -248,6 +230,11 @@ export default {
 @import "../../styles/login-index.css";
 .hoverLink:hover {
   border-bottom: 1px solid #eee;
+}
+.rember-tit{
+  &:hover{
+    color: #409eff;
+  }
 }
 
 </style>

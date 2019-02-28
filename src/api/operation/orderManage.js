@@ -1,4 +1,6 @@
-import fetch, { checkStatus } from '@/utils/fetch'
+import fetch, {
+  checkStatus
+} from '@/utils/fetch'
 import CACHE from '@/utils/cache'
 
 export default {
@@ -119,7 +121,10 @@ export default {
       url = '/api-order/order/v1/change'
     }
     return fetch.post(url, param).then(res => {
-      return res.data ? res.data : { total: 0, list: [] }
+      return res.data ? res.data : {
+        total: 0,
+        list: []
+      }
     })
   },
   /**
@@ -442,7 +447,10 @@ export default {
    */
   getRemarkList() {
     return fetch.get('/api-order/order/recently/v1/').then(res => {
-      return res.data || { list: [], total: 0 }
+      return res.data || {
+        list: [],
+        total: 0
+      }
     })
   },
   /**
@@ -532,7 +540,10 @@ export default {
         shipId
       }
     }).then(res => {
-      return res.data || { list: [], total: 0 }
+      return res.data || {
+        list: [],
+        total: 0
+      }
     })
   },
   /**
@@ -655,5 +666,17 @@ export default {
   // 删除置顶的网点
   deleteFixedOrg(id) {
     return fetch.delete('/api-system/system/tmssystemorgtop/v1.5/' + id)
+  },
+  // 获得创建运单模板信息
+  getOrderModel() {
+    return fetch.get('/api-order/order/tmsordershiptemplate/v1.6').then(res => {
+      return res.data
+    })
+  },
+  // 修改创建运单模板信息
+  putOrderModel(data) {
+    return fetch.put('/api-order/order/tmsordershiptemplate/v1.6', data).then(res => {
+      return res.data
+    })
   }
 }

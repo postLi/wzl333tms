@@ -5,7 +5,7 @@
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               :size="btnsize"
               value-format="yyyy-MM-dd"
@@ -38,7 +38,7 @@
           <div class="block">
             <el-date-picker
               v-model="searchCreatTime2"
-              type="daterange"
+              type="daterange" unlink-panels
               align="right"
               :size="btnsize"
               value-format="yyyy-MM-dd"

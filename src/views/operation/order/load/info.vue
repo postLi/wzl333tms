@@ -147,6 +147,14 @@
                   </el-form-item>
                 </div>
                 <div class="baseInfoCol">
+                  <el-form-item prop="remark" label="追货宝">
+                    <el-select v-model="formModel.terminalNo" filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="changeTerminal" :loading="searchLoading">
+                      <el-option v-for="(item, index) in Terminals" :key="index" :value="item.terminalNo">
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="baseInfoCol">
                   <el-form-item prop="remark" label="备注" v-if="loadTypeId !== 40">
                     <el-input :maxlength="300" size="mini" v-model="formModel.remark"></el-input>
                   </el-form-item>
@@ -281,7 +289,7 @@ import draggable from 'vuedraggable'
 import { REGEX } from '@/utils/validate'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers } from '@/api/operation/load'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable'
@@ -346,6 +354,7 @@ export default {
       }
     }
     return {
+      searchLoading: false,
       visibleChange: false,
       disOrgList: [],
       networkList: [],
@@ -385,7 +394,8 @@ export default {
         dirverName: '',
         dirverMobile: '',
         truckIdNumber: '',
-        arriveOrgid: ''
+        arriveOrgid: '',
+        terminalNo: '' // 追货宝
         // truckLoad: '',
         // truckVolume: ''
       },
@@ -428,6 +438,7 @@ export default {
       cacheTruckList: {},
       Drivers: [],
       Trucks: [],
+      Terminals: [], // 跟车宝终端列表
       submitvalidate: false,
       // loadTypeId: 38,
       batchTypeIdFinish: 47,
@@ -655,7 +666,7 @@ export default {
         console.log('isEdit', this.isEdit)
         this.getSelectAddLoadRepertoryList()
       })
-       // 分摊费用  送货-deliveryFee(送货费) 短驳干线-handlingFee(操作费)
+      // 分摊费用  送货-deliveryFee(送货费) 短驳干线-handlingFee(操作费)
       this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
 
       if (!this.inited) {
@@ -1191,7 +1202,7 @@ export default {
     closeAddTruckVisible() {
       this.addTruckVisible = false
     },
-    initInfo() { // 初始化车辆和司机下拉信息
+    initInfo() { // 初始化车辆和司机下拉信息 初始化跟车宝终端信息
       this.loading = false
       this.truckKey = new Date().getTime()
       this.driverKey = new Date().getTime()
@@ -1202,6 +1213,35 @@ export default {
       // 切换组织了列表时更新司机列表信息
       this.getDrivers(this.otherinfo.orgid)
       this.getTrucks(this.otherinfo.orgid)
+      this.getTerminal()
+    },
+    changeTerminal(val) {
+      if (val) {
+        this.getTerminal(val)
+      }
+    },
+    getTerminal(terminalNo = '') {
+      let companyId = this.otherinfo.companyId
+      if (process.env.NODE_ENV !== 'production') {
+        companyId = 1
+      }
+      let query = {
+        currentPage: 1,
+        pageSize: 100,
+        vo: {
+          companyId: companyId, // 公司id
+          terminalNo: terminalNo ? terminalNo : this.formModel.terminalNo // 设备号 模糊搜索
+        }
+      }
+      getOrdertrailterminal(query).then(data => {
+          if (data) {
+            console.log('Terminals', data)
+            this.Terminals = data.list
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     getDrivers(orgid) {
       if (this.cacheDriverList[orgid]) {
@@ -1245,6 +1285,9 @@ export default {
       // this.formModel.truckLoad = item.truckLoad
       // this.formModel.truckVolume = item.truckVolume
     },
+    handleSelectTerminal(item) {
+      console.warn('选择追货宝', item)
+    },
     querySearch(queryString, cb) {
       const driverList = this.Drivers
       const results = queryString ? driverList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'driverName')) : driverList
@@ -1255,6 +1298,12 @@ export default {
       const truckList = this.Trucks
       const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
       // 调用 callback 返回车辆列表的数据
+      cb(results)
+    },
+    querySearchTerminal(queryString, cb) {
+      const terminalList = this.Terminals
+      const results = queryString ? terminalList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'terminalNo')) : terminalList
+      // 调用 callback 返回追货宝列表的数据
       cb(results)
     },
     createFilter(queryString, prop) {

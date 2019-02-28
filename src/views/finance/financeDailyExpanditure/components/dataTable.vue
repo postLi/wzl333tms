@@ -88,7 +88,7 @@
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
         </el-table-column> -->
-        <!-- <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
+        <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="noOperationPay" sortable label="未核销操作费" width="120" v-if="settlementId!==181">
           <template slot-scope="scope">
@@ -99,7 +99,7 @@
           <template slot-scope="scope">
             <span v-html="_setTextColor(scope.row.operationPay, scope.row.hadOperationPay, scope.row.noOperationPay, scope.row.hadOperationPay)"></span>
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <!-- <el-table-column prop="startLoadPay" sortable label="发站装卸费" width="120" v-if="settlementId===179">
         </el-table-column>
         <el-table-column prop="noStartLoadPay" sortable label="未核销发站装卸费" width="120" v-if="settlementId===179">
@@ -229,7 +229,7 @@
             <span v-html="_setTextColor(scope.row.othePay, scope.row.hadOthePay, scope.row.noOthePay, scope.row.hadOthePay)"></span>
           </template>
         </el-table-column> -->
-        <!-- <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
+        <el-table-column prop="operationPay" sortable label="操作费" width="120" v-if="settlementId!==181">
         </el-table-column>
         <el-table-column prop="noOperationPay" sortable label="未核销操作费" width="120" v-if="settlementId!==181">
           <template slot-scope="scope">
@@ -242,7 +242,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="operationPayActual" sortable label="实际核销操作费" width="120" v-if="settlementId!==181">
-        </el-table-column> -->
+        </el-table-column>
         <!-- 
         <el-table-column prop="sendPay" sortable label="送货费" width="120" v-if="settlementId===181">
         </el-table-column>

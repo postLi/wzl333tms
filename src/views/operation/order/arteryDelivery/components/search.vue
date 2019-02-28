@@ -5,9 +5,8 @@
       <el-form-item label="发车时间">
         <el-date-picker
           v-model="searchCreatTime"
-          type="daterange"
+          type="daterange" unlink-panels
           align="right"
-          unlink-panels
           :picker-options="pickerOptions2"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -18,9 +17,8 @@
       <el-form-item label="到车时间">
         <el-date-picker
           v-model="searchEndTime"
-          type="daterange"
+          type="daterange" unlink-panels
           align="right"
-          unlink-panels
           :picker-options="pickerOptions2"
           range-separator="-"
           start-placeholder="开始日期"

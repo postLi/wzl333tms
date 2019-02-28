@@ -9,7 +9,7 @@
         <div class="createOrder-info clearfix">
           <div class="order-num required">运单号： <span class="order-num-info">
         <el-form-item  :error='shipFieldValueInfo.shipSn'>
-          <el-input ref="tmsOrderShipshipSn" v-onlyNumberAndLetter size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+          <el-input ref="tmsOrderShipshipSn"  size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
           <div class="create-num required">开单日期： <span class="create-num-info">
@@ -455,6 +455,7 @@
       <FeeDialog v-if="dialogVisible" @success="(config)=>{feeConfig = config}" :dialogVisible.sync="dialogVisible" />
       <PersonDialog v-if="dialogVisiblePerson" @success="getKeySetup" :dialogVisiblePerson.sync="dialogVisiblePerson" />
       <ManageRemarks v-if="popVisible" @success="setRemark" :popVisible.sync="popVisible" />
+      <modelOrderPop :isModify="false" @success="setModel" :popVisible.sync="dialogVisibleModel" />
     </div>
   </div>
 </template>
@@ -485,6 +486,7 @@ import FeeDialog from './components/feePop'
 import PersonDialog from './components/personSetup'
 import FooterBtns from './components/btns'
 import ManageRemarks from './components/remarks'
+import modelOrderPop from './components/modelOrderPop'
 // 阿拉伯数字转中文大写
 import { smalltoBIG } from '@/filters/'
 
@@ -499,7 +501,8 @@ export default {
     SelectCity,
     querySelect,
     ManageRemarks,
-    queryCity
+    queryCity,
+    modelOrderPop
   },
   props: {
     ispop: {
@@ -875,14 +878,16 @@ export default {
         highOrLow: '', // 超过 低于
         proposedPrice: 0 // 总价
       },
-      RECEIPT_TYPE: {} // 回单类型中文
+      RECEIPT_TYPE: {}, // 回单类型中文
+      dialogVisibleModel: false, // 
+      modelList: [] // 模板设置列表
     }
   },
   computed: {
-    'transferTotalFee'() {
+    'transferTotalFee' () {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig'() {
+    'theFeeConfig' () {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -972,14 +977,14 @@ export default {
       },
       immediate: true
     },
-    '$route'(to, from) {
+    '$route' (to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop'(newVal) {
+    'ispop' (newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -997,6 +1002,34 @@ export default {
 
   },
   mounted() {
+
+    // if (process.env.NODE_ENV !== 'production') {
+    //   console.warn('模板设置字段：', this.form)
+    //   console.warn('-----------开始分割线--------------')
+
+    //   let str = ''
+    //   let count = 0
+    //   let sort = 0
+    //   for (let item in this.form) {
+    //     if (/(cargoList|customerList|tmsOrderTransfer|tmsOrderPre)/.test(item) === false) {
+    //       count += 1
+    //       sort += 1
+    //       console.warn('>>>>>模块>>>>', typeof this.form[item], item, this.form[item])
+    //       str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + item + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
+
+    //       if (this.form[item]) {
+    //         for (let kk in this.form[item]) {
+    //           if (kk) {
+    //             sort += 1
+    //             str += "INSERT INTO `tms_order_template` (`id`, `field_name`, `field_property`, `is_hide`, `field_order`, `template_type`, `type_order`,`user_id`, `org_id`,`company_id`)VALUES(1,'','" + kk + "', 0,"+sort+"," + count + ",'tmsOrderShip',1,0, 0, 0);" + '\n'
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   console.log(str)
+    //   console.warn('-----------结束分割线--------------')
+    // }
     // this.getSelectType()
     // this.getShipPayWay()
     // this.getReceiptType()
@@ -1012,6 +1045,20 @@ export default {
     }
   },
   methods: {
+    fetchModel() { // 获取模板信息
+      return orderManage.getOrderModel().then(data => {
+          if (data) {
+            this.modelList = data
+            this.modelList.forEach((el, index) => {
+              
+            })
+            console.warn('模板信息 modelList', this.modelList)
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
     // 公共工具函数
     showMessage(msg) {
       if (this.isChecked && !this.isCheckedShow) {
@@ -1474,6 +1521,7 @@ export default {
       this.loading = true
 
       this.reset()
+      this.fetchModel()
       this.getBaseSetting().then(res => {
         let param
         if (this.ispop) {
@@ -1505,6 +1553,8 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
+
+
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
@@ -3018,24 +3068,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyLi().then(data => {
-        printObj.printSetup = data
-        printObj.printer = this.otherinfo.systemSetup.printSetting.label
+          printObj.printSetup = data
+          printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-        CreatePrintPageEnable(printObj)
-        return data
-        this.setPrintData('lib') // 设置数据
-        const printData = objectMerge2({}, this.printDataObject)
-        console.log('getSettingCompanyLi', data, printData)
-        const libData = Object.assign([], data)
-        for (const item in printData) {
-          libData.forEach((e, index) => {
-            if (e.filedValue === item) {
-              e['value'] = printData[item] // 把页面数据存储到打印数组中
-            }
-          })
-        }
-        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-      })
+          CreatePrintPageEnable(printObj)
+          return data
+          this.setPrintData('lib') // 设置数据
+          const printData = objectMerge2({}, this.printDataObject)
+          console.log('getSettingCompanyLi', data, printData)
+          const libData = Object.assign([], data)
+          for (const item in printData) {
+            libData.forEach((e, index) => {
+              if (e.filedValue === item) {
+                e['value'] = printData[item] // 把页面数据存储到打印数组中
+              }
+            })
+          }
+          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3051,24 +3101,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyOrder().then(data => {
-        printObj.printSetup = data
-        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+          printObj.printSetup = data
+          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-        CreatePrintPageEnable(printObj)
-        return
-        this.setPrintData('order') // 设置数据
-        const printData = objectMerge2({}, this.printDataObject)
-        console.log('getSettingCompanyOrder', data)
-        const libData = Object.assign([], data)
-        for (const item in printData) {
-          libData.forEach((e, index) => {
-            if (e.filedValue === item) {
-              e['value'] = printData[item] // 把页面数据存储到打印数组中
-            }
-          })
-        }
-        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-      })
+          CreatePrintPageEnable(printObj)
+          return
+          this.setPrintData('order') // 设置数据
+          const printData = objectMerge2({}, this.printDataObject)
+          console.log('getSettingCompanyOrder', data)
+          const libData = Object.assign([], data)
+          for (const item in printData) {
+            libData.forEach((e, index) => {
+              if (e.filedValue === item) {
+                e['value'] = printData[item] // 把页面数据存储到打印数组中
+              }
+            })
+          }
+          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3388,6 +3438,9 @@ export default {
         case 'openInNewWindow':
           this.$message('暂不支持新开窗口创建运单~')
           break
+        case 'openModelPop':
+          this.dialogVisibleModel = true
+          break
       }
     },
     getKeySetup() {
@@ -3402,7 +3455,8 @@ export default {
         this.loading = false
         this._handlerCatchMsg(err)
       })
-    }
+    },
+    setModel() {}
   }
 }
 

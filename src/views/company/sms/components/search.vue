@@ -4,7 +4,7 @@
       <SelectTree v-model="formModel.orgId" :orgid="otherinfo.orgid" />
     </el-form-item>
     <el-form-item label="发送时间">
-      <el-date-picker v-model="searchTime" type="daterange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
+      <el-date-picker v-model="searchTime" type="daterange" unlink-panels align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期" :picker-options="pickerOptions2" end-placeholder="结束日期">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="发送节点">
