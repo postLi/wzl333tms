@@ -83,6 +83,7 @@
             </el-form>
           </transition>
         </el-tab-pane>
+        <!-- <el-tab-pane label="监控中心" name="3"></el-tab-pane> -->
         </transition>
       </el-tabs>
       <transition name="el-zoom-in-top">
@@ -176,11 +177,11 @@ export default {
       },
       groupList: [],
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '50',
-          fixed: true
-        }, {
+        label: '序号',
+        prop: 'number',
+        width: '50',
+        fixed: true
+      }, {
           label: '车辆定位时间',
           prop: 'time',
           width: '160'
@@ -211,15 +212,15 @@ export default {
           prop: 'altitude',
           width: '80'
         },
-        {
-          label: '车牌号码',
-          prop: 'truckIdNumber',
-          width: '100'
-        },
-        {
-          label: '司机名称',
-          prop: 'dirverName'
-        }
+      {
+        label: '车牌号码',
+        prop: 'truckIdNumber',
+        width: '100'
+      },
+      {
+        label: '司机名称',
+        prop: 'dirverName'
+      }
       ],
       total: 0,
       searchQuery: {
@@ -264,7 +265,6 @@ export default {
     orderdata: {
       handler() {
         this.init(333)
-
       },
       deep: true
     },
@@ -296,20 +296,18 @@ export default {
       handler(cval, oval) {
         if (cval) {
           if (this.pathNavigs[0]) { // 单辆车的时候 才显示进度条
-            let idx = cval.idx
-            let total = this.allPathData[0].path.length
-            let num = Math.floor(idx / total * 100)
-            let page = Math.floor(idx / this.searchQuery.pageSize)
+            const idx = cval.idx
+            const total = this.allPathData[0].path.length
+            const num = Math.floor(idx / total * 100)
+            const page = Math.floor(idx / this.searchQuery.pageSize)
             // 进度条 comDis为true时表示完成路径
             this.progressPercentage = this.comDis ? 100 : (num >= 0 ? num : 0)
             // this.pathNavigs[0] 不存在时（销毁） 表格需要从第一页显示
             this.searchQuery.currentPage = this.pathNavigs[0] ? page : 0
             this.dataList = this.orgPageDataList[this.searchQuery.currentPage]
-
           } else {
             this.progressPercentage = 0
           }
-
         } else {
           this.progressPercentage = 0
         }
@@ -329,8 +327,15 @@ export default {
     console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
-      // _this.initMap()
-      _this.hasLoadedMap = true
+      loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+        _this.initMap()
+        _this.hasLoadedMap = true
+        _this.getPathSimplifierIns()
+        // this.onSubmit()
+        console.log('window.AMap', window.AMap)
+        console.log('window.AMapUI', window.AMapUI)
+        console.log('this.map', this.map)
+      })
     }
     this.init(2222)
     this.fetchTruck() // 获取公司车辆信息
@@ -399,7 +404,7 @@ export default {
       // 判断pagesize是否修改
       // flag === true如果修改了就要重新计算分页数据
       // flag === false否则直接表格展示相应页面的数据
-      let flag = (obj.pageSize !== this.searchQuery.pageSize)
+      const flag = (obj.pageSize !== this.searchQuery.pageSize)
 
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
@@ -415,10 +420,10 @@ export default {
       this.fetchTruck()
     },
     fetchTruck() {
-      let truckQuery = { "currentPage": 1, "pageSize": 100, "vo": { "orgid": this.otherinfo.orgid, "truckIdNumber": "", "truckSource": "" } }
+      const truckQuery = { 'currentPage': 1, 'pageSize': 100, 'vo': { 'orgid': this.otherinfo.orgid, 'truckIdNumber': '', 'truckSource': '' }}
       getAllTrunk(truckQuery).then(data => {
-          this.TruckList = data.list
-        })
+        this.TruckList = data.list
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -457,7 +462,7 @@ export default {
         this.orgPageDataList[i] = [] // 初始化分页数据(前端做简单分页)
       }
       this.showDataList.forEach((el, index) => {
-        let _index = Math.floor(index / this.searchQuery.pageSize)
+        const _index = Math.floor(index / this.searchQuery.pageSize)
         this.orgPageDataList[_index].push(el) // 填充分页数据数组
       })
       this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
@@ -465,12 +470,12 @@ export default {
     validateForm(type) { // 表单验证
       let flag = true
 
-       if (type !== 'location') { // 查定位的不需要传时间
-          if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.shipId) {
-            this.$message.warning('请选择开始时间和结束时间~')
-            flag = false
-          }
+      if (type !== 'location') { // 查定位的不需要传时间
+        if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.shipId) {
+          this.$message.warning('请选择开始时间和结束时间~')
+          flag = false
         }
+      }
 
       if (this.isShowInlineOrderMap) { // 运单查询界面
         if (this.searchShipSn && !this.searchQuery.vo.shipId) {
@@ -490,7 +495,7 @@ export default {
       return flag
     },
     onSubmit(type) {
-      let _this = this
+      const _this = this
       _this.loadSearch = true
       if (!this.validateForm(type)) { // 判断输入
         _this.loadSearch = false
@@ -521,7 +526,7 @@ export default {
       }
 
       // 方法：格式化车辆轨迹数据
-      let fn = (lineData) => {
+      const fn = (lineData) => {
         if (!lineData) { return }
         _this.orgDataList = []
         _this.dataList = []
@@ -531,7 +536,7 @@ export default {
           _this.showPopTrucktree() // 显示车辆列表
           _this.realTimeTrucks = objectMerge2([], lineData) // 设置当前车辆列表数据
           lineData.forEach((em, emindex) => {
-            let emData = []
+            const emData = []
             em.trajectoryList.forEach((el, index) => {
               el.dirverMobile = em.dirverMobile
               el.dirverName = em.dirverName
@@ -549,10 +554,9 @@ export default {
         }
       }
 
-
       // fetch 判断请求接口 运单&车牌号
-      let fetch = _this.isShowInlineOrderMap ? trajectoryOrder : trajectoryTruck
-      let params = objectMerge2({}, _this.searchQuery.vo)
+      const fetch = _this.isShowInlineOrderMap ? trajectoryOrder : trajectoryTruck
+      const params = objectMerge2({}, _this.searchQuery.vo)
       // 删除不需要的参数
       if (_this.isShowInlineOrderMap) {
         delete params.truckIdNumber
@@ -569,7 +573,9 @@ export default {
       } else { // 查轨迹及定位  默认查轨迹及定位
         if (params) {
           fetch(params).then(data => {
-              if (data && data.length > 0) {
+              // 定时刷新
+            _this.initTimer()
+            if (data && data.length > 0) {
                 // 格式化数据
                 fn(data)
                 // 初始化轨迹
@@ -577,8 +583,8 @@ export default {
               } else {
                 this.$message.warning('暂无轨迹跟踪数据！')
               }
-              _this.loadSearch = false
-            })
+            _this.loadSearch = false
+          })
             .catch(err => {
               _this.loadSearch = false
               this._handlerCatchMsg(err)
@@ -591,15 +597,15 @@ export default {
     },
     getRealTimeLocate(type) { // 实时定位查询
       // 判断是不是 查询运单界面
-      let isOrder = type === 'order'
+      const isOrder = type === 'order'
       // 判断调接口  运单&车牌号
-      let fetch = isOrder ? realTimeLocationOrder : realTimeLocationByTruckIdNumber
+      const fetch = isOrder ? realTimeLocationOrder : realTimeLocationByTruckIdNumber
       // 判断参数 用户输入的 运单号&车牌号
-      let flag = isOrder ? this.searchShipSn : this.searchQuery.vo.truckIdNumber
+      const flag = isOrder ? this.searchShipSn : this.searchQuery.vo.truckIdNumber
       if (flag) {
-        let params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
+        const params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
         fetch(params).then(data => {
-            if (data && data.length > 0) {
+          if (data && data.length > 0) {
               if (isOrder) {
                 this.realTimeLocateList = data
               } else {
@@ -612,7 +618,7 @@ export default {
             } else {
               this.$message.warning('暂无车辆定位数据！')
             }
-          })
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -624,7 +630,7 @@ export default {
       const map = this.map
       const _this = this
       map.remove(this.markers)
-      let lnglat = []
+      const lnglat = []
       let marker
       this.markers = []
       // 坐标转换
@@ -668,19 +674,19 @@ export default {
           return
         }
 
-        let colors = _this.lineColor
-        let pathSimplifierIns = new PathSimplifier({
+        const colors = _this.lineColor
+        const pathSimplifierIns = new PathSimplifier({
           zIndex: 100,
           setFitView: -1,
-          map: map, //所属的地图实例
+          map: map, // 所属的地图实例
           getPath: function(pathData, pathIndex) {
-            return pathData.path;
+            return pathData.path
           },
           getHoverTitle: function(pathData, pathIndex, pointIndex) {
             if (pointIndex >= 0) {
-              return pathData.name + '，点:' + pointIndex + '/' + pathData.path.length;
+              return pathData.name + '，点:' + pointIndex + '/' + pathData.path.length
             }
-            return pathData.name + '，点数量' + pathData.path.length;
+            return pathData.name + '，点数量' + pathData.path.length
           },
           renderOptions: {
             pathLineStyle: {
@@ -688,7 +694,7 @@ export default {
             },
             getPathStyle: function(pathItem, zoom) {
               let color = colors[pathItem.pathIndex],
-                lineWidth = Math.round(4 * Math.pow(1.1, zoom - 3));
+                lineWidth = Math.round(4 * Math.pow(1.1, zoom - 3))
               return {
                 pathLineStyle: {
                   strokeStyle: color,
@@ -726,17 +732,17 @@ export default {
       const AMapUI = window.AMapUI
       const map = _this.map
 
-      let pathSimplifierIns = window.pathSimplifierIns
+      const pathSimplifierIns = window.pathSimplifierIns
       if (!_this.pathNavigs[pathIndex]) {
         function onload() {
-          pathSimplifierIns.renderLater();
+          pathSimplifierIns.renderLater()
         }
 
         function onerror(e) {
           _this.$message.info('巡航器图片加载失败！')
         }
-        //创建一个轨迹巡航器
-        let navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
+        // 创建一个轨迹巡航器
+        const navgtr = pathSimplifierIns.createPathNavigator(pathIndex, {
           loop: false,
           speed: _this.speedSlider,
           pathNavigatorStyle: {
@@ -759,9 +765,9 @@ export default {
           navgtr._movedTime = Date.now() - navgtr._startTime
           navgtr._movedDist = this.getMovedDistance() - navgtr._startDist
           navgtr._realSpeed = (navgtr._movedDist / navgtr._movedTime * 3600)
-          let totalDis = Math.round(this.getMovedDistance() / 1000) || 0 // 总行进距离
-          let curDis = Math.round(navgtr._movedDist / 1000) || 0 // 本段行进距离
-          let msgInfo = {
+          const totalDis = Math.round(this.getMovedDistance() / 1000) || 0 // 总行进距离
+          const curDis = Math.round(navgtr._movedDist / 1000) || 0 // 本段行进距离
+          const msgInfo = {
             '状态': this.getNaviStatus(),
             '设定速度': this.getSpeed() + ' km/h',
             '总行进距离': totalDis + ' km',
@@ -774,7 +780,7 @@ export default {
         })
 
         navgtr.on('move', function() {
-          let msgInfo = {
+          const msgInfo = {
             '状态': this.getNaviStatus(),
             '设定速度': this.getSpeed() + ' km/h',
             '总行进距离': Math.round(this.getMovedDistance() / 1000) + ' km'
@@ -789,23 +795,23 @@ export default {
       return _this.pathNavigs[pathIndex]
     },
     setDataLine() { // 设置轨迹需要的经纬度数据
-      let arr = []
+      const arr = []
       this.allList.forEach((row, pathIndex) => {
         if (row.length) {
-          let obj = {
+          const obj = {
             name: '',
             path: []
           }
           if (this.activeTruckItem && this.activeTruckItem.length) {
             // 选择一辆车
             let flagIndex = 0
-            for (let item in this.activeTruckItem) {
+            for (const item in this.activeTruckItem) {
               flagIndex = Number(item)
             }
             if (pathIndex === flagIndex) {
               // 选择所有车
               row.forEach((e, index) => {
-                let location = [Number(e.longitude), Number(e.latitude)]
+                const location = [Number(e.longitude), Number(e.latitude)]
                 obj.name = e.truckIdNumber
                 obj.path.push(location)
               })
@@ -814,7 +820,7 @@ export default {
           } else {
             // 选择所有车
             row.forEach((e, index) => {
-              let location = [Number(e.longitude), Number(e.latitude)]
+              const location = [Number(e.longitude), Number(e.latitude)]
               obj.name = e.truckIdNumber
               obj.path.push(location)
             })
@@ -829,11 +835,11 @@ export default {
       if (window.pathSimplifierIns) {
         const map = this.map
         map.remove(this.markers) // 移除标注
-        let pathSimplifierIns = window.pathSimplifierIns
-        let pathData = this.setDataLine() // 格式化数据
+        const pathSimplifierIns = window.pathSimplifierIns
+        const pathData = this.setDataLine() // 格式化数据
         pathSimplifierIns.setData(this.setDataLine()) // 给巡航器设置数据
         pathData.forEach((row, pathIndex) => {
-          let navg = this.getNavg(pathIndex, row) // 创建轨迹
+          const navg = this.getNavg(pathIndex, row) // 创建轨迹
         })
       } else {
         if (!this.initedPath) {
@@ -850,9 +856,9 @@ export default {
         } else {
           this.initTimer()
         }
-        let pathSimplifierIns = window.pathSimplifierIns
+        const pathSimplifierIns = window.pathSimplifierIns
         this.allPathData.forEach((row, pathIndex) => {
-          let navg = this.getNavg(pathIndex, row) // 创建轨迹
+          const navg = this.getNavg(pathIndex, row) // 创建轨迹
           navg[type]()
           this.refreshNavgButtons(pathIndex)
         })
@@ -869,7 +875,7 @@ export default {
       }
       let navgStatus = 'stop',
         navgExists = !!this.pathNavigs[pathIndex]
-      let navgtr = this.pathNavigs[pathIndex]
+      const navgtr = this.pathNavigs[pathIndex]
       if (navgExists) {
         navgStatus = navgtr.getNaviStatus()
       }
@@ -910,18 +916,8 @@ export default {
           // this.onSubmit()
         }, 500)
       } else {
-        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-          loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
-            this.initMap()
-            this.getPathSimplifierIns()
-            // this.onSubmit()
-            console.log('window.AMap', window.AMap)
-            console.log('window.AMapUI', window.AMapUI)
-            console.log('this.map', this.map)
-          })
-        })
+        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {})
       }
-
     },
     close(done) {
       this.exit()
@@ -937,7 +933,7 @@ export default {
       // 地图加载
       _this.map = new AMap.Map('trucklogmap', {
         resizeEnable: true,
-        zoom: 6,
+        zoom: 6
         // mapStyle: "amap://styles/darkblue"
       })
     },
