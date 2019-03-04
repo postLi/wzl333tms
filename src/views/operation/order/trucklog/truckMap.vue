@@ -150,7 +150,8 @@
                 <el-tab-pane label="查询结果" name="2">
                   <el-card class="childTruckTree">
                     <div class="truckTree-group">
-                      <div v-for="(item, index) in realTimeTrucks" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="showLine(item, index)">
+                      <div v-if="realTimeTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-for="(item, index) in realTimeTrucks" v-else class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="showLine(item, index)">
                         <h3>
                         <el-tag 
                         :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
@@ -180,7 +181,8 @@
           <span slot="label"><i class="el-icon-menu"></i> 监控中心</span>
           <el-card class="terminalTree">
             <div class="truckTree-group">
-              <div v-for="(item, index) in terminalList" class="truckTree-group-item" @click="selectTerminal(item, index)">
+              <div v-if="terminalList.length === 0" class="emptyTips">暂无设备信息</div>
+              <div v-for="(item, index) in terminalList" v-else class="truckTree-group-item" @click="selectTerminal(item, index)">
                 <h3>
                   <el-tag 
                   :type="item.vehicleStatus===0?'info':(item.vehicleStatus===1?'success':(item.vehicleStatus===2?'warning':'info'))" 
@@ -509,9 +511,6 @@ export default {
 
       this.closeInfoWindow()
       let content = []
-      let posStyle = obj.posStyle === '0' ? '不定位' : (obj.posStyle === '1' ? 'GPS' : (obj.posStyle === '2' ? 'WIFI' : (obj.posStyle === '3' ? '多基站' : '单基站')))
-      let vehicleStatus = obj.vehicleStatus === '0' ? '从未上线' : (obj.vehicleStatus === '1' ? '行驶' : (obj.vehicleStatus === '2' ? '停车' : '离线'))
-      let alarmInfo = obj.alarmInfo || '暂无'
 
       window.globalMapFn = () => {
         console.log(obj)
@@ -522,24 +521,49 @@ export default {
         map.clearInfoWindow()
       }
 
+      if (this.tabModel === '1') {
+        for(let item in obj) {
+          obj[item] = obj[item] || '-无数据-'
+        }
+        content.push('<div class="mapwin">')
+        content.push('<div class="winhead"><i>' + obj.truckIdNumber + '</i><a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
+        content.push('<div class="winmain">')
+        content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
+        content.push('<p>关联司机: <span>' + obj.dirverName + 'km</span></p>')
+        content.push('<p>司机号码: <span>' + obj.dirverMobile + '</span></p>')
+        content.push('<p>定位时间: <span>' + obj.locationTime + '</span></p>')
+        content.push('</div>')
+        content.push('<div class="winfoot">')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        content.push('</div>')
+        content.push('</div>')
+      } else {
 
-      content.push('<div class="mapwin">')
-      content.push('<div class="winhead"><i>' + obj.terminalNo + '</i> [ ' + obj.terminalType + ' / <span>电量: ' + obj.lastPower + '%</span> ]<a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
-      content.push('<div class="winmain">')
-      content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
-      content.push('<p>里程: <span>' + obj.mlileage + 'km</span></p>')
-      content.push('<p>信号时间: <span>' + obj.gpsTime + '</span></p>')
-      content.push('<p>定位时间: <span>' + obj.gpsTime + '</span></p>')
-      content.push('<p>定位: <span>' + posStyle + '</span></p>')
-      content.push('<p>车辆状态: <span>' + obj.formatTime + '</span></p>')
-      content.push('<p>报警: <span>' + alarmInfo + '</span></p>')
-      content.push('</div>')
-      content.push('<div class="winfoot">')
-      content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
-      content.push('<a><i class="el-icon-share"></i> 轨迹</a>')
-      content.push('<a><i class="el-icon-setting"></i> 设置</a>')
-      content.push('</div>')
-      content.push('</div>')
+        let posStyle = obj.posStyle === '0' ? '不定位' : (obj.posStyle === '1' ? 'GPS' : (obj.posStyle === '2' ? 'WIFI' : (obj.posStyle === '3' ? '多基站' : '单基站')))
+        let vehicleStatus = obj.vehicleStatus === '0' ? '从未上线' : (obj.vehicleStatus === '1' ? '行驶' : (obj.vehicleStatus === '2' ? '停车' : '离线'))
+        let alarmInfo = obj.alarmInfo || '暂无'
+
+        content.push('<div class="mapwin">')
+        content.push('<div class="winhead"><i>' + obj.terminalNo + '</i> [ ' + obj.terminalType + ' / <span>电量: ' + obj.lastPower + '%</span> ]<a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
+        content.push('<div class="winmain">')
+        content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
+        content.push('<p>里程: <span>' + obj.mlileage + 'km</span></p>')
+        content.push('<p>信号时间: <span>' + obj.gpsTime + '</span></p>')
+        content.push('<p>定位时间: <span>' + obj.gpsTime + '</span></p>')
+        content.push('<p>定位: <span>' + posStyle + '</span></p>')
+        content.push('<p>车辆状态: <span>' + obj.formatTime + '</span></p>')
+        content.push('<p>报警: <span>' + alarmInfo + '</span></p>')
+        content.push('</div>')
+        content.push('<div class="winfoot">')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
+        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        content.push('</div>')
+        content.push('</div>')
+      }
+
 
       return content.join('')
     },
@@ -551,7 +575,7 @@ export default {
       window.infoWindow = new AMap.InfoWindow({
         isCustom: true, //使用自定义窗体
         content: _this.createInfoWindow(obj),
-        offset: new AMap.Pixel(5, -45),
+        offset: new AMap.Pixel(5, -25),
         showShadow: true
       })
     },
@@ -1059,7 +1083,7 @@ export default {
       let lnglat = []
       let marker
       this.markers = []
-
+      // let content = []
 
       // 坐标转换
       if (this.realTimeLocateList.length) {
@@ -1070,11 +1094,21 @@ export default {
               map: map,
               position: lnglat[index]
             })
-            content.push(e.terminalNo)
+            // content.push(e.terminalNo)
+
+            // 创建信息窗体
+            _this.infoWindow(e)
+            window.infoWindow.open(map, marker.getPosition())
+
+            //鼠标点击marker弹出自定义的信息窗体
+            marker.on('click', function(em) {
+              _this.infoWindow(e)
+              window.infoWindow.open(map, em.lnglat)
+            })
 
             marker.setLabel({
               offset: new AMap.Pixel(20, 20),
-              content: ''
+              // content: content
             })
             this.markers.push(marker)
             map.setFitView()
