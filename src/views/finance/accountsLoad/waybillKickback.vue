@@ -11,7 +11,7 @@
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
       </div>
       <!-- 左边表格区 -->
-      <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+      <div slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" label="序号">
@@ -40,12 +40,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
+            <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" />
           </div>
-        </div> -->
+        </div>
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -77,9 +77,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalRight }}</b>
-        </div> -->
+            <div class="show_pager">
+            <!-- <Pager :total="totalRight" @change="handlePageChangeRight" :btnsize="'mini'" /> -->
+          </div>
+        </div>
       </div>
     </transferTable>
     <!-- 核销凭证 -->

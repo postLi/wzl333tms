@@ -316,6 +316,16 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
     }
   }
 }
+.heightvhPoptree {
+  .childOrderTruckTree {
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+      max-height: calc(100vh - 370px);
+      overflow: auto;
+    }
+  }
+}
 
 .truck-page-log {
   display: flex;
@@ -767,6 +777,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
         }
       }
     }
+    .childOrderTruckTree,
     .childTruckTree,
     .terminalTree,
     .truckTree {
@@ -795,9 +806,11 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
           font-style: normal;
           i {
             font-style: normal;
+            font-weight: 400;
             font-size: 14px;
             color: #999;
           }
+
         }
         .truckTree-group-item-desc {
           padding: 0 25px;

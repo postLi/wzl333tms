@@ -8,12 +8,40 @@
             <el-tab-pane label="运单查询" name="1">
               <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
                 <el-form-item label="运单查询">
-                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipId" search="shipSn" type="order" @change="getShipSn" />
+                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn" />
                 </el-form-item>
                 <el-form-item class="staff_searchinfo--btn">
                   <el-button type="warning" @click="onSubmit('location', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
                 </el-form-item>
               </el-form>
+              <el-tabs class="secChild_tabs" v-if="realLocatOrderTrucks.length">
+                <el-tab-pane label="查询结果">
+                  <el-card class="childOrderTruckTree">
+                    <div class="truckTree-group">
+                      <div v-if="realLocatOrderTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-else v-for="(item, index) in realLocatOrderTrucks" class="truckTree-group-item" :class="actLocatOrderTruckItem[index]?'activeItem' : ''" @click="selectGroupOrderLocat(item, index)">
+                        <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} <i>[{{item.speed}} km/h]</i>
+                        <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
+                      </h3>
+                        <div class="truckTree-group-item-desc">
+                          <h4>{{item.orgName}}</h4>
+                          <div>
+                            <i class="el-icon-mobile-phone"></i>
+                            <span v-if="item.driverName || item.dirverName">
+                            {{item.driverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                            <span v-else>暂无关联司机</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="车辆查询" name="2">
               <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
@@ -270,6 +298,7 @@ export default {
   },
   data() {
     return {
+      actLocatOrderTruckItem: [],
       tabModel: '1',
       tabMap: '1',
       tabLine: '1',
@@ -317,11 +346,13 @@ export default {
           label: '速度 km/h',
           prop: 'speed',
           width: '90'
-        }, {
-          label: '方向',
-          prop: 'direction',
-          width: '80'
-        }, {
+        },
+        //  {
+        //   label: '方向',
+        //   prop: 'direction',
+        //   width: '80'
+        // },
+        {
           label: '部件状态',
           prop: 'status',
           width: '90',
@@ -356,9 +387,10 @@ export default {
         pageSize: 100,
         vo: {
           truckIdNumber: '', // 陕YH0009
-          startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
+          startTime: parseTime(new Date() - 60 * 24 * 60 * 7 * 1000),
           endTime: parseTime(new Date()),
-          shipId: ''
+          shipId: '',
+          shipSn: ''
         }
       },
       timer: 60,
@@ -386,7 +418,8 @@ export default {
       terminalList: [], // 追货宝设备列表
       curTerminalList: [], // 添加到定位列表的追货宝
       realTimeOrderTrucks: [], // 轨迹追踪-运单查询-结果列表
-      m: false
+      m: false,
+      realLocatOrderTrucks: [], // 运单定位的车辆返回列表
     }
   },
   watch: {
@@ -422,6 +455,15 @@ export default {
             }
           }
         }
+        if (to.query) {
+          if (to.query.searchQuery && this.map && window.AMap && window.AMapUI) {
+            this.$nextTick(() => {
+              this.openRouteLineTruck()
+            })
+          }
+        }
+        console.log('to', to)
+        console.log('from', from)
       },
       immediate: true
     },
@@ -458,6 +500,21 @@ export default {
       immediate: true
     }
   },
+  computed: {
+    routeSearch() {
+      let query = {
+        searchQuery: {},
+        flag: ''
+      }
+      if (this.$route.query && this.$route.query.searchQuery) {
+        let searchQuery = JSON.parse(this.$route.query.searchQuery)
+        query.searchQuery = objectMerge2({}, searchQuery)
+        query.flag = this.$route.query.flag
+        query.type = this.$route.query.type
+      }
+      return query
+    }
+  },
   mounted() {
     console.log('测试车辆：陕YH0009')
     const _this = this
@@ -470,18 +527,36 @@ export default {
         console.log('window.AMap', window.AMap)
         console.log('window.AMapUI', window.AMapUI)
         console.log('this.map', this.map)
+        _this.openRouteLineTruck()
       })
     }
     this.init(2222)
     this.fetchTruck() // 获取公司车辆信息
     this.fetchTerminal() // 获取设备列表
+
   },
   // 关闭时清空地图数据
   destoryed() {
     this.exit()
     clearInterval(this.timerOption)
   },
+  activated() {
+
+
+  },
   methods: {
+
+    selectGroupOrderLocat(row, index) {
+      let map = this.map
+      let lnglat = [Number(row.longitude), Number(row.latitude)]
+      this.actLocatOrderTruckItem = []
+      this.actLocatOrderTruckItem[index] = true
+      this.closeInfoWindow() // 关闭之前的窗口
+      this.infoWindow(row)
+      window.infoWindow.open(map, lnglat)
+      console.log('row', row, index, row.truckIdNumber, lnglat)
+      map.setFitView()
+    },
     handleTabModel(obj) {
       console.log('当前选中的tab::', obj)
     },
@@ -496,9 +571,53 @@ export default {
       return () => {
         alert()
       }
-
     },
-    closeInfoWindow() {
+    openCheckLineTruck(obj) {
+      this.tabModel = '2'
+      this.tabLine = '2'
+      this.$set(this.searchQuery.vo, 'truckIdNumber', obj.truckIdNumber)
+      this.onSubmit('line', 'truck')
+    },
+    openRouteLineTruck() { // 路由跳转后需要查询轨迹或定位
+      console.log('init route query ', this.routeSearch)
+      if (this.routeSearch && this.routeSearch.searchQuery.truckIdNumber) {
+        // 如果路由中有查询参数表示 干线短驳和送货列表需要查询
+        if (this.routeSearch.type === 'truck') { // 车辆查询
+          switch (this.routeSearch.flag) {
+            case 'line': // 查轨迹
+              this.tabModel = '2'
+              this.tabLine = '2'
+              this.$set(this.searchQuery.vo, 'truckIdNumber', this.routeSearch.searchQuery.truckIdNumber)
+              this.$set(this.searchQuery.vo, 'startTime', this.routeSearch.searchQuery.startTime || '')
+              this.onSubmit('line', 'truck')
+              break
+            case 'location': // 查定位
+              this.tabModel = '1'
+              this.tabMap = '2'
+              this.$set(this.searchQuery.vo, 'truckIdNumber', this.routeSearch.searchQuery.truckIdNumber)
+              this.onSubmit('location', 'truck')
+              break
+          }
+        } else { // 运单查询
+          switch (this.routeSearch.flag) {
+            case 'line': // 查轨迹
+              this.tabModel = '2'
+              this.tabLine = '1'
+              this.$set(this.searchQuery.vo, 'shipSn', this.routeSearch.searchQuery.shipSn)
+              this.$set(this.searchQuery.vo, 'startTime', this.routeSearch.searchQuery.startTime || '')
+              this.onSubmit('line', 'truck')
+              break
+            case 'location': // 查定位
+              this.tabModel = '1'
+              this.tabMap = '1'
+              this.$set(this.searchQuery.vo, 'shipSn', this.routeSearch.searchQuery.shipSn)
+              this.onSubmit('location', 'truck')
+              break
+          }
+        }
+      }
+    },
+    closeInfoWindow() { // 清除信息窗体
       const AMap = window.AMap
       const AMapUI = window.AMapUI
       const map = this.map
@@ -515,6 +634,10 @@ export default {
       window.globalMapFn = () => {
         console.log(obj)
         this.$message.warning('暂无该功能~')
+
+      }
+      window.globalLineTruck = () => {
+        this.openCheckLineTruck(obj) // 查车辆轨迹
       }
 
       window.closeInfoWindow = () => {
@@ -522,7 +645,7 @@ export default {
       }
 
       if (this.tabModel === '1') {
-        for(let item in obj) {
+        for (let item in obj) {
           obj[item] = obj[item] || '-无数据-'
         }
         content.push('<div class="mapwin">')
@@ -531,19 +654,23 @@ export default {
         content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
         content.push('<p>关联司机: <span>' + obj.dirverName + 'km</span></p>')
         content.push('<p>司机号码: <span>' + obj.dirverMobile + '</span></p>')
-        content.push('<p>定位时间: <span>' + obj.locationTime + '</span></p>')
+        content.push('<p>地址: <span>' + obj.address + '</span></p>')
+        // content.push('<p>定位时间: <span>' + obj.locationTime + '</span></p>')
         content.push('</div>')
         content.push('<div class="winfoot">')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        content.push('<a href="javascript:;" onclick="globalLineTruck()"><i class="el-icon-share"></i> 轨迹</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
         content.push('</div>')
         content.push('</div>')
       } else {
 
         let posStyle = obj.posStyle === '0' ? '不定位' : (obj.posStyle === '1' ? 'GPS' : (obj.posStyle === '2' ? 'WIFI' : (obj.posStyle === '3' ? '多基站' : '单基站')))
         let vehicleStatus = obj.vehicleStatus === '0' ? '从未上线' : (obj.vehicleStatus === '1' ? '行驶' : (obj.vehicleStatus === '2' ? '停车' : '离线'))
-        let alarmInfo = obj.alarmInfo || '暂无'
+
+        for (let item in obj) {
+          obj[item] = obj[item] || '-无数据-'
+        }
 
         content.push('<div class="mapwin">')
         content.push('<div class="winhead"><i>' + obj.terminalNo + '</i> [ ' + obj.terminalType + ' / <span>电量: ' + obj.lastPower + '%</span> ]<a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
@@ -554,12 +681,13 @@ export default {
         content.push('<p>定位时间: <span>' + obj.gpsTime + '</span></p>')
         content.push('<p>定位: <span>' + posStyle + '</span></p>')
         content.push('<p>车辆状态: <span>' + obj.formatTime + '</span></p>')
-        content.push('<p>报警: <span>' + alarmInfo + '</span></p>')
+        content.push('<p>报警: <span>' + obj.alarmInfo + '</span></p>')
+        content.push('<p>地址: <span>' + obj.address + '</span></p>')
         content.push('</div>')
-        content.push('<div class="winfoot">')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
-        content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        // content.push('<div class="winfoot">')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
         content.push('</div>')
         content.push('</div>')
       }
@@ -575,7 +703,7 @@ export default {
       window.infoWindow = new AMap.InfoWindow({
         isCustom: true, //使用自定义窗体
         content: _this.createInfoWindow(obj),
-        offset: new AMap.Pixel(5, -25),
+        offset: new AMap.Pixel(5, -45),
         showShadow: true
       })
     },
@@ -634,9 +762,11 @@ export default {
       console.log('flag', flag)
       if (!flag || flag < 1) {
 
-        // if (process.env.NODE_ENV !== 'production') {
-        //   item.vehicleId = '7F174725C0EFB5334DF029FF4DF6BCA1'
-        // }
+        if (process.env.NODE_ENV !== 'production') {
+          if (this.otherinfo.companyId !== 160) {
+            item.vehicleId = '7F174725C0EFB5334DF029FF4DF6BCA1'
+          }
+        }
 
         this.fetchTerminalLocation(item.vehicleId)
       }
@@ -682,7 +812,7 @@ export default {
     fetchTerminal(terminalNo = '') { // 获取本公司追货宝列表
       let companyId = this.otherinfo.companyId
       if (process.env.NODE_ENV !== 'production') {
-        companyId = 1
+        companyId = (companyId === 160) ? 160 : 1
       }
       let query = {
         currentPage: 1,
@@ -705,8 +835,13 @@ export default {
 
     getShipSn(item) {
       console.log('运单选择item', item)
-      this.searchQuery.vo.shipId = item.shipSn
-      this.searchShipSn = item.shipSn
+      if (this.tabModel === '1') {
+        this.searchQuery.vo.shipSn = item.shipSn
+        this.searchShipSn = item.shipSn
+      } else {
+        this.searchQuery.vo.shipId = item.shipSn
+        this.searchShipSn = item.shipSn
+      }
     },
     classLineRed(row) { // 行样式
       if (this.allPathData.length) {
@@ -814,7 +949,7 @@ export default {
       switch (type) {
         case 'location': // 定位
           if (childtype === 'order') {
-            if (!this.searchQuery.vo.shipId) {
+            if (!this.searchQuery.vo.shipSn) {
               this.$message.warning('请选择运单号~')
               flag = false
             }
@@ -906,7 +1041,6 @@ export default {
 
 
 
-
       if (!this.validateForm(type, childtype)) { // 判断输入
         _this.loadSearch = false
         return false
@@ -935,7 +1069,9 @@ export default {
       if (window.pathSimplifierIns) {
         window.pathSimplifierIns.setData([]) // 给巡航器设置数据为空
       }
-      this.closeInfoWindow() // 清除窗体
+      if (this.map) {
+        this.closeInfoWindow() // 清除窗体
+      }
 
       // 方法：格式化车辆轨迹数据
       let fn = (lineData) => {
@@ -983,13 +1119,13 @@ export default {
       let fetch = childtype === 'order' ? trajectoryOrder : trajectoryTruck
       let params = selecttype ? query : objectMerge2({}, _this.searchQuery.vo)
 
-      // if (process.env.NODE_ENV !== 'production') {
-      //   if (!selecttype) {
-      //     params.truckIdNumber = '粤L18782'
-      //     params.shipId = '1064817474404352000'
-      //     params.startTime = "2019-02-05 10:38:56"
-      //   }
-      // }
+      if (process.env.NODE_ENV !== 'production') {
+        if (!selecttype) {
+          // params.truckIdNumber = '粤L18782'
+          // params.shipId = '1064817474404352000'
+          // params.startTime = "2019-02-05 10:38:56"
+        }
+      }
 
 
       // let params = objectMerge2({}, _this.searchQuery.vo)
@@ -997,14 +1133,18 @@ export default {
       if (type === 'location') {
         delete params.startTime
         delete params.endTime
+        delete params.shipId
+      }
+      if (type === 'line') {
+        delete params.shipSn
       }
       if (childtype === 'order') {
         delete params.truckIdNumber
       } else {
         delete params.shipId
       }
+      console.log('params', params)
       if (type === 'location') { // 查定位
-        console.log('params', params)
         if (params) {
           _this.getRealTimeLocate(childtype, params)
           _this.loadSearch = false
@@ -1016,8 +1156,8 @@ export default {
           fetch(params).then(data => {
               // 定时刷新
               _this.initTimer()
+              this.tabLineChild = '2'
               if (data && data.length > 0) {
-                this.tabLineChild = '2'
                 // 格式化数据
                 fn(data)
                 // 初始化轨迹
@@ -1041,7 +1181,6 @@ export default {
       // type类型 order-运单 truck-车辆 
       // query传参
       // 
-      console.log('12312312312312')
 
       // 判断是不是 查询运单界面
       let isOrder = type === 'order'
@@ -1056,6 +1195,7 @@ export default {
             if (data) {
               if (isOrder && data.length > 0) {
                 this.realTimeLocateList = data
+                this.realLocatOrderTrucks = data
               } else if (data.truckIdNumber) {
                 this.realTimeLocateList = []
                 this.realTimeLocateList.push(data)
@@ -1063,7 +1203,7 @@ export default {
               this.loadSearch = false
               // 转高德坐标
               this.tomap()
-              this.$message.warning('查询成功~')
+              this.$message.success('查询成功~')
             } else {
               this.$message.warning('暂无车辆定位数据！')
             }
@@ -1108,7 +1248,7 @@ export default {
 
             marker.setLabel({
               offset: new AMap.Pixel(20, 20),
-              // content: content
+              // content: ''
             })
             this.markers.push(marker)
             map.setFitView()
@@ -1377,7 +1517,9 @@ export default {
           // this.onSubmit()
         }, 500)
       } else {
-        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {})
+        loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
+
+        })
       }
 
     },
@@ -1398,6 +1540,7 @@ export default {
         zoom: 6,
         // mapStyle: "amap://styles/darkblue"
       })
+
     },
     // 设置获取到的信息
     setData(pos, addr, obj) {
