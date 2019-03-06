@@ -14,7 +14,7 @@
                   <el-button type="warning" @click="onSubmit('location', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
                 </el-form-item>
               </el-form>
-              <el-tabs class="secChild_tabs" v-if="realLocatOrderTrucks.length">
+              <el-tabs class="secChild_tabs" >
                 <el-tab-pane label="查询结果">
                   <el-card class="childOrderTruckTree">
                     <div class="truckTree-group">
@@ -101,11 +101,12 @@
                   <el-button type="success" @click="onSubmit('line', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
                 </el-form-item>
               </el-form>
-              <el-tabs class="secChild_tabs" v-if="realTimeOrderTrucks.length">
+              <el-tabs class="secChild_tabs">
                 <el-tab-pane label="查询结果">
                   <el-card class="childTruckTree">
                     <div class="truckTree-group">
-                      <div v-for="(item, index) in realTimeOrderTrucks" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index, 'line', 'order')">
+                      <div v-if="realTimeOrderTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-else v-for="(item, index) in realTimeOrderTrucks" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index, 'line', 'order')">
                         <h3>
                         <el-tag 
                         :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
@@ -691,8 +692,6 @@ export default {
         content.push('</div>')
         content.push('</div>')
       }
-
-
       return content.join('')
     },
     infoWindow(obj) {

@@ -1050,7 +1050,7 @@ export default {
           if (data) {
             this.modelList = data
             this.modelList.forEach((el, index) => {
-              
+
             })
             console.warn('模板信息 modelList', this.modelList)
           }
@@ -1235,8 +1235,10 @@ export default {
         // return Promise.all([this.getAllSetting(), this.getCargoSetting()]).then(dataArr => {
         // 获取全局设置
         this.config = dataArr[0] || {}
+        console.warn('config=========', this.config)
         // 获取费用设置
         this.feeConfig = dataArr[1] || []
+        console.warn('feeConfig===========', this.feeConfig)
         // 获取个人设置
         this.personConfig = dataArr[2] || {}
         // 获取后台时间
@@ -2850,7 +2852,15 @@ export default {
                   if (el[i] === '' && i !== 'cargoName') {
                     b[i] = 0
                   } else {
-                    b[i] = el[i]
+                    ////////////// 系统设置回扣不计入运费合计的时候 需要清空为0
+                    console.log('++++++++++++++')
+                    console.log('i', i, el[i])
+                    console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
+                    if (this.config.shipFee['brokerageFee'] === '0') {
+                      b[i] = 0
+                    } else {
+                      b[i] = el[i]
+                    }
                   }
                 }
                 return b
@@ -2954,6 +2964,7 @@ export default {
                   }
 
                   return */
+                console.log('create order data', data)
                 orderManage.postNewOrder(data).then(res => {
                   this.resOrderId = res.data // 获取开单后返回的运单id
                   this.$message.success('成功创建运单！')

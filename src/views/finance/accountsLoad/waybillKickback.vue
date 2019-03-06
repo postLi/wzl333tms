@@ -67,7 +67,7 @@
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
               <template slot-scope="scope">
                 <div v-if="column.expand">
-                  <el-input  v-numberOnly:point type="number" @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
+                  <el-input v-numberOnly:point type="number" @dblclick.stop.prevent.native @click.stop.prevent.native :class="{'textChangeDanger': textChangeDanger[scope.$index]}" v-model.number="column.slot(scope)" :size="btnsize" @change="(val) => changLoadData(scope.$index, column.prop, val)"></el-input>
                 </div>
                 <div v-else>
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -79,7 +79,7 @@
         </el-table>
         <div class="accountsLoad_table_pager">
           <b>共计:{{ totalRight }}</b>
-            <div class="show_pager">
+          <div class="show_pager">
             <!-- <Pager :total="totalRight" @change="handlePageChangeRight" :btnsize="'mini'" /> -->
           </div>
         </div>
@@ -92,7 +92,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import { postFindListByFeeType,postCreateloadSettlement } from '@/api/finance/accountsPayable'
+import { postFindListByFeeType, postCreateloadSettlement } from '@/api/finance/accountsPayable'
 import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import querySelect from '@/components/querySelect/'
@@ -126,7 +126,7 @@ export default {
       loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
-      // totalLeft: 0,
+      totalLeft: 0,
       // totalRight: 0,
       tableReceiptInfo: [],
       orgLeftTable: [],
@@ -426,24 +426,26 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      console.log('xxxxxxxxxxxxxxxxxx:',this.$route.query,JSON.parse(this.$route.query.searchQuery))
+      console.log('xxxxxxxxxxxxxxxxxx:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
       return JSON.parse(this.$route.query.searchQuery)
     },
-    totalLeft() {
-      return this.leftTable.length
-    },
+    // totalLeft() {
+    //   return this.leftTable.length
+    // },
     totalRight() {
       return this.rightTable.length
     }
   },
   mounted() {
-    console.log('xxxxxxxxxxxxxxxxxx333:',this.$route.query,JSON.parse(this.$route.query.searchQuery))
+    console.log('xxxxxxxxxxxxxxxxxx333:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
     this.getList()
   },
   methods: {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.getList('handlePage')
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
@@ -461,7 +463,7 @@ export default {
       //   this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // }
     },
-    getList() {
+    getList(handle) {
       const sns = JSON.parse(this.$route.query.selectListShipSns)
       const selectListShipSns = Object.assign([], sns)
       if (this.$route.query.selectListShipSns) {
@@ -474,10 +476,13 @@ export default {
       this.infoTable = this.$options.data().infoTable
       // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.orgLeftTable = this.$options.data().orgLeftTable
-      this.initLeftParams() // 设置searchQuery
+      if (!handle) {
+        this.initLeftParams() // 设置searchQuery
+      }
 
       postFindListByFeeType(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)
+        this.totalLeft = data.total
         selectListShipSns.forEach(e => {
           this.leftTable.forEach(item => {
             if (e === item.shipSn) {
@@ -525,7 +530,7 @@ export default {
       } else {
         this.$set(this.textChangeDanger, index, false)
       }
-      console.log(index, paidVal, unpaidVal, unpaidName, this.rightTable[index][unpaidName],this.rightTable[index][prop], this.rightTable[index])
+      console.log(index, paidVal, unpaidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index][prop], this.rightTable[index])
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -672,7 +677,7 @@ export default {
       this.infoTable = this.$options.data().infoTable
       // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
-          let amount = 0
+        let amount = 0
         this.rightTable.forEach((e, index) => {
           console.log('右边列表', index, e)
           if (e.inputBrokerageFee > 0 && e.inputBrokerageFee <= e.unpaidFee) { // 提交可核销项
@@ -692,8 +697,8 @@ export default {
             item = {}
           }
         })
-          this.infoTable.amount = amount
-          amount = 0
+        this.infoTable.amount = amount
+        amount = 0
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {

@@ -11,7 +11,7 @@
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
       </div>
       <!-- 左边表格区 -->
-      <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+      <div slot="tableLeft" class="tableHeadItemBtn">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" type="index" label="序号">
@@ -40,12 +40,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
             <Pager :total="totalLeft" @change="handlePageChangeLeft" />
           </div>
-        </div> -->
+        </div>
       </div>
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn">
@@ -77,9 +77,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalRight }}</b>
-        </div> -->
+          <div class="show_pager">
+            <!-- <Pager :total="totalRight" @change="handlePageChangeRight" :btnsize="'mini'" /> -->
+          </div>
+        </div>
       </div>
     </transferTable>
     <!-- 核销凭证 -->
@@ -110,6 +113,7 @@ export default {
         amount: 0,
         orderList: []
       },
+      totalLeft: 0,
       btnLoading: false,
       textChangeDanger: [],
       tablekey: '',
@@ -420,9 +424,9 @@ export default {
       console.log('getRouteInfo', this.$route.query)
       return JSON.parse(this.$route.query.searchQuery)
     },
-    totalLeft() {
-      return this.leftTable.length
-    },
+    // totalLeft() {
+    //   return this.leftTable.length
+    // },
     totalRight() {
       return this.rightTable.length
     }
@@ -434,12 +438,14 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.getList('handlePage')
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
-    getList() {
+    getList(handle) {
       const sns = JSON.parse(this.$route.query.selectListShipSns)
       const selectListShipSns = Object.assign([], sns)
       if (this.$route.query.selectListShipSns) {
@@ -452,9 +458,12 @@ export default {
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
-      this.initLeftParams() // 设置searchQuery
+      if (!handle) {
+        this.initLeftParams() // 设置searchQuery
+      }
       postFindChangeList(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)
+        this.totalLeft = data.total
         selectListShipSns.forEach(e => {
           this.leftTable.forEach(item => {
             if (e === item.shipSn) {
