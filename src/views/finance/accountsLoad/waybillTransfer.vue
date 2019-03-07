@@ -11,7 +11,7 @@
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
       </div>
       <!-- 左边表格区 -->
-      <div slot="tableLeft" class="tableHeadItemBtn">
+      <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" type="index" label="序号">
@@ -48,7 +48,7 @@
         </div>
       </div>
       <!-- 右边表格区 -->
-      <div slot="tableRight" class="tableHeadItemBtn">
+      <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
           <el-table-column fixed width="50" type="index" label="序号">

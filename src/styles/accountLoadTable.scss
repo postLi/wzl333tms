@@ -1,5 +1,8 @@
 .tableHeadItemBtn {
-  height: calc(100% - 45px);
+  height: 100%;
+  &.tableHeadItemBtnHeight {
+    height: calc(100% - 45px);
+  }
   position: relative;
   .el-button--mini,
   .el-button--mini.is-round {
@@ -52,21 +55,21 @@
   width: 100;
   overflow: hidden;
   height: 100%;
-  position:relative;
-  .transferTable_search{
-    position:absolute;
-    display:flex;
+  position: relative;
+  .transferTable_search {
+    position: absolute;
+    display: flex;
     text-align: center;
-    top:26px;
-    left:calc( 50% + 100px);
-    z-index:2;
-    .el-button{
+    top: 26px;
+    left: calc( 50% + 100px);
+    z-index: 2;
+    .el-button {
       margin-left: 10px;
     }
   }
   .accountsLoad_table_pager {
     position: absolute;
-    bottom: -45px; 
+    bottom: -45px;
     left: 0px;
     z-index: 3;
     display: flex;
@@ -78,16 +81,15 @@
     height: 45px;
     line-height: 45px;
     padding: 0 10px;
-    b{
+    b {
       color: #333;
       font-weight: 400;
     }
-    .show_pager{
-      .tms-pagination__sizes{
+    .show_pager {
+      .tms-pagination__sizes {
         vertical-align: baseline;
       }
-    }
-    // display: flex;
+    } // display: flex;
     // flex-direction: columns;
     // justify-content: space-between;
     // flex-wrap: wrap;
@@ -140,15 +142,16 @@
   -webkit-animation-name: fadeInRight;
   animation-name: fadeInRight;
 }
-.dbclickTips{
-  color:#999;
+
+.dbclickTips {
+  color: #999;
   font-size: 12px;
-  line-height:28px;
-  padding:0 10px;
+  line-height: 28px;
+  padding: 0 10px;
 }
 
-.textChangeDanger{
-  .el-input__inner{
+.textChangeDanger {
+  .el-input__inner {
     color: red;
   }
 }
