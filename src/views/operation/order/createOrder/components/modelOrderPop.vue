@@ -1,6 +1,6 @@
 <!-- 弹出框-创建运单模板设置 -->
 <template>
-  <el-dialog :title="'运单模板'+(isModify?'-编辑':(isClose ? '-详情':'-预览'))" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="close" :key="modelKey" center>
+  <el-dialog :title="'运单模板'+(isModify?'-编辑':(isClose ? '-详情':'-预览'))" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="closeWindow" :key="modelKey" center>
     <div class="modelDialog-tips">
       <i class="el-icon-question"></i> 操作提示：
       <el-tag size="mini" type="warning"><i class="el-icon-check"></i> 打勾为显示, 不打勾为隐藏</el-tag>
@@ -51,7 +51,7 @@
             borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
           }">
             <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
-            <i class="el-icon-d-caret" style="transform: rotate(90deg);"  v-if="item.fieldProperty!=='shipRemarks'"></i>
+            <i class="el-icon-d-caret" style="transform: rotate(90deg);" v-if="item.fieldProperty!=='shipRemarks'"></i>
             <i class="el-icon-d-caret"></i>
           </div>
           <div style="clear:both"></div>
@@ -90,8 +90,7 @@
       <div class="model-item item-1" data-name="tmsOrderShip" :data-index="m_index.tmsOrderShip">
         <div v-model="dataList">
           <div>
-            <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip' && item.hide" 
-            :style="{
+            <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip' && item.hide" :style="{
             width: item.fieldProperty==='shipOther' ? '33.32%' : (item.fieldProperty==='shipRemarks'? '100%' : '16.66%'),
             borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
           }">
@@ -180,6 +179,7 @@ export default {
         })
         this.org_m_index = objectMerge2({}, this.m_index)
         console.log('init m_index', JSON.stringify(this.m_index))
+        this.sortModel()
       }
     },
     sortModel() {
@@ -249,6 +249,25 @@ export default {
       this.$emit('close')
       if (typeof done === 'function') {
         done()
+      }
+    },
+    closeWindow() {
+      if (this.isModify) {
+        let str = JSON.stringify(objectMerge2([], this.dataList))
+        let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+        if (str === orgstr) {
+          this.close()
+        } else {
+          this.$confirm('模板已修改, 是否保存?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.updateModel()
+          }).catch(() => {})
+        }
+      } else {
+        this.close()
       }
     },
     getFeeSetup() {},

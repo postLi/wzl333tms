@@ -1278,13 +1278,13 @@ export default {
             this.org_m_index = objectMerge2({}, this.m_index)
             console.log('模板各个模块排序：', JSON.stringify(this.m_index))
             console.warn('所有模板排序信息 modelList:', this.modelList)
-              this.sortModel() // 初始化开单页面各个模块排序
-          }else {
+            this.sortModel() // 初始化开单页面各个模块排序
+          } else {
             this.modelList = this.$const.MODELLIST
           }
         })
         .catch(err => {
-           this.modelList = this.$const.MODELLIST
+          this.modelList = this.$const.MODELLIST
           this._handlerCatchMsg(err)
         })
     },
@@ -1512,26 +1512,28 @@ export default {
     },
     // 初始化各个表单的情况
     init() {
-      this.fetchModel() // 查询开单页面模板
-      this.setRequired()
-      this.setOrderNum()
-      this.setCargoNum()
-      this.setOrderDate()
-      this.setOrderFee()
-      this.setOrderTransfer()
-      this.setOrgCity()
-      // 当为修改运单时，不设置默认值
-      if (!this.output.isOrder) {
-        this.setDefaultValue()
-        this.setLastOrderInfo()
-      }
-      const _this = this
-      setTimeout(() => {
-        // 避免重复绑定
-        if (!_this.isbindtab) {
-          _this.bindTabWithArrow()
+      this.fetchModel().then(() => {
+        this.setRequired()
+        this.setOrderNum()
+        this.setCargoNum()
+        this.setOrderDate()
+        this.setOrderFee()
+        this.setOrderTransfer()
+        this.setOrgCity()
+        // 当为修改运单时，不设置默认值
+        if (!this.output.isOrder) {
+          this.setDefaultValue()
+          this.setLastOrderInfo()
         }
-      }, 1000)
+        const _this = this
+        setTimeout(() => {
+          // 避免重复绑定
+          if (!_this.isbindtab) {
+            _this.bindTabWithArrow()
+          }
+        }, 1000)
+      }) // 查询开单页面模板
+
     },
     // 设置上一次的运单信息
     setLastOrderInfo() {
@@ -1549,7 +1551,8 @@ export default {
       if (this.config.shipNo.manualInput !== '1') {
         obj = this.$refs['tmsOrderShipshipToCityName']
         if (obj) {
-          obj = obj.$refs['myautocomplete']
+          console.warn('obj======', obj[0])
+          obj = obj[0].$refs['myautocomplete']
         }
         // 不允许修改系统生成的单号
         if (this.config.shipNo.systemNumberImmutable === '1') {

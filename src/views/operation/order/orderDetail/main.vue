@@ -229,43 +229,43 @@
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipTotalFee" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipPayWay'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipPayWay'">
                 <span class="order-form-label">付款方式</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.shipPayWayName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipNowpayFee'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipNowpayFee'">
                 <span class="order-form-label">现付</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipNowpayFee" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipArrivepayFee'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipArrivepayFee'">
                 <span class="order-form-label">到付</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipArrivepayFee" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipReceiptpayFee'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipReceiptpayFee'">
                 <span class="order-form-label">回单付</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipReceiptpayFee" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipMonthpayFee'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipMonthpayFee'">
                 <span class="order-form-label">月结</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipMonthpayFee" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipReceiptRequire'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipReceiptRequire'">
                 <span class="order-form-label">回单要求</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.shipReceiptRequireName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipReceiptSn'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipReceiptSn'">
                 <span class="order-form-label other-form-shipReceiptNum">
                 <el-form-item>
                   <el-input size="mini" disabled  :value="form.tmsOrderShipInfo.shipReceiptNum" >
@@ -277,7 +277,7 @@
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipReceiptSn" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipPrintLib'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipPrintLib'">
                 <span class="order-form-label">打印标签</span>
                 <el-form-item>
                   <el-input size="mini" disabled :value="form.tmsOrderShipInfo.shipPrintLib">
@@ -285,49 +285,49 @@
                   </el-input>
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipCustomerNumber'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipCustomerNumber'">
                 <span class="order-form-label required">客户单号</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipCustomerNumber" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipShippingType'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipShippingType'">
                 <span class="order-form-label">运输方式</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.shipShippingTypeName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipBusinessType'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipBusinessType'">
                 <span class="order-form-label">业务类型</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.shipBusinessTypeName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipEffective'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipEffective'">
                 <span class="order-form-label">时效</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.shipEffectiveName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipBatchId'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipBatchId'">
                 <span class="order-form-label">提货批次</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.pickupBatchNumber" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipTruckIdNumber'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipTruckIdNumber'">
                 <span class="order-form-label">车牌号</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipTruckIdNumber" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipUserid'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipUserid'">
                 <span class="order-form-label">业务员</span>
                 <el-form-item>
                   <el-input :value="form.tmsOrderShipInfo.userName" disabled size="mini" />
                 </el-form-item>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipOther'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipOther'">
                 <span class="order-form-label">其他</span>
                 <el-checkbox-group disabled v-model="shipOther">
                   <el-checkbox label="168">控货</el-checkbox>
@@ -336,7 +336,7 @@
                   <el-checkbox label="171">回扣已返</el-checkbox>
                 </el-checkbox-group>
               </div>
-              <div class="order-form-item"  v-if="eitem.fieldProperty==='shipRemarks'">
+              <div class="order-form-item" v-if="eitem.fieldProperty==='shipRemarks'">
                 <span class="order-form-label">备注</span>
                 <el-form-item>
                   <el-input size="mini" disabled v-model="form.tmsOrderShipInfo.shipRemarks" :maxlength="300" />
@@ -1171,8 +1171,9 @@ export default {
     // 初始化各个表单的情况
     init() {
       // this.getShipPayWay()
-      this.fetchModel()
-      this.setOrderFee()
+      this.fetchModel().then(() => {
+        this.setOrderFee()
+      })
     },
     // 设置费用列
     setOrderFee() {

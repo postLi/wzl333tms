@@ -353,10 +353,10 @@ export default {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
+         this.totalLeft = data.total
           this.leftTable = Object.assign([], data.list.filter(el => {
             return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.changeState)
           }))
-          this.totalLeft = this.leftTable.length
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {

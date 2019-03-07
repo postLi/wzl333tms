@@ -361,7 +361,7 @@ export default {
           this.leftTable = Object.assign([], data.list.filter(el => {
             return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.receiptpayState)
           }))
-           this.totalLeft = this.leftTable.length
+         this.totalLeft = data.total
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {
