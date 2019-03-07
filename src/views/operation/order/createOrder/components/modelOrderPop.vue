@@ -38,7 +38,8 @@
       <div class="model-item item-1" style="cursor:default;" data-name="tmsOrderCargoList" :data-index="m_index.tmsOrderCargoList">
         <span class="el-icon-d-caret sortBtn"></span>
         <div class="model-cell" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderCargoList'">
-          <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
+          {{item.fieldName}}
+          <!-- <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> -->
         </div>
         <div style="clear:both"></div>
       </div>
