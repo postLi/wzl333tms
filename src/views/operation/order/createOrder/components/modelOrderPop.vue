@@ -13,7 +13,7 @@
         <span class="el-icon-d-caret sortBtn"></span>
         <draggable v-model="dataList">
           <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShipTop'">
-            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
+            <el-checkbox v-model="item.hide" :label="item.fieldName" @change="(val) => changeCheck(val,item, index)"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
           <div style="clear:both;"></div>
         </draggable>
       </div>
@@ -168,6 +168,24 @@ export default {
     this.sortModel()
   },
   methods: {
+    changeCheck(val, item, index) {
+      if (item.fieldProperty === 'shipToCityName') {
+          item.hide = true
+          this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
+          return false
+        }
+      if (this.otherinfo.systemSetup) {
+        let sysprops = Object.assign([], this.otherinfo.systemSetup.shipPageFunc.shipFieldValue)
+        for (let i in sysprops) {
+          if (i === item.fieldProperty) {
+            if (sysprops[i] === '1') {
+              item.hide = true
+              this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
+            }
+          }
+        }
+      }
+    },
     initModelIndex() { // 初始化模块排序
       if (this.dataList) {
         this.dataList.forEach((el, index) => {

@@ -278,7 +278,7 @@
             </el-table>
           </div>
           <!-- 其它项 -->
-          <div class="order-other-form  model-order-item clearfix" :data-index="m_index.tmsOrderShip">
+          <div class="order-other-form model-order-item clearfix" :data-index="m_index.tmsOrderShip">
             <el-row class="firstline-order-other">
               <el-col :span="(eitem.fieldProperty==='shipOther' ? 8: (eitem.fieldProperty==='shipRemarks' ? 24: 4))" v-for="(eitem, eindex) in modelList" :key="eindex" v-if="eitem.templateType === 'tmsOrderShip' && eitem.hide">
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipTotalFee'">
@@ -568,7 +568,7 @@
             </el-row> -->
           </div>
           <!-- 中转信息 -->
-          <div class="order-transfer-form" v-if="shouldInputTransfer">
+          <div class="order-transfer-form model-order-item " :data-index="m_index.tmsOrderTransfer" v-if="shouldInputTransfer">
             <el-collapse v-model="activeNames">
               <el-collapse-item title="中转信息" name="1">
                 <table class="order-transfer-table">
@@ -725,13 +725,15 @@ export default {
         tmsOrderShipTop: 1,
         customerInfo: 2,
         tmsOrderCargoList: 3,
-        tmsOrderShip: 4
+        tmsOrderShip: 4,
+        tmsOrderTransfer: 5
       },
       m_index: {
         tmsOrderShipTop: 1,
         customerInfo: 2,
         tmsOrderCargoList: 3,
-        tmsOrderShip: 4
+        tmsOrderShip: 4,
+         tmsOrderTransfer: 5
       },
       shipUserName: '',
       // 用来更新收发货人信息
@@ -1275,6 +1277,7 @@ export default {
                 this.m_index[el.templateType] = el.typeOrder
               }
             })
+            this.m_index.tmsOrderTransfer = 5
             this.org_m_index = objectMerge2({}, this.m_index)
             console.log('模板各个模块排序：', JSON.stringify(this.m_index))
             console.warn('所有模板排序信息 modelList:', this.modelList)
@@ -1293,10 +1296,12 @@ export default {
         if (this.modelList) {
           let list = document.querySelectorAll('.model-order-item')
           let arr = Array.prototype.slice.call(list)
+          console.log('arr+++++', arr, list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
           let modelDiv = document.querySelectorAll('.model-order-list')[0]
+          console.log('modelDiv+++++', modelDiv)
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
             let name = arr[i].getAttribute('data-name')
@@ -1512,13 +1517,14 @@ export default {
     },
     // 初始化各个表单的情况
     init() {
+      this.setOrderTransfer()
       this.fetchModel().then(() => {
         this.setRequired()
         this.setOrderNum()
         this.setCargoNum()
         this.setOrderDate()
         this.setOrderFee()
-        this.setOrderTransfer()
+        
         this.setOrgCity()
         // 当为修改运单时，不设置默认值
         if (!this.output.isOrder) {
@@ -1707,6 +1713,7 @@ export default {
       if (this.output.ismodify) {
         this.shouldInputTransfer = false
       }
+      this.sortModel()
     },
     // 设置默认值
     setDefaultValue() {
