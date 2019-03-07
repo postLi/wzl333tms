@@ -208,6 +208,7 @@ $mainFontSize: 12px;
 
     .firstline-order{
       border-bottom: 1px solid $bordercolor;
+      border-top: 1px solid $bordercolor;
       
       .el-col:first-child .order-form-label{
         border-left: none;

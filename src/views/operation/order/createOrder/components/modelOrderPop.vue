@@ -50,8 +50,8 @@
             borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
           }">
             <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
-            <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i>
-            <i class="el-icon-d-caret" v-if="item.fieldProperty!=='shipRemarks'"></i>
+            <i class="el-icon-d-caret" style="transform: rotate(90deg);"  v-if="item.fieldProperty!=='shipRemarks'"></i>
+            <i class="el-icon-d-caret"></i>
           </div>
           <div style="clear:both"></div>
         </draggable>
@@ -89,7 +89,8 @@
       <div class="model-item item-1" data-name="tmsOrderShip" :data-index="m_index.tmsOrderShip">
         <div v-model="dataList">
           <div>
-            <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip' && item.hide" :style="{
+            <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShip' && item.hide" 
+            :style="{
             width: item.fieldProperty==='shipOther' ? '33.32%' : (item.fieldProperty==='shipRemarks'? '100%' : '16.66%'),
             borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
           }">
@@ -359,6 +360,8 @@ export default {
           return orderManage.putOrderModel(dataList).then(data => {
               this.$message.success('保存成功！')
               this.fetchData()
+              this.$emit('success')
+              this.close()
               resolve()
             })
             .catch(err => {
