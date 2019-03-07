@@ -1262,9 +1262,9 @@ export default {
   methods: {
     setModel() {
       // 重新修改开单页面的模板
-      this.fetchModel('update')
+      this.fetchModel()
     },
-    fetchModel(flag) { // 获取模板信息
+    fetchModel() { // 获取模板信息
       return orderManage.getOrderModel().then(data => {
           if (data) {
             this.modelList = data
@@ -1277,12 +1277,8 @@ export default {
             })
             this.org_m_index = objectMerge2({}, this.m_index)
             console.log('模板各个模块排序：', JSON.stringify(this.m_index))
-            console.warn('所有模板排序信息 modelList/:', this.modelList)
-            if (flag) {
-              this.sortModel(flag) // 初始化开单页面各个模块排序
-            } else {
-              this.sortModel()
-            }
+            console.warn('所有模板排序信息 modelList:', this.modelList)
+              this.sortModel() // 初始化开单页面各个模块排序
           }else {
             this.modelList = this.$const.MODELLIST
           }
@@ -1292,7 +1288,7 @@ export default {
           this._handlerCatchMsg(err)
         })
     },
-    sortModel(flag) { // 按照模板修改开单页面各个模块上下排序
+    sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
           let list = document.querySelectorAll('.model-order-item')
