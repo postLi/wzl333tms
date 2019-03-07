@@ -2554,6 +2554,7 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
+        this.loading = false
       } else {
         msg = m
       }
