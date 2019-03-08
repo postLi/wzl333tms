@@ -268,7 +268,7 @@ export default {
         starttime: parseTime(this.query.createTimeStart, '{y}-{m}-{d}'),
         endtime: parseTime(this.query.createTimeEnd, '{y}-{m}-{d}'),
         area: '',
-        shipToName: this.getOrgName.to
+        shipToName: this.getOrgName.from
       }
 
       let arr = objectMerge2([], this.dataList)
@@ -284,14 +284,23 @@ export default {
         obj.area = ''
       }
 
-      let str = '<div><h3>' + obj.title + '</h3>\n' +
-        '<div style="text-align: left;margin: 10px;">' +
-        '<span style="margin:0 10px;">开单时间：' + obj.starttime + '至' + obj.endtime + '</span>' +
-        '<span style="margin:0 10px;' + (!obj.shipToName ? 'display:none' : '') + '"> 收货网点：' + obj.shipToName + '</span>' +
-        '<span style="margin：0 10px;' + (!obj.area ? 'display:none' : '') + '">区间：' + obj.area + '</span>' +
-        '</div></div>'
+      // let title = '<table width="100%"><tr><td colspan="3" style="text-align:center;">' + obj.title + '</td></tr>\n' +
+      //   '<tr style="text-align: left;padding: 20px 10px;">' +
+      //   '<td style="padding:0 10px;">开单时间：' + obj.starttime + '至' + obj.endtime + '</td>' +
+      //   '<td style="padding:0 10px;' + (!obj.shipToName ? 'display:none' : '') + '"> 收货网点：' + obj.shipToName + '</td>' +
+      //   '<td style="padding：0 10px;' + (!obj.area ? 'display:none' : '') + '">区间：' + obj.area + '</td>' +
+      //   '</tr></table>'
+      // let title = '<table width="100%"><tr><td colspan="3" style="text-align:center;">' + obj.title + '</td></tr></table>'
+      let content = '<table width="100%"><tr style="text-align: left;padding: 20px 10px;">' +
+        '<td style="padding:0 10px;">开单时间：' + obj.starttime + '至' + obj.endtime + '</td>' +
+        '<td style="padding:0 10px;' + (!obj.shipToName ? 'display:none' : '') + '">     收货网点：' + obj.shipToName + '</td>' +
+        '<td style="padding：0 10px;' + (!obj.area ? 'display:none' : '') + '">     区间：' + obj.area + '</td>' +
+        '</tr></table>'
 
-      return str
+      return {
+        title: obj.title,
+        content: content
+      }
 
     },
     handlePageChange(obj) {
@@ -356,11 +365,22 @@ export default {
       const fontTitle = document.createElement('font')
       let thetitle = '营业额汇总表'
       thTitle.setAttribute('colspan', this.columns.length)
-      fontTitle.innerHTML = titleDiv
+      fontTitle.innerHTML = titleDiv.title
 
       thTitle.appendChild(fontTitle)
       theadTrTitle.appendChild(thTitle)
       thead.appendChild(theadTrTitle)
+
+      const theadTrTitle2 = document.createElement('tr')
+      const thTitle2 = document.createElement('th')
+      const fontTitle2 = document.createElement('font')
+      let thetitle2 = ''
+      thTitle2.setAttribute('colspan', this.columns.length)
+      fontTitle2.innerHTML = titleDiv.content
+
+      thTitle2.appendChild(fontTitle2)
+      theadTrTitle2.appendChild(thTitle2)
+      thead.appendChild(theadTrTitle2)
 
 
 

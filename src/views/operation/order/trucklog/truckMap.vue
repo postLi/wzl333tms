@@ -1,116 +1,268 @@
 <template>
   <div class="orderinfo-manager truck-page-log heightvhPoptree" v-loading="loading">
-    <transition name="el-zoom-in-bottom">
-      <div class="truck-log-info" v-if="activeTruckItem.length">
-        <div class="info-btns">
-          <el-button :size="btnsize" type="primary" icon="el-icon-document" @click="exportData">导出EXCEL</el-button>
-          <el-button :size="btnsize" type="warning" icon="el-icon-rank" @click="tableStyle = !tableStyle">缩放</el-button>
-          <el-button class="btnsright" :size="btnsize" type="info" icon="el-icon-close" @click="activeTruckItem = []">关闭</el-button>
-        </div>
-        <div class="info_tab">
-          <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border height="100%" tooltip-effect="dark" :style="tableStyle ? 'width:100%;' : 'width: 390px;'" :row-class-name="classLineRed">
-            <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-              </el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" v-else :width="column.width">
-                <template slot-scope="scope">
-                  <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
-                  <span v-else v-html="column.slot(scope)"></span>
-                </template>
-              </el-table-column>
-            </template>
-          </el-table>
-        </div>
-        <div class="table-contr"></div>
-        <div class="info_tab_footer">
-          共计:{{ total }}
-          <div class="show_pager">
-            <Pager :total="total" @change="handlePageChange" :btnsize="'mini'" />
-          </div>
-        </div>
-      </div>
-    </transition>
-    <div id="trucklogmap">
-      <div class="popTimer" v-if="isTimer">
-        <el-button @click="timerCon" size="mini" type="warning" :icon="isTimerOpen ? '' :'el-icon-time'">{{isTimerOpen ? '关闭' : '开启'}}自动刷新</el-button>
-        <span v-if="isTimerOpen"><i class="el-icon-time"></i> {{timer}}秒后刷新轨迹</span>
-      </div>
-    </div>
-    <div class="search-card">
-      <el-tabs type="border-card" @tab-click="handleSearchView" v-model="activeName">
-        <el-tab-pane label="运单跟踪" name="1">
-          <transition name="el-zoom-in-center">
-            <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
-              <el-form-item label="运单查询">
-                <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchShipSn" search="shipSn" type="order" @change="getShipSn" />
-              </el-form-item>
-              <el-form-item label="开始时间">
-                <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="结束时间">
-                <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsSimple" placeholder="结束日期">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item class="staff_searchinfo--btn">
-                <el-button type="primary" @click="onSubmit('line')" icon="el-icon-search" :loading="loadSearch">查询轨迹</el-button>
-                <el-button type="warning" @click="onSubmit('location')" icon="el-icon-search" :loading="loadSearch">查询当前定位</el-button>
-              </el-form-item>
-            </el-form>
-          </transition>
-        </el-tab-pane>
-        <el-tab-pane label="车辆跟踪" name="2">
-          <transition name="el-zoom-in-center">
-            <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
-              <el-form-item label="选择车辆">
-                <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
-                  <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="开始时间">
-                <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item label="结束时间">
-                <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsSimple" placeholder="结束日期">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item class="staff_searchinfo--btn">
-                <el-button type="primary" @click="onSubmit('line')" icon="el-icon-search" :loading="loadSearch">查询轨迹</el-button>
-                <el-button type="warning" @click="onSubmit('location')" icon="el-icon-search" :loading="loadSearch">查询当前定位</el-button>
-              </el-form-item>
-            </el-form>
-          </transition>
-        </el-tab-pane>
-        </transition>
-      </el-tabs>
-      <transition name="el-zoom-in-top">
-        <el-card v-if="popTreeVisible" class="popTree" v-show="!isAllTable">
-          <div class="popTree-group">
-            <div v-for="(item, index) in realTimeTrucks" class="popTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index)">
-              <h3>
-                  <el-tag 
-                  :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
-                  :size='btnsize'>{{index + 1}}</el-tag> {{item.truckIdNumber}} 
-                  <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
-                </h3>
-              <div class="popTree-group-item-desc">
-                <h4>{{item.orgName}}</h4>
-                <div>
-                  <i class="el-icon-mobile-phone"></i>
-                  <span v-if="item.driverName || item.dirverName">
-                      {{item.dirverName||''}} {{item.dirverMobile|| ''}}
-                   </span>
-                  <span v-else>暂无关联司机</span>
+    <div class="info_card">
+      <el-tabs tab-position="top" v-model="tabModel" @tab-click="handleTabModel">
+        <el-tab-pane label="定位查询" name="1">
+          <span slot="label"><i class="el-icon-location"></i> 定位查询</span>
+          <el-tabs class="child_tabs" v-model="tabMap" @tab-click="handleTabMap">
+            <el-tab-pane label="运单查询" name="1">
+              <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
+                <el-form-item label="运单查询">
+                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn" />
+                </el-form-item>
+                <el-form-item class="staff_searchinfo--btn">
+                  <el-button type="warning" @click="onSubmit('location', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
+                </el-form-item>
+              </el-form>
+              <el-tabs class="secChild_tabs" >
+                <el-tab-pane label="查询结果">
+                  <el-card class="childOrderTruckTree">
+                    <div class="truckTree-group">
+                      <div v-if="realLocatOrderTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-else v-for="(item, index) in realLocatOrderTrucks" class="truckTree-group-item" :class="actLocatOrderTruckItem[index]?'activeItem' : ''" @click="selectGroupOrderLocat(item, index)">
+                        <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} <i>[{{item.speed}} km/h]</i>
+                        <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
+                      </h3>
+                        <div class="truckTree-group-item-desc">
+                          <h4>{{item.orgName}}</h4>
+                          <div>
+                            <i class="el-icon-mobile-phone"></i>
+                            <span v-if="item.driverName || item.dirverName">
+                            {{item.driverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                            <span v-else>暂无关联司机</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="车辆查询" name="2">
+              <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
+                <el-form-item label="选择车辆">
+                  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
+                    <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item class="staff_searchinfo--btn">
+                  <el-button type="warning" @click="onSubmit('location', 'truck')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
+                </el-form-item>
+              </el-form>
+              <el-card class="truckTree">
+                <div class="truckTree-group">
+                  <div v-for="(item, index) in TruckList" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index, 'location','truck')">
+                    <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} 
+                        <!-- <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i> -->
+                      </h3>
+                    <div class="truckTree-group-item-desc">
+                      <!-- <h4>{{item.orgName}}</h4> -->
+                      <div>
+                        <i class="el-icon-mobile-phone"></i>
+                        <span v-if="item.driverName || item.dirverName">
+                            {{item.dirverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                        <span v-else>暂无关联司机</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </el-card>
+            </el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="轨迹追踪" name="2">
+          <span slot="label"><i class="el-icon-share"></i> 轨迹追踪</span>
+          <el-tabs class="child_tabs" v-model="tabLine" @tab-click="handleTabLine">
+            <el-tab-pane label="运单查询" name="1">
+              <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
+                <el-form-item label="运单查询">
+                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchShipSn" search="shipSn" type="order" @change="getShipSn" />
+                </el-form-item>
+                <el-form-item label="开始时间">
+                  <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间">
+                  <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsSimple" placeholder="结束日期">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item class="staff_searchinfo--btn">
+                  <el-button type="success" @click="onSubmit('line', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
+                </el-form-item>
+              </el-form>
+              <el-tabs class="secChild_tabs">
+                <el-tab-pane label="查询结果">
+                  <el-card class="childTruckTree">
+                    <div class="truckTree-group">
+                      <div v-if="realTimeOrderTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-else v-for="(item, index) in realTimeOrderTrucks" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index, 'line', 'order')">
+                        <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} 
+                        <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
+                      </h3>
+                        <div class="truckTree-group-item-desc">
+                          <h4>{{item.orgName}}</h4>
+                          <div>
+                            <i class="el-icon-mobile-phone"></i>
+                            <span v-if="item.driverName || item.dirverName">
+                            {{item.driverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                            <span v-else>暂无关联司机</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="车辆查询" name="2">
+              <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
+                <el-form-item label="选择车辆">
+                  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
+                    <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                  <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结束时间">
+                  <el-date-picker v-model="searchQuery.vo.endTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsSimple" placeholder="结束日期">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item class="staff_searchinfo--btn">
+                  <el-button type="success" @click="onSubmit('line', 'truck')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
+                </el-form-item>
+              </el-form>
+              <el-tabs class="secChild_tabs" v-model="tabLineChild">
+                <el-tab-pane label="全部车辆" name="1">
+                  <el-card class="childTruckTree">
+                    <div class="truckTree-group">
+                      <div v-for="(item, index) in TruckList" class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="selectGroup(item, index, 'line', 'truck')">
+                        <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} 
+                        <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
+                      </h3>
+                        <div class="truckTree-group-item-desc">
+                          <h4>{{item.orgName}}</h4>
+                          <div>
+                            <i class="el-icon-mobile-phone"></i>
+                            <span v-if="item.driverName || item.dirverName">
+                            {{item.driverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                            <span v-else>暂无关联司机</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-tab-pane>
+                <el-tab-pane label="查询结果" name="2">
+                  <el-card class="childTruckTree">
+                    <div class="truckTree-group">
+                      <div v-if="realTimeTrucks.length === 0" class="emptyTips">暂无信息</div>
+                      <div v-for="(item, index) in realTimeTrucks" v-else class="truckTree-group-item" :class="activeTruckItem[index]?'activeItem' : ''" @click="showLine(item, index)">
+                        <h3>
+                        <el-tag 
+                        :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
+                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        {{item.truckIdNumber}} 
+                        <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
+                      </h3>
+                        <div class="truckTree-group-item-desc">
+                          <h4>{{item.orgName}}</h4>
+                          <div>
+                            <i class="el-icon-mobile-phone"></i>
+                            <span v-if="item.driverName || item.dirverName">
+                            {{item.driverName||''}} {{item.dirverMobile|| ''}}
+                         </span>
+                            <span v-else>暂无关联司机</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-card>
+                </el-tab-pane>
+              </el-tabs>
+            </el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="监控中心" name="3">
+          <span slot="label"><i class="el-icon-menu"></i> 监控中心</span>
+          <el-card class="terminalTree">
+            <div class="truckTree-group">
+              <div v-if="terminalList.length === 0" class="emptyTips">暂无设备信息</div>
+              <div v-for="(item, index) in terminalList" v-else class="truckTree-group-item" @click="selectTerminal(item, index)">
+                <h3>
+                  <el-tag 
+                  :type="item.vehicleStatus===0?'info':(item.vehicleStatus===1?'success':(item.vehicleStatus===2?'warning':'info'))" 
+                  :size='btnsize'>{{index + 1}}</el-tag> 
+                  {{item.terminalNo}} 
+                  <i>{{item.terminalType || ''}}</i> <i>{{item.terminalStatus===0?' 从未上线':(item.terminalStatus===1?' 行驶':(item.terminalStatus===2?' 停车':' 离线'))}}</i>
+                </h3>
               </div>
             </div>
+          </el-card>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="truck-log-main">
+      <div id="trucklogmap">
+        <div class="popTimer" v-if="isTimer">
+          <span v-if="isTimerOpen"><i class="el-icon-time"></i> {{timer}}秒后刷新轨迹</span>
+          <el-button @click="timerCon" size="mini" type="text" :icon="isTimerOpen ? '' :'el-icon-time'">{{isTimerOpen ? '关闭' : '开启自动刷新'}}</el-button>
+        </div>
+      </div>
+      <transition name="el-zoom-in-bottom">
+        <div class="truck-log-table" v-if="activeTruckItem.length && tabModel==='2'">
+          <div class="info-btns">
+            <el-button :size="btnsize" type="primary" icon="el-icon-document" @click="exportData">导出EXCEL</el-button>
+            <el-button class="btnsright" type="info" :size="btnsize" icon="el-icon-close" @click="activeTruckItem = []">关闭</el-button>
           </div>
-        </el-card>
+          <div class="info_tab">
+            <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border height="250px" tooltip-effect="dark" style="width:100%;" :row-class-name="classLineRed">
+              <template v-for="column in tableColumn">
+                <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                </el-table-column>
+                <el-table-column :key="column.id" :fixed="column.fixed" :label="column.label" v-else :width="column.width">
+                  <template slot-scope="scope">
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="table-contr"></div>
+          <div class="info_tab_footer">
+            共计:{{ total }}
+            <div class="show_pager">
+              <Pager :total="total" @change="handlePageChange" :btnsize="'mini'" />
+            </div>
+          </div>
+        </div>
       </transition>
     </div>
-    <div class="truck-log-expand">
+    <div class="truck-log-expand" v-if="tabModel!=='3'">
       <transition name="el-zoom-in-center">
         <div class="control-panel">
           <el-button :size="btnsize" type="text" icon="el-icon-caret-right" @click="doLine('start')" title="播放"></el-button>
@@ -118,7 +270,7 @@
           <el-button :size="btnsize" type="text" @click="doLine('pause')" class="btn-stop" title="暂停"></el-button>
           <el-button :size="btnsize" type="text" icon="el-icon-close" @click="doLine('destroy')" title="清空"></el-button>
           <span class="speed-sudu">速度:</span><i class="speed-slow">慢 </i>
-          <el-slider v-model="speedSlider" class="slider-step" :min="1000" :max="1000000"></el-slider>
+          <el-slider v-model="speedSlider" class="slider-step" :min="1000" :max="1000000" :show-tooltip="false"></el-slider>
           <i class="speed-quick">快 </i>
           <el-progress :text-inside="true" :stroke-width="18" :percentage="progressPercentage" status="success"></el-progress>
         </div>
@@ -131,10 +283,11 @@
 import orderManage from '@/api/operation/orderManage'
 import { loadJs, objectMerge2, pickerOptionsSimple, parseTime } from '@/utils/'
 import Pager from '@/components/Pagination/index'
-import { realTimeLocation, trajectory, trajectoryOrder, trajectoryTruck, realTimeLocationOrder, realTimeLocationByTruckIdNumber } from '@/api/operation/truckLog'
+import { trajectoryOrder, trajectoryTruck, realTimeLocationOrder, realTimeLocationByTruckIdNumber, getTruckIdNumbers, getTerminalLocation } from '@/api/operation/truckLog'
 import { SaveAsFile } from '@/utils/lodopFuncs'
 import querySelect from '@/components/querySelect/'
 import { getAllTrunk } from '@/api/company/trunkManage'
+import { getOrdertrailterminal } from '@/api/operation/load'
 export default {
   components: {
     Pager,
@@ -146,7 +299,13 @@ export default {
   },
   data() {
     return {
+      actLocatOrderTruckItem: [],
+      tabModel: '1',
+      tabMap: '1',
+      tabLine: '1',
+      tabTerminal: '2',
       activeName: '1',
+      tabLineChild: '1',
       realTimeLocateList: [], // 实时定位列表
       tableStyle: false,
       activeTruckItem: [], // 当前展示的车辆列表
@@ -178,7 +337,7 @@ export default {
       tableColumn: [{
           label: '序号',
           prop: 'number',
-          width: '50',
+          width: '100',
           fixed: true
         }, {
           label: '车辆定位时间',
@@ -188,11 +347,13 @@ export default {
           label: '速度 km/h',
           prop: 'speed',
           width: '90'
-        }, {
-          label: '方向',
-          prop: 'direction',
-          width: '80'
-        }, {
+        },
+        //  {
+        //   label: '方向',
+        //   prop: 'direction',
+        //   width: '80'
+        // },
+        {
           label: '部件状态',
           prop: 'status',
           width: '90',
@@ -227,9 +388,10 @@ export default {
         pageSize: 100,
         vo: {
           truckIdNumber: '', // 陕YH0009
-          startTime: parseTime(new Date() - 60 * 24 * 60 * 3 * 1000),
+          startTime: parseTime(new Date() - 60 * 24 * 60 * 7 * 1000),
           endTime: parseTime(new Date()),
-          shipId: ''
+          shipId: '',
+          shipSn: ''
         }
       },
       timer: 60,
@@ -238,6 +400,7 @@ export default {
       map: {},
       allPathData: [],
       imgurl: require('../../../../assets/truck_log/car.png'),
+      closeurl: require('../../../../assets/login_images/bb3.png'),
       initedPath: false,
       orgPageDataList: [],
       orgDataList: [],
@@ -252,7 +415,12 @@ export default {
       realTimeTrucks: [], // 实时车辆信息
       org_order_realTimeTrucks: [], // 存储切换视图前的车辆信息
       org_truck_realTimeTrucks: [], // 存储切换视图前的车辆信息
-      lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac', '#409eff', '#008000', '#40E0D0', '#22aa99', '#9400D3', '#FFC0CB', '#0000FF', '#FFA500', '#B22222', '#808080', '#00FFFF', '#8A2BE2', '#5F9EA0', '#7FFF00', '#DAA520']
+      lineColor: ['#3366cc', '#329262', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#dc3912', '#5574a6', '#3b3eac', '#409eff', '#008000', '#40E0D0', '#22aa99', '#9400D3', '#FFC0CB', '#0000FF', '#FFA500', '#B22222', '#808080', '#00FFFF', '#8A2BE2', '#5F9EA0', '#7FFF00', '#DAA520'],
+      terminalList: [], // 追货宝设备列表
+      curTerminalList: [], // 添加到定位列表的追货宝
+      realTimeOrderTrucks: [], // 轨迹追踪-运单查询-结果列表
+      m: false,
+      realLocatOrderTrucks: [], // 运单定位的车辆返回列表
     }
   },
   watch: {
@@ -264,7 +432,6 @@ export default {
     orderdata: {
       handler() {
         this.init(333)
-
       },
       deep: true
     },
@@ -283,13 +450,21 @@ export default {
       handler(to, from) {
         if (this.isTimer) { // 添加自动刷新功能时
           if (window.AMapUI) { // 开启自动刷新时
-            if (to.fullPath && to.fullPath.indexOf('/operation/order/orderDetail?orderid=') !== -1) {
-            } else {
+            if (to.fullPath && to.fullPath.indexOf('/operation/order/trucklog') !== -1) {} else {
               this.isTimerOpen = false
               clearInterval(this.timerOption)
             }
           }
         }
+        if (to.query) {
+          if (to.query.searchQuery && this.map && window.AMap && window.AMapUI) {
+            this.$nextTick(() => {
+              this.openRouteLineTruck()
+            })
+          }
+        }
+        console.log('to', to)
+        console.log('from', from)
       },
       immediate: true
     },
@@ -326,26 +501,346 @@ export default {
       immediate: true
     }
   },
+  computed: {
+    routeSearch() {
+      let query = {
+        searchQuery: {},
+        flag: ''
+      }
+      if (this.$route.query && this.$route.query.searchQuery) {
+        let searchQuery = JSON.parse(this.$route.query.searchQuery)
+        query.searchQuery = objectMerge2({}, searchQuery)
+        query.flag = this.$route.query.flag
+        query.type = this.$route.query.type
+      }
+      return query
+    }
+  },
   mounted() {
     console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
-      // _this.initMap()
-      _this.hasLoadedMap = true
+      loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+        _this.initMap()
+        _this.hasLoadedMap = true
+        _this.getPathSimplifierIns()
+        // this.onSubmit()
+        console.log('window.AMap', window.AMap)
+        console.log('window.AMapUI', window.AMapUI)
+        console.log('this.map', this.map)
+        _this.openRouteLineTruck()
+      })
     }
     this.init(2222)
     this.fetchTruck() // 获取公司车辆信息
+    this.fetchTerminal() // 获取设备列表
+
   },
   // 关闭时清空地图数据
   destoryed() {
     this.exit()
     clearInterval(this.timerOption)
   },
+  activated() {
+
+
+  },
   methods: {
+
+    selectGroupOrderLocat(row, index) {
+      let map = this.map
+      let lnglat = [Number(row.longitude), Number(row.latitude)]
+      this.actLocatOrderTruckItem = []
+      this.actLocatOrderTruckItem[index] = true
+      this.closeInfoWindow() // 关闭之前的窗口
+      this.infoWindow(row)
+      window.infoWindow.open(map, lnglat)
+      console.log('row', row, index, row.truckIdNumber, lnglat)
+      map.setFitView()
+    },
+    handleTabModel(obj) {
+      console.log('当前选中的tab::', obj)
+    },
+    handleTabMap(obj) {
+      console.log('当前选中的二级tab::Map', obj)
+      this.fetchTruck()
+    },
+    handleTabLine(obj) {
+      console.log('当前选中的二级tab::Line', obj)
+    },
+    terminalToLine(obj) {
+      return () => {
+        alert()
+      }
+    },
+    openCheckLineTruck(obj) {
+      this.tabModel = '2'
+      this.tabLine = '2'
+      this.$set(this.searchQuery.vo, 'truckIdNumber', obj.truckIdNumber)
+      this.onSubmit('line', 'truck')
+    },
+    openRouteLineTruck() { // 路由跳转后需要查询轨迹或定位
+      console.log('init route query ', this.routeSearch)
+      if (this.routeSearch && this.routeSearch.searchQuery.truckIdNumber) {
+        // 如果路由中有查询参数表示 干线短驳和送货列表需要查询
+        if (this.routeSearch.type === 'truck') { // 车辆查询
+          switch (this.routeSearch.flag) {
+            case 'line': // 查轨迹
+              this.tabModel = '2'
+              this.tabLine = '2'
+              this.$set(this.searchQuery.vo, 'truckIdNumber', this.routeSearch.searchQuery.truckIdNumber)
+              this.$set(this.searchQuery.vo, 'startTime', this.routeSearch.searchQuery.startTime || '')
+              this.onSubmit('line', 'truck')
+              break
+            case 'location': // 查定位
+              this.tabModel = '1'
+              this.tabMap = '2'
+              this.$set(this.searchQuery.vo, 'truckIdNumber', this.routeSearch.searchQuery.truckIdNumber)
+              this.onSubmit('location', 'truck')
+              break
+          }
+        } else { // 运单查询
+          switch (this.routeSearch.flag) {
+            case 'line': // 查轨迹
+              this.tabModel = '2'
+              this.tabLine = '1'
+              this.$set(this.searchQuery.vo, 'shipSn', this.routeSearch.searchQuery.shipSn)
+              this.$set(this.searchQuery.vo, 'startTime', this.routeSearch.searchQuery.startTime || '')
+              this.onSubmit('line', 'truck')
+              break
+            case 'location': // 查定位
+              this.tabModel = '1'
+              this.tabMap = '1'
+              this.$set(this.searchQuery.vo, 'shipSn', this.routeSearch.searchQuery.shipSn)
+              this.onSubmit('location', 'truck')
+              break
+          }
+        }
+      }
+    },
+    closeInfoWindow() { // 清除信息窗体
+      const AMap = window.AMap
+      const AMapUI = window.AMapUI
+      const map = this.map
+      map.clearInfoWindow()
+    },
+    createInfoWindow(obj) {
+      const AMap = window.AMap
+      const AMapUI = window.AMapUI
+      const map = this.map
+
+      this.closeInfoWindow()
+      let content = []
+
+      window.globalMapFn = () => {
+        console.log(obj)
+        this.$message.warning('暂无该功能~')
+
+      }
+      window.globalLineTruck = () => {
+        this.openCheckLineTruck(obj) // 查车辆轨迹
+      }
+
+      window.closeInfoWindow = () => {
+        map.clearInfoWindow()
+      }
+
+      if (this.tabModel === '1') {
+        for (let item in obj) {
+          obj[item] = obj[item] || '-无数据-'
+        }
+        content.push('<div class="mapwin">')
+        content.push('<div class="winhead"><i>' + obj.truckIdNumber + '</i><a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
+        content.push('<div class="winmain">')
+        content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
+        content.push('<p>关联司机: <span>' + obj.dirverName + 'km</span></p>')
+        content.push('<p>司机号码: <span>' + obj.dirverMobile + '</span></p>')
+        content.push('<p>地址: <span>' + obj.address + '</span></p>')
+        // content.push('<p>定位时间: <span>' + obj.locationTime + '</span></p>')
+        content.push('</div>')
+        content.push('<div class="winfoot">')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        content.push('<a href="javascript:;" onclick="globalLineTruck()"><i class="el-icon-share"></i> 轨迹</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        content.push('</div>')
+        content.push('</div>')
+      } else {
+
+        let posStyle = obj.posStyle === '0' ? '不定位' : (obj.posStyle === '1' ? 'GPS' : (obj.posStyle === '2' ? 'WIFI' : (obj.posStyle === '3' ? '多基站' : '单基站')))
+        let vehicleStatus = obj.vehicleStatus === '0' ? '从未上线' : (obj.vehicleStatus === '1' ? '行驶' : (obj.vehicleStatus === '2' ? '停车' : '离线'))
+
+        for (let item in obj) {
+          obj[item] = obj[item] || '-无数据-'
+        }
+
+        content.push('<div class="mapwin">')
+        content.push('<div class="winhead"><i>' + obj.terminalNo + '</i> [ ' + obj.terminalType + ' / <span>电量: ' + obj.lastPower + '%</span> ]<a href="javascript:;" onclick="closeInfoWindow()"><img src="' + this.closeurl + '" /></a></div>')
+        content.push('<div class="winmain">')
+        content.push('<p>速度: <span>' + obj.speed + 'km/h</span></p>')
+        content.push('<p>里程: <span>' + obj.mlileage + 'km</span></p>')
+        content.push('<p>信号时间: <span>' + obj.gpsTime + '</span></p>')
+        content.push('<p>定位时间: <span>' + obj.gpsTime + '</span></p>')
+        content.push('<p>定位: <span>' + posStyle + '</span></p>')
+        content.push('<p>车辆状态: <span>' + obj.formatTime + '</span></p>')
+        content.push('<p>报警: <span>' + obj.alarmInfo + '</span></p>')
+        content.push('<p>地址: <span>' + obj.address + '</span></p>')
+        content.push('</div>')
+        // content.push('<div class="winfoot">')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-date"></i> 跟踪</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-share"></i> 轨迹</a>')
+        // content.push('<a href="javascript:;" onclick="globalMapFn()"><i class="el-icon-setting"></i> 设置</a>')
+        content.push('</div>')
+        content.push('</div>')
+      }
+      return content.join('')
+    },
+    infoWindow(obj) {
+      const AMap = window.AMap
+      const AMapUI = window.AMapUI
+      const map = this.map
+      const _this = this
+      window.infoWindow = new AMap.InfoWindow({
+        isCustom: true, //使用自定义窗体
+        content: _this.createInfoWindow(obj),
+        offset: new AMap.Pixel(5, -45),
+        showShadow: true
+      })
+    },
+    tomapTerminal() { // 追货宝-转高德坐标
+      const AMap = window.AMap
+      const AMapUI = window.AMapUI
+      const map = this.map
+      const _this = this
+
+      console.log('markers', this.markers)
+      console.log('curTerminalList', this.curTerminalList)
+
+
+      map.remove(this.markers)
+      let lnglat = []
+      let marker
+      this.markers = []
+
+      // 坐标转换
+      if (this.curTerminalList.length) {
+        this.curTerminalList.forEach((e, index) => {
+          if (e.lon !== null && e.lat !== null) {
+            lnglat[index] = [e.lon, e.lat]
+            marker = new AMap.Marker({
+              map: map,
+              position: lnglat[index]
+            })
+
+            // 创建信息窗体
+            _this.infoWindow(e)
+            window.infoWindow.open(map, marker.getPosition())
+
+            //鼠标点击marker弹出自定义的信息窗体
+            marker.on('click', function(em) {
+              _this.infoWindow(e)
+              window.infoWindow.open(map, em.lnglat)
+            })
+
+            marker.setLabel({
+              offset: new AMap.Pixel(20, 20),
+              icon: _this.imgurl
+            })
+            this.markers.push(marker)
+            map.setFitView()
+          }
+        })
+        console.log('实时设备定位：：', this.curTerminalList, lnglat, this.map)
+      }
+    },
+    selectTerminal(item, index) { // 左边列表选择当前的追货宝
+      if (window.pathSimplifierIns) {
+        window.pathSimplifierIns.setData([]) // 给巡航器设置数据为空
+      }
+      // 判断mark定位列表中是否有相同的
+      let flag = this.curTerminalList.filter(el => el.terminalNo === item.terminalNo).length
+      console.log('flag', flag)
+      if (!flag || flag < 1) {
+
+        if (process.env.NODE_ENV !== 'production') {
+          if (this.otherinfo.companyId !== 160) {
+            item.vehicleId = '7F174725C0EFB5334DF029FF4DF6BCA1'
+          }
+        }
+
+        this.fetchTerminalLocation(item.vehicleId)
+      }
+      this.curTerminal = item
+      console.log('选中的设备', item, item.terminalNo)
+
+    },
+    fetchTerminalLocation(terminalNo) { // 获取当前追货宝的定位信息
+      getTerminalLocation(terminalNo).then(data => {
+          if (data && data.terminalNo) {
+            console.log('dadta', data)
+            this.$message.success('设备查询成功~')
+            this.curTerminalList.push(data)
+            // if (process.env.NODE_ENV !== 'production') {
+            //   this.curTerminalList.push({
+            //     lon: '113.001817',
+            //     lat: '23.23185',
+            //     lastPower: '20',
+            //     terminalNo: '0863014532659660'
+            //   })
+
+            //   if (this.m) {
+            //     this.curTerminalList.push({
+            //       lon: '112.001817',
+            //       lat: '23.23185',
+            //       lastPower: '10',
+            //       terminalNo: '0863014532659650'
+            //     })
+            //   }
+            //   this.m = true
+            // }
+
+
+            this.tomapTerminal()
+          } else {
+            this.$message.warning('暂无数据, 请稍后重试~')
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
+    fetchTerminal(terminalNo = '') { // 获取本公司追货宝列表
+      let companyId = this.otherinfo.companyId
+      if (process.env.NODE_ENV !== 'production') {
+        companyId = (companyId === 160) ? 160 : 1
+      }
+      let query = {
+        currentPage: 1,
+        pageSize: 10000,
+        vo: {
+          companyId: companyId, // 公司id
+          terminalNo: terminalNo // 设备号 模糊搜索
+        }
+      }
+      getOrdertrailterminal(query).then(data => {
+          if (data) {
+            console.log('Terminals', data)
+            this.terminalList = data.list
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
+
     getShipSn(item) {
       console.log('运单选择item', item)
-      this.searchQuery.vo.shipId = item.id
-      this.searchShipSn = item.shipSn
+      if (this.tabModel === '1') {
+        this.searchQuery.vo.shipSn = item.shipSn
+        this.searchShipSn = item.shipSn
+      } else {
+        this.searchQuery.vo.shipId = item.shipSn
+        this.searchShipSn = item.shipSn
+      }
     },
     classLineRed(row) { // 行样式
       if (this.allPathData.length) {
@@ -415,10 +910,11 @@ export default {
       this.popTreeVisible = !this.popTreeVisible
       this.fetchTruck()
     },
-    fetchTruck() {
-      let truckQuery = { "currentPage": 1, "pageSize": 100, "vo": { "orgid": this.otherinfo.orgid, "truckIdNumber": "", "truckSource": "" } }
-      getAllTrunk(truckQuery).then(data => {
-          this.TruckList = data.list
+    fetchTruck() { // 获取车辆列表
+      getTruckIdNumbers().then(data => {
+          if (data) {
+            this.TruckList = data
+          }
         })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -430,23 +926,6 @@ export default {
       setTimeout(() => {
         this.popTreeVisible = true
       }, 300)
-    },
-    selectGroup(row, index) {
-      this.showDataList = []
-      this.searchQuery.currentPage = 1
-      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
-      console.log('选中的车：：', index, row.truckIdNumber, row.longitude, row.latitude, row)
-      if (this.activeTruckItem[index]) {
-        this.activeTruckItem = []
-      } else {
-        this.activeTruckItem = []
-        this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
-        this.showDataList = objectMerge2([], row.trajectoryList)
-        this.activeTruckItem[index] = true // 车辆列表高亮
-        this.setPage() // 设置表格数据分页
-      }
-
-      this.initLine() // 设置巡航器
     },
     setPage() { // 设置表格数据分页
       // 设置表格分页
@@ -463,7 +942,110 @@ export default {
       })
       this.dataList = this.orgPageDataList[this.searchQuery.currentPage - 1]
     },
-    onSubmit(type) {
+    validateForm(type, childtype, query) { // 表单验证
+      let flag = true
+
+      switch (type) {
+        case 'location': // 定位
+          if (childtype === 'order') {
+            if (!this.searchQuery.vo.shipSn) {
+              this.$message.warning('请选择运单号~')
+              flag = false
+            }
+          } else {
+            if (!this.searchQuery.vo.truckIdNumber) {
+              this.$message.warning('请选择车牌号~')
+              flag = false
+            }
+          }
+          break
+        case 'line': // 轨迹
+          if (!this.searchQuery.vo.startTime || !this.searchQuery.vo.endTime) {
+            this.$message.warning('时间范围不能为空~')
+            flag = false
+          }
+          if (childtype === 'order') {
+            if (!this.searchQuery.vo.shipId) {
+              this.$message.warning('运单号不能为空~')
+              flag = false
+            }
+          } else {
+            if (!this.searchQuery.vo.truckIdNumber) {
+              this.$message.warning('车牌号不能为空~')
+              flag = false
+            }
+          }
+          break
+        case 'terminal':
+          break
+      }
+
+      return flag
+    },
+    showLine(row, index) {
+      this.showDataList = []
+      this.searchQuery.currentPage = 1
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
+      console.log('选中的车：：', index, row.truckIdNumber, row.longitude, row.latitude, row)
+      if (this.activeTruckItem[index]) {
+        this.activeTruckItem = []
+      } else {
+        this.activeTruckItem = []
+        this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
+        this.showDataList = objectMerge2([], row.trajectoryList)
+        this.activeTruckItem[index] = true // 车辆列表高亮
+        this.setPage() // 设置表格数据分页
+      }
+      this.initLine() // 设置巡航器
+    },
+    selectGroup(row, index, type, childtype) {
+      console.log('选中的项:', row, index, type, childtype)
+      // row 当前选中的对象
+      // index 当前对象的索引
+      // type 一级类型 location-定位 line-轨迹 terminal-监控
+      // childtype 二级类型 order-运单 truck-车辆
+      // 
+      this.searchQuery.currentPage = 1
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
+      switch (type) {
+        case 'location': // 查定位
+          if (childtype === 'truck') {
+            this.$set(this.searchQuery.vo, 'truckIdNumber', row.truckIdNumber)
+            this.onSubmit(type, childtype, { truckIdNumber: row.truckIdNumber }, 'select')
+          } else {
+            this.onSubmit(type, childtype, { shipSn: row.shipSn }, 'select')
+          }
+          break
+        case 'line': //  查轨迹
+          if (childtype === 'truck') {
+            this.searchQuery.vo.truckIdNumber = row.truckIdNumber
+            this.onSubmit(type, childtype)
+          } else {
+            this.showLine(row, index)
+          }
+          break
+        case 'terminal': // 查监控设备号
+
+          break
+      }
+    },
+    onSubmit(type, childtype, query, selecttype) {
+      // type 一级类型 location-定位 line-轨迹 terminal-监控
+      // childtype 二级类型 order-运单 truck-车辆
+      // query 请求参数
+      // selecttype 直接选中还是点击查询
+
+      let _this = this
+      _this.loadSearch = true
+
+
+
+      if (!this.validateForm(type, childtype)) { // 判断输入
+        _this.loadSearch = false
+        return false
+      }
+      console.log('72384238478')
+
       // 查询定位及轨迹
       // 0、清空定时刷新， 清空巡航器
       // 1、获取查询数据，this.isShowInlineOrderMap判断是查询运单true[2.1]还是车辆false[2.2]
@@ -477,8 +1059,7 @@ export default {
       // 4、格式化获取到的数据，否则提示“暂无车辆轨迹数据！”
       // 5、设置巡航器， 绘制轨迹及定位
       // 6、设置刷新定时器
-      let _this = this
-      _this.loadSearch = true
+
       _this.progressPercentage = 0
       _this.pathNavigs = []
       _this.activeTruckItem = []
@@ -487,17 +1068,24 @@ export default {
       if (window.pathSimplifierIns) {
         window.pathSimplifierIns.setData([]) // 给巡航器设置数据为空
       }
+      if (this.map) {
+        this.closeInfoWindow() // 清除窗体
+      }
 
       // 方法：格式化车辆轨迹数据
       let fn = (lineData) => {
         if (!lineData) { return }
         _this.orgDataList = []
         _this.dataList = []
-        _this.realTimeTrucks = []
+        // _this.realTimeTrucks = []
+        // _this.realTimeOrderTrucks = []
+
+        let resList = []
 
         if (lineData && lineData.length) {
           _this.showPopTrucktree() // 显示车辆列表
-          _this.realTimeTrucks = objectMerge2([], lineData) // 设置当前车辆列表数据
+          // _this.realTimeTrucks = objectMerge2([], lineData) // 设置当前车辆列表数据
+          resList = objectMerge2([], lineData) // 设置当前车辆列表数据
           lineData.forEach((em, emindex) => {
             let emData = []
             em.trajectoryList.forEach((el, index) => {
@@ -509,33 +1097,65 @@ export default {
               emData[index] = el
             })
             _this.allList[emindex] = emData
-            _this.realTimeTrucks[emindex].trajectoryList = objectMerge2([], emData)
-            _this.realTimeTrucks[emindex]._index = emindex
+            resList[emindex].trajectoryList = objectMerge2([], emData)
+            resList[emindex]._index = emindex
+            // _this.realTimeTrucks[emindex].trajectoryList = objectMerge2([], emData)
+            // _this.realTimeTrucks[emindex]._index = emindex
             console.log('allList', _this.allList)
-            console.log('realTimeTrucks', _this.realTimeTrucks)
+            console.log('realTimeTrucks', resList)
           })
+        }
+
+        if (childtype === 'order') {
+          _this.realTimeOrderTrucks = resList
+        } else {
+          _this.realTimeTrucks = resList
         }
       }
 
+
       // fetch 判断请求接口 运单&车牌号
-      let fetch = _this.isShowInlineOrderMap ? trajectoryOrder : trajectoryTruck
-      let params = objectMerge2({}, _this.searchQuery.vo)
+      let fetch = childtype === 'order' ? trajectoryOrder : trajectoryTruck
+      let params = selecttype ? query : objectMerge2({}, _this.searchQuery.vo)
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (!selecttype) {
+          // params.truckIdNumber = '粤L18782'
+          // params.shipId = '1064817474404352000'
+          // params.startTime = "2019-02-05 10:38:56"
+        }
+      }
+
+
+      // let params = objectMerge2({}, _this.searchQuery.vo)
       // 删除不需要的参数
-      if (_this.isShowInlineOrderMap) {
+      if (type === 'location') {
+        delete params.startTime
+        delete params.endTime
+        delete params.shipId
+      }
+      if (type === 'line') {
+        delete params.shipSn
+      }
+      if (childtype === 'order') {
         delete params.truckIdNumber
       } else {
         delete params.shipId
       }
+      console.log('params', params)
       if (type === 'location') { // 查定位
         if (params) {
-          this.getRealTimeLocate(_this.isShowInlineOrderMap ? 'order' : 'truck')
+          _this.getRealTimeLocate(childtype, params)
           _this.loadSearch = false
         } else {
           _this.loadSearch = false
         }
-      } else { // 查轨迹及定位  默认查轨迹及定位
+      } else if (type === 'line') { // 查轨迹及定位  默认查轨迹及定位
         if (params) {
           fetch(params).then(data => {
+              // 定时刷新
+              _this.initTimer()
+              this.tabLineChild = '2'
               if (data && data.length > 0) {
                 // 格式化数据
                 fn(data)
@@ -556,26 +1176,33 @@ export default {
         }
       }
     },
-    getRealTimeLocate(type) { // 实时定位查询
+    getRealTimeLocate(type, query) { // 实时定位查询
+      // type类型 order-运单 truck-车辆 
+      // query传参
+      // 
+
       // 判断是不是 查询运单界面
       let isOrder = type === 'order'
       // 判断调接口  运单&车牌号
       let fetch = isOrder ? realTimeLocationOrder : realTimeLocationByTruckIdNumber
       // 判断参数 用户输入的 运单号&车牌号
-      let flag = isOrder ? this.searchShipSn : this.searchQuery.vo.truckIdNumber
-      if (flag) {
-        let params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
-        fetch(params).then(data => {
-            if (data && data.length > 0) {
-              if (isOrder) {
+      // let flag = query
+      // let flag = isOrder ? this.searchShipSn : this.searchQuery.vo.truckIdNumber
+      if (query) {
+        // let params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
+        fetch(query).then(data => {
+            if (data) {
+              if (isOrder && data.length > 0) {
                 this.realTimeLocateList = data
-              } else {
+                this.realLocatOrderTrucks = data
+              } else if (data.truckIdNumber) {
                 this.realTimeLocateList = []
                 this.realTimeLocateList.push(data)
               }
               this.loadSearch = false
               // 转高德坐标
               this.tomap()
+              this.$message.success('查询成功~')
             } else {
               this.$message.warning('暂无车辆定位数据！')
             }
@@ -585,6 +1212,7 @@ export default {
           })
       }
     },
+
     tomap() { // 转高德坐标
       const AMap = window.AMap
       const AMapUI = window.AMapUI
@@ -594,6 +1222,8 @@ export default {
       let lnglat = []
       let marker
       this.markers = []
+      // let content = []
+
       // 坐标转换
       if (this.realTimeLocateList.length) {
         this.realTimeLocateList.forEach((e, index) => {
@@ -603,12 +1233,21 @@ export default {
               map: map,
               position: lnglat[index]
             })
+            // content.push(e.terminalNo)
+
+            // 创建信息窗体
+            _this.infoWindow(e)
+            window.infoWindow.open(map, marker.getPosition())
+
+            //鼠标点击marker弹出自定义的信息窗体
+            marker.on('click', function(em) {
+              _this.infoWindow(e)
+              window.infoWindow.open(map, em.lnglat)
+            })
+
             marker.setLabel({
               offset: new AMap.Pixel(20, 20),
-              content: '<div class="markerContent"><h3>' 
-              + e.truckIdNumber + ' <i>' + e.speed + 'km/h</i></h3><p>' 
-              + e.dirverName + ' <i>' + e.dirverMobile + '</i></p><p>' 
-              + (e.address || '') + '</p></div>'
+              // content: ''
             })
             this.markers.push(marker)
             map.setFitView()
@@ -874,18 +1513,11 @@ export default {
         setTimeout(() => {
           this.initMap()
           this.getPathSimplifierIns()
-          this.onSubmit()
+          // this.onSubmit()
         }, 500)
       } else {
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-          loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
-            this.initMap()
-            this.getPathSimplifierIns()
-            this.onSubmit()
-            console.log('window.AMap', window.AMap)
-            console.log('window.AMapUI', window.AMapUI)
-            console.log('this.map', this.map)
-          })
+
         })
       }
 
@@ -907,6 +1539,7 @@ export default {
         zoom: 6,
         // mapStyle: "amap://styles/darkblue"
       })
+
     },
     // 设置获取到的信息
     setData(pos, addr, obj) {

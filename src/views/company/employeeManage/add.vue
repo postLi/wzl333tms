@@ -155,7 +155,7 @@ export default {
         ],
         username: [
           { required: true, message: '请输入有效的登录账号', pattern: REGEX.USERNAME_NOUP },
-          { max: 30, message: '不能超过30个字符', trigger: 'blur' }
+          { max: 30, message: '不能超过30个字符', trigger: 'change' }
         ],
         position: [
           { max: 10, message: '不能超过10个字符', trigger: 'blur' }

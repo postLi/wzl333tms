@@ -3,7 +3,7 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="开单时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期"
+          <el-date-picker v-model="searchCreatTime" :default-value="defaultTime" :default-time="['00:00:00', '23:59:59']" unlink-panels type="datetimerange" align="right" value-format="yyyy-MM-dd HH:mm:ss" start-placeholder="开始日期"
           :picker-options="pickerOptions2" end-placeholder="结束日期">
           </el-date-picker>
         </div>
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       searchCreatTime: [],
-      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d} {h}:{i}:{s}'), parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}')+' 00:00:00', parseTime(new Date(), '{y}-{m}-{d}')+' 23:59:59'],
       searchForm: {
         orgid: '',
         value: '',

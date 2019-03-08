@@ -2,7 +2,7 @@
   <el-form :inline="true" :size="btnsize" label-position="right" :rules="rules" :model="searchForm" label-width="70px" class="staff_searchinfo clearfix">
     <div class="staff_searchinfo--input">
       <el-form-item label="发车时间">
-        <el-date-picker v-model="searchTime" type="daterange" unlink-panels align="right" unlink-panels :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-date-picker v-model="searchTime" type="daterange" unlink-panels align="right"  :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="卸货状态">
@@ -96,7 +96,6 @@ export default {
     },
     clearForm() {
       this.searchForm = this.$options.data().searchForm
-
     }
   }
 }

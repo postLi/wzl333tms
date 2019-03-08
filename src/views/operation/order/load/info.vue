@@ -1222,12 +1222,12 @@ export default {
     },
     getTerminal(terminalNo = '') {
       let companyId = this.otherinfo.companyId
-      if (process.env.NODE_ENV !== 'production') {
-        companyId = 1
-      }
+      // if (process.env.NODE_ENV !== 'production') {
+      //   companyId = 1
+      // }
       let query = {
         currentPage: 1,
-        pageSize: 100,
+        pageSize: 10000,
         vo: {
           companyId: companyId, // 公司id
           terminalNo: terminalNo ? terminalNo : this.formModel.terminalNo // 设备号 模糊搜索

@@ -280,8 +280,14 @@ export default {
     console.log('测试车辆：陕YH0009')
     const _this = this
     window.loadedGaodeMap = function() {
-      _this.initMap()
-      _this.hasLoadedMap = true
+      loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+        _this.initMap()
+        _this.hasLoadedMap = true
+        _this.getPathSimplifierIns()
+        console.log('window.AMap', window.AMap)
+        console.log('window.AMapUI', window.AMapUI)
+        console.log('this.map', this.map)
+      })
     }
     this.init(2222)
   },
@@ -757,14 +763,14 @@ export default {
       } else {
         console.log('loadMap3', window.AMap)
         loadJs('https://webapi.amap.com/maps?v=1.4.8&key=e61aa7ddc6349acdb3b57c062080f730&plugin=AMap.Autocomplete,AMap.PlaceSearch,AMap.Geocoder&callback=loadedGaodeMap').then(() => {
-          loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
-            this.initMap()
-            this.getPathSimplifierIns()
-            // this.onSubmit()
-            console.log('window.AMap', window.AMap)
-            console.log('window.AMapUI', window.AMapUI)
-            console.log('this.map', this.map)
-          })
+          // loadJs('//webapi.amap.com/ui/1.0/main.js').then(() => {
+          //   this.initMap()
+          //   this.getPathSimplifierIns()
+          //   // this.onSubmit()
+          //   console.log('window.AMap', window.AMap)
+          //   console.log('window.AMapUI', window.AMapUI)
+          //   console.log('this.map', this.map)
+          // })
         })
       }
 

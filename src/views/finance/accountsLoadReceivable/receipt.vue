@@ -11,7 +11,7 @@
         <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
       </div>
       <!-- 左边表格区 -->
-      <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+      <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
 
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
           <el-table-column fixed width="50" label="序号">
@@ -40,15 +40,15 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
             <Pager :total="totalLeft" @change="handlePageChangeLeft" />
           </div>
-        </div> -->
+        </div>
       </div>
       <!-- 右边表格区 -->
-      <div slot="tableRight" class="tableHeadItemBtn">
+      <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
           <el-table-column fixed width="50" label="序号">
             <template slot-scope="scope">
@@ -76,9 +76,12 @@
             </el-table-column>
           </template>
         </el-table>
-        <!-- <div class="accountsLoad_table_pager">
-          <b>共计:{{ totalRight }}</b>
-        </div> -->
+      <div class="accountsLoad_table_pager">
+            <b>共计:{{ totalRight }}</b>
+            <div class="show_pager">
+              <!-- <Pager :total="totalRight" @change="handlePageChangeRight" :btnsize="'mini'" /> -->
+            </div>
+          </div>
       </div>
     </transferTable>
     <!-- 核销凭证 -->
@@ -122,7 +125,7 @@ export default {
       loading: false,
       popVisibleDialog: false,
       btnsize: 'mini',
-      // totalLeft: 0,
+      totalLeft: 0,
       // totalRight: 0,
       tableReceiptInfo: [],
       orgLeftTable: [],
@@ -282,9 +285,9 @@ export default {
     getRouteInfo() {
       return JSON.parse(this.$route.query.searchQuery)
     },
-    totalLeft() {
-      return this.leftTable.length
-    },
+    // totalLeft() {
+    //   return this.leftTable.length
+    // },
     totalRight() {
       return this.rightTable.length
     }
@@ -306,6 +309,8 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.getList('handlePage')
     },
     initLeftParams() {
       if (!this.$route.query) {
@@ -332,7 +337,7 @@ export default {
 
       this.$set(this.rightTable, this.rightTable.length, item)
     },
-    getList() {
+    getList(handle) {
       this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
       if (JSON.parse(this.$route.query.selectListShipSns)) {
@@ -346,7 +351,9 @@ export default {
       // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.orgLeftTable = this.$options.data().orgLeftTable
 
-      this.initLeftParams() // 设置searchQuery
+     if (!handle) {
+        this.initLeftParams() // 设置searchQuery
+      }
       if (!this.isFresh) {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
@@ -354,6 +361,7 @@ export default {
           this.leftTable = Object.assign([], data.list.filter(el => {
             return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.receiptpayState)
           }))
+         this.totalLeft = data.total
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {

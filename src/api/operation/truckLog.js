@@ -10,7 +10,7 @@ import fetch, {
  * 运单号 id
  */
 export function realTimeLocation(data) {
-	return fetch.post('/api-order/order/load/v1/realTimeLocation/?type=zhiYun', data).then(res => {
+	return fetch.post('/api-order/order/load/v1/realTimeLocation/?type=', data).then(res => {
 		return res.data ? res.data : {}
 	})
 }
@@ -92,6 +92,24 @@ export function realTimeLocationOrder(data) {
  */
 export function realTimeLocationByTruckIdNumber(data) {
 	return fetch.post('/api-order/order/load/v1/realTimeLocationByTruckIdNumber/', data).then(res => {
+		return res.data ? res.data : {}
+	})
+}
+// 监控中心列表
+/**
+ * {
+	"vehicleId":""
+}
+ */
+export function getTerminalLocation(vehicleId) {
+	return fetch.get('/api-order/order/load/v1/monitor/?vehicleId=' + vehicleId).then(res => {
+		return res.data ? res.data : {}
+	})
+}
+
+// 获取车辆列表
+export function getTruckIdNumbers() {
+	return fetch.get('/api-order/order/load/v1/getTruckIdNumber/').then(res => {
 		return res.data ? res.data : {}
 	})
 }

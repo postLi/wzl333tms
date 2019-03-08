@@ -3,7 +3,7 @@
     <div class="staff_searchinfo--input">
       <el-form-item label="凭证时间">
         <div class="block">
-          <el-date-picker v-model="searchCreatTime" type="daterange" unlink-panels align="right" :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期" unlink-panels>
+          <el-date-picker v-model="searchCreatTime" type="daterange" unlink-panels align="right" :picker-options="pickerOptions2" start-placeholder="开始日期" end-placeholder="结束日期" >
           </el-date-picker>
         </div>
       </el-form-item>
@@ -42,7 +42,7 @@
 import { REGEX } from '@/utils/validate'
 import SelectType from '@/components/selectType/index'
 import SelectTree from '@/components/selectTree/index'
-import { parseTime ,pickerOptions2} from '@/utils/'
+import { parseTime , pickerOptions2 } from '@/utils/'
 export default {
   components: {
     SelectType,
@@ -72,11 +72,11 @@ export default {
       searchCreatTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}'), parseTime(new Date(), '{y}-{m}-{d}')],
       searchForm: {
         'orgId': '',
-        verifyStatus: 0 ,
+        verifyStatus: 0,
         paymentsType: '',
         dataSrc: '',
-        startTime:'',
-        endTime:'',
+        startTime: '',
+        endTime: ''
       },
       rules: {
         mobile: [{

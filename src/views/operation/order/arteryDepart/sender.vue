@@ -19,6 +19,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_GX_PRINT>打印</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain v-has:LOAD_GX_PRINTCONTRACT>打印合同
         </el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>轨迹跟踪-车辆</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>实时定位-车辆</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
           表格设置
         </el-button>
@@ -167,12 +169,12 @@ export default {
           prop: 'orgName',
           width: '110',
           fixed: false
-        },  {
+        }, {
           label: '途径网点一',
           prop: 'wayOrgNameOne',
           width: '110',
           fixed: false
-        },{
+        }, {
           label: '途径网点二',
           prop: 'wayOrgNameTwo',
           width: '110',
@@ -183,13 +185,13 @@ export default {
           prop: 'wayOrgNameThree',
           width: '110',
           fixed: false
-        }, 
+        },
         {
           label: '途径网点四',
           prop: 'wayOrgNameFour',
           width: '110',
           fixed: false
-        },{
+        }, {
           label: '到达网点',
           prop: 'arriveOrgName',
           width: '110',
@@ -249,7 +251,7 @@ export default {
           prop: 'grossMargin',
           width: '110',
           fixed: false
-        },{
+        }, {
           label: '现付车费(元)',
           prop: 'nowpayCarriage',
           width: '110',
@@ -338,6 +340,64 @@ export default {
     }
   },
   methods: {
+    doMap(type) { // 查询批次车辆轨迹或定位
+      console.log('选择的批次数', this.selected.length)
+      if (!this.selected.length || this.selected.length !== 1) {
+        this.$message.warning('只能选择一条数据来查询~')
+        this.$refs.multipleTable.clearSelection()
+        return false
+      }
+      let item = this.selected[0]
+      console.log('当前选中的批次', item, item.truckIdNumber)
+      if (!item.truckIdNumber) {
+        this.$message.warning('查询失败！该批次没有关联车辆~')
+        return false
+      }
+      let query = {
+        truckIdNumber: item.truckIdNumber,
+        startTime: item.createTime,
+        endTime: parseTime(new Date())
+      }
+
+      // 判断时间区间
+      // 送货状态为 送货中(57) createTime创建时间 ~ now
+      // 其他送货状态  createTime ~ departureTime送货完成时间
+      // 开始时间定义：小于7天才用前面的时间createTime，大于7天则用后面的时间倒推7天
+
+      let now = new Date().getTime() // 现在
+      let betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
+      let startTime = new Date(item.createTime).getTime()
+
+      let isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
+
+      if (item.batchTypeId === 52 || item.batchTypeId === 53) { // 送货中
+        query.startTime = isAfterSeven ? parseTime(betweenDay) : item.createTime
+        query.endTime = parseTime(now)
+      }else { // 其他状态
+        query.startTime = item.createTime
+        query.endTime = item.receivingTime
+      }
+
+      switch (type) {
+        case 'line':
+          this.$router.push({path: '/operation/order/trucklog', query: {
+            searchQuery: JSON.stringify(query),
+            flag: 'line',
+            type: 'truck',
+            timer: new Date().getTime()
+          }})
+          break
+        case 'location':
+        this.$router.push({path: '/operation/order/trucklog', query: {
+            searchQuery: JSON.stringify(query),
+            flag: 'location',
+            type: 'truck',
+            timer: new Date().getTime()
+          }})
+          break
+      }
+       this.$refs.multipleTable.clearSelection()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

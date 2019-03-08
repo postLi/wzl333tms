@@ -14,6 +14,9 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
   height: 100%;
   width: 100%;
   box-shadow: $floatPanelBoxShoadow;
+}
+
+#allmap {
   margin-bottom: 10px;
 }
 
@@ -29,6 +32,16 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
 .truck-page-log {
   height: calc(100% - 0px) !important;
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -245,6 +258,16 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
 
 
 
+
+
+
+
+
+
+
+
+
+
 /**
  * 轨迹跟踪  终端信息
  * 运单+车辆 
@@ -260,12 +283,58 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
     }
   }
 }
+
+.heightvhPoptree {
+  .truckTree {
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+      max-height: calc(100vh - 345px);
+      overflow: auto;
+    }
+  }
+}
+
+.heightvhPoptree {
+  .childTruckTree {
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+      max-height: calc(100vh - 445px);
+      overflow: auto;
+    }
+  }
+}
+
+.heightvhPoptree {
+  .terminalTree {
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+      max-height: calc(100vh - 445px);
+      overflow: auto;
+    }
+  }
+}
+.heightvhPoptree {
+  .childOrderTruckTree {
+    .el-card__body {
+      padding: 0;
+      height: 100%;
+      max-height: calc(100vh - 370px);
+      overflow: auto;
+    }
+  }
+}
+
 .truck-page-log {
   display: flex;
   flex-direction: row;
   position: relative;
   width: 100%;
-  padding: 10px 0 10px 10px;
+  padding: 20px 0 10px 20px;
+  margin-top: -10px;
+  background-color: #f2f2f2;
   .markerContent {
     padding: 5px 5px 0 5px;
     background-color: $floatPanelBgcolor;
@@ -278,36 +347,39 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       word-spacing: normal;
       white-space: pre-wrap;
     }
-    i{
+    i {
       font-style: normal;
     }
-    h3{
+    h3 {
       color: #409eff;
     }
   }
 
   .popTimer {
     position: absolute;
-    left: 70px;
-    top: 20px;
+    right: 10px;
+    top: 70px;
     padding: 5px 5px; // background-color: rgba(64, 158, 255, 0.5);
     background-color: rgba(0, 0, 0, 0.3);
     box-shadow: $floatPanelBoxShoadow;
     border-radius: 5px;
     overflow: hidden;
     clear: both;
-    font-size: 14px;
+    font-size: 12px;
     color: #fff;
     z-index: 2;
+    .el-button--text {
+      color: #F2F6FC;
+      border-bottom: 1px solid #F2F6FC;
+    }
   }
   .popTree {
-    
     .popTree-group-item {
       border-bottom: 1px solid #eee;
       padding: 10px;
       cursor: pointer;
       position: relative;
-       background-color: #fff;
+      background-color: #fff;
       transition: 0.5s;
       &:last-child {
         border: none;
@@ -341,9 +413,9 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       }
     }
     .activeItem {
-        transition: 0.5s;
-        background-color: #eee;
-       &:before {
+      transition: 0.5s;
+      background-color: #eee;
+      &:before {
         transition: 0.3s;
         content: '';
         position: absolute;
@@ -358,8 +430,7 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
 
   .truck-log-expand {
     font-size: 14px;
-    color: #ffffff;
-    padding: 0 0px 0 10px;
+    color: #ffffff; // padding: 0 0px 0 10px;
     position: relative;
     .control-bur {
       cursor: n-resize;
@@ -382,16 +453,16 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       position: absolute;
       display: block;
       float: left;
-      width: 495px;
+      width: 375px;
       color: #333;
       background-color: $floatPanelBgcolor;
       box-shadow: $floatPanelBoxShoadow;
       border-radius: 5px;
-      right: 20px;
-      bottom: 10px;
+      right: 30px;
+      top: 10px;
       z-index: 2;
       .el-button--text {
-        margin: 2px 3px;
+        margin: 0px 1px;
         float: left;
         color: #333;
         font-size: 20px;
@@ -435,48 +506,54 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       }
       .slider-step {
         float: left;
-        width: 100px;
-        margin: 5px 10px;
+        width: 60px;
+        margin: 3px 10px;
         .el-slider__runway {
           background-color: #ddd;
         }
       }
       .el-progress {
         float: left;
-        margin: 14px 10px 0;
-        width: 180px;
+        margin: 12px 7px 0;
+        width: 120px;
         .el-progress-bar__outer {
           background-color: #ddd;
         }
       }
     }
   }
-  .truck-log-info {
-    position: relative;
-    padding-right: 10px;
-    .info-btns{
-      padding: 5px;
-      background-color: #eee;
-      .btnsright{
+  .truck-log-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 510px);
+    margin-right: 20px;
+  }
+  .truck-log-table {
+    position: relative; // padding: 10px;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: $floatPanelBoxShoadow;
+    .info-btns {
+      padding: 10px 0;
+      margin: 0 10px;
+      .btnsright {
         float: right;
-        margin-right: 0px;
       }
     }
     .info_tab {
-      height: calc(100% - 80px);
+      height: calc(100% - 90px);
+      padding: 0 10px 40px;
       position: relative;
     }
     .table-contr {
-      // background-color: #eee;
       position: absolute;
       height: 100%;
       width: 10px;
       right: 0px;
       top: 0px;
-      // cursor: w-resize;
       transition: 0.5s;
       &:hover {
-        // background-color: #ccc;
         transition: 0.3s;
       }
     }
@@ -496,7 +573,61 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       left: 0;
       width: 100%;
       font-size: 12px;
-      .tms-pagination__sizes{
+      .tms-pagination__sizes {
+        margin-top: 10px;
+      }
+    }
+    .show_pager {
+      float: right;
+      line-height: 40px;
+      height: 40px;
+      overflow: hidden;
+    }
+  }
+  .truck-log-info {
+    position: relative;
+    padding: 10px;
+    margin-right: 20px;
+    background-color: #fff;
+    box-shadow: $floatPanelBoxShoadow;
+    .info-btns {
+      padding: 10px 0;
+      .btnsright {
+        float: right;
+      }
+    }
+    .info_tab {
+      height: calc(100% - 90px);
+      position: relative;
+    }
+    .table-contr {
+      position: absolute;
+      height: 100%;
+      width: 10px;
+      right: 0px;
+      top: 0px;
+      transition: 0.5s;
+      &:hover {
+        transition: 0.3s;
+      }
+    }
+
+    .rowSelect {
+      background-color: #E6A23C;
+    }
+    .info_tab_footer {
+      padding-left: 5px;
+      background: #eee;
+      height: 40px;
+      line-height: 40px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, .2);
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      font-size: 12px;
+      .tms-pagination__sizes {
         margin-top: 10px;
       }
     }
@@ -514,9 +645,9 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
     top: 20px;
     z-index: 2;
     border-radius: 5px;
-    .el-tabs--border-card{
-    background-color: $floatPanelBgcolor;
-    box-shadow: $floatPanelBoxShoadow;
+    .el-tabs--border-card {
+      background-color: $floatPanelBgcolor;
+      box-shadow: $floatPanelBoxShoadow;
     }
     .el-form {
       // padding: 10px 10px 5px;
@@ -535,9 +666,243 @@ $floatPanelBoxShoadow: 1px 1px 10px #ccc;
       .el-autocomplete {
         width: 100%;
       }
-       .el-date-editor.el-input, .el-date-editor.el-input__inner{
+      .el-date-editor.el-input,
+      .el-date-editor.el-input__inner {
         width: 100%;
       }
+    }
+  }
+  .info_card {
+    min-width: 300px;
+    margin-right: 20px;
+    box-shadow: $floatPanelBoxShoadow;
+    background-color: #fff;
+    .el-tabs {
+      .el-tabs__header {
+        background-color: #409eff;
+        margin: 0 0 10px;
+        .el-tabs__nav {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          .el-tabs__active-bar {
+            // height: 0px;
+            // width: 100% !important;
+          }
+          .el-tabs__item {
+            flex: 1;
+            color: #fff;
+            height: 80px;
+            line-height: 40px;
+            padding: 0;
+            text-align: center;
+            span {
+              i {
+                display: block;
+                font-size: 26px;
+                margin-top: 15px;
+              }
+            }
+          }
+          .is-active {
+            color: rgb(252, 249, 242);
+            background-color: #2b85e3;
+          }
+        }
+      }
+    }
+    .child_tabs {
+      .el-tabs__header {
+        background-color: #fff;
+
+        .el-tabs__nav {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+          .el-tabs__active-bar {
+            height: 1px; // z-index: -1;
+          }
+          .el-tabs__item {
+            flex: 1;
+            color: #666;
+            height: 36px;
+            line-height: 36px;
+            padding: 0;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            span {
+              i {
+                display: block;
+                font-size: 26px;
+                margin-top: 15px;
+              }
+            }
+          }
+          .is-active {
+            color: #409eff;
+            background-color: #fff;
+          }
+        }
+      }
+      .el-tabs__content {
+        // padding: 0 10px;
+        .el-form {
+          padding: 0 10px;
+          border-bottom: 1px solid #eee;
+          .el-autocomplete,
+          .el-select,
+          .el-date-editor {
+            width: 100%;
+          }
+          .el-form-item--mini.el-form-item,
+          .el-form-item--small.el-form-item {
+            margin-bottom: 10px;
+          }
+        }
+
+        .secChild_tabs {
+          .el-tabs__header {
+            margin: 0px;
+            .el-tabs__active-bar {
+              height: 1px;
+              background-color: #E6A23C;
+            }
+            .el-tabs__nav {
+              .is-active {
+                color: #E6A23C;
+                background-color: #fff;
+              }
+            }
+          }
+        }
+      }
+    }
+    .childOrderTruckTree,
+    .childTruckTree,
+    .terminalTree,
+    .truckTree {
+      .emptyTips{
+        color: #999;
+        text-align:center;
+        font-size: 14px;
+        line-height: 28px;
+      }
+      .truckTree-group-item {
+        border-bottom: 1px solid #eee;
+        padding: 10px;
+        cursor: pointer;
+        position: relative;
+        background-color: #fff;
+        transition: 0.5s;
+        &:last-child {
+          border: none;
+        }
+        &:hover {
+          background-color: #eee;
+          transition: 0.3s;
+        }
+        h3 {
+          font-size: 16px;
+          font-style: normal;
+          i {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            color: #999;
+          }
+
+        }
+        .truckTree-group-item-desc {
+          padding: 0 25px;
+          h4 {
+            font-size: 14px;
+            line-height: 28px;
+            color: #666;
+          }
+          i,
+          span {
+            color: #666;
+            font-size: 12px;
+            font-style: normal;
+          }
+        }
+      }
+      .activeItem {
+        transition: 0.5s;
+        background-color: #dedede;
+        &:before {
+          transition: 0.3s;
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 5px;
+          background-color: #409eff;
+        }
+      }
+    }
+  }
+}
+
+
+.mapwin {
+  width: 380px;
+  background-color: #fff;
+  box-shadow: $floatPanelBoxShoadow;
+  padding: 10px;
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    right: 50%;
+    margin-right: -10px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #ffffff;
+  }
+  .winhead {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    i {
+      font-style: normal;
+      font-size: 16px;
+      margin-right: 5px;
+      font-weight: 600;
+      line-height: 24px;
+    }
+    span {
+      color: #67C23A;
+    }
+    a {
+      float: right;
+      margin-right: 0px;
+      margin-top: 5px;
+      img {}
+    }
+  }
+  .winmain {
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+    p {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 18px;
+      span {
+        margin-left: 5px;
+        font-weight: 400;
+        color: #444;
+      }
+    }
+  }
+  .winfoot {
+    a {
+      color: #409eff;
+      line-height: 36px;
+      font-size: 14px;
+      margin-right: 10px;
     }
   }
 }

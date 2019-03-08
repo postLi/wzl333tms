@@ -17,7 +17,7 @@
         </el-form-item>
         <el-form-item label="短信验证码" prop="code">
           <el-input autoComplete="off" v-model="formB.code" placeholder="请输入短信验证码" @keyup.enter.native="next"></el-input>
-          <el-button type="primary" size="mini" @click="getUserValidate" :disabled="!(regphone.test(formB.phone))">获取验证码</el-button>
+          <el-button type="primary" size="mini" @click="getUserValidate" :disabled="!(regphone.test(formB.phone)) || timerMsg!== '短信验证码'">{{timerMsg}}</el-button>
         </el-form-item>
       </el-form>
       <el-form :model="formC" :rules="ruleC" ref="formC" :label-width="formLabelWidth" v-if="active === 2" :size="formSize" :rule="ruleC">
@@ -75,6 +75,7 @@ export default {
         newPassword: '',
         successFlag: ''
       },
+      timerMsg: '短信验证码',
       desA: '请填写你要找回的密码的账号',
       desB: '请填写手机号码',
       ruleA: {
@@ -123,9 +124,11 @@ export default {
       this.formA = Object.assign({}, this.$options.data().formA)
       this.formB = Object.assign({}, this.$options.data().formB)
       this.formC = Object.assign({}, this.$options.data().formC)
-      if (this.info.username) {
-        this.formA.username = this.info.username
-      }
+      this.$nextTick(() => {
+        this.$refs['formA'].resetFields()
+      })
+      this.formA.username = this.info.username || ''
+      clearInterval(this.timerOption)
     },
     next() {
       let formName = this.active === 0 ? 'formA' : (this.active === 1 ? 'formB' : 'formC')
@@ -145,6 +148,19 @@ export default {
         }
       })
     },
+    codeTime() {
+      let timer = 60
+      this.timerOption = setInterval(() => {
+        timer = timer - 1
+        this.timerMsg = timer + ' 秒后刷新'
+        if (timer <= 0) {
+          this.timerMsg = this.$options.data().timerMsg
+          clearInterval(this.timerOption)
+          timer = 60
+        }
+      }, 1000)
+
+    },
     checkUsername() { // 校验登录帐号是否存在 1
       return checkUsername(this.formA).then(data => {
           this.active++
@@ -158,6 +174,7 @@ export default {
     getUserValidate() { // 根据用户名和电话获取验证码 2
       if (this.formB.phone) {
         return getUserValidate(this.formB).then(data => {
+            this.codeTime()
             this.$notify({
               title: '成功',
               message: '短信已发送成功，注意查收！',
@@ -197,7 +214,7 @@ export default {
     closeMe() {
       this.$emit('update:popVisible', false)
     },
-    focus () {}
+    focus() {}
   }
 }
 
