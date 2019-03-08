@@ -678,5 +678,11 @@ export default {
     return fetch.put('/api-order/order/tmsordershiptemplate/v1.6', data).then(res => {
       return res.data
     })
+  },
+  //全部运单费用项总计
+  findAllShipCount(param) {
+    return fetch.post('/api-order/order/v1/findAllShipCount', param).then(res => {
+      return res.data
+    })
   }
 }

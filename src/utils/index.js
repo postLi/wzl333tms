@@ -24,7 +24,7 @@ export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'age
  * 属性名|单位
  * _index|索引（|单位）
  */
-export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ') {
+export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ', allCount) {
   const {
     columns,
     data
@@ -84,7 +84,8 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
       } else {
         // const values = data.map(item => Number(item[prop]))
         let isAllEmpty = true
-        const values = data.map(item => {
+        let allCountIndex = {}
+        const values = data.map((item, mindex) => {
           if (item[prop] !== '') {
             isAllEmpty = false
           }
@@ -93,6 +94,7 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
         if (isAllEmpty) {
           sums[index] = defaultNoneString
         } else {
+
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -102,9 +104,16 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
               return prev
             }
           }, 0)
+          if (allCount) {
+            for (let oi in allCount) {
+              if (oi === prop) {
+                sums[index] = allCount[oi]
+                console.warn('oi', oi, sums[index])
+              }
+            }
+          }
           sums[index] += ' ' + unit
         }
-
       }
     } else {
       sums[index] = defaultNoneString
