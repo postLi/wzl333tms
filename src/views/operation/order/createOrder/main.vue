@@ -1296,7 +1296,7 @@ export default {
     sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
-        this.loading = true
+          this.loading = true
           let list = document.querySelectorAll('.model-order-item')
           let arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
@@ -1308,7 +1308,7 @@ export default {
             let name = arr[i].getAttribute('data-name')
             let index = arr[i].getAttribute('data-index')
           }
-        this.loading = false
+          this.loading = false
         }
       })
     },
@@ -1576,7 +1576,7 @@ export default {
           })
         }
       } else {
-        obj = this.$refs['tmsOrderShipshipSn']
+        obj = this.$refs['tmsOrderShipshipSn'][0]
       }
       if (obj && this.output.iscreate) {
         obj.focus()
@@ -2550,7 +2550,7 @@ export default {
       this.shipFieldValueInfo.shipFromCityName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipFromCityName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderShipFromCityName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2565,8 +2565,7 @@ export default {
       this.shipFieldValueInfo.shipToCityName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
-        this.loading = false
+        this.$refs['tmsOrderShipshipToCityName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2581,7 +2580,7 @@ export default {
       this.shipFieldValueInfo.shipToOrgid = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipToOrgid'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderShipToOrgid'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2596,7 +2595,7 @@ export default {
       this.shipFieldValueInfo.shipGoodsSn = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipGoodsSn'].focus()
+        this.$refs['tmsOrderShipGoodsSn'][0].focus()
       } else {
         msg = m
       }
@@ -2611,7 +2610,7 @@ export default {
       this.shipFieldValueInfo.shipSenderUnit = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerUnit'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerUnit'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2626,7 +2625,7 @@ export default {
       this.shipFieldValueInfo.shipSenderName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2641,7 +2640,7 @@ export default {
       this.shipFieldValueInfo.shipSenderMobile = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerMobile'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerMobile'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2656,7 +2655,7 @@ export default {
       this.shipFieldValueInfo.shipSenderAddress = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderdetailedAddress'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderdetailedAddress'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2671,7 +2670,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverUnit = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverUnit'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverUnit'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2686,7 +2685,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2701,7 +2700,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverMobile = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverMobile'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverMobile'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2716,7 +2715,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverAddress = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverAddress'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverAddress'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2832,7 +2831,9 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         let obj = this.$refs['tmsOrder' + find.fieldProperty]
+          console.log('obj1111', obj)
         obj = Array.isArray(obj) ? obj[1] : obj
+          console.log('obj2222', obj)
         if (obj) {
           obj.focus()
         }
@@ -2868,7 +2869,7 @@ export default {
       this.shipFieldValueInfo.shipCustomerNumber = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipCustomerNumber'].focus()
+        this.$refs['tmsOrdershipCustomerNumber'][0].focus()
       } else {
         msg = m
       }
@@ -2883,7 +2884,7 @@ export default {
       this.shipFieldValueInfo.shipUserid = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipUserid'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipUserid'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2987,7 +2988,7 @@ export default {
           resolve(!msg)
         } else {
           if (!this.form.tmsOrderShip.shipSn) {
-            this.$refs['tmsOrderShipshipSn'].focus()
+            this.$refs['tmsOrderShipshipSn'][0].focus()
             this.$message.error('请填写运单号~')
             resolve(false)
           } else {
@@ -3009,7 +3010,7 @@ export default {
                   })
                   this.$message.error('重复的订单号，已为你重新生成新的运单号~')
                 } else {
-                  this.$refs['tmsOrderShipshipSn'].focus()
+                  this.$refs['tmsOrderShipshipSn'][0].focus()
                   this.$message.error('重复的订单号，请修改~')
                 }
 
@@ -3107,6 +3108,15 @@ export default {
 
                 return flag
               }).map(el => {
+                // const b = {}
+                // for (const i in el) {
+                //   if (el[i] === '' && i !== 'cargoName') {
+                //     b[i] = 0
+                //   } else {
+                //     b[i] = el[i]
+                //   }
+                // }
+                // return b
                 const b = {}
                 for (const i in el) {
                   if (el[i] === '' && i !== 'cargoName') {
@@ -3116,8 +3126,12 @@ export default {
                     console.log('++++++++++++++')
                     console.log('i', i, el[i])
                     console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
-                    if (this.config.shipFee['brokerageFee'] === '0') {
-                      b[i] = 0
+                    if (i === 'brokerageFee') {
+                      if (this.config.shipFee['brokerageFee'] === '0') {
+                        b[i] = 0
+                      } else {
+                        b[i] = el[i]
+                      }
                     } else {
                       b[i] = el[i]
                     }
