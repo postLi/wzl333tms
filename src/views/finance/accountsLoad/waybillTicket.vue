@@ -43,7 +43,7 @@
         <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
+            <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" :defaultValues="searchQuery" />
           </div>
         </div>
       </div>
@@ -442,7 +442,26 @@ export default {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       console.log(obj.pageSize, obj.pageNum, obj)
-      this.getList('handlePage')
+        this.pageGetList()
+    },
+     pageGetList () {
+      let rightTable = objectMerge2([], this.rightTable)
+      this.loading = true
+       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      postFindListByFeeType(this.searchQuery).then(data => {
+        if (data) {
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+           rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+           })
+        }
+        this.orgLeftTable = objectMerge2([], this.leftTable)
+        this.loading = false
+      })
+      .catch(err => {
+        this._handlerCatchMsg(err)
+      })
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)

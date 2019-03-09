@@ -203,7 +203,6 @@ export default {
   },
   methods: {
     initStep() {
-
       // 进来先隐藏全部
       // this.$emit('success', [])
 
@@ -229,7 +228,6 @@ export default {
       }
       // 如果有code值则请求处理
       if (this.thecode) {
-
         this.fetchTableSetup()
         if (!window['tablesetup' + this.thecode]) {
           window['tablesetup' + this.thecode] = true
@@ -261,14 +259,14 @@ export default {
     },
     initData(_data) {
       // 针对前端写的表格配置数据也进行简单的排序处理
-      // if (process.env.NODE_ENV !== 'production') {
-      //   console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-      //   let str = ''
-      //   this.columns.forEach(e => {
-      //     str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
-      //   })
-      //   console.log(str)
-      // }
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
+        let str = ''
+        this.columns.forEach(e => {
+          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
+        })
+        console.log(str)
+      }
       let fedata = objectMerge2([], this.columns)
       fedata = this.sort(fedata)
       _data = _data || fedata
@@ -510,7 +508,7 @@ export default {
           //     }
           //   }
           // })
-          // 
+          //
 
           this.columns.forEach(el => {
             // 将本地剩余的项塞到后面
@@ -519,7 +517,6 @@ export default {
             if (find.length === 0) {
               const find2 = copy.filter((_el, _index) => {
                 if (_el.label === el.label) {
-
                   return true
                 }
               })
@@ -650,15 +647,19 @@ export default {
       }
       console.log('checkListLeft 左边->右边', this.checkListLeft)
       this.columnData = this.columnData.filter(el => {
+        let flag = true
         this.checkListLeft.forEach(em => {
           if (em.prop !== el.prop) {
             return true
           } else {
             el.fixed = false
+            flag = false
             this.showColumnData.push(el)
             return false
           }
         })
+
+        return flag
         // if (this.checkListLeft.indexOf(el) === -1) {
         //   return true
         // } else {
@@ -668,15 +669,19 @@ export default {
         // }
       })
       this.orgColumnData = this.orgColumnData.filter(el => {
+        let flag = true
         this.checkListLeft.forEach(em => {
           if (em.prop !== el.prop) {
             return true
           } else {
             el.fixed = false
+            flag = false
             this.orgShowColumnData.push(el)
             return false
           }
         })
+
+        return flag
         // if (this.checkListLeft.indexOf(el) === -1) {
         //   return true
         // } else {
@@ -701,11 +706,13 @@ export default {
         //   this.showColumnData.splice(item, 1)
         // }
         this.showColumnData = objectMerge2([], this.showColumnData).filter(el => {
-          this.showColumnData.forEach(em => {
-            if (em.prop !== el.prop) {
+          return el.prop !== e.prop
+          /* this.showColumnData.forEach(em => {
+            if (em.prop !== e.prop) {
+              flag = true
               return true
             }
-          })
+          }) */
           // if (this.showColumnData.indexOf(el) === -1) {
           //   return true
           // }
@@ -715,11 +722,7 @@ export default {
         //   this.orgShowColumnData.splice(item, 1)
         // }
         this.orgShowColumnData = objectMerge2([], this.orgShowColumnData).filter(el => {
-          this.orgShowColumnData.forEach(em => {
-            if (em.prop !== el.prop) {
-              return true
-            }
-          })
+          return el.prop !== e.prop
           // if (this.orgShowColumnData.indexOf(el) === -1) {
           //   return true
           // }
