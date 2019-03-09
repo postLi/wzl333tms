@@ -733,7 +733,7 @@ export default {
         customerInfo: 2,
         tmsOrderCargoList: 3,
         tmsOrderShip: 4,
-         tmsOrderTransfer: 5
+        tmsOrderTransfer: 5
       },
       shipUserName: '',
       // 用来更新收发货人信息
@@ -1267,6 +1267,7 @@ export default {
       this.fetchModel()
     },
     fetchModel() { // 获取模板信息
+      this.loading = true
       return orderManage.getOrderModel().then(data => {
           if (data) {
             this.modelList = data
@@ -1285,6 +1286,7 @@ export default {
           } else {
             this.modelList = this.$const.MODELLIST
           }
+          this.loading = false
         })
         .catch(err => {
           this.modelList = this.$const.MODELLIST
@@ -1294,19 +1296,19 @@ export default {
     sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
+        this.loading = true
           let list = document.querySelectorAll('.model-order-item')
           let arr = Array.prototype.slice.call(list)
-          console.log('arr+++++', arr, list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
           let modelDiv = document.querySelectorAll('.model-order-list')[0]
-          console.log('modelDiv+++++', modelDiv)
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
             let name = arr[i].getAttribute('data-name')
             let index = arr[i].getAttribute('data-index')
           }
+        this.loading = false
         }
       })
     },
@@ -1524,7 +1526,7 @@ export default {
         this.setCargoNum()
         this.setOrderDate()
         this.setOrderFee()
-        
+
         this.setOrgCity()
         // 当为修改运单时，不设置默认值
         if (!this.output.isOrder) {

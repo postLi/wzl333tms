@@ -75,11 +75,11 @@ export default {
       this.fetchData(queryString).then(() => { // 远程搜索
         let arr = objectMerge2([], this.dataList)
         this.currentSearch = queryString
-        if (queryString.shipSn === undefined || queryString.batchNo) {
-          if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
-            this.$emit('change', objectMerge2([], this.info))
-          }
-        }
+        // if (queryString.shipSn === undefined || queryString.batchNo) {
+        //   if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
+        //     this.$emit('change', objectMerge2([], this.info))
+        //   }
+        // }
         const leftTable = arr || this.info
         const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
         cb(results)

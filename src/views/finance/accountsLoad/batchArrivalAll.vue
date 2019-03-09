@@ -607,7 +607,7 @@ export default {
             this.leftTable = Object.assign([], data.list)
             this.totalLeft = data.total
             rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
             })
           }
           this.orgLeftTable = Object.assign([], this.leftTable)
