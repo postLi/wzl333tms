@@ -21,9 +21,29 @@
           <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </el-popover>
       </div>
-      <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
-        <div slot="content">双击查看运单详情</div> -->
       <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
+        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+          <el-table-column fixed sortable type="selection" width="60">
+          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <!--  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template> -->
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+              <!--    <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" />
+              </template> -->
+              <template slot-scope="scope">
+                <div class="td-slot" v-html="column.slot(scope)"></div>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+      <!--   <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
         <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
           <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
@@ -37,11 +57,91 @@
             </el-table-column>
           </template>
         </el-table>
-      </div>
-      <!-- </el-tooltip> -->
-      <div class="info_tab_footer">共计:{{ total }}
+      </div> -->
+      <div class="info_tab_footer">
+        <div class="tab_footer_content">
+          <div class="footer_item">
+            共计:
+             <el-tooltip class="item" effect="dark" :content="total + ' 条'" placement="top">
+            <i>{{total}}条</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              现付:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipNowpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipNowpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              到付:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipArrivepayFeeAll + ' 元'" placement="top">
+            <i>{{countSum.shipArrivepayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              回单付:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'" placement="top">
+            <i>{{countSum.shipReceiptpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              月结:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'" placement="top">
+            <i>{{countSum.shipMonthpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              运费合计:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'" placement="top">
+            <i>{{countSum.shipTotalFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              回扣:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'" placement="top">
+            <i>{{countSum.brokerageFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              件数:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'" placement="top">
+            <i>{{countSum.cargoAmountAll}}件</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              重量:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'" placement="top">
+            <i>{{countSum.cargoWeightAll}}kg</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              体积:
+            </el-tag>
+             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'" placement="top">
+            <i>{{countSum.cargoVolumeAll}}方</i>
+            </el-tooltip>
+          </div>
+        </div>
         <div class="show_pager">
-          <Pager :total="total" @change="handlePageChange" />
+          <Pager :total="total" @change="handlePageChange">
+          </Pager>
         </div>
       </div>
     </div>
@@ -57,19 +157,20 @@ import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
     orgid() {
-      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
@@ -82,6 +183,17 @@ export default {
   },
   data() {
     return {
+      countSum: {
+        shipNowpayFeeAll: 0,
+        shipArrivepayFeeAll: 0,
+        shipReceiptpayFeeAll: 0,
+        shipMonthpayFeeAll: 0,
+        shipTotalFeeAll: 0,
+        brokerageFeeAll: 0,
+        cargoAmountAll: 0,
+        cargoWeightAll: 0,
+        cargoVolumeAll: 0
+      },
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -459,14 +571,20 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     findAllShipCount() { // 计算底部合计行
       return orderManageApi.findAllShipCount(this.searchQuery).then(data => {
           if (data) {
-            for (let item in data) {
-              let name = item.slice(0, -3)
-              this.countAll[name] = data[item]
-            }
-            console.log('计算底部合计行', this.countAll)
+            this.countSum = data
+            // let _data = objectMerge2({}, data)
+            // for (let item in _data) {
+            //   let name = item.slice(0, -3)
+            //   this.countAll[name] = _data[item]
+            // }
+            // console.log('countAll', this.countAll)
           }
         })
         .catch(err => {
@@ -474,8 +592,8 @@ export default {
         })
     },
     getSumLeft(param, type) {
-      console.log(param, type)
-      return getSummaries(param, operationPropertyCalc,'' , '-',this.countAll)
+      // return getSummaries(param, operationPropertyCalc, '', '-', this.countAll)
+      return getSummaries(param, operationPropertyCalc)
     },
     viewDetails(row) {
       this.$router.push({
@@ -493,9 +611,14 @@ export default {
     },
     fetchAllOrder() {
       this.loading = true
-       this.findAllShipCount() // 获取费用总计
+      this.findAllShipCount() // 获取费用总计
       return orderManageApi.getAllShip(this.searchQuery).then(data => {
         this.usersArr = data.list
+        // let count = 0
+        // this.usersArr.forEach(e => {
+        //   count += e.cargoAmount
+        // })
+        // console.log('当前页面的件数总计:' , count)
         this.total = data.total
         this.loading = false
         // 当搜索运单号且全匹配且仅有一条结果时自动打开其详情页面
@@ -505,7 +628,7 @@ export default {
             this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
           }
         }
-       
+
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)

@@ -104,14 +104,13 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
               return prev
             }
           }, 0)
-          if (allCount) {
-            for (let oi in allCount) {
-              if (oi === prop) {
-                sums[index] = allCount[oi]
-                console.warn('oi', oi, sums[index])
-              }
-            }
-          }
+          // if (allCount) {
+          //   for (let oi in allCount) {
+          //     if (oi === prop) {
+          //       sums[index] = allCount[oi]
+          //     }
+          //   }
+          // }
           sums[index] += ' ' + unit
         }
       }
