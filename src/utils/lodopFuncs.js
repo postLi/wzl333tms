@@ -376,7 +376,7 @@
        data.forEach(el => {
          obj[el.fieldName] = el.fieldValue
        })
-       console.error('obj', obj)
+       console.log('obj', obj)
        fn(obj)
      } else {
        console.error('获取打印信息失败')

@@ -27,13 +27,13 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
-              <!--  <template slot="header" slot-scope="scope">
+             <!--  <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" :key="tablekey" @change="changeKey" />
               </template> -->
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
-               <!--   <template slot="header" slot-scope="scope">
+             <!--  <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :key="tablekey" :query="searchQuery" @change="changeKey" />
               </template> -->
               <template slot-scope="scope">
@@ -62,8 +62,8 @@
         <div class="tab_footer_content">
           <div class="footer_item">
             共计:
-             <el-tooltip class="item" effect="dark" :content="total + ' 条'" placement="top">
-            <i>{{total}}条</i>
+            <el-tooltip class="item" effect="dark" :content="total + ' 条'" placement="top">
+              <i>{{total}}条</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
@@ -79,63 +79,63 @@
               到付:
             </el-tag>
             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipArrivepayFeeAll + ' 元'" placement="top">
-            <i>{{countSum.shipArrivepayFeeAll}}元</i>
+              <i>{{countSum.shipArrivepayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               回单付:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'" placement="top">
-            <i>{{countSum.shipReceiptpayFeeAll}}元</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipReceiptpayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               月结:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'" placement="top">
-            <i>{{countSum.shipMonthpayFeeAll}}元</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipMonthpayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               运费合计:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'" placement="top">
-            <i>{{countSum.shipTotalFeeAll}}元</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipTotalFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               回扣:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'" placement="top">
-            <i>{{countSum.brokerageFeeAll}}元</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'" placement="top">
+              <i>{{countSum.brokerageFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               件数:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'" placement="top">
-            <i>{{countSum.cargoAmountAll}}件</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'" placement="top">
+              <i>{{countSum.cargoAmountAll}}件</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               重量:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'" placement="top">
-            <i>{{countSum.cargoWeightAll}}kg</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'" placement="top">
+              <i>{{countSum.cargoWeightAll}}kg</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">
               体积:
             </el-tag>
-             <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'" placement="top">
-            <i>{{countSum.cargoVolumeAll}}方</i>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'" placement="top">
+              <i>{{countSum.cargoVolumeAll}}方</i>
             </el-tooltip>
           </div>
         </div>
