@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -28,13 +28,13 @@
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
               <!--  <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+                <tableHeaderSearch :scope="scope" :query="searchQuery" :key="tablekey" @change="changeKey" />
               </template> -->
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
-              <!--    <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" />
+               <!--   <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :key="tablekey" :query="searchQuery" @change="changeKey" />
               </template> -->
               <template slot-scope="scope">
                 <div class="td-slot" v-html="column.slot(scope)"></div>
@@ -846,6 +846,7 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)

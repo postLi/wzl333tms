@@ -35,7 +35,7 @@
             </el-table-column>
           </template>
         </el-table>
-         <div class="accountsLoad_table_pager">
+        <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
             <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" :defaultValues="searchQuery" />
@@ -387,6 +387,13 @@ export default {
             rightTable.forEach((el, index) => {
               this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
             })
+            this.leftTable.forEach(e => {
+              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
+              e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
+              e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
+              e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
+              this.$set(e, 'amount', e.unpaidFee)
+            })
           }
           this.orgLeftTable = Object.assign([], this.leftTable)
           this.loading = false
@@ -422,7 +429,7 @@ export default {
             e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
             e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
             e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
-            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh: e.dbHandlingFeePayStatusZh)
+            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
             this.$set(e, 'amount', e.unpaidFee)
           })
           selectListBatchNos.forEach(e => {
@@ -485,7 +492,7 @@ export default {
       this.selectedLeft = list
     },
     changeTableKey() { // 刷新表格
-    this.tablekey = new Date().getTime()
+      this.tablekey = new Date().getTime()
     },
     doAction(type) {
       switch (type) {
