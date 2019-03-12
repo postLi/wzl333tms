@@ -101,7 +101,8 @@
                 <!-- 有输入框的列 -->
                 <div v-if="column.expand">
                   <span v-if="isWareStatus(scope.$index, scope.row)" v-html="column.slot(scope)"></span>
-                  <el-input v-else @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" type="number" v-model.number="detailList[scope.$index][column.prop]" :size="btnsize" @click.stop.prevent.native @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                  <el-input v-else-if="column.prop === 'actualAmount'" @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" type="number" v-model.number="detailList[scope.$index][column.prop]" :size="btnsize" @click.stop.prevent.native @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly></el-input>
+                  <el-input v-else @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}" type="number" v-model.number="detailList[scope.$index][column.prop]" :size="btnsize" @click.stop.prevent.native @change="(val) => {changeInputData(scope.$index, column.prop, val)}" v-numberOnly:point></el-input>
                 </div>
                 <!-- 有返回值的列 -->
                 <div v-else>
@@ -473,7 +474,7 @@ export default {
           appendTopStr += '<body width="100%"><table width="100%" style="font-size: {content_word_size}px;"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.orgName + '   →   ' + (obj.arriveOrgName || obj.endOrgName || '') +
             '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
-            obj.loadTime +
+            (obj.actualSendtime || '无') +
             '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.batchNo +
             '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +

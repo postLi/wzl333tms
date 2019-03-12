@@ -1,6 +1,6 @@
 <!-- 弹出框-创建运单模板设置 -->
 <template>
-  <el-dialog :title="'运单模板'+(isModify?'-编辑':(isClose ? '-详情':'-预览'))" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="close" :key="modelKey" center>
+  <el-dialog :title="'运单模板'+(isModify?'-编辑':(isClose ? '-详情':'-预览'))" class="modelDialog" :visible="popVisible" :close-on-click-modal="false" :append-to-body="true" v-loading="loading" @opened="getFeeSetup" :before-close="closeWindow" :key="modelKey" center>
     <div class="modelDialog-tips">
       <i class="el-icon-question"></i> 操作提示：
       <el-tag size="mini" type="warning"><i class="el-icon-check"></i> 打勾为显示, 不打勾为隐藏</el-tag>
@@ -13,7 +13,7 @@
         <span class="el-icon-d-caret sortBtn"></span>
         <draggable v-model="dataList">
           <div class="model-cell cell-6" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderShipTop'">
-            <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
+            <el-checkbox v-model="item.hide" :label="item.fieldName" @change="(val) => changeCheck(val,item, index)"></el-checkbox> <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i></div>
           <div style="clear:both;"></div>
         </draggable>
       </div>
@@ -38,7 +38,8 @@
       <div class="model-item item-1" style="cursor:default;" data-name="tmsOrderCargoList" :data-index="m_index.tmsOrderCargoList">
         <span class="el-icon-d-caret sortBtn"></span>
         <div class="model-cell" v-for="(item, index) in dataList" v-if="item.templateType === 'tmsOrderCargoList'">
-          <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
+          {{item.fieldName}}
+          <!-- <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox> -->
         </div>
         <div style="clear:both"></div>
       </div>
@@ -50,8 +51,8 @@
             borderTop: item.fieldProperty==='shipRemarks' ? '1px solid #d4d4d4':''
           }">
             <el-checkbox v-model="item.hide" :label="item.fieldName"></el-checkbox>
-            <i class="el-icon-d-caret" style="transform: rotate(90deg);"></i>
-            <i class="el-icon-d-caret" v-if="item.fieldProperty!=='shipRemarks'"></i>
+            <i class="el-icon-d-caret" style="transform: rotate(90deg);" v-if="item.fieldProperty!=='shipRemarks'"></i>
+            <i class="el-icon-d-caret"></i>
           </div>
           <div style="clear:both"></div>
         </draggable>
@@ -167,6 +168,24 @@ export default {
     this.sortModel()
   },
   methods: {
+    changeCheck(val, item, index) {
+      if (item.fieldProperty === 'shipToCityName') {
+          item.hide = true
+          this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
+          return false
+        }
+      if (this.otherinfo.systemSetup) {
+        let sysprops = Object.assign([], this.otherinfo.systemSetup.shipPageFunc.shipFieldValue)
+        for (let i in sysprops) {
+          if (i === item.fieldProperty) {
+            if (sysprops[i] === '1') {
+              item.hide = true
+              this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
+            }
+          }
+        }
+      }
+    },
     initModelIndex() { // 初始化模块排序
       if (this.dataList) {
         this.dataList.forEach((el, index) => {
@@ -178,6 +197,7 @@ export default {
         })
         this.org_m_index = objectMerge2({}, this.m_index)
         console.log('init m_index', JSON.stringify(this.m_index))
+        this.sortModel()
       }
     },
     sortModel() {
@@ -247,6 +267,25 @@ export default {
       this.$emit('close')
       if (typeof done === 'function') {
         done()
+      }
+    },
+    closeWindow() {
+      if (this.isModify) {
+        let str = JSON.stringify(objectMerge2([], this.dataList))
+        let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+        if (str === orgstr) {
+          this.close()
+        } else {
+          this.$confirm('模板已修改, 是否保存?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.updateModel()
+          }).catch(() => {})
+        }
+      } else {
+        this.close()
       }
     },
     getFeeSetup() {},
@@ -359,6 +398,8 @@ export default {
           return orderManage.putOrderModel(dataList).then(data => {
               this.$message.success('保存成功！')
               this.fetchData()
+              this.$emit('success')
+              this.close()
               resolve()
             })
             .catch(err => {

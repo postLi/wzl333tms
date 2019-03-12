@@ -165,7 +165,7 @@
                                {{scope.row[column.prop]}}
                             </span> -->
                             <span v-if="column.checkfn(scope.row)" v-html="column.slot(scope)"></span>
-                            <span v-else>
+                            <span v-else-if="column.prop==='actualAmount'">
                                <el-input
                                @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
                                 @click.stop.prevent.native
@@ -175,7 +175,17 @@
                                  @change="(val) => changeData(scope.$index, column.prop, val)"
                                >
                               </el-input>
-                              <!--{{scope.row[column.prop]}}-->
+                            </span>
+                            <span v-else>
+                               <el-input
+                               @dblclick.stop.prevent.native :class="{'textChangeDanger': detailList[scope.$index][column.prop + 'lyy']}"
+                                @click.stop.prevent.native
+                                 v-model.number="scope.row[column.prop]"
+                                 :size="btnsize"
+                                 v-number-only:point
+                                 @change="(val) => changeData(scope.$index, column.prop, val)"
+                               >
+                              </el-input>
                             </span>
                           </div>
                           <div v-else-if="column.expand">

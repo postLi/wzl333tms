@@ -1,5 +1,5 @@
 <template>
-  <!-- 搜索框-搜索左边列表数据 -->
+  <!-- 搜索框-搜索左边列表数据 远程搜索-->
   <!-- shipSn 运单号   batchNo 批次号 -->
   <el-autocomplete v-model="currentSearch" :size="btnsize" :fetch-suggestions="querySearch" :placeholder="placeholderText" prefix-icon="el-icon-search" @select="handleSelect">
     <template slot-scope="{ item }">
@@ -10,6 +10,7 @@
 </template>
 <script>
 import { objectMerge2 } from '@/utils/index'
+import { postFindListByFeeType, postPayListByOne, postPayListBySummary, payListByHandlingFee } from '@/api/finance/accountsPayable'
 export default {
   props: {
     info: {
@@ -20,7 +21,8 @@ export default {
   data() {
     return {
       currentSearch: '',
-      btnsize: 'mini'
+      btnsize: 'mini',
+      dataList: []
     }
   },
   computed: {
@@ -33,20 +35,55 @@ export default {
         }
       },
       set() {}
+    },
+    getRouteInfo() {
+      return JSON.parse(this.$route.query.searchQuery)
     }
   },
   methods: {
-    querySearch(queryString, cb) {
-      this.currentSearch = queryString
-      if (queryString.shipSn === undefined || queryString.batchNo) {
-        if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
-          this.$emit('change', objectMerge2([], this.info))
+    fetchData(queryString) {
+      let params = objectMerge2({}, this.getRouteInfo)
+      // params.vo.shipSn = queryString
+      params.vo.status = 'NOSETTLEMENT,PARTSETTLEMENT'
+      let fetchList
+      let currentPage = this.$route.query.currentPage
+      if (currentPage.indexOf('batch') !== -1) { // 查批次
+        params.vo.batchNo = queryString
+        if (/(batchTruckAll|batchArrivalAll)/.test(currentPage)) { // 查发车汇总
+          fetchList = postPayListBySummary
+        } else {
+          fetchList = postPayListByOne
         }
+      } else if (currentPage === 'handleFee') { // 操作费-查批次
+        params.vo.batchNo = queryString
+        fetchList = payListByHandlingFee
+      } else { // 查运单
+        params.vo.shipSn = queryString
+        fetchList = postFindListByFeeType
       }
-      const leftTable = this.info
-      const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
-      // 调用 callback 返回建议列表的数据
-      cb(results)
+      return fetchList(params).then(data => {
+          if (data) {
+            this.dataList = objectMerge2([], data.list)
+            console.log('this.dataList', this.dataList)
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
+    querySearch(queryString, cb) {
+      this.fetchData(queryString).then(() => { // 远程搜索
+        let arr = objectMerge2([], this.dataList)
+        this.currentSearch = queryString
+        // if (queryString.shipSn === undefined || queryString.batchNo) {
+        //   if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
+        //     this.$emit('change', objectMerge2([], this.info))
+        //   }
+        // }
+        const leftTable = arr || this.info
+        const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
+        cb(results)
+      })
     },
     createFilter(queryString) {
       return (res) => {
@@ -63,11 +100,10 @@ export default {
       } else if (obj.batchNo) {
         this.currentSearch = obj.batchNo
       }
-      const array = []
-      array.push(obj)
 
       this.currentSearch = ''
-      this.$emit('change', obj, this.info.indexOf(obj))
+      // this.$emit('change', obj, this.dataList.indexOf(obj))
+      this.$emit('change', obj, 0)
     }
   }
 }

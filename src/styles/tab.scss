@@ -27,7 +27,7 @@
     }
   }
 
-  & > .tab-label:first-child {
+  &>.tab-label:first-child {
     margin-left: 1px;
     border-left-width: 1px;
   }
@@ -49,7 +49,8 @@
       background: #ffffee;
     }
   }
-  .active-tab, .router-link-active {
+  .active-tab,
+  .router-link-active {
     color: #3e9ff1;
     border-color: #3e9ff1;
     border-bottom-color: #fff;
@@ -92,12 +93,11 @@
       }
       .info_tab {
         width: 100%;
-        height: calc(100% - 38px);
-        // flex-grow: 1;
-
+        height: calc(100% - 38px); // flex-grow: 1;
         .el-table {
           table {
-            th, td {
+            th,
+            td {
               text-align: center;
             }
           }
@@ -120,6 +120,31 @@
       left: 0;
       width: 100%;
     }
+    .tab_footer_content {
+      float: left;
+      display: flex;
+      flex-direction: row;
+      font-size: 13px;
+      width: calc(100% - 320px);
+      .footer_item {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        i {
+          font-size: 13px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          font-style: normal;
+        }
+      }
+      .el-tag--mini {
+        // color: #000;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+    }
 
     .show_pager {
       float: right;
@@ -128,9 +153,7 @@
       overflow: hidden;
     }
   }
-  .tab-content {
-
-  }
+  .tab-content {}
   &.tab-wrapper-100 {
     padding-top: 0;
     .tab-content {
@@ -139,11 +162,10 @@
         .el-table {
           .el-table__body-wrapper.is-scrolling-none {
             overflow-y: auto;
-            .col-class{
-              text-align: left;
-              //padding-left: 10px;
+            .col-class {
+              text-align: left; //padding-left: 10px;
             }
-            .scope-node{
+            .scope-node {
               //margin-left: 14px;
               //padding-left: 0 !important;
               //border-bottom: 1px solid #ddd;
@@ -169,13 +191,14 @@
     .fr_btn {
       margin-top: 5px;
     }
-
   }
 }
+
 
 /**
 搜索框样式
 **/
+
 .staff_searchinfo {
   padding: 0 0 10px;
   margin: 0 10px;
@@ -232,7 +255,6 @@
             border-color: #ccc;
             color: #606266;
           }
-
         }
       }
     }

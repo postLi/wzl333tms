@@ -11,7 +11,7 @@
           <el-button :type="isGoReceipt?'info':'success'" size="mini" icon="el-icon-sort" @click="goReceipt" :disabled="isGoReceipt">核销</el-button>
         </div>
         <!-- 左边表格区 -->
-        <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
+        <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
             <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
@@ -39,9 +39,15 @@
               </el-table-column>
             </template>
           </el-table>
+          <div class="accountsLoad_table_pager">
+            <b>共计:{{ totalLeft }}</b>
+            <div class="show_pager">
+              <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" :defaultValues="searchQuery" />
+            </div>
+          </div>
         </div>
         <!-- 右边表格区 -->
-        <div slot="tableRight" class="tableHeadItemBtn">
+        <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
             <el-table-column fixed width="50" label="序号">
               <template slot-scope="scope">
@@ -69,6 +75,12 @@
               </el-table-column>
             </template>
           </el-table>
+          <div class="accountsLoad_table_pager">
+            <b>共计:{{ totalRight }}</b>
+            <div class="show_pager">
+              <!-- <Pager :total="totalRight" @change="handlePageChangeRight" :btnsize="'mini'" /> -->
+            </div>
+          </div>
         </div>
       </transferTable>
       <!-- 核销凭证 -->
@@ -105,6 +117,7 @@ export default {
       textChangeDanger: [],
       currentSearch: '',
       tablekey: '',
+      totalLeft: 0,
       truckMessage: '',
       formModel: {},
       loading: false,
@@ -129,119 +142,119 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '核销状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车类型',
-        prop: 'loadTypeName',
-        width: '90',
-        fixed: true
-      },
-      {
-        label: '到达网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车时间',
-        prop: 'departureTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '到达时间',
-        prop: 'receivingTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '操作费',
-        prop: 'fee',
-        width: '110',
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '130',
+          fixed: true
+        },
+        {
+          label: '核销状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车类型',
+          prop: 'loadTypeName',
+          width: '90',
+          fixed: true
+        },
+        {
+          label: '到达网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '操作费',
+          prop: 'fee',
+          width: '110',
           // slot: (scope) => {
           //   return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
           // },
-        fixed: false
-      },
-      {
-        label: '已核销操作费',
-        prop: 'paidFee',
-        width: '110',
-        slot: (scope) => {
+          fixed: false
+        },
+        {
+          label: '已核销操作费',
+          prop: 'paidFee',
+          width: '110',
+          slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
           },
-        fixed: false
-      },
-      {
-        label: '未核销操作费',
-        prop: 'unpaidFee',
-        width: '110',
-        slot: (scope) => {
+          fixed: false
+        },
+        {
+          label: '未核销操作费',
+          prop: 'unpaidFee',
+          width: '110',
+          slot: (scope) => {
             const row = scope.row
             return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
             //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
           },
-        fixed: false
-      },
-      {
-        label: '实际核销操作费',
-        prop: 'amount',
-        width: '110',
-        expand: true,
-        slot: (scope) => {
+          fixed: false
+        },
+        {
+          label: '实际核销操作费',
+          prop: 'amount',
+          width: '110',
+          expand: true,
+          slot: (scope) => {
             return scope.row.amount
           },
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '司机名称',
-        prop: 'dirverName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmountall',
-        fixed: false
-      },
-      {
-        label: '配载体积',
-        prop: 'loadVolumeall',
-        fixed: false
-      },
-      {
-        label: '配载重量',
-        prop: 'loadWeightall',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        fixed: false
-      }
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmountall',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolumeall',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeightall',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          fixed: false
+        }
       ]
     }
   },
@@ -250,9 +263,9 @@ export default {
       console.log(JSON.parse(this.$route.query.searchQuery))
       return JSON.parse(this.$route.query.searchQuery)
     },
-    totalLeft() {
-      return this.leftTable.length
-    },
+    // totalLeft() {
+    //   return this.leftTable.length
+    // },
     totalRight() {
       return this.rightTable.length
     }
@@ -274,6 +287,35 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
+    },
+    pageGetList() {
+      let rightTable = objectMerge2([], this.rightTable)
+      this.loading = true
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+          if (data) {
+            this.leftTable = Object.assign([], data.list)
+            this.totalLeft = data.total
+            rightTable.forEach((el, index) => {
+              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+            })
+            this.leftTable.forEach((e, index) => {
+              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
+              e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
+              e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
+              e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeeRecStatusZh : e.dbHandlingFeeRecStatusZh)
+              this.$set(e, 'amount', e.unpaidFee)
+              console.log(e)
+            })
+          }
+          this.orgLeftTable = Object.assign([], this.leftTable)
+          this.loading = false
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     initLeftParams() {
       if (!this.$route.query) {
@@ -282,10 +324,11 @@ export default {
       } else {
         this.searchQuery.vo = Object.assign({}, this.getRouteInfo.vo)
         if (this.searchQuery.vo.status === '' || /(ALLSETTLEMENT)/.test(this.searchQuery.vo.status)) {
-         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+          this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         }
         this.isFresh = false
       }
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     setRight(item) {
       item.inputNowPayFee = item.notNowPayFee
@@ -295,7 +338,7 @@ export default {
       item.inputChangeFee = item.notChangeFee
       this.$set(this.rightTable, this.rightTable.length, item)
     },
-    getList() {
+    getList(handle) {
       this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListBatchNos))
       if (JSON.parse(this.$route.query.selectListBatchNos)) {
@@ -308,13 +351,16 @@ export default {
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
-      this.initLeftParams() // 设置searchQuery
+      if (!handle) {
+        this.initLeftParams() // 设置searchQuery
+      }
       if (!this.isFresh) {
         console.log('getList::::', this.searchQuery)
         payListByHandlingFee(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
           this.leftTable = data.list
+          this.totalLeft = data.total
           this.leftTable.forEach((e, index) => {
             e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
             e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
@@ -401,8 +447,8 @@ export default {
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-             return em.batchNo !== e.batchNo
-           })
+            return em.batchNo !== e.batchNo
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => {
             return el.batchNo !== e.batchNo

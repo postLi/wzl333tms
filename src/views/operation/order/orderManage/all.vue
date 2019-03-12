@@ -1,90 +1,151 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:ORDER_MADD>创建运单</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:ORDER_MEDIT5>运单修改</el-button>
-          <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain v-has:ORDER_MDEL2>运单作废</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain v-has:ORDER_MDEL>运单删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_MEXP>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_MPRI>打印</el-button>
-          <span class="viewtip">
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:ORDER_MADD>创建运单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:ORDER_MEDIT5>运单修改</el-button>
+        <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain v-has:ORDER_MDEL2>运单作废</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain v-has:ORDER_MDEL>运单删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_MEXP>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_MPRI>打印</el-button>
+        <span class="viewtip">
             双击查看详情
           </span>
-          <el-popover
-            @mouseenter.native="showSaveBox"
-            @mouseout.native="hideSaveBox"
-            placement="top"
-            width="160"
-            trigger="manual"
-            v-model="visible2">
-            <p>表格宽度修改了，是否要保存？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-              <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
-            </div>
-            <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup" 
-           >表格设置</el-button>
-          </el-popover>
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
+          <p>表格宽度修改了，是否要保存？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
+          </div>
+          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        </el-popover>
       </div>
-      <!-- <el-tooltip placement="top" v-model="showtip" :manual="true">
-        <div slot="content">双击查看运单详情</div> -->
-
-      <div @mouseover="showtip = true"
-          @mouseout="showtip = false" class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          :key="tablekey"
-          stripe
-          border
-          @row-click="clickDetails"
-          @row-dblclick="showDetail"
-          @selection-change="getSelection"
-          @header-dragend="setTableWidth"
-          height="100%"
-          :summary-method="getSumLeft"
-          show-summary
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="60">
+      <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
+        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+          <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+             <!--  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" :key="tablekey" @change="changeKey" />
+              </template> -->
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              :prop="column.prop"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+             <!--  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :key="tablekey" :query="searchQuery" @change="changeKey" />
+              </template> -->
               <template slot-scope="scope">
-                  <div class="td-slot" v-html="column.slot(scope)"></div>
+                <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
             </el-table-column>
           </template>
         </el-table>
       </div>
-      <!-- </el-tooltip> -->
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <!--   <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
+        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+          <el-table-column fixed sortable type="selection" width="60">
+          </el-table-column>
+          <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+              <template slot-scope="scope">
+                <div class="td-slot" v-html="column.slot(scope)"></div>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div> -->
+      <div class="info_tab_footer">
+        <div class="tab_footer_content">
+          <div class="footer_item">
+            共计:
+            <el-tooltip class="item" effect="dark" :content="total + ' 条'" placement="top">
+              <i>{{total}}条</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              现付:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipNowpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipNowpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              到付:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipArrivepayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipArrivepayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              回单付:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipReceiptpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              月结:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipMonthpayFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              运费合计:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'" placement="top">
+              <i>{{countSum.shipTotalFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              回扣:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'" placement="top">
+              <i>{{countSum.brokerageFeeAll}}元</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              件数:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'" placement="top">
+              <i>{{countSum.cargoAmountAll}}件</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              重量:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'" placement="top">
+              <i>{{countSum.cargoWeightAll}}kg</i>
+            </el-tooltip>
+          </div>
+          <div class="footer_item">
+            <el-tag size="mini">
+              体积:
+            </el-tag>
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'" placement="top">
+              <i>{{countSum.cargoVolumeAll}}方</i>
+            </el-tooltip>
+          </div>
+        </div>
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange">
+          </Pager>
+        </div>
+      </div>
     </div>
-    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn"  code="ORDER_ALL" />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns='tableColumn' @success="setColumn" code="ORDER_ALL" />
   </div>
 </template>
 <script>
@@ -96,19 +157,20 @@ import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
       'otherinfo'
     ]),
     orgid() {
-      console.log(this.selectInfo.orgid, this.searchQuery.vo.orgid, this.otherinfo.orgid)
       return this.isModify ? this.selectInfo.orgid : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
@@ -121,6 +183,17 @@ export default {
   },
   data() {
     return {
+      countSum: {
+        shipNowpayFeeAll: 0,
+        shipArrivepayFeeAll: 0,
+        shipReceiptpayFeeAll: 0,
+        shipMonthpayFeeAll: 0,
+        shipTotalFeeAll: 0,
+        brokerageFeeAll: 0,
+        cargoAmountAll: 0,
+        cargoWeightAll: 0,
+        cargoVolumeAll: 0
+      },
       btnsize: 'mini',
       usersArr: [],
       total: 0,
@@ -175,10 +248,10 @@ export default {
         'prop': 'fromOrgName',
         'width': '150'
       }, {
-          'label': '目的网点',
-          'prop': 'toOrgName',
-          'width': '150'
-        }, {
+        'label': '目的网点',
+        'prop': 'toOrgName',
+        'width': '150'
+      }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180',
@@ -493,11 +566,33 @@ export default {
         'width': '150'
       }],
       showtip: false,
-      visible2: false
+      visible2: false,
+      countAll: {}
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
+    findAllShipCount() { // 计算底部合计行
+      return orderManageApi.findAllShipCount(this.searchQuery).then(data => {
+          if (data) {
+            this.countSum = data
+            // let _data = objectMerge2({}, data)
+            // for (let item in _data) {
+            //   let name = item.slice(0, -3)
+            //   this.countAll[name] = _data[item]
+            // }
+            // console.log('countAll', this.countAll)
+          }
+        })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
+    },
     getSumLeft(param, type) {
+      // return getSummaries(param, operationPropertyCalc, '', '-', this.countAll)
       return getSummaries(param, operationPropertyCalc)
     },
     viewDetails(row) {
@@ -516,8 +611,14 @@ export default {
     },
     fetchAllOrder() {
       this.loading = true
+      this.findAllShipCount() // 获取费用总计
       return orderManageApi.getAllShip(this.searchQuery).then(data => {
         this.usersArr = data.list
+        // let count = 0
+        // this.usersArr.forEach(e => {
+        //   count += e.cargoAmount
+        // })
+        // console.log('当前页面的件数总计:' , count)
         this.total = data.total
         this.loading = false
         // 当搜索运单号且全匹配且仅有一条结果时自动打开其详情页面
@@ -527,6 +628,7 @@ export default {
             this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
           }
         }
+
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -560,7 +662,7 @@ export default {
       console.log('this.selected:', this.selected)
 
       switch (type) {
-          // 添加运单
+        // 添加运单
         case 'add':
           this.isModify = false
           this.selectInfo = {}
@@ -596,7 +698,7 @@ export default {
                 query: {
                   orderid: this.selectInfo.id,
                   type: 'modify',
-                      // tab: '修改' + this.selectInfo.shipSn
+                  // tab: '修改' + this.selectInfo.shipSn
                   tab: '改单'
                 }
               })
@@ -670,7 +772,7 @@ export default {
             this.$refs.multipleTable.clearSelection()
             return false
           }
-              // shipStatus 59 已入库
+          // shipStatus 59 已入库
           var cancelItem = this.selected.filter(el => el.shipStatus === 59)
           if (cancelItem.length === 0) {
             this.$message({
@@ -716,7 +818,7 @@ export default {
           }
 
           break
-        // 导出数据
+          // 导出数据
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
@@ -744,6 +846,7 @@ export default {
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
+      this.$refs.multipleTable.doLayout()
     },
     clickDetails(row, event, column) {
       this.$refs.multipleTable.toggleRowSelection(row)
@@ -792,4 +895,5 @@ export default {
     }
   }
 }
+
 </script>

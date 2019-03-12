@@ -69,6 +69,10 @@ export default {
     btnsize: {
       type: String,
       default: ''
+    },
+    defaultValues: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
@@ -80,6 +84,10 @@ export default {
     pageNum() {
       this.inputval = this.pageNum
     },
+   defaultValues () {
+     this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum 
+     this.oldNum = this.pageNum
+   },
     size() {
       this.pageNum = 1
     }
@@ -99,6 +107,7 @@ export default {
   methods: {
     handleFocus(event) {
       this.oldValue = event.target.value
+      console.log('__++_+_+_+_+event', event)
     },
     sizesChange() {
       this.pageNum = 1
@@ -162,6 +171,7 @@ export default {
       } else {
         this.pageNum = num
       }
+      console.log('1111jumpTo', num, this.pageNum, this.oldNum)
       this.changeEvent()
     }
   }

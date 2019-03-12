@@ -24,7 +24,7 @@ export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'age
  * 属性名|单位
  * _index|索引（|单位）
  */
-export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ') {
+export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ', allCount) {
   const {
     columns,
     data
@@ -84,7 +84,8 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
       } else {
         // const values = data.map(item => Number(item[prop]))
         let isAllEmpty = true
-        const values = data.map(item => {
+        let allCountIndex = {}
+        const values = data.map((item, mindex) => {
           if (item[prop] !== '') {
             isAllEmpty = false
           }
@@ -93,6 +94,7 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
         if (isAllEmpty) {
           sums[index] = defaultNoneString
         } else {
+
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -102,9 +104,15 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
               return prev
             }
           }, 0)
+          // if (allCount) {
+          //   for (let oi in allCount) {
+          //     if (oi === prop) {
+          //       sums[index] = allCount[oi]
+          //     }
+          //   }
+          // }
           sums[index] += ' ' + unit
         }
-
       }
     } else {
       sums[index] = defaultNoneString
@@ -543,14 +551,16 @@ export const pickerOptions4 = {
 export const pickerOptions2 = [{
   text: '今天',
   onClick(picker) {
-    const end = new Date()
+    // const end = new Date()
+    const day = new Date(new Date().getTime())
+    const end = new Date(day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' 23:59:59')
     const start = new Date(end.getFullYear() + '-' + (end.getMonth() + 1) + '-' + end.getDate() + ' 00:00:00')
     picker.$emit('pick', [start, end])
   }
 }, {
   text: '昨天',
   onClick(picker) {
-    const day = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+    const day = new Date(new Date().getTime() - 24 * 3600 * 1000)
     const end = new Date(day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' 23:59:59')
     const start = new Date(day.getFullYear() + '-' + (day.getMonth() + 1) + '-' + day.getDate() + ' 00:00:00')
     picker.$emit('pick', [start, end])
@@ -558,27 +568,34 @@ export const pickerOptions2 = [{
 }, {
   text: '最近一周',
   onClick(picker) {
-    const end = new Date()
-    const start = new Date()
-    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+    const dayStart = new Date(new Date().getTime() - 24 * 3600 * 7 * 1000)
+    const dayEnd = new Date(new Date().getTime())
+    const end = new Date(dayEnd.getFullYear() + '-' + (dayEnd.getMonth() + 1) + '-' + dayEnd.getDate() + ' 23:59:59')
+    const start = new Date(dayStart.getFullYear() + '-' + (dayStart.getMonth() + 1) + '-' + dayStart.getDate() + ' 00:00:00')
+    // start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
     picker.$emit('pick', [start, end])
   }
 }, {
   text: '最近一个月',
   onClick(picker) {
-    const end = new Date()
-    const start = new Date()
-    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+    const dayStart = new Date(new Date().getTime() - 24 * 3600 * 30 * 1000)
+    const dayEnd = new Date(new Date().getTime())
+    const end = new Date(dayEnd.getFullYear() + '-' + (dayEnd.getMonth() + 1) + '-' + dayEnd.getDate() + ' 23:59:59')
+    const start = new Date(dayStart.getFullYear() + '-' + (dayStart.getMonth() + 1) + '-' + dayStart.getDate() + ' 00:00:00')
+    // start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
     picker.$emit('pick', [start, end])
   }
 }, {
   text: '本月',
   onClick(picker) {
     let _end = new Date()
-    const start = new Date(_end.getFullYear(), _end.getMonth(), 1)
+    let start = new Date(_end.getFullYear(), _end.getMonth(), 1)
     _end = new Date(_end.getFullYear(), _end.getMonth() + 1, 1)
 
-    const end = new Date(_end.getTime() - 3600 * 1000 * 24)
+    let end = new Date(_end.getTime() - 3600 * 1000 * 24)
+
+    start = new Date(start.getFullYear() + '-' + (start.getMonth() + 1) + '-' + start.getDate() + ' 00:00:00')
+    end = new Date(end.getFullYear() + '-' + (end.getMonth() + 1) + '-' + end.getDate() + ' 23:59:59')
     picker.$emit('pick', [start, end])
   }
 }, {
@@ -586,16 +603,21 @@ export const pickerOptions2 = [{
   onClick(picker) {
     let day = new Date()
     day = new Date(day.getFullYear(), day.getMonth(), 1)
-    const start = new Date(day.getFullYear(), day.getMonth() - 1, 1)
-    const end = new Date(day.getFullYear(), day.getMonth() - 1, (day.getTime() - start.getTime()) / (24 * 60 * 60 * 1000))
+    let start = new Date(day.getFullYear(), day.getMonth() - 1, 1)
+    let end = new Date(day.getFullYear(), day.getMonth() - 1, (day.getTime() - start.getTime()) / (24 * 60 * 60 * 1000))
+
+    start = new Date(start.getFullYear() + '-' + (start.getMonth() + 1) + '-' + start.getDate() + ' 00:00:00')
+    end = new Date(end.getFullYear() + '-' + (end.getMonth() + 1) + '-' + end.getDate() + ' 23:59:59')
     picker.$emit('pick', [start, end])
   }
 }, {
   text: '最近三个月',
   onClick(picker) {
-    const end = new Date()
-    const start = new Date()
-    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+    const dayStart = new Date(new Date().getTime() - 3600 * 1000 * 24 * 90)
+    const dayEnd = new Date(new Date().getTime())
+    const end = new Date(dayEnd.getFullYear() + '-' + (dayEnd.getMonth() + 1) + '-' + dayEnd.getDate() + ' 23:59:59')
+    const start = new Date(dayStart.getFullYear() + '-' + (dayStart.getMonth() + 1) + '-' + dayStart.getDate() + ' 00:00:00')
+    // start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
     picker.$emit('pick', [start, end])
     console.log(picker)
   }

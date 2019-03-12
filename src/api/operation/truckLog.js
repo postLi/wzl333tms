@@ -95,3 +95,21 @@ export function realTimeLocationByTruckIdNumber(data) {
 		return res.data ? res.data : {}
 	})
 }
+// 监控中心列表
+/**
+ * {
+	"vehicleId":""
+}
+ */
+export function getTerminalLocation(vehicleId) {
+	return fetch.get('/api-order/order/load/v1/monitor/?vehicleId=' + vehicleId).then(res => {
+		return res.data ? res.data : {}
+	})
+}
+
+// 获取车辆列表
+export function getTruckIdNumbers() {
+	return fetch.get('/api-order/order/load/v1/getTruckIdNumber/').then(res => {
+		return res.data ? res.data : {}
+	})
+}
