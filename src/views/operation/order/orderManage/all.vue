@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content miniHeaderSearch" v-loading="loading">
+  <div class="tab-content" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -173,7 +173,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    TableSetup
     // tableHeaderSearch
   },
   computed: {
@@ -581,7 +581,7 @@ export default {
     }
   },
   methods: {
-    filterTag (value, row) {
+    filterTag(value, row) {
       return row.tag === value
     },
     changeKey(obj) {
@@ -590,7 +590,7 @@ export default {
     },
     findAllShipCount() { // 计算底部合计行
       return orderManageApi.findAllShipCount(this.searchQuery).then(data => {
-          if (data) {
+        if (data) {
             this.countSum = data
             // let _data = objectMerge2({}, data)
             // for (let item in _data) {
@@ -599,7 +599,7 @@ export default {
             // }
             // console.log('countAll', this.countAll)
           }
-        })
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -640,14 +640,13 @@ export default {
             this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
           }
         }
-
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
     fetchData() {
-        this.findAllShipCount() // 获取费用总计
+      this.findAllShipCount() // 获取费用总计
       this.fetchAllOrder()
     },
     handlePageChange(obj) {
@@ -858,11 +857,10 @@ export default {
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
-      
-      setTimeout(()=>{
-        this.tablekey = Math.random() // 刷新表格视图
-      this.$refs.multipleTable.doLayout()
 
+      setTimeout(() => {
+        this.tablekey = Math.random() // 刷新表格视图
+        this.$refs.multipleTable.doLayout()
       }, 0)
     },
     clickDetails(row, event, column) {
