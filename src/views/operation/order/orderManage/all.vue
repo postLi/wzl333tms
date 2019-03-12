@@ -22,13 +22,23 @@
         </el-popover>
       </div>
       <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
-        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+        <el-table ref="multipleTable" :data="usersArr" 
+        :key="tablekey" stripe border 
+        @row-click="clickDetails" 
+        @row-dblclick="showDetail" 
+        @selection-change="getSelection" 
+        @header-dragend="setTableWidth" 
+        height="100%" 
+        :summary-method="getSumLeft" 
+        show-summary tooltip-effect="dark" 
+        :default-sort="{prop: 'id', order: 'ascending'}" 
+        style="width: 100%">
           <el-table-column fixed sortable type="selection" width="60">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" >
               <!-- <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey" />
+                <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
               </template> -->
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
@@ -571,6 +581,9 @@ export default {
     }
   },
   methods: {
+    filterTag (value, row) {
+      return row.tag === value
+    },
     changeKey(obj) {
       this.searchQuery = obj
       this.fetchAllOrder()

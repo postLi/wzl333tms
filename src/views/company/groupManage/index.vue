@@ -151,12 +151,29 @@
               @row-click="clickDetails"
               @selection-change="seleClick"
               style="width: 100%;">
-              <el-table-column
+
+               <el-table-column
                 fixed
                 type="selection"
                 width="55">
               </el-table-column>
-              <el-table-column
+             <!--   <template v-for="column in tableColumn">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" >
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope"  :query="searchQuery" @change="changeKey" />
+              </template>
+              <template slot-scope="scope">
+                <div class="td-slot" v-html="column.slot(scope)"></div>
+              </template>
+            </el-table-column>
+          </template> -->
+             <el-table-column
                 fixed
                 prop="id"
                 width="60"
@@ -243,6 +260,7 @@
   import Pager from '@/components/Pagination/index'
   import { getUserInfo, setUserInfo } from '../../../utils/auth'
   import { objectMerge2 } from '@/utils/index'
+  import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     name: 'groupManage',
@@ -250,7 +268,8 @@
       AddDot,
       AddPeople,
       Pager,
-      DepMaintain
+      DepMaintain,
+      tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -277,6 +296,36 @@
         orgName: '',
         //
         isModify: false,
+        // tableColumn: [{
+        //   'label': '姓名',
+        //   'prop': 'name',
+        //   'width': '150'
+        // },
+        // {
+        //   'label': '归属网点',
+        //   'prop': 'orgName',
+        //   'width': '150'
+        // },
+        // {
+        //   'label': '归属部门',
+        //   'prop': 'departmentName',
+        //   'width': '150'
+        // },
+        // {
+        //   'label': '职务',
+        //   'prop': 'position',
+        //   'width': '150'
+        // },
+        //  {
+        //   'label': '登录账号',
+        //   'prop': 'username',
+        //   'width': '150'
+        // },
+        //  {
+        //   'label': '权限角色',
+        //   'prop': 'rolesName',
+        //   'width': '150'
+        // }],
         // 新建网点
         ruleForm: {
           name: '',

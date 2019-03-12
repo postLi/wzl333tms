@@ -170,14 +170,14 @@ export default {
       this.query = query
       const REG = new RegExp(query, 'i')
       let filterfn = (el) => {
-        console.log(el.dictName, REG, REG.test(el.dictName))
+        // console.log(el.dictName, REG, REG.test(el.dictName))
         return REG.test(el.dictName)
       }
 
       if (query === '') {
         filterfn = (el) => el
       }
-      console.log('typeof this.filterfn', typeof this.filterfn)
+      // console.log('typeof this.filterfn', typeof this.filterfn)
       if (typeof this.filterfn === 'function') {
         filterfn = this.filterfn
       }
