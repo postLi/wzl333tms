@@ -3108,35 +3108,35 @@ export default {
 
                 return flag
               }).map(el => {
-                // const b = {}
-                // for (const i in el) {
-                //   if (el[i] === '' && i !== 'cargoName') {
-                //     b[i] = 0
-                //   } else {
-                //     b[i] = el[i]
-                //   }
-                // }
-                // return b
                 const b = {}
                 for (const i in el) {
                   if (el[i] === '' && i !== 'cargoName') {
                     b[i] = 0
                   } else {
-                    ////////////// 系统设置回扣不计入运费合计的时候 需要清空为0
-                    console.log('++++++++++++++')
-                    console.log('i', i, el[i])
-                    console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
-                    if (i === 'brokerageFee') {
-                      if (this.config.shipFee['brokerageFee'] === '0') {
-                        b[i] = 0
-                      } else {
-                        b[i] = el[i]
-                      }
-                    } else {
-                      b[i] = el[i]
-                    }
+                    b[i] = el[i]
                   }
                 }
+                return b
+                // const b = {}
+                // for (const i in el) {
+                //   if (el[i] === '' && i !== 'cargoName') {
+                //     b[i] = 0
+                //   } else {
+                //     ////////////// 系统设置回扣不计入运费合计的时候 需要清空为0
+                //     console.log('++++++++++++++')
+                //     console.log('i', i, el[i])
+                //     console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
+                //     if (i === 'brokerageFee') {
+                //       if (this.config.shipFee['brokerageFee'] === '0') {
+                //         b[i] = 0
+                //       } else {
+                //         b[i] = el[i]
+                //       }
+                //     } else {
+                //       b[i] = el[i]
+                //     }
+                //   }
+                // }
                 return b
               })
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
