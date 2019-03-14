@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -43,15 +43,27 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               :prop="column.prop"
               :label="column.label"
                show-overflow-tooltip
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope" v-html="true">
                   {{ column.slot(scope) }}
               </template>
@@ -74,13 +86,15 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, uniqArray, getSummaries, operationPropertyCalc } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddOrder
+    AddOrder,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -134,7 +148,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '150'
@@ -441,6 +455,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllTransfer()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

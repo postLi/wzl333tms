@@ -1,5 +1,5 @@
 <template>
-<div class="handAccount-manager tab-wrapper tab-wrapper-100">
+<div class="handAccount-manager tab-wrapper tab-wrapper-100 miniHeaderSearch">
   <div class="tab-content handAccount-detail" v-loading="loading">
     <SearchForm :orgid="searchQuery.vo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
@@ -40,14 +40,22 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               :prop="column.prop"
               :label="column.label"
               v-else
               :width="column.width">
+                  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope" v-html="true">
                   {{ column.slot(scope) }}
               </template>
@@ -68,13 +76,15 @@ import TableSetup from '@/components/tableSetup'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Pager from '@/components/Pagination/index'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'handAccountDetail',
   components: {
     SearchForm,
     TableSetup,
-    Pager
+    Pager,
+    tableHeaderSearch
   },
   mounted() {
     // this.searchQuery.vo.userId = this.$route.query.id
@@ -120,7 +130,7 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
@@ -140,7 +150,7 @@ export default {
         label: '签收状态',
         prop: 'signStatus',
         width: '100'
-      },{
+      }, {
         'label': '费用类别',
         'prop': 'feeName'
       }, {
@@ -187,6 +197,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     viewDetails(row) {
       this.$router.push({
         path: '/finance/handAccount/detail',
@@ -206,7 +220,7 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -214,7 +228,7 @@ export default {
     fetchData() {
       this.fetchAllOrder()
     },
-    setColumn () {},
+    setColumn() {},
     handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize

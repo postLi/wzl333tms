@@ -151,7 +151,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -298,7 +298,7 @@
        objp.h = objp.h - 5 - objp.t
 
        console.log('print obj:', obj)
-       let shipSn = obj.data.map(el => {
+       const shipSn = obj.data.map(el => {
          return el.shipSn
        })
        console.log('打印的数据shipSn', shipSn)
@@ -429,7 +429,7 @@
          LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
        } else {
          let str = '?'
-         let propArr = [
+         const propArr = [
            'checkBillName', 'contractNo', 'orgName', 'carrier', 'dirverName',
            'frameNum', 'userName', 'driverCardid', 'dirverMobile', 'truckIdNumber',
            'engineNum', 'loadAmountall', 'loadWeightall', 'loadVolumeall', 'shipFeeAmount',

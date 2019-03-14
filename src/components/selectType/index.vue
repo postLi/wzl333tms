@@ -1,5 +1,5 @@
 <template>
-  <el-select ref="myautocomplete" @change="change" v-model="val" :placeholder="placeholder" :filterable="filterable" :filter-method="makefilter" v-bind="$attrs" @focus="focus" @blur="blur">
+  <el-select ref="myautocomplete" @change="(e)=>{change(e, 'change')}" v-model="val" :placeholder="placeholder" :filterable="filterable" :filter-method="makefilter" v-bind="$attrs" @focus="focus" @blur="blur">
     <slot name="head"></slot>
     <template v-for="item in listdata">
       <!-- 将 `item` 对象作为一个插槽的 prop 传入。-->
@@ -214,10 +214,13 @@ export default {
     setHightLight(str, key) {
       return str.replace(new RegExp(key, 'igm'), '<i class="highlight">' + key + '</i>')
     },
-    change(item) {
+    change(item, type) {
       this.$emit('input', this.val + '')
       const find = this.listdata.filter(el => el.id === item)
       this.$emit('change', item, find[0] || {})
+      if (type) {
+        this.$emit('changeItem', item, find[0] || {})
+      }
     }
   }
 }

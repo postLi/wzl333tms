@@ -1,6 +1,6 @@
 <template>
   <!-- 整车保险费 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :isAllOrg="false" :isArrivalSel="false" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
@@ -18,8 +18,15 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+             <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -48,11 +55,13 @@ import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -90,8 +99,8 @@ export default {
       tableColumn: [
         {
           label: '序号',
-          prop: 'id',
-          width: '50',
+          prop: 'number',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -212,53 +221,57 @@ export default {
     }
   },
   methods: {
-   getSearchParam(obj) {
-    this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchList()
+    },
+    getSearchParam(obj) {
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.searchQuery.vo = Object.assign({}, obj)
       this.fetchList()
     },
-   handlePageChange(obj) {
+    handlePageChange(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
-   fetchList() {
+    fetchList() {
       this.$set(this.searchQuery.vo, 'feeTypeId', this.feeTypeId)
       this.loading = true
       return postPayListByOne(this.searchQuery).then(data => {
         this.dataList = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
-   setTable() {},
-   doAction(type) {
+    setTable() {},
+    doAction(type) {
       switch (type) {
         case 'count':
           this.count()
           break
         case 'export':
           SaveAsFile({
-             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费核销-整车保险费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费核销-整车保险费'
           })
           break
       }
     },
-   count() {
+    count() {
       let count = 0
       if (this.selectedList.length !== 0) {
         objectMerge2([], this.selectedList).forEach(e => {
@@ -288,10 +301,10 @@ export default {
         }
       })
     },
-   clickDetails(row) {
+    clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
-   getSelection(list) {
+    getSelection(list) {
       this.selectListBatchNos = []
       this.selectedDataList = list
       list.forEach((e, index) => {
@@ -300,24 +313,24 @@ export default {
       this.selectedList = list
       console.log(this.selectListBatchNos)
     },
-   showDetail(order) {
+    showDetail(order) {
     // this.eventBus.$emit('showOrderDetail', order.id, order.shipSn, true)
       // this.eventBus.$emit('showOrderDetail', order.id)
     },
-   setTable() {
+    setTable() {
       this.setupTableVisible = true
     },
-   closeSetupTable() {
+    closeSetupTable() {
       this.setupTableVisible = false
     },
-   setColumn(obj) { // 重绘表格列表
+    setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    getSummaries (param) {
+    getSummaries(param) {
       return getSummaries(param)
     }
- }
+  }
 }
 
 </script>

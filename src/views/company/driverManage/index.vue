@@ -1,5 +1,5 @@
 <template>
-  <div class="driver-manager" v-loading="loading">
+  <div class="driver-manager miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
@@ -35,9 +35,17 @@
                 <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span>
               </template>
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
+               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
             
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width || ''">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -63,6 +71,7 @@ import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
 import { objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'driverManage',
@@ -71,7 +80,8 @@ export default {
     Pager,
     TableSetup,
     AddCustomer,
-    ImportDialog
+    ImportDialog,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -153,9 +163,9 @@ export default {
         width: '300',
         fixed: false,
         slot: (scope) => {
-          let start = scope.row.validityStartdate ?  parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
-          let end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
-          let data = start +' - '+ end
+          const start = scope.row.validityStartdate ? parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+          const end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+          const data = start + ' - ' + end
           return data
         }
       }, {
@@ -186,6 +196,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllCustomer()
+    },
     getLicenType(id) {
       const info = this.licenseTypes.filter(item => {
         // console.log(item, id)

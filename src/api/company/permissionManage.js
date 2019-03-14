@@ -1,5 +1,7 @@
 import fetch from '../../utils/fetch'
-import { getSelectType } from '@/api/common'
+import {
+  getSelectType
+} from '@/api/common'
 
 /**
  * 插入角色信息
@@ -46,16 +48,20 @@ export function deleteRoleInfo(id) {
  * @param {*} orgid 网点id
  * @param {*} pagesize 获取权限列表的长度
  */
-export function getAuthInfo(orgid, rolesName, currentPage = 1, pageSize = 100) {
+export function getAuthInfo(orgid, rolesName, currentPage = 1, pageSize = 100, searchVo) {
   return fetch.post('/api-system/system/role/v1/findAllInfo', {
     currentPage,
     pageSize,
     vo: {
       orgid,
       rolesName
-    }
+    },
+    searchVo: searchVo
   }).then(res => {
-    return res.data || { total: 0, list: [] }
+    return res.data || {
+      total: 0,
+      list: []
+    }
   })
 }
 
@@ -81,4 +87,3 @@ export function getauthTreeInfo(role_id) {
 export function getSelectDictInfo(orgId) {
   return getSelectType('menu_type', orgId)
 }
-

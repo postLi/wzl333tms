@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 库存总表 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -32,8 +32,19 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -65,12 +76,14 @@ import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     Pager,
     SearchForm,
     Colorpicker,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -507,6 +520,10 @@ export default {
     // this.fetchAllOrderRepertory()
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrderRepertory()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

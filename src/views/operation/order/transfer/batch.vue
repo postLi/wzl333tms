@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :isbatch="true" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -39,6 +39,14 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -46,8 +54,12 @@
                show-overflow-tooltip
               sortable
               :label="column.label"
+              :prop="column.prop"
               v-else
               :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -72,13 +84,15 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, uniqArray } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddOrder
+    AddOrder,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -134,7 +148,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         'label': '中转批次',
         'prop': 'transferBatchNo',
         'width': '150',
@@ -161,7 +175,7 @@ export default {
         prop: 'shipArrivepayFee',
         width: '90',
         fixed: false
-      },{
+      }, {
         'label': '中转件数',
         'prop': 'transferAmount',
         'width': '150'
@@ -205,6 +219,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllTransfer()
+    },
     fetchAllTransfer() {
       this.loading = true
       return transferManageApi.getAlreadyTransferBatchList(this.searchQuery).then(data => {
@@ -212,7 +230,7 @@ export default {
         this.total = data.total
         this.loading = false
         console.log('this.usersArr:', this.usersArr, data)
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -246,21 +264,21 @@ export default {
           // 提交前先进行去重
         transferManageApi.deleteTransfer(this.otherinfo.orgid, uniqArray(transferBatchNos).join(','), '').then(res => {
           this.$message({
-              type: 'success',
-              message: '取消成功!'
-            })
+            type: 'success',
+            message: '取消成功!'
+          })
           this.fetchData()
         }).catch(err => {
-            this.$message({
-              type: 'info',
-              message: '取消失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
-            })
+          this.$message({
+            type: 'info',
+            message: '取消失败，原因：' + (err.errorInfo ? err.errorInfo : err.text)
           })
+        })
       }).catch((err) => {
         this.$message({
-            type: 'info',
-            message: '已取消'
-          })
+          type: 'info',
+          message: '已取消'
+        })
       })
     },
     doAction(type) {

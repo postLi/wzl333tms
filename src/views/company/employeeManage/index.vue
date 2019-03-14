@@ -1,5 +1,5 @@
 <template>
-  <div class="staff_manage" v-loading="loading">
+  <div class="staff_manage miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="staff_info">
       <div class="btns_box">
@@ -14,8 +14,16 @@
           <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchForm" @change="changeKey" />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''" :prop="column.prop">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchForm" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -44,6 +52,7 @@ import AddEmployeer from './add'
 import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'employeeManage',
@@ -52,7 +61,8 @@ export default {
     TableSetup,
     AddEmployeer,
     SetAuth,
-    Pager
+    Pager,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -86,7 +96,8 @@ export default {
         pageSize: 100,
         pageNum: 1,
         mobile: '',
-        orgid: ''
+        orgid: '',
+        searchVo: {}
       },
       dialogFormVisible: false,
       // 是否修改员工信息
@@ -172,6 +183,19 @@ export default {
     })
   },
   methods: {
+    changeKey(obj) {
+      this.searchForm = obj
+      this.loading = true
+      this.SetAuthVisible = false
+      return getAllUser(this.otherinfo.orgid, this.searchForm.name, this.searchForm.mobile, this.searchForm.pageSize, this.searchForm.pageNum, this.searchForm.searchVo).then(data => {
+        this.loading = false
+        this.usersArr = data.list
+        this.total = data.total
+      }).catch((err) => {
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
+    },
     fetchAllUser(orgid, username, mobilephone) {
       return getAllUser(orgid, username || '', mobilephone || '')
     },
@@ -299,7 +323,7 @@ export default {
     // 获取组件返回的搜索参数
     getSearchParam(searchParam) {
       this.searchForm.pageNum = this.$options.data().searchForm.pageNum
-      this.searchForm.pageSize = this.$options.data().searchForm.pageNum
+      this.searchForm.pageSize = this.$options.data().searchForm.pageSize
       // 根据搜索参数请求后台获取数据
       Object.assign(this.searchForm, searchParam)
       this.fetchData()

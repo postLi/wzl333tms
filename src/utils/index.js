@@ -84,7 +84,7 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
       } else {
         // const values = data.map(item => Number(item[prop]))
         let isAllEmpty = true
-        let allCountIndex = {}
+        const allCountIndex = {}
         const values = data.map((item, mindex) => {
           if (item[prop] !== '') {
             isAllEmpty = false
@@ -94,7 +94,6 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
         if (isAllEmpty) {
           sums[index] = defaultNoneString
         } else {
-
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -391,7 +390,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number

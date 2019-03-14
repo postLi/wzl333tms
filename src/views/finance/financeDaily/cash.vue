@@ -1,6 +1,6 @@
 <template>
   <!-- 回扣 -->
-  <div class="tab-content finance-tab-content" v-loading="loading">
+  <div class="tab-content finance-tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!--  <div class="tab_count_lyy">
@@ -52,13 +52,23 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.preview" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <el-button v-if="scope.row[column.prop]" size="mini" type="text" icon="el-icon-picture-outline" @click.stop.prevent.native="previewPicture( scope.row, scope.$index, column.prop)">预览({{scope.row[column.prop].split(',').length}})</el-button>
               </template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
+            <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -103,12 +113,14 @@ import { postBillRecordList, cancelVerification, delBillRecord } from '@/api/fin
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Income
+    Income,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -144,158 +156,158 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: '凭证号',
-          prop: 'certNo',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '手工凭证号',
-          prop: 'manualCert',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '来源',
-          prop: 'dataSrcZh',
-          width: '110',
-          fixed: true
-        },
-        {
-          label: '类别',
-          prop: 'verificationWay',
-          width: '110',
-        },
-        {
-          label: '方向',
-          prop: 'paymentsTypeZh',
-          width: '50',
-          fixed: true
-        },
-        {
-          label: '金额',
-          prop: 'amount',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '发票号码',
-          prop: 'invoiceNo',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '收据号码',
-          prop: 'receiptNo',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '支票号码',
-          prop: 'checkNo',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '凭证日期',
-          prop: 'certTime',
-          width: '160',
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },
+      {
+        label: '凭证号',
+        prop: 'certNo',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '手工凭证号',
+        prop: 'manualCert',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '来源',
+        prop: 'dataSrcZh',
+        width: '110',
+        fixed: true
+      },
+      {
+        label: '类别',
+        prop: 'verificationWay',
+        width: '110'
+      },
+      {
+        label: '方向',
+        prop: 'paymentsTypeZh',
+        width: '100',
+        fixed: true
+      },
+      {
+        label: '金额',
+        prop: 'amount',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '发票号码',
+        prop: 'invoiceNo',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '收据号码',
+        prop: 'receiptNo',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '支票号码',
+        prop: 'checkNo',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '凭证日期',
+        prop: 'certTime',
+        width: '160',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
-          fixed: false
-        },
-        {
-          label: '系统操作日期',
-          prop: 'createTime',
-          width: '160',
+        fixed: false
+      },
+      {
+        label: '系统操作日期',
+        prop: 'createTime',
+        width: '160',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
-          fixed: false
-        },
-        {
-          label: '一级科目',
-          prop: 'subjectOneName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '二级科目',
-          prop: 'subjectTwoName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '三级科目',
-          prop: 'subjectThreeName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '四级科目',
-          prop: 'subjectFourName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '摘要',
-          prop: 'remark',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '记账网点',
-          prop: 'orgName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '核销人',
-          prop: 'createName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '笔数',
-          prop: 'verifyCount',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '审核人',
-          prop: 'verifyMan',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '审核状态',
-          prop: 'verifyStatusZh',
-          width: '90',
-          fixed: true
-        },
-        {
-          label: '审核日期',
-          prop: 'verifyTime',
-          width: '180',
-          fixed: false
-        },
-        {
-          label: '凭证图片',
-          prop: 'picsPath',
-          width: '90',
-          preview: true,
-          fixed: true
-        }
+        fixed: false
+      },
+      {
+        label: '一级科目',
+        prop: 'subjectOneName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '二级科目',
+        prop: 'subjectTwoName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '三级科目',
+        prop: 'subjectThreeName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '四级科目',
+        prop: 'subjectFourName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '摘要',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '记账网点',
+        prop: 'orgName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '核销人',
+        prop: 'createName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '笔数',
+        prop: 'verifyCount',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '审核人',
+        prop: 'verifyMan',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '审核状态',
+        prop: 'verifyStatusZh',
+        width: '90',
+        fixed: true
+      },
+      {
+        label: '审核日期',
+        prop: 'verifyTime',
+        width: '180',
+        fixed: false
+      },
+      {
+        label: '凭证图片',
+        prop: 'picsPath',
+        width: '90',
+        preview: true,
+        fixed: true
+      }
       ]
     }
   },
@@ -307,6 +319,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchList()
+    },
     handleCommand(command) {
       console.log('智能核销::', command)
       switch (command) {
@@ -378,7 +394,7 @@ export default {
         case 'expandtiure': // 记支出
           this.expandtiure()
           break
-        case 'delCount': // 删除 
+        case 'delCount': // 删除
           if (isShow) {
             this.delCount()
           }
@@ -417,8 +433,8 @@ export default {
       }
     },
     backCount() {
-      // 反核销 
-      // isNeededVoucher 2-不需要财务凭证的时候，可以直接反核销 
+      // 反核销
+      // isNeededVoucher 2-不需要财务凭证的时候，可以直接反核销
       // isNeededVoucher 1-需要反核销的时候，只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
       if (this.selectedList[0].isNeededVoucher === '2') {
@@ -436,27 +452,27 @@ export default {
       }
     },
     cancelVerification() {
-      let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】' : ''
+      const certNo = this.selectedList[0].certNo ? '【 ' + this.selectedList[0].certNo + ' 】' : ''
       this.$confirm('确定要反核销' + certNo + '吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.loading = true
-          cancelVerification({
-              id: this.selectedList[0].id
-            }).then(data => {
-              this.loading = false
-              this.$message.success('反核销成功！')
-              this.$refs.multipleTable.clearSelection()
-              this.fetchList()
-            })
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        cancelVerification({
+          id: this.selectedList[0].id
+        }).then(data => {
+          this.loading = false
+          this.$message.success('反核销成功！')
+          this.$refs.multipleTable.clearSelection()
+          this.fetchList()
+        })
             .catch(err => {
               this.loading = false
               this.$refs.multipleTable.clearSelection()
               this._handlerCatchMsg(err)
             })
-        })
+      })
         .catch(() => {})
     },
     delCount() { // 删除 只有手工录入并且未审核的可以删除
@@ -468,23 +484,23 @@ export default {
         }
         this.$refs.multipleTable.clearSelection()
       } else {
-        let certNo = this.selectedList[0].certNo ? '【 '+this.selectedList[0].certNo +' 】': ''
+        const certNo = this.selectedList[0].certNo ? '【 ' + this.selectedList[0].certNo + ' 】' : ''
         this.$confirm('确定要删除' + certNo + '吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            delBillRecord({ id: this.selectedList[0].id }).then(data => {
-                this.loading = false
-                this.$message.success('删除成功！')
-                this.fetchList()
-              })
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          delBillRecord({ id: this.selectedList[0].id }).then(data => {
+            this.loading = false
+            this.$message.success('删除成功！')
+            this.fetchList()
+          })
               .catch(err => {
                 this._handlerCatchMsg(err)
                 this.loading = false
               })
-          })
+        })
           .catch(() => {})
       }
     },

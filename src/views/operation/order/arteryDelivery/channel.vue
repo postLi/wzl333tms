@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 途径卸货 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -15,8 +15,19 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -44,12 +55,14 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import { unloadList, cancelUnload } from '@/api/operation/discharge'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Discharge
+    Discharge,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -169,6 +182,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchList()
+    },
     getSearchParam(obj) { // 查询
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -181,14 +198,14 @@ export default {
     fetchList() {
       this.$refs.multipleTable.clearSelection()
       this.closeSetupTable()
-      let query = objectMerge2({}, this.searchQuery)
+      const query = objectMerge2({}, this.searchQuery)
       unloadList(query).then(data => {
-          if (data) {
-            this.dataList = data.list
-            this.total = data.total
-          }
-          this.loading = false
-        })
+        if (data) {
+          this.dataList = data.list
+          this.total = data.total
+        }
+        this.loading = false
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -226,7 +243,7 @@ export default {
       //   return e.unloadSignName === '未卸货'
       // })
       if (this.selected.length > 0) { // 一次只能选择一条数据选择多条数据默认为第一条
-        let selected = this.selected[0]
+        const selected = this.selected[0]
         if (selected.batchTypeId === 53) { // 53-在途中
           this.selectInfo = selected
           this.dischargeVisible = true
@@ -238,24 +255,23 @@ export default {
         // this.$message.warning('该批次已经卸货~')
         this.$refs.multipleTable.clearSelection()
       }
-
     },
     cancel() { // 取消卸货
       this.selected = this.selected.filter(e => {
         return e.unloadSignName === '已卸货'
       })
       if (this.selected.length > 0) { // 一次只能选择一条数据选择多条数据默认为第一条
-        let selected = Object.assign({}, this.selected[0])
-        if (selected.batchTypeId === 53 ) {
+        const selected = Object.assign({}, this.selected[0])
+        if (selected.batchTypeId === 53) {
           this.$confirm('确定要取消卸货吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
             cancelUnload([selected.loadId]).then(data => {
-                this.$message.success('取消卸货成功!')
-                this.fetchList()
-              })
+              this.$message.success('取消卸货成功!')
+              this.fetchList()
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
               })

@@ -1,6 +1,6 @@
 <template>
   <!-- 短驳费 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
@@ -18,8 +18,15 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -48,11 +55,13 @@ import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -88,129 +97,133 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: '短驳批次',
-          prop: 'batchNo',
-          width: '130',
-          fixed: true
-        },
-        {
-          label: '核销状态',
-          prop: 'statusName',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '短驳时间',
-          prop: 'actualSendtime',
-          width: '160',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '接收时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '短驳费',
-          prop: 'fee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '已核销短驳费',
-          prop: 'paidFee',
-          width: '100',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          }
-        },
-        {
-          label: '未核销短驳费',
-          prop: 'unpaidFee',
-          width: '100',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          }
-        },
-        {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '司机名称',
-          prop: 'dirverName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '司机电话',
-          prop: 'dirverMobile',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '短驳件数',
-          prop: 'loadAmountall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '短驳重量',
-          prop: 'loadWeightall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '短驳体积',
-          prop: 'loadVolumeall',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'remark',
-          width: '150',
-          fixed: false
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
+      },
+      {
+        label: '短驳批次',
+        prop: 'batchNo',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '核销状态',
+        prop: 'statusName',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '短驳时间',
+        prop: 'actualSendtime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.actualSendtime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '接收时间',
+        prop: 'receivingTime',
+        width: '160',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '短驳费',
+        prop: 'fee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '已核销短驳费',
+        prop: 'paidFee',
+        width: '100',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        }
+      },
+      {
+        label: '未核销短驳费',
+        prop: 'unpaidFee',
+        width: '100',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        }
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '司机名称',
+        prop: 'dirverName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '短驳件数',
+        prop: 'loadAmountall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '短驳重量',
+        prop: 'loadWeightall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '短驳体积',
+        prop: 'loadVolumeall',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ],
       selectedDataList: []
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchList()
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -243,14 +256,14 @@ export default {
           break
         case 'export':
           SaveAsFile({
-             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费核销-短驳费-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-             data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
+            data: this.selectedDataList.length > 0 ? this.selectedDataList : this.dataList,
             columns: this.tableColumn,
             name: '车费核销-短驳费'
           })
@@ -313,7 +326,7 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    getSummaries (param) {
+    getSummaries(param) {
       return getSummaries(param)
     }
   }

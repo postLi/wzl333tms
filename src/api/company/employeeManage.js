@@ -1,7 +1,11 @@
 import fetch from '../../utils/fetch'
 import CACHE from '@/utils/cache'
-import { getSelectType } from '@/api/common'
-import { getUserInfo } from '@/utils/auth'
+import {
+  getSelectType
+} from '@/api/common'
+import {
+  getUserInfo
+} from '@/utils/auth'
 import md5 from 'js-md5'
 
 /**
@@ -109,7 +113,10 @@ export function getAuthInfo(orgid, pageSize = 50, currentPage = 1) {
       rolesName: ''
     }
   }).then(res => {
-    return res.data || { total: 0, list: [] }
+    return res.data || {
+      total: 0,
+      list: []
+    }
   })
 }
 
@@ -118,16 +125,25 @@ export function getAuthInfo(orgid, pageSize = 50, currentPage = 1) {
  * @param {*} name 姓名
  * @param {*} orgid 组织ID
  */
-export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1) {
+export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1, searchVo) {
   let params = orgid
   if (typeof orgid !== 'object') {
-    params = { pageSize, currentPage, vo: {
-      name, orgid, mobilephone
-    }
+    params = {
+      pageSize,
+      currentPage,
+      vo: {
+        name,
+        orgid,
+        mobilephone
+      },
+      searchVo
     }
   }
   return fetch.post('/api-system/system/user/v1/findAllInfo', params).then(res => {
-    return res.data || { total: 0, list: [] }
+    return res.data || {
+      total: 0,
+      list: []
+    }
   })
 }
 
@@ -139,13 +155,21 @@ export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage
 export function getAllOrgUser(orgid, name, mobilephone, pageSize = 100, currentPage = 1) {
   let params = orgid
   if (typeof orgid !== 'object') {
-    params = { pageSize, currentPage, vo: {
-      name, orgid, mobilephone
-    }
+    params = {
+      pageSize,
+      currentPage,
+      vo: {
+        name,
+        orgid,
+        mobilephone
+      }
     }
   }
   return fetch.post('/api-system/system/user/v1/findAllInfoByOrgId', params).then(res => {
-    return res.data || { total: 0, list: [] }
+    return res.data || {
+      total: 0,
+      list: []
+    }
   })
 }
 
