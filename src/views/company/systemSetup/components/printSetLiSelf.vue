@@ -581,6 +581,7 @@ export default {
         return e.filedValue === row.filedValue
       }).length
       if (row.filedValue === 'customFields') { // 自定义字段的添加，点击后需要清空输入框
+        row = objectMerge2({}, row)
         row.topy = 0
         row.leftx = 0
         row.filedName = this.labelSelf
@@ -599,7 +600,7 @@ export default {
         })
         console.log('row::::', row)
         const currentRow = objectMerge2({}, row)
-        currentRow._index = ++this.labelIndex
+        currentRow._index = this.labelIndex++
         currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
         currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
         currentRow.fontsize = this.defaultLabelFontSize
@@ -643,7 +644,7 @@ export default {
     },
     editDragItem(row, index, event) { // 编辑显示项
       this.dragDetailInfo = {}
-      this.dragDetailInfo = Object.assign({}, row)
+      this.dragDetailInfo = objectMerge2({}, row)
       console.log('编辑显示项:', this.dragDetailInfo, index)
       this.classItem = []
       this.showDragTips = []
@@ -1038,7 +1039,7 @@ export default {
                   em.bold = em.bold === 2 // 2-true 加粗
                   em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
                     // ///////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
-                  em._index = ++this.labelIndex
+                  em._index = this.labelIndex++
                   this.labelListView.push(em)
                 } else {
                   if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
