@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 打印 现金记账凭证【出纳】 -->
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
+    padding: 0;
+    margin: 0;
+    font-family: '微软雅黑';
+  }
+
+
+  body {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  body h2 {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  table {
+    width: 100%;
+    min-width: 700px;
+    padding: 10px 0;
+  }
+
+  table:nth-child(1),
+  table:nth-child(2),
+  table:nth-child(3) {}
+
+  table tr th {
+    text-align: right;
+    width: 100px;
+    padding-right: 15px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  table tr td {
+    width: 20%;
+    max-width: 300px;
+    word-break: break-all;
+  }
+
+  #table_content {
+    padding: 0px 20px;
+    min-width: 700px;
+  }
+
+  span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-bottom: 1px solid black;
+  }
+
+  </style>
+</head>
+
+<body>
+  <h2>现金记账凭证【出纳】</h2>
+  <table class="table_content" id="table_content" style="border: 1px solid black;" borderCollapse="collapse">
+    <!-- <table><tr><th>记账网点</th><td></td><th>凭证编号</th><td></td><th></th><td></td></tr></table> -->
+    <!-- <table><tr><th>记账方向</th><td></td><th>凭证日期</th><td></td><th>去向</th><td></td></tr></table> -->
+    <!-- <table><tr><th>一级科目</th><td></td><th>二级科目</th><td></td><th>三级科目</th><td></td></tr><tr><th>四级科目</th><td></td><th>凭证类别</th><td></td><th>发生金额</th><td></td></tr></table> -->
+    <!-- <table><tr><th>收据号码</th><td></td><th>发票号码</th><td></td><th>支票号码</th><td></td></tr><tr><th>手工凭证</th><td></td><th>摘要</th><td></td></tr></table> -->
+  </table>
+  <script>
+  function getUrlParams() {
+    var str = decodeURI(location.href)
+    var num = str.indexOf('?')
+    str = str.substr(num + 1)
+    var arr = str.split('&')
+    var query = new Object()
+
+    for (var i = 0; i < arr.length - 1; i++) {
+      num = arr[i].indexOf("=");
+      if (num > 0) {
+        name = arr[i].substring(0, num);
+        value = arr[i].substr(num + 1);
+        query[name] = value;
+      }
+    }
+    return query
+  }
+  var data = getUrlParams()
+  var table_content = document.getElementById('table_content')
+  var voucherInfoStr = ''
+  voucherInfoStr += '<tr><td><table><tr><th>记账网点</th><td>' +
+    data.orgName + '</td><th>凭证编号</th><td>' +
+    data.certNo + '</td><th></th><td></td></tr></table><span></span></td></tr>'
+
+  voucherInfoStr += '<tr><td><table><tr><th>记账方向</th><td>' +
+    data.paymentsTypeZh + '</td><th>凭证日期</th><td>' +
+    data.certTime + '</td><th>去向</th><td>' +
+    data.verificationWay + '</td></tr></table><span></span></td></tr>'
+
+  voucherInfoStr += '<tr><td><table><tr><th>一级科目</th><td>' +
+    data.subjectOneName + '</td><th>二级科目</th><td>' +
+    data.subjectTwoName + '</td><th>三级科目</th><td>' +
+    data.subjectThreeName + '</td></tr><tr><th>四级科目</th><td>' +
+    data.subjectFourName + '</td><th>凭证类别</th><td>' +
+    data.certTypeName + '</td><th>发生金额</th><td>' +
+    data.amount + '</td></tr></table><span></span></td></tr>'
+
+  voucherInfoStr += '<tr><td><table><tr><th>收据号码</th><td>' +
+    data.receiptNo + '</td><th>发票号码</th><td>' +
+    data.invoiceNo + '</td><th>支票号码</th><td>' +
+    data.checkNo + '</td></tr><tr><th>手工凭证</th><td>' +
+    data.manualCert + '</td><th>摘要</th><td>' +
+    data.remark + '</td></tr></table></td></tr>'
+  table_content.innerHTML = voucherInfoStr
+
+  </script>
+</body>
+
+</html>

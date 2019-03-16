@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    p {
+      padding: 0;
+      margin: 0;
+      font-family: '微软雅黑';
+    }
+
+    body {
+      padding: 10px 20px;
+      font-size: 15px;
+    }
+
+    .contract_title {
+      position: relative;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .contract_title h2 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 16px;
+    }
+    .contract_title h1 {
+      text-align: center;
+      /*margin: 0 0 10px;*/
+      font-size: 18px;
+
+    }
+    .contract_title h1 i {
+      font-style: normal;
+      font-size: 24px;
+    }
+
+    .contract_title_number {
+      position: absolute;
+      top: 5px;
+      right: 20px;
+    }
+
+    .contract_info {
+      text-indent: 2em;
+      margin-bottom: 10px;
+    }
+
+    .contract_form {
+      width: 100%;
+      float: left;
+    }
+
+    .contract_form_item {
+      width: 48%;
+      text-align: center;
+      float: left;
+    }
+
+    .contract_form_item ul {
+      padding: 0;
+    }
+
+    .contract_form_item ul li {
+      list-style: none;
+      text-align: left;
+      padding: 3px 0 0;
+    }
+
+    label {
+      min-width: 60px;
+      display: inline-block;
+    }
+
+    span {
+      padding: 0 10px 3px 0;
+      margin-left: 15px;
+      display: inline-block;
+      min-width: 120px;
+      border-bottom: 1px solid black;
+    }
+
+    #contract_time span,
+    #goods_info span {
+      padding: 0 10px;
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .contract_atricle p {
+      padding: 6px 0;
+    }
+
+  </style>
+</head>
+
+<body>
+<div class="contract_title">
+  <h1><i id="contract_companyname"></i><i id="contract_checkBillName">货物运输合同</i></h1>
+  <!-- <h2 > </h2> -->
+  <div class="contract_title_number" id="contract_title_number">No:23478237482378</div>
+</div>
+<div class="contract_info">
+  <p>委托方: <span id="partA"></span> (以下简称甲方)</p>
+  <p>承运方: <span id="partB"></span> (以下简称乙方)</p>
+  <p style="margin-top: 10px;">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
+</div>
+<div class="contract_atricle">
+  <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
+  <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方要负担其伙食费；</p>
+  <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付运费；</p>
+  <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
+  <p id="goods_info"></p>
+  <p id="contract_time"></p>
+  <p>七、本合同一式两份，双方各执一份，未尽事宜，双方另行协商，签字后生效。</p>
+  <p>关于本车：<span id="remark"></span></p>
+  <p>附：驾驶员、车辆登记</p>
+</div>
+<div class="contract_form" id="contract_form"></div>
+<div class="contract_form">
+  <div class="contract_form_item">
+    <ul>
+      <li><h3>甲方签章</h3></li>
+    </ul>
+
+  </div>
+  <div class="contract_form_item">
+    <ul>
+      <li><h3>乙方签章</h3></li>
+    </ul>
+  </div>
+</div>
+<script>
+  // var data = location.search
+  // document.getElementsByTagName
+  // ('h5')[0].
+  // innerHTML = data
+
+  function getUrlParams() {
+    var str = decodeURI(location.href)
+    // var str = location.href
+    var num = str.indexOf('?')
+    str = str.substr(num + 1)
+    var arr = str.split('&')
+    var query = new Object()
+
+    for (var i = 0; i < arr.length; i++) {
+      num = arr[i].indexOf("=");
+      if (num > 0) {
+        name = arr[i].substring(0, num);
+        value = arr[i].substr(num + 1);
+        query[name] = value;
+      }
+    }
+    return query
+  }
+
+  var data = getUrlParams()
+  var contract_checkBillName = document.getElementById('contract_checkBillName')
+  var contract_title_number = document.getElementById('contract_title_number')
+  var partA = document.getElementById('partA')
+  var contract_companyname = document.getElementById('contract_companyname')
+  var partB = document.getElementById('partB')
+  var contract_form = document.getElementById('contract_form')
+  var goods_info = document.getElementById('goods_info')
+  var contract_time = document.getElementById('contract_time')
+  var remark = document.getElementById('remark')
+  var formItemStr = ''
+  var goodsInfoStr = ''
+  var contractTimeStr = ''
+
+  
+  contract_checkBillName.innerHTML = data.checkBillName || '货物运输合同'
+  contract_checkBillName.style.fontSize = (data.heading_word_size || 18) + 'px'
+  document.body.style.fontSize = (data.content_word_size || 14) + 'px'
+  contract_title_number.innerHTML = 'NO.' + data.contractNo
+  partA.innerHTML = data.orgName
+  contract_companyname.innerHTML = data.heading_content || ''
+  contract_companyname.style.fontSize = (data.heading_word_size || 18) + 'px'
+  partB.innerHTML = data.carrier
+  // 双方信息
+  formItemStr += '<div class="contract_form_item"><ul><li><label>司机名称</label><span>' + data.dirverName + '</span></li>' +
+    '<li><label>家庭住址</label><span></span></li>' +
+    ' <li><label>家庭电话</label><span></span></li>' +
+    '<li><label>车架号</label><span>'+data.frameNum+'</span></li>' +
+    '<li><label>配载人员</label><span>' + data.userName + '</span></li></ul>' +
+    '</div><div class="contract_form_item"><ul><li><label>身份证号</label><span>' + data.driverCardid + '</span></li>' +
+    '<li><label>随车电话</label><span>' + data.dirverMobile + '</span></li>' +
+    '<li><label>车牌号</label><span>' + data.truckIdNumber + '</span></li>' +
+    '<li><label>发动机号</label><span>'+data.engineNum+'</span></li></ul><div>'
+  contract_form.innerHTML = formItemStr
+  // 货物信息
+  goodsInfoStr += '五、本车货物总为<span>' + data.loadAmountall + '</span>件<span>' +
+    data.loadWeightall + '</span>千克<span>' +
+    data.loadVolumeall + '</span>方,全程运费<span>' +
+    data.shipFeeAmount + '</span>元，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车现付运费<span>' +
+    data.nowpayCarriage + '</span>元，现付油卡<span>' +
+    data.nowpayOilCard + '</span>元，到付运费<span>' +
+    data.arrivepayCarriage + '</span>，到付油卡<span>' +
+    data.arrivepayOilCard + '</span>元，回付运费<span>' +
+    data.backpayCarriage + '</span>元，回付油卡<span>' +
+    data.backpayOilCard + '</span>元，保险费<span>' +
+    data.carloadInsuranceFee + '</span>元 。乙方必须将货物安全完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次运费；'
+  goods_info.innerHTML = goodsInfoStr
+
+  // 运输时间
+  contractTimeStr += '六、本次发车时间为<span>' +
+  data.actualSendtime + '</span>，到达时间为<span>' +
+  data.receivingTime + '</span>。<p>司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>'
+  contract_time.innerHTML = contractTimeStr
+  // 车辆备注
+  remark.innerHTML = data.remark ? data.remark : ''
+
+</script>
+</body>
+
+</html>

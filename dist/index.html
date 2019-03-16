@@ -1,0 +1,135 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=renderer content=webkit><meta name=force-rendering content=webkit><meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1"><title>安发TMS管理系统</title><meta name=keywords content=广州市安发网络科技有限公司><script>var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?6085308f371f1d5ecf1236cdb657301e";
+        var s = document.getElementsByTagName("script")[0]; 
+        if(location.href.indexOf('28tms.cn')!==-1){
+          s.parentNode.insertBefore(hm, s);
+        }
+      })();</script><script>var modernBrowser = (
+        'fetch' in window &&
+        'assign' in Object
+      );
+
+      if ( !modernBrowser ) {
+        var scriptElement = document.createElement('script');
+
+        scriptElement.async = false;
+        scriptElement.src = '/polyfills.js';
+        document.head.appendChild(scriptElement);
+      }</script><style>#old_msg_bg{position: fixed;
+      _position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: #000;
+      opacity: .5;
+      filter: alpha(opacity=50);
+      }
+      #old_msg{
+        font-size: 16px;
+        background: #fff;
+        position: fixed;
+        _position: absolute;
+        width: 325px;
+        height: 225px;
+        top: 50%;
+        left: 50%;
+        margin-top: -112px;
+        margin-left: -162px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      #old_msg_title{
+        text-align: center;
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+        font-size: 16px;
+        background: #eee;
+        color: #333;
+      }
+      #old_msg_con{
+        padding: 15px;
+        font-size: 12px;
+        color: #333;
+        line-height: 1.7;
+        margin-top: 15px;
+      }
+      #old_msg_con p{
+        margin: 0;
+      }
+
+      #old_msg_btn{
+        margin-top: 20px;
+        text-align: center;
+      }
+      #old_msg_btn a{
+        display: inline-block;
+        width: 112px;
+        height: 38px;
+        line-height: 38px;
+        border: 1px solid #eee;
+        color: #fff;
+        background: #0a84ff;
+        text-align: center;
+        margin-right: 15px;
+        text-decoration: none;
+        font-size: 14px;
+        border-radius: 5px;
+      }
+      #old_msg_btn a:hover{
+        background: #3698fa;
+      }
+      #old_msg_wrapper{
+        display: none;
+      }
+      #old_msg_wrapper.show_old_msg{
+        display: block;
+      }
+      .old_msg_modern #old_msg_bg{
+        display: none;
+      }
+      .old_msg_modern #old_msg{
+        width: 100%;
+        top: 0;
+        left: 0;
+        margin-top: 0;
+        margin-left: 0;
+        height: 40px;text-align: center;
+        background: #ffe;
+      }
+      .old_msg_modern #old_msg_title{
+        display: inline;
+        background: transparent;
+        border:  none;
+        color: #fe0000;
+      }
+      .old_msg_modern p,.old_msg_modern #old_msg_con,.old_msg_modern #old_msg_btn{
+        display: inline;
+      }
+      .old_msg_modern  #old_msg_btn a{
+        height: 30px;
+        line-height: 30px;
+      }</style><link rel="shortcut icon" href=/favicon.ico><link href=https://cdn.bootcss.com/element-ui/2.4.10/theme-chalk/index.css rel=stylesheet><link href=/static/css/all.e441d078583fe52a9526c4bae53a30ce.css rel=stylesheet></head><body><div id=old_msg_wrapper><div id=old_msg_bg></div><div id=old_msg><div id=old_msg_title>提示</div><div id=old_msg_con>由于浏览器兼容问题，为了您更好的使用TMS系统，<p>建议使用谷歌或者QQ浏览器哦！</p></div><div id=old_msg_btn><a href=https://www.google.cn/chrome/ target=_blank>下载谷歌</a> <a href=https://browser.qq.com/ target=_blank>下载QQ浏览器</a></div></div></div><script>;(function(){
+      var d = document;
+      var wrap = d.getElementById('old_msg_wrapper');
+      var ua = navigator.userAgent.toLowerCase();
+
+      if(/(chrome|Firefox|Trident\/7\.0|Edge)/i.test(ua)===false || /MSIE/i.test(ua) ){
+        //&& /qqbrowser/.test(ua)===false
+        wrap.className='show_old_msg';
+      } else {
+        // Don't show the msg in chrome or qq browser
+        // 判断是否为chrome浏览器，非chrome浏览器进入判断
+        if(/Safari\/\S+$/i.test(ua)===false){
+          // 判断是否为qq浏览器，非qq浏览器进入判断
+          if(/QQBrowser/i.test(ua)===false){
+            wrap.className='show_old_msg old_msg_modern';
+          }
+        }
+      }
+
+      // wrap.className='show_old_msg';
+      //old_msg_modern
+    })();</script><div id=app></div><script src=/static/js/vendor.dll.js></script><script type=text/javascript src=https://cdn.bootcss.com/vue/2.5.16/vue.min.js></script><script type=text/javascript src=https://cdn.bootcss.com/element-ui/2.4.10/index.js></script><script type=text/javascript src=https://cdn.bootcss.com/element-ui/2.4.10/locale/zh-CN.min.js></script><script type=text/javascript src=/static/js/manifest.d0c2542bc2c5a7fd0d3a.js></script><script type=text/javascript src=/static/js/vendor.225979ebdbe5e872fc22.js></script><script type=text/javascript src=/static/js/app.e095769f1d7397f87cbe.js></script></body></html>
