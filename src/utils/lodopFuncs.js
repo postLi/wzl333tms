@@ -888,10 +888,10 @@
      } else if (Number(infoDetail.shipDeliveryMethod) === 69) {
        obj.sendGood = '√' // 送货（√）
      }
-     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 168) {
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('168') !== -1) {
        obj.controlGoods = infoDetail.shipOther // 168-控货
      }
-     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 169) {
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('169') !== -1) {
        obj.valuables = infoDetail.shipOther //  169-贵重物品
      }
      if (infoDetail.shipEffective === 95) {
