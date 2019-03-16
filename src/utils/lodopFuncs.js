@@ -888,16 +888,20 @@
      } else if (Number(infoDetail.shipDeliveryMethod) === 69) {
        obj.sendGood = '√' // 送货（√）
      }
+      // //////////////////////////////////////////////////////////
+     // /控货和贵重物品 需要特殊处理为打勾
      if (infoDetail.shipOther && infoDetail.shipOther.indexOf('168') !== -1) {
-       obj.controlGoods = infoDetail.shipOther // 168-控货
+       obj.controlGoods = infoDetail.shipOther ? '√' : '' // 168-控货
      }
      if (infoDetail.shipOther && infoDetail.shipOther.indexOf('169') !== -1) {
-       obj.valuables = infoDetail.shipOther //  169-贵重物品
+       obj.valuables = infoDetail.shipOther ? '√' : '' //  169-贵重物品
      }
+     // //////////////////////////////////////////////////////////
+     // /加急urgent和普通common 需要特殊处理为打勾
      if (infoDetail.shipEffective === 95) {
-       obj.urgent = infoDetail.shipEffective // 95-时效-加急
+       obj.urgent = infoDetail.shipEffective ? '√' : '' // 95-时效-加急
      } else {
-       obj.common = infoDetail.shipEffective // 94-时效-普通
+       obj.common = infoDetail.shipEffective ? '√' : '' // 94-时效-普通
      }
      // //////////////////////////////////////////////////////////
      // /处理合计中文大写
