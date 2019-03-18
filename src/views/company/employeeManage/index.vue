@@ -106,8 +106,8 @@ export default {
       tablekey: '',
       tableColumn: [{
         label: '序号',
-        prop: 'id',
-        width: '60',
+        prop: 'number',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchForm.pageNum - 1) * this.searchForm.pageSize) + scope.$index + 1

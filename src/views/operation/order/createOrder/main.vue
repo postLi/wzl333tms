@@ -1096,15 +1096,15 @@ export default {
         proposedPrice: 0 // 总价
       },
       RECEIPT_TYPE: {}, // 回单类型中文
-      dialogVisibleModel: false, // 
+      dialogVisibleModel: false, //
       modelList: [] // 模板设置列表
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -1194,14 +1194,14 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -1219,7 +1219,6 @@ export default {
 
   },
   mounted() {
-
     // if (process.env.NODE_ENV !== 'production') {
     //   console.warn('模板设置字段：', this.form)
     //   console.warn('-----------开始分割线--------------')
@@ -1269,25 +1268,25 @@ export default {
     fetchModel() { // 获取模板信息
       this.loading = true
       return orderManage.getOrderModel().then(data => {
-          if (data) {
-            this.modelList = data
-            this.modelList.forEach((el, index) => {
-              if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
-                this.m_index.customerInfo = el.typeOrder
-              } else {
-                this.m_index[el.templateType] = el.typeOrder
-              }
-            })
-            this.m_index.tmsOrderTransfer = 5
-            this.org_m_index = objectMerge2({}, this.m_index)
-            console.log('模板各个模块排序：', JSON.stringify(this.m_index))
-            console.warn('所有模板排序信息 modelList:', this.modelList)
-            this.sortModel() // 初始化开单页面各个模块排序
-          } else {
-            this.modelList = this.$const.MODELLIST
-          }
-          this.loading = false
-        })
+        if (data) {
+          this.modelList = data
+          this.modelList.forEach((el, index) => {
+            if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+              this.m_index.customerInfo = el.typeOrder
+            } else {
+              this.m_index[el.templateType] = el.typeOrder
+            }
+          })
+          this.m_index.tmsOrderTransfer = 5
+          this.org_m_index = objectMerge2({}, this.m_index)
+          console.log('模板各个模块排序：', JSON.stringify(this.m_index))
+          console.warn('所有模板排序信息 modelList:', this.modelList)
+          this.sortModel() // 初始化开单页面各个模块排序
+        } else {
+          this.modelList = this.$const.MODELLIST
+        }
+        this.loading = false
+      })
         .catch(err => {
           this.modelList = this.$const.MODELLIST
           this._handlerCatchMsg(err)
@@ -1297,16 +1296,16 @@ export default {
       this.$nextTick(() => {
         if (this.modelList) {
           this.loading = true
-          let list = document.querySelectorAll('.model-order-item')
-          let arr = Array.prototype.slice.call(list)
+          const list = document.querySelectorAll('.model-order-item')
+          const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          let modelDiv = document.querySelectorAll('.model-order-list')[0]
+          const modelDiv = document.querySelectorAll('.model-order-list')[0]
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
-            let name = arr[i].getAttribute('data-name')
-            let index = arr[i].getAttribute('data-index')
+            const name = arr[i].getAttribute('data-name')
+            const index = arr[i].getAttribute('data-index')
           }
           this.loading = false
         }
@@ -1541,7 +1540,6 @@ export default {
           }
         }, 1000)
       }) // 查询开单页面模板
-
     },
     // 设置上一次的运单信息
     setLastOrderInfo() {
@@ -1814,8 +1812,6 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
-
-
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
@@ -2831,9 +2827,9 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         let obj = this.$refs['tmsOrder' + find.fieldProperty]
-          console.log('obj1111', obj)
+        console.log('obj1111', obj)
         obj = Array.isArray(obj) ? obj[1] : obj
-          console.log('obj2222', obj)
+        console.log('obj2222', obj)
         if (obj) {
           obj.focus()
         }
@@ -3353,24 +3349,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyLi().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.label
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-          CreatePrintPageEnable(printObj)
-          return data
-          this.setPrintData('lib') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyLi', data, printData)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-        })
+        CreatePrintPageEnable(printObj)
+        return data
+        this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyLi', data, printData)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3386,24 +3382,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyOrder().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-          CreatePrintPageEnable(printObj)
-          return
-          this.setPrintData('order') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyOrder', data)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-        })
+        CreatePrintPageEnable(printObj)
+        return
+        this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyOrder', data)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

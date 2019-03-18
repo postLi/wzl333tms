@@ -11,8 +11,8 @@
         <el-button :type="isDisBtn?'info':'primary'" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn" v-has:LOAD_DB_UPDATE>修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_DB_PRINT>打印</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_EXPORT>导出</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>轨迹跟踪-车辆</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>实时定位-车辆</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>车辆轨迹</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>车辆定位</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>

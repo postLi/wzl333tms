@@ -1,7 +1,7 @@
 
 <template>
   <div class="permManage miniHeaderSearch" v-loading="loading">
-    <div class="permManage-top">
+    <div class="permManage-top staff_searchinfo">
       <el-form :inline="true" :model="searchDate" class="demo-form-inline">
         <el-form-item label="角色名称：">
           <el-input v-model="searchDate.roleName" placeholder="" clearable></el-input>
@@ -99,7 +99,7 @@
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
-   import tableHeaderSearch from '@/components/tableHeaderSearch'
+  import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
     name: 'permissionManage',
     components: {
@@ -129,7 +129,7 @@
         loading: true,
         tableColumn: [{
           'label': '角色名称',
-          'prop': 'roleName',
+          'prop': 'roleName'
         },
         {
           'label': '创建者',
@@ -174,17 +174,17 @@
       this.getTreeInfo()
     },
     methods: {
-       changeKey(obj) {
-        this.searchQuery = obj
-        this.getSeachInfo(this.otherinfo.orgid, this.searchDate.roleName)
-      },
+      changeKey(obj) {
+         this.searchQuery = obj
+         this.getSeachInfo(this.otherinfo.orgid, this.searchDate.roleName)
+       },
       fetchAllUser(orgid, username, mobilephone) {
         return getAllUser(orgid, username || '', mobilephone || '')
       },
       getSeachInfo(orgid, roleName) {
         if (roleName) {
           this.searchDate.roleName = roleName
-          getAuthInfo(this.otherinfo.orgid, this.searchDate.roleName,this.searchQuery.currentPage, this.searchQuery.pageSize, this.searchQuery.searchVo).then(res => {
+          getAuthInfo(this.otherinfo.orgid, this.searchDate.roleName, this.searchQuery.currentPage, this.searchQuery.pageSize, this.searchQuery.searchVo).then(res => {
             this.loading = false
             this.usersArr = res.list
           }).catch(err => {
