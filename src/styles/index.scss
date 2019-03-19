@@ -148,28 +148,30 @@ table{
   vertical-align: middle;
 }
 .ship-zhuan{
-  background: url("./assets/icom/shipStatus/zhuan.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/zhuan.png") no-repeat;
 }
 .ship-chai{
-  background: url("./assets/icom/shipStatus/chai.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/chai.png") no-repeat;
 }
 .ship-gai{
-  background: url("./assets/icom/shipStatus/gai.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/gai.png") no-repeat;
 }
 .ship-kong{
-  background: url("./assets/icom/shipStatus/kong.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/kong.png") no-repeat;
 }
 .ship-yi{
-  background: url("./assets/icom/shipStatus/yi.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/yi.png") no-repeat;
 }
 .ship-ji{
-  background: url("./assets/icom/shipStatus/ji.png") no-repeat;;
+  background: url("./assets/icom/shipStatus/ji.png") no-repeat;
 }
 // 运单费用状态
 .shipstatus{
   position: absolute;
-  width: 120px;
-  height: 71px;
+  width: 140px;
+  height: 80px;
+  // width: 120px;
+  // height: 71px;
   top: 120px;
   right: 110px;
   display: none;
@@ -180,15 +182,15 @@ table{
 }
 .ship-bufenjiesuan{
   display: block;
-  background: url("./assets/icom/shipFeeStatus/bufenjiesuan.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/bufenjiesuan.png") no-repeat;
 }
 .ship-yunfeiweijie{
   display: block;
-  background: url("./assets/icom/shipFeeStatus/yunfeiweijie.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/yunfeiweijie.png") no-repeat;
 }
 .ship-yunfeiyijie{
   display: block;
-  background: url("./assets/icom/shipFeeStatus/yunfeiyijie.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/yunfeiyijie.png") no-repeat;
 }
 
 .ship-huidanweifafang,.ship-huidanyifafang,.ship-huidanweihuishou{
@@ -198,13 +200,13 @@ table{
   display: block;
 }
 .ship-huidanweihuishou{
-  background: url("./assets/icom/shipFeeStatus/y9.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y9.png") no-repeat;
 }
 .ship-huidanweifafang{
-  background: url("./assets/icom/shipFeeStatus/y8.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y8.png") no-repeat;
 }
 .ship-huidanyifafang{
-  background: url("./assets/icom/shipFeeStatus/y4.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y4.png") no-repeat;
 }
 
 .ship-huokuanweifafang,.ship-huokuanyifafang,.ship-huokuanweihuishou{
@@ -213,13 +215,13 @@ table{
   right: 400px;
 }
 .ship-huokuanweihuishou{
-  background: url("./assets/icom/shipFeeStatus/y10.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y10.png") no-repeat;
 }
 .ship-huokuanweifafang{
-  background: url("./assets/icom/shipFeeStatus/y6.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y6.png") no-repeat;
 }
 .ship-huokuanyifafang{
-  background: url("./assets/icom/shipFeeStatus/y7.png") no-repeat;;
+  background: url("./assets/icom/shipFeeStatus/y7.png") no-repeat;
 }
 
 

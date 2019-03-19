@@ -11,6 +11,17 @@ export default {
       this.$router.push('/operation/order/createOrder')
       // 2.新开窗口查看
       // openWindow('/createOrder', '创建运单', 1200, 666)
+
+      // console.log('route', this.$router, this.$store.state.tagsView.cachedViews)
+      // if (this.$store.state.tagsView.cachedViews) {
+      //   const cachedViews = Object.assign([], this.$store.state.tagsView.cachedViews)
+      //   const arr = cachedViews.filter(el => el.indexOf('createOrder') !== -1)
+      //   if (arr.len) {
+      //     this.$router.push('/operation/order/createOrder')
+      //   } else {
+      //     this.$router.push({ path: '/operation/order/createOrder', query: { tab: '创建运单' }})
+      //   }
+      // }
     }
   }
 }
@@ -31,7 +42,6 @@ export default {
   &:hover{
     background-color: rgba(0, 0, 0, .1);
   }
-
   .svg-icon{
     margin-right: 0px;
     font-size: 1.5em;

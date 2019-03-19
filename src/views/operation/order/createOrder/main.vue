@@ -1806,8 +1806,10 @@ export default {
         } else {
           param = this.$route.query
         }
-
-        if (param.orderid) {
+        if (whereAreYou === 'isSaveAndNew') {
+          this.output.iscreate = true
+          this.initCreate()
+        } else if (param.orderid) {
           this.output.orderid = param.orderid
           this.output.isOrder = true
           this.initOrder()
@@ -3318,7 +3320,7 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           this.submitForm()
           break
-        case 'saveInsertKey':
+        case 'saveInsertKey': // 保存并新增
           this.isSaveAndNew = true
           this.submitForm().then(r => {
             this.initIndex('isSaveAndNew')
