@@ -133,7 +133,7 @@ export default {
         {
           label: '序号',
           prop: 'id',
-          width: '60',
+          width: '70',
           fixed: true,
           slot: (scope) => {
             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -238,7 +238,7 @@ export default {
     }
   },
   methods: {
-     changeKey(obj) {
+    changeKey(obj) {
       this.searchQuery = obj
       this.fetchAllCustomer()
     },

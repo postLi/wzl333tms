@@ -13,7 +13,7 @@
         <!-- 左边表格区 -->
         <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-            <el-table-column fixed width="50" label="序号">
+            <el-table-column fixed width="60" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
               </template>
@@ -49,7 +49,7 @@
         <!-- 右边表格区 -->
         <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-            <el-table-column fixed width="50" label="序号">
+            <el-table-column fixed width="60" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
               </template>
@@ -144,47 +144,47 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'totalStatusCn',
-          width: '120'
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '120',
-          fixed: false
-        },
-        {
-          'label': '现付',
-          'prop': 'nowPayFee'
-        }, {
-          'label': '现付核销状态',
-          'prop': 'nowPayStateCn'
-        }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'totalStatusCn',
+        width: '120'
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        'label': '现付',
+        'prop': 'nowPayFee'
+      }, {
+        'label': '现付核销状态',
+        'prop': 'nowPayStateCn'
+      }, {
           'label': '已核销现付',
           'prop': 'finishNowPayFee',
           slot: (scope) => {
@@ -214,63 +214,63 @@ export default {
           'prop': 'receiverCustomerUnit'
         },
 
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime)}`
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime)}`
         }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
       // getRouteInfo: {
       //   vo: {
@@ -309,23 +309,23 @@ export default {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       console.log(obj.pageSize, obj.pageNum, obj)
-       this.pageGetList()
+      this.pageGetList()
     },
     pageGetList() {
-      let rightTable = objectMerge2([], this.rightTable)
+      const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-       accountApi.getReceivableList(this.searchQuery).then(data => {
-          if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+        if (data) {
+           this.leftTable = Object.assign([], data.list)
+           this.totalLeft = data.total
+           rightTable.forEach((el, index) => {
               this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
             })
-          }
-          this.orgLeftTable = Object.assign([], this.leftTable)
-          this.loading = false
-        })
+         }
+        this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -375,7 +375,6 @@ export default {
       // this.tableReceiptInfo = this.$options.data().tableReceiptInfo
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
-
 
       if (!handle) {
         this.initLeftParams() // 设置searchQuery
@@ -617,7 +616,7 @@ export default {
     },
 
     getSumRight(param) { // 右边表格合计-自定义显示
-      let arr = objectMerge2([], operationPropertyCalc)
+      const arr = objectMerge2([], operationPropertyCalc)
       arr.forEach((el, index) => {
         if (el === '_index|1|单') {
           arr[index] = '_index|2|单'
@@ -626,7 +625,7 @@ export default {
       return getSummaries(param, arr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      let arr = objectMerge2([], operationPropertyCalc)
+      const arr = objectMerge2([], operationPropertyCalc)
       arr.forEach((el, index) => {
         if (el === '_index|1|单') {
           arr[index] = '_index|2|单'

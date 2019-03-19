@@ -143,14 +143,16 @@
               </div>
               <div class="tab_info artDelivery_table">
                 <div class="_btns_box">
+                 
                   <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isAlFun" class="table_poptitle">{{popTitle}}
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain class="table_export">打印清单
+                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出
+                  <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain class="table_export">打印清单
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
+                  <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出
                   </el-button>
+                  
                 </div>
                 <div class="infos_tab">
                   <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :row-class-name="classLineRed">
@@ -513,41 +515,41 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
-        }, {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: true
-        }, {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '150',
-          fixed: true
-        }, {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFee',
-          width: '100',
-          fixed: false
-        },
+        label: '序号',
+        prop: 'number',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '150',
+        fixed: true
+      }, {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFee',
+        width: '100',
+        fixed: false
+      },
         //   {
         //   label: '应到件数',
         //   prop: 'loadAmount',
@@ -565,49 +567,49 @@ export default {
         //   fixed: false
         // },
         // v-if="isAlFun"   入库前的
-        {
-          label: '实到件数',
-          prop: 'actualAmount',
-          width: '100',
-          isAlFun: true,
-          expand: true,
-          fixed: false,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
-          }
-        }, {
-          label: '实到重量(kg)',
-          prop: 'actualWeight',
-          width: '120',
-          expand: true,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
-          }
-        }, {
-          label: '实到体积(m³)',
-          prop: 'actualVolume',
-          width: '120',
-          expand: true,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-          fixed: false,
-
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
-          }
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        isAlFun: true,
+        expand: true,
+        fixed: false,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
         },
+
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
+        }
+      }, {
+        label: '实到重量(kg)',
+        prop: 'actualWeight',
+        width: '120',
+        expand: true,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
+        },
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
+        }
+      }, {
+        label: '实到体积(m³)',
+        prop: 'actualVolume',
+        width: '120',
+        expand: true,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
+        },
+        fixed: false,
+
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
+        }
+      },
         // v-if="!isAlFun"  入库后的
         // {
         //   label: '实到件数',
@@ -635,67 +637,67 @@ export default {
         //   fixed: false
         // },
         //
-        {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '130',
-          fixed: false
-        }, {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '110',
-          fixed: false
-        }
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '130',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '110',
+        fixed: false
+      }
       ]
     }
   },
@@ -1145,7 +1147,7 @@ export default {
           this.loading = false
         })
       } else {
-        let countActual = 0
+        const countActual = 0
         let countStatus = 0
         this.selected.forEach((value, index, array) => {
           if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
@@ -1224,13 +1226,13 @@ export default {
       }
     },
     getSelection(selection) {
-      let arr = []
+      const arr = []
       this.detailList.forEach((el, index) => {
         selection.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
             if (em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
-            }else {
+            } else {
               arr.push(em)
             }
           }
@@ -1291,13 +1293,9 @@ export default {
       .el-button.table_poptitle {
         position: absolute;
       }
-      .el-button.table_export {
-        position: absolute;
-        right: 200px;
-      }
+      .el-button.table_export,
       .el-button.table_import {
-        position: absolute;
-        right: 110px;
+        float: right;
       }
       .table_setup {
         float: right;

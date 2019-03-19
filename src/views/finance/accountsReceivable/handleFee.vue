@@ -155,7 +155,7 @@ export default {
         {
           label: '序号',
           prop: 'number',
-          width: '50',
+          width: '70',
           fixed: true,
           slot: scope => {
             return (
@@ -174,7 +174,7 @@ export default {
         {
           label: '发车类型',
           prop: 'loadTypeName',
-          width: '90',
+          width: '100',
           fixed: true
         },
         {
@@ -210,7 +210,7 @@ export default {
         {
           label: '已核销操作费',
           prop: 'paidFee',
-          width: '110',
+          width: '140',
           slot: scope => {
             const row = scope.row
             const fee =
@@ -232,7 +232,7 @@ export default {
         {
           label: '未核销操作费',
           prop: 'unpaidFee',
-          width: '110',
+          width: '140',
           slot: scope => {
             const row = scope.row
             const fee =
@@ -254,7 +254,7 @@ export default {
         {
           label: '已付（应付）',
           prop: 'pandHandlingFeePay',
-          width: '120',
+          width: '140',
           fixed: false
         },
         {

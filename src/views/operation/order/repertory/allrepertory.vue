@@ -5,8 +5,8 @@
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-menu" plain @click="doAction('colorpicker')" v-has:ORDER_COLOUR1>提醒颜色设置</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:ORDER_COLOURP1>打印</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:ORDER_COLOUREXP1>导出</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:ORDER_COLOURP1>打印</el-button>
+        <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:ORDER_COLOUREXP1>导出</el-button>
         <el-popover
             @mouseenter.native="showSaveBox"
             @mouseout.native="hideSaveBox"

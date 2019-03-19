@@ -167,13 +167,13 @@ export default {
       {
         label: '凭证号',
         prop: 'certNo',
-        width: '150',
+        width: '170',
         fixed: true
       },
       {
         label: '手工凭证号',
         prop: 'manualCert',
-        width: '150',
+        width: '170',
         fixed: false
       },
       {
@@ -220,7 +220,7 @@ export default {
       {
         label: '凭证日期',
         prop: 'certTime',
-        width: '160',
+        width: '170',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
@@ -229,7 +229,7 @@ export default {
       {
         label: '系统操作日期',
         prop: 'createTime',
-        width: '160',
+        width: '180',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
@@ -585,7 +585,7 @@ export default {
         this.previews = Object.assign([], row[prop].split(','))
         this.isShowPre = true
       }
-      console.log('previewPicture', index, row, )
+      console.log('previewPicture', index, row,)
     }
   }
 }

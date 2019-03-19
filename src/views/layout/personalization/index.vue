@@ -82,13 +82,14 @@ export default {
         formModel[i] = formModel[i] === '' ? this.$options.data().formModel[i] : formModel[i]
       }
       const body = document.body
-      let themeName = 'tms_theme_default'
+      // let themeName = 'tms_theme_default'
+      let themeName = ''
       switch (formModel.fontSize) {
         case '12': //  '超小'
           themeName = 'tms_theme_mini'
           break
         case '14'://  '常规'
-          themeName = 'tms_theme_default'
+          themeName = ''
           break
         case '16': // '较大'
           themeName = 'tms_theme_medium'

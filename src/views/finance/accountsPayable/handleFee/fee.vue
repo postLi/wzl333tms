@@ -15,7 +15,7 @@
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;"
          :show-summary="true" :summary-method="getSummaries">
-          <el-table-column fixed sortable type="selection" width="60">
+          <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
@@ -98,7 +98,7 @@ export default {
       {
         label: '发车类型',
         prop: 'loadTypeName',
-        width: '90',
+        width: '100',
         fixed: true
       },
       {
@@ -116,13 +116,13 @@ export default {
       {
         label: '发车时间',
         prop: 'departureTime',
-        width: '160',
+        width: '170',
         fixed: false
       },
       {
         label: '到达时间',
         prop: 'receivingTime',
-        width: '160',
+        width: '170',
         fixed: false
       },
       {
@@ -137,7 +137,7 @@ export default {
       {
         label: '已核销操作费',
         prop: 'paidFee',
-        width: '110',
+        width: '140',
         slot: (scope) => {
           const row = scope.row
           const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
@@ -150,7 +150,7 @@ export default {
       {
         label: '未核销操作费',
         prop: 'unpaidFee',
-        width: '110',
+        width: '140',
         slot: (scope) => {
           const row = scope.row
           const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
@@ -164,7 +164,7 @@ export default {
       {
         label: '已付（应付）',
         prop: 'pandHandlingFeePay',
-        width: '120',
+        width: '140',
         slot: (scope) => {
           return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
         },

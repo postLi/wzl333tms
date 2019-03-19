@@ -345,7 +345,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'number',
-        width: '60',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -363,7 +363,7 @@ export default {
       }, {
         label: '开单日期',
         prop: 'shipCreateTime',
-        width: '160',
+        width: '180',
         slot: (scope) => {
           return `${parseTime(scope.row.shipCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -371,7 +371,7 @@ export default {
       }, {
         label: '货号',
         prop: 'shipGoodsSn',
-        width: '120',
+        width: '150',
         fixed: false
       }, {
         label: '发站',
