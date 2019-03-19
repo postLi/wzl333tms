@@ -338,7 +338,7 @@
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipPrintLib'">
                   <span class="order-form-label">打印标签</span>
                   <el-form-item prop="tmsOrderShip.shipPrintLib">
-                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib">
+                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib" @change="changePrintAmount">
                       <template slot="append">份</template>
                     </el-input>
                   </el-form-item>
@@ -719,8 +719,8 @@ export default {
   },
   data() {
     const _this = this
-
     return {
+      isPrintAmount: false,
       org_m_index: {
         tmsOrderShipTop: 1,
         customerInfo: 2,
@@ -1155,7 +1155,7 @@ export default {
       this.form.tmsOrderShip.shipOther = newVal.join(',')
       console.log('this.form.tmsOrderShip.shipOther:', this.form.tmsOrderShip.shipOther)
     },
-    'form.tmsOrderShip.shipPrintLib': {
+    'form.tmsOrderShip.shipPrintLib': { // 打印标签数量
       handler(newVal) {
         if (newVal > 500) {
           this.form.tmsOrderShip.shipPrintLib = 500
@@ -1259,8 +1259,25 @@ export default {
       // 中转默认付款方式
       this.form.tmsOrderTransfer.paymentId = 16
     }
+    this.initPrintAmount()
   },
   methods: {
+    initPrintAmount() {
+      this.isPrintAmount = false
+      if (this.otherinfo.systemSetup) {
+        const systemSetup = this.otherinfo.systemSetup
+        if (systemSetup.shipPageFunc) {
+           // systemSetup.shipPageFunc.printLabelIsAmount  0否1是，默认是1
+          this.isPrintAmount = systemSetup.shipPageFunc.printLabelIsAmount === '1'
+        }
+        console.log('系统设置 打印标签是否默认件数：', this.isPrintAmount, this.otherinfo.systemSetup, systemSetup.shipPageFunc)
+      }
+    },
+    changePrintAmount(val) {
+      // 修改打印标签数量
+      console.log('val changePrintAmount', val)
+      this.isPrintAmount = false
+    },
     setModel() {
       // 重新修改开单页面的模板
       this.fetchModel()
@@ -2300,6 +2317,11 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // }
       this.setCargoNum()
+      console.log('件数 change方法', index, name, event)
+      if (this.isPrintAmount) {
+        // ture 打印标签数量默认为第一个货品的件数
+        this.form.tmsOrderShip.shipPrintLib = event.target.value
+      }
     },
     // 修改货品列表
     changeFee(index, name, event) {

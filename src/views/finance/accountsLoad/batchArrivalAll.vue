@@ -178,8 +178,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达时间',
@@ -187,8 +187,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到付车费',
@@ -202,9 +202,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+        }
       },
       {
         label: '未核销到付车费',
@@ -212,9 +212,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+        }
       },
       {
         label: '到付油卡',
@@ -228,9 +228,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+        }
       },
       {
         label: '未核销到付油卡',
@@ -238,9 +238,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+        }
       },
       {
         label: '到站装卸费',
@@ -254,9 +254,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+        }
       },
       {
         label: '未核销到站装卸费',
@@ -264,9 +264,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+        }
       },
       {
         label: '到站其他费',
@@ -280,9 +280,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+        }
       },
       {
         label: '未核销到站其他车费',
@@ -290,9 +290,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+        }
       },
       {
         label: '司机电话',
@@ -368,8 +368,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达时间',
@@ -377,8 +377,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到付车费',
@@ -392,9 +392,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+        }
       },
       {
         label: '未核销到付车费',
@@ -402,9 +402,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+        }
       },
       {
         label: '实际核销到付车费',
@@ -413,8 +413,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amountArrivepayCarriage
-          }
+          return scope.row.amountArrivepayCarriage
+        }
       },
       {
         label: '到付油卡',
@@ -428,9 +428,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+        }
       },
       {
         label: '未核销到付油卡',
@@ -438,9 +438,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+        }
       },
       {
         label: '实际核销到付油卡',
@@ -449,8 +449,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amountArrivepayOilCard
-          }
+          return scope.row.amountArrivepayOilCard
+        }
       },
       {
         label: '到站装卸费',
@@ -464,9 +464,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+        }
       },
       {
         label: '未核销到站装卸费',
@@ -474,9 +474,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+        }
       },
       {
         label: '实际核销到站装卸费',
@@ -485,8 +485,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amountArriveHandlingFee
-          }
+          return scope.row.amountArriveHandlingFee
+        }
       },
       {
         label: '到站其他费',
@@ -500,9 +500,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+        }
       },
       {
         label: '未核销到站其他车费',
@@ -510,9 +510,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+        }
       },
       {
         label: '实际核销到站其他费',
@@ -521,8 +521,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amountArriveOtherFee
-          }
+          return scope.row.amountArriveOtherFee
+        }
       },
       {
         label: '司机电话',
@@ -593,23 +593,23 @@ export default {
   },
   methods: {
     handlePageChangeLeft(obj) {
-     this.searchQuery.currentPage = obj.pageNum
-     this.searchQuery.pageSize = obj.pageSize
-     console.log(obj.pageSize, obj.pageNum, obj)
-     this.pageGetList()
-   },
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
+    },
     pageGetList() {
       const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postPayListBySummary(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })

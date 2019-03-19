@@ -171,8 +171,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达时间',
@@ -180,8 +180,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到站装卸费',
@@ -195,9 +195,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        }
       },
       {
         label: '未核销到站装卸费',
@@ -205,9 +205,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '司机电话',
@@ -282,8 +282,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到站装卸费',
@@ -297,9 +297,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        }
       },
       {
         label: '未核销到站装卸费',
@@ -307,9 +307,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '实际核销到站装卸费',
@@ -318,8 +318,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amount
-          }
+          return scope.row.amount
+        }
       },
       {
         label: '司机电话',
@@ -396,12 +396,12 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postPayListByOne(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -483,10 +483,10 @@ export default {
       const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       const paidVal = this.rightTable[index][prop]
       if (paidVal !== unpaidVal) {
-         this.$set(this.textChangeDanger, index, true)
-       } else {
-         this.$set(this.textChangeDanger, index, false)
-       }
+        this.$set(this.textChangeDanger, index, true)
+      } else {
+        this.$set(this.textChangeDanger, index, false)
+      }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.isGoReceipt = true
         this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
