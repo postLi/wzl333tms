@@ -1199,6 +1199,16 @@ export default {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
+      console.warn('开单页面的 route, to, from', to, from)
+      if (from.query.type && from.query.type === 'modify' && from.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 1 如果从改单页面进入
+        console.log('1 如果从改单页面进入', to, from)
+        this.initIndex()
+      }
+      if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 2 如果进入改单页面
+        this.initIndex()
+      }
     },
     // 弹窗时处理、如提货转运单，订单转运单
     'ispop'(newVal) {
