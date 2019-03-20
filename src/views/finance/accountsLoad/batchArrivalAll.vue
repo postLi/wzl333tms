@@ -584,6 +584,9 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     let i = 50
     while (i-- < 50) {
@@ -621,6 +624,13 @@ export default {
       // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {

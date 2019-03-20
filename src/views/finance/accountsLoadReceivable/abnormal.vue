@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -121,7 +121,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       totalLeft: 0,
@@ -196,24 +196,24 @@ export default {
         'label': '已核销异动',
         'prop': 'finishChangeFee',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
       }, {
-          label: '实际核销异动付',
-          prop: 'inputChangeFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputChangeFee
-          }
-        }, {
-          'label': '发货方',
-          'prop': 'senderCustomerUnit'
-        }, {
-          'label': '收货方',
-          'prop': 'receiverCustomerUnit'
-        },
+        label: '实际核销异动付',
+        prop: 'inputChangeFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputChangeFee
+        }
+      }, {
+        'label': '发货方',
+        'prop': 'senderCustomerUnit'
+      }, {
+        'label': '收货方',
+        'prop': 'receiverCustomerUnit'
+      },
 
       {
         label: '货号',
@@ -297,6 +297,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -316,8 +319,8 @@ export default {
           this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           rightTable.forEach((el, index) => {
-             this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-           })
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
         }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
@@ -338,6 +341,14 @@ export default {
         // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
         // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
+      }
+
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
       }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
@@ -374,9 +385,10 @@ export default {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
           this.totalLeft = data.total
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.changeState)
-          }))
+          this.leftTable = Object.assign([], data.list)
+          // this.leftTable = Object.assign([], data.list.filter(el => {
+          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.changeState)
+          // }))
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
               if (e === item.shipSn) {
@@ -398,6 +410,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)

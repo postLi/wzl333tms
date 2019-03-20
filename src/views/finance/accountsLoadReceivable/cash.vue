@@ -185,34 +185,34 @@ export default {
         'label': '现付核销状态',
         'prop': 'nowPayStateCn'
       }, {
-          'label': '已核销现付',
-          'prop': 'finishNowPayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
-          }
-        }, {
-          'label': '未核销现付',
-          'prop': 'notNowPayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
-          }
-        }, {
-          label: '实际核销现付',
-          prop: 'inputNowPayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputNowPayFee
-          }
-        }, {
-          'label': '发货方',
-          'prop': 'senderCustomerUnit'
-        }, {
-          'label': '收货方',
-          'prop': 'receiverCustomerUnit'
-        },
+        'label': '已核销现付',
+        'prop': 'finishNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
+        }
+      }, {
+        'label': '未核销现付',
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
+      }, {
+        label: '实际核销现付',
+        prop: 'inputNowPayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputNowPayFee
+        }
+      }, {
+        'label': '发货方',
+        'prop': 'senderCustomerUnit'
+      }, {
+        'label': '收货方',
+        'prop': 'receiverCustomerUnit'
+      },
 
       {
         label: '货号',
@@ -301,6 +301,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -317,12 +320,12 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       accountApi.getReceivableList(this.searchQuery).then(data => {
         if (data) {
-           this.leftTable = Object.assign([], data.list)
-           this.totalLeft = data.total
-           rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-         }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -332,6 +335,13 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // this.searchQuery.currentPage = 1
       // this.searchQuery.pageSize = 100
@@ -384,9 +394,10 @@ export default {
         // NOSETTLEMENT,PARTSETTLEMENT
         // 过滤未完成核销的数据
         this.totalLeft = data.total
-        this.leftTable = Object.assign([], data.list.filter(el => {
-          return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
-        }))
+        // this.leftTable = Object.assign([], data.list.filter(el => {
+          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.nowPayState)
+        // }))
+        this.leftTable = Object.assign([], data.list)
         selectListShipSns.forEach(e => {
           this.leftTable.forEach(item => {
             if (e === item.shipSn) {

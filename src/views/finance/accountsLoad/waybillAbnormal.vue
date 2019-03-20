@@ -434,27 +434,30 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
   methods: {
     handlePageChangeLeft(obj) {
-     this.searchQuery.currentPage = obj.pageNum
-     this.searchQuery.pageSize = obj.pageSize
-     console.log(obj.pageSize, obj.pageNum, obj)
-     this.pageGetList()
-   },
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
+    },
     pageGetList() {
-       const rightTable = objectMerge2([], this.rightTable)
-       this.loading = true
-       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-       postFindListByFeeType(this.searchQuery).then(data => {
+      const rightTable = objectMerge2([], this.rightTable)
+      this.loading = true
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      postFindListByFeeType(this.searchQuery).then(data => {
         if (data) {
           this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           rightTable.forEach((el, index) => {
-             this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-           })
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
         }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
@@ -462,9 +465,16 @@ export default {
       .catch(err => {
         this._handlerCatchMsg(err)
       })
-     },
+    },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')

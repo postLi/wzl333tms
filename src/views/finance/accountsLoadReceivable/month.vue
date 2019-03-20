@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -122,7 +122,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       totalLeft: 0,
@@ -293,39 +293,42 @@ export default {
   },
   watch: {
     '$route.query': {
-       handler(cval, oval) {
+      handler(cval, oval) {
         if (cval) {
           this.getList()
         }
       },
-       deep: true
-     }
+      deep: true
+    }
+  },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
   },
   mounted() {
     this.getList()
   },
   methods: {
     handlePageChangeLeft(obj) {
-     this.searchQuery.currentPage = obj.pageNum
-     this.searchQuery.pageSize = obj.pageSize
-     console.log(obj.pageSize, obj.pageNum, obj)
-     this.pageGetList()
-   },
+      this.searchQuery.currentPage = obj.pageNum
+      this.searchQuery.pageSize = obj.pageSize
+      console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
+    },
     pageGetList() {
       const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       accountApi.getReceivableList(this.searchQuery).then(data => {
-         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-          }
-         this.orgLeftTable = Object.assign([], this.leftTable)
-         this.loading = false
-       })
+        if (data) {
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+        }
+        this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -342,6 +345,13 @@ export default {
         // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
         // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
+      }
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
       }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
@@ -377,9 +387,10 @@ export default {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.monthpayState)
-          }))
+          // this.leftTable = Object.assign([], data.list.filter(el => {
+          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.monthpayState)
+          // }))
+          this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
@@ -402,6 +413,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)

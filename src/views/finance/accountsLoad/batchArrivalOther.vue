@@ -170,8 +170,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到达时间',
@@ -179,8 +179,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到站其他费',
@@ -194,9 +194,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        }
       },
       {
         label: '未核销到站其他费',
@@ -204,9 +204,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '司机电话',
@@ -281,8 +281,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '到站其他费',
@@ -296,9 +296,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        }
       },
       {
         label: '未核销到站其他费',
@@ -306,9 +306,9 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '实际核销到站其他费',
@@ -317,8 +317,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.amount
-          }
+          return scope.row.amount
+        }
       },
       {
         label: '司机电话',
@@ -379,6 +379,9 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -395,12 +398,12 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postPayListByOne(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -414,6 +417,13 @@ export default {
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       // this.$set(this.searchQuery.vo, 'feeTypeId', this.getRouteInfo.vo.feeTypeId)
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/batch')
@@ -442,8 +452,8 @@ export default {
       this.orgLeftTable = this.$options.data().orgLeftTable
 
       if (!handle) {
-         this.initLeftParams() // 设置searchQuery
-       }
+        this.initLeftParams() // 设置searchQuery
+      }
       // if (!this.isFresh) {
       postPayListByOne(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)

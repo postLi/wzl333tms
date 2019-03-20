@@ -193,9 +193,9 @@ export default {
         width: '100',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+        }
       },
       {
         label: '未核销回扣',
@@ -203,9 +203,9 @@ export default {
         width: '100',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '发货方',
@@ -237,8 +237,8 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '发站',
@@ -325,9 +325,9 @@ export default {
         width: '100',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+        }
       },
       {
         label: '未核销回扣',
@@ -335,9 +335,9 @@ export default {
         width: '100',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '实际核销回扣',
@@ -346,8 +346,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.inputBrokerageFee
-          }
+          return scope.row.inputBrokerageFee
+        }
       },
       {
         label: '发货方',
@@ -379,8 +379,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '发站',
@@ -436,6 +436,9 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     console.log('xxxxxxxxxxxxxxxxxx333:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
     this.getList()
@@ -453,12 +456,12 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postFindListByFeeType(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -468,13 +471,13 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
-      if (this.$route.query.selectListShipSns) {
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
         console.log('111111111111111')
       } else {
         console.log('22222222222222222')
         this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
       }
-      this.searchQuery.pageSize = 100
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {

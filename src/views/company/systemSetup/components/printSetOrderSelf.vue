@@ -474,7 +474,7 @@ export default {
       if (this.imageUrl && bkimg) {
         labelList.push(imgObj)
       }
-      console.log('labelList', labelList)
+      console.warn('labelList', labelList)
       CreatePrintPageEnable({
         orderdata: labelList, // 运单数据
         number: 1, // 打印份数

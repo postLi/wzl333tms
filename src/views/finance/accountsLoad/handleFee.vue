@@ -178,8 +178,8 @@ export default {
         prop: 'fee',
         width: '110',
         slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
-          },
+          return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+        },
         fixed: false
       },
       {
@@ -187,8 +187,8 @@ export default {
         prop: 'paidFee',
         width: '110',
         slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
-          },
+          return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+        },
         fixed: false
       },
       {
@@ -196,8 +196,8 @@ export default {
         prop: 'unpaidFee',
         width: '110',
         slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
+          return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+        },
         fixed: false
       },
       {
@@ -286,9 +286,9 @@ export default {
         prop: 'paidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          },
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        },
         fixed: false
       },
       {
@@ -296,10 +296,10 @@ export default {
         prop: 'unpaidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
             //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
+        },
         fixed: false
       },
       {
@@ -308,8 +308,8 @@ export default {
         width: '110',
         expand: true,
         slot: (scope) => {
-            return scope.row.amount
-          },
+          return scope.row.amount
+        },
         fixed: false
       },
       {
@@ -353,6 +353,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   computed: {
     ...mapGetters([
       'otherinfo'
@@ -382,19 +385,19 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       payListByHandlingFee(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-            })
-            this.leftTable.forEach(e => {
-              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
-              e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
-              e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
-              e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
-              this.$set(e, 'amount', e.unpaidFee)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+          this.leftTable.forEach(e => {
+            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
+            e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
+            e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
+            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
+            this.$set(e, 'amount', e.unpaidFee)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -404,6 +407,13 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     getList(handle) {

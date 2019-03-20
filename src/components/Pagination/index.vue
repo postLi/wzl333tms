@@ -54,7 +54,7 @@
 <script>
 export default {
   props: {
-    sizes: { // picker 
+    sizes: { // picker
       type: Array,
       default: () => [100, 200, 300, 400]
     },
@@ -83,17 +83,19 @@ export default {
   watch: {
     pageNum() {
       this.inputval = this.pageNum
+      console.log('pageNum', this.pageNum)
     },
-   defaultValues () {
-     this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum 
-     this.oldNum = this.pageNum
-   },
+    defaultValues() {
+      this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum
+      this.oldNum = this.pageNum
+    },
     size() {
-      this.pageNum = 1
+      this.pageNum = this.defaultValues ? this.defaultValues.currentPage : 1
     }
   },
   mounted() {
-    this.size = this.defaultSize
+    this.size = this.defaultValues ? this.defaultValues.pageSize : this.defaultSize
+    console.log('this.size', this.size)
   },
   data() {
     return {

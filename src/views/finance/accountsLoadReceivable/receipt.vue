@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -122,7 +122,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       totalLeft: 0,
@@ -302,6 +302,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -344,6 +347,13 @@ export default {
         // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
       }
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     setRight(item) {
@@ -378,9 +388,10 @@ export default {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.receiptpayState)
-          }))
+          // this.leftTable = Object.assign([], data.list.filter(el => {
+          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.receiptpayState)
+          // }))
+          this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
@@ -403,6 +414,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)

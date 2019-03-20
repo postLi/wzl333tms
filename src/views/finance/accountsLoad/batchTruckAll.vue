@@ -206,9 +206,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.paidNowpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.paidNowpayCarriage)
+        }
       },
       {
         label: '未核销现付车费',
@@ -216,9 +216,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.unpaidNowpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.unpaidNowpayCarriage)
+        }
       },
       {
         label: '现付油卡',
@@ -232,9 +232,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.paidNowpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.paidNowpayOilCard)
+        }
       },
       {
         label: '未核销现付油卡',
@@ -242,9 +242,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.unpaidNowpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.unpaidNowpayOilCard)
+        }
       },
       {
         label: '回付车费',
@@ -258,9 +258,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.paidBackpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.paidBackpayCarriage)
+        }
       },
       {
         label: '未核销回付车费',
@@ -268,9 +268,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.unpaidBackpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.unpaidBackpayCarriage)
+        }
       },
       {
         label: '回付油卡',
@@ -284,9 +284,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.paidBackpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.paidBackpayOilCard)
+        }
       },
       {
         label: '未核销回付油卡',
@@ -294,9 +294,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
+        }
       },
       {
         label: '整车保险费',
@@ -310,9 +310,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.paidCarloadInsuranceFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.paidCarloadInsuranceFee)
+        }
       },
       {
         label: '未核销整车保险费',
@@ -320,9 +320,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee)
+        }
       },
       {
         label: '发站装卸费',
@@ -336,9 +336,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.paidLeaveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.paidLeaveHandlingFee)
+        }
       },
       {
         label: '未核销发站装卸费',
@@ -346,9 +346,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.unpaidLeaveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.unpaidLeaveHandlingFee)
+        }
       },
       {
         label: '发站其他费',
@@ -362,9 +362,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.paidLeaveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.paidLeaveOtherFee)
+        }
       },
       {
         label: '未核销发站其他费',
@@ -372,9 +372,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.unpaidLeaveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.unpaidLeaveOtherFee)
+        }
       },
       {
         label: '司机电话',
@@ -474,9 +474,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.paidNowpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.paidNowpayCarriage)
+        }
       },
       {
         label: '未核销现付车费',
@@ -484,9 +484,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.unpaidNowpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayCarriage, row.paidNowpayCarriage, row.unpaidNowpayCarriage, row.unpaidNowpayCarriage)
+        }
       },
       {
         label: '实际核销现付车费',
@@ -510,9 +510,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.paidNowpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.paidNowpayOilCard)
+        }
       },
       {
         label: '未核销现付油卡',
@@ -520,9 +520,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.unpaidNowpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.nowpayOilCard, row.paidNowpayOilCard, row.unpaidNowpayOilCard, row.unpaidNowpayOilCard)
+        }
       },
       {
         label: '实际核销现付油卡',
@@ -546,9 +546,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.paidBackpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.paidBackpayCarriage)
+        }
       },
       {
         label: '未核销回付车费',
@@ -556,9 +556,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.unpaidBackpayCarriage)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayCarriage, row.paidBackpayCarriage, row.unpaidBackpayCarriage, row.unpaidBackpayCarriage)
+        }
       },
       {
         label: '实际核销回付车费',
@@ -582,9 +582,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.paidBackpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.paidBackpayOilCard)
+        }
       },
       {
         label: '未核销回付油卡',
@@ -592,9 +592,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
-          }
+          const row = scope.row
+          return this._setTextColor(row.backpayOilCard, row.paidBackpayOilCard, row.unpaidBackpayOilCard, row.unpaidBackpayOilCard)
+        }
       },
       {
         label: '实际核销回付油卡',
@@ -618,9 +618,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.paidCarloadInsuranceFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.paidCarloadInsuranceFee)
+        }
       },
       {
         label: '未核销整车保险费',
@@ -628,9 +628,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.carloadInsuranceFee, row.paidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee, row.unpaidCarloadInsuranceFee)
+        }
       },
       {
         label: '实际核销整车保险费',
@@ -654,9 +654,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.paidLeaveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.paidLeaveHandlingFee)
+        }
       },
       {
         label: '未核销发站装卸费',
@@ -664,9 +664,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.unpaidLeaveHandlingFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveHandlingFee, row.paidLeaveHandlingFee, row.unpaidLeaveHandlingFee, row.unpaidLeaveHandlingFee)
+        }
       },
       {
         label: '实际核销发站装卸费',
@@ -690,9 +690,9 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.paidLeaveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.paidLeaveOtherFee)
+        }
       },
       {
         label: '未核销发站其他费',
@@ -700,9 +700,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.unpaidLeaveOtherFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.leaveOtherFee, row.paidLeaveOtherFee, row.unpaidLeaveOtherFee, row.unpaidLeaveOtherFee)
+        }
       },
       {
         label: '实际核销发站其他费',
@@ -774,6 +774,9 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     let i = 50
     while (i-- < 50) {
@@ -794,12 +797,12 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postPayListBySummary(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -811,6 +814,13 @@ export default {
       // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
@@ -846,37 +856,37 @@ export default {
         this.leftTable = Object.assign([], data.list)
         this.totalLeft = data.total
         selectListBatchNos.forEach(e => {
-            this.leftTable.forEach(item => {
-              if (e === item.batchNo) {
-                this.rightTable.push(item)
-              }
-            })
-          })
-        if (this.rightTable.length < 1) {
-            this.isGoReceipt = true
-          } else {
-            this.isGoReceipt = false
-          }
-        this.rightTable.forEach(e => { // 左边表格减去右边的数据
-            const item = this.leftTable.indexOf(e)
-            if (item !== -1) {
-              this.leftTable.splice(item, 1)
+          this.leftTable.forEach(item => {
+            if (e === item.batchNo) {
+              this.rightTable.push(item)
             }
-            // 默认设置实际核销数量
-            e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付车费
-            e.amountNowpayOilCard = e.unpaidNowpayOilCard // 实际核销现付油卡
-            e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付车费
-            e.amountBackpayOilCard = e.unpaidBackpayOilCard // 实际核销回付油卡
-            e.amountCarloadInsuranceFee = e.unpaidCarloadInsuranceFee // 实际核销整车保险费
-            e.amountLeaveHandlingFee = e.unpaidLeaveHandlingFee // 实际核销发站装卸费
-            e.amountLeaveOtherFee = e.unpaidLeaveOtherFee // 实际核销发站其他费
           })
+        })
+        if (this.rightTable.length < 1) {
+          this.isGoReceipt = true
+        } else {
+          this.isGoReceipt = false
+        }
+        this.rightTable.forEach(e => { // 左边表格减去右边的数据
+          const item = this.leftTable.indexOf(e)
+          if (item !== -1) {
+            this.leftTable.splice(item, 1)
+          }
+            // 默认设置实际核销数量
+          e.amountNowpayCarriage = e.unpaidNowpayCarriage // 实际核销现付车费
+          e.amountNowpayOilCard = e.unpaidNowpayOilCard // 实际核销现付油卡
+          e.amountBackpayCarriage = e.unpaidBackpayCarriage // 实际核销回付车费
+          e.amountBackpayOilCard = e.unpaidBackpayOilCard // 实际核销回付油卡
+          e.amountCarloadInsuranceFee = e.unpaidCarloadInsuranceFee // 实际核销整车保险费
+          e.amountLeaveHandlingFee = e.unpaidLeaveHandlingFee // 实际核销发站装卸费
+          e.amountLeaveOtherFee = e.unpaidLeaveOtherFee // 实际核销发站其他费
+        })
         this.orgLeftTable = objectMerge2([], this.leftTable)
         this.loading = false
       }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
-        })
+        this.loading = false
+        this._handlerCatchMsg(err)
+      })
 
       // }
     },

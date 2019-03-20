@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -120,7 +120,7 @@ export default {
       totalLeft: 0,
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       tableReceiptInfo: [],
@@ -191,9 +191,9 @@ export default {
         prop: 'paidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          },
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        },
         fixed: false
       },
       {
@@ -201,10 +201,10 @@ export default {
         prop: 'unpaidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
             //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
+        },
         fixed: false
       },
       {
@@ -213,8 +213,8 @@ export default {
         width: '110',
         expand: true,
         slot: (scope) => {
-            return scope.row.amount
-          },
+          return scope.row.amount
+        },
         fixed: false
       },
       {
@@ -280,6 +280,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -296,20 +299,20 @@ export default {
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       accountApi.getReceivableList(this.searchQuery).then(data => {
         if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-            this.leftTable.forEach((e, index) => {
-              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
-              e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
-              e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
-              e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeeRecStatusZh : e.dbHandlingFeeRecStatusZh)
-              this.$set(e, 'amount', e.unpaidFee)
-              console.log(e)
-            })
-          }
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+          this.leftTable.forEach((e, index) => {
+            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
+            e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
+            e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
+            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeeRecStatusZh : e.dbHandlingFeeRecStatusZh)
+            this.$set(e, 'amount', e.unpaidFee)
+            console.log(e)
+          })
+        }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
       })
@@ -327,6 +330,13 @@ export default {
           this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         }
         this.isFresh = false
+      }
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
       }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
@@ -390,6 +400,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
