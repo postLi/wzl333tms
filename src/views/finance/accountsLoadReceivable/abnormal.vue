@@ -307,7 +307,6 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
       this.pageGetList()
     },
     pageGetList() {
@@ -344,9 +343,7 @@ export default {
       }
 
       if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }

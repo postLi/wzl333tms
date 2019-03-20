@@ -258,14 +258,14 @@ export default {
     },
     initData(_data) {
       // 针对前端写的表格配置数据也进行简单的排序处理
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
-        let str = ''
-        this.columns.forEach(e => {
-          str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
-        })
-        console.log(str)
-      }
+      // if (process.env.NODE_ENV !== 'production') {
+      //   console.warn('表格设置字段：【前端写的数据】', this.columns.length, '个')
+      //   let str = ''
+      //   this.columns.forEach(e => {
+      //     str += "INSERT INTO tms_common_title VALUES ('" + e.label + "', '" + e.prop + "', '" + this.code + "');" + '\n'
+      //   })
+      //   console.log(str)
+      // }
       let fedata = objectMerge2([], this.columns)
       fedata = this.sort(fedata)
       _data = _data || fedata

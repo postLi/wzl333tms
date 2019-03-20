@@ -1135,7 +1135,6 @@
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
-         console.log('column.label:', column.label)
          el['index'] = k + 1
          el['id'] = k + 1
          el['number'] = k + 1
@@ -1337,7 +1336,7 @@
      saveAs(blob, (option.fileName || '报表') + '.xlsx')
    })
 
-   console.log('option:::::', option)
+  //  console.log('option:::::', option)
    //global .FileSaver
  }
 

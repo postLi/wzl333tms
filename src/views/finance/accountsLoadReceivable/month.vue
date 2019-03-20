@@ -280,7 +280,7 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      console.log('xxxxxxxxxxxxxxxxxx222:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
+      // console.log('xxxxxxxxxxxxxxxxxx222:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
       const obj = this.$route.query
       return JSON.parse(obj.searchQuery)
     },
@@ -311,7 +311,7 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
+      // console.log(obj.pageSize, obj.pageNum, obj)
       this.pageGetList()
     },
     pageGetList() {
@@ -347,9 +347,9 @@ export default {
         this.isFresh = false
       }
       if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        console.log('111111111111111')
+        // console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
+        // console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }
@@ -446,7 +446,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
+      // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)

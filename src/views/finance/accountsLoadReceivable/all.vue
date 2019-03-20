@@ -409,7 +409,6 @@ export default {
   computed: {
     getRouteInfo() {
       if (this.$route.query.searchQuery) {
-        console.log('核销页面接收到的参数：searchQuery', JSON.parse(this.$route.query.searchQuery))
         return JSON.parse(this.$route.query.searchQuery)
       } else {
 
@@ -442,7 +441,6 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
       this.pageGetList()
     },
     pageGetList() {
@@ -476,11 +474,8 @@ export default {
         // this.$set(this.searchQuery.vo, 'status', this.getRouteInfo.vo.status)
         this.isFresh = false
       }
-      console.log('routeqyery', this.$route.query)
       if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }
@@ -515,7 +510,6 @@ export default {
         this.initLeftParams() // 设置searchQuery
       }
       if (!this.isFresh) {
-        console.log('getList:', this.searchQuery)
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
@@ -571,7 +565,6 @@ export default {
         [prop]: num
       }))
 
-      console.log(index, prop, newVal, this.rightTable[index])
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未核销费用名
@@ -729,12 +722,6 @@ export default {
       if (!this.isGoReceipt) {
         let amount = 0
         this.rightTable.forEach((e, index) => {
-          console.log(
-            e.inputNowPayFee,
-            e.inputArrivepayFee,
-            e.inputReceiptpayFee,
-            e.inputMonthpayFee,
-            e.inputChangeFee)
           amount = tmsMath.add(
             amount,
             e.inputNowPayFee,
@@ -850,7 +837,6 @@ export default {
         this.infoTable.amount = amount
         amount = 0
         if (this.infoTable.orderList.length > 0) { // 判断是否要核销
-          console.log('this.infoTable', this.infoTable)
           this.openDialog()
         } else {
           this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })

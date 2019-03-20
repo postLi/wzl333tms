@@ -281,7 +281,7 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      console.log('核销页面的接收到的数据:::', this.$route.query)
+      // console.log('核销页面的接收到的数据:::', this.$route.query)
       return JSON.parse(this.$route.query.searchQuery)
     },
     // totalLeft() {
@@ -311,7 +311,7 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
+      // console.log(obj.pageSize, obj.pageNum, obj)
       this.pageGetList()
     },
     pageGetList() {
@@ -336,9 +336,9 @@ export default {
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        console.log('111111111111111')
+        // console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
+        // console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }
@@ -374,7 +374,7 @@ export default {
       // this.getRouteInfo = JSON.parse(this.$route.query.searchQuery)
       // this.$set(this.getRouteInfo.vo, 'ascriptionOrgId', this.otherinfo.orgid)
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
-      console.log('selectListShipSns', selectListShipSns)
+      // console.log('selectListShipSns', selectListShipSns)
       if (JSON.parse(this.$route.query.selectListShipSns)) {
         this.isModify = true
       } else {
@@ -452,7 +452,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
+      // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -557,7 +557,7 @@ export default {
     selectCurrent(obj, index) {
       // this.leftTable = Object.assign([], obj)
       this.addItem(obj, index)
-      console.log('选中的行selectCurrent', obj, index)
+      // console.log('选中的行selectCurrent', obj, index)
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []

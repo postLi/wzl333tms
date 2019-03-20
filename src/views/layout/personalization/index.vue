@@ -66,7 +66,6 @@ export default {
       return findAllByUserId().then(data => {
         if (data) {
           this.formModel = data
-          console.log('获取系统个性化设置', this.formModel)
           this.setTheme()
         }
       })
@@ -102,7 +101,6 @@ export default {
       }
       // 设置全局样式
       body.setAttribute('class', themeName)
-      console.log('body', body, body.style.fontSize)
     },
     onSubmit() {
       this.$refs.formModel.validate((valid) => {
