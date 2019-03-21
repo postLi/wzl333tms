@@ -12,7 +12,7 @@ export default {
       // 2.新开窗口查看
       // openWindow('/createOrder', '创建运单', 1200, 666)
 
-      console.log('11111111', this.$store.state.tagsView.visitedViews)
+      console.log('visitedViews', this.$store.state.tagsView.visitedViews)
       if (this.$store.state.tagsView.visitedViews) {
         const visitedViews = Object.assign([], this.$store.state.tagsView.visitedViews)
         let edits = 0 // 判断是否有改单页面

@@ -108,6 +108,7 @@
       <el-button type="primary" icon="el-icon-edit-outline" v-if="!isModify" @click="doAction('edit')">编辑模板</el-button>
       <el-button type="success" icon="el-icon-document" v-if="isModify" @click="doAction('save')">保存</el-button>
       <el-button type="warning" icon="el-icon-view" v-if="isModify" @click="doAction('preview')">预览</el-button>
+      <el-button type="warning" icon="el-icon-view" v-if="isModify" @click="doAction('default')">恢复默认模板</el-button>
     </div>
   </el-dialog>
 </template>
@@ -170,13 +171,13 @@ export default {
   methods: {
     changeCheck(val, item, index) {
       if (item.fieldProperty === 'shipToCityName') {
-          item.hide = true
-          this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
-          return false
-        }
+        item.hide = true
+        this.$message.warning('【' + item.fieldName + '为必填项不可隐藏，需要隐藏请先取消必填项设置】')
+        return false
+      }
       if (this.otherinfo.systemSetup) {
-        let sysprops = Object.assign([], this.otherinfo.systemSetup.shipPageFunc.shipFieldValue)
-        for (let i in sysprops) {
+        const sysprops = Object.assign([], this.otherinfo.systemSetup.shipPageFunc.shipFieldValue)
+        for (const i in sysprops) {
           if (i === item.fieldProperty) {
             if (sysprops[i] === '1') {
               item.hide = true
@@ -203,16 +204,16 @@ export default {
     sortModel() {
       this.$nextTick(() => {
         if (this.dataList) {
-          let list = document.querySelectorAll('.model-item')
-          let arr = Array.prototype.slice.call(list)
+          const list = document.querySelectorAll('.model-item')
+          const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          let modelDiv = document.querySelectorAll('.model-list')[0]
+          const modelDiv = document.querySelectorAll('.model-list')[0]
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
-            let name = arr[i].getAttribute('data-name')
-            let index = arr[i].getAttribute('data-index')
+            const name = arr[i].getAttribute('data-name')
+            const index = arr[i].getAttribute('data-index')
           }
         }
       })
@@ -244,11 +245,11 @@ export default {
     },
     fetchData() {
       return orderManage.getOrderModel().then(data => {
-          if (data) {
-            this.dataList = data
-            this.setData()
-          }
-        })
+        if (data) {
+          this.dataList = data
+          this.setData()
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -256,7 +257,7 @@ export default {
     setData() {
       // 格式化数据
       this.dataList.forEach((el, index) => {
-        el.hide = el.hide === 1 ? true : false
+        el.hide = el.hide === 1
       })
       this.orgDataList = objectMerge2([], this.dataList)
       // 初始化模块排序
@@ -271,8 +272,8 @@ export default {
     },
     closeWindow() {
       if (this.isModify) {
-        let str = JSON.stringify(objectMerge2([], this.dataList))
-        let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+        const str = JSON.stringify(objectMerge2([], this.dataList))
+        const orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
         if (str === orgstr) {
           this.close()
         } else {
@@ -293,8 +294,8 @@ export default {
       switch (type) {
         case 'close':
           if (this.isModify) {
-            let str = JSON.stringify(objectMerge2([], this.dataList))
-            let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+            const str = JSON.stringify(objectMerge2([], this.dataList))
+            const orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
             if (str === orgstr) {
               this.close()
             } else {
@@ -319,8 +320,8 @@ export default {
           break
         case 'back':
           if (this.isModify) {
-            let str = JSON.stringify(objectMerge2([], this.dataList))
-            let orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
+            const str = JSON.stringify(objectMerge2([], this.dataList))
+            const orgstr = JSON.stringify(objectMerge2([], this.orgDataList))
             if (str === orgstr) {
               this.isClose = true
               this.isModify = false
@@ -385,23 +386,73 @@ export default {
           this.isModify = false
           this.isClose = false
           break
+        case 'default':
+          const hh = this.$createElement
+          this.$msgbox({
+            title: '提示',
+            closeOnClickModal: false,
+            closeOnPressEscape: false,
+            closeOnHashChange: false,
+            message: hh('p', null, [
+              hh('p', null, '是否使用默认模板，确定保存为全公司通用模板吗？'),
+              hh('p', { style: 'color: #999' }, '修改后，公司所有网点都按照该模板开单')
+            ]),
+            showCancelButton: true,
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            beforeClose: (action, instance, done) => {
+              if (action === 'confirm') {
+                instance.confirmButtonLoading = true
+                instance.confirmButtonText = '执行中...'
+                this.updateModel('default')
+                instance.confirmButtonLoading = false
+                done()
+              } else {
+                this.m_index = objectMerge2({}, this.org_m_index)
+                this.dataList = objectMerge2([], this.orgDataList)
+                done()
+              }
+            }
+          }).then(action => {
+
+          })
+          break
       }
     },
-    updateModel() {
+    updateModel(flag) {
       return new Promise((resolve, reject) => {
         try {
-          let dataList = objectMerge2([], this.dataList)
+          // let dataList = []
+          // if (flag) {
+          //   dataList = objectMerge2([], this.$const.MODELLIST)
+          //   console.log('111111111', dataList)
+          // } else {
+          //   dataList = objectMerge2([], this.dataList)
+          //   console.log('222222222', dataList)
+          // }
+          const dataList = objectMerge2([], this.dataList)
+
           dataList.forEach((el, index) => {
-            el.fieldOrder = index + 1
-            el.hide = el.hide ? 1 : 0
+            if (flag) {
+              this.$const.MODELLIST.forEach((em, eindex) => {
+                if (em.fieldProperty === el.fieldProperty) {
+                  el.fieldOrder = em.fieldOrder
+                  el.hide = em.hide
+                  el.typeOrder = em.typeOrder
+                }
+              })
+            } else {
+              el.fieldOrder = index + 1
+              el.hide = el.hide ? 1 : 0
+            }
           })
           return orderManage.putOrderModel(dataList).then(data => {
-              this.$message.success('保存成功！')
-              this.fetchData()
-              this.$emit('success')
-              this.close()
-              resolve()
-            })
+            this.$message.success('保存成功！')
+            this.fetchData()
+            this.$emit('success')
+            this.close()
+            resolve()
+          })
             .catch(err => {
               this._handlerCatchMsg(err)
               reject(err)
