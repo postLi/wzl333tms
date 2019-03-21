@@ -232,7 +232,7 @@ export default {
         signName: [
           // { required: true, trigger: 'blur', validator: validateNameSn }
           // { pattern: REGEX.USERNAME, message: '不能超过十个字符', trigger: 'blur' }
-          { required: true, message: '请输入签收人', trigger: 'blur' }
+          { required: true, message: '请输入签收人', trigger: 'change' }
         ],
         // signCocumentTypeId: [
         //   { required: true, message: '请选择签收证件', trigger: 'blur' }
@@ -381,7 +381,7 @@ export default {
         this.form.signCocumentTypeId = 96
       }
 
-      this.form.signName = this.repertoryId.signName || this.repertoryId.receiver_customer_name
+      this.form.signName = this.repertoryId.signName || this.repertoryId.receiver_customer_name || ''
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
@@ -438,7 +438,7 @@ export default {
       this.form.signTime = this.searchCreatTime
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-      this.loading = true
+          this.loading = true
           const data = objectMerge2({}, this.obj)
           for (const i in data) {
             data[i] = this.form[i]

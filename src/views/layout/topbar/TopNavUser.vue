@@ -9,9 +9,9 @@
           <div class="popoveruser_info_lyy">
             <p>{{ otherinfo.name }} <img :src="vipIcon" v-if="otherinfo.openAccountType===1"></p>
             <p>{{ company }}</p>
-            <p v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'生产环境':'测试环境'}}
+            <p v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'正式环境':'体验环境'}}
               <br>
-              <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'测试环境':'生产环境'}}</el-button>
+              <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'体验账号':'到正式账号'}}</el-button>
             </p>
               <el-button type="success" slot="reference" size="mini" v-if="canSwitch" plain @click="handleSwitchUser">切换其他账户</el-button>
           </div>
@@ -46,7 +46,7 @@ export default {
       'company'
     ]),
     canSwitch() {
-      let switchUser = this.otherinfo.systemSetup.switchUser ? this.otherinfo.systemSetup.switchUser : { canSwitch: '0' }
+      const switchUser = this.otherinfo.systemSetup.switchUser ? this.otherinfo.systemSetup.switchUser : { canSwitch: '0' }
       return switchUser ? (switchUser.canSwitch === '1') : false
     }
   },
@@ -58,7 +58,6 @@ export default {
     if (agnt.indexOf('msie') > 0 || agnt.indexOf('trident') > 0) {
       this.showit = true
     }
-
   },
   data() {
     return {
@@ -92,8 +91,8 @@ export default {
     },
     changeLogin(loginForm) {
       this.$store.dispatch('Login', loginForm).then(() => {
-          location.href = '/'
-        })
+        location.href = '/'
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
