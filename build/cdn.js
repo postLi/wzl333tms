@@ -15,12 +15,19 @@ const elementVersion = package.dependencies['element-ui']
 
 // 生产环境默认注入 vue 
 // 开发环境中不注入
-const assets = (process.env.NODE_ENV === 'production' ? [
+/* const assets = (process.env.NODE_ENV === 'production' ? [
     { path: `https://cdnjs.cloudflare.com/ajax/libs/vue/${vueVersion}/vue.min.js`, type: 'js' },
     { path: `https://cdnjs.cloudflare.com/ajax/libs/element-ui/${elementVersion}/index.js`, type: 'js' },
     { path: `https://cdnjs.cloudflare.com/ajax/libs/element-ui/${elementVersion}/locale/zh-CN.min.js`, type: 'js' },
 ] : []).concat([
     { path: `https://cdnjs.cloudflare.com/ajax/libs/element-ui/${elementVersion}/theme-chalk/index.css`, type: 'css' }
+]) */
+const assets = (process.env.NODE_ENV === 'production' ? [
+    { path: `/static/cdn/vue.min.js`, type: 'js' },
+    { path: `/static/cdn/index.js`, type: 'js' },
+    { path: `/static/cdn/zh-CN.min.js`, type: 'js' },
+] : []).concat([
+    { path: `/static/cdn/index.css`, type: 'css' }
 ])
 // console.log(process.env.NODE_ENV, defaultJS)
 const plugins = [
