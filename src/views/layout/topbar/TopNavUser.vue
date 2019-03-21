@@ -4,15 +4,14 @@
       <el-row>
         <el-col :span="8" class="popoveruser-avatar">
           <img class="user-avatar" :src="avatar">
-          <Personalization />
         </el-col>
         <el-col :span="16">
           <div class="popoveruser_info_lyy">
             <p>{{ otherinfo.name }} <img :src="vipIcon" v-if="otherinfo.openAccountType===1"></p>
             <p>{{ company }}</p>
-            <p v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'生产环境':'测试环境'}}
+            <p v-show="otherinfo.associatedUsername">当前环境：{{otherinfo.isTest===0?'正式环境':'体验环境'}}
               <br>
-              <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'测试环境':'生产环境'}}</el-button>
+              <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'体验账号':'到正式账号'}}</el-button>
             </p>
               <el-button type="success" slot="reference" size="mini" v-if="canSwitch" plain @click="handleSwitchUser">切换其他账户</el-button>
           </div>
@@ -40,7 +39,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import UsersTree from '@/components/usersTree'
-import Personalization from './../personalization'
 export default {
   computed: {
     ...mapGetters([
@@ -53,8 +51,7 @@ export default {
     }
   },
   components: {
-    UsersTree,
-    Personalization
+    UsersTree
   },
   mounted() {
     var agnt = navigator.userAgent.toLowerCase()

@@ -37,7 +37,6 @@
               value-format="timestamp"
               :disabled="isDbclick"
               >
-
           </el-date-picker>
         </el-form-item>
         <el-form-item label="交接方式:" prop="shipDeliveryMethodName" >
@@ -53,7 +52,8 @@
           <p style="color: red;font-size: 12px;margin-bottom: -25px">拆单的代收货款不统计在内</p>
         </el-form-item>
         <el-form-item label="签收人:" prop="signName">
-          <el-input :maxlength="10" v-model="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input>
+          <el-input ref="signName" :maxlength="10" v-model.trim="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick"></el-input>
+        <!--   <el-input :maxlength="10" v-model="form.signName" auto-complete="off" v-if="!(repertoryId.signStatus !== 227 && isDbclick)" :disabled="isDbclick ? true :false" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"></el-input> -->
           <el-input disabled v-else></el-input>
         </el-form-item>
         <el-form-item label="签收证件:" prop="signCocumentTypeId" >
@@ -232,7 +232,7 @@ export default {
         signName: [
           // { required: true, trigger: 'blur', validator: validateNameSn }
           // { pattern: REGEX.USERNAME, message: '不能超过十个字符', trigger: 'blur' }
-          { required: true, message: '请输入签收人', trigger: 'blur' }
+          { required: true, message: '请输入签收人', trigger: 'change' }
         ],
         // signCocumentTypeId: [
         //   { required: true, message: '请选择签收证件', trigger: 'blur' }
@@ -381,7 +381,7 @@ export default {
         this.form.signCocumentTypeId = 96
       }
 
-      this.form.signName = this.repertoryId.signName || this.repertoryId.receiver_customer_name
+      this.form.signName = this.repertoryId.signName || this.repertoryId.receiver_customer_name || ''
     },
     reset() {
       this.$refs['ruleForm'].resetFields()
@@ -436,9 +436,12 @@ export default {
     // },
     submitForm(ruleForm) {
       this.form.signTime = this.searchCreatTime
+
+      this.$set(this.form, 'signName', this.$refs.signName.value)
+      
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          this.loading = true
+          // this.loading = true
           const data = objectMerge2({}, this.obj)
           for (const i in data) {
             data[i] = this.form[i]
@@ -446,8 +449,8 @@ export default {
           data.childShipId = this.repertoryId.childShipId
           data.shipId = this.repertoryId.shipId
           data.loadId = this.repertoryId.loadId
-          // data.remark = this.repertoryId.signRemark
-          // console.log(this.repertoryId.loadId)
+          data.remark = this.repertoryId.signRemark
+          console.log(this.repertoryId.loadId)
           let promiseObj
           if (this.isPick) {
             promiseObj = putXiugai(this.id, data)
@@ -467,14 +470,6 @@ export default {
             this.closeMe()
             this.$emit('success')
             this.loading = false
-            // this.$alert('保存成功', '提示', {
-              //   confirmButtonText: '确定',
-              //   callback: action => {
-              //     this.loading = false
-              //     this.closeMe()
-              //     this.$emit('success')
-              //   }
-              // })
           }).catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
@@ -549,8 +544,8 @@ export default {
     padding-right: 15px;
   }
   .bz{
-    height: 28px;
-    line-height: 28px;
+    height: 35px;
+    line-height: 35px;
     width:1055px;
     padding-left:20px;
     border:1px solid #ccc;

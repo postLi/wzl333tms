@@ -213,6 +213,11 @@ export default {
           this.form.orgid = this.orgid
         })
       }
+    },
+    'form.username' (newVal) {
+      if (newVal) {
+         this.$refs.ruleForm.validate((valid) => {})
+      }
     }
   },
   methods: {
