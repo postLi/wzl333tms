@@ -438,7 +438,7 @@ export default {
       this.form.signTime = this.searchCreatTime
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-      this.loading = true
+          this.loading = true
           const data = objectMerge2({}, this.obj)
           for (const i in data) {
             data[i] = this.form[i]
@@ -549,8 +549,8 @@ export default {
     padding-right: 15px;
   }
   .bz{
-    height: 35px;
-    line-height: 35px;
+    height: 28px;
+    line-height: 28px;
     width:1055px;
     padding-left:20px;
     border:1px solid #ccc;

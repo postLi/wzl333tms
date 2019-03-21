@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 短驳发车 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
@@ -11,8 +11,8 @@
         <el-button :type="isDisBtn?'info':'primary'" :size="btnsize" icon="el-icon-printer" @click="doAction('edit')" plain :disabled="isDisBtn" v-has:LOAD_DB_UPDATE>修改</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_DB_PRINT>打印</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:LOAD_DB_EXPORT>导出</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>轨迹跟踪-车辆</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>实时定位-车辆</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>车辆轨迹</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>车辆定位</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>
@@ -24,8 +24,19 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQueryData"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQueryData" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -59,6 +70,8 @@ import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
+
 export default {
   components: {
     Pager,
@@ -66,7 +79,8 @@ export default {
     postAllshortDepartList,
     TableSetup,
     editInfo,
-    actualSendtime
+    actualSendtime,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -122,8 +136,8 @@ export default {
           width: '80',
           fixed: true,
           slot: (scope) => {
-          return ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
-        }
+            return ((this.searchQueryData.currentPage - 1) * this.searchQueryData.pageSize) + scope.$index + 1
+          }
         },
         {
           label: '发车批次',
@@ -255,6 +269,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQueryData = obj
+      this.getAllList()
+    },
     doMap(type) { // 查询批次车辆轨迹或定位
       console.log('选择的批次数', this.selected.length)
       if (!this.selected.length || this.selected.length !== 1) {
@@ -262,13 +280,13 @@ export default {
         this.$refs.multipleTable.clearSelection()
         return false
       }
-      let item = this.selected[0]
+      const item = this.selected[0]
       console.log('当前选中的批次', item, item.truckIdNumber)
       if (!item.truckIdNumber) {
         this.$message.warning('查询失败！该批次没有关联车辆~')
         return false
       }
-      let query = {
+      const query = {
         truckIdNumber: item.truckIdNumber,
         startTime: item.loadTime,
         endTime: parseTime(new Date())
@@ -279,23 +297,23 @@ export default {
       // 其他送货状态  createTime ~ departureTime送货完成时间
       // 开始时间定义：小于7天才用前面的时间createTime，大于7天则用后面的时间倒推7天
 
-      let now = new Date().getTime() // 现在
-      let betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
-      let startTime = new Date(item.createTime).getTime()
+      const now = new Date().getTime() // 现在
+      const betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
+      const startTime = new Date(item.createTime).getTime()
 
-      let isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
+      const isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
 
       if (item.batchTypeId === 47 || item.batchTypeId === 48) { // 送货中
         query.startTime = isAfterSeven ? parseTime(betweenDay) : item.createTime
         query.endTime = parseTime(now)
-      }else { // 其他状态
+      } else { // 其他状态
         query.startTime = item.createTime
         query.endTime = item.receivingTime
       }
 
       switch (type) {
         case 'line':
-          this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'line',
             type: 'truck',
@@ -303,7 +321,7 @@ export default {
           }})
           break
         case 'location':
-        this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'location',
             type: 'truck',
@@ -426,12 +444,12 @@ export default {
       }
       return postAllshortDepartList(this.searchQueryData).then(data => {
         if (data) {
-            this.dataList = data.list
-            this.total = data.total
-            this.loading = false
-          } else {
-            this.loading = false
-          }
+          this.dataList = data.list
+          this.total = data.total
+          this.loading = false
+        } else {
+          this.loading = false
+        }
       })
         .catch(err => {
           this._handlerCatchMsg(err)
@@ -490,11 +508,11 @@ export default {
       console.log('发车', this.commonTruck)
       putTruckDepart(this.commonTruck).then(data => {
         if (data) {
-            this.loading = false
-            this.$message({ type: 'success', message: '发车成功！' })
-            this.fetchAllShortDepartList()
-            this.clearData()
-          }
+          this.loading = false
+          this.$message({ type: 'success', message: '发车成功！' })
+          this.fetchAllShortDepartList()
+          this.clearData()
+        }
       })
         .catch(err => {
           this.loading = false
@@ -518,11 +536,11 @@ export default {
           console.log('取消发车', this.commonTruck)
           putTruckChanel(this.commonTruck).then(data => {
             if (data) {
-                this.loading = false
-                this.$message({ type: 'success', message: '取消发车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.loading = false
+              this.$message({ type: 'success', message: '取消发车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(err => {
               this.loading = false
@@ -548,11 +566,11 @@ export default {
           this.loading = true
           putTruckLoad(this.commonTruck).then(data => {
             if (data) {
-                this.loading = false
-                this.$message({ type: 'success', message: '取消装车操作成功！' })
-                this.fetchAllShortDepartList()
-                this.clearData()
-              }
+              this.loading = false
+              this.$message({ type: 'success', message: '取消装车操作成功！' })
+              this.fetchAllShortDepartList()
+              this.clearData()
+            }
           })
             .catch(err => {
               this.loading = false

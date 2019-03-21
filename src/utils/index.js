@@ -24,7 +24,7 @@ export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'age
  * 属性名|单位
  * _index|索引（|单位）
  */
-export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ') {
+export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ', allCount) {
   const {
     columns,
     data
@@ -84,7 +84,8 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
       } else {
         // const values = data.map(item => Number(item[prop]))
         let isAllEmpty = true
-        const values = data.map(item => {
+        const allCountIndex = {}
+        const values = data.map((item, mindex) => {
           if (item[prop] !== '') {
             isAllEmpty = false
           }
@@ -102,9 +103,15 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ')
               return prev
             }
           }, 0)
+          // if (allCount) {
+          //   for (let oi in allCount) {
+          //     if (oi === prop) {
+          //       sums[index] = allCount[oi]
+          //     }
+          //   }
+          // }
           sums[index] += ' ' + unit
         }
-
       }
     } else {
       sums[index] = defaultNoneString
@@ -383,7 +390,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number

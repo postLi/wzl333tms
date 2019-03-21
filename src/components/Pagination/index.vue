@@ -54,7 +54,7 @@
 <script>
 export default {
   props: {
-    sizes: { // picker 
+    sizes: { // picker
       type: Array,
       default: () => [100, 200, 300, 400]
     },
@@ -69,6 +69,10 @@ export default {
     btnsize: {
       type: String,
       default: ''
+    },
+    defaultValues: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
@@ -80,12 +84,16 @@ export default {
     pageNum() {
       this.inputval = this.pageNum
     },
+    defaultValues() {
+      this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum
+      this.oldNum = this.pageNum
+    },
     size() {
-      this.pageNum = 1
+      this.pageNum = this.defaultValues ? this.defaultValues.currentPage : 1
     }
   },
   mounted() {
-    this.size = this.defaultSize
+    this.size = this.defaultValues ? this.defaultValues.pageSize : this.defaultSize
   },
   data() {
     return {
@@ -148,7 +156,6 @@ export default {
       this.jumpTo(this.inputval)
     },
     handleKeyup({ keyCode, target }) {
-      console.log('page keydown:', keyCode, target)
       if (keyCode === 13 && this.oldValue && target.value !== this.oldValue) {
         this.handleChange(target.value)
         this.oldValue = ''

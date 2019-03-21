@@ -1,7 +1,6 @@
 <template>
   <!--
     USAGE【表格设置组件】-用法-父组件引入：
-
     //html
     <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
 
@@ -203,7 +202,6 @@ export default {
   },
   methods: {
     initStep() {
-
       // 进来先隐藏全部
       // this.$emit('success', [])
 
@@ -229,7 +227,6 @@ export default {
       }
       // 如果有code值则请求处理
       if (this.thecode) {
-
         this.fetchTableSetup()
         if (!window['tablesetup' + this.thecode]) {
           window['tablesetup' + this.thecode] = true
@@ -510,7 +507,7 @@ export default {
           //     }
           //   }
           // })
-          // 
+          //
 
           this.columns.forEach(el => {
             // 将本地剩余的项塞到后面
@@ -519,7 +516,6 @@ export default {
             if (find.length === 0) {
               const find2 = copy.filter((_el, _index) => {
                 if (_el.label === el.label) {
-
                   return true
                 }
               })
@@ -650,15 +646,19 @@ export default {
       }
       console.log('checkListLeft 左边->右边', this.checkListLeft)
       this.columnData = this.columnData.filter(el => {
+        let flag = true
         this.checkListLeft.forEach(em => {
           if (em.prop !== el.prop) {
             return true
           } else {
             el.fixed = false
+            flag = false
             this.showColumnData.push(el)
             return false
           }
         })
+
+        return flag
         // if (this.checkListLeft.indexOf(el) === -1) {
         //   return true
         // } else {
@@ -668,15 +668,19 @@ export default {
         // }
       })
       this.orgColumnData = this.orgColumnData.filter(el => {
+        let flag = true
         this.checkListLeft.forEach(em => {
           if (em.prop !== el.prop) {
             return true
           } else {
             el.fixed = false
+            flag = false
             this.orgShowColumnData.push(el)
             return false
           }
         })
+
+        return flag
         // if (this.checkListLeft.indexOf(el) === -1) {
         //   return true
         // } else {
@@ -701,11 +705,13 @@ export default {
         //   this.showColumnData.splice(item, 1)
         // }
         this.showColumnData = objectMerge2([], this.showColumnData).filter(el => {
-          this.showColumnData.forEach(em => {
-            if (em.prop !== el.prop) {
+          return el.prop !== e.prop
+          /* this.showColumnData.forEach(em => {
+            if (em.prop !== e.prop) {
+              flag = true
               return true
             }
-          })
+          }) */
           // if (this.showColumnData.indexOf(el) === -1) {
           //   return true
           // }
@@ -715,11 +721,7 @@ export default {
         //   this.orgShowColumnData.splice(item, 1)
         // }
         this.orgShowColumnData = objectMerge2([], this.orgShowColumnData).filter(el => {
-          this.orgShowColumnData.forEach(em => {
-            if (em.prop !== el.prop) {
-              return true
-            }
-          })
+          return el.prop !== e.prop
           // if (this.orgShowColumnData.indexOf(el) === -1) {
           //   return true
           // }

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -43,14 +43,26 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               :prop="column.prop"
               :label="column.label"
               v-else
               :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope" v-html="true">
                   <div v-html="column.slot(scope)"></div>
               </template>
@@ -74,13 +86,15 @@ import Pager from '@/components/Pagination/index'
 import { parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddOrder
+    AddOrder,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -123,14 +137,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -304,6 +318,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchForms = obj
+      this.fetchAllOrder()
+    },
     fetchAllOrder() {
       this.loading = true
       return orderManageApi.getAllShip(this.searchQuery).then(data => {

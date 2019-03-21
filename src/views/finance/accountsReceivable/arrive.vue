@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content accountsReceivable-summary" v-loading="loading">
+  <div class="tab-content accountsReceivable-summary miniHeaderSearch"  v-loading="loading">
     <SearchForm :filter="true" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
@@ -41,6 +41,14 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -50,6 +58,9 @@
               :label="column.label"
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                   <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
@@ -70,12 +81,14 @@ import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, parseTime, objectMerge2 } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   mounted() {
     // this.loading = false
@@ -113,7 +126,7 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
@@ -142,9 +155,9 @@ export default {
         width: '100',
         fixed: false
       }, {
-          'label': '发站',
-          'prop': 'shipFromCityName'
-        }, {
+        'label': '发站',
+        'prop': 'shipFromCityName'
+      }, {
         'label': '到站',
         'prop': 'shipToCityName'
       }, {
@@ -161,13 +174,13 @@ export default {
             return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
           }
       }, {
-        'label': '未核销到付',
-        'prop': 'notArrivepayFee',
-        slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-          }
-      }, {
+          'label': '未核销到付',
+          'prop': 'notArrivepayFee',
+          slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
+        }, {
         'label': '开单日期',
         'prop': 'createTime',
         width: 180
@@ -226,6 +239,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     viewDetails(row) {
       row = row || []
       console.log('row:', row.map(el => { console.log('11') }).join(','))

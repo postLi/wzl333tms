@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
+    <div class="tab-content miniHeaderSearch" v-loading="loading" @success="fetchAllreceipt">
       <SearchForm :orgid="otherinfo.orgid" title="发放" type="giveout_status" status="giveoutStatus" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -289,8 +289,20 @@
            :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
                 <template slot-scope="scope">
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                   <span v-else v-html="column.slot(scope)"></span>
@@ -314,12 +326,14 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import AddMark from './components/add'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     TableSetup,
     Pager,
-    AddMark
+    AddMark,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -552,6 +566,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllreceipt()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

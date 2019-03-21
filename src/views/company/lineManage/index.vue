@@ -1,5 +1,5 @@
 <template>
-  <div class="linemanage-manager tab-wrapper tab-wrapper-100">
+  <div class="linemanage-manager tab-wrapper tab-wrapper-100 miniHeaderSearch">
   <div class="tab-content linemanage-summary" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
@@ -43,14 +43,22 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               :prop="column.prop"
               :label="column.label"
               v-else
               :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope" >
                 <span v-html="column.slot(scope)"></span>
               </template>
@@ -82,12 +90,14 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   mounted() {
 
@@ -119,7 +129,7 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
@@ -191,6 +201,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     getRangePrice(list = [], unit) {
       if (!list || !list.length) {
         return ''

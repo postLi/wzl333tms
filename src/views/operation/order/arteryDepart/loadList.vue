@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm @change="getSearchParam"></SearchForm>
     <div class="tab_info">
       <div class="btns_box">
@@ -14,9 +14,32 @@
             </template>
           </el-table-column>
           <el-table-column label="创建时间" prop="createTime" width="180">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
           </el-table-column>
-          <el-table-column label="运行路线" prop="line"></el-table-column>
-          <el-table-column label="方案数量" prop="schemeNum" width="120"></el-table-column>
+          <el-table-column label="运行路线" prop="line">
+             <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+          </el-table-column>
+          <el-table-column label="方案数量" prop="schemeNum" width="120">
+             <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+          </el-table-column>
           <el-table-column label="操作" width="160">
             <template slot-scope="scope">
               <el-button :size="btnsize" icon="el-icon-view" type="text" @click="doView(scope.row, scope.$index)">查看</el-button>
@@ -41,12 +64,14 @@ import Pager from '@/components/Pagination/index'
 import AddLntelligent from './components/addLntelligent '
 import { postLoadSchemeList, deleteScheme, selectSchemeGroupDetail } from '@/api/operation/arteryDepart'
 import { objectMerge2, parseTime } from '@/utils/index'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    AddLntelligent
+    AddLntelligent,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -65,18 +90,22 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQueryData = obj
+      this.fetchData()
+    },
     openlntelligent() { // 打开智能配载弹出框
       this.lntelligentVisible = true
     },
     fetchData() { // 查询方案列表
       this.loading = true
       postLoadSchemeList(this.searchQuery).then(data => {
-          if (data) {
-            this.loading = false
-            this.dataList = data.list
-            this.total = data.total
-          }
-        })
+        if (data) {
+          this.loading = false
+          this.dataList = data.list
+          this.total = data.total
+        }
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -89,14 +118,14 @@ export default {
       this.fetchData()
     },
     doView(row, index) { // 查看方案
-      this.$router.push({path: '/operation/order/loadIntelligent/load',query:{
+      this.$router.push({ path: '/operation/order/loadIntelligent/load', query: {
         schemeGroup: row.schemeGroup,
         orgid: this.otherinfo.orgid,
         timer: new Date().getTime()
       }})
     },
     doDelete(row, index) { // 删除方案
-      let obj = {
+      const obj = {
         schemeGroup: row.schemeGroup,
         orgid: this.otherinfo.orgid
       }
@@ -106,9 +135,9 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteScheme(obj).then(data => {
-            this.$message.success('删除成功！')
-            this.fetchData()
-          })
+          this.$message.success('删除成功！')
+          this.fetchData()
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
           })

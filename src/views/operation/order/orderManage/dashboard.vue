@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -46,14 +46,26 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
+              :prop="column.prop"
               sortable
               :label="column.label"
               v-else
               :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope" v-html="true">
                   <div v-html="column.slot(scope)"></div>
               </template>
@@ -77,13 +89,15 @@ import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddOrder
+    AddOrder,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -126,14 +140,14 @@ export default {
       // 默认sort值为true
       tablekey: '',
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },{
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      }, {
         'label': '运单号',
         'prop': 'shipSn',
         'width': '100',
@@ -148,13 +162,13 @@ export default {
         'prop': 'shipIdentifying',
         'width': '150',
         slot: function(scope) {
-          return parseShipStatus(scope.row.shipIdentifying)
-        }
+            return parseShipStatus(scope.row.shipIdentifying)
+          }
       }, {
-        'label': '开单网点',
-        'prop': 'fromOrgName',
-        'width': '150'
-      }, {
+          'label': '开单网点',
+          'prop': 'fromOrgName',
+          'width': '150'
+        }, {
         'label': '目的网点',
         'prop': 'toOrgName',
         'width': '150'
@@ -436,6 +450,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     getSumLeft(param, type) {
       const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']
       return getSummaries(param, propsArr)
@@ -468,7 +486,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print' ) {
+      if (!this.selected.length && type !== 'add' && type !== 'export' && type !== 'print') {
         this.closeAddOrder()
         this.$message({
           message: '请选择要操作的项~',

@@ -19,9 +19,9 @@
                 <!-- <el-table-column type="selection" width="35"></el-table-column> -->
                 <el-table-column prop="name" label="车型">
                 </el-table-column>
-                <el-table-column prop="weight" width="120" label="承载重(千克)">
+                <el-table-column prop="weight" width="120" label="承载重(kg)">
                 </el-table-column>
-                <el-table-column prop="vol" width="100" label="承载方(方)">
+                <el-table-column prop="vol" width="120" label="承载方(方)">
                 </el-table-column>
               </el-table>
             </el-tab-pane>
@@ -42,13 +42,13 @@
                       </el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="weight" width="120" label="承载重(千克)">
+                  <el-table-column prop="weight" width="120" label="承载重(kg)">
                     <template slot-scope="scope">
                       <!-- <input v-model.trim="scope.row.weight" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'weight', val)" :maxlength="8" placeholder="承载重(千克)" @click.stop.prevent.native :disabled="scope.row['selectdCheck']"></input> -->
                       <el-input placeholder="承载重" v-model.number="scope.row.weight" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'weight', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="vol" width="100" label="承载方(方)">
+                  <el-table-column prop="vol" width="120" label="承载方(方)">
                     <template slot-scope="scope">
                       <!-- <input v-model.trim="scope.row.vol" :size="btnsize" v-number-only:point class="nativeinput" @change="(val)=>changeFright(scope.$index, 'vol', val)" :maxlength="8" placeholder="承载方(方)" @click.stop.prevent.native :disabled="scope.row['selectdCheck']"></input> -->
                       <el-input placeholder="承载方" v-model.number="scope.row.vol" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, 'vol', val)" :disabled="scope.row['selectdCheck']" :maxlength="8" @click.stop.prevent.native></el-input>
@@ -103,7 +103,7 @@ export default {
   },
   data() {
     return {
-      activeName: "first",
+      activeName: 'first',
       isSecond: false,
       selectdCheck: true,
       btnsize: 'mini',
@@ -112,21 +112,21 @@ export default {
       rules: {},
       formLabelWidth: '100',
       usersArr: [{
-          num: 10,
-          date: '车型'
-        },
-        {
-          num: 10,
-          date: '车型'
-        },
-        {
-          num: 10,
-          date: '车型'
-        },
-        {
-          num: 10,
-          date: '车型'
-        }
+        num: 10,
+        date: '车型'
+      },
+      {
+        num: 10,
+        date: '车型'
+      },
+      {
+        num: 10,
+        date: '车型'
+      },
+      {
+        num: 10,
+        date: '车型'
+      }
       ],
       checked1: true,
       popTitle: '参数设置',
@@ -171,7 +171,6 @@ export default {
     }
   },
   mounted() {
-
     if (this.popVisible) {}
   },
   methods: {
@@ -179,7 +178,7 @@ export default {
       switch (type) {
         case 'addCar':
           this.addTruck()
-          break;
+          break
         case 'subCar':
           this.subTruck()
           break
@@ -192,15 +191,15 @@ export default {
           type: 'warning'
         })
       } else {
-        let item = {
+        const item = {
           name: '自定义车型',
           weight: 8000,
           vol: 25
         }
         postPzcarinfotms(item).then(data => {
-            this.fetchData()
-            this.$message.success('添加车型成功！')
-          })
+          this.fetchData()
+          this.$message.success('添加车型成功！')
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -238,7 +237,6 @@ export default {
       return getIntnteCarInfo(this.infoGetSystemList.orgid, this.infoGetSystemList.sign).then(data => {
         this.systemList = data
         this.loading = false
-
       })
     },
     fetchGetIntnteCarDefinedInfo() { // 获取自定义车型信息
@@ -353,7 +351,7 @@ export default {
     putPzcarinfotms(row) { // 保存修改
       putPzcarinfotms(row).then(data => {}).catch(err => {
         this.isEditSuccess++
-          this._handlerCatchMsg(err)
+        this._handlerCatchMsg(err)
       })
     },
     handleCurChangeSystem(val) {

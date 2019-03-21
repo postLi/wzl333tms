@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" type="funds_giveout_status" title="发放" status="fundsGiveoutStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -260,8 +260,16 @@
           <el-table ref="multipleTable" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                 <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+                  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
                 <template slot-scope="scope">
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                   <span v-else v-html="column.slot(scope)"></span>
@@ -286,12 +294,14 @@ import TableSetup from '@/components/tableSetup'
 import AddPayment from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddPayment
+    AddPayment,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -335,7 +345,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '60',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -505,6 +515,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.featchAllpayment()
+    },
     featchAllpayment() {
       this.loading = true
       return postGoodsfundsList(this.searchQuery).then(data => {

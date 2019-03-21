@@ -14,7 +14,7 @@
       <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed width="50" label="序号">
+          <el-table-column fixed width="60" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -38,7 +38,7 @@
         <div class="accountsLoad_table_pager">
           <b>共计:{{ totalLeft }}</b>
           <div class="show_pager">
-            <Pager :total="totalLeft" @change="handlePageChangeLeft" />
+            <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" :defaultValues="searchQuery" />
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
       <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed width="50" type="index" label="序号">
+          <el-table-column fixed width="60" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -149,424 +149,424 @@ export default {
       },
       sign: 2, // 2-到车汇总
       tableColumnLeft: [{
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '批次状态',
-          prop: 'batchTypeName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '达到网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '到付车费',
-          prop: 'arrivepayCarriage',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到付车费',
-          prop: 'paidArrivepayCarriage',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
-          }
-        },
-        {
-          label: '未核销到付车费',
-          prop: 'unpaidArrivepayCarriage',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
-          }
-        },
-        {
-          label: '到付油卡',
-          prop: 'arrivepayOilCard',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到付油卡',
-          prop: 'paidArrivepayOilCard',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
-          }
-        },
-        {
-          label: '未核销到付油卡',
-          prop: 'unpaidArrivepayOilCard',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
-          }
-        },
-        {
-          label: '到站装卸费',
-          prop: 'arriveHandlingFee',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到站装卸费',
-          prop: 'paidArriveHandlingFee',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
-          }
-        },
-        {
-          label: '未核销到站装卸费',
-          prop: 'unpaidArriveHandlingFee',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
-          }
-        },
-        {
-          label: '到站其他费',
-          prop: 'arriveOtherFee',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到站其他费',
-          prop: 'paidArriveOtherFee',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
-          }
-        },
-        {
-          label: '未核销到站其他车费',
-          prop: 'unpaidArriveOtherFee',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
-          }
-        },
-        {
-          label: '司机电话',
-          prop: 'dirverMobile',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '司机姓名',
-          prop: 'dirverName',
-          width: '120',
-          fixed: false
-        },
-
-        {
-          label: '配载件数',
-          prop: 'loadAmountall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载重量',
-          prop: 'loadWeightall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载体积',
-          prop: 'loadVolumeall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'remark',
-          width: '120',
-          fixed: false
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '批次状态',
+        prop: 'batchTypeName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '达到网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车时间',
+        prop: 'departureTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         }
+      },
+      {
+        label: '到达时间',
+        prop: 'receivingTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '到付车费',
+        prop: 'arrivepayCarriage',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到付车费',
+        prop: 'paidArrivepayCarriage',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+        }
+      },
+      {
+        label: '未核销到付车费',
+        prop: 'unpaidArrivepayCarriage',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+        }
+      },
+      {
+        label: '到付油卡',
+        prop: 'arrivepayOilCard',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到付油卡',
+        prop: 'paidArrivepayOilCard',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+        }
+      },
+      {
+        label: '未核销到付油卡',
+        prop: 'unpaidArrivepayOilCard',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+        }
+      },
+      {
+        label: '到站装卸费',
+        prop: 'arriveHandlingFee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到站装卸费',
+        prop: 'paidArriveHandlingFee',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+        }
+      },
+      {
+        label: '未核销到站装卸费',
+        prop: 'unpaidArriveHandlingFee',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+        }
+      },
+      {
+        label: '到站其他费',
+        prop: 'arriveOtherFee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到站其他费',
+        prop: 'paidArriveOtherFee',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+        }
+      },
+      {
+        label: '未核销到站其他车费',
+        prop: 'unpaidArriveOtherFee',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+        }
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '司机姓名',
+        prop: 'dirverName',
+        width: '120',
+        fixed: false
+      },
+
+      {
+        label: '配载件数',
+        prop: 'loadAmountall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载重量',
+        prop: 'loadWeightall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载体积',
+        prop: 'loadVolumeall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '120',
+        fixed: false
+      }
       ],
       tableColumnRight: [{
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '批次状态',
-          prop: 'batchTypeName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '达到网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '到付车费',
-          prop: 'arrivepayCarriage',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '已核销到付车费',
-          prop: 'paidArrivepayCarriage',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
-          }
-        },
-        {
-          label: '未核销到付车费',
-          prop: 'unpaidArrivepayCarriage',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
-          }
-        },
-        {
-          label: '实际核销到付车费',
-          prop: 'amountArrivepayCarriage',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.amountArrivepayCarriage
-          }
-        },
-        {
-          label: '到付油卡',
-          prop: 'arrivepayOilCard',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到付油卡',
-          prop: 'paidArrivepayOilCard',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
-          }
-        },
-        {
-          label: '未核销到付油卡',
-          prop: 'unpaidArrivepayOilCard',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
-          }
-        },
-        {
-          label: '实际核销到付油卡',
-          prop: 'amountArrivepayOilCard',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.amountArrivepayOilCard
-          }
-        },
-        {
-          label: '到站装卸费',
-          prop: 'arriveHandlingFee',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到站装卸费',
-          prop: 'paidArriveHandlingFee',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
-          }
-        },
-        {
-          label: '未核销到站装卸费',
-          prop: 'unpaidArriveHandlingFee',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
-          }
-        },
-        {
-          label: '实际核销到站装卸费',
-          prop: 'amountArriveHandlingFee',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.amountArriveHandlingFee
-          }
-        },
-        {
-          label: '到站其他费',
-          prop: 'arriveOtherFee',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '已核销到站其他费',
-          prop: 'paidArriveOtherFee',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
-          }
-        },
-        {
-          label: '未核销到站其他车费',
-          prop: 'unpaidArriveOtherFee',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
-          }
-        },
-        {
-          label: '实际核销到站其他费',
-          prop: 'amountArriveOtherFee',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.amountArriveOtherFee
-          }
-        },
-        {
-          label: '司机电话',
-          prop: 'dirverMobile',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '司机姓名',
-          prop: 'dirverName',
-          width: '120',
-          fixed: false
-        },
-
-        {
-          label: '配载件数',
-          prop: 'loadAmountall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载重量',
-          prop: 'loadWeightall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '配载体积',
-          prop: 'loadVolumeall',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'remark',
-          width: '120',
-          fixed: false
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '批次状态',
+        prop: 'batchTypeName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '达到网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车时间',
+        prop: 'departureTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         }
+      },
+      {
+        label: '到达时间',
+        prop: 'receivingTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.receivingTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '到付车费',
+        prop: 'arrivepayCarriage',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '已核销到付车费',
+        prop: 'paidArrivepayCarriage',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.paidArrivepayCarriage)
+        }
+      },
+      {
+        label: '未核销到付车费',
+        prop: 'unpaidArrivepayCarriage',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayCarriage, row.paidArrivepayCarriage, row.unpaidArrivepayCarriage, row.unpaidArrivepayCarriage)
+        }
+      },
+      {
+        label: '实际核销到付车费',
+        prop: 'amountArrivepayCarriage',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.amountArrivepayCarriage
+        }
+      },
+      {
+        label: '到付油卡',
+        prop: 'arrivepayOilCard',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到付油卡',
+        prop: 'paidArrivepayOilCard',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.paidArrivepayOilCard)
+        }
+      },
+      {
+        label: '未核销到付油卡',
+        prop: 'unpaidArrivepayOilCard',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayOilCard, row.paidArrivepayOilCard, row.unpaidArrivepayOilCard, row.unpaidArrivepayOilCard)
+        }
+      },
+      {
+        label: '实际核销到付油卡',
+        prop: 'amountArrivepayOilCard',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.amountArrivepayOilCard
+        }
+      },
+      {
+        label: '到站装卸费',
+        prop: 'arriveHandlingFee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到站装卸费',
+        prop: 'paidArriveHandlingFee',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.paidArriveHandlingFee)
+        }
+      },
+      {
+        label: '未核销到站装卸费',
+        prop: 'unpaidArriveHandlingFee',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveHandlingFee, row.paidArriveHandlingFee, row.unpaidArriveHandlingFee, row.unpaidArriveHandlingFee)
+        }
+      },
+      {
+        label: '实际核销到站装卸费',
+        prop: 'amountArriveHandlingFee',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.amountArriveHandlingFee
+        }
+      },
+      {
+        label: '到站其他费',
+        prop: 'arriveOtherFee',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '已核销到站其他费',
+        prop: 'paidArriveOtherFee',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.paidArriveOtherFee)
+        }
+      },
+      {
+        label: '未核销到站其他车费',
+        prop: 'unpaidArriveOtherFee',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arriveOtherFee, row.paidArriveOtherFee, row.unpaidArriveOtherFee, row.unpaidArriveOtherFee)
+        }
+      },
+      {
+        label: '实际核销到站其他费',
+        prop: 'amountArriveOtherFee',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.amountArriveOtherFee
+        }
+      },
+      {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '司机姓名',
+        prop: 'dirverName',
+        width: '120',
+        fixed: false
+      },
+
+      {
+        label: '配载件数',
+        prop: 'loadAmountall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载重量',
+        prop: 'loadWeightall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载体积',
+        prop: 'loadVolumeall',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
@@ -584,6 +584,9 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     let i = 50
     while (i-- < 50) {
@@ -592,16 +595,42 @@ export default {
     this.getList()
   },
   methods: {
-   handlePageChangeLeft(obj) {
+    handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       console.log(obj.pageSize, obj.pageNum, obj)
-      this.getList('handlePage')
+      this.pageGetList()
+    },
+    pageGetList() {
+      const rightTable = objectMerge2([], this.rightTable)
+      this.loading = true
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      postPayListBySummary(this.searchQuery).then(data => {
+        if (data) {
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+          })
+        }
+        this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
+      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     initLeftParams() {
       // this.$set(this.searchQuery.vo, 'orgid', this.getRouteInfo.vo.orgid)
       // this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.getRouteInfo.vo.ascriptionOrgid)
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'sign', this.sign)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
@@ -671,10 +700,10 @@ export default {
     },
     changLoadData(index, prop, newVal) {
       this.rightTable[index][prop] = Number(newVal)
-      let unpaidName = 'unpaid' + prop.substring(6) // 未核销费用名
-      let unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
+      const unpaidName = 'unpaid' + prop.substring(6) // 未核销费用名
+      const unpaidVal = Number(this.rightTable[index][unpaidName]) // 未核销费用值
       // 未核销费用值
-      let paidVal = this.rightTable[index][prop]
+      const paidVal = this.rightTable[index][prop]
 
       if (paidVal !== unpaidVal) {
         this.$set(this.rightTable[index], prop + 'lyy', true)

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" @success="fetchAllreceipt" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" @success="fetchAllreceipt" v-loading="loading">
     <SearchForm :component="'accept'" :orgid="otherinfo.orgid" title="接收" type="accept_status" status="acceptStatus" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -295,8 +295,20 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -324,12 +336,14 @@ import Pager from '@/components/Pagination/index'
 import AddMark from './components/add'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddMark
+    AddMark,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -569,6 +583,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllreceipt()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -707,33 +725,32 @@ export default {
           if (this.searchQuery.vo.acceptStatus !== '408') {
             this.$message.warning('【未回回单】才可以操作哦~')
           } else {
-            let idsss = objectMerge2([], this.selected).map(e => {
+            const idsss = objectMerge2([], this.selected).map(e => {
               return e.shipId
             }) || []
             this.$confirm('确定回单已回？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-              }).then(() => {
-                this.loading = true
-                acceptShips(idsss.join(',')).then(data => {
-                    this.loading = false
-                    this.fetchAllreceipt()
-                    this.$message.success('回单已回操作成功~')
-                  })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消'
+            }).then(() => {
+              this.loading = true
+              acceptShips(idsss.join(',')).then(data => {
+                this.loading = false
+                this.fetchAllreceipt()
+                this.$message.success('回单已回操作成功~')
+              })
                   .catch(err => {
                     this.loading = false
                     this._handlerCatchMsg(err)
                   })
-              })
+            })
               .catch(() => {
 
               })
-
           }
           break
         case 'alearyCancel': // 取消已回
           let countNoflag = 0
-          let idss = objectMerge2([], this.selected).filter(el => {
+          const idss = objectMerge2([], this.selected).filter(el => {
             if ((el.backstatus < 242 || !el.backstatus) && el.rollbackStatus) {
               return true
             } else {
@@ -749,20 +766,20 @@ export default {
           }
           if (idss && idss.length > 0) {
             this.$confirm('确定取消已回？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-              }).then(() => {
-                this.loading = true
-                cancelAcceptShips(idss.join(',')).then(data => {
-                    this.loading = false
-                    this.fetchAllreceipt()
-                    this.$message.success('取消已回操作成功~')
-                  })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消'
+            }).then(() => {
+              this.loading = true
+              cancelAcceptShips(idss.join(',')).then(data => {
+                this.loading = false
+                this.fetchAllreceipt()
+                this.$message.success('取消已回操作成功~')
+              })
                   .catch(err => {
                     this.loading = false
                     this._handlerCatchMsg(err)
                   })
-              })
+            })
               .catch(() => {
 
               })

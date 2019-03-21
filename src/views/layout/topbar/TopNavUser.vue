@@ -4,6 +4,7 @@
       <el-row>
         <el-col :span="8" class="popoveruser-avatar">
           <img class="user-avatar" :src="avatar">
+          <Personalization />
         </el-col>
         <el-col :span="16">
           <div class="popoveruser_info_lyy">
@@ -39,6 +40,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import UsersTree from '@/components/usersTree'
+import Personalization from './../personalization'
 export default {
   computed: {
     ...mapGetters([
@@ -46,19 +48,19 @@ export default {
       'company'
     ]),
     canSwitch() {
-      let switchUser = this.otherinfo.systemSetup.switchUser ? this.otherinfo.systemSetup.switchUser : { canSwitch: '0' }
+      const switchUser = this.otherinfo.systemSetup.switchUser ? this.otherinfo.systemSetup.switchUser : { canSwitch: '0' }
       return switchUser ? (switchUser.canSwitch === '1') : false
     }
   },
   components: {
-    UsersTree
+    UsersTree,
+    Personalization
   },
   mounted() {
     var agnt = navigator.userAgent.toLowerCase()
     if (agnt.indexOf('msie') > 0 || agnt.indexOf('trident') > 0) {
       this.showit = true
     }
-
   },
   data() {
     return {
@@ -92,8 +94,8 @@ export default {
     },
     changeLogin(loginForm) {
       this.$store.dispatch('Login', loginForm).then(() => {
-          location.href = '/'
-        })
+        location.href = '/'
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

@@ -338,7 +338,7 @@
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipPrintLib'">
                   <span class="order-form-label">打印标签</span>
                   <el-form-item prop="tmsOrderShip.shipPrintLib">
-                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib">
+                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib" @change="changePrintAmount">
                       <template slot="append">份</template>
                     </el-input>
                   </el-form-item>
@@ -719,8 +719,8 @@ export default {
   },
   data() {
     const _this = this
-
     return {
+      isPrintAmount: false,
       org_m_index: {
         tmsOrderShipTop: 1,
         customerInfo: 2,
@@ -733,7 +733,7 @@ export default {
         customerInfo: 2,
         tmsOrderCargoList: 3,
         tmsOrderShip: 4,
-         tmsOrderTransfer: 5
+        tmsOrderTransfer: 5
       },
       shipUserName: '',
       // 用来更新收发货人信息
@@ -1096,15 +1096,15 @@ export default {
         proposedPrice: 0 // 总价
       },
       RECEIPT_TYPE: {}, // 回单类型中文
-      dialogVisibleModel: false, // 
+      dialogVisibleModel: false, //
       modelList: [] // 模板设置列表
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -1155,7 +1155,7 @@ export default {
       this.form.tmsOrderShip.shipOther = newVal.join(',')
       console.log('this.form.tmsOrderShip.shipOther:', this.form.tmsOrderShip.shipOther)
     },
-    'form.tmsOrderShip.shipPrintLib': {
+    'form.tmsOrderShip.shipPrintLib': { // 打印标签数量
       handler(newVal) {
         if (newVal > 500) {
           this.form.tmsOrderShip.shipPrintLib = 500
@@ -1194,14 +1194,24 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
+      console.warn('开单页面的 route, to, from', to, from)
+      if (from.query.type && from.query.type === 'modify' && from.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 1 如果从改单页面进入
+        console.log('1 如果从改单页面进入', to, from)
+        this.initIndex()
+      }
+      if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 2 如果进入改单页面
+        this.initIndex()
+      }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -1219,7 +1229,6 @@ export default {
 
   },
   mounted() {
-
     // if (process.env.NODE_ENV !== 'production') {
     //   console.warn('模板设置字段：', this.form)
     //   console.warn('-----------开始分割线--------------')
@@ -1260,32 +1269,51 @@ export default {
       // 中转默认付款方式
       this.form.tmsOrderTransfer.paymentId = 16
     }
+    this.initPrintAmount()
   },
   methods: {
+    initPrintAmount() {
+      this.isPrintAmount = false
+      if (this.otherinfo.systemSetup) {
+        const systemSetup = this.otherinfo.systemSetup
+        if (systemSetup.shipPageFunc) {
+           // systemSetup.shipPageFunc.printLabelIsAmount  0否1是，默认是1
+          this.isPrintAmount = systemSetup.shipPageFunc.printLabelIsAmount === '1'
+        }
+        console.log('系统设置 打印标签是否默认件数：', this.isPrintAmount, this.otherinfo.systemSetup, systemSetup.shipPageFunc)
+      }
+    },
+    changePrintAmount(val) {
+      // 修改打印标签数量
+      console.log('val changePrintAmount', val)
+      this.isPrintAmount = false
+    },
     setModel() {
       // 重新修改开单页面的模板
       this.fetchModel()
     },
     fetchModel() { // 获取模板信息
+      this.loading = true
       return orderManage.getOrderModel().then(data => {
-          if (data) {
-            this.modelList = data
-            this.modelList.forEach((el, index) => {
-              if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
-                this.m_index.customerInfo = el.typeOrder
-              } else {
-                this.m_index[el.templateType] = el.typeOrder
-              }
-            })
-            this.m_index.tmsOrderTransfer = 5
-            this.org_m_index = objectMerge2({}, this.m_index)
-            console.log('模板各个模块排序：', JSON.stringify(this.m_index))
-            console.warn('所有模板排序信息 modelList:', this.modelList)
-            this.sortModel() // 初始化开单页面各个模块排序
-          } else {
-            this.modelList = this.$const.MODELLIST
-          }
-        })
+        if (data) {
+          this.modelList = data
+          this.modelList.forEach((el, index) => {
+            if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+              this.m_index.customerInfo = el.typeOrder
+            } else {
+              this.m_index[el.templateType] = el.typeOrder
+            }
+          })
+          this.m_index.tmsOrderTransfer = 5
+          this.org_m_index = objectMerge2({}, this.m_index)
+          console.log('模板各个模块排序：', JSON.stringify(this.m_index))
+          console.warn('所有模板排序信息 modelList:', this.modelList)
+          this.sortModel() // 初始化开单页面各个模块排序
+        } else {
+          this.modelList = this.$const.MODELLIST
+        }
+        this.loading = false
+      })
         .catch(err => {
           this.modelList = this.$const.MODELLIST
           this._handlerCatchMsg(err)
@@ -1294,19 +1322,19 @@ export default {
     sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
-          let list = document.querySelectorAll('.model-order-item')
-          let arr = Array.prototype.slice.call(list)
-          console.log('arr+++++', arr, list)
+          this.loading = true
+          const list = document.querySelectorAll('.model-order-item')
+          const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          let modelDiv = document.querySelectorAll('.model-order-list')[0]
-          console.log('modelDiv+++++', modelDiv)
+          const modelDiv = document.querySelectorAll('.model-order-list')[0]
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
-            let name = arr[i].getAttribute('data-name')
-            let index = arr[i].getAttribute('data-index')
+            const name = arr[i].getAttribute('data-name')
+            const index = arr[i].getAttribute('data-index')
           }
+          this.loading = false
         }
       })
     },
@@ -1524,7 +1552,7 @@ export default {
         this.setCargoNum()
         this.setOrderDate()
         this.setOrderFee()
-        
+
         this.setOrgCity()
         // 当为修改运单时，不设置默认值
         if (!this.output.isOrder) {
@@ -1539,7 +1567,6 @@ export default {
           }
         }, 1000)
       }) // 查询开单页面模板
-
     },
     // 设置上一次的运单信息
     setLastOrderInfo() {
@@ -1574,7 +1601,7 @@ export default {
           })
         }
       } else {
-        obj = this.$refs['tmsOrderShipshipSn']
+        obj = this.$refs['tmsOrderShipshipSn'][0]
       }
       if (obj && this.output.iscreate) {
         obj.focus()
@@ -1789,8 +1816,10 @@ export default {
         } else {
           param = this.$route.query
         }
-
-        if (param.orderid) {
+        if (whereAreYou === 'isSaveAndNew') {
+          this.output.iscreate = true
+          this.initCreate()
+        } else if (param.orderid) {
           this.output.orderid = param.orderid
           this.output.isOrder = true
           this.initOrder()
@@ -1812,8 +1841,6 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
-
-
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
@@ -2302,6 +2329,11 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // }
       this.setCargoNum()
+      console.log('件数 change方法', index, name, event)
+      if (this.isPrintAmount) {
+        // ture 打印标签数量默认为第一个货品的件数
+        this.form.tmsOrderShip.shipPrintLib = event.target.value
+      }
     },
     // 修改货品列表
     changeFee(index, name, event) {
@@ -2548,7 +2580,7 @@ export default {
       this.shipFieldValueInfo.shipFromCityName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipFromCityName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderShipFromCityName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2563,8 +2595,7 @@ export default {
       this.shipFieldValueInfo.shipToCityName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipshipToCityName'].$refs['myautocomplete'].focus()
-        this.loading = false
+        this.$refs['tmsOrderShipshipToCityName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2579,7 +2610,7 @@ export default {
       this.shipFieldValueInfo.shipToOrgid = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipToOrgid'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderShipToOrgid'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2594,7 +2625,7 @@ export default {
       this.shipFieldValueInfo.shipGoodsSn = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderShipGoodsSn'].focus()
+        this.$refs['tmsOrderShipGoodsSn'][0].focus()
       } else {
         msg = m
       }
@@ -2609,7 +2640,7 @@ export default {
       this.shipFieldValueInfo.shipSenderUnit = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerUnit'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerUnit'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2624,7 +2655,7 @@ export default {
       this.shipFieldValueInfo.shipSenderName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2639,7 +2670,7 @@ export default {
       this.shipFieldValueInfo.shipSenderMobile = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdercustomerMobile'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdercustomerMobile'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2654,7 +2685,7 @@ export default {
       this.shipFieldValueInfo.shipSenderAddress = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrderdetailedAddress'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrderdetailedAddress'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2669,7 +2700,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverUnit = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverUnit'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverUnit'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2684,7 +2715,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverName = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverName'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverName'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2699,7 +2730,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverMobile = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverMobile'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverMobile'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2714,7 +2745,7 @@ export default {
       this.shipFieldValueInfo.shipReceiverAddress = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipReceiverAddress'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipReceiverAddress'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2830,7 +2861,9 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         let obj = this.$refs['tmsOrder' + find.fieldProperty]
+        console.log('obj1111', obj)
         obj = Array.isArray(obj) ? obj[1] : obj
+        console.log('obj2222', obj)
         if (obj) {
           obj.focus()
         }
@@ -2866,7 +2899,7 @@ export default {
       this.shipFieldValueInfo.shipCustomerNumber = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipCustomerNumber'].focus()
+        this.$refs['tmsOrdershipCustomerNumber'][0].focus()
       } else {
         msg = m
       }
@@ -2881,7 +2914,7 @@ export default {
       this.shipFieldValueInfo.shipUserid = msg
       if (msg && !m) {
         this.$message.error(msg)
-        this.$refs['tmsOrdershipUserid'].$refs['myautocomplete'].focus()
+        this.$refs['tmsOrdershipUserid'][0].$refs['myautocomplete'].focus()
       } else {
         msg = m
       }
@@ -2985,7 +3018,7 @@ export default {
           resolve(!msg)
         } else {
           if (!this.form.tmsOrderShip.shipSn) {
-            this.$refs['tmsOrderShipshipSn'].focus()
+            this.$refs['tmsOrderShipshipSn'][0].focus()
             this.$message.error('请填写运单号~')
             resolve(false)
           } else {
@@ -3007,7 +3040,7 @@ export default {
                   })
                   this.$message.error('重复的订单号，已为你重新生成新的运单号~')
                 } else {
-                  this.$refs['tmsOrderShipshipSn'].focus()
+                  this.$refs['tmsOrderShipshipSn'][0].focus()
                   this.$message.error('重复的订单号，请修改~')
                 }
 
@@ -3110,17 +3143,30 @@ export default {
                   if (el[i] === '' && i !== 'cargoName') {
                     b[i] = 0
                   } else {
-                    ////////////// 系统设置回扣不计入运费合计的时候 需要清空为0
-                    console.log('++++++++++++++')
-                    console.log('i', i, el[i])
-                    console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
-                    if (this.config.shipFee['brokerageFee'] === '0') {
-                      b[i] = 0
-                    } else {
-                      b[i] = el[i]
-                    }
+                    b[i] = el[i]
                   }
                 }
+                return b
+                // const b = {}
+                // for (const i in el) {
+                //   if (el[i] === '' && i !== 'cargoName') {
+                //     b[i] = 0
+                //   } else {
+                //     ////////////// 系统设置回扣不计入运费合计的时候 需要清空为0
+                //     console.log('++++++++++++++')
+                //     console.log('i', i, el[i])
+                //     console.log('this.config.shipFee["brokerageFee"]', this.config.shipFee['brokerageFee'])
+                //     if (i === 'brokerageFee') {
+                //       if (this.config.shipFee['brokerageFee'] === '0') {
+                //         b[i] = 0
+                //       } else {
+                //         b[i] = el[i]
+                //       }
+                //     } else {
+                //       b[i] = el[i]
+                //     }
+                //   }
+                // }
                 return b
               })
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
@@ -3284,7 +3330,7 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           this.submitForm()
           break
-        case 'saveInsertKey':
+        case 'saveInsertKey': // 保存并新增
           this.isSaveAndNew = true
           this.submitForm().then(r => {
             this.initIndex('isSaveAndNew')
@@ -3337,24 +3383,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyLi().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.label
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-          CreatePrintPageEnable(printObj)
-          return data
-          this.setPrintData('lib') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyLi', data, printData)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-        })
+        CreatePrintPageEnable(printObj)
+        return data
+        this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyLi', data, printData)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3370,24 +3416,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyOrder().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-          CreatePrintPageEnable(printObj)
-          return
-          this.setPrintData('order') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyOrder', data)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-        })
+        CreatePrintPageEnable(printObj)
+        return
+        this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyOrder', data)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

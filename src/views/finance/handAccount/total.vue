@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content handAccount-summary" v-loading="loading">
+  <div class="tab-content handAccount-summary miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
@@ -41,14 +41,22 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+                :prop="column.prop"
               :label="column.label"
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope" v-html="true">
                   {{ column.slot(scope) }}
               </template>
@@ -68,12 +76,14 @@ import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   mounted() {
 
@@ -103,7 +113,8 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'width': '70',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
@@ -132,6 +143,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     viewDetails(row) {
       this.$router.push({
         path: '/finance/handAccount/detail',
@@ -151,7 +166,7 @@ export default {
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

@@ -1,6 +1,6 @@
 <template>
   <!-- 回扣 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
@@ -15,12 +15,19 @@
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;"
          :show-summary="true" :summary-method="getSummaries">
-          <el-table-column fixed sortable type="selection" width="60">
+          <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+             <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -49,11 +56,13 @@ import TableSetup from '@/components/tableSetup'
 import { payListByHandlingFee } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -72,105 +81,109 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'id',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '发车类型',
-          prop: 'loadTypeName',
-          width: '90',
-          fixed: true
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '操作费',
-          prop: 'fee',
-          width: '110',
-          slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
-          },
-          fixed: false
-        },
-        {
-          label: '已核销操作费',
-          prop: 'paidFee',
-          width: '110',
-          slot: (scope) => {
-            const row = scope.row
-            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-            return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
-          },
-          fixed: false
-        },
-        {
-          label: '未核销操作费',
-          prop: 'unpaidFee',
-          width: '110',
-          slot: (scope) => {
-            const row = scope.row
-            let fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-            let closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-            let unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-            return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
-            // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
-          fixed: false
-        },
-        {
-          label: '已付（应付）',
-          prop: 'pandHandlingFeePay',
-          width: '120',
-          slot: (scope) => {
-            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
-          },
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'remark',
-          fixed: false
+        label: '序号',
+        prop: 'number',
+        width: '65',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
+      },
+      {
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '发车类型',
+        prop: 'loadTypeName',
+        width: '100',
+        fixed: true
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车时间',
+        prop: 'departureTime',
+        width: '170',
+        fixed: false
+      },
+      {
+        label: '到达时间',
+        prop: 'receivingTime',
+        width: '170',
+        fixed: false
+      },
+      {
+        label: '操作费',
+        prop: 'fee',
+        width: '110',
+        slot: (scope) => {
+          return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+        },
+        fixed: false
+      },
+      {
+        label: '已核销操作费',
+        prop: 'paidFee',
+        width: '140',
+        slot: (scope) => {
+          const row = scope.row
+          const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+          const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
+          const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+          return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
+        },
+        fixed: false
+      },
+      {
+        label: '未核销操作费',
+        prop: 'unpaidFee',
+        width: '140',
+        slot: (scope) => {
+          const row = scope.row
+          const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+          const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
+          const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+          return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
+            // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+        },
+        fixed: false
+      },
+      {
+        label: '已付（应付）',
+        prop: 'pandHandlingFeePay',
+        width: '140',
+        slot: (scope) => {
+          return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+        },
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'remark',
+        fixed: false
+      }
       ],
       selectedDataList: []
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchList()
+    },
     getSearchParam(obj) { // 获取搜索条件
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -254,7 +267,7 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    getSummaries (param) {
+    getSummaries(param) {
       return getSummaries(param)
     }
   }

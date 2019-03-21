@@ -1,7 +1,7 @@
 
 <template>
-  <div class="permManage" v-loading="loading">
-    <div class="permManage-top">
+  <div class="permManage miniHeaderSearch" v-loading="loading">
+    <div class="permManage-top staff_searchinfo">
       <el-form :inline="true" :model="searchDate" class="demo-form-inline">
         <el-form-item label="角色名称：">
           <el-input v-model="searchDate.roleName" placeholder="" clearable></el-input>
@@ -21,7 +21,6 @@
             <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('deletePeople')" plain v-has:PERMISSION_DELETE>删除</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('reference')" plain v-has:PERMISSION_COPY>参照</el-button>
             <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('relationPer')" plain v-has:PERMISSION_LINK>关联员工</el-button>
-
           </div>
         </div>
         <div class="info_news">
@@ -46,6 +45,23 @@
               label="序号" width="50">
               <template slot-scope="scope">{{  scope.$index + 1 }}</template>
             </el-table-column>
+               <template v-for="column in tableColumn">
+                  <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" >
+                    <template slot="header" slot-scope="scope">
+                      <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"  />
+                    </template>
+                    <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+                  </el-table-column>
+                  <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+                    <template slot="header" slot-scope="scope">
+                      <tableHeaderSearch :scope="scope"  :query="searchQuery" @change="changeKey" />
+                    </template>
+                    <template slot-scope="scope">
+                      <div class="td-slot" v-html="column.slot(scope)"></div>
+                    </template>
+                  </el-table-column>
+              </template>
+           <!--  
             <el-table-column
               fixed
               prop="roleName"
@@ -63,7 +79,7 @@
             <el-table-column
               prop="remark"
               label="备注">
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
 
@@ -83,11 +99,13 @@
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
+  import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
     name: 'permissionManage',
     components: {
       AddRole,
-      RelationPer
+      RelationPer,
+      tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -102,8 +120,29 @@
           roleName: '',
           id: ''
         },
+        searchQuery: {
+          currentPage: 1,
+          pageSize: 100,
+          searchVo: {}
+        },
         btnsize: 'mini',
         loading: true,
+        tableColumn: [{
+          'label': '角色名称',
+          'prop': 'roleName'
+        },
+        {
+          'label': '创建者',
+          'prop': 'createrName'
+        },
+        {
+          'label': '创建时间',
+          'prop': 'createTime'
+        },
+        {
+          'label': '备注',
+          'prop': 'remark'
+        }],
         addRelatVisible: false,
         addDoRoleVisible: false,
         addDoTotVisible: false,
@@ -135,13 +174,17 @@
       this.getTreeInfo()
     },
     methods: {
+      changeKey(obj) {
+         this.searchQuery = obj
+         this.getSeachInfo(this.otherinfo.orgid, this.searchDate.roleName)
+       },
       fetchAllUser(orgid, username, mobilephone) {
         return getAllUser(orgid, username || '', mobilephone || '')
       },
       getSeachInfo(orgid, roleName) {
         if (roleName) {
           this.searchDate.roleName = roleName
-          getAuthInfo(this.otherinfo.orgid, this.searchDate.roleName).then(res => {
+          getAuthInfo(this.otherinfo.orgid, this.searchDate.roleName, this.searchQuery.currentPage, this.searchQuery.pageSize, this.searchQuery.searchVo).then(res => {
             this.loading = false
             this.usersArr = res.list
           }).catch(err => {
@@ -149,7 +192,7 @@
           })
         } else {
           this.loading = false
-          getAuthInfo(this.otherinfo.orgid).then(res => {
+          getAuthInfo(this.otherinfo.orgid, '', this.searchQuery.currentPage, this.searchQuery.pageSize, this.searchQuery.searchVo).then(res => {
             this.usersArr = res.list
           }).catch(err => {
             this._handlerCatchMsg(err)

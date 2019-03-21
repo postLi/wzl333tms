@@ -186,6 +186,13 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item>
+                  开单打印标签是否默认件数
+                    <el-select v-model="form.shipPageFunc.printLabelIsAmount" placeholder="请选择">
+                      <el-option label="是" value="1"></el-option>
+                      <el-option label="否" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
               </div>
             </div>
             <!-- 运单权限 -->
@@ -663,7 +670,8 @@ export default {
           'shipTimeRule': '',
           'shipFieldSign': '1',
           orderName: '收发货凭证', // 开单页面标题
-          decimalPlaces: '2' // 0,1,2
+          decimalPlaces: '2', // 0,1,2
+          printLabelIsAmount: '1' // 0否1是，默认是1
         },
         'loadSetting': {
           'carrier': 'driver'

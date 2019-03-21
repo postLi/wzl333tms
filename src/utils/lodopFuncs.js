@@ -151,7 +151,7 @@
          CreatedOKLodop7766 = LODOP
        } else LODOP = CreatedOKLodop7766
        // =====Lodop插件未安装时提示下载地址:==========
-       if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+       if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
          if (navigator.userAgent.indexOf('Chrome') >= 0) {
            document.body.innerHTML = strHtmChrome + document.body.innerHTML
          }
@@ -298,7 +298,7 @@
        objp.h = objp.h - 5 - objp.t
 
        console.log('print obj:', obj)
-       let shipSn = obj.data.map(el => {
+       const shipSn = obj.data.map(el => {
          return el.shipSn
        })
        console.log('打印的数据shipSn', shipSn)
@@ -376,7 +376,7 @@
        data.forEach(el => {
          obj[el.fieldName] = el.fieldValue
        })
-       console.error('obj', obj)
+       console.log('obj', obj)
        fn(obj)
      } else {
        console.error('获取打印信息失败')
@@ -429,7 +429,7 @@
          LODOP.SET_PRINT_PAGESIZE(1, '218mm', '280mm', '合同')
        } else {
          let str = '?'
-         let propArr = [
+         const propArr = [
            'checkBillName', 'contractNo', 'orgName', 'carrier', 'dirverName',
            'frameNum', 'userName', 'driverCardid', 'dirverMobile', 'truckIdNumber',
            'engineNum', 'loadAmountall', 'loadWeightall', 'loadVolumeall', 'shipFeeAmount',
@@ -888,16 +888,20 @@
      } else if (Number(infoDetail.shipDeliveryMethod) === 69) {
        obj.sendGood = '√' // 送货（√）
      }
-     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 168) {
-       obj.controlGoods = infoDetail.shipOther // 168-控货
+      // //////////////////////////////////////////////////////////
+     // /控货和贵重物品 需要特殊处理为打勾
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('168') !== -1) {
+       obj.controlGoods = infoDetail.shipOther ? '√' : '' // 168-控货
      }
-     if (infoDetail.shipOther && Number(infoDetail.shipOther) === 169) {
-       obj.valuables = infoDetail.shipOther //  169-贵重物品
+     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('169') !== -1) {
+       obj.valuables = infoDetail.shipOther ? '√' : '' //  169-贵重物品
      }
+     // //////////////////////////////////////////////////////////
+     // /加急urgent和普通common 需要特殊处理为打勾
      if (infoDetail.shipEffective === 95) {
-       obj.urgent = infoDetail.shipEffective // 95-时效-加急
+       obj.urgent = infoDetail.shipEffective ? '√' : '' // 95-时效-加急
      } else {
-       obj.common = infoDetail.shipEffective // 94-时效-普通
+       obj.common = infoDetail.shipEffective ? '√' : '' // 94-时效-普通
      }
      // //////////////////////////////////////////////////////////
      // /处理合计中文大写
@@ -1131,7 +1135,6 @@
    obj.data.forEach((el, k) => {
      obj.columns.forEach((column, j) => {
        if (column.prop === 'id' || column.label === '序号') {
-         console.log('column.label:', column.label)
          el['index'] = k + 1
          el['id'] = k + 1
          el['number'] = k + 1
@@ -1333,7 +1336,7 @@
      saveAs(blob, (option.fileName || '报表') + '.xlsx')
    })
 
-   console.log('option:::::', option)
+  //  console.log('option:::::', option)
    //global .FileSaver
  }
 

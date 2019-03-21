@@ -237,3 +237,19 @@ export function getTwocodeUrl(url) {
 export function postUploadIdInfo(id, url) {
   return fetch.post('/api-plugin/common/qrcode/v1/SaveByID?k=' + id + '&v=' + url)
 }
+/**
+ * 用户个性化设置-查询
+ */
+export function findAllByUserId() {
+  return fetch.get('/api-system/system/personalization/v1/findAllByUserId').then(res => {
+    return res.data
+  })
+}
+/**
+ * 用户个性化设置-修改
+ */
+export function updateByUserId(data) {
+  return fetch.post('/api-system/system/personalization/v1/updateByUserId', data).then(res => {
+    return res.data
+  })
+}

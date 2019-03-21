@@ -16,8 +16,7 @@
         <el-form-item label="中转网点">
             <SelectTree v-model="searchForm.orgid" :orgid="otherinfo.orgid" />
         </el-form-item>
-        <el-form-item label="对账状态
-  ">
+        <el-form-item label="对账状态">
           <el-select v-model="searchForm.checkStatus">
             <el-option label="未对账" :value="0"></el-option>
             <el-option label="已对账" :value="1"></el-option>

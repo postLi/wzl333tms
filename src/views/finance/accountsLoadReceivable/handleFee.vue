@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
       <!-- 搜索框 -->
       <div class="transferTable_search clearfix">
@@ -13,7 +13,7 @@
         <!-- 左边表格区 -->
         <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-            <el-table-column fixed width="50" label="序号">
+            <el-table-column fixed width="60" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
               </template>
@@ -42,14 +42,14 @@
           <div class="accountsLoad_table_pager">
             <b>共计:{{ totalLeft }}</b>
             <div class="show_pager">
-              <Pager :total="totalLeft" @change="handlePageChangeLeft" />
+              <Pager :total="totalLeft" @change="handlePageChangeLeft" :btnsize="'mini'" :defaultValues="searchQuery" />
             </div>
           </div>
         </div>
         <!-- 右边表格区 -->
         <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
           <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-            <el-table-column fixed width="50" label="序号">
+            <el-table-column fixed width="60" label="序号">
               <template slot-scope="scope">
                 {{scope.$index + 1}}
               </template>
@@ -120,7 +120,7 @@ export default {
       totalLeft: 0,
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       tableReceiptInfo: [],
@@ -191,9 +191,9 @@ export default {
         prop: 'paidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
-          },
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+        },
         fixed: false
       },
       {
@@ -201,10 +201,10 @@ export default {
         prop: 'unpaidFee',
         width: '110',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+          const row = scope.row
+          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
             //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
-          },
+        },
         fixed: false
       },
       {
@@ -213,8 +213,8 @@ export default {
         width: '110',
         expand: true,
         slot: (scope) => {
-            return scope.row.amount
-          },
+          return scope.row.amount
+        },
         fixed: false
       },
       {
@@ -260,7 +260,7 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      console.log(JSON.parse(this.$route.query.searchQuery))
+      // console.log(JSON.parse(this.$route.query.searchQuery))
       return JSON.parse(this.$route.query.searchQuery)
     },
     // totalLeft() {
@@ -280,6 +280,9 @@ export default {
       deep: true
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
@@ -287,8 +290,35 @@ export default {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
-      this.getList('handlePage')
+      // console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
+    },
+    pageGetList() {
+      const rightTable = objectMerge2([], this.rightTable)
+      this.loading = true
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+        if (data) {
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+          this.leftTable.forEach((e, index) => {
+            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeeRec : e.dbHandlingFeeRec)
+            e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeeRec : e.paidDbHandlingFeeRec)
+            e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
+            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeeRecStatusZh : e.dbHandlingFeeRecStatusZh)
+            this.$set(e, 'amount', e.unpaidFee)
+            // console.log(e)
+          })
+        }
+        this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
+      })
+        .catch(err => {
+          this._handlerCatchMsg(err)
+        })
     },
     initLeftParams() {
       if (!this.$route.query) {
@@ -297,10 +327,18 @@ export default {
       } else {
         this.searchQuery.vo = Object.assign({}, this.getRouteInfo.vo)
         if (this.searchQuery.vo.status === '' || /(ALLSETTLEMENT)/.test(this.searchQuery.vo.status)) {
-         this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+          this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
         }
         this.isFresh = false
       }
+      if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
+        // console.log('111111111111111')
+      } else {
+        // console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
     setRight(item) {
       item.inputNowPayFee = item.notNowPayFee
@@ -323,11 +361,11 @@ export default {
       this.infoTable = this.$options.data().infoTable
       this.orgLeftTable = this.$options.data().orgLeftTable
 
-     if (!handle) {
+      if (!handle) {
         this.initLeftParams() // 设置searchQuery
       }
       if (!this.isFresh) {
-        console.log('getList::::', this.searchQuery)
+        // console.log('getList::::', this.searchQuery)
         payListByHandlingFee(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
@@ -339,7 +377,7 @@ export default {
             e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeeRec : e.unpaidDbHandlingFeeRec)
             e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeeRecStatusZh : e.dbHandlingFeeRecStatusZh)
             this.$set(e, 'amount', e.unpaidFee)
-            console.log(e)
+            // console.log(e)
           })
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
@@ -362,6 +400,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -419,8 +458,8 @@ export default {
           e.inputBrokerageFee = e.unpaidFee
           this.setRight(e)
           this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-             return em.batchNo !== e.batchNo
-           })
+            return em.batchNo !== e.batchNo
+          })
           this.rightTable.push(e)
           this.leftTable = objectMerge2([], this.leftTable).filter(el => {
             return el.batchNo !== e.batchNo

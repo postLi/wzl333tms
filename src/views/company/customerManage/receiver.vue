@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -36,9 +36,17 @@
                 <!-- <span v-if="scope.row[column.prop]" v-showPicture :imgurl="scope.row[column.prop]">预览</span> -->
               </template>
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
             
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :prop="column.prop" :width="column.width || ''">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -64,6 +72,7 @@ import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
 import { objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
@@ -71,7 +80,8 @@ export default {
     Pager,
     TableSetup,
     AddCustomer,
-    ImportDialog
+    ImportDialog,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -117,7 +127,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '60',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -191,6 +201,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllCustomer()
+    },
     fetchAllCustomer() {
       this.loading = true
       return getAllCustomer(this.searchQuery).then(data => {

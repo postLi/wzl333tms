@@ -14,7 +14,7 @@
           </el-tooltip>
         </div>
         <el-table ref="multipleTableLeft" :data="leftTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickAddItem" @row-click="clickLeftRow" @selection-change="getSelectionLeft" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
-          <el-table-column fixed sortable width="50" label="序号">
+          <el-table-column fixed width="60" label="序号">
             <template slot-scope="scope">
               {{scope.$index+1}}
             </template>
@@ -39,12 +39,12 @@
           <el-button v-if="!isShowLeftTable" type="primary" size="mini" plain @click="paramSet" icon="el-icon-setting" style="margin:0 10px;">参数设置</el-button>
         </div>
         <el-table row-key="repertoryId" ref="multipleTableRight" :data="rightTable" :key="tablekey" :show-overflow-tooltip="true" @row-dblclick="dclickMinusItem" @row-click="clickRightRow" @selection-change="getSelectionRight" height="100%" style="height: 100%;width: 100%;" class="tableHeadItemBtn" tooltip-effect="dark" border triped>
-          <el-table-column fixed sortable width="50" label="序号">
+          <el-table-column fixed width="60" label="序号">
             <template slot-scope="scope">
               {{scope.$index+1}}
             </template>
           </el-table-column>
-          <el-table-column fixed :render-header="setHeaderMinus" width="50" sortable>
+          <el-table-column fixed :render-header="setHeaderMinus" width="50">
             <template slot-scope="scope">
               <el-button class="tableItemBtnMinus" size="mini" @click="minusItem(scope.row, scope.$index)"></el-button>
             </template>
@@ -126,145 +126,145 @@ export default {
       selectedLeft: [],
       tableColumnLeft: [],
       tableColumnLeftDepart: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '130'
-        },
-        {
-          label: '库存重量',
-          prop: 'repertoryWeight'
-        },
-        {
-          label: '库存体积',
-          prop: 'repertoryVolume'
-        }
+        label: '运单号',
+        prop: 'shipSn',
+        width: '130'
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight'
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume'
+      }
       ],
       tableColumnLeftAll: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '140'
-        },
-        {
-          label: '库存重量',
-          prop: 'repertoryWeight'
-        },
-        {
-          label: '库存体积',
-          prop: 'repertoryVolume'
-        },
-        {
-          label: '到达网点',
-          prop: 'shipToOrgName'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName'
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName'
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName'
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName'
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName'
-        }
+        label: '运单号',
+        prop: 'shipSn',
+        width: '140'
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight'
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume'
+      },
+      {
+        label: '到达网点',
+        prop: 'shipToOrgName'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName'
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName'
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName'
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName'
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName'
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName'
+      }
       ],
       tableColumnRight: [],
       tableColumnRightDepart: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '140'
-        },
-        {
-          label: '到达网点',
-          prop: 'shipToOrgName'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName'
-        },
-        {
-          label: '操作费',
-          prop: 'handlingFee'
-        },
-        {
-          label: '库存重量',
-          prop: 'repertoryWeight'
-        },
-        {
-          label: '库存体积',
-          prop: 'repertoryVolume'
-        }
+        label: '运单号',
+        prop: 'shipSn',
+        width: '140'
+      },
+      {
+        label: '到达网点',
+        prop: 'shipToOrgName'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName'
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName'
+      },
+      {
+        label: '操作费',
+        prop: 'handlingFee'
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight'
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume'
+      }
       ],
       tableColumnRightAll: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '140'
-        },
-        {
-          label: '操作费',
-          prop: 'handlingFee'
-        },
-        {
-          label: '到达网点',
-          prop: 'shipToOrgName'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName'
-        },
-        {
-          label: '库存重量',
-          prop: 'repertoryWeight'
-        },
-        {
-          label: '库存体积',
-          prop: 'repertoryVolume'
-        },
-        {
-          label: '库存件数',
-          prop: 'repertoryAmount'
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName'
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName'
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName'
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName'
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn'
-        }
+        label: '运单号',
+        prop: 'shipSn',
+        width: '140'
+      },
+      {
+        label: '操作费',
+        prop: 'handlingFee'
+      },
+      {
+        label: '到达网点',
+        prop: 'shipToOrgName'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName'
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName'
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight'
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume'
+      },
+      {
+        label: '库存件数',
+        prop: 'repertoryAmount'
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName'
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName'
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName'
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName'
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn'
+      }
       ],
       oldList: [],
       newList: [],
@@ -288,7 +288,7 @@ export default {
       handler(cval, oval) {
         if (cval && cval.right) {
           // this.orgLeftTable[this.truckIndex] = Object.assign([], cval)
-          let arr = []
+          const arr = []
           this.orgLeftTable = Object.assign([], cval.left)
           cval.right.forEach(e => {
             arr.push(e.tmsOrderLoadDetailsList)
@@ -308,7 +308,7 @@ export default {
         this.getinfoed2 = true
       }
     },
-    loadTable: { // 深度监听数组变换  
+    loadTable: { // 深度监听数组变换
       handler(cval, oval) { // 拿到智能配载返回的数据
         console.log('loadTable1')
         if (this.getinfoed2) {
@@ -358,9 +358,9 @@ export default {
         if (cval === '') {
           return
         }
-        let arr = []
+        const arr = []
         this.selectedRight = []
-        let difflen = Number(cval ? cval : 0) - Number(this.orgRightTable.length ? this.orgRightTable.length : 0)
+        const difflen = Number(cval || 0) - Number(this.orgRightTable.length ? this.orgRightTable.length : 0)
         if (difflen > 0) {
           for (let i = 0; i < difflen; i++) {
             this.orgRightTable.push([])
@@ -409,16 +409,16 @@ export default {
       return this.dofo ? this.dofo.length : 0
     },
     showLeftStyle() {
-      let showWidth = '30%'
-      showWidth = this.isShowLeftTable ? '100%' : (this.isShowRightTable ? '0%' : '30%')
+      let showWidth = '35%'
+      showWidth = this.isShowLeftTable ? '100%' : (this.isShowRightTable ? '0%' : '35%')
       return {
         width: showWidth,
         transition: '0.3s'
       }
     },
     showRightStyle() {
-      let showWidth = '70%'
-      showWidth = this.isShowRightTable ? '100%' : (this.isShowLeftTable ? '0%' : '70%')
+      let showWidth = '65%'
+      showWidth = this.isShowRightTable ? '100%' : (this.isShowLeftTable ? '0%' : '65%')
       return {
         width: showWidth,
         transition: '0.3s'
@@ -430,7 +430,7 @@ export default {
       console.log('#$%#$%#$1 initTable')
       this.rightTable = objectMerge2([], this.orgRightTable[this.truckIndex]) // 右边列表-当前车辆的配载运单
 
-      let arr = [] // 存储所有被配载的运单
+      const arr = [] // 存储所有被配载的运单
       this.orgRightTable.forEach((e, index) => {
         if (e) {
           e.forEach(em => {
@@ -467,7 +467,7 @@ export default {
     setSort() { // 右边列表行拖拽
       const el = document.querySelectorAll('.transferTable_main_right .el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
-        animation: 150, //动画参数
+        animation: 150, // 动画参数
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')
@@ -483,7 +483,6 @@ export default {
           this.newList.splice(evt.newIndex, 0, tempIndex)
         }
       })
-
     },
     setHeaderAdd(h, { column }) {
       return h('el-button', {
@@ -513,7 +512,7 @@ export default {
     },
     goLeft() { // 右边穿梭到左边
       this.selectedRight.forEach((e, index) => {
-        let find = this.leftTable.filter(em => {
+        const find = this.leftTable.filter(em => {
           return em.repertoryId === e.repertoryId
         })
         if (find.length === 0) {
@@ -548,7 +547,7 @@ export default {
         this.$message.warning('请添加一个车型！')
       } else {
         this.selectedLeft.forEach((e, index) => {
-          let find = this.rightTable.filter(em => {
+          const find = this.rightTable.filter(em => {
             return em.repertoryId === e.repertoryId
           })
           if (find.length === 0) {
@@ -572,7 +571,6 @@ export default {
         this.$emit('loadTable', this.orgRightTable)
         // this.isChangeHandlingFee = false
       }
-
     },
     dclickAddItem(row, event) { // 双击添加单行
       this.selectedLeft = []
@@ -615,7 +613,7 @@ export default {
       this.isChangeHandlingFee = true
       console.log('-----获取操作费 switch 3------ ')
       switch (this.handlingFeeInfo.apportionTypeId) {
-        case 45: //按运单车费占车费比例分摊 (运单-回扣）/（总车费-总回扣）*车费
+        case 45: // 按运单车费占车费比例分摊 (运单-回扣）/（总车费-总回扣）*车费
           let totalBrokerageFee = 0 // 总回扣
           let totalShipTotalFee = 0 // 总车费合计
           this.rightTable.forEach(e => {
@@ -623,7 +621,7 @@ export default {
             totalShipTotalFee = tmsMath._add(totalShipTotalFee, e.shipTotalFee ? e.shipTotalFee : 0)
           })
           this.rightTable.forEach((e, index) => {
-            let sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
+            const sub = tmsMath._sub(e.shipTotalFee, e.brokerageFee)
             if (sub < 0) {
               console.log('-----获取操作费 switch 4------ ', sub)
               e.handlingFee = 0
@@ -668,7 +666,7 @@ export default {
 
       let count = 0
       let countFeeZero = 0
-      let listLen = this.rightTable.length
+      const listLen = this.rightTable.length
 
       this.rightTable.forEach((e, index) => {
         count = tmsMath._add(count, e.handlingFee)

@@ -1,7 +1,7 @@
 <template>
   <!--v-loading="loading"-->
   <!-- 送货管理 -->
-  <div class="tab-content">
+  <div class="tab-content miniHeaderSearch">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -13,8 +13,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain>打印</el-button> -->
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('export')" plain v-has:LOAD_SH_EXPORT>导出</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_SH_PRINT>打印</el-button>
-         <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>轨迹跟踪-车辆</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>实时定位-车辆</el-button>
+         <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>车辆轨迹</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>车辆定位</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         <span class="dbclickTips">双击查看详情</span>
       </div>
@@ -27,8 +27,19 @@
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -65,6 +76,7 @@ import { objectMerge2, parseTime, loadJs, getSummaries, operationPropertyCalc } 
 import SignFrom from './components/sign'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
@@ -72,7 +84,8 @@ export default {
     TableSetup,
     editInfo,
     SignFrom,
-    actualSendtime
+    actualSendtime,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -134,109 +147,113 @@ export default {
         }
       },
       tableColumn: [
-      {
-        label: '序号',
-        prop: 'number',
-        width: '80',
-        fixed: true,
-        slot: (scope) => {
-          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        {
+          label: '序号',
+          prop: 'number',
+          width: '80',
+          fixed: true,
+          slot: (scope) => {
+            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          }
+        },
+        {
+          label: '送货批次',
+          prop: 'batchNo',
+          width: '110',
+          fixed: true
+        },
+        {
+          label: '批次状态',
+          prop: 'bathStatusName',
+          width: '120'
+        },
+        {
+          label: '到付(元)',
+          prop: 'shipArrivepayFee',
+          width: '90',
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '120'
+        },
+        {
+          label: '司机',
+          prop: 'dirverName',
+          width: '120'
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '120'
+        },
+        {
+          label: '实际送货完成时间',
+          prop: 'actualArrivetime',
+          width: '180',
+          slot: (scope) => {
+            return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '实际送货时间',
+          prop: 'loadTime',
+          width: '180',
+          slot: (scope) => {
+            return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '完成时间',
+          prop: 'departureTime',
+          width: '180',
+          slot: (scope) => {
+            return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+          }
+        },
+        {
+          label: '送货费(元)',
+          prop: 'deliveryFee',
+          width: '120'
+        },
+        {
+          label: '送货件数',
+          prop: 'loadAmountall',
+          width: '120'
+        },
+        {
+          label: '送货重量(kg)',
+          prop: 'loadWeightall',
+          width: '120'
+        },
+        {
+          label: '送货体积(m³)',
+          prop: 'loadVolumeall',
+          width: '120'
+        },
+        {
+          label: '重量装载率',
+          prop: 'weightLoadRate',
+          width: '120'
+        }, {
+          label: '体积装载率',
+          prop: 'volumeLoadRate',
+          width: '120'
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          width: '120'
         }
-      },
-      {
-        label: '送货批次',
-        prop: 'batchNo',
-        width: '110',
-        fixed: true
-      },
-      {
-        label: '批次状态',
-        prop: 'bathStatusName',
-        width: '120'
-      },
-      {
-        label: '到付(元)',
-        prop: 'shipArrivepayFee',
-        width: '90',
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '120'
-      },
-      {
-        label: '司机',
-        prop: 'dirverName',
-        width: '120'
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '120'
-      },
-      {
-        label: '实际送货完成时间',
-        prop: 'actualArrivetime',
-        width: '180',
-        slot: (scope) => {
-          return `${parseTime(scope.row.actualArrivetime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        }
-      },
-      {
-        label: '实际送货时间',
-        prop: 'loadTime',
-        width: '180',
-        slot: (scope) => {
-          return `${parseTime(scope.row.loadTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        }
-      },
-      {
-        label: '完成时间',
-        prop: 'departureTime',
-        width: '180',
-        slot: (scope) => {
-          return `${parseTime(scope.row.departureTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-        }
-      },
-      {
-        label: '送货费(元)',
-        prop: 'deliveryFee',
-        width: '120'
-      },
-      {
-        label: '送货件数',
-        prop: 'loadAmountall',
-        width: '120'
-      },
-      {
-        label: '送货重量(kg)',
-        prop: 'loadWeightall',
-        width: '120'
-      },
-      {
-        label: '送货体积(m³)',
-        prop: 'loadVolumeall',
-        width: '120'
-      },
-      {
-        label: '重量装载率',
-        prop: 'weightLoadRate',
-        width: '120'
-      }, {
-        label: '体积装载率',
-        prop: 'volumeLoadRate',
-        width: '120'
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        width: '120'
-      }
       ]
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllData()
+    },
     doMap(type) { // 查询批次车辆轨迹或定位
       console.log('选择的批次数', this.selected.length)
       if (!this.selected.length || this.selected.length !== 1) {
@@ -244,14 +261,14 @@ export default {
         this.$refs.multipleTable.clearSelection()
         return false
       }
-      let item = this.selected[0]
+      const item = this.selected[0]
       console.log('当前选中的批次', item, item.truckIdNumber)
       if (!item.truckIdNumber) {
         this.$message.warning('查询失败！该批次没有关联车辆~')
         return false
       }
 
-       let query = {
+      const query = {
         truckIdNumber: item.truckIdNumber,
         startTime: item.createTime,
         endTime: parseTime(new Date())
@@ -262,23 +279,23 @@ export default {
       // 其他送货状态  createTime ~ departureTime送货完成时间
       // 开始时间定义：小于7天才用前面的时间createTime，大于7天则用后面的时间倒推7天
 
-      let now = new Date().getTime() // 现在
-      let betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
-      let startTime = new Date(item.createTime).getTime()
+      const now = new Date().getTime() // 现在
+      const betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
+      const startTime = new Date(item.createTime).getTime()
 
-      let isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
+      const isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
 
       if (item.batchTypeId === 57) { // 送货中
         query.startTime = isAfterSeven ? parseTime(betweenDay) : item.createTime
         query.endTime = parseTime(now)
-      }else { // 其他状态
+      } else { // 其他状态
         query.startTime = item.createTime
         query.endTime = item.departureTime
       }
 
       switch (type) {
         case 'line': // 轨迹
-          this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'line',
             type: 'truck',
@@ -286,7 +303,7 @@ export default {
           }})
           break
         case 'location': // 定位
-        this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'location',
             type: 'truck',
@@ -307,7 +324,7 @@ export default {
       }
       return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
         this.infoList = data.list
-        this.infoList.forEach((el, index) =>{
+        this.infoList.forEach((el, index) => {
           el.bathStatusName = el.batchTypeName
         })
         this.total = data.total

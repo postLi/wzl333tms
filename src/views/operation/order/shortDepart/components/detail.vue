@@ -474,7 +474,7 @@ export default {
           appendTopStr += '<body width="100%"><table width="100%" style="font-size: {content_word_size}px;"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.orgName + '   →   ' + (obj.arriveOrgName || obj.endOrgName || '') +
             '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
-            obj.loadTime +
+            (obj.actualSendtime || '无') +
             '</td><td align="right">发车批次: </td><td colspan="2" style="padding-left: 20px;">' +
             obj.batchNo +
             '</td></tr><tr><td align="right">车牌号码: </td><td colspan="2" style="padding-left: 20px;">' +

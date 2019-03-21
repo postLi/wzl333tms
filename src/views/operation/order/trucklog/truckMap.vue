@@ -6,9 +6,9 @@
           <span slot="label"><i class="el-icon-location"></i> 定位查询</span>
           <el-tabs class="child_tabs" v-model="tabMap" @tab-click="handleTabMap">
             <el-tab-pane label="运单查询" name="1">
-              <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
+              <el-form @submit.native.prevent ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
                 <el-form-item label="运单查询">
-                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn" />
+                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn"  />
                 </el-form-item>
                 <el-form-item class="staff_searchinfo--btn">
                   <el-button type="warning" @click="onSubmit('location', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>

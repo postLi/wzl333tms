@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
+  <div class="tab-content miniHeaderSearch" v-loading="loading" @success="fetchAllreceipt">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -478,8 +478,20 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" :summary-method="getSumLeft" show-summary @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -511,21 +523,23 @@ import Addbatch from './components/batch'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Addsign,
     Addbatch,
     TableSetup,
-    Pager
+    Pager,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters(['otherinfo']),
     orgid() {
       // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-      return this.isModify ?
-        this.selectInfo.orgid :
-        this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify
+        ? this.selectInfo.orgid
+        : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -735,7 +749,7 @@ export default {
         prop: 'signRemark',
         width: '120',
         fixed: false
-      },  {
+      }, {
         label: '到达省',
         prop: 'endProvince',
         width: '120',
@@ -908,6 +922,10 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.searchQuery = obj
+      this.fetchAllreceipt()
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -1026,7 +1044,6 @@ export default {
             this.id = this.selected[0].signId
             console.log(this.id)
             this.openAddSign()
-
           } else {
             this.$message({
               message: '已签收状态才可以修改',
