@@ -6,7 +6,6 @@
     custom-class="feeSetupDialog"
     :close-on-click-modal="false"
     append-to-body
-    v-loading="loading"
     @opened="getRemarkSetup"
     width="300px"
     :before-close="close">
@@ -14,7 +13,7 @@
       <el-button type="primary" size="mini" icon="el-icon-plus" @click="canAdd" circle></el-button>
       常用备注
     </div>
-    <div class="setup-info-remark">
+    <div class="setup-info-remark"  v-loading="loading">
       <div class="addNew" v-if="isAdd">
         <el-input size="mini" ref="newItem" v-model.trim="newItem" /><el-button size="mini" icon="el-icon-check" @click="addItem" class="add-btn"></el-button><el-button @click="reset" size="mini" icon="el-icon-close" class="delete-btn"></el-button>
       </div>
