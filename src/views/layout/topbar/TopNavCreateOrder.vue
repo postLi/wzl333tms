@@ -12,6 +12,7 @@ export default {
       // 2.新开窗口查看
       // openWindow('/createOrder', '创建运单', 1200, 666)
 
+      console.log('11111111', this.$store.state.tagsView.visitedViews)
       if (this.$store.state.tagsView.visitedViews) {
         const visitedViews = Object.assign([], this.$store.state.tagsView.visitedViews)
         let edits = 0 // 判断是否有改单页面
@@ -25,8 +26,13 @@ export default {
         })
         if (edits > 0 && creates < 1) { // 如果有改单页面并没有开单页面，就添加“创建运单”tab
           this.$router.push({ path: '/operation/order/createOrder', query: { tab: '创建运单' }})
+          console.log('222222222')
         } else if (creates > 0) { // 如果有创建运单页面，就直接跳转到创建运单tab
           this.$router.push('/operation/order/createOrder?tab=创建运单')
+          console.log('33333333333')
+        } else {
+          this.$router.push('/operation/order/createOrder?tab=创建运单')
+          console.log('444444444')
         }
       }
     }
