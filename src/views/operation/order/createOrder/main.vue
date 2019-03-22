@@ -26,7 +26,7 @@
           </el-date-picker>
       </span></div>
         </div>
-        <div class="order-main model-order-list">
+        <div class="order-main model-order-list" v-if="orderModelShow">
           <!-- 网点信息 -->
           <el-row class="firstline-order model-order-item" :data-index="m_index.tmsOrderShipTop">
             <el-col :span="4" v-for="(mitem, mindex) in modelList" :key="mindex" v-if="mitem.templateType === 'tmsOrderShipTop' && mitem.hide">
@@ -278,7 +278,7 @@
             </el-table>
           </div>
           <!-- 其它项 -->
-          <div class="order-other-form model-order-item clearfix" :data-index="m_index.tmsOrderShip">
+          <div class="order-other-form model-order-item clearfix" :data-index="m_index.tmsOrderShip" >
             <el-row class="firstline-order-other">
               <el-col :span="(eitem.fieldProperty==='shipOther' ? 8: (eitem.fieldProperty==='shipRemarks' ? 24: 4))" v-for="(eitem, eindex) in modelList" :key="eindex" v-if="eitem.templateType === 'tmsOrderShip' && eitem.hide">
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipTotalFee'">
@@ -720,6 +720,7 @@ export default {
   data() {
     const _this = this
     return {
+      orderModelShow: true,
       isPrintAmount: false,
       org_m_index: {
         tmsOrderShipTop: 1,
@@ -1289,8 +1290,19 @@ export default {
       this.isPrintAmount = false
     },
     setModel() {
+      // this.loading = true
+      // this.initIndex('isSaveAndNew')
+      // this.orderModelShow = false
+      // setTimeout(() => {
+      //   this.orderModelShow = true
+      //   this.$nextTick(() => {
+      //     this.init()
+      //   })
+      // }, 200)
       // 重新修改开单页面的模板
-      this.fetchModel()
+      this.fetchModel().then(() => {
+        this.setCargoNum()
+      })
     },
     fetchModel() { // 获取模板信息
       this.loading = true
@@ -1331,8 +1343,6 @@ export default {
           const modelDiv = document.querySelectorAll('.model-order-list')[0]
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
-            const name = arr[i].getAttribute('data-name')
-            const index = arr[i].getAttribute('data-index')
           }
           this.loading = false
         }
@@ -1583,8 +1593,8 @@ export default {
       let obj
       if (this.config.shipNo.manualInput !== '1') {
         obj = this.$refs['tmsOrderShipshipToCityName']
-        if (obj) {
-          console.warn('obj======', obj[0])
+        if (obj && obj.length) {
+          console.warn('obj======', obj[0], obj, obj.length)
           obj = obj[0].$refs['myautocomplete']
         }
         // 不允许修改系统生成的单号
@@ -1601,8 +1611,9 @@ export default {
           })
         }
       } else {
-        obj = this.$refs['tmsOrderShipshipSn'][0]
+        obj = this.$refs['tmsOrderShipshipSn']
       }
+      console.warn('obj22222', obj)
       if (obj && this.output.iscreate) {
         obj.focus()
       }

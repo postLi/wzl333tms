@@ -20,6 +20,7 @@
       :size="btnsize"
       :type="curSelect.type"
       clearable
+      :filterfn="filterfn"
       @click.stop.prevent.native
       @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
       @changeItem="(val, obj) => changeKey(scope.column, scope.$index, (obj.dictName || ''))"
@@ -296,6 +297,10 @@ export default {
     }
   },
   methods: {
+    filterfn(el) {
+      // 过滤不显示的选择项
+      return (el.id !== '')
+    },
     changeEnter(column, index, event) {
       this.changeKey(column, index, event.target.value)
     },
