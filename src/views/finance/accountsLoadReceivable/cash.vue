@@ -232,13 +232,13 @@ export default {
       {
         label: '发站',
         prop: 'shipFromCityName',
-        width: '120',
+        width: '130',
         fixed: false
       },
       {
         label: '到站',
         prop: 'shipToCityName',
-        width: '120',
+        width: '130',
         fixed: false
       },
       {

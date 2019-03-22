@@ -84,7 +84,8 @@ export default {
         property: 'shipShippingTypeName',
         label: '运输方式',
         type: 'ship_shipping_type',
-        options: []
+        options: [],
+        filter: ''
       },
       selectOptions: [
         {
@@ -250,10 +251,46 @@ export default {
           options: []
         },
         {
-          property: 'totalStatusCn',
+          property: 'totalStatusCn', // 应收-全部核销状态
           label: '核销状态',
           type: 'count_status',
-          options: []
+          options: [],
+          filter: ''
+        },
+        {
+          property: 'nowPayStateCn', // 应收-现付核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ''
+        },
+        {
+          property: 'arrivepayStateCn', // 应收-到付核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ''
+        },
+        {
+          property: 'receiptpayStateCn', // 应收-回单付核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ''
+        },
+        {
+          property: 'monthpayStateCn', // 应收-月结核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ''
+        },
+        {
+          property: 'changeStateCn', // 应收-异动费用核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ''
         }
       ]
     }
@@ -287,6 +324,7 @@ export default {
     },
     isSelect() {
       // 判断当前字段是否下拉选择格式
+      // console.log('scope.column', this.scope.column.label, this.scope.column.property)
       const find = this.selectOptions.filter(
         el => el.property === this.scope.column.property
       )
@@ -298,8 +336,12 @@ export default {
   },
   methods: {
     filterfn(el) {
-      // 过滤不显示的选择项
-      return (el.id !== '')
+      if (this.curSelect.filter) {
+        return el.id.indexOf(this.curSelect.filter) === -1
+      } else {
+        // 过滤不显示的选择项
+        return (el.id !== '')
+      }
     },
     changeEnter(column, index, event) {
       this.changeKey(column, index, event.target.value)

@@ -1116,10 +1116,12 @@ export default {
       this.selected = selected
     },
     getDbClick(row, event) {
-      this.repertoryId = row
-      this.isPick = false
-      this.isDbclick = true
-      this.openAddSign()
+      // 2019-03-22 根据需求修改双击进入运单详情页而不是签收详情弹出框
+      this.eventBus.$emit('showOrderDetail', row.shipId, row.shipSn, true)
+      // this.repertoryId = row
+      // this.isPick = false
+      // this.isDbclick = true
+      // this.openAddSign()
     }
 
   }

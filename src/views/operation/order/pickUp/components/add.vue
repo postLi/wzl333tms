@@ -110,7 +110,7 @@
             <el-date-picker
               v-model="form.tmsOrderPickup.arriveTime"
               align="right"
-              type="date"
+              type="datetime"
               :picker-options="pickOption2"
               placeholder="选择日期"
               value-format="timestamp"
@@ -277,14 +277,16 @@
           firstDayOfWeek: 1,
           disabledDate(time) {
             // 小于终止日
-            return _this.form.tmsOrderPickup.arriveTime ? time.getTime() > _this.form.tmsOrderPickup.arriveTime : false
+            return _this.form.tmsOrderPickup.arriveTime ? time.getDate() > _this.form.tmsOrderPickup.arriveTime : false
           }
         },
         pickOption2: {
           firstDayOfWeek: 1,
           disabledDate(time) {
             // 大于起始日
-            return _this.form.tmsOrderPickup.outTime ? time.getTime() < _this.form.tmsOrderPickup.outTime : false
+            // const outTime = _this.form.tmsOrderPickup.outTime
+            const outTime = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())
+            return outTime ? time.getTime() < outTime : false
           }
         },
         form: {

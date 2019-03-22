@@ -161,25 +161,31 @@ export default {
         fixed: false
       }, {
         'label': '发站',
+        width: '100',
         'prop': 'shipFromCityName'
       }, {
         'label': '到站',
+        width: '100',
         'prop': 'shipToCityName'
       }, {
         'label': '核销状态',
+        width: '100',
         'prop': 'changeStateCn'
       }, {
         'label': '异动',
+        width: '100',
         'prop': 'changeFee'
       }, {
-          'label': '未核销异动',
-          'prop': 'notChangeFee',
-          slot: (scope) => {
+        'label': '未核销异动',
+        width: '130',
+        'prop': 'notChangeFee',
+        slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
         }
-        }, {
+      }, {
         'label': '已核销异动',
+        width: '130',
         'prop': 'finishChangeFee',
         slot: (scope) => {
           const row = scope.row
@@ -191,9 +197,11 @@ export default {
         width: 180
       }, {
         'label': '发货方',
+        width: '100',
         'prop': 'senderCustomerUnit'
       }, {
         'label': '发货人',
+        width: '100',
         'prop': 'shipSenderName'
       }, {
         'label': '收货方',
