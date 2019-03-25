@@ -783,7 +783,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllOrder()
+      if (!this.loading) {
+        this.fetchAllOrder()
+      }
     },
     findAllShipCount() {
       // 计算底部合计行

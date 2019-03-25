@@ -93,7 +93,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQueryData = obj
-      this.fetchData()
+      if (!this.loading) {
+        this.fetchData()
+      }
     },
     openlntelligent() { // 打开智能配载弹出框
       this.lntelligentVisible = true

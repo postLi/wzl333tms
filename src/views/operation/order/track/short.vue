@@ -235,7 +235,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -300,13 +302,12 @@ export default {
         if (data) {
           this.dataList = data.list
           this.total = data.total
-          this.loading = false
           // this.searchQuery.vo = {}
-        } else {
-          this.loading = false
         }
+        this.loading = false
       })
       .catch(err => {
+        this.loading = false
         this._handlerCatchMsg(err)
       })
     },

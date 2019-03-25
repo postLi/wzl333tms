@@ -272,7 +272,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQueryData = obj
-      this.getAllList()
+      if (!this.loading) {
+        this.getAllList()
+      }
     },
     doMap(type) { // 查询批次车辆轨迹或定位
       console.log('选择的批次数', this.selected.length)
@@ -447,12 +449,11 @@ export default {
         if (data) {
           this.dataList = data.list
           this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
         }
+        this.loading = false
       })
         .catch(err => {
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },

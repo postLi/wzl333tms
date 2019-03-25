@@ -247,7 +247,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     getSearchParam(obj) { // 获取搜索条件
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage

@@ -528,7 +528,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllreceipt()
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
     },
     fetchAllreceipt() {
       this.loading = true

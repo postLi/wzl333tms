@@ -321,7 +321,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchForms = obj
-      this.fetchAllOrder()
+      if (!this.loading) {
+        this.fetchAllOrder()
+      }
     },
     fetchAllOrder() {
       this.loading = true

@@ -289,7 +289,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.getAllList()
+      if (!this.loading) {
+        this.getAllList()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -400,11 +402,11 @@ export default {
         this.loading = true
         postConfirmToCar(data).then(data => {
           if (data) {
-            this.loading = false
             this.$message({ type: 'success', message: '短驳到车操作成功' })
             this.getAllList()
             this.clearInfo()
           }
+          this.loading = false
         })
           .catch(err => {
             this.loading = false
@@ -483,12 +485,11 @@ export default {
         if (data) {
           this.infoList = data.list
           this.total = data.total
-          this.loading = false
-        } else {
-          this.loading = false
         }
+        this.loading = false
       })
         .catch(err => {
+          this.loading = false
           this._handlerCatchMsg(err)
         })
     },

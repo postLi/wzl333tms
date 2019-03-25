@@ -411,7 +411,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchForms = obj
-      this.fetchAllList()
+      if (!this.loading) {
+        this.fetchAllList()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)

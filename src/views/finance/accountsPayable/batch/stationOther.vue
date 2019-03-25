@@ -224,7 +224,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage

@@ -169,10 +169,10 @@ export default {
         'prop': 'fromOrgName',
         'width': '150'
       }, {
-          'label': '目的网点',
-          'prop': 'toOrgName',
-          'width': '150'
-        }, {
+        'label': '目的网点',
+        'prop': 'toOrgName',
+        'width': '150'
+      }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180',
@@ -184,10 +184,10 @@ export default {
         'prop': 'shipSenderName',
         'width': '150'
       }, {
-        'label': '发货人电话',
-        'prop': 'shipSenderMobile',
-        'width': '150'
-      }, {
+          'label': '发货人电话',
+          'prop': 'shipSenderMobile',
+          'width': '150'
+        }, {
         'label': '收货人',
         'prop': 'shipReceiverName',
         'width': '150'
@@ -453,7 +453,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllOrder()
+      if (!this.loading) {
+        this.fetchAllOrder()
+      }
     },
     getSumLeft(param, type) {
       const propsArr = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方']

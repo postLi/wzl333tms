@@ -460,7 +460,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllreceipt()
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -476,6 +478,7 @@ export default {
         this.signId = data.signId
         this.loading = false
       }).catch(err => {
+        this.loading = false
         this._handlerCatchMsg(err)
       })
     },

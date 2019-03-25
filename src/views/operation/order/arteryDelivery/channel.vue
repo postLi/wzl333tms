@@ -185,7 +185,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     getSearchParam(obj) { // 查询
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -198,6 +200,7 @@ export default {
     },
     fetchList() {
       this.$refs.multipleTable.clearSelection()
+      this.loading = true
       this.closeSetupTable()
       const query = objectMerge2({}, this.searchQuery)
       unloadList(query).then(data => {

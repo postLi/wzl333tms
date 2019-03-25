@@ -202,7 +202,9 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
       changeKey(obj) {
         this.total = 0
         this.searchQuery = obj
-        this.fetchAllCustomer()
+        if (!this.loading) {
+          this.fetchAllCustomer()
+        }
       },
       fetchAllCustomer() {
         this.loading = true

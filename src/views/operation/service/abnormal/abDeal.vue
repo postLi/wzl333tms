@@ -239,7 +239,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllreceipt()
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -252,6 +254,7 @@ export default {
         this.loading = false
         // console.log(data)
       }).catch(err => {
+        this.loading = false
         this._handlerCatchMsg(err)
       })
     },

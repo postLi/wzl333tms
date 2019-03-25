@@ -173,21 +173,21 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
             width: '180',
             fixed: false
           }, {
-          label: '开户行',
-          prop: 'bankName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '微信',
-          prop: 'wechatAccount',
-          width: '150',
-          fixed: false
-        }, {
-          label: '支付宝',
-          prop: 'alipayAccount',
-          width: '150',
-          fixed: false
-        }, {
+            label: '开户行',
+            prop: 'bankName',
+            width: '120',
+            fixed: false
+          }, {
+            label: '微信',
+            prop: 'wechatAccount',
+            width: '150',
+            fixed: false
+          }, {
+            label: '支付宝',
+            prop: 'alipayAccount',
+            width: '150',
+            fixed: false
+          }, {
           label: '备注',
           prop: 'remark',
           width: '130',
@@ -200,7 +200,9 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
       changeKey(obj) {
         this.total = 0
         this.searchQuery = obj
-        this.fetchAllCustomer()
+        if (!this.loading) {
+          this.fetchAllCustomer()
+        }
       },
       fetchAllCustomer() {
         this.loading = true

@@ -222,7 +222,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllTransfer()
+      if (!this.loading) {
+        this.fetchAllTransfer()
+      }
     },
     fetchAllTransfer() {
       this.loading = true

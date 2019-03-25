@@ -458,7 +458,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllTransfer()
+      if (!this.loading) {
+        this.fetchAllTransfer()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
