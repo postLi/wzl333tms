@@ -358,6 +358,7 @@ export default {
           value = parseTime(value, '{y}-{m}-{d} {h}:{i}:{s}')
         }
         query.searchVo[column.property] = value
+        query.currentPage = 1 // 搜索时 默认为第一页
         console.log('changeKey components::', query, column)
         this.$emit('change', query)
       })

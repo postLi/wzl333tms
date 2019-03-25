@@ -320,6 +320,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchList()
     },
@@ -585,7 +586,7 @@ export default {
         this.previews = Object.assign([], row[prop].split(','))
         this.isShowPre = true
       }
-      console.log('previewPicture', index, row,)
+      console.log('previewPicture', index, row, )
     }
   }
 }

@@ -200,6 +200,7 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
     },
     methods: {
       changeKey(obj) {
+        this.total = 0
         this.searchQuery = obj
         this.fetchAllCustomer()
       },

@@ -108,28 +108,29 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchList()
     },
     getSmsDocText() { // 免费短信文案提示
       getSmsDocText(this.otherinfo.orgid).then(data => {
-          this.smsDocText = data.smsDocText
-        })
+        this.smsDocText = data.smsDocText
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
     postSmsSign() { // 签名
       postSmsSign(this.otherinfo.orgid).then(data => {
-          if (data.data) {
-            this.signName = data.data.modifySign
-            if (data.data.modifyCount === 1) {
-              this.isShowSignBtn = true
-            } else {
-              this.isShowSignBtn = false
-            }
+        if (data.data) {
+          this.signName = data.data.modifySign
+          if (data.data.modifyCount === 1) {
+            this.isShowSignBtn = true
+          } else {
+            this.isShowSignBtn = false
           }
-        })
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -138,16 +139,15 @@ export default {
       this.loading = true
       this.searchQuery.vo.orgId = this.otherinfo.orgid
       postSmsTemplateLogList(this.searchQuery).then(data => {
-          if (data) {
-            this.infoList = data.list
-            this.infoList.forEach(e => {
-              e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
-            })
-            this.total = data.total
-            this.loading = false
-          }
-
-        })
+        if (data) {
+          this.infoList = data.list
+          this.infoList.forEach(e => {
+            e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
+          })
+          this.total = data.total
+          this.loading = false
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
@@ -191,9 +191,9 @@ export default {
         sendStatus: newVal ? 0 : 1
       }
       udpateSmsTemplateLogStatus(obj).then(data => {
-          this.fetchList()
-          this.$message.success('修改发送状态成功！')
-        })
+        this.fetchList()
+        this.$message.success('修改发送状态成功！')
+      })
         .catch(err => {
           row.sendStatus = !newVal
           this._handlerCatchMsg(err)

@@ -163,16 +163,16 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
             width: '120',
             fixed: false
           }, {
-          label: '对账状态',
-          prop: 'checkStatusZh',
-          width: '120',
-          fixed: false
-        }, {
-          label: '银行卡号',
-          prop: 'bankAccount',
-          width: '180',
-          fixed: false
-        }, {
+            label: '对账状态',
+            prop: 'checkStatusZh',
+            width: '120',
+            fixed: false
+          }, {
+            label: '银行卡号',
+            prop: 'bankAccount',
+            width: '180',
+            fixed: false
+          }, {
           label: '开户行',
           prop: 'bankName',
           width: '120',
@@ -198,6 +198,7 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
     },
     methods: {
       changeKey(obj) {
+        this.total = 0
         this.searchQuery = obj
         this.fetchAllCustomer()
       },

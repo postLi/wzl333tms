@@ -126,50 +126,114 @@ export default {
         fixed: false
       },
       {
-        label: '操作费',
-        prop: 'fee',
+        label: '干线操作费',
+        prop: 'gxHandlingFeePay',
         width: '110',
-        slot: (scope) => {
-          return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
-        },
         fixed: false
       },
       {
-        label: '已核销操作费',
-        prop: 'paidFee',
+        label: '已核销干线操作费',
+        prop: 'paidGxHandlingFeePay',
         width: '140',
         slot: (scope) => {
           const row = scope.row
-          const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-          const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-          const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-          return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
+          return this._setTextColor(row.gxHandlingFeePay, row.paidGxHandlingFeePay, row.unpaidGxHandlingFeePay, row.paidGxHandlingFeePay)
         },
         fixed: false
       },
       {
-        label: '未核销操作费',
-        prop: 'unpaidFee',
+        label: '未核销干线操作费',
+        prop: 'unpaidGxHandlingFeePay',
         width: '140',
         slot: (scope) => {
           const row = scope.row
-          const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
-          const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
-          const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
-          return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
-            // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+          return this._setTextColor(row.gxHandlingFeePay, row.paidGxHandlingFeePay, row.unpaidGxHandlingFeePay, row.unpaidGxHandlingFeePay)
         },
         fixed: false
       },
       {
-        label: '已付（应付）',
-        prop: 'pandHandlingFeePay',
+        label: '干线已付（应付）',
+        prop: 'paidGxHandlingFeePay',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '短驳操作费',
+        prop: 'dbHandlingFeePay',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '已核销短驳操作费',
+        prop: 'paidDbHandlingFeePay',
         width: '140',
         slot: (scope) => {
-          return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+          const row = scope.row
+          return this._setTextColor(row.dbHandlingFeePay, row.paidDbHandlingFeePay, row.unpaidDbHandlingFeePay, row.paidDbHandlingFeePay)
         },
         fixed: false
       },
+      {
+        label: '未核销短驳操作费',
+        prop: 'unpaidDbHandlingFeePay',
+        width: '140',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.dbHandlingFeePay, row.paidDbHandlingFeePay, row.unpaidDbHandlingFeePay, row.unpaidDbHandlingFeePay)
+        },
+        fixed: false
+      },
+      {
+        label: '短驳已付（应付）',
+        prop: 'paidDbHandlingFeePay',
+        width: '140',
+        fixed: false
+      },
+      // {
+      //   label: '操作费',
+      //   prop: 'fee',
+      //   width: '110',
+      //   slot: (scope) => {
+      //     return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+      //   },
+      //   fixed: false
+      // },
+      // {
+      //   label: '已核销操作费',
+      //   prop: 'paidFee',
+      //   width: '140',
+      //   slot: (scope) => {
+      //     const row = scope.row
+      //     const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+      //     const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
+      //     const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+      //     return this._setTextColor(fee, closeFee, unpaidFee, closeFee)
+      //   },
+      //   fixed: false
+      // },
+      // {
+      //   label: '未核销操作费',
+      //   prop: 'unpaidFee',
+      //   width: '140',
+      //   slot: (scope) => {
+      //     const row = scope.row
+      //     const fee = row.loadTypeName === '干线' ? row.gxHandlingFeePay : row.dbHandlingFeePay
+      //     const closeFee = row.loadTypeName === '干线' ? row.paidGxHandlingFeePay : row.paidDbHandlingFeePay
+      //     const unpaidFee = row.loadTypeName === '干线' ? row.unpaidGxHandlingFeePay : row.unpaidDbHandlingFeePay
+      //     return this._setTextColor(fee, closeFee, unpaidFee, unpaidFee)
+      //       // return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+      //   },
+      //   fixed: false
+      // },
+      // {
+      //   label: '已付（应付）',
+      //   prop: 'pandHandlingFeePay',
+      //   width: '140',
+      //   slot: (scope) => {
+      //     return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+      //   },
+      //   fixed: false
+      // },
       {
         label: '备注',
         prop: 'remark',
@@ -181,6 +245,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchList()
     },
@@ -201,12 +266,12 @@ export default {
       return payListByHandlingFee(this.searchQuery).then(data => {
         if (data) {
           this.dataList = data.list
-          this.dataList.forEach((e, index) => {
-            e.fee = e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay
-            e.paidFee = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
-            e.unpaidFee = e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay
-            e.pandHandlingFeePay = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
-          })
+          // this.dataList.forEach((e, index) => {
+          //   e.fee = e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay
+          //   e.paidFee = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
+          //   e.unpaidFee = e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay
+          //   e.pandHandlingFeePay = e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay
+          // })
           this.total = data.total
         }
         this.loading = false

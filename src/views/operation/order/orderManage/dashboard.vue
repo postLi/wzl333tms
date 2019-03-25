@@ -162,17 +162,17 @@ export default {
         'prop': 'shipIdentifying',
         'width': '150',
         slot: function(scope) {
-            return parseShipStatus(scope.row.shipIdentifying)
-          }
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
       }, {
-          'label': '开单网点',
-          'prop': 'fromOrgName',
-          'width': '150'
-        }, {
-        'label': '目的网点',
-        'prop': 'toOrgName',
+        'label': '开单网点',
+        'prop': 'fromOrgName',
         'width': '150'
       }, {
+          'label': '目的网点',
+          'prop': 'toOrgName',
+          'width': '150'
+        }, {
         'label': '开单时间',
         'prop': 'createTime',
         'width': '180',
@@ -451,6 +451,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchAllOrder()
     },

@@ -105,32 +105,32 @@ export default {
       money: 0,
       usersArr: [],
       tableColumn: [{
-          label: '交易时间',
-          prop: 'tradeTime'
-        },
-        {
-          label: '交易流水',
-          prop: 'flowNo'
-        },
-        {
-          label: '交易类型',
-          prop: 'tradeTypeName'
-        },
-        {
-          label: '交易金额',
-          prop: 'tradeFee',
-          slot: (scope) => {
-            return (scope.row.expenditureChannelName ? '-' : '+') + scope.row.tradeFee
-          }
-        },
-        {
-          label: '收入渠道',
-          prop: 'incomeChannelName'
-        },
-        {
-          label: '支出渠道',
-          prop: 'expenditureChannelName'
+        label: '交易时间',
+        prop: 'tradeTime'
+      },
+      {
+        label: '交易流水',
+        prop: 'flowNo'
+      },
+      {
+        label: '交易类型',
+        prop: 'tradeTypeName'
+      },
+      {
+        label: '交易金额',
+        prop: 'tradeFee',
+        slot: (scope) => {
+          return (scope.row.expenditureChannelName ? '-' : '+') + scope.row.tradeFee
         }
+      },
+      {
+        label: '收入渠道',
+        prop: 'incomeChannelName'
+      },
+      {
+        label: '支出渠道',
+        prop: 'expenditureChannelName'
+      }
       ],
       searchQuery: {
         'currentPage': 1,
@@ -159,6 +159,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchData()
     },

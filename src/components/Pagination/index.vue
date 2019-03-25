@@ -81,15 +81,33 @@ export default {
     }
   },
   watch: {
+    // pageNum() {
+    //   this.inputval = this.pageNum
+    // },
+    // size() {
+    //   this.pageNum = 1
+    // }
+    total: {
+      handler(cval, oval) {
+        // 模糊搜索的时候 需要把当前页初始化为1
+        if (cval && !this.defaultValues) {
+          this.pageNum = 1
+        }
+      },
+      deep: true
+    },
     pageNum() {
       this.inputval = this.pageNum
+      console.log('pageNum', this.pageNum)
     },
     defaultValues() {
-      this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum
+      this.pageNum = this.defaultValues.currentPage || 1
       this.oldNum = this.pageNum
+      console.log('this.pageNum1111', this.pageNum)
     },
     size() {
       this.pageNum = this.defaultValues ? this.defaultValues.currentPage : 1
+      console.log('this.pageNum2222', this.pageNum)
     }
   },
   mounted() {
@@ -99,6 +117,7 @@ export default {
     return {
       pageNum: 1,
       oldValue: 0,
+      oldTotal: 0,
       inputval: 1,
       oldNum: 1,
       size: 100

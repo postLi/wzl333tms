@@ -449,6 +449,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchForms = obj
       this.fetchAllList()
     },

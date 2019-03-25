@@ -175,9 +175,10 @@
     },
     methods: {
       changeKey(obj) {
-         this.searchQuery = obj
-         this.getSeachInfo(this.otherinfo.orgid, this.searchDate.roleName)
-       },
+        this.total = 0
+        this.searchQuery = obj
+        this.getSeachInfo(this.otherinfo.orgid, this.searchDate.roleName)
+      },
       fetchAllUser(orgid, username, mobilephone) {
         return getAllUser(orgid, username || '', mobilephone || '')
       },

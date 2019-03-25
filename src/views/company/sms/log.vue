@@ -113,17 +113,17 @@ export default {
       infoList: [],
       tableColumn: [{
         label: '网点',
-        prop: 'orgName',
+        prop: 'orgName'
       }, {
         label: '发送节点',
-        prop: 'sendNode',
+        prop: 'sendNode'
       }, {
         label: '发送对象',
-        prop: 'sendTarget',
+        prop: 'sendTarget'
       },
-       {
+      {
         label: '手机号码',
-        prop: 'phone',
+        prop: 'phone'
       }, {
         label: '发送时间',
         prop: 'sendTime',
@@ -152,6 +152,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.postSmsSendLogList()
     },

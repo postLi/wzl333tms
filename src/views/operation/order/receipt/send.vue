@@ -554,6 +554,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchAllreceipt()
     },
@@ -564,6 +565,7 @@ export default {
       this.loading = true
       return postReceipt(this.searchQuery).then(data => {
         this.dataset = data.list
+        this.total = data.total
         this.loading = false
       }).catch((err) => {
         this.loading = false

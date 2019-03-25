@@ -184,6 +184,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchForm = obj
       this.loading = true
       this.SetAuthVisible = false

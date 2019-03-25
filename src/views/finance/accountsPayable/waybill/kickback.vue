@@ -299,8 +299,11 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -318,8 +321,10 @@ export default {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.loading = true
       return postFindListByFeeType(this.searchQuery).then(data => {
-        this.dataList = data.list
-        this.total = data.total
+        if (data) {
+          this.dataList = data.list
+          this.total = data.total
+        }
         this.loading = false
       }).catch((err) => {
         this.loading = false

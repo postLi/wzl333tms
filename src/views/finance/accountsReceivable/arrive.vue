@@ -170,21 +170,21 @@ export default {
         'label': '已核销到付',
         'prop': 'finishArrivepayFee',
         slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
+      }, {
+        'label': '未核销到付',
+        'prop': 'notArrivepayFee',
+        slot: (scope) => {
             const row = scope.row
-            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
           }
       }, {
-          'label': '未核销到付',
-          'prop': 'notArrivepayFee',
-          slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-        }
+          'label': '开单日期',
+          'prop': 'createTime',
+          width: 180
         }, {
-        'label': '开单日期',
-        'prop': 'createTime',
-        width: 180
-      }, {
         'label': '发货方',
         'prop': 'senderCustomerUnit'
       }, {
@@ -240,6 +240,7 @@ export default {
   },
   methods: {
     changeKey(obj) {
+      this.total = 0
       this.searchQuery = obj
       this.fetchAllOrder()
     },
