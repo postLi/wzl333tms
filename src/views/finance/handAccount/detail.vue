@@ -40,10 +40,6 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
-               <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
-              </template>
-              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -53,9 +49,6 @@
               :label="column.label"
               v-else
               :width="column.width">
-                  <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
-              </template>
               <template slot-scope="scope" v-html="true">
                   {{ column.slot(scope) }}
               </template>
@@ -197,11 +190,6 @@ export default {
     }
   },
   methods: {
-    changeKey(obj) {
-      this.total = 0
-      this.searchQuery = obj
-      this.fetchAllOrder()
-    },
     viewDetails(row) {
       this.$router.push({
         path: '/finance/handAccount/detail',

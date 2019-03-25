@@ -76,15 +76,15 @@
           <el-table-column fixed sortable type="selection" width="35"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label"   v-if="!column.slot" :width="column.width">
-              <template slot="header" slot-scope="scope">
+              <!-- <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
-              </template>
+              </template> -->
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
          <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
-              <template slot="header" slot-scope="scope">
+              <!-- <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
-              </template>
+              </template> -->
               <template slot-scope="scope">
                 <span
                   class="clickitem"

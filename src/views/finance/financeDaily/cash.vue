@@ -322,7 +322,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchList()
+      if (!this.loading) {
+        this.fetchList()
+      }
     },
     handleCommand(command) {
       console.log('智能核销::', command)

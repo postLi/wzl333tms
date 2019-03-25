@@ -146,7 +146,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllOrder()
+      if (!this.loading) {
+        this.fetchAllOrder()
+      }
     },
     viewDetails(row) {
       this.$router.push({

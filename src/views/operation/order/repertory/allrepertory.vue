@@ -523,7 +523,9 @@ export default {
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
-      this.fetchAllOrderRepertory()
+      if (!this.loading) {
+        this.fetchAllOrderRepertory()
+      }
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
