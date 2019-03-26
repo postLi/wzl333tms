@@ -1081,7 +1081,7 @@ export default {
         obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
       }
       let appendTopStr = '<style>body{width: 100%;}</style>'
-      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+      appendTopStr += '<body width="100%" style="font-family: {content_font_family}"><table width="100%" style="font-size: {content_word_size}px;font-family: {content_font_family}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">' +
         this.otherinfo.companyName +
         '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
         obj.orgName + '   →   ' + obj.endOrgName +
@@ -1112,7 +1112,8 @@ export default {
             data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
             name: '批次详情',
-            appendTop: appendTopStr
+            appendTop: appendTopStr,
+            type: 'load' // 配载单
           })
           break
           // 添加客户

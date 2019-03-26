@@ -78,6 +78,12 @@
             </li>
           </ul>
         </div>
+         <div class="prinit_aside_paper">
+          <label><i class="el-icon-edit"></i> 打印字体</label>
+          <el-select v-model="formPrint.printFontSetting.ship" size="mini">
+            <el-option v-for="(item, index) in $const.PRINT_FONT" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </div>
         <div class="prinit_aside_paper">
           <span><i class="el-icon-document"></i> 纸张设置</span>
           <br>
@@ -106,6 +112,7 @@
             </el-input>
           </el-form-item>
         </div>
+       
         <el-collapse-transition>
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
@@ -186,6 +193,7 @@
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
           fontStyle: 'Simsun',
+          fontFamily: formPrint.printFontSetting.ship,
           fontWeight: item.bold ? 700 : 400,
           textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">
@@ -250,7 +258,10 @@ export default {
         leftx: 0
       },
       formPrint: {
-        printSetting: {
+        printSetting: { // 打印机
+          ship: ''
+        },
+        printFontSetting: { // 打印字体
           ship: ''
         }
       },
@@ -405,7 +416,6 @@ export default {
       }
     },
     showCargoPlus() { // 添加显示货物信息
-      console.log('cargoNum', this.cargoNum)
       const fn = (num) => {
         this.cargoLabelList[num].forEach(e => {
           this.formModel.labelList.forEach((el, index) => {
@@ -443,9 +453,9 @@ export default {
       this.loading = true
       this.isShowBkimg = true
       this.getCommonSettingOrder()
+      console.log('formInfo init', this.formPrint)
     },
     print(type, bkimg = false) { // preview-打印预览 test-打印测试 previewBkimg-打印预览包含背景图 testBkimg-打印测试包含背景图
-      console.log('type bkimg', type, bkimg)
       const labelList = objectMerge2([], this.labelListView)
       let imgObj = {}
       labelList.push(objectMerge2({}, this.formModel.paper))
@@ -474,11 +484,11 @@ export default {
       if (this.imageUrl && bkimg) {
         labelList.push(imgObj)
       }
-      console.warn('labelList', labelList)
       CreatePrintPageEnable({
         orderdata: labelList, // 运单数据
         number: 1, // 打印份数
         printer: this.formPrint.printSetting.ship, // 打印机
+        fontFamily: this.formPrint.printFontSetting.ship, // 打印字体
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
         preview: type === 'preview', // 是否预览
@@ -605,7 +615,6 @@ export default {
       }
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
-      console.log('skdofkwoefkosd  row::::', row, index)
       const len = this.labelListView.filter(e => {
         return e.filedValue === row.filedValue
       }).length
@@ -688,9 +697,7 @@ export default {
     changeDragDetailInfo(newVal) { // 修改编辑显示项的数据
       if (newVal) {
         this.labelListView.forEach((e, index) => {
-          console.log('editDragItem111111111111', e, e._index, this.dragDetailInfo._index)
           if (e._index === this.dragDetailInfo._index) {
-            console.warn('editDragItem222222222222', e, e._index, this.dragDetailInfo._index, this.dragDetailInfo)
             this.$set(this.labelListView, index, this.dragDetailInfo)
           }
         })
@@ -1189,14 +1196,15 @@ export default {
       this.viewKey = new Date().getTime()
     },
     savePrinter() {
-      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship) {
-        this.$confirm('默认打印机已修改，是否需要保存?', '提示', {
+      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship || this.formInfo.printFontSetting.ship !== this.formPrint.printFontSetting.ship) {
+        this.$confirm('默认打印机或字体已修改，是否需要保存?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.$emit('success', {
-            ship: this.formPrint.printSetting.ship
+            ship: this.formPrint.printSetting.ship,
+            shipFont: this.formPrint.printFontSetting.ship
           })
         }).catch(() => {})
       }

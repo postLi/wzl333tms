@@ -21,6 +21,9 @@
         <span class="el-icon-d-caret sortBtn"></span>
         <div class="item-1 customerTitle">
           <div class="item-2">发货方</div>
+            <!-- <el-tooltip effect="dark" content="点击可左右调换" placement="top">
+              <el-button icon="el-icon-sort" circle size="mini" class="exchange-btn" @click="exchange"></el-button>
+            </el-tooltip> -->
           <div class="item-2">收货方</div>
         </div>
         <draggable v-model="dataList" class="item-2">
@@ -169,6 +172,9 @@ export default {
     this.sortModel()
   },
   methods: {
+    exchange() { // 交换发货方和收货方
+
+    },
     changeCheck(val, item, index) {
       if (item.fieldProperty === 'shipToCityName') {
         item.hide = true
@@ -484,6 +490,12 @@ $cellHoverHeightColor: #409eff;
   }
   .modelDialog-tips {
     margin-bottom: 10px;
+  }
+  .exchange-btn{
+    position: absolute;
+    transform: rotate(90deg);
+    left: 50%;
+    margin-left: -13px;
   }
 
   .model-list {

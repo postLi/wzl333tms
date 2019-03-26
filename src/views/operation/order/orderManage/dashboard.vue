@@ -184,10 +184,10 @@ export default {
         'prop': 'shipSenderName',
         'width': '150'
       }, {
-          'label': '发货人电话',
-          'prop': 'shipSenderMobile',
-          'width': '150'
-        }, {
+        'label': '发货人电话',
+        'prop': 'shipSenderMobile',
+        'width': '150'
+      }, {
         'label': '收货人',
         'prop': 'shipReceiverName',
         'width': '150'
@@ -232,10 +232,10 @@ export default {
         'prop': 'weightFee',
         'width': '150'
       }, {
-        'label': '体积单价',
-        'prop': 'volumeFee',
-        'width': '150'
-      }, {
+          'label': '体积单价',
+          'prop': 'volumeFee',
+          'width': '150'
+        }, {
         'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'

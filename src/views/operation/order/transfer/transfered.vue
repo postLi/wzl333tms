@@ -18,6 +18,7 @@
           :key="tablekey"
           stripe
           border
+          @row-dblclick="showDetail" 
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -455,6 +456,9 @@ export default {
     }
   },
   methods: {
+    showDetail(order) { // 双击查看运单详情
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
+    },
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj

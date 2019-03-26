@@ -361,8 +361,8 @@
     </div>
     <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
     <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
-    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false"></printLoadInfo>
-    <printContract :popVisible="printContractVisible" @close="printContractVisible = false"></printContract>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" :formInfo="form" @success="changeSystem"></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" :formInfo="form" @success="changeSystem"></printContract>
   </div>
 </template>
 <script>
@@ -900,11 +900,21 @@ export default {
     },
     changeSystem(obj) {
       if (obj.ship) {
-        this.$set(this.form.printSetting, 'ship', obj.ship)
+        this.$set(this.form.printSetting, 'ship', obj.ship) // 运单打印机
+        this.$set(this.form.printFontSetting, 'ship', obj.shipFont)// 运单字体
         this.saveData()
       }
       if (obj.label) {
-        this.$set(this.form.printSetting, 'label', obj.label)
+        this.$set(this.form.printSetting, 'label', obj.label) // 标签打印机
+        this.$set(this.form.printFontSetting, 'label', obj.labelFont) // 标签字体
+        this.saveData()
+      }
+      if (obj.loadFont) {
+        this.$set(this.form.printFontSetting, 'load', obj.loadFont) // 配载单字体
+        this.saveData()
+      }
+      if (obj.contractFont) {
+        this.$set(this.form.printFontSetting, 'contract', obj.contractFont) // 合同字体
         this.saveData()
       }
     },

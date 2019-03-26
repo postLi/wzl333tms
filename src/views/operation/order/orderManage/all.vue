@@ -1085,10 +1085,16 @@ export default {
           })
           break
         case 'print':
+          const obj = Object.assign({}, this.searchQuery)
+          let appendTopStr = '<style>body{width: 100%;}</style>'
+          appendTopStr += '<body width="100%"><table width="100%"><tr style="text-align:center;"><td style="font-size: 16px;">' +
+          (obj.vo.startTime || ' ') + ' ~ ' + (obj.vo.endTime || ' ') + ' 的全部运单列表' +
+          '</td></tr></table></body>'
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name: '全部运单'
+            name: '全部运单',
+            appendTopTitle: appendTopStr
           })
           break
       }

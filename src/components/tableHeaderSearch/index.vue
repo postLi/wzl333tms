@@ -5,7 +5,7 @@
     <el-date-picker
       v-model.lazy.trim="queryString"
       v-if="isTime && unSearch"
-      type="datetime"
+      type="date"
       placeholder="选择日期时间"
       :size="btnsize"
       @click.stop.prevent.native
@@ -355,7 +355,8 @@ export default {
         this.isChange = true
         if (this.isTime) {
           // 处理时间格式
-          value = parseTime(value, '{y}-{m}-{d} {h}:{i}:{s}')
+          // value = parseTime(value, '{y}-{m}-{d} {h}:{i}:{s}')
+          value = parseTime(value, '{y}-{m}-{d}')
         }
         query.searchVo[column.property] = value
         query.currentPage = 1 // 搜索时 默认为第一页

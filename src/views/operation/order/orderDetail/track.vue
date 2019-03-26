@@ -53,7 +53,7 @@
           <el-date-picker v-model.trim="formModel.createTime" type="datetime" placeholder="选择时间" size="mini">
           </el-date-picker>
         </el-form-item>
-        <el-form-item :maxlength="250" label="操作信息" prop="trackInfo">
+        <el-form-item :maxlength="250" label="操作信息" prop="trackInfo" class="stepinfo-footer-longitem">
           <el-input v-model="formModel.trackInfo" placeholder="" size="mini"></el-input>
         </el-form-item>
         <el-form-item class="tracksavebtn">
@@ -85,7 +85,7 @@ export default {
         trackInfo: [{ required: true, trigger: 'blur', message: '不能为空' }]
       },
       formModel: {
-        'createTime': '', 
+        'createTime': '',
         // 修改时需要带上
         // "id": 0,
         'orgid': '',
@@ -129,7 +129,7 @@ export default {
       return orderManage.getCreateOrderDate().then(data => {
         this.nowTime = new Date(data)
         return data
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -139,7 +139,7 @@ export default {
       return orderManage.getShipTrackinfo(this.orderid).then(data => {
         this.trackDetail = data
         return data
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
@@ -349,7 +349,15 @@ export default {
   .stepinfo-footer{
     border-top: 1px solid #d8d8d8;
     height: 70px;
-    padding-top: 30px;
+    padding-top: 20px;
+    .stepinfo-footer-longitem {
+      width: calc(100% - 700px);
+      padding-right: 80px;
+      white-space: nowrap;
+      .el-form-item__content{
+        width: 100%;
+      }
+    }
   }
 }
 </style>

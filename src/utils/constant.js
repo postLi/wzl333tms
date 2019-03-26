@@ -108,6 +108,10 @@ export const APPORTION_TYPE_DESCRIPT = {
   45: '(运单 - 回扣）/（总车费 - 总回扣）* 操作费'
 }
 /**
+ * 常用打印字体列表
+ */
+export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', 'Arial']
+/**
  * 默认开单页面模板JSON
  */
 export const MODELLIST = [{

@@ -49,6 +49,13 @@
       <el-form-item label="上边距(mm)">
         <el-input :maxlength="5" v-model="formModel.top_distance" autocomplete="off"></el-input>
       </el-form-item>
+
+      <h3>其他设置</h3>
+      <el-form-item label="打印字体">
+        <el-select v-model="formPrint.printFontSetting.load" size="mini">
+          <el-option v-for="(item, index) in $const.PRINT_FONT" :key="index" :value="item" :label="item"></el-option>
+        </el-select>
+      </el-form-item>
       
       <div class="tms_dialog_print2-footer">
         <el-button type="primary" @click="submitForm('ruleForm2')">保存</el-button>
@@ -60,6 +67,7 @@
 <script>
 import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { getPrintSetting, putPrintSetting } from '@/api/operation/print'
+import { objectMerge2 } from '@/utils/index'
 export default {
   components: {
   },
@@ -67,6 +75,10 @@ export default {
     popVisible: {
       type: Boolean,
       default: false
+    },
+    formInfo: {
+      type: [Object, Array],
+      default: () => {}
     }
   },
   data() {
@@ -84,11 +96,16 @@ export default {
         printing_direction: '',
         paper_height: '',
         top_distance: '',
-        printing_date:'',
-        printing_person:''
+        printing_date: '',
+        printing_person: ''
+      },
+      formPrint: {
+        printFontSetting: { // 打印字体
+          load: ''
+        }
       },
       printers: [],
-      fontSizes:[12,13,14,15,16,18,20,22,24,26,28,32,40,60],
+      fontSizes: [12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 32, 40, 60],
       orgData: []
     }
   },
@@ -97,6 +114,8 @@ export default {
       if (this.popVisible) {
         this.dialogVisible = true
         this.getPrintSetting()
+        this.formPrint = objectMerge2({}, this.formInfo)
+        console.log('formPrint', this.formPrint)
       } else {
         this.dialogVisible = false
       }
@@ -121,25 +140,32 @@ export default {
         this.printers[item] = this.printers[item].replace(/%^/g, '\\')
       }
     },
+    savePrinter() {
+      if (this.formInfo.printFontSetting.load !== this.formPrint.printFontSetting.load) {
+        this.$emit('success', {
+          loadFont: this.formPrint.printFontSetting.load
+        })
+        this.closeMe()
+      }
+    },
     getPrintSetting() {
       this.orgData = []
       getPrintSetting({
-        "companyId": this.otherinfo.companyId,
-        "printType": 0
+        'companyId': this.otherinfo.companyId,
+        'printType': 0
       }).then(res => {
-        let data = res.data
-        if(data){
+        const data = res.data
+        if (data) {
           this.orgData = data
           data.forEach(el => {
-            if(typeof this.formModel[el.fieldName] !== 'undefined'){
+            if (typeof this.formModel[el.fieldName] !== 'undefined') {
               this.formModel[el.fieldName] = el.fieldValue || ''
             }
           })
         } else {
           this._handlerCatchMsg(res)
         }
-        
-      }).catch(err=>{
+      }).catch(err => {
         this._handlerCatchMsg(err)
       })
     },
@@ -151,22 +177,23 @@ export default {
     },
     submitForm(formName) {
       // 先格式化数据
-      let data = []
-      this.orgData.forEach(el=>{
-        if(typeof this.formModel[el.fieldName] !== 'undefined'){
+      const data = []
+      this.savePrinter()
+      this.orgData.forEach(el => {
+        if (typeof this.formModel[el.fieldName] !== 'undefined') {
           el.fieldValue = this.formModel[el.fieldName]
         }
         data.push(el)
       })
 
       putPrintSetting({
-        "companyId": this.otherinfo.companyId,
-        "printType": 0,
+        'companyId': this.otherinfo.companyId,
+        'printType': 0,
         settingList: data
       }).then(data => {
         this.$message({ type: 'success', message: '打印设置成功！' })
-        this.closeMe()
-      }).catch(err=>{
+        // this.closeMe()
+      }).catch(err => {
         this._handlerCatchMsg(err)
       })
     }

@@ -157,17 +157,29 @@ export default {
         prop: 'licenseTypeName',
         width: '120',
         fixed: false
+      },
+      {
+        label: '驾驶证有效期（开始）',
+        prop: 'validityStartdate',
+        width: '170',
+        fixed: false
+        // slot: (scope) => {
+        //   const start = scope.row.validityStartdate ? parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+        //   const end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+        //   const data = start + ' - ' + end
+        //   return data
+        // }
       }, {
-        label: '驾驶证有效期',
+        label: '驾驶证有效期（结束）',
         prop: 'validityDate',
-        width: '300',
-        fixed: false,
-        slot: (scope) => {
-          const start = scope.row.validityStartdate ? parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
-          const end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
-          const data = start + ' - ' + end
-          return data
-        }
+        width: '170',
+        fixed: false
+        // slot: (scope) => {
+        //   const start = scope.row.validityStartdate ? parseTime(scope.row.validityStartdate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+        //   const end = scope.row.validityDate ? parseTime(scope.row.validityDate, '{y}-{m}-{d} {h}:{i}:{s}') : ''
+        //   const data = start + ' - ' + end
+        //   return data
+        // }
       }, {
         label: '银行卡号',
         prop: 'bankCardNumber',
