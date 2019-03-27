@@ -152,26 +152,26 @@ export default {
         width: '70',
         fixed: true,
         slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
       }, {
-          'label': '运单号',
-          'prop': 'shipSn',
-          'width': '150',
-          'fixed': true
-        }, {
+        'label': '运单号',
+        'prop': 'shipSn',
+        'width': '150',
+        'fixed': true
+      }, {
         'label': '运单状态',
         'prop': 'shipStatusName',
         'width': '120',
         'fixed': false
       }, {
-        'label': '运单标识',
-        'prop': 'shipIdentifying',
-        'width': '150',
-        slot: function(scope) {
+          'label': '运单标识',
+          'prop': 'shipIdentifying',
+          'width': '150',
+          slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      }, {
+        }, {
         'label': '开单网点',
         'prop': 'fromOrgName',
         'width': '150'
@@ -307,26 +307,17 @@ export default {
         'label': '到达省',
         'prop': 'endProvince',
         'width': '150',
-        hidden: true,
-        slot: function(scope) {
-          return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '')
-        }
+        hidden: true
       }, {
         'label': '到达市',
         'prop': 'endCity',
         'width': '150',
-        hidden: true,
-        slot: function(scope) {
-          return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '')
-        }
+        hidden: true
       }, {
         'label': '到达县区',
         'prop': 'endArea',
         'width': '150',
-        hidden: true,
-        slot: function(scope) {
-          return (scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '')
-        }
+        hidden: true
       }, {
         'label': '业务员',
         'prop': 'userName',

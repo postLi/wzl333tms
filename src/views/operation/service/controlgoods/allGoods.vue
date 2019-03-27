@@ -748,27 +748,18 @@ export default {
         fixed: false
       }, {
         label: '目的省',
-        prop: 'shipToCityName',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
         fixed: false
       }, {
         label: '目的市',
-        prop: 'shipToCityName',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
         fixed: false
       }, {
         label: '目的区',
-        prop: 'shipToCityName',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
         fixed: false
       }, {
         label: '制单人',

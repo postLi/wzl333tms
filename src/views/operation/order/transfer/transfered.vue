@@ -282,25 +282,16 @@ export default {
         'width': '150'
       }, {
         'label': '到达省',
-        'prop': 'shipToCityName1',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        }
+        'prop': 'endProvince',
+        'width': '150'
       }, {
         'label': '到达市',
-        'prop': 'shipToCityName2',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        }
+        'prop': 'endCity',
+        'width': '150'
       }, {
         'label': '到达县',
-        'prop': 'shipToCityName3',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        }
+        'prop': 'endArea',
+        'width': '150'
       }, {
         'label': '发货方',
         'prop': 'sendCustomerUnit',

@@ -341,21 +341,6 @@ export default {
         width: '150',
         fixed: false
       },
-        // {
-        //   label: "到达省",
-        //   prop: "orgId",
-        //   width: "150"
-        // },
-        // {
-        //   label: "到达市",
-        //   prop: "orgId",
-        //   width: "150"
-        // },
-        // {
-        //   label: "到达县区",
-        //   prop: "orgId",
-        //   width: "150"
-        // },
       {
         label: '发货方',
         prop: 'senderCustomerUnit',

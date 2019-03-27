@@ -753,25 +753,16 @@ export default {
         label: '到达省',
         prop: 'endProvince',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        // },
         fixed: false
       }, {
         label: '到达市',
         prop: 'endCity',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        // },
         fixed: false
       }, {
         label: '到达县',
         prop: 'endArea',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        // },
         fixed: false
       }, {
         label: '付款方式',
@@ -986,18 +977,7 @@ export default {
         // 导出
         case 'export':
           const arr = objectMerge2([], this.dataset) // 所有的数据
-          arr.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
-
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,

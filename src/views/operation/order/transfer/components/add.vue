@@ -197,10 +197,10 @@ export default {
         'prop': 'number',
         'width': '100',
         'fixed': true,
-        slot: (scope)=> {
+        slot: (scope) => {
           return scope.$index + 1
         }
-      },{
+      }, {
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '100',
@@ -326,24 +326,15 @@ export default {
       }, {
         'label': '到达省',
         'prop': 'endProvince',
-        'width': '100',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        }
+        'width': '100'
       }, {
         'label': '到达市',
         'prop': 'endCity',
-        'width': '100',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        }
+        'width': '100'
       }, {
         'label': '到达县区',
         'prop': 'endArea',
-        'width': '100',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        }
+        'width': '100'
       }, {
         'label': '发货方',
         'prop': 'sendCustomerUnit',
@@ -538,30 +529,30 @@ export default {
       const columnArr = objectMerge2([], this.tableColumn)
       switch (type) {
         case 'cancel':
-         this.$emit('action', 'cancel', [this.transferBatchNo])
-        break
+          this.$emit('action', 'cancel', [this.transferBatchNo])
+          break
         case 'print':
-        PrintInFullPage({
-            data: this.selectDetailList.length ? this.selectDetailList : this.usersArr,
-            columns: columnArr,
-            name: '中转-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}'),
-          })
-        break
-        case 'export':
-        SaveAsFile({
+          PrintInFullPage({
             data: this.selectDetailList.length ? this.selectDetailList : this.usersArr,
             columns: columnArr,
             name: '中转-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
-        break
+          break
+        case 'export':
+          SaveAsFile({
+            data: this.selectDetailList.length ? this.selectDetailList : this.usersArr,
+            columns: columnArr,
+            name: '中转-' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
+          })
+          break
       }
     },
-   setColumn(obj) { // 打开表格设置
+    setColumn(obj) { // 打开表格设置
       this.tableColumn = obj
       this.setupTableVisible = false
       this.tablekey = Math.random()
     },
-    setTable () {
+    setTable() {
       this.setupTableVisible = true
     },
     // 获取批次详细信息
@@ -583,7 +574,7 @@ export default {
           }
           this.form.transferTime = parseTime(new Date(this.form.transferTime))
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
