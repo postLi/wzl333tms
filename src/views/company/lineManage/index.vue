@@ -196,6 +196,7 @@ export default {
         }
       }, {
         'label': '线路说明',
+        width: '150',
         'prop': 'transportRemark'
       }]
     }

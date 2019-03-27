@@ -1128,6 +1128,7 @@ export default {
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
       formModel.remark = this.sendContract.aboutLocal
+      // formModel.content_font_family = this.otherinfo.systemSetup.printFontSetting ? this.otherinfo.systemSetup.printFontSetting.contract : ''
       console.log('formModel', formModel)
       PrintContract(formModel)
     },

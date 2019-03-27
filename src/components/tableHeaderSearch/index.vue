@@ -60,7 +60,7 @@
   </div>
 </template>
 <script>
-import { parseTime } from '@/utils/index'
+import { parseTime, objectMerge2 } from '@/utils/index'
 import SelectType from '@/components/selectType/index'
 export default {
   components: {
@@ -87,22 +87,33 @@ export default {
         options: [],
         filter: ''
       },
+      /**
+       * selectOptions-下拉选择，有type的表示查字典表，没有type用自定义键值
+       * property // 字段名
+       * label // 字段中文名
+       * type // 字典表该字段类型，如果没有表示自定义
+       * options // 没有type的时候，配置自定义键值对用于下拉选项
+       * dispage // 配置不需要模糊查询的当前字段的页面,目的为了区分不同页面的不同搜索需求
+       */
       selectOptions: [
         {
           property: 'shipShippingTypeName',
           label: '运输方式',
+          dispage: [],
           type: 'ship_shipping_type',
           options: []
         },
         {
           property: 'shipPayWayName',
           label: '付款方式',
+          dispage: [],
           type: 'ship_pay_way',
           options: []
         },
         {
           property: 'orderPayWayName',
           label: '付款方式',
+          dispage: [],
           type: 'ship_pay_way',
           options: []
         },
@@ -291,6 +302,40 @@ export default {
           type: 'count_status',
           options: [],
           filter: ''
+        },
+        {
+          property: 'applyStatus',
+          label: '审核状态',
+          type: '',
+          options: [
+            {
+              dictName: '审核中',
+              id: 0
+            },
+            {
+              dictName: '审核通过',
+              id: 1
+            },
+            {
+              dictName: '审核不通过',
+              id: 2
+            }
+          ]
+        },
+        {
+          property: 'rangeStatus',
+          label: '状态',
+          type: '',
+          options: [
+            {
+              dictName: '禁用',
+              id: 0
+            },
+            {
+              dictName: '启用',
+              id: 1
+            }
+          ]
         }
       ]
     }
@@ -299,7 +344,11 @@ export default {
     unSearch() {
       // 不需要搜索的字段 true-需要 false-不需要
       // 不需要搜索的字段集合 property
-      const arr = ['id', 'number']
+      const arr = [
+        'id', 'number', 'grossProfit'
+        // 'endCity', 'endArea', 'endProvince',
+        // 'shipToCityName1', 'shipToCityName2', 'shipToCityName3'
+      ]
       const property = this.scope.column.property.toLowerCase()
       const find = arr.filter(el => el.toLowerCase() === property)
       return !find.length

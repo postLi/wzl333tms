@@ -912,17 +912,19 @@ export default {
         prop: 'shipRemarks',
         width: '120',
         fixed: false
-      }, {
-        label: '送货车牌',
-        prop: 'shipTruckIdNumber',
-        width: '120',
-        fixed: false
-      }, {
-        label: '送货司机',
-        prop: 'dirverName',
-        width: '120',
-        fixed: false
-      }]
+      }
+      // {
+      //   label: '送货车牌',
+      //   prop: 'shipTruckIdNumber',
+      //   width: '120',
+      //   fixed: false
+      // }, {
+      //   label: '送货司机',
+      //   prop: 'dirverName',
+      //   width: '120',
+      //   fixed: false
+      // }
+      ]
     }
   },
     // props:{

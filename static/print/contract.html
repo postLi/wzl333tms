@@ -15,7 +15,7 @@
     p {
       padding: 0;
       margin: 0;
-      font-family: '微软雅黑';
+      /* font-family: '微软雅黑'; */
     }
 
     body {
@@ -220,6 +220,7 @@
   // 车辆备注
   remark.innerHTML = data.remark ? data.remark : ''
 
+  document.body.style.fontFamily = data.content_font_family || ''
 </script>
 </body>
 

@@ -282,21 +282,21 @@ export default {
         'width': '150'
       }, {
         'label': '到达省',
-        'prop': 'shipToCityName',
+        'prop': 'shipToCityName1',
         'width': '150',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
         }
       }, {
         'label': '到达市',
-        'prop': 'shipToCityName',
+        'prop': 'shipToCityName2',
         'width': '150',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
         }
       }, {
-        'label': '到达县区',
-        'prop': 'shipToCityName',
+        'label': '到达县',
+        'prop': 'shipToCityName3',
         'width': '150',
         slot: function(scope) {
           return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''

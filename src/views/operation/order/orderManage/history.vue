@@ -313,6 +313,18 @@ export default {
         'prop': 'shipReceiverAddress',
         hidden: true,
         'width': '150'
+      }, {
+        'label': '到达省',
+        'prop': 'endProvince',
+        'width': '150'
+      }, {
+        'label': '到达市',
+        'prop': 'endCity',
+        'width': '150'
+      }, {
+        'label': '到达区县',
+        'prop': 'endArea',
+        'width': '150'
       }],
       showtip: false
     }

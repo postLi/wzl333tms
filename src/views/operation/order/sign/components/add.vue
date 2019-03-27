@@ -438,7 +438,7 @@ export default {
       this.form.signTime = this.searchCreatTime
 
       this.$set(this.form, 'signName', this.$refs.signName.value)
-      
+
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           // this.loading = true
@@ -449,7 +449,7 @@ export default {
           data.childShipId = this.repertoryId.childShipId
           data.shipId = this.repertoryId.shipId
           data.loadId = this.repertoryId.loadId
-          data.remark = this.repertoryId.signRemark
+          data.remark = data.remark ? data.remark : this.repertoryId.signRemark
           console.log(this.repertoryId.loadId)
           let promiseObj
           if (this.isPick) {

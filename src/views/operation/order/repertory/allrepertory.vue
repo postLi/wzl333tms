@@ -632,6 +632,9 @@ export default {
     getAllOrderRepertory() {
       this.loading = true
       postAllOrderRepertory(this.searchQuery).then(data => {
+        data.list.forEach(el => {
+          el.grossProfit = el.shipTotalFee - el.brokerageFee
+        })
         this.repertoryArr = data.list
         this.total = data.total
         this.loading = false

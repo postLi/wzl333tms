@@ -485,7 +485,7 @@ export function PrintContract(obj, type) {
           LODOP.SET_PRINTER_INDEXA(printObj.printer)
         }
         console.log('PrintContract printObj:', printObj, objp)
-        obj += encodeURI('&heading_content=' + printObj.heading_content + '&heading_word_size=' + printObj.heading_word_size + '&content_word_size=' + printObj.content_word_size)
+        obj += encodeURI('&heading_content=' + printObj.heading_content + '&heading_word_size=' + printObj.heading_word_size + '&content_word_size=' + printObj.content_word_size + '&content_font_family=' + printObj.content_font_family)
       }
       //  LODOP.PRINT_INIT('合同')
 
@@ -512,6 +512,7 @@ export function PrintContract(obj, type) {
   } else {
     // 获取用户信息
     const user = getUserInfo()
+    const fontFamily = user.systemSetup.printFontSetting.contract || ''
     getPrintSetting({
       'companyId': user.companyId,
       'printType': 1
@@ -522,6 +523,7 @@ export function PrintContract(obj, type) {
         data.forEach(el => {
           obj[el.fieldName] = el.fieldValue
         })
+        obj.content_font_family = fontFamily
         fn(obj)
       } else {
         console.error('获取打印信息失败')
