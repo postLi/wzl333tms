@@ -574,6 +574,7 @@ export default {
           province: arr[0] || '',
           city: arr[1] || '',
           area: arr[2] || '',
+          town: arr[3] || '',
           longAddr: el.value
         }
         return obj
@@ -666,13 +667,15 @@ export default {
         id: info.id || '',
         province: info.province || '',
         city: info.city || '',
-        area: info.area || ''
+        area: info.area || '',
+        town: info.town || ''
       }, {
         longAddr: info.longAddr || info,
         id: info.id || '',
         province: info.province || '',
         city: info.city || '',
-        area: info.area || ''
+        area: info.area || '',
+        town: info.town || ''
       })
     }
   }

@@ -996,9 +996,11 @@ export default {
           startProvince: '',
           startCity: '',
           startArea: '',
+          startTown: '',
           endProvince: '',
           endCity: '',
           endArea: '',
+          endTown: '',
 
           'shipFromOrgid': '',
           'shipGoodsSn': '',
@@ -1690,6 +1692,7 @@ export default {
         this.form.tmsOrderShip.startProvince = item.province || ''
         this.form.tmsOrderShip.startCity = item.city || ''
         this.form.tmsOrderShip.startArea = item.area || ''
+        this.form.tmsOrderShip.startTown = item.town || ''
       }
       /*  else {
               this.form.tmsOrderShip.shipFromCityCode = city || ''
@@ -1706,6 +1709,7 @@ export default {
         this.form.tmsOrderShip.endProvince = item.province || ''
         this.form.tmsOrderShip.endCity = item.city || ''
         this.form.tmsOrderShip.endArea = item.area || ''
+        this.form.tmsOrderShip.endTown = item.town || ''
       }
       this.getLineInfo()
     },

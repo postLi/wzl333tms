@@ -1,6 +1,6 @@
 <template>
   <div class="table-header-wrapper">
-    <p class="table-header-label">{{scope.column.label}}</p>
+    <p :title="scope.column.label" class="table-header-label">{{scope.column.label}}</p>
     <!-- 时间搜索 -->
     <el-date-picker
       v-model.lazy.trim="queryString"
