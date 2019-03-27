@@ -1197,16 +1197,20 @@ export default {
     },
     savePrinter() {
       if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship || this.formInfo.printFontSetting.ship !== this.formPrint.printFontSetting.ship) {
-        this.$confirm('默认打印机或字体已修改，是否需要保存?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$emit('success', {
-            ship: this.formPrint.printSetting.ship,
-            shipFont: this.formPrint.printFontSetting.ship
-          })
-        }).catch(() => {})
+        this.$emit('success', {
+          ship: this.formPrint.printSetting.ship,
+          shipFont: this.formPrint.printFontSetting.ship
+        })
+        // this.$confirm('默认打印机或字体已修改，是否需要保存?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   this.$emit('success', {
+        //     ship: this.formPrint.printSetting.ship,
+        //     shipFont: this.formPrint.printFontSetting.ship
+        //   })
+        // }).catch(() => {})
       }
     },
     submitForm(formName) { // 保存修改

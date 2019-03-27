@@ -849,6 +849,35 @@ export default {
       this.form.cargoNo.shipNoAndNumberOfUnits = '0'
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
+    saveDatePrint() { // 为保存字体和打印机，简化调用接口不需要finance和base
+      this.loading = true
+      // 转译一下打印的\\字符
+      const formPrintSetting = Object.assign({}, this.form.printSetting)
+      for (const item in formPrintSetting) {
+        formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
+      }
+      const form = Object.assign({}, this.form)
+      form.printSetting = Object.assign({}, formPrintSetting)
+
+      console.warn('提交 form,base', form)
+      if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
+        form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
+      }
+      this.putSetting(form).then(() => {
+        let otherinfo = localStorage.getItem('TMS-userinfo')
+        if (otherinfo) {
+          otherinfo = JSON.parse(otherinfo)
+          if (otherinfo.systemSetup) {
+            otherinfo.systemSetup.printFontSetting = objectMerge2({}, form.printFontSetting)
+            otherinfo.systemSetup.printSetting = objectMerge2({}, form.printSetting)
+          }
+        }
+        localStorage.setItem('TMS-userinfo', JSON.stringify(otherinfo))
+
+        this.initOrder()
+        this.loading = false
+      })
+    },
     saveData() { // 保存
       this.loading = true
       // 转译一下打印的\\字符
@@ -878,6 +907,10 @@ export default {
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.putSetting(base).then(() => {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
             this.initOrder()
             this.loading = false
             // this.infoFinance()
@@ -888,11 +921,6 @@ export default {
     putSetting(query) {
       return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
-        console.log('other.systemSetup', this.otherinfo.systemSetup)
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -902,20 +930,20 @@ export default {
       if (obj.ship) {
         this.$set(this.form.printSetting, 'ship', obj.ship) // 运单打印机
         this.$set(this.form.printFontSetting, 'ship', obj.shipFont)// 运单字体
-        this.saveData()
+        this.saveDatePrint()
       }
       if (obj.label) {
         this.$set(this.form.printSetting, 'label', obj.label) // 标签打印机
         this.$set(this.form.printFontSetting, 'label', obj.labelFont) // 标签字体
-        this.saveData()
+        this.saveDatePrint()
       }
       if (obj.loadFont) {
         this.$set(this.form.printFontSetting, 'load', obj.loadFont) // 配载单字体
-        this.saveData()
+        this.saveDatePrint()
       }
       if (obj.contractFont) {
         this.$set(this.form.printFontSetting, 'contract', obj.contractFont) // 合同字体
-        this.saveData()
+        this.saveDatePrint()
       }
     },
     initField() {

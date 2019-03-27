@@ -159,7 +159,7 @@ export default {
       }, {
         'label': '运输时效',
         'prop': 'transportAging',
-
+        width: '90',
         slot: (scope) => {
           return scope.row.transportAgingType ? (scope.row.transportAging + ['天', '小时', '天'][scope.row.transportAgingType]) : ''
         }

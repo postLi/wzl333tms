@@ -45,18 +45,20 @@
       ></el-option>
     </el-select>
     <!-- 普通输入框 -->
-    <el-input
-      v-else-if="unSearch"
-      @click.stop.prevent.native
-      :size="btnsize"
-      placeholder="搜索关键字"
-      @change="value => changeKey(scope.column, scope.$index, value)"
-      v-model.lazy.trim="queryString"
-      class="table-header-input"
-      :maxlength="50"
-      clearable
-      @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
-    ></el-input>
+    <el-tooltip  v-else-if="unSearch" :content="specialTypeTitle"  :disabled="!specialTypeTitle" placement="top" effect="light">
+      <el-input
+            @click.stop.prevent.native
+            :size="btnsize"
+            placeholder="搜索关键字"
+            @change="value => changeKey(scope.column, scope.$index, value)"
+            v-model.lazy.trim="queryString"
+            class="table-header-input"
+            :maxlength="50"
+            clearable
+            @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
+          ></el-input>
+</el-tooltip>
+    
   </div>
 </template>
 <script>
@@ -85,8 +87,15 @@ export default {
         label: '运输方式',
         type: 'ship_shipping_type',
         options: [],
-        filter: ''
+        filter: '',
+        dispage: []
       },
+      specialType: [{
+        property: 'lowerPrice',
+        label: '最低价格(元)',
+        page: [],
+        title: '查询"面议", 请输入 0'
+      }],
       /**
        * selectOptions-下拉选择，有type的表示查字典表，没有type用自定义键值
        * property // 字段名
@@ -341,13 +350,24 @@ export default {
     }
   },
   computed: {
+    specialTypeTitle() {
+      // 判断当前字段是否是特殊查询，
+      // 例如为空时前端写了中文字符显示，但是后台查询不到
+      // 这种情况默认传0
+      // 例如：线路管理列表的【最低价格(元)】
+      let msg = ''
+      const property = this.scope.column.property.toLowerCase()
+      const find = this.specialType.filter(el => el.property.toLowerCase() === property)
+      if (find && find.length) {
+        msg = find[0].title
+      }
+      return msg
+    },
     unSearch() {
       // 不需要搜索的字段 true-需要 false-不需要
       // 不需要搜索的字段集合 property
       const arr = [
         'id', 'number', 'grossProfit'
-        // 'endCity', 'endArea', 'endProvince',
-        // 'shipToCityName1', 'shipToCityName2', 'shipToCityName3'
       ]
       const property = this.scope.column.property.toLowerCase()
       const find = arr.filter(el => el.toLowerCase() === property)
