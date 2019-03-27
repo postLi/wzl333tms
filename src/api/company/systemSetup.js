@@ -92,7 +92,6 @@ export function getAllSetting(params) {
 }
  */
 export function putSetting(info) {
-  console.warn('=========info putSetting', info)
   CACHE.set('AllSetting' + info.module + '_update', true)
   return fetch.put('/api-system/system/setting/v1/', info)
 }
