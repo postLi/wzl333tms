@@ -596,6 +596,25 @@ export default {
             id: '已对账'
           }]
         }
+      ],
+      unSearchList: [
+        {
+          property: 'id',
+          label: '序号'
+        },
+        {
+          property: 'number',
+          label: '序号'
+        },
+        {
+          property: 'grossProfit',
+          label: '毛利'
+        },
+        {
+          property: 'status', // 控货管理-未放货及已放货页面的‘控货状态’
+          label: '控货状态',
+          dispage: ['/operation/service/controlgoods/noGoods', '/operation/service/controlgoods/haveGoods']
+        }
       ]
     }
   },
@@ -618,9 +637,24 @@ export default {
     unSearch() {
       // 不需要搜索的字段 true-需要 false-不需要
       // 不需要搜索的字段集合 property
-      const arr = ['id', 'number', 'grossProfit']
       const property = this.scope.column.property.toLowerCase()
-      const find = arr.filter(el => el.toLowerCase() === property)
+      let count = 0
+      let isSamProp = false
+      const find = this.unSearchList.filter(el => {
+        if (el.property.toLowerCase() === property) {
+          isSamProp = true
+          if (el.dispage && el.dispage.length) {
+            count = el.dispage.filter(em => em === this.$route.fullPath).length
+          }
+        }
+        if (el.dispage) {
+          if (isSamProp && count > 0) {
+            return true
+          }
+        } else {
+          return isSamProp
+        }
+      })
       return !find.length
     },
     isTime() {

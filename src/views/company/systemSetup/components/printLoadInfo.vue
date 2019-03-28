@@ -23,7 +23,6 @@
         <el-checkbox v-model="formModel.content_wrap" true-label="1" false-label="0" label="内容是否换行"></el-checkbox>
       </el-form-item>
        
-
       <h3>打印参数</h3>
       <el-form-item label="默认打印机">
         <el-select v-model="formModel.printer">
