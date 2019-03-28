@@ -281,12 +281,12 @@
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                   清单
                   <el-select v-model="form.printSetting.inventory">
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
               </div>
             </div>
             <div class="clearfix setup-table">
@@ -340,6 +340,16 @@
                 <el-form-item>
                   <el-radio-group v-model="form.switchUser.canSwitch" size="mini">
                     <el-radio v-for="(item, index) in canSwitchs" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table">
+               <div class="setup-left">轨迹跟踪来源</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio-group v-model="form.track.trackSign" size="mini">
+                    <el-radio v-for="(item, index) in trackSigns" :key="index" :label="item.value">{{item.label}}</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </div>
@@ -562,6 +572,13 @@ export default {
           value: '1',
           label: '可以'
         }],
+      trackSigns: [{
+        value: '0',
+        label: '追货宝'
+      }, {
+        value: '1',
+        label: '中交兴路'
+      }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -570,6 +587,9 @@ export default {
         label: '车牌号'
       }],
       form: {
+        track: {
+          trackSign: '0' // 0-追货宝 1-中交兴路
+        },
         'switchUser': {
           'canSwitch': ''
         },
@@ -930,21 +950,18 @@ export default {
       if (obj.ship) {
         this.$set(this.form.printSetting, 'ship', obj.ship) // 运单打印机
         this.$set(this.form.printFontSetting, 'ship', obj.shipFont)// 运单字体
-        this.saveDatePrint()
       }
       if (obj.label) {
         this.$set(this.form.printSetting, 'label', obj.label) // 标签打印机
         this.$set(this.form.printFontSetting, 'label', obj.labelFont) // 标签字体
-        this.saveDatePrint()
       }
       if (obj.loadFont) {
         this.$set(this.form.printFontSetting, 'load', obj.loadFont) // 配载单字体
-        this.saveDatePrint()
       }
       if (obj.contractFont) {
         this.$set(this.form.printFontSetting, 'contract', obj.contractFont) // 合同字体
-        this.saveDatePrint()
       }
+      this.saveDatePrint()
     },
     initField() {
       this.fieldSetup = []

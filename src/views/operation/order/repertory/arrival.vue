@@ -534,6 +534,9 @@ export default {
       this.loading = true
       this.$set(this.searchQuery.vo, 'repertoryType', 2)
       return postAllOrderRepertory(this.searchQuery).then(data => {
+        data.list.forEach(el => {
+          el.grossProfit = el.shipTotalFee - el.brokerageFee
+        })
         this.repertoryArr = data.list
         this.total = data.total
         this.loading = false

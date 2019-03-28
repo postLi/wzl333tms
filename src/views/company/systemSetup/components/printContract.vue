@@ -139,7 +139,6 @@ export default {
         this.$emit('success', {
           contractFont: this.formPrint.printFontSetting.contract
         })
-        this.closeMe()
       }
     },
     getPrintSetting() {

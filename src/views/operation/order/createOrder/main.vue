@@ -3033,8 +3033,9 @@ export default {
           resolve(!msg)
         } else {
           if (!this.form.tmsOrderShip.shipSn) {
-            this.$refs['tmsOrderShipshipSn'][0].focus()
+            this.$refs['tmsOrderShipshipSn'].focus()
             this.$message.error('请填写运单号~')
+            // this.loading = false
             resolve(false)
           } else {
             this.detectOrderNum().then(isDulip => {

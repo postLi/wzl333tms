@@ -145,7 +145,7 @@ export default {
         this.$emit('success', {
           loadFont: this.formPrint.printFontSetting.load
         })
-        this.closeMe()
+        // this.closeMe()
       }
     },
     getPrintSetting() {
@@ -192,7 +192,7 @@ export default {
         settingList: data
       }).then(data => {
         this.$message({ type: 'success', message: '打印设置成功！' })
-        // this.closeMe()
+        this.closeMe()
       }).catch(err => {
         this._handlerCatchMsg(err)
       })

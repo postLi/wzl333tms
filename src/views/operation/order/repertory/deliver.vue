@@ -550,6 +550,7 @@ export default {
       this.$set(this.searchQuery.vo, 'repertoryType', 1)
       return postAllOrderRepertory(this.searchQuery).then(data => {
         this.repertoryArr = data.list.map(el => {
+          el.grossProfit = el.shipTotalFee - el.brokerageFee
           el.shipTotalProfit = tmsMath._sub(el.shipTotalFee, el.brokerageFee)
           return el
         })

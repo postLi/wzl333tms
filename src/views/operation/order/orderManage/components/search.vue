@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       searchCreatTime: [],
-      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}')+' 00:00:00', parseTime(new Date(), '{y}-{m}-{d}')+' 23:59:59'],
+      defaultTime: [parseTime(+new Date() - 60 * 24 * 60 * 60 * 1000, '{y}-{m}-{d}') + ' 00:00:00', parseTime(new Date(), '{y}-{m}-{d}') + ' 23:59:59'],
       searchForm: {
         orgid: '',
         value: '',
@@ -96,7 +96,7 @@ export default {
       this.searchForm.orgid = newVal
     },
     $route(newVal) {
-      if (this.$route.path.indexOf('operation/order/orderManage') !== -1) {
+      if (this.$route.path.indexOf('operation/order/orderManage/All') !== -1) {
         this.setSearch()
         this.onSubmit()
       }

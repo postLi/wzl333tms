@@ -1,6 +1,6 @@
 <template>
   <div class="table-header-wrapper">
-    <p :title="scope.column.label" class="table-header-label">{{scope.column.label}}</p>
+    <p class="table-header-label" :title="scope.column.label">{{scope.column.label}}</p>
     <!-- 时间搜索 -->
     <el-date-picker
       v-model.lazy.trim="queryString"
@@ -45,20 +45,26 @@
       ></el-option>
     </el-select>
     <!-- 普通输入框 -->
-    <el-tooltip  v-else-if="unSearch" :content="specialTypeTitle"  :disabled="!specialTypeTitle" placement="top" effect="light">
+    <el-tooltip
+      v-else-if="unSearch"
+      :content="specialTypeTitle"
+      :disabled="!specialTypeTitle"
+      placement="top"
+      effect="light"
+    >
       <el-input
-            @click.stop.prevent.native
-            :size="btnsize"
-            placeholder="搜索关键字"
-            @change="value => changeKey(scope.column, scope.$index, value)"
-            v-model.lazy.trim="queryString"
-            class="table-header-input"
-            :maxlength="50"
-            clearable
-            @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
-          ></el-input>
-</el-tooltip>
-    
+        @click.stop.prevent.native
+        :size="btnsize"
+        placeholder="搜索关键字"
+        @change="value => changeKey(scope.column, scope.$index, value)"
+        v-model.lazy.trim="queryString"
+        class="table-header-input"
+        :maxlength="50"
+        clearable
+        @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
+      ></el-input>
+    </el-tooltip>
+
   </div>
 </template>
 <script>
@@ -87,15 +93,17 @@ export default {
         label: '运输方式',
         type: 'ship_shipping_type',
         options: [],
-        filter: '',
+        filter: [],
         dispage: []
       },
-      specialType: [{
-        property: 'lowerPrice',
-        label: '最低价格(元)',
-        page: [],
-        title: '查询"面议", 请输入 0'
-      }],
+      specialType: [
+        {
+          property: 'lowerPrice',
+          label: '最低价格(元)',
+          page: [],
+          title: '查询"面议", 请输入 0'
+        }
+      ],
       /**
        * selectOptions-下拉选择，有type的表示查字典表，没有type用自定义键值
        * property // 字段名
@@ -103,6 +111,7 @@ export default {
        * type // 字典表该字段类型，如果没有表示自定义
        * options // 没有type的时候，配置自定义键值对用于下拉选项
        * dispage // 配置不需要模糊查询的当前字段的页面,目的为了区分不同页面的不同搜索需求
+       * onlypage // 指定使用的页面：配置当前字段只能在指定页面使用
        */
       selectOptions: [
         {
@@ -211,30 +220,6 @@ export default {
           options: []
         },
         {
-          property: 'backStatusName', // 回单回收状态
-          label: '回单状态',
-          type: 'rec_status',
-          options: []
-        },
-        {
-          property: 'sendStatusName', // 回单寄出状态
-          label: '寄出状态',
-          type: 'send_status',
-          options: []
-        },
-        {
-          property: 'acceptStatusName', // 回单接收状态
-          label: '接收状态',
-          type: 'accept_status',
-          options: []
-        },
-        {
-          property: 'giveoutStatusName', // 回单发放状态
-          label: '发放状态',
-          type: 'giveout_status',
-          options: []
-        },
-        {
           property: 'abnormalStatusName',
           label: '异常状态',
           type: 'abnormal_status',
@@ -275,42 +260,77 @@ export default {
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
         },
         {
           property: 'nowPayStateCn', // 应收-现付核销状态
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
         },
         {
           property: 'arrivepayStateCn', // 应收-到付核销状态
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
         },
         {
           property: 'receiptpayStateCn', // 应收-回单付核销状态
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
         },
         {
           property: 'monthpayStateCn', // 应收-月结核销状态
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
         },
         {
           property: 'changeStateCn', // 应收-异动费用核销状态
           label: '核销状态',
           type: 'count_status',
           options: [],
-          filter: ''
+          filter: ['']
+        },
+        {
+          property: 'statusName', // 应付-运单核销
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ['']
+        },
+        {
+          property: 'statusValue', // 异动费用-核销状态
+          label: '核销状态',
+          type: 'count_status',
+          options: [],
+          filter: ['']
+        },,
+        {
+          property: 'incomePayTypeValue', // 异动费用-费用类型
+          label: '费用类型',
+          type: '',
+          options: [{
+            dictName: '应付',
+            id: '应付'
+          },
+          {
+            dictName: '到付',
+            id: '到付'
+          },
+          {
+            dictName: '回单付',
+            id: '回单付'
+          },
+          {
+            dictName: '月结',
+            id: '月结'
+          }]
         },
         {
           property: 'applyStatus',
@@ -345,6 +365,236 @@ export default {
               id: 1
             }
           ]
+        },
+        {
+          property: 'pickupStatusName', // 提货管理-提货状态
+          label: '提货状态',
+          type: 'pickup_status',
+          options: [],
+          filter: ['235'] // 过滤掉'全部-235'
+        },
+        {
+          property: 'payMethodName', // 提货管理-付款方式
+          label: '付款方式',
+          type: 'ship_pay_way',
+          options: [],
+          filter: []
+        },
+        {
+          property: 'batchTypeName', // 短驳发车-批次状态
+          label: '批次状态',
+          type: 'short_batch_type',
+          dispage: ['/operation/order/arteryDepart/sender', '/operation/order/track/artery', '/operation/order/track/deliver'],
+          options: [],
+          filter: ['46']// 过滤掉'全部-46'
+        },
+        {
+          property: 'bathStatusName', // 短驳到车-批次状态
+          label: '批次状态',
+          dispage: ['/operation/order/arteryDelivery/sender', '/operation/order/deliverManage'],
+          type: 'short_batch_type',
+          options: [],
+          filter: ['46', '47'] // 过滤掉'全部-46'、'已装车-47'
+        },
+        {
+          property: 'batchTypeName', // 干线发车、干线跟踪-批次状态
+          label: '批次状态',
+          type: 'main_batch_type',
+          dispage: ['/operation/order/shortDepart/deliver', '/operation/order/track/deliver'],
+          options: [],
+          filter: ['51'] // 过滤掉'全部-51'
+        },
+        {
+          property: 'bathStatusName', // 干线到车-批次状态
+          label: '批次状态',
+          dispage: ['/operation/order/shortDepart/arrival', '/operation/order/deliverManage'],
+          type: 'main_batch_type',
+          options: [],
+          filter: ['51'] // 过滤掉'全部-51'
+        },
+        {
+          property: 'bathStatusName', // 送货管理-批次状态
+          label: '批次状态',
+          dispage: ['/operation/order/shortDepart/arrival', '/operation/order/arteryDelivery/sender'],
+          type: 'delivery_batch_type',
+          options: [],
+          filter: ['56'] // 过滤掉'全部-56'
+        },
+        {
+          property: 'batchTypeName', // 送货跟踪-批次状态
+          label: '批次状态',
+          dispage: ['/operation/order/shortDepart/deliver', '/operation/order/arteryDepart/sender', '/operation/order/track/artery'],
+          type: 'delivery_batch_type',
+          options: [],
+          filter: ['56'] // 过滤掉'全部-56'
+        },
+        {
+          property: 'unloadSignName', // 途径卸货-卸货状态
+          label: '卸货状态',
+          type: 'unload_type',
+          options: [],
+          filter: ['405'] // 过滤掉'全部-405'
+        },
+        {
+          property: 'signStatusName', // 签收管理-签收状态
+          label: '签收状态',
+          type: 'sign_status',
+          options: []
+        },
+        {
+          property: 'signCertificateName', // 签收管理-凭证状态
+          label: '凭证状态',
+          type: 'sign_certificate',
+          options: [],
+          filter: ['230'] // '全部-230'
+        },
+        {
+          property: 'signCocumentTypeName', // 签收管理-签收证件
+          label: '签收证件',
+          type: 'sign_cocument_type',
+          options: []
+        },
+        {
+          property: 'backStatusName', // 回单管理-回单状态
+          label: '回单状态',
+          type: 'back_status',
+          options: []
+        },
+        {
+          property: 'recStatusName', // 回单回收-回收状态
+          label: '回收状态',
+          type: 'rec_status',
+          options: []
+        },
+        {
+          property: 'sendStatusName', // 回单寄出-寄出状态
+          label: '寄出状态',
+          type: 'send_status',
+          options: []
+        },
+        {
+          property: 'acceptStatusName', // 回单接收-接收状态
+          label: '接收状态',
+          type: 'accept_status',
+          options: []
+        },
+        {
+          property: 'giveoutStatusName', // 回单发放-发放状态
+          label: '发放状态',
+          type: 'giveout_status',
+          options: []
+        },
+        {
+          property: 'fundsGoodsStatusName', // 货款管理-货款状态
+          label: '货款状态',
+          type: 'funds_goods_status',
+          options: []
+        },
+        {
+          property: 'fundsRecStatusName', // 货款回收-回收状态
+          label: '回收状态',
+          type: 'funds_rec_status',
+          options: [],
+          filter: ['253']
+        },
+        {
+          property: 'fundsRemittanceStatusName', // 货款汇款-汇款状态
+          label: '汇款状态',
+          type: 'funds_remittance_status',
+          options: [],
+          filter: ['256']
+        },
+        {
+          property: 'fundsAccountStatusName', // 货款到账-到账状态
+          label: '到账状态',
+          type: 'funds_account_status',
+          options: [],
+          filter: ['259']
+        },
+        {
+          property: 'fundsGiveoutStatusName', // 货款发放-发放状态
+          label: '发放状态',
+          type: 'funds_giveout_status',
+          options: [],
+          filter: ['262']
+        },
+        {
+          property: 'paymentName', // 中转跟踪-中转付款方式
+          label: '中转付款方式',
+          type: 'payment_type',
+          options: []
+        },
+        {
+          property: 'status', // 控货管理-控货状态
+          label: '控货状态',
+          onlypage: '/operation/service/controlgoods/allGoods',
+          type: '',
+          options: [
+            {
+              dictName: '未放货',
+              id: 1
+            },
+            {
+              dictName: '已放货',
+              id: 2
+            },
+            {
+              dictName: '未控货',
+              id: '0'
+            }
+          ]
+        },
+        {
+          property: 'dataSrcZh', // 财务日记账-来源
+          label: '来源',
+          type: '',
+          options: [
+            {
+              dictName: '核销产生',
+              id: '核销产生'
+            }, {
+              dictName: '手工录入',
+              id: '手工录入'
+            }
+          ]
+        },
+        {
+          property: 'paymentsTypeZh', // 财务日记账-方向
+          label: '方向',
+          type: '',
+          options: [
+            {
+              dictName: '收入',
+              id: '收入'
+            }, {
+              dictName: '支出',
+              id: '支出'
+            }
+          ]
+        },
+        {
+          property: 'verifyStatusZh', // 财务日记账-审核状态
+          label: '审核状态',
+          type: '',
+          options: [{
+            dictName: '未审核',
+            id: '未审核'
+          }, {
+            dictName: '已审核',
+            id: '已审核'
+          }]
+        },
+        {
+          property: 'checkStatusZh', // 车费对账-对账状态
+          label: '对账状态',
+          type: '',
+          options: [{
+            dictName: '未对账',
+            id: '未对账'
+          }, {
+            dictName: '已对账',
+            id: '已对账'
+          }]
         }
       ]
     }
@@ -357,7 +607,9 @@ export default {
       // 例如：线路管理列表的【最低价格(元)】
       let msg = ''
       const property = this.scope.column.property.toLowerCase()
-      const find = this.specialType.filter(el => el.property.toLowerCase() === property)
+      const find = this.specialType.filter(
+        el => el.property.toLowerCase() === property
+      )
       if (find && find.length) {
         msg = find[0].title
       }
@@ -366,9 +618,7 @@ export default {
     unSearch() {
       // 不需要搜索的字段 true-需要 false-不需要
       // 不需要搜索的字段集合 property
-      const arr = [
-        'id', 'number', 'grossProfit'
-      ]
+      const arr = ['id', 'number', 'grossProfit']
       const property = this.scope.column.property.toLowerCase()
       const find = arr.filter(el => el.toLowerCase() === property)
       return !find.length
@@ -377,7 +627,7 @@ export default {
       // 判断当前字段是否是时间格式
       const reg = /(time)/
       const property = this.scope.column.property.toLowerCase()
-      if (reg.test(property)) {
+      if (reg.test(property) && property !== 'timeliness') {
         return reg.test(property)
       } else {
         // 其他时间格式的字段集合 property
@@ -392,11 +642,37 @@ export default {
       }
     },
     isSelect() {
-      // 判断当前字段是否下拉选择格式
-      // console.log('scope.column', this.scope.column.label, this.scope.column.property)
+      // 1、判断当前字段是否下拉选择格式
+      // 2、判断当前字段在当前页面是否使用，排查以满足不同页面 同一个字段名称 需要使用不同值 的需求
+      // 3、判断当前有没有onlypage参数， 只在当前配置页面显示的下拉值，排查以满足不同页面相同字段名需要使用不同值的需求
       const find = this.selectOptions.filter(
-        el => el.property === this.scope.column.property
+        el => {
+          let isSamProp = false
+          let isSamPage = true
+          let isOnlyPage = false
+          let count = 0
+          if (el.property === this.scope.column.property) {
+            isSamProp = true
+            if (el.dispage && el.dispage.length) {
+              count = el.dispage.filter(em => em === this.$route.fullPath).length
+            }
+            // 判断当前有没有onlypage参数，配置路由是否当前页面
+            isOnlyPage = (el.onlypage && el.onlypage === this.$route.fullPath)
+          }
+           // 判断判断是否不需要在当前页面显示
+          isSamPage = !(count > 0)
+          if (el.onlypage) {
+            if (isSamProp && isSamPage && isOnlyPage) {
+              return true
+            }
+          } else {
+            if (isSamProp && isSamPage) {
+              return true
+            }
+          }
+        }
       )
+      // 拿到第一条数据，赋值给副本显示
       if (find.length) {
         this.curSelect = Object.assign({}, find[0])
       }
@@ -406,10 +682,17 @@ export default {
   methods: {
     filterfn(el) {
       if (this.curSelect.filter) {
-        return el.id.indexOf(this.curSelect.filter) === -1
+        // 过滤有指定的项
+        let count = 0
+        this.curSelect.filter.forEach(em => {
+          if (el.id.toString() === em) {
+            count += 1
+          }
+        })
+        return count === 0
       } else {
         // 过滤不显示的选择项
-        return (el.id !== '')
+        return el.id !== ''
       }
     },
     changeEnter(column, index, event) {

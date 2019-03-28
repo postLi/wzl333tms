@@ -490,25 +490,16 @@ export default {
         label: '到达省',
         prop: 'endProvince',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        // },
         fixed: false
       }, {
         label: '到达市',
         prop: 'endCity',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        // },
         fixed: false
       }, {
         label: '到达县',
         prop: 'endArea',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        // },
         fixed: false
       }]
     }
