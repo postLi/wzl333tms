@@ -146,6 +146,14 @@ export function getAllUser(orgid, name, mobilephone, pageSize = 100, currentPage
     }
   })
 }
+export function newGetAllUser(data) {
+  return fetch.post('/api-system/system/user/v1/findAllInfo', data).then(res => {
+    return res.data || {
+      total: 0,
+      list: []
+    }
+  })
+}
 
 /**
  * 获取当前网点的全部用户

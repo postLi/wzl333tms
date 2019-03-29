@@ -373,7 +373,7 @@ export default {
             this.bgLabelObj.leftx = cval.x
             this.bgLabelObj.topy = cval.y
           }
-          console.log('bgprop', cval, cval.scale, cval.x, cval.y, this.printPreviewContent, this.bgLabelObj)
+          console.log('bgprop', cval, cval.scale, cval.x, cval.y, this.printPreviewContent, this.bgLabelObj, this.isShowBkimg)
         }
       },
       deep: true
@@ -992,6 +992,8 @@ export default {
       this.viewKey = new Date().getTime()
       let cargoShow2 = false
       let cargoShow3 = false
+      this.isShowBkimg = true
+      this.bgprop.scale = this.$options.data().bgprop.scale
       this.loading = true
       getSettingCompanyOrder().then(data => {
         const array = Object.assign([], data || [])
@@ -1009,7 +1011,7 @@ export default {
                 e.height = this.defaultLabelHeight
               }
               if (el.filedValue === 'setting') {
-                console.log('纸张设置', this.formModel.labelList[index], e)
+                // console.log('纸张设置', this.formModel.labelList[index], e)
                 this.$set(this.formModel.labelList, index, e)
                 this.formModel.labelList[index] = e
               }
@@ -1029,8 +1031,8 @@ export default {
             }
           })
         })
-        console.log('相同字段', commonArr.length, commonArr)
-        console.log('差异字段', labelList.length, labelList)
+        // console.log('相同字段', commonArr.length, commonArr)
+        // console.log('差异字段', labelList.length, labelList)
         this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
           // 匹配完所有字段 初始化显示
         this.formModel.labelList.forEach((e, index) => {
@@ -1064,15 +1066,18 @@ export default {
                   this.labelListView.push(em)
                 } else {
                   if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
+                    console.log('11111111111111111', em.isshow, em.filedName, this.imgNameStr)
                     this.imageUrl = em.filedName.split(',')[1]
+                    console.log('22222222222222', this.imageUrl)
                     this.bgLabelObj.width = em.width
                     this.bgLabelObj.height = em.height
                     this.bgLabelObj.topy = em.topy
                     this.bgLabelObj.leftx = em.leftx
-                    this.bgprop.scale = Math.round((em.width / this.formModel.paper.width))
+
+                    this.bgprop.scale = em.width ? Math.round((em.width / this.formModel.paper.width)) : 1
                     this.bgprop.x = em.leftx
                     this.bgprop.y = em.topy
-                    console.log('放大%', Math.round((em.width / this.formModel.paper.width)))
+                    console.log('放大%', em, this.bgprop.scale)
                   }
                 }
               }
@@ -1110,7 +1115,7 @@ export default {
           }
         })
         this.orgLabelList = objectMerge2([], this.formModel.labelList)
-        console.log('相同+差异', this.formModel.labelList)
+        // console.log('相同+差异', this.formModel.labelList)
           // }
         this.loading = false
       })
@@ -1160,7 +1165,7 @@ export default {
             this.labelListView = []
             this.showDragDetail = false
             this.currentSearch = ''
-            console.log('cargoNum', this.cargoNum)
+            // console.log('cargoNum', this.cargoNum)
           })
             .catch(err => {})
         }
@@ -1179,7 +1184,6 @@ export default {
           len = len + 1
         }
       })
-      console.log('len', len)
       if (len === 1) {
         this.formModel.labelList.forEach((e, index) => {
           if (e.filedValue === this.dragDetailInfo.filedValue) {
@@ -1201,16 +1205,6 @@ export default {
           ship: this.formPrint.printSetting.ship,
           shipFont: this.formPrint.printFontSetting.ship
         })
-        // this.$confirm('默认打印机或字体已修改，是否需要保存?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //   this.$emit('success', {
-        //     ship: this.formPrint.printSetting.ship,
-        //     shipFont: this.formPrint.printFontSetting.ship
-        //   })
-        // }).catch(() => {})
       }
     },
     submitForm(formName) { // 保存修改

@@ -324,9 +324,9 @@
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
-                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
-                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
+                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方要负担其伙食费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
+                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
                     <span></span>
@@ -338,13 +338,13 @@
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
                       方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
+                      元，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
                       元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
-                      ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
+                      ，到付油卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
                       元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
@@ -352,7 +352,7 @@
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
+                      元 。乙方必须将货物安全完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">

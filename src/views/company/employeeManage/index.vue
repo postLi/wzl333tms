@@ -16,13 +16,13 @@
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
               <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchForm" @change="changeKey" />
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''" :prop="column.prop">
               <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchForm" @change="changeKey" />
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
@@ -44,7 +44,7 @@
   </div>
 </template>
 <script type="text/javascript">
-import { getAllOrgInfo, getAllUser, deleteEmployeer } from '@/api/company/employeeManage'
+import { newGetAllUser, deleteEmployeer } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
 import TableSetup from '@/components/tableSetup'
@@ -91,6 +91,18 @@ export default {
       showTableSetup: false,
       showSetAuth: false,
       showAddEmployeer: false,
+      searchQuery: {
+        pageSize: 100,
+        currentPage: 1,
+        vo: {
+          name: '',
+          pageSize: 100,
+          pageNum: 1,
+          mobile: '',
+          orgid: ''
+        },
+        searchVo: {}
+      },
       searchForm: {
         name: '',
         pageSize: 100,
@@ -172,34 +184,85 @@ export default {
       }]
     }
   },
-  mounted() {
-    Promise.all([this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
-      this.loading = false
-      this.usersArr = resArr[0].list
-      this.total = resArr[0].total
-    }).catch((err) => {
-      this.loading = false
-      this._handlerCatchMsg(err)
-    })
-  },
+  // mounted() {
+    // Promise.all([this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
+    //   this.loading = false
+    //   this.usersArr = resArr[0].list
+    //   this.total = resArr[0].total
+    // }).catch((err) => {
+    //   this.loading = false
+    //   this._handlerCatchMsg(err)
+    // })
+  // },
   methods: {
-    changeKey(obj) {
-      this.total = 0
-      this.searchForm = obj
+    newGetAllUser() {
       this.loading = true
-      this.SetAuthVisible = false
-      return getAllUser(this.otherinfo.orgid, this.searchForm.name, this.searchForm.mobile, this.searchForm.pageSize, this.searchForm.pageNum, this.searchForm.searchVo).then(data => {
-        this.loading = false
+      return newGetAllUser(this.searchQuery).then(data => {
+        console.log('2342342342343423423')
         this.usersArr = data.list
         this.total = data.total
-      }).catch((err) => {
+        this.loading = false
+      })
+      .catch(err => {
         this.loading = false
         this._handlerCatchMsg(err)
       })
     },
-    fetchAllUser(orgid, username, mobilephone) {
-      return getAllUser(orgid, username || '', mobilephone || '')
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchData()
+      }
+
+      // this.searchForm = obj
+      // this.loading = true
+      // this.SetAuthVisible = false
+      // return getAllUser(this.otherinfo.orgid, this.searchForm.name, this.searchForm.mobile, this.searchForm.pageSize, this.searchForm.pageNum, this.searchForm.searchVo).then(data => {
+      //   this.loading = false
+      //   this.usersArr = data.list
+      //   this.total = data.total
+      // }).catch((err) => {
+      //   this.loading = false
+      //   this._handlerCatchMsg(err)
+      // })
     },
+    fetchData() {
+      this.SetAuthVisible = false
+      this.newGetAllUser()
+    },
+    // fetchData(orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
+    //   this.loading = true
+    //   this.SetAuthVisible = false
+    //   this.fetchAllUser(orgid, name, mobile).then(data => {
+    //     this.loading = false
+    //     this.usersArr = data.list
+    //     this.total = data.total
+    //   }).catch((err) => {
+    //     this.loading = false
+    //     this._handlerCatchMsg(err)
+    //   })
+    // },
+    // 获取组件返回的搜索参数
+    getSearchParam(searchParam) {
+      this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
+      this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
+      this.searchQuery.vo = Object.assign({}, searchParam)
+      this.fetchData()
+      // this.searchForm.pageNum = this.$options.data().searchForm.pageNum
+      // this.searchForm.pageSize = this.$options.data().searchForm.pageSize
+      // 根据搜索参数请求后台获取数据
+      // Object.assign(this.searchForm, searchParam)
+      // this.fetchData()
+    },
+    // 获取翻页返回的数据
+    handlePageChange(obj) {
+      Object.assign(this.searchForm, obj)
+      this.fetchData()
+    },
+    // fetchAllUser(orgid, username, mobilephone) {
+    //   return getAllUser(orgid, username || '', mobilephone || '')
+    // },
     doAction(type) {
       // 判断是否有选中项
       if (!this.selected.length && type !== 'add') {
@@ -308,32 +371,8 @@ export default {
     },
     getSelection(selection) {
       this.selected = selection
-    },
-    fetchData(orgid = this.searchForm.orgid || this.otherinfo.orgid, name = this.searchForm.name, mobile = this.searchForm.mobile, pageSize = this.searchForm.pageSize, pageNum = this.searchForm.pageNum) {
-      this.loading = true
-      this.SetAuthVisible = false
-      this.fetchAllUser(orgid, name, mobile).then(data => {
-        this.loading = false
-        this.usersArr = data.list
-        this.total = data.total
-      }).catch((err) => {
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
-    },
-    // 获取组件返回的搜索参数
-    getSearchParam(searchParam) {
-      this.searchForm.pageNum = this.$options.data().searchForm.pageNum
-      this.searchForm.pageSize = this.$options.data().searchForm.pageSize
-      // 根据搜索参数请求后台获取数据
-      Object.assign(this.searchForm, searchParam)
-      this.fetchData()
-    },
-    // 获取翻页返回的数据
-    handlePageChange(obj) {
-      Object.assign(this.searchForm, obj)
-      this.fetchData()
     }
+
   }
 
 }
