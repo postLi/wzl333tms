@@ -101,7 +101,7 @@ export default {
         shortcuts: pickerOptions2
       },
       searchForm: {
-        // orgId: '',
+        orgId: '',
         dirverName: '',
         truckIdNumber: '', // 车牌号
         batchTypeId: 56, // 批次状态
@@ -127,6 +127,10 @@ export default {
   watch: {
     orgid(newVal) {
     }
+  },
+  mounted() {
+    this.searchForm.orgId = this.otherinfo.orgid
+    this.onSubmit()
   },
   methods: {
     onSubmit() {

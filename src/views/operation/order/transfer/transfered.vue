@@ -289,7 +289,7 @@ export default {
         'prop': 'endCity',
         'width': '150'
       }, {
-        'label': '到达县',
+        'label': '到达区',
         'prop': 'endArea',
         'width': '150'
       }, {

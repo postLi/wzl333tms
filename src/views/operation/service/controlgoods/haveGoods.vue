@@ -762,17 +762,17 @@ export default {
         width: '120',
         fixed: false
       }, {
-        label: '目的省',
+        label: '到达省',
         prop: 'endProvince',
         width: '120',
         fixed: false
       }, {
-        label: '目的市',
+        label: '到达市',
         prop: 'endCity',
         width: '120',
         fixed: false
       }, {
-        label: '目的区',
+        label: '到达区',
         prop: 'endArea',
         width: '120',
         fixed: false

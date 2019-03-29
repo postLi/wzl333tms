@@ -97,7 +97,7 @@ export default {
   },
   mounted() {
     this.searchQuery.vo.orgId = this.otherinfo.orgid
-    this.fetchAllData()
+    // this.fetchAllData()
     // Promise.all(this.fetchAllData(this.otherinfo.orgid)).then(res => {
     //   console.log(res)
     //   this.loading = false
@@ -164,7 +164,7 @@ export default {
         },
         {
           label: '批次状态',
-          prop: 'bathStatusName',
+          prop: 'batchTypeName',
           width: '120'
         },
         {
@@ -319,31 +319,8 @@ export default {
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
-    fetchAllData() {
-      this.loading = true
-      this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
-      if (this.searchQuery.vo.batchTypeId === 56) {
-        this.searchQuery.vo.batchTypeId = undefined
-      }
-      return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
-        this.infoList = data.list
-        this.infoList.forEach((el, index) => {
-          el.bathStatusName = el.batchTypeName
-        })
-        this.total = data.total
-        this.loading = false
-      })
-        .catch(err => {
-          this.loading = false
-          this._handlerCatchMsg(err)
-        })
-    },
     fetchData() {
       this.fetchAllData()
-    },
-    handlePageChange(obj) {
-      Object.assign(this.searchQuery, obj)
-      this.fetchData()
     },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
@@ -352,7 +329,32 @@ export default {
       if (!this.searchQuery.vo.orgId) {
         this.searchQuery.vo.orgId = this.otherinfo.orgid
       }
+      console.log('getSearchParam', this.searchQuery)
       this.fetchAllData()
+    },
+    fetchAllData() {
+      this.loading = true
+      this.$set(this.searchQuery.vo, 'orgId', this.otherinfo.orgid)
+      if (this.searchQuery.vo.batchTypeId === 56) {
+        this.searchQuery.vo.batchTypeId = undefined
+      }
+      return postSelectLoadMainInfoListDeliver(this.searchQuery).then(data => {
+        this.infoList = data.list
+        // this.infoList.forEach((el, index) => {
+        //   el.bathStatusName = el.batchTypeName
+        // })
+        this.total = data.total
+        this.loading = false
+      })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
+    },
+
+    handlePageChange(obj) {
+      Object.assign(this.searchQuery, obj)
+      this.fetchData()
     },
     getSelection(selection) {
       this.selected = selection

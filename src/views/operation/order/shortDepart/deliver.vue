@@ -341,11 +341,9 @@ export default {
       this.editInfoVisible = false
     },
     getSearchParam(obj) {
-      this.searchQueryData = this.$options.data().searchQueryData
+      this.searchQueryData.currentPage = this.$options.data().searchQueryData.currentPage
+      this.searchQueryData.pageSize = this.$options.data().searchQueryData.pageSize
       this.searchQuery = objectMerge2({}, obj) // 38-短驳 39-干线 40-送货
-      // if (!this.searchQuery.orgId) {
-      //   this.searchQuery.orgId = this.otherinfo.orgid
-      // }
       this.fetchAllShortDepartList()
     },
     doAction(type) {

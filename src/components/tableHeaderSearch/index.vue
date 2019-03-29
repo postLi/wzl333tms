@@ -310,26 +310,18 @@ export default {
           type: 'count_status',
           options: [],
           filter: ['']
-        },,
+        },
         {
           property: 'incomePayTypeValue', // 异动费用-费用类型
           label: '费用类型',
           type: '',
           options: [{
-            dictName: '应付',
-            id: '应付'
+            dictName: '异动增款',
+            id: '异动增款'
           },
           {
-            dictName: '到付',
-            id: '到付'
-          },
-          {
-            dictName: '回单付',
-            id: '回单付'
-          },
-          {
-            dictName: '月结',
-            id: '月结'
+            dictName: '异动减款',
+            id: '异动减款'
           }]
         },
         {
@@ -384,14 +376,14 @@ export default {
           property: 'batchTypeName', // 短驳发车-批次状态
           label: '批次状态',
           type: 'short_batch_type',
-          dispage: ['/operation/order/arteryDepart/sender', '/operation/order/track/artery', '/operation/order/track/deliver'],
+          dispage: ['/operation/order/arteryDepart/sender', '/operation/order/track/artery', '/operation/order/track/deliver', '/operation/order/deliverManage'],
           options: [],
           filter: ['46']// 过滤掉'全部-46'
         },
         {
           property: 'bathStatusName', // 短驳到车-批次状态
           label: '批次状态',
-          dispage: ['/operation/order/arteryDelivery/sender', '/operation/order/deliverManage'],
+          dispage: ['/operation/order/arteryDelivery/sender'],
           type: 'short_batch_type',
           options: [],
           filter: ['46', '47'] // 过滤掉'全部-46'、'已装车-47'
@@ -400,28 +392,20 @@ export default {
           property: 'batchTypeName', // 干线发车、干线跟踪-批次状态
           label: '批次状态',
           type: 'main_batch_type',
-          dispage: ['/operation/order/shortDepart/deliver', '/operation/order/track/deliver'],
+          dispage: ['/operation/order/shortDepart/deliver', '/operation/order/track/deliver', '/operation/order/track/deliver', '/operation/order/deliverManage'],
           options: [],
           filter: ['51'] // 过滤掉'全部-51'
         },
         {
           property: 'bathStatusName', // 干线到车-批次状态
           label: '批次状态',
-          dispage: ['/operation/order/shortDepart/arrival', '/operation/order/deliverManage'],
+          dispage: ['/operation/order/shortDepart/arrival'],
           type: 'main_batch_type',
           options: [],
           filter: ['51'] // 过滤掉'全部-51'
         },
         {
-          property: 'bathStatusName', // 送货管理-批次状态
-          label: '批次状态',
-          dispage: ['/operation/order/shortDepart/arrival', '/operation/order/arteryDelivery/sender'],
-          type: 'delivery_batch_type',
-          options: [],
-          filter: ['56'] // 过滤掉'全部-56'
-        },
-        {
-          property: 'batchTypeName', // 送货跟踪-批次状态
+          property: 'batchTypeName', // 送货管理、送货跟踪-批次状态
           label: '批次状态',
           dispage: ['/operation/order/shortDepart/deliver', '/operation/order/arteryDepart/sender', '/operation/order/track/artery'],
           type: 'delivery_batch_type',
