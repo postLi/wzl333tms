@@ -1,9 +1,16 @@
 import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
-import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken, removeToken, setToken } from '@/utils/auth' // 验权
-import { Message, MessageBox } from 'element-ui'
+import 'nprogress/nprogress.css' // Progress 进度条样式
+import {
+  getToken,
+  removeToken,
+  setToken
+} from '@/utils/auth' // 验权
+import {
+  Message,
+  MessageBox
+} from 'element-ui'
 
 const whiteList = ['/login']
 
@@ -21,28 +28,39 @@ router.beforeEach((to, from, next) => {
       })
       console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, ''))
     })
+
   } else if (getToken()) {
     if (to.path === '/login') {
-      next({ path: '/' })
+      next({
+        path: '/'
+      })
     } else {
       // 如果没有当前角色权限信息，则请求获取
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => {
           const roles = res.data.permissionTrees
-          store.dispatch('GenerateRoutes', { roles }).then(() => {
+          store.dispatch('GenerateRoutes', {
+            roles
+          }).then(() => {
             router.addRoutes(store.getters.addRouters)
-            next({ ...to, replace: true })
+            next({ ...to,
+              replace: true
+            })
           })
         }).catch((err) => {
           Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           // console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           // 如果在登录页面时，因为跳转到的还是/login页，会导致右上角一直在转动加载条
+          // 
 
-          next({ path: '/login', query: {
-            // 删除access_token，避免重复循环
-            tourl: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1')
-          }})
+          next({
+            path: '/login',
+            query: {
+              // 删除access_token，避免重复循环
+              tourl: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1')
+            }
+          })
           NProgress.done()
         })
       } else {
@@ -60,9 +78,12 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      next({ path: '/login', query: {
-        tourl: to.fullPath
-      }})
+      next({
+        path: '/login',
+        query: {
+          tourl: to.fullPath
+        }
+      })
       NProgress.done()
     }
   }

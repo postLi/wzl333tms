@@ -145,7 +145,7 @@
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipSenderMobile'" class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipSenderMobile'" :error='shipFieldValueInfo.shipSenderMobile'>
-                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipSenderAddress'" class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipSenderAddress'" :error='shipFieldValueInfo.shipSenderAddress'>
@@ -192,7 +192,7 @@
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipReceiverMobile'" class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipReceiverMobile'" :error='shipFieldValueInfo.shipReceiverMobile'>
-                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipReceiverAddress'" class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipReceiverAddress'" :error='shipFieldValueInfo.shipReceiverAddress'>

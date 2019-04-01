@@ -3,7 +3,7 @@
   <div class="sms">
     <div v-if="isShowData">
       <div class="sms_top">
-        <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条，请购买，才能正常使用。当前账户余额<b>{{packageInfo.balance}}</b>元。
+        <p>尊敬的用户您好：当前剩余可发的短信<b>{{packageInfo.surplusAmount}}</b>条。当前账户余额<b>{{packageInfo.balance}}</b>元。
           <el-button size="mini" type="primary" icon="el-icon-sort" @click="recharge" v-has:SMS_BUY_1>充值</el-button>
         </p>
       </div>
