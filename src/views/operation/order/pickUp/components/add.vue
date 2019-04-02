@@ -30,8 +30,8 @@
 
           </el-form-item>
           <el-form-item label="件数" prop="tmsOrderPickup.pickupAmount">
-            <input class="nativeinput" :value="form.tmsOrderPickup.pickupAmount" @change="(e)=>{setInputVal(e.target.value, 'pickupAmount')}" :maxlength="8" auto-complete="off" clearable
-                            :disabled="isDbclick" v-number-only type="text">
+            <input class="nativeinput" :value="form.tmsOrderPickup.pickupAmount"  @change="(e)=>{setInputVal(e.target.value, 'pickupAmount')}" :maxlength="8" auto-complete="off" clearable
+                            :disabled="isDbclick" v-number-only type="text" >
           </el-form-item>
           <el-form-item label="体积" prop="">
             <input class="nativeinput" :value="form.tmsOrderPickup.pickupVolume" @change="(e)=>{setInputVal(e.target.value, 'pickupVolume')}" :maxlength="8" auto-complete="off" clearable
@@ -64,7 +64,7 @@
         <div class="info_date">其他信息</div>
         <div class="pickUp-bottom">
           <el-form-item label="车费" prop="tmsOrderPickup.truckFee">
-            <input class="nativeinput" :value="form.tmsOrderPickup.truckFee" @change="(e)=>{setInputVal(e.target.value, 'truckFee')}" :maxlength="8" auto-complete="off" clearable
+            <input class="nativeinput" :value="form.tmsOrderPickup.truckFee"  @change="(e)=>{setInputVal(e.target.value, 'truckFee')}" :maxlength="8" auto-complete="off" clearable
                             :disabled="isDbclick" v-number-only:point type="text">
           </el-form-item>
           <el-form-item label="代收费用" prop="">
@@ -119,7 +119,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item class='checked'>
-            <el-checkbox v-model="checked" disabled>发送短信给司机</el-checkbox>
+            <el-checkbox v-model="checked">发送短信给司机</el-checkbox>
           </el-form-item>
 
         </div>
@@ -409,6 +409,7 @@
     methods: {
       setInputVal(val, name) {
         this.$set(this.form.tmsOrderPickup, name, val)
+        this.$refs.ruleForm.validate((valid) => {})
       },
       watchInfo() {
         if (this.isModify) {

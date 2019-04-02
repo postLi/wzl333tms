@@ -13,7 +13,10 @@
               <br>
               <el-button type="primary" @click="changeView" size="mini" plain>切换{{otherinfo.isTest===0?'体验账号':'到正式账号'}}</el-button>
             </p>
-              <el-button type="success" slot="reference" size="mini" v-if="canSwitch" plain @click="handleSwitchUser">切换其他账户</el-button>
+            <el-button type="success" slot="reference" size="mini" v-if="canSwitch" plain @click="handleSwitchUser">切换其他账户</el-button>
+            <p>
+            <el-button v-if="isExperience" @click="handleReal" type="danger" size="mini" plain>切换到正式账号</el-button>
+            </p>
           </div>
         </el-col>
         <el-col class="popover-btns" :span="24">
@@ -26,7 +29,6 @@
           </el-button-group>
         </el-col>
       </el-row>
-      
       <iframe src="about:blank" v-if="showit" :class="{popperHide: popperHide}" frameborder="0"></iframe>
     </el-popover>
     <div class="avatar-wrapper" v-popover:popoveruser>
@@ -34,11 +36,13 @@
       <span class="user-name">{{ otherinfo.name }}</span>
     </div>
     <UsersTree :popVisible="usersVisible" @close="usersVisible = false"></UsersTree>
+    <ExperienceForm :popVisible="experienceVisible" @close="experienceVisible = false" />
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
 import UsersTree from '@/components/usersTree'
+import ExperienceForm from '@/components/experienceForm'
 export default {
   computed: {
     ...mapGetters([
@@ -51,7 +55,8 @@ export default {
     }
   },
   components: {
-    UsersTree
+    UsersTree,
+    ExperienceForm
   },
   mounted() {
     var agnt = navigator.userAgent.toLowerCase()
@@ -61,6 +66,8 @@ export default {
   },
   data() {
     return {
+      experienceVisible: false,
+      isExperience: false,
       popperHide: false,
       showit: false,
       usersVisible: false,
@@ -68,10 +75,16 @@ export default {
     }
   },
   methods: {
+    handleReal() {
+      this.experienceVisible = true
+    },
     handleSwitchUser() { // 切换账户
       this.usersVisible = true
     },
     showChart() {
+      this.isExperience = sessionStorage.getItem('TMS_experience_system') === 'yes'
+      console.log('show prop',this.isExperience, sessionStorage.getItem('TMS_experience_system'))
+
       this.popperHide = false
       this.eventBus.$emit('hideSupcanChart')
     },
@@ -91,8 +104,8 @@ export default {
     },
     changeLogin(loginForm) {
       this.$store.dispatch('Login', loginForm).then(() => {
-        location.href = '/'
-      })
+          location.href = '/'
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -170,7 +183,7 @@ export default {
       line-height: 32px;
       font-size: 16px;
     }
-    img{
+    img {
       width: 15px;
       vertical-align: middle;
     }

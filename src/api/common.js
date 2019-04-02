@@ -253,3 +253,13 @@ export function updateByUserId(data) {
     return res.data
   })
 }
+
+
+/**
+ * 体验系统_完善资料
+ */
+export function completeTheInformation(data) {
+  return fetch.post('/api-system/system/init/v1/completeTheInformation', data).then(res => {
+    return res.data
+  })
+}

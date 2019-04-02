@@ -307,6 +307,7 @@ export default {
       this.form.drivingPicture = ''
       this.form.certification = ''
       this.form.orgid = orgid
+      this.searchTime = []
     },
     closeMe(done) {
       // this.reset()

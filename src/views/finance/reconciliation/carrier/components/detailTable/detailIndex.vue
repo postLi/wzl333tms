@@ -415,7 +415,7 @@
             })
             break
         // 导出
-        case 'export':
+          case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,
               columns: this.tableColumn

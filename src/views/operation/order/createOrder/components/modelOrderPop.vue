@@ -208,21 +208,42 @@ export default {
       }
     },
     sortModel() {
+      // 1/需要深拷贝DOM
+    // 2/清空容器的dom
+    // 3/排序每个模块
+    // 4/重新把dom设置进去被清空的容器里面，实现排序效果
       this.$nextTick(() => {
         if (this.dataList) {
-          const list = document.querySelectorAll('.model-item')
+          const root = document.querySelector('.model-list')
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-item'))
+          root.innerHTML = ''
           const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          const modelDiv = document.querySelectorAll('.model-list')[0]
           for (let i = 0; i < arr.length; i++) {
-            modelDiv.appendChild(arr[i])
+            root.appendChild(arr[i])
             const name = arr[i].getAttribute('data-name')
             const index = arr[i].getAttribute('data-index')
           }
+          this.loading = false
         }
       })
+      // this.$nextTick(() => {
+      //   if (this.dataList) {
+      //     const list = document.querySelectorAll('.model-item')
+      //     const arr = Array.prototype.slice.call(list)
+      //     arr.sort(function(a, b) {
+      //       return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
+      //     })
+      //     const modelDiv = document.querySelectorAll('.model-list')[0]
+      //     for (let i = 0; i < arr.length; i++) {
+      //       modelDiv.appendChild(arr[i])
+      //       const name = arr[i].getAttribute('data-name')
+      //       const index = arr[i].getAttribute('data-index')
+      //     }
+      //   }
+      // })
     },
     startDragModel(event) {
       dom = event.item

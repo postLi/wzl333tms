@@ -1323,8 +1323,8 @@ export default {
           })
           this.m_index.tmsOrderTransfer = 5
           this.org_m_index = objectMerge2({}, this.m_index)
-          console.log('模板各个模块排序：', JSON.stringify(this.m_index))
-          console.warn('所有模板排序信息 modelList:', this.modelList)
+          // console.log('模板各个模块排序：', JSON.stringify(this.m_index))
+          // console.warn('所有模板排序信息 modelList:', this.modelList)
           this.sortModel() // 初始化开单页面各个模块排序
         } else {
           this.modelList = this.$const.MODELLIST
@@ -1337,17 +1337,21 @@ export default {
         })
     },
     sortModel() { // 按照模板修改开单页面各个模块上下排序
+    // 1/需要深拷贝DOM
+    // 2/清空容器的dom
+    // 3/排序每个模块
+    // 4/重新把dom设置进去被清空的容器里面，实现排序效果
       this.$nextTick(() => {
         if (this.modelList) {
-          this.loading = true
-          const list = document.querySelectorAll('.model-order-item')
+          const root = document.querySelector('.model-order-list')
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-order-item'))
+          root.innerHTML = ''
           const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          const modelDiv = document.querySelectorAll('.model-order-list')[0]
           for (let i = 0; i < arr.length; i++) {
-            modelDiv.appendChild(arr[i])
+            root.appendChild(arr[i])
           }
           this.loading = false
         }
@@ -3186,7 +3190,7 @@ export default {
                 //     }
                 //   }
                 // }
-                return b
+                // return b
               })
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
@@ -3285,9 +3289,7 @@ export default {
                       this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + 9 + '&tab=查看' + data.tmsOrderShip.shipSn)
                     }
                   }
-
                   return */
-                console.log('create order data', data)
                 orderManage.postNewOrder(data).then(res => {
                   this.resOrderId = res.data // 获取开单后返回的运单id
                   this.$message.success('成功创建运单！')

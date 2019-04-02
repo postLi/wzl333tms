@@ -56,7 +56,7 @@
   import PopFrame from '@/components/PopFrame/index'
   import querySelect from '@/components/querySelect/index'
   import { postCreatesaveCarrierDetail } from '@/api/finance/fin_carrier'
-  import {tmsMath} from '@/utils/'
+  import { tmsMath } from '@/utils/'
   // parseTime
   import { parseTime } from '@/utils'
   export default {
@@ -155,7 +155,7 @@
 
       urlId() {
       },
-      popKey (newVal) {
+      popKey(newVal) {
         console.log('==========popKey', newVal)
         console.log(this.tota)
         return newVal
@@ -166,7 +166,6 @@
     },
     methods: {
       watchData() {
-
         this.dialogData = this.tota
         // console.log(this.dialogData);
         this.dialogInfo[0].toPay = 0
@@ -182,23 +181,23 @@
         this.dialogData.dealPaytota.map(el => {
           this.$set(this.dialogInfo, 1, {
             date: '未付清单',
-            toPay: tmsMath.add(this.dialogInfo[1].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
+            toPay: tmsMath.add(this.dialogInfo[1].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
         })
         this.dialogData.alreadytota.map(el => {
           this.$set(this.dialogInfo, 2, {
             date: '已收清单',
-            toPay: tmsMath.add(this.dialogInfo[2].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
+            toPay: tmsMath.add(this.dialogInfo[2].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
         })
         this.dialogData.alreadyPaytota.map(el => {
           this.$set(this.dialogInfo, 3, {
             date: '已付清单',
-            toPay: tmsMath.add(this.dialogInfo[3].toPay ).add(el.totalFee ? +el.totalFee : 0).result()
+            toPay: tmsMath.add(this.dialogInfo[3].toPay).add(el.totalFee ? +el.totalFee : 0).result()
           })
             // this.dialogInfo[1].toPay += (el.arrSendPay ? +el.arrSendPay : 0)
         })
-        this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay,this.dialogInfo[1].toPay,this.dialogInfo[2].toPay,this.dialogInfo[3].toPay).result()
+        this.totaMoney = tmsMath.add(this.dialogInfo[0].toPay, this.dialogInfo[1].toPay, this.dialogInfo[2].toPay, this.dialogInfo[3].toPay).result()
       },
       closeMe(done) {
         this.$emit('update:popVisible', false)
@@ -214,13 +213,13 @@
           data[i] = this.dotInfo[i]
         }
         data.tmsFinanceBillCheckDto.createTime = parseTime(data.tmsFinanceBillCheckDto.createTime)
+        const rooturl = '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id='
+  
         if (this.sendId) {
           data.tmsFinanceBillCheckDto.id = this.sendId
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.urlId )
         } else {
           promiseObj = postCreatesaveCarrierDetail(data)
-          this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.memberId )
         }
         if (this.totaMoney === 0) {
 
@@ -232,6 +231,15 @@
             type: 'success'
           })
           this.loading = false
+          if (this.sendId) {
+            this.$router.push({ path: (rooturl + this.urlId) })
+            this.eventBus.$emit('closeCurrentView')
+          // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.urlId )
+          } else {
+            this.$router.push({ path: (rooturl + this.memberId) })
+            this.eventBus.$emit('closeCurrentView')
+          // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.memberId)
+          }
         }).catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false

@@ -14,6 +14,16 @@ import {
 
 const whiteList = ['/login']
 
+function setExperience(to) {
+  // 判断当前用户是否是体验用户， 做标记
+  sessionStorage.setItem('TMS_experience_system', 'no')
+  sessionStorage.setItem('TMS_experience_info', null)
+  if (to.query.grant_type && to.query.grant_type === 'experience_system') {
+    sessionStorage.setItem('TMS_experience_system', 'yes')
+    sessionStorage.setItem('TMS_experience_info', JSON.stringify(to.query))
+  }
+}
+
 router.beforeEach((to, from, next) => {
   const _hmt = window._hmt || []
   // _hmt.push(['_trackPageview', '/virtual/login']);
@@ -21,7 +31,12 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   // 如果链接带有token信息，则将其保存
   // 会覆盖原有的token
+
   if (to.query.access_token) {
+    console.log('to.query', to.query)
+    // 判断当前用户是否是体验用户
+    setExperience(to)
+
     store.dispatch('FeLogin', to.query.access_token, to.query.refresh_token).then(() => {
       next({
         path: to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, '')

@@ -846,7 +846,7 @@
       </div>
     </div>
     <SaveDialog :popVisible.sync="visibleDialog" :dotInfo="form" @close="oopenVisibleDialog" :tota="tota"
-                :sendId="sendId" :memberId="messageInfo.memberId" @success="fetchList"
+                :sendId="sendId" :memberId="messageInfo.memberId"
                 :urlId="$route.query.urlId" :popKey="popKey"></SaveDialog>
   </div>
 </template>
@@ -996,6 +996,7 @@
           name: '承运商对账'
         })
       },
+  
       fetchList() {
         this.loading = true
         this.searchTitle.carrierId = this.$route.query.urlId ? this.$route.query.urlId : this.$route.query.id
@@ -1170,17 +1171,24 @@
             message: '取消成功!'
           })
           // this.$router.back(-1)
+          const rooturl = '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id='
+  
           if (this.$route.query.tab === '承运商对账-创建对账') {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.id)
+            // 关闭标签页
+            this.$router.push({ path: (rooturl + this.$route.query.id) })
+            this.eventBus.$emit('closeCurrentView')
+            // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.id)
           } else {
-            this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.urlId)
+            this.$router.push({ path: (rooturl + this.$route.query.urlId) })
+            this.eventBus.$emit('closeCurrentView')
+            // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.$route.query.urlId)
           }
         }).catch(() => {
-          this.$message({
+        this.$message({
             type: 'info',
             message: '已取消操作'
           })
-        })
+      })
       },
       validateIsEmpty(msg = '不能为空！') {
         return (rule, value, callback) => {
