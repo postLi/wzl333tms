@@ -64,24 +64,24 @@
 <script>
 import { getAllDriver, deleteSomeDriverInfo, getExportExcel, getDriverLiceseType } from '@/api/company/driverManage'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
 import { objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'driverManage',
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     AddCustomer,
-    ImportDialog,
-    tableHeaderSearch
+    ImportDialog
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

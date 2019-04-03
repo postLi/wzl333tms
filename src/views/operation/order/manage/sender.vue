@@ -174,7 +174,7 @@ import {
   putAccept
 } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -184,15 +184,15 @@ import {
   operationPropertyCalc
 } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddCustomer,
-    tableHeaderSearch
+    // TableSetup,
+    AddCustomer
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters(['otherinfo']),

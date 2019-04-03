@@ -1,9 +1,23 @@
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import { eventBus } from '@/eventBus'
-import { keepNumber, keepNumberAndPoint, cacheDEVInfo, handleErrorMsg } from '@/utils/'
-import { getToken } from '@/utils/auth'
-import { getOrgName } from '@/api/company/employeeManage'
+import {
+  mapGetters
+} from 'vuex'
+import {
+  eventBus
+} from '@/eventBus'
+import {
+  keepNumber,
+  keepNumberAndPoint,
+  cacheDEVInfo,
+  handleErrorMsg,
+  objectMerge2
+} from '@/utils/'
+import {
+  getToken
+} from '@/utils/auth'
+import {
+  getOrgName
+} from '@/api/company/employeeManage'
 
 Vue.mixin({
   data() {
@@ -87,13 +101,36 @@ Vue.mixin({
     },
     _handlerCatchMsg(err, premsg = '') {
       handleErrorMsg(err, premsg)
+    },
+    _checkExperience(row, type) {
+      let isUser = type === 'username'
+      // 判断当前环境是否体验环境
+      let flag = false // true-体验环境 false-非体验环境， 默认非体验环境
+      if (sessionStorage.getItem('TMS_experience_system')) {
+        flag = sessionStorage.getItem('TMS_experience_system') === 'yes'
+      }
+      // type: 'username'-判断登录账号，'network'-判断网点名
+      if (flag) {
+        let defaults = objectMerge2([], isUser ? this.$const.EXPERIENCE_USERNAME : this.$const.EXPERIENCE_NETWORK)
+        let reg = defaults.filter(el => el === (isUser ? row.username : row.orgName))
+        if (reg.length) {
+          let msg = isUser ? '员工' : '网点'
+          this.$message.info('默认' + msg + '不可修改及删除~')
+          return false
+        } else {
+          return true
+        }
+      } else {
+        return true
+      }
     }
-  }/* ,
+  }
+  /* ,
 
-  methods: {
-    ...mapActions([
-      '$getUserInfo',
-      '$setMenuList'
-    ])
-  } */
+    methods: {
+      ...mapActions([
+        '$getUserInfo',
+        '$setMenuList'
+      ])
+    } */
 })

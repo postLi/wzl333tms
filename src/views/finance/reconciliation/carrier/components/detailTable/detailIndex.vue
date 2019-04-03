@@ -59,7 +59,7 @@
   import { postCarrierdetailList } from '@/api/finance/fin_carrier'
   import { deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import IndexDialog from './components/indexDialog'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
@@ -69,7 +69,7 @@
     components: {
       SearchForm,
       Pager,
-      TableSetup,
+      // TableSetup,
       IndexDialog
     },
     computed: {

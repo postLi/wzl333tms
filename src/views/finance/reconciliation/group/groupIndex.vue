@@ -66,14 +66,14 @@
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-  import tableHeaderSearch from '@/components/tableHeaderSearch'
+  // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     components: {
       SearchForm,
       Pager,
-      TableSetup,
-      tableHeaderSearch
+      TableSetup
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([

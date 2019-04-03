@@ -52,17 +52,17 @@
 import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
 import SearchForm from './components/searchDeliver'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postPayListByOne } from '@/api/finance/accountsPayable'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
-    Pager,
-    TableSetup,
-    tableHeaderSearch
+    Pager
+    // TableSetup,
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

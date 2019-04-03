@@ -68,7 +68,7 @@
 <script>
 import { postSelectLoadMainInfoListDeliver, putDeliverLoad, putCompleteDelivery } from '@/api/operation/deliverManage'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -76,16 +76,16 @@ import { objectMerge2, parseTime, loadJs, getSummaries, operationPropertyCalc } 
 import SignFrom from './components/sign'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     editInfo,
     SignFrom,
-    actualSendtime,
-    tableHeaderSearch
+    actualSendtime
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

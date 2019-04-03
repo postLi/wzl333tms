@@ -51,17 +51,17 @@
 import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postFindTransferList } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
-    Pager,
-    TableSetup,
-    tableHeaderSearch
+    Pager
+    // TableSetup,
+    // tableHeaderSearch
   },
   data() {
     return {

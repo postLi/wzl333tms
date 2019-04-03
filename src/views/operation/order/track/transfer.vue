@@ -56,16 +56,16 @@ import { mapGetters } from 'vuex'
 import { postTransferList } from '@/api/operation/track'
 import Pager from '@/components/Pagination/index'
 import editInfoTransfer from './components/editInfoTransfer'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    editInfoTransfer,
-    TableSetup,
-    tableHeaderSearch
+    editInfoTransfer
+    // TableSetup,
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

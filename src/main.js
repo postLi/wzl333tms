@@ -41,6 +41,13 @@ import 'echarts/lib/component/legendScroll'
 // import 'echarts/lib/component/axisPointer'
 // import 'echarts/lib/component/polar'
 
+// 公用组件-表格设置
+import TableSetup from '@/components/tableSetup/index'
+Vue.use(TableSetup)
+// 公用组件-表头模糊查询
+import tableHeaderSearch from '@/components/tableHeaderSearch/index'
+Vue.use(tableHeaderSearch)
+
 Vue.prototype.$echarts = echarts
 
 // Vue.use(ElementUI, { locale })

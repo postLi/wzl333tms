@@ -1,42 +1,59 @@
 <template>
   <!--  -->
-  <el-dialog :title="titlePop" :visible.sync="isShow" center :close-on-click-modal="false" append-to-body :before-close="closeMe" class="tms_experience">
+  <el-dialog :title="titlePop" :visible.sync="isShow" :close-on-click-modal="false" append-to-body :before-close="closeMe" class="tms_experience">
     <el-form :inline="true" ref="formModel" :model="formModel" class="demo-form-inline" :rules="rules" :size="btnsize" label-width="120px">
-      <el-form-item label="公司名称" prop="orgName">
-        <el-input v-model="formModel.orgName" placeholder="公司名称"></el-input>
-      </el-form-item>
-      <el-form-item label="联系人" prop="name">
-        <el-input v-model="formModel.name" placeholder="联系人" maxlength="30"></el-input>
-      </el-form-item>
-      <el-form-item label="联系手机" prop="username">
-        <el-input v-model="formModel.username" placeholder="联系手机" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="客服电话" prop="servicePhone">
-        <el-input v-model="formModel.servicePhone" placeholder="客服电话" maxlength="25"></el-input>
-      </el-form-item>
-      <el-form-item label="地址" prop="city">
-        <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr" type="city" v-model="formModel.city" :remote="true" clearable/>
-      </el-form-item>
-      <el-form-item label="详细地址" prop="detailedAddr">
-        <el-input v-model="formModel.detailedAddr" placeholder="详细地址"></el-input>
-      </el-form-item>
-      <el-row :gutter="20" class="tms_experience_picture">
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="公司名称" prop="orgName">
+            <el-input v-model="formModel.orgName" placeholder="公司名称"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="联系人" prop="name">
+            <el-input v-model="formModel.name" placeholder="联系人" maxlength="30"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="联系手机" prop="username">
+            <el-input v-model="formModel.username" placeholder="联系手机" disabled></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="8">
+          <el-form-item label="客服电话" prop="servicePhone">
+            <el-input v-model="formModel.servicePhone" placeholder="客服电话" maxlength="25"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="地址" prop="city">
+            <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr" type="city" v-model="formModel.city" :remote="true" clearable/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="详细地址" prop="detailedAddr">
+            <el-input v-model="formModel.detailedAddr" placeholder="详细地址"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="24">
           <el-form-item label="统一社会信用代码" prop="socialCreditCode">
             <el-input v-model="formModel.socialCreditCode" placeholder="统一社会信用代码"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+      </el-row>
+      <el-row :gutter="12" class="tms_experience_picture">
+        <el-col :span="24"><p class="upload-title">上传证件</p></el-col>
+        <el-col :span="16">
           <el-form-item>
-            <upload twocode tip="（有年检章，jpg/png。小于5M）" v-model="formModel.checkChapterYear" />
+            <upload twocode tip="（有年检章，jpg/png。小于5M）" v-model="formModel.checkChapterYear" class="checkChapterYear" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item>
             <upload twocode title="法人身份证正面" v-model="formModel.idCardFront" />
           </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item>
             <upload twocode title="法人身份证反面" v-model="formModel.idCardReverse" />
           </el-form-item>
@@ -45,6 +62,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button @click="closeMe">取消</el-button>
   </span>
   </el-dialog>
 </template>
@@ -69,7 +87,7 @@ export default {
   },
   data() {
     return {
-      btnsize: 'mini',
+      btnsize: '',
       titlePop: '完善资料',
       rules: {
         orgName: [{ required: true, message: '不能为空', trigger: 'change' }],
@@ -79,7 +97,7 @@ export default {
       orgiInfo: {
         orgName: '', // 公司名称
         username: '', // 联系手机
-        name: '', // 联系人
+        name: '' // 联系人
       },
       formModel: {
         orgName: '', // 公司名称
@@ -127,7 +145,7 @@ export default {
           if (sessionStorage.getItem('TMS_experience_system') === 'yes') {
             sessionStorage.setItem('TMS_experience_system', 'no')
           }
-          let query = {
+          const query = {
             username: this.formModel.username,
             password: '123456'
           }
@@ -168,31 +186,73 @@ export default {
 <style lang="scss">
 .tms_experience {
   .el-dialog {
+    width: 80%;
     max-width: 1189px;
     min-width: 700px;
+    margin-top: 84px !important;
+    .el-dialog__header {
+      background-color: #E6E6E6;
+      padding: 20px 34px 16px;
+    }
     .el-dialog__body {
-      padding: 10px 20px;
+      padding: 20px 20px 10px;
     }
     .el-dialog__footer {
-      padding: 15px;
+      padding: 20px;
+      background-color: #E6E6E6;
+      .el-button{
+        width: 120px;
+        height: 48px;
+      }
     }
   }
-  .el-form-item--mini.el-form-item,
-  .el-form-item--small.el-form-item {
-    margin-bottom: 13px;
+  .el-col-8 {
+    .el-form-item {
+      display: flex;
+      flex-direction: row;
+    .el-form-item__content {
+        width: 100%;
+        margin-left: 11px;
+      }
+    }
   }
+  .el-form--inline .el-form-item__content {
+    width: 100%;
+    .el-select {
+      width: 100%;
+    }
+  }
+  .el-form-item{
+    margin-bottom: 15px;
+    width: 100%;
+    .el-input.is-disabled .el-input__inner {
+      background-color: #fff;
+      color: #333333;
+    }
+  }
+  
   .tms_experience_picture {
+    .upload-title{
+      font-size: 18px;
+      margin: 20px 0;
+      padding: 0;
+    }
     .el-form-item {
       width: 100%;
       .el-form-item__content {
         width: 100%;
       }
-      .el-select {}
     }
     .upload-container {
       height: 170px;
       .el-button {
         margin-top: 15px;
+      }
+    }
+    .checkChapterYear {
+      height: 355px;
+      .el-button {
+        margin-top: 140px;
       }
     }
   }

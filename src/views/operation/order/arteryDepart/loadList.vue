@@ -64,14 +64,14 @@ import Pager from '@/components/Pagination/index'
 import AddLntelligent from './components/addLntelligent '
 import { postLoadSchemeList, deleteScheme, selectSchemeGroupDetail } from '@/api/operation/arteryDepart'
 import { objectMerge2, parseTime } from '@/utils/index'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    AddLntelligent,
-    tableHeaderSearch
+    AddLntelligent
+    // tableHeaderSearch
   },
   data() {
     return {

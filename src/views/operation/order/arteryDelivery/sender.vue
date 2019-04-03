@@ -54,22 +54,22 @@
 import { getExportExcel } from '@/api/company/customerManage'
 import { postArtList, postCancelLoad, postCancelPut, postConfirmToCar } from '@/api/operation/arteryDelivery'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     AddCustomer,
-    actualSendtime,
-    tableHeaderSearch
+    actualSendtime
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

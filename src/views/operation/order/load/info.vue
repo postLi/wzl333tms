@@ -524,7 +524,6 @@ export default {
   },
   activated() {
     this.getSystemTime()
-
   },
   watch: {
     '$route': {
@@ -552,7 +551,7 @@ export default {
     },
     networkList: {
       handler(cval, oval) {
-        let arr = [this.otherinfo.orgid]
+        const arr = [this.otherinfo.orgid]
         if (cval) {
           cval.forEach(e => {
             arr.push(e.id)
@@ -736,7 +735,6 @@ export default {
             if (data) {
               this.orgData = objectMerge2({}, data.list[0])
               this.setAfterOrgData()
-
             }
           })
           break
@@ -808,9 +806,9 @@ export default {
         console.log('这里是初始化网点', this.orgData)
         console.log('编辑')
         this.networkList = []
-        let wayOrgid = this.orgData.wayOrgid
+        const wayOrgid = this.orgData.wayOrgid
         if (wayOrgid) {
-          let arr = wayOrgid.split(',')
+          const arr = wayOrgid.split(',')
           arr.forEach(e => {
             this.networkList.push({
               id: e
@@ -843,9 +841,9 @@ export default {
     getLoadNo() {
       // if (this.loadTypeId) {
       return getBatchNo(this.otherinfo.orgid, this.loadTypeId).then(data => {
-          this.truckMessage = data.text // 批次号
-          this.contractNo = data.text // 合同编号？？？？？
-        })
+        this.truckMessage = data.text // 批次号
+        this.contractNo = data.text // 合同编号？？？？？
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -871,10 +869,10 @@ export default {
       } else {
         this.$set(this.setLoadTableList, 'left', [])
         getSelectAddLoadRepertoryList(this.otherinfo.orgid).then(data => {
-            this.setLoadTableList.left = data.data
-            this.loading = false
-            console.log('不修改 ')
-          })
+          this.setLoadTableList.left = data.data
+          this.loading = false
+          console.log('不修改 ')
+        })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
@@ -945,15 +943,15 @@ export default {
       this.eventBus.$emit('closeCurrentView')
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
-          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/arteryDepart')
           break
         case 40: // 送货
-          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() } })
+          this.$router.push({ path: '././deliverManage', query: { pageKey: new Date().getTime() }})
           this.eventBus.$emit('replaceCurrentView', '/operation/order/deliverManage')
           break
       }
@@ -970,13 +968,13 @@ export default {
             this.loading = true
             console.log('这里是编辑完成配载', this.loadInfo)
             putLoadInfo(this.loadInfo).then(data => {
-                this.loading = false
-                this.$message({ type: 'success', message: '修改配载信息成功' })
-                this.resetFieldsForm()
-                this.$nextTick(() => {
-                  this.gotoPage() // 操作成功后跳转到配载列表页面
-                })
+              this.loading = false
+              this.$message({ type: 'success', message: '修改配载信息成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage() // 操作成功后跳转到配载列表页面
               })
+            })
               .catch(err => {
                 this.loading = false
                 this._handlerCatchMsg(err)
@@ -985,13 +983,13 @@ export default {
             console.log('这里是添加完成配载', this.loadInfo)
             this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
-                this.loading = false
-                this.$message({ type: 'success', message: '插入配载信息成功' })
-                this.resetFieldsForm()
-                this.$nextTick(() => {
-                  this.gotoPage()
-                })
+              this.loading = false
+              this.$message({ type: 'success', message: '插入配载信息成功' })
+              this.resetFieldsForm()
+              this.$nextTick(() => {
+                this.gotoPage()
               })
+            })
               .catch(err => {
                 this.loading = false
                 this._handlerCatchMsg(err)
@@ -1014,13 +1012,13 @@ export default {
           this.loading = true
           this.$set(this.loadInfo.tmsOrderLoad, 'actualSendtime', obj.actualSendtime)
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
-              this.loading = false
-              this.$message({ type: 'success', message: '保存成功' })
-              this.resetFieldsForm()
-              this.$nextTick(() => {
-                this.gotoPage() // 操作成功后跳转到配载列表页面
-              })
+            this.loading = false
+            this.$message({ type: 'success', message: '保存成功' })
+            this.resetFieldsForm()
+            this.$nextTick(() => {
+              this.gotoPage() // 操作成功后跳转到配载列表页面
             })
+          })
             .catch(err => {
               this.loading = false
               this._handlerCatchMsg(err)
@@ -1046,7 +1044,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid } })
+        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
       } else {}
       this.init()
     },
@@ -1077,7 +1075,7 @@ export default {
         this.$set(this.formModel, 'contractNo', this.contractNo)
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
-        let networkList = []
+        const networkList = []
         objectMerge2([], this.networkList).forEach(e => {
           if (e.id) {
             networkList.push(e.id)
@@ -1120,7 +1118,7 @@ export default {
         this.$set(this.formModel, 'oilCardNumber', this.formFee.oilCardNumber) // 封签号 不属于费用
         this.$set(this.formModel, 'sealNumber', this.formFee.sealNumber) // 油卡号 不属于费用
 
-        let networkList = []
+        const networkList = []
         objectMerge2([], this.networkList).forEach(e => {
           if (e.id) {
             networkList.push(e.id)
@@ -1161,10 +1159,10 @@ export default {
       if (this.orgData.orgid) {
         this.loading = true
         getUpdateRepertoryLeft(this.orgData.orgid, this.orgData.loadId).then(data => {
-            this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
-            console.log('修改ing左边列表', this.setLoadTableList.left)
-            this.loading = false
-          })
+          this.$set(this.setLoadTableList, 'left', data.data) // this.setLoadTableList.left = objectMerge2([], data.data)
+          console.log('修改ing左边列表', this.setLoadTableList.left)
+          this.loading = false
+        })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
@@ -1176,10 +1174,10 @@ export default {
       console.log('right', this.orgData.orgid)
       if (this.orgData.orgid) {
         getUpdateRepertoryRight(this.orgData.orgid, this.orgData.loadId).then(data => {
-            this.$set(this.setLoadTableList, 'right', data.data)
+          this.$set(this.setLoadTableList, 'right', data.data)
             // this.setLoadTableList.right = objectMerge2([], data.data)
-            console.log('修改ing右边列表', this.setLoadTableList.right)
-          })
+          console.log('修改ing右边列表', this.setLoadTableList.right)
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -1221,24 +1219,24 @@ export default {
       }
     },
     getTerminal(terminalNo = '') {
-      let companyId = this.otherinfo.companyId
+      const companyId = this.otherinfo.companyId
       // if (process.env.NODE_ENV !== 'production') {
       //   companyId = 1
       // }
-      let query = {
+      const query = {
         currentPage: 1,
         pageSize: 10000,
         vo: {
           companyId: companyId, // 公司id
-          terminalNo: terminalNo ? terminalNo : this.formModel.terminalNo // 设备号 模糊搜索
+          terminalNo: terminalNo || this.formModel.terminalNo // 设备号 模糊搜索
         }
       }
       getOrdertrailterminal(query).then(data => {
-          if (data) {
-            console.log('Terminals', data)
-            this.Terminals = data.list
-          }
-        })
+        if (data) {
+          console.log('Terminals', data)
+          this.Terminals = data.list
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -1258,9 +1256,9 @@ export default {
         this.Trucks = this.cacheTruckList[orgid]
       } else {
         getTrucK().then(data => {
-            this.Trucks = data.data
-            this.cacheTruckList[orgid] = data.data
-          })
+          this.Trucks = data.data
+          this.cacheTruckList[orgid] = data.data
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
           })
@@ -1328,14 +1326,14 @@ export default {
     },
     getSelectType() { // 分摊方式 + 说明
       getSelectType('apportion_type', this.otherinfo.orgid || this.otherinfo.companyId).then(data => {
-          if (data) {
-            this.apportionTypeList = data
-            this.apportionTypeList.forEach((el, index) => {
-              let descript = this.$const.APPORTION_TYPE_DESCRIPT[el.id]
-              this.$set(this.apportionTypeList[index], 'descript', this.loadTypeId === 40 ? descript.replace(/(操作费)/g, '送货费') : descript)
-            })
-          }
-        })
+        if (data) {
+          this.apportionTypeList = data
+          this.apportionTypeList.forEach((el, index) => {
+            const descript = this.$const.APPORTION_TYPE_DESCRIPT[el.id]
+            this.$set(this.apportionTypeList[index], 'descript', this.loadTypeId === 40 ? descript.replace(/(操作费)/g, '送货费') : descript)
+          })
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

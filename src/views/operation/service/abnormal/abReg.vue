@@ -219,19 +219,19 @@ import SearchForm from './components/search'
 import { PostGetAbnormalList, delAbnormal } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 // import TableSetup from './components/tableSetup'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Addabnormal,
-    tableHeaderSearch
+    // TableSetup,
+    Addabnormal
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

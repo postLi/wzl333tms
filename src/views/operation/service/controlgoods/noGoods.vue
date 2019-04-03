@@ -508,18 +508,18 @@ import { PutFh, PostControlgoods } from '@/api/operation/dashboard'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from './components/tableSetup'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { parseShipStatus } from '@/utils/dict'
 import dataTableVue from '@/views/operation/order/transferLoad/components/dataTable.vue'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
-    TableSetup,
-    Pager,
-    tableHeaderSearch
+    // TableSetup,
+    Pager
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([
