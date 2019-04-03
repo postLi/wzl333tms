@@ -15,7 +15,7 @@
     p {
       padding: 0;
       margin: 0;
-      font-family: '微软雅黑';
+      /* font-family: '微软雅黑'; */
     }
 
     body {
@@ -215,13 +215,12 @@
   goods_info.innerHTML = goodsInfoStr
 
   // 运输时间
-  contractTimeStr += '六、本次发车时间为<span>' +
-  data.actualSendtime + '</span>，到达时间为<span>' +
-  data.receivingTime + '</span>。<p>司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>'
+  contractTimeStr += '六、本次发车时间为<span>' + data.actualSendtime + '</span>，到达时间为<span>' + data.receivingTime + '</span>。<p>司机在行驶途中手机不得关机，以便甲方跟进了解运输途中情况；</p>'
   contract_time.innerHTML = contractTimeStr
   // 车辆备注
   remark.innerHTML = data.remark ? data.remark : ''
 
+  document.body.style.fontFamily = data.content_font_family || ''
 </script>
 </body>
 
