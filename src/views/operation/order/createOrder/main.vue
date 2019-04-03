@@ -2887,6 +2887,7 @@ export default {
         obj = Array.isArray(obj) ? obj[1] : obj
         console.log('obj2222', obj)
         if (obj) {
+          this.loading = false
           obj.focus()
         }
       } else {
