@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -16,8 +16,20 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable  :prop="column.prop" :label="column.label" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -49,13 +61,15 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
     AddCustomer,
-    actualSendtime
+    actualSendtime,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -106,218 +120,225 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        }, {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFeeAll',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '110',
-          fixed: true
-        }, {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '110',
-          fixed: false
-        },{
-          label: '目的网点',
-          prop: 'endOrgName',
-          width: '110',
-          fixed: false
-        }, {
-          label: '批次状态',
-          prop: 'bathStatusName',
-          width: '110',
-          fixed: false
-        }, {
-          label: '实际到车时间',
-          prop: 'actualArrivetime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '到车操作时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '实际发车时间',
-          prop: 'actualSendtime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '时效',
-          prop: 'timeLiness',
-          width: '120',
-          fixed: false
-        }, {
-          label: '司机名称',
-          prop: 'dirverName',
-          width: '150',
-          fixed: false
-        }, {
-          label: '司机电话',
-          prop: 'dirverMobile',
-          width: '130',
-          fixed: false
-        }, {
-          label: '实到件数',
-          prop: 'actualAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '实到重量(kg)',
-          prop: 'actualWeight',
-          width: '110',
-          fixed: false
-        }, {
-          label: '实到体积(m³)',
-          prop: 'actualVolume',
-          width: '110',
-          fixed: false
-        }, {
-          label: '配载总件数',
-          prop: 'amountall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载总重量(kg)',
-          prop: 'weightall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载总体积(m³)',
-          prop: 'volumeall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '重量装载率(%)',
-          prop: 'weightRate',
-          width: '140',
-          fixed: false
-        }, {
-          label: '体积装载率(%)',
-          prop: 'volumeRate',
-          width: '140',
-          fixed: false
-        }, {
-          label: '封签号',
-          prop: 'sealNumber',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '油卡号',
-          prop: 'oilCardNumber',
-          width: '120',
-          fixed: false
-        }, {
-          label: '现付车费(元)',
-          prop: 'nowpayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '现付油卡(元)',
-          prop: 'nowpayOilCard',
-          width: '110',
-          fixed: false
-        }, {
-          label: '到付车费(元)',
-          prop: 'arrivepayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '到付油卡(元)',
-          prop: 'arrivepayOilCard',
-          width: '110',
-          fixed: false
-        }, {
-          label: '回付车费(元)',
-          prop: 'backpayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '回付油卡(元)',
-          prop: 'backpayOilCard',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '车费合计(元)',
-          prop: 'totalFee',
-          width: '110',
-          fixed: false
-        }, {
-          label: '整车保险费(元)',
-          prop: 'carloadInsuranceFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站装卸费(元)',
-          prop: 'leaveHandlingFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站其他费(元)',
-          prop: 'leaveOtherFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '到站装卸费(元)',
-          prop: 'arriveHandlingFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '到站其他费(元)',
-          prop: 'arriveOtherFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载时间',
-          prop: 'loadTime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '配载人',
-          prop: 'username',
-          width: '90',
-          fixed: false
-        }, {
-          label: '发车人',
-          prop: 'truckName',
-          width: '90',
-          fixed: false
-        }, {
-          label: '备注',
-          prop: 'remark',
-          width: '150',
-          fixed: false
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
+      }, {
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFeeAll',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '110',
+        fixed: true
+      }, {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '目的网点',
+        prop: 'endOrgName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '批次状态',
+        prop: 'bathStatusName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '实际到车时间',
+        prop: 'actualArrivetime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '到车操作时间',
+        prop: 'receivingTime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '实际发车时间',
+        prop: 'actualSendtime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '时效',
+        prop: 'timeLiness',
+        width: '120',
+        fixed: false
+      }, {
+        label: '司机名称',
+        prop: 'dirverName',
+        width: '150',
+        fixed: false
+      }, {
+        label: '司机电话',
+        prop: 'dirverMobile',
+        width: '130',
+        fixed: false
+      }, {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '实到重量(kg)',
+        prop: 'actualWeight',
+        width: '110',
+        fixed: false
+      }, {
+        label: '实到体积(m³)',
+        prop: 'actualVolume',
+        width: '110',
+        fixed: false
+      }, {
+        label: '配载总件数',
+        prop: 'amountall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载总重量(kg)',
+        prop: 'weightall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载总体积(m³)',
+        prop: 'volumeall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量装载率(%)',
+        prop: 'weightRate',
+        width: '140',
+        fixed: false
+      }, {
+        label: '体积装载率(%)',
+        prop: 'volumeRate',
+        width: '140',
+        fixed: false
+      }, {
+        label: '封签号',
+        prop: 'sealNumber',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '油卡号',
+        prop: 'oilCardNumber',
+        width: '120',
+        fixed: false
+      }, {
+        label: '现付车费(元)',
+        prop: 'nowpayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '现付油卡(元)',
+        prop: 'nowpayOilCard',
+        width: '110',
+        fixed: false
+      }, {
+        label: '到付车费(元)',
+        prop: 'arrivepayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '到付油卡(元)',
+        prop: 'arrivepayOilCard',
+        width: '110',
+        fixed: false
+      }, {
+        label: '回付车费(元)',
+        prop: 'backpayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '回付油卡(元)',
+        prop: 'backpayOilCard',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '车费合计(元)',
+        prop: 'totalFee',
+        width: '110',
+        fixed: false
+      }, {
+        label: '整车保险费(元)',
+        prop: 'carloadInsuranceFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站装卸费(元)',
+        prop: 'leaveHandlingFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站其他费(元)',
+        prop: 'leaveOtherFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到站装卸费(元)',
+        prop: 'arriveHandlingFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到站其他费(元)',
+        prop: 'arriveOtherFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载时间',
+        prop: 'loadTime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '配载人',
+        prop: 'username',
+        width: '90',
+        fixed: false
+      }, {
+        label: '发车人',
+        prop: 'truckName',
+        width: '90',
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ]
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllCustomer()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -328,6 +349,7 @@ export default {
         this.total = data.total
         this.loading = false
       }).catch(err => {
+        this.loading = false
         this._handlerCatchMsg(err)
       })
     },

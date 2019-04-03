@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -19,8 +19,8 @@
         <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:LOAD_GX_PRINT>打印</el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('import')" plain v-has:LOAD_GX_PRINTCONTRACT>打印合同
         </el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>轨迹跟踪-车辆</el-button>
-        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>实时定位-车辆</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-share" @click="doMap('line')" plain>车辆轨迹</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-location" @click="doMap('location')" plain>车辆定位</el-button>
         <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">
           表格设置
         </el-button>
@@ -30,8 +30,19 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"><template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -71,6 +82,7 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 // import AddLntelligent from './components/intelligentFreight'
 // import AddLntelligent from './components/intelligentHint'
 // import AddLntelligent from './components/intelligentPayHint'
@@ -83,7 +95,8 @@ export default {
     TableSetup,
     AddCustomer,
     AddLntelligent,
-    actualSendtime
+    actualSendtime,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -136,210 +149,217 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          }
-        },
-        {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '120',
-          fixed: true
-        }, {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        }, {
-          label: '操作费(元)',
-          prop: 'handlingFeeAll',
-          width: '100',
-          fixed: false
-        }, {
-          label: '车牌号',
-          prop: 'truckIdNumber',
-          width: '110',
-          fixed: true
-        }, {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '110',
-          fixed: false
-        }, {
-          label: '途径网点一',
-          prop: 'wayOrgNameOne',
-          width: '110',
-          fixed: false
-        }, {
-          label: '途径网点二',
-          prop: 'wayOrgNameTwo',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '途径网点三',
-          prop: 'wayOrgNameThree',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '途径网点四',
-          prop: 'wayOrgNameFour',
-          width: '110',
-          fixed: false
-        }, {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '110',
-          fixed: false
-        }, {
-          label: '批次状态',
-          prop: 'batchTypeName',
-          width: '110',
-          fixed: false
-        }, {
-          label: '配载时间',
-          prop: 'loadTime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '发车操作时间',
-          prop: 'departureTime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '实际发车时间',
-          prop: 'actualSendtime',
-          width: '160',
-          fixed: false
-        }, {
-          label: '司机名称',
-          prop: 'dirverName',
-          width: '150',
-          fixed: false
-        }, {
-          label: '配载总件数',
-          prop: 'loadAmountall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载总重量(kg)',
-          prop: 'loadWeightall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载总体积(m³)',
-          prop: 'loadVolumeall',
-          width: '120',
-          fixed: false
-        }, {
-          label: '重量装载率',
-          prop: 'weightLoadRate',
-          width: '120',
-          fixed: false
-        }, {
-          label: '体积装载率',
-          prop: 'volumeLoadRate',
-          width: '120',
-          fixed: false
-        }, {
-          label: '毛利(元)',
-          prop: 'grossMargin',
-          width: '110',
-          fixed: false
-        }, {
-          label: '现付车费(元)',
-          prop: 'nowpayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '现付油卡(元)',
-          prop: 'nowpayOilCard',
-          width: '110',
-          fixed: false
-        }, {
-          label: '到付车费(元)',
-          prop: 'arrivepayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '到付油卡(元)',
-          prop: 'arrivepayOilCard',
-          width: '110',
-          fixed: false
-        }, {
-          label: '回付车费(元)',
-          prop: 'backpayCarriage',
-          width: '110',
-          fixed: false
-        }, {
-          label: '回付油卡(元)',
-          prop: 'backpayOilCard',
-          width: '110',
-          fixed: false
-        }, {
-          label: '车费合计(元)',
-          prop: 'shipFeeAmount',
-          width: '110',
-          fixed: false
-        }, {
-          label: '整车保险费(元)',
-          prop: 'carloadInsuranceFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站装卸费(元)',
-          prop: 'leaveHandlingFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站其他费(元)',
-          prop: 'leaveOtherFee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '封签号',
-          prop: 'sealNumber',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '油卡号',
-          prop: 'oilCardNumber',
-          width: '120',
-          fixed: false
-        },
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: (scope) => {
+          return ((this.searchQuery.pageNum - 1) * this.searchQuery.pageSize) + scope.$index + 1
+        }
+      },
+      {
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '120',
+        fixed: true
+      }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      }, {
+        label: '操作费(元)',
+        prop: 'handlingFeeAll',
+        width: '100',
+        fixed: false
+      }, {
+        label: '车牌号',
+        prop: 'truckIdNumber',
+        width: '110',
+        fixed: true
+      }, {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '途径网点一',
+        prop: 'wayOrgNameOne',
+        width: '110',
+        fixed: false
+      }, {
+        label: '途径网点二',
+        prop: 'wayOrgNameTwo',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '途径网点三',
+        prop: 'wayOrgNameThree',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '途径网点四',
+        prop: 'wayOrgNameFour',
+        width: '110',
+        fixed: false
+      }, {
+        label: '到达网点',
+        prop: 'arriveOrgName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '批次状态',
+        prop: 'batchTypeName',
+        width: '110',
+        fixed: false
+      }, {
+        label: '配载时间',
+        prop: 'loadTime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '发车操作时间',
+        prop: 'departureTime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '实际发车时间',
+        prop: 'actualSendtime',
+        width: '160',
+        fixed: false
+      }, {
+        label: '司机名称',
+        prop: 'dirverName',
+        width: '150',
+        fixed: false
+      }, {
+        label: '配载总件数',
+        prop: 'loadAmountall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载总重量(kg)',
+        prop: 'loadWeightall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载总体积(m³)',
+        prop: 'loadVolumeall',
+        width: '120',
+        fixed: false
+      }, {
+        label: '重量装载率',
+        prop: 'weightLoadRate',
+        width: '120',
+        fixed: false
+      }, {
+        label: '体积装载率',
+        prop: 'volumeLoadRate',
+        width: '120',
+        fixed: false
+      }, {
+        label: '毛利(元)',
+        prop: 'grossMargin',
+        width: '110',
+        fixed: false
+      }, {
+        label: '现付车费(元)',
+        prop: 'nowpayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '现付油卡(元)',
+        prop: 'nowpayOilCard',
+        width: '110',
+        fixed: false
+      }, {
+        label: '到付车费(元)',
+        prop: 'arrivepayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '到付油卡(元)',
+        prop: 'arrivepayOilCard',
+        width: '110',
+        fixed: false
+      }, {
+        label: '回付车费(元)',
+        prop: 'backpayCarriage',
+        width: '110',
+        fixed: false
+      }, {
+        label: '回付油卡(元)',
+        prop: 'backpayOilCard',
+        width: '110',
+        fixed: false
+      }, {
+        label: '车费合计(元)',
+        prop: 'shipFeeAmount',
+        width: '110',
+        fixed: false
+      }, {
+        label: '整车保险费(元)',
+        prop: 'carloadInsuranceFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站装卸费(元)',
+        prop: 'leaveHandlingFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站其他费(元)',
+        prop: 'leaveOtherFee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '封签号',
+        prop: 'sealNumber',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '油卡号',
+        prop: 'oilCardNumber',
+        width: '120',
+        fixed: false
+      },
         // {
         //   label: '配载时间',
         //   prop: 'loadTime',
         //   width: '160',
         //   fixed: false
         // },
-        {
-          label: '配载人',
-          prop: 'userName',
-          width: '90',
-          fixed: false
-        }, {
-          label: '发车人',
-          prop: 'truckUserName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '备注',
-          prop: 'remark',
-          width: '150',
-          fixed: false
-        }
+      {
+        label: '配载人',
+        prop: 'userName',
+        width: '90',
+        fixed: false
+      }, {
+        label: '发车人',
+        prop: 'truckUserName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '备注',
+        prop: 'remark',
+        width: '150',
+        fixed: false
+      }
       ]
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllCustomer()
+      }
+    },
     doMap(type) { // 查询批次车辆轨迹或定位
       console.log('选择的批次数', this.selected.length)
       if (!this.selected.length || this.selected.length !== 1) {
@@ -347,13 +367,13 @@ export default {
         this.$refs.multipleTable.clearSelection()
         return false
       }
-      let item = this.selected[0]
+      const item = this.selected[0]
       console.log('当前选中的批次', item, item.truckIdNumber)
       if (!item.truckIdNumber) {
         this.$message.warning('查询失败！该批次没有关联车辆~')
         return false
       }
-      let query = {
+      const query = {
         truckIdNumber: item.truckIdNumber,
         startTime: item.createTime,
         endTime: parseTime(new Date())
@@ -364,23 +384,23 @@ export default {
       // 其他送货状态  createTime ~ departureTime送货完成时间
       // 开始时间定义：小于7天才用前面的时间createTime，大于7天则用后面的时间倒推7天
 
-      let now = new Date().getTime() // 现在
-      let betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
-      let startTime = new Date(item.createTime).getTime()
+      const now = new Date().getTime() // 现在
+      const betweenDay = now - 3600 * 1000 * 24 * 7 // 7天前
+      const startTime = new Date(item.createTime).getTime()
 
-      let isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
+      const isAfterSeven = betweenDay > startTime // true-超过7天  false-不超过7天
 
       if (item.batchTypeId === 52 || item.batchTypeId === 53) { // 送货中
         query.startTime = isAfterSeven ? parseTime(betweenDay) : item.createTime
         query.endTime = parseTime(now)
-      }else { // 其他状态
+      } else { // 其他状态
         query.startTime = item.createTime
         query.endTime = item.receivingTime
       }
 
       switch (type) {
         case 'line':
-          this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'line',
             type: 'truck',
@@ -388,7 +408,7 @@ export default {
           }})
           break
         case 'location':
-        this.$router.push({path: '/operation/order/trucklog', query: {
+          this.$router.push({ path: '/operation/order/trucklog', query: {
             searchQuery: JSON.stringify(query),
             flag: 'location',
             type: 'truck',
@@ -396,7 +416,7 @@ export default {
           }})
           break
       }
-       this.$refs.multipleTable.clearSelection()
+      this.$refs.multipleTable.clearSelection()
     },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
@@ -404,19 +424,22 @@ export default {
     fetchAllCustomer() {
       this.loading = true
       return postSelectLoadMainInfoList(this.searchQuery).then(data => {
-        this.usersArr = data.list
-        this.usersArr.forEach((el, index) => {
-          if (el.wayOrgName) {
-            el.wayOrgNameOne = el.wayOrgName.split(',')[0] || ''
-            el.wayOrgNameTwo = el.wayOrgName.split(',')[1] || ''
-            el.wayOrgNameThree = el.wayOrgName.split(',')[2] || ''
-            el.wayOrgNameFour = el.wayOrgName.split(',')[3] || ''
-          }
-        })
-        this.total = data.total
+        if (data.list) {
+          this.usersArr = data.list
+          this.usersArr.forEach((el, index) => {
+            if (el.wayOrgName) {
+              el.wayOrgNameOne = el.wayOrgName.split(',')[0] || ''
+              el.wayOrgNameTwo = el.wayOrgName.split(',')[1] || ''
+              el.wayOrgNameThree = el.wayOrgName.split(',')[2] || ''
+              el.wayOrgNameFour = el.wayOrgName.split(',')[3] || ''
+            }
+          })
+        }
+        this.total = data.total || 0
         this.loading = false
       }).catch(err => {
         this._handlerCatchMsg(err)
+        console.error('err', err)
         this.loading = false
       })
     },
@@ -495,7 +518,7 @@ export default {
           break
           // 新增配载
         case 'add':
-          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' } }) // 38-短驳 39-干线 40-送货
+          this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, tab: '新增配载' }}) // 38-短驳 39-干线 40-送货
           console.log(this.$router)
           break
           // 添加客户
@@ -536,7 +559,7 @@ export default {
               return false
             } else {
               this.selectInfo = this.selected[0]
-              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo } })
+              this.$router.push({ path: '/operation/order/load', query: { loadTypeId: 39, info: this.selectInfo, tab: '修改配载', flag: this.selectInfo.batchNo }})
             }
           }
           break
@@ -549,7 +572,7 @@ export default {
           //  取消配载发车(批量)
         case 'deselectCar':
 
-          let count = this.selected.filter(e => {
+          const count = this.selected.filter(e => {
             return e.unloadSign === 1
           }).length
           if (count) {

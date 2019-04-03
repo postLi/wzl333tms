@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -18,6 +18,7 @@
           :key="tablekey"
           stripe
           border
+          @row-dblclick="showDetail" 
           @row-click="clickDetails"
           @selection-change="getSelection"
           height="100%"
@@ -43,15 +44,27 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
+               :prop="column.prop"
               :label="column.label"
                show-overflow-tooltip
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope" v-html="true">
                   {{ column.slot(scope) }}
               </template>
@@ -74,13 +87,15 @@ import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, uniqArray, getSummaries, operationPropertyCalc } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddOrder
+    AddOrder,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -134,7 +149,7 @@ export default {
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         }
-      },{
+      }, {
         'label': '开单网点',
         'prop': 'shipFromOrgName',
         'width': '150'
@@ -267,25 +282,16 @@ export default {
         'width': '150'
       }, {
         'label': '到达省',
-        'prop': 'shipToCityName',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        }
+        'prop': 'endProvince',
+        'width': '150'
       }, {
         'label': '到达市',
-        'prop': 'shipToCityName',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        }
+        'prop': 'endCity',
+        'width': '150'
       }, {
-        'label': '到达县区',
-        'prop': 'shipToCityName',
-        'width': '150',
-        slot: function(scope) {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        }
+        'label': '到达区',
+        'prop': 'endArea',
+        'width': '150'
       }, {
         'label': '发货方',
         'prop': 'sendCustomerUnit',
@@ -441,6 +447,16 @@ export default {
     }
   },
   methods: {
+    showDetail(order) { // 双击查看运单详情
+      this.eventBus.$emit('showOrderDetail', order.shipId, order.shipSn, true)
+    },
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllTransfer()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

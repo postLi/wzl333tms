@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content tab-content_sms" v-loading="loading">
+  <div class="tab-content tab-content_sms miniHeaderSearch" v-loading="loading">
     <div class="tab_info">
       <div class="btns_box">
         <el-button type="primary" :size="btnsize" icon="el-icon-document" plain @click="openAddSign" v-has:SMS_CUSTOMIZATION_1>定制专属签名</el-button>
@@ -14,10 +14,21 @@
             </template>
           </el-table-column>
           <el-table-column sortable label="短信发送节点" width="150" prop="sendNode">
+            <template slot="header" slot-scope="scope">
+              <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+            </template>
+             <template slot-scope="scope">{{scope.row.sendNode}}</template>
           </el-table-column>
           <el-table-column sortable label="提醒对象" width="110" prop="remindTarget">
+            <template slot="header" slot-scope="scope">
+              <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+            </template>
+            <template slot-scope="scope">{{scope.row.remindTarget}}</template>
           </el-table-column>
           <el-table-column sortable label="短信内容（双击编辑短信内容）" prop="templateContent" align="left">
+            <template slot="header" slot-scope="scope">
+              <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+            </template>
             <template slot-scope="scope">
               <el-popover placement="bottom" width="400" trigger="hover" :content="scope.row.templateContent">
                 <span slot="reference">{{scope.row.templateContent}}</span>
@@ -25,11 +36,17 @@
             </template>
           </el-table-column>
           <el-table-column sortable label="审核状态" width="120" prop="applyStatus">
+            <template slot="header" slot-scope="scope">
+              <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+            </template>
             <template slot-scope="scope">
               {{ scope.row.applyStatus===0 ? '审核中' : scope.row.applyStatus===1 ? '审核通过' : '审核不通过' }}
             </template>
           </el-table-column>
           <el-table-column sortable label="发送状态" width="120" prop="sendStatus">
+            <template slot="header" slot-scope="scope">
+              <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+            </template>
             <template slot-scope="scope">
               <el-switch v-model="scope.row.sendStatus" active-color="#67c23a" :active-text="scope.row.sendStatus?'开':'关'" @dblclick.stop.prevent.native @change="(newVal) => handleEnable(newVal, scope.row)"></el-switch>
             </template>
@@ -55,11 +72,13 @@ import { postSmsTemplateLogList, sendSmsByTemplateLog, postSmsSign, udpateSmsTem
 import Pager from '@/components/Pagination/index'
 import addCustomized from './components/addCustomized'
 import popRight from './components/editContent'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     Pager,
     popRight,
-    addCustomized
+    addCustomized,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -88,25 +107,30 @@ export default {
     this.fetchList()
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      this.fetchList()
+    },
     getSmsDocText() { // 免费短信文案提示
       getSmsDocText(this.otherinfo.orgid).then(data => {
-          this.smsDocText = data.smsDocText
-        })
+        this.smsDocText = data.smsDocText
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
     },
     postSmsSign() { // 签名
       postSmsSign(this.otherinfo.orgid).then(data => {
-          if (data.data) {
-            this.signName = data.data.modifySign
-            if (data.data.modifyCount === 1) {
-              this.isShowSignBtn = true
-            } else {
-              this.isShowSignBtn = false
-            }
+        if (data.data) {
+          this.signName = data.data.modifySign
+          if (data.data.modifyCount === 1) {
+            this.isShowSignBtn = true
+          } else {
+            this.isShowSignBtn = false
           }
-        })
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -115,16 +139,15 @@ export default {
       this.loading = true
       this.searchQuery.vo.orgId = this.otherinfo.orgid
       postSmsTemplateLogList(this.searchQuery).then(data => {
-          if (data) {
-            this.infoList = data.list
-            this.infoList.forEach(e => {
-              e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
-            })
-            this.total = data.total
-            this.loading = false
-          }
-
-        })
+        if (data) {
+          this.infoList = data.list
+          this.infoList.forEach(e => {
+            e.sendStatus = e.sendStatus === 0 // true-0 可发送  false-1 不发送
+          })
+          this.total = data.total
+          this.loading = false
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
           this.loading = false
@@ -168,9 +191,9 @@ export default {
         sendStatus: newVal ? 0 : 1
       }
       udpateSmsTemplateLogStatus(obj).then(data => {
-          this.fetchList()
-          this.$message.success('修改发送状态成功！')
-        })
+        this.fetchList()
+        this.$message.success('修改发送状态成功！')
+      })
         .catch(err => {
           row.sendStatus = !newVal
           this._handlerCatchMsg(err)

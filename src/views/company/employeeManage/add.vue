@@ -143,8 +143,8 @@ export default {
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 10, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'change' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'change' }
         ],
         mobilephone: [{ required: true, trigger: 'change', validator: validateFormMobile }],
         // mobilephone: [
@@ -187,7 +187,7 @@ export default {
     popVisible(newVal, oldVal) {
       // if (!this.inited) {
         // this.inited = true
-        this.initInfo()
+      this.initInfo()
       // }
     },
     orgid(newVal) {
@@ -212,6 +212,16 @@ export default {
           console.log('orgid333333', this.orgid)
           this.form.orgid = this.orgid
         })
+      }
+    },
+    'form.username'(newVal) {
+      if (newVal) {
+        this.$refs.ruleForm.validate((valid) => {})
+      }
+    },
+    'form.password'(newVal) {
+      if (newVal) {
+        this.$refs.ruleForm.validate((valid) => {})
       }
     }
   },

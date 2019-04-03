@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>
     <div class="tab_info">
       <div class="btns_box">
@@ -30,9 +30,17 @@
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
-                             v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else
+                             v-if="!column.slot" :width="column.width">
+                               <template slot="header" slot-scope="scope">
+                                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+                              </template>
+                               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+                             </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else  :prop="column.prop"
                              :width="column.width">
+                              <template slot="header" slot-scope="scope">
+                                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+                              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)"
                       @click.stop="column.click(scope)"></span>
@@ -56,20 +64,22 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {postFinCerList, postFinCerFicationcert} from '@/api/finance/finCertificationAudit'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { postFinCerList, postFinCerFicationcert } from '@/api/finance/finCertificationAudit'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { objectMerge2 } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+  import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     components: {
       SearchForm,
       Pager,
       TableSetup,
+      tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -104,13 +114,13 @@
             paymentsType: '',
             dataSrc: '',
             startTime: '',
-            endTime: '',
+            endTime: ''
           }
         },
         tableColumn: [
           {
             label: '序号',
-            prop: 'id',
+            prop: 'number',
             width: '70',
             fixed: true,
             slot: (scope) => {
@@ -120,7 +130,7 @@
             label: '审核状态',
             prop: 'verifyStatusZh',
             width: '110',
-            fixed: true,
+            fixed: true
           }, {
             label: '来源',
             prop: 'dataSrcZh',
@@ -136,13 +146,13 @@
             label: '类别',
             prop: 'verificationWay',
             width: '130',
-            fixed: false,
+            fixed: false
 
           }, {
             label: '方向',
             prop: 'paymentsTypeZh',
             width: '170',
-            fixed: false,
+            fixed: false
           }, {
             label: '金额',
             prop: 'amount',
@@ -223,6 +233,13 @@
       }
     },
     methods: {
+      changeKey(obj) {
+        this.total = 0
+        this.searchQuery = obj
+        if (!this.loading) {
+          this.fetchAllCustomer()
+        }
+      },
       fetchAllCustomer() {
         this.loading = true
         return postFinCerList(this.searchQuery).then(data => {
@@ -257,7 +274,7 @@
         switch (type) {
           case 'theAudit':
             const idLists = this.selected.filter(el => {
-              //审核状态, 0 未审核, 1 已审核
+              // 审核状态, 0 未审核, 1 已审核
               return el.verifyStatus === 1
             }).map(el => {
               return el.id
@@ -288,7 +305,7 @@
             break
           case 'audit':
             const idList = this.selected.filter(el => {
-              //审核状态, 0 未审核, 1 已审核
+              // 审核状态, 0 未审核, 1 已审核
               return el.verifyStatus === 0
             }).map(el => {
               return el.id

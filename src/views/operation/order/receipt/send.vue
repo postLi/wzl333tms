@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content" v-loading="loading" :issender="true">
+    <div class="tab-content miniHeaderSearch" v-loading="loading" :issender="true">
       <SearchForm :orgid="otherinfo.orgid" title="寄出" type="send_status" status="sendStatus"  @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -275,8 +275,20 @@
            tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+                 <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
                 <template slot-scope="scope">
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                   <span v-else v-html="column.slot(scope)"></span>
@@ -301,12 +313,14 @@ import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import AddMark from './components/add'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     TableSetup,
     Pager,
-    AddMark
+    AddMark,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -535,10 +549,17 @@ export default {
         //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
         // },
         fixed: false
-      } ]
+      }]
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -546,6 +567,7 @@ export default {
       this.loading = true
       return postReceipt(this.searchQuery).then(data => {
         this.dataset = data.list
+        this.total = data.total
         this.loading = false
       }).catch((err) => {
         this.loading = false
@@ -584,18 +606,8 @@ export default {
           // 导出
         case 'export':
           const arr = objectMerge2([], this.dataset) // 所有的数据
-          arr.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
 
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
@@ -605,18 +617,18 @@ export default {
           // 打印
         case 'print':
           const arr1 = objectMerge2([], this.dataset) // 所有的数据
-          arr1.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
+          // arr1.forEach(e => {
+          //   this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+          //   this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+          //   this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          // })
 
           const arrSel1 = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel1.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
+          // arrSel1.forEach(e => {
+          //   this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+          //   this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+          //   this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          // })
           PrintInFullPage({
             data: arrSel1.length ? arrSel1 : arr1,
             columns: this.tableColumn,

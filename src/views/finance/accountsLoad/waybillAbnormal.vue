@@ -14,7 +14,7 @@
       <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed width="50" type="index" label="序号">
+          <el-table-column fixed width="60" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -51,7 +51,7 @@
       <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed width="50" type="index" label="序号">
+          <el-table-column fixed width="60" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -192,9 +192,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+        }
       },
       {
         label: '未核销异常理赔',
@@ -202,9 +202,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '发货方',
@@ -236,8 +236,8 @@ export default {
         width: '120',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '发站',
@@ -324,9 +324,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+        }
       },
       {
         label: '未核销异常理赔',
@@ -334,9 +334,9 @@ export default {
         width: '150',
         fixed: false,
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
       },
       {
         label: '实际核销异常理赔',
@@ -345,8 +345,8 @@ export default {
         fixed: false,
         expand: true,
         slot: (scope) => {
-            return scope.row.inputAbnormalFee
-          }
+          return scope.row.inputAbnormalFee
+        }
       },
       {
         label: '发货方',
@@ -378,8 +378,8 @@ export default {
         width: '180',
         fixed: false,
         slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
       },
       {
         label: '发站',
@@ -434,27 +434,30 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
   methods: {
-   handlePageChangeLeft(obj) {
+    handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       console.log(obj.pageSize, obj.pageNum, obj)
-       this.pageGetList()
+      this.pageGetList()
     },
-     pageGetList () {
-      let rightTable = objectMerge2([], this.rightTable)
+    pageGetList() {
+      const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
-       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postFindListByFeeType(this.searchQuery).then(data => {
         if (data) {
           this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
-           rightTable.forEach((el, index) => {
+          rightTable.forEach((el, index) => {
             this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-           })
+          })
         }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
@@ -465,6 +468,13 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       // if (!this.$route.query.searchQuery.vo) {
       //   this.eventBus.$emit('replaceCurrentView', '/finance/accountsPayable/waybill')
@@ -495,7 +505,7 @@ export default {
       // if (!this.isFresh) {
       postFindAbnormalList(this.searchQuery).then(data => {
         this.leftTable = Object.assign([], data.list)
-         this.totalLeft = data.total
+        this.totalLeft = data.total
         selectListShipSns.forEach(e => {
           this.leftTable.forEach(item => {
             if (e === item.shipSn) {

@@ -1,5 +1,5 @@
 <template>
-<div class="tab-wrapper tab-wrapper-100">
+<div class="tab-wrapper tab-wrapper-100 miniHeaderSearch">
     <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
         <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
@@ -13,259 +13,20 @@
           <el-button type="primary" :size="btnsize"  plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <!-- <el-table
-          ref="multipleTable"
-          :data="dataset"
-          stripe
-          border
-          @row-dblclick="getDbClick"
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            fixed
-            sortable
-            prop="id"
-            label="序号"
-            width="200">
-          </el-table-column>
-         
-          <el-table-column
-            label="开单网点"
-            width="180"
-            prop="orgidName"
-            sortable
-            >
-          </el-table-column>
-           <el-table-column
-            sortable
-            width="200"
-            label="开单日期">
-            <template slot-scope="scope">{{ scope.row.shipCreateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</template>
-          </el-table-column>
-          <el-table-column
-            prop="shipSn"
-            width="120"
-            sortable
-            label="运单号">
-          </el-table-column>
-
-          <el-table-column
-            prop="shipGoodsSn"
-            sortable
-            width="120"
-            label="货号">
-          </el-table-column>
-          <el-table-column
-            prop="shipFromCityName"
-            label="发站"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="shipToCityName"
-            width="120"
-            label="到站">
-          </el-table-column>
-         
-          <el-table-column
-            prop="statusValue"
-            label="核销状态"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="fee"
-            label="异动费用"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-         
-          <el-table-column
-            prop="incomePayTypeValue"
-            label="费用类型"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-
-           <el-table-column
-            prop=""
-            label="异动时间"
-            width="200"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</template>
-          </el-table-column>
-
-          <el-table-column
-            prop="remark"
-            label="异动备注"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipStatusName"
-            label="运单状态"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="senderCustomerName"
-            label="发货人"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="senderCustomerMobile"
-            label="发货人电话"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="receiverCustomerName"
-            label="收货人"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="receiverCustomerMobile"
-            label="收货人电话"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-         
-          <el-table-column
-            prop="cargoName"
-            label="货品名"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="cargoAmount"
-            label="件数"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="cargoWeight"
-            label="重量"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="cargoVolume"
-            label="体积"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipRemarks"
-            label="运单备注"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="shipPayWay"
-            label="付款方式"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="nowPayFee"
-            label="现付"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="arrivePayFee"
-            label="到付"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="receiptPayFee"
-            label="回单付"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="monthPayFee"
-            label="月结"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            label="到达省"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : '' }}</template>
-          </el-table-column>
-          <el-table-column
-            label="到达市"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : '' }}</template>
-          </el-table-column>
-          <el-table-column
-            label="到达区"
-            width="120"
-            sortable
-            >
-            <template slot-scope="scope">{{ scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : '' }}</template>
-          </el-table-column>
-
-          <el-table-column
-            prop="senderDetailedAddress"
-            label="发货地址"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-          <el-table-column
-            prop="receiverDetailedAddress"
-            label="收货地址"
-            width="120"
-            sortable
-            >
-          </el-table-column>
-        </el-table> -->
+       
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -290,13 +51,15 @@ import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   name: 'financeunusual',
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Addunusual
+    Addunusual,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -334,8 +97,8 @@ export default {
       },
       tableColumn: [{
         label: '序号',
-        prop: 'id',
-        width: '60',
+        prop: 'number',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -353,7 +116,7 @@ export default {
       }, {
         label: '开单日期',
         prop: 'shipCreateTime',
-        width: '160',
+        width: '180',
         slot: (scope) => {
           return `${parseTime(scope.row.shipCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
@@ -361,7 +124,7 @@ export default {
       }, {
         label: '货号',
         prop: 'shipGoodsSn',
-        width: '120',
+        width: '150',
         fixed: false
       }, {
         label: '发站',
@@ -478,27 +241,27 @@ export default {
         fixed: false
       }, {
         label: '到达省',
-        prop: 'shipToCityName1',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
+        // },
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName2',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
+        // },
         fixed: false
       }, {
         label: '到达区',
-        prop: 'shipToCityName3',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
+        // slot: (scope) => {
+        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
+        // },
         fixed: false
       },
       {
@@ -515,6 +278,13 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
+    },
     fetchAllreceipt() {
       this.loading = true
       return postAbnormalUnusual(this.searchQuery).then(data => {
@@ -565,18 +335,18 @@ export default {
         // 导出
         case 'export':
           const arr = objectMerge2([], this.dataset) // 所有的数据
-          arr.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
+          // arr.forEach(e => {
+          //   this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+          //   this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+          //   this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          // })
 
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
+          // arrSel.forEach(e => {
+          //   this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
+          //   this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
+          //   this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
+          // })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,

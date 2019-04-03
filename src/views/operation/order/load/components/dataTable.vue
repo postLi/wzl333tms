@@ -9,7 +9,7 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" @row-dblclick="dclickAddItem" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true">
-        <el-table-column fixed width="50" label="序号">
+        <el-table-column fixed width="60" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -71,7 +71,7 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed width="50" label="序号">
+        <el-table-column fixed width="60" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -257,7 +257,7 @@ export default {
       if (!this.handlingFeeInfo.apportionTypeId || !this.handlingFeeInfo.handlingFeeAll || this.rightTable.length < 1) {
         return
       }
-      let info = this.handlingFeeInfo
+      const info = this.handlingFeeInfo
       info.params = this.$route.query.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: // 按运单运费占运费比例分摊 (运单-回扣）/（总运费-总回扣）*运费[送货费]
@@ -451,8 +451,8 @@ export default {
       return this.rightTable[newVal].loadAmount && this.rightTable[newVal].loadWeight && this.rightTable[newVal].loadVolume
     },
     changHandlingFee(index, newVal, type) {
-      let info = objectMerge2({}, this.handlingFeeInfo)
-      info.params = Number(this.$route.query.loadTypeId)===40 ? 'deliveryFeeToPay' : 'handlingFee'
+      const info = objectMerge2({}, this.handlingFeeInfo)
+      info.params = Number(this.$route.query.loadTypeId) === 40 ? 'deliveryFeeToPay' : 'handlingFee'
       this.$set(this.rightTable[index], type, Number(newVal) || '')
       let total = 0
       this.rightTable.forEach(e => {
@@ -460,16 +460,16 @@ export default {
       })
       let cut = 0
       // 判断是否有卸货费， 如果有卸货费就total值为小框送货费deliveryDetailFee
-      // 如果有卸货费 
+      // 如果有卸货费
       //     卸货费比total大就把卸货费置为0，total为送货费deliveryDetailFee
       //     卸货费比total小就把卸货费不变，total为减去卸货费后的送货费deliveryDetailFee
       //     卸货费比total相同, total为0
-      let delihandFee = info.deliveryHandlingFee
+      const delihandFee = info.deliveryHandlingFee
       if (delihandFee) {
         cut = total - delihandFee
         if (cut >= 0) {
           total = cut
-        } else{
+        } else {
           info.deliveryHandlingFee = 0
         }
       }
@@ -483,9 +483,9 @@ export default {
       } else {
         this.selectedRight.forEach((e, index) => {
           // 默认设置配载重量,配载体积,配载数量,操作费用
-          // 
+          //
           if (this.$route.query) {
-            let params = Number(this.$route.query.loadTypeId)=== 40 ? 'deliveryFeeToPay' : 'handlingFee'
+            const params = Number(this.$route.query.loadTypeId) === 40 ? 'deliveryFeeToPay' : 'handlingFee'
             console.log('=============', params)
             e[params] = 0
           }
@@ -505,7 +505,7 @@ export default {
         })
         this.selectedRight = [] // 清空选择列表
         // if (this.$route.query.loadTypeId !== 40) {
-          this.countHandingFee()
+        this.countHandingFee()
         // }
         console.log('rightTable', this.rightTable.length, this.rightTable)
         this.$emit('loadTable', this.rightTable)
@@ -534,7 +534,7 @@ export default {
         this.selectedLeft = [] // 清空选择列表
         console.log('rightTable', this.rightTable)
         // if (this.$route.query.loadTypeId !== 40) {
-          this.countHandingFee()
+        this.countHandingFee()
         // }
         this.$emit('loadTable', this.rightTable)
         this.$emit('repertoryList', this.orgLeftTable)
@@ -605,7 +605,7 @@ export default {
     position: absolute;
     z-index: 33;
     top: 10px;
-    left: 67px;
+    left: 77px;
     background-size: 18px;
     background-repeat: no-repeat;
   }

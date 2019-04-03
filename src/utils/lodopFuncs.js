@@ -251,6 +251,13 @@ export function myBlankDesign() {
 }
 // 打印表格
 export function PrintInFullPage(obj) {
+    // 获取用户信息
+  const user = getUserInfo()
+  let fontFamily = ''
+  if (obj.type) {
+    fontFamily = obj.type === 'load' ? user.systemSetup.printFontSetting.load : ''
+  }
+  console.log('obj.type', obj.type, fontFamily)
   const fn = (printObj) => {
     try {
       // let tableId = createTable(data, columns) // 重新创建打印视图table
@@ -267,6 +274,12 @@ export function PrintInFullPage(obj) {
         width: '97.5%',
         height: '78%'
       }
+      const _topTitleMainStyle = {
+        top: '5%',
+        left: '1%',
+        width: '97.5%',
+        height: '94%'
+      }
       const _mainStyle = {
         top: '1%',
         left: '1%',
@@ -274,7 +287,7 @@ export function PrintInFullPage(obj) {
         height: '98%'
       }
 
-      const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : _mainStyle, obj.mainStyle || {})
+      const mainStyle = objectMerge2(obj.appendTop ? _topMainStyle : (obj.appendTopTitle ? _topTitleMainStyle : _mainStyle), obj.mainStyle || {})
       /* const pageStyle = objectMerge2({
         intOrient: 2, // 1---纵向打印，固定纸张 2---横向打印，固定纸张 3---纵向打印，宽度固定，高度按打印内容的高度自适应 0---方向不定，由操作者自行选择或按打印机缺省设置
         intPageWidth: 0, // 单位为0.1mm
@@ -297,23 +310,25 @@ export function PrintInFullPage(obj) {
       objp.w = objp.w - 5 - objp.l
       objp.h = objp.h - 5 - objp.t
 
-      console.log('print obj:', obj)
+      // console.log('print obj:', obj)
       const shipSn = obj.data.map(el => {
         return el.shipSn
       })
-      console.log('打印的数据shipSn', shipSn)
-      const tableId = createTable(obj, true, '', printObj) // 重新创建打印视图table
+      // console.log('打印的数据shipSn', shipSn)
+      const tableId = createTable(obj, true, '', printObj, fontFamily) // 重新创建打印视图table
       // console.log('tableId.innerHTML:', tableId.innerHTML)
       LODOP = getLodop()
       // PRINT_INITA(Top,Left,Width,Height,strPrintName)
-
-      if (obj.appendTop) {
+      // if (fontFamily) {
+      // LODOP.SET_PRINT_STYLE('FontName', fontFamily)
+      // }
+      if (obj.appendTop || obj.appendTopTitle) {
         pageStyle.intOrient = printObj.printing_direction || pageStyle.intOrient
         LODOP.PRINT_INITA(objp.t, objp.l, objp.w, objp.h, '订货单')
       } else {
         LODOP.PRINT_INITA('0', '0', pageStyle.intPageWidth, pageStyle.intPageHeight, '订货单')
       }
-
+      LODOP.SET_PRINT_STYLE('FontName', fontFamily)
       //  LODOP.PRINT_INIT('订货单')
       // LODOP.SET_PRINT_STYLE("FontSize", 10);
       // LODOP.SET_PRINT_STYLE("FontName", "微软雅黑")
@@ -327,15 +342,23 @@ export function PrintInFullPage(obj) {
       }
 
       if (obj.appendTop) {
-        obj.appendTop = obj.appendTop.replace('{heading_content}', printObj.heading_content).replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)
-        LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTop + '</body>')
+        obj.appendTop = obj.appendTop.replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_content}', printObj.heading_content).replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)
+        LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0;'>" + obj.appendTop + '</body>')
+        // LODOP.SET_PRINT_STYLE('FontName', fontFamily)
+
+        //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
+      }
+      if (obj.appendTopTitle) { // 标题
+        obj.appendTopTitle = obj.appendTopTitle.replace('{heading_content}', printObj.heading_content).replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)
+        LODOP.ADD_PRINT_HTM(topStyle.top, topStyle.left, topStyle.width, topStyle.height, "<body style='margin-top:0'>" + obj.appendTopTitle + '</body>')
 
         //  LODOP.SET_PRINT_STYLEA(0, 'TableHeightScope', 1)
       }
       LODOP.ADD_PRINT_TABLE(mainStyle.top, mainStyle.left, mainStyle.width, mainStyle.height, tableId.innerHTML)
-      if (obj.appendTop) {
+      if (obj.appendTop || obj.appendTopTitle) {
         LODOP.SET_PRINT_STYLEA(0, 'Offset2Top', '-12%')
         LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
+        LODOP.SET_PRINT_STYLE('FontName', fontFamily)
         if (printObj.print_page_num === '1') {
           const le = objp.w - 20
           const to = objp.h - 20
@@ -353,6 +376,9 @@ export function PrintInFullPage(obj) {
       }
 
       console.log('printObj:', printObj)
+      // if (fontFamily) {
+      LODOP.SET_PRINT_STYLE('FontName', fontFamily)
+      // }
 
       //  LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '1%')
 
@@ -364,8 +390,7 @@ export function PrintInFullPage(obj) {
       getLodop()
     }
   }
-  // 获取用户信息
-  const user = getUserInfo()
+
   getPrintSetting({
     'companyId': user.companyId,
     'printType': 0
@@ -460,7 +485,7 @@ export function PrintContract(obj, type) {
           LODOP.SET_PRINTER_INDEXA(printObj.printer)
         }
         console.log('PrintContract printObj:', printObj, objp)
-        obj += encodeURI('&heading_content=' + printObj.heading_content + '&heading_word_size=' + printObj.heading_word_size + '&content_word_size=' + printObj.content_word_size)
+        obj += encodeURI('&heading_content=' + printObj.heading_content + '&heading_word_size=' + printObj.heading_word_size + '&content_word_size=' + printObj.content_word_size + '&content_font_family=' + printObj.content_font_family)
       }
       //  LODOP.PRINT_INIT('合同')
 
@@ -487,6 +512,7 @@ export function PrintContract(obj, type) {
   } else {
     // 获取用户信息
     const user = getUserInfo()
+    const fontFamily = user.systemSetup.printFontSetting.contract || ''
     getPrintSetting({
       'companyId': user.companyId,
       'printType': 1
@@ -497,6 +523,7 @@ export function PrintContract(obj, type) {
         data.forEach(el => {
           obj[el.fieldName] = el.fieldValue
         })
+        obj.content_font_family = fontFamily
         fn(obj)
       } else {
         console.error('获取打印信息失败')
@@ -938,17 +965,20 @@ export function formatOrderData(info, type) {
  * preview // 是否预览
  * mock // 是否直接读取value字段
  * bkimg // 是否包含背景图
+ * fontFamily // 打印字体
  * }
  */
 export function CreatePrintPageEnable(info, printer, preview, number) {
   console.log('是否预览', preview, info)
   const user = getUserInfo()
+  console.log('CreatePrintPageEnable user', user)
 
   // info-打印数据
   // printer-打印机
   // number-打印份数
   // preview-是否预览
   // bkimg-是否背景图
+  // fontFamily-打印字体
   return new Promise((resolve, reject) => {
     try {
       const prxvalue = 0.264
@@ -958,7 +988,9 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
       let printSetup = []
       let copy = []
       const bkimg = info.bkimg || false
+      let fontFamily = '宋体'
       LODOP = getLodop()
+      let print_type = '' // 当前打印的是order-运单还是lib-标签
 
       console.log('print', info, printer, number)
       // 2.0：处理数据
@@ -971,7 +1003,17 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
         } else {
           printer = info.printer
         }
+
+        if (!info.fontFamily) { // 判断是不是预览，如果为预览就使用当前选择的字体，否则就使用系统保存的字体
+          // 打印字体
+          fontFamily = (info.type === 'lib') ? user.systemSetup.printFontSetting.label : info.type === 'order' ? user.systemSetup.printFontSetting.ship : '宋体'
+        } else {
+          fontFamily = info.fontFamily
+        }
+        console.warn('打印字体:', fontFamily)
+
         preview = !info.preview
+
         printSetup = objectMerge2([], info.printSetup)
         if (!info.mock) {
           const cargoLen = info.orderdata.tmsOrderCargoList.length
@@ -1006,16 +1048,21 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
       let bkimgUrl = '' // 背景图片的url链接
       arr = Object.assign([], info)
       let title = ''
+
       for (const item in arr) { // 没有传值的项设置位空字符串
         if (arr[item].filedValue === 'setting') {
           if (arr[item].filedName === '标签尺寸') {
             title = '标签打印'
+            print_type = 'lib'
           } else {
             title = '托运单打印'
+            print_type = 'order'
           }
+
           console.log('setting::', arr[item])
           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
           LODOP.PRINT_INITA(arr[item].topy, arr[item].leftx, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', title)
+          LODOP.SET_PRINT_STYLE('FontName', fontFamily)  // 设置打印字体
           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
           LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
@@ -1042,6 +1089,9 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
         } else {
           title = '托运单打印'
         }
+         // 设置打印字体
+        // LODOP.SET_PRINT_STYLE('FontName', '锐字云字库综艺体1.0')
+        LODOP.SET_PRINT_STYLE('FontName', fontFamily)
         if (e.filedValue !== 'setting' && Number(e.isshow) === 1) {
           if ((e.filedValue === 'urgent' && e.value) || (e.filedValue === 'common' && e.value || (e.filedValue === 'controlGoods' && e.value) || (e.filedValue === 'valuables' && e.value))) { // 加急urgent和普通common 需要特殊处理为打勾
             // str += 'LODOP.ADD_PRINT_TEXT(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',"√");'
@@ -1496,7 +1546,7 @@ function IEVersion() {
   }
 }
 
-function createTable(obj, noUnit, page, printObj) { // 打印导出创建表格视图
+function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出创建表格视图
   const data = obj.data // 数据表格
   const columns = obj.columns // 表格设置列
   console.log('data', data)
@@ -1583,6 +1633,7 @@ function createTable(obj, noUnit, page, printObj) { // 打印导出创建表格�
   //  table.setAttribute('width', '100%')
   table.setAttribute('border', '1')
   table.style.borderCollapse = 'collapse'
+  table.style.fontFamily = fontFamily || ''
   table.style.fontSize = (printObj.content_word_size || '16') + 'px'
   // table.style.wordBreak = 'break-all';
   // table.style.wordWrap = 'break'

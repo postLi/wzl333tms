@@ -1,0 +1,424 @@
+/*字体大小*/
+$tms_theme_mini: 12px; //  '超小'
+$tms_theme_default: 14px; //  '常规'
+$tms_theme_medium: 16px; // '较大'
+$tms_theme_large: 18px; // '最大'
+
+@mixin golbal_font_size($fontSize) {
+  font-size: $fontSize;
+  &.tms_theme_mini {
+    font-size: $tms_theme_mini;
+    @include commonPart($tms_theme_mini);
+  }
+  &.tms_theme_default {
+    font-size: $tms_theme_default;
+    @include commonPart($tms_theme_default);
+  }
+  &.tms_theme_medium {
+    font-size: $tms_theme_medium;
+    @include commonPart($tms_theme_medium);
+  }
+  &.tms_theme_large {
+    font-size: $tms_theme_large;
+    @include commonPart($tms_theme_large);
+  }
+}
+@mixin commonPart($fontSize) {
+  /** 表格样式覆盖 ***/
+  .el-table,
+  .el-table--border td,
+  .el-table--border th,
+  .el-table__body-wrapper
+    .el-table--border.is-scrolling-left
+    ~ .el-table__fixed,
+  .el-table--border,
+  .el-table--group,
+  .el-table td,
+  .el-table th,
+  .el-table th.is-leaf {
+    @if ($fontSize != 14) {
+      font-size: $fontSize;
+    }
+  }
+  .el-table {
+    table {
+      th,
+      td {
+        @if ($fontSize != 14) {
+          font-size: $fontSize;
+        }
+      }
+    }
+  }
+
+  .el-table th .cell {
+    @if ($fontSize != 14) {
+      font-size: $fontSize;
+    }
+  }
+
+  .el-table .caret-wrapper {
+    @if ($fontSize != 14) {
+      font-size: $fontSize;
+    }
+  }
+  /* 按钮 */
+  .el-button {
+    @if ($fontSize != 14) {
+      font-size: $fontSize * 0.9;
+    }
+  }
+  /* 表单 */
+
+  .el-form-item--mini .el-form-item__content,
+  .el-form-item--mini .el-form-item__label {
+    @if ($fontSize != 14) {
+      font-size: $fontSize !important;
+      white-space: nowrap;
+    }
+  }
+  .el-form-item--mini .el-form-item__label {
+    @if ($fontSize > 14) {
+      width: $fontSize * 5.5 !important;
+    }
+  }
+  .el-range-editor--mini .el-range-input,
+  .el-range-editor.el-input__inner,
+  .el-input--mini {
+    font-size: $fontSize * 0.85;
+  }
+  .el-textarea,
+  .el-radio .el-radio__label,
+  .el-checkbox .el-checkbox__label {
+    @if ($fontSize != 14) {
+      font-size: $fontSize !important;
+    }
+  }
+
+  /* tab */
+  .tab-label {
+    font-size: $fontSize !important;
+  }
+  .tags-view-container .tags-view-wrapper .tags-view-item {
+    font-size: $fontSize;
+  }
+  /* tooltip popover */
+  .el-popover,
+  .el-tooltip__popper {
+    @if ($fontSize != 14) {
+      font-size: $fontSize !important;
+    }
+  }
+
+  /* 主要布局 */
+  /*** 列表页-顶部搜索区域 **/
+  .staff_searchinfo {
+    padding-right: if(
+      ($fontSize > 14),
+      ($fontSize * 8.8),
+      ($fontSize * 11)
+    ) !important;
+    .staff_searchinfo--btn {
+      width: if(
+        ($fontSize > 14),
+        ($fontSize * 8.8),
+        ($fontSize * 11)
+      ) !important;
+      margin-right: if(
+        ($fontSize > 14),
+        -($fontSize * 8.8),
+        -($fontSize * 11)
+      ) !important;
+    }
+    .el-form-item--mini .el-form-item__content .el-input__inner,
+    .el-select > .el-input,
+    .el-date-editor--daterange.el-input__inner {
+      width: if(
+        ($fontSize > 14),
+        ($fontSize * 13),
+        ($fontSize * 18)
+      ) !important;
+    }
+  }
+  .dbclickTips {
+    @if ($fontSize != 14) {
+      font-size: $fontSize;
+      padding-top: 5px;
+    }
+  }
+  .tab_info {
+    .btns_box {
+      @if ($fontSize > 14) {
+        height: $fontSize * 2 !important;
+      }
+    }
+    $fontSizeTwoSize: $fontSize * 2.5;
+    .info_tab {
+      @if ($fontSize > 14) {
+        height: calc(100% - #{$fontSizeTwoSize}) !important;
+      }
+    }
+  }
+
+  /*** 控制台 ***/
+  .html5index {
+    .inner_div p,
+    .main_forthUl ul > li:nth-child(1),
+    .head_title ul > li {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+  }
+  .html5index2 {
+    .head_title ul > li,
+    .databox .databox-label {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+  }
+  .html5index3 {
+    .head_title ul > li,
+    .databox .databox-label {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+  }
+  /*** 系统体检 ***/
+  .check_box {
+    .main_checker2 p {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+    .company_content ul li p button {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+        margin: 10px 0 0 0;
+      }
+    }
+  }
+  /*** 流程图 ***/
+  .finace-container .finace_flow,
+  .dashboard-container {
+    .el-tooltip {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+    .flowitem p,
+    .el-tooltip span {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+        margin-top: 5px;
+      }
+    }
+  }
+  /** 系统设置 */
+  .setup-table {
+    .setup-left {
+      @if ($fontSize != 14) {
+        font-size: ($fontSize * 0.9) !important;
+      }
+    }
+  }
+  /* 短信服务 */
+  .smsedit_content_title {
+    @if ($fontSize != 14) {
+      font-size: ($fontSize * 0.9) !important;
+    }
+  }
+  .smsedit_list {
+    ul > li {
+      .el-tag {
+        font-size: ($fontSize * 0.9) !important;
+      }
+    }
+    @if ($fontSize > 14) {
+      ul > li {
+        width: 25%;
+      }
+    }
+  }
+  /*钱包*/
+  .hyq-wallet-content {
+    .hyq-title {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+  }
+  /* 新增配载 */
+  .load_wrapper {
+    .loadFrom {
+      .el-form-item__label {
+        font-size: $fontSize !important;
+        @if ($fontSize > 14) {
+          font-size: 16px !important;
+          width: 105px !important;
+        }
+      }
+    }
+    .tableHeadItemForm {
+      .el-form-item__label {
+        font-size: $fontSize !important;
+      }
+    }
+  }
+  .transferload-steup {
+    .el-form-item__label {
+      font-size: $fontSize !important;
+      @if ($fontSize > 14) {
+        font-size: 16px !important;
+        width: 105px !important;
+      }
+    }
+  }
+  /* 用户弹出框 */
+  .popoveruser {
+    .el-button {
+      font-size: 14px !important;
+    }
+  }
+  /*合同*/
+  // .pact {
+  //   .pact_content,
+  //   .el-form-item__label,
+  //   .pact_title,
+  //   .editInput,
+  //   .el-form-item__content,
+  //   .p_cont,
+  //   .p_input.el-form-item__label {
+  //     @if ($fontSize != 14) {
+  //       font-size: $fontSize !important;
+  //     }
+  //   }
+  // }
+  /* 开单页面*/
+  @if ($fontSize != 14) {
+    .orderinfo-manager {
+      .el-tabs__item {
+        font-size: $fontSize;
+      }
+    }
+  }
+  .OrderDetail-main,
+  .createOrder-page {
+    @if ($fontSize > 14) {
+      .createOrder-main {
+        min-width: 1490px !important;
+        max-width: 1500px !important;
+      }
+      .order-form-item .order-form-label {
+        width: $fontSize * 4.7;
+      }
+      .el-table__body,
+      .el-table__header {
+        @if ($fontSize != 14) {
+          colgroup > col {
+            width: $fontSize * 7 !important;
+          }
+          colgroup col:first-child {
+            width: 50px !important;
+          }
+        }
+      }
+    }
+    @if ($fontSize != 14) {
+      .order-status-info {
+        left: $fontSize * 10;
+      }
+    }
+    .model-orderDetail-item table tr {
+      @if ($fontSize != 14) {
+        th {
+          font-weight: 400;
+        }
+        font-size: $fontSize !important;
+      }
+    }
+    .order-cargo-form .el-form-item__content > input,
+    .order-transfer-table tbody td,
+    .order-transfer-table thead th,
+    .el-collapse-item__header,
+    .el-select > .el-input,
+    .order-form-item .el-input__inner,
+    .sender-form .el-input__inner,
+    .receiver-form .el-input__inner,
+    .firstline-order .el-input__inner,
+    .order-form-item .order-form-label,
+    .el-form-item__content .autocomplete-input,
+    .el-form .createOrder-info {
+      @if ($fontSize != 14) {
+        font-size: $fontSize !important;
+      }
+    }
+
+    .order-transfer-table thead th {
+      @if ($fontSize != 14) {
+        font-weight: 400;
+      }
+    }
+  }
+  /* 配载详情弹出框 */
+  .st_searchinfo,
+  .deliverInfoPop .el-tabs__item,
+  .editInfoPop_content .el-tabs__item,
+  .storagesInfoPop_content .el-tabs__item,
+  .truck_editInfoPop_content .el-tabs__item,
+  .detailTablePop tr,
+  .detailTables_info tr,
+  .detailTable_info table tr {
+    @if ($fontSize != 14) {
+      font-size: $fontSize !important;
+      .el-form-item--mini .el-form-item__label {
+        width: 113px !important;
+        white-space: nowrap;
+      }
+    }
+  }
+  @if ($fontSize != 14) {
+    .storagesInfoPop_content {
+      .tabs-cont .info_form .st_searchinfo .el-form-item {
+        margin-right: 0px;
+      }
+    }
+  }
+  /* 智能配载 */
+  @if ($fontSize != 14) {
+    .content_left {
+      .el-form-item--mini .el-form-item__label {
+        width: $fontSize * 5 !important;
+        white-space: nowrap;
+        font-size: $fontSize !important;
+      }
+      .el-form-item__content {
+        margin-left: $fontSize * 5 !important;
+      }
+    }
+    .loadInfo_item_form_row {
+      .el-form-item__label {
+        width: $fontSize !important;
+        white-space: nowrap;
+        font-size: $fontSize !important;
+      }
+      .el-form-item__content {
+        margin-left: 10px !important;
+      }
+    }
+  }
+  /* 轨迹跟踪 */
+  .truck-page-log {
+    .el-form-item__label {
+      width: 65px !important;
+    }
+    .el-input__inner,
+    .el-button,
+    .el-form-item__label,
+    .el-tabs__item {
+      font-size: 14px !important;
+    }
+  }
+}

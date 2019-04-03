@@ -1,6 +1,6 @@
 <template>
   <!--v-loading="loading"-->
-  <div class="company clearfix" v-loading="loading">
+  <div class="company miniHeaderSearch clearfix" v-loading="loading">
     <div class="company-box">
       <div class="side_left">
         <el-tree
@@ -115,8 +115,6 @@
                 <el-form-item label="预警额度" :label-width="formLabelWidth">
                   <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
                 </el-form-item>
-
-
               </el-form>
             </div>
           </el-collapse-item>
@@ -157,23 +155,35 @@
                 type="selection"
                 width="55">
               </el-table-column>
-             <!--   <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" >
-              <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
+               <template v-for="column in tableColumn">
+                  <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width" >
+                    <template slot="header" slot-scope="scope">
+                      <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
+                    </template>
+                    <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+                  </el-table-column>
+                  <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+                    <template slot="header" slot-scope="scope">
+                      <tableHeaderSearch :scope="scope"  :query="searchQuery" @change="changeKey" />
+                    </template>
+                    <template slot-scope="scope">
+                      <div class="td-slot" v-html="column.slot(scope)"></div>
+                    </template>
+                  </el-table-column>
               </template>
-              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
-            </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
-              <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope"  :query="searchQuery" @change="changeKey" />
-              </template>
-              <template slot-scope="scope">
-                <div class="td-slot" v-html="column.slot(scope)"></div>
-              </template>
-            </el-table-column>
-          </template> -->
-             <el-table-column
+               <el-table-column
+                width="220"
+                prop="rolesName"
+                label="权限角色">
+                 <template slot="header" slot-scope="scope">
+                      <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
+                    </template>
+                <template slot-scope="scope">
+                  <span v-if="scope.row.rolesId !== '0'">{{ scope.row.rolesName }}</span>
+                  <span class="unauth" v-else>未授权</span>
+                </template>
+              </el-table-column>
+           <!--   <el-table-column
                 fixed
                 prop="id"
                 width="60"
@@ -225,7 +235,7 @@
                 prop="mobilephone"
                 label="联系手机"
               >
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
           </div>
         </div>
@@ -284,6 +294,14 @@
         checkedInput: false, // 过滤失效网点
         getCheckedKeyId: '',
         btnsize: 'mini',
+        searchQuery: {
+          orgid: '',
+          name: '',
+          mobile: '',
+          pageSize: 100,
+          pageNum: 1,
+          searchVo: {}
+        },
         // 加载状态
         loading: true,
         addDoTotVisible: false,
@@ -296,36 +314,44 @@
         orgName: '',
         //
         isModify: false,
-        // tableColumn: [{
-        //   'label': '姓名',
-        //   'prop': 'name',
-        //   'width': '150'
-        // },
+        tableColumn: [{
+          'label': '姓名',
+          'prop': 'name',
+          'width': '130'
+        },
+        {
+          'label': '归属网点',
+          'prop': 'orgName',
+          'width': '150'
+        },
+        {
+          'label': '归属部门',
+          'prop': 'departmentName',
+          'width': '150'
+        },
+        {
+          'label': '职务',
+          'prop': 'position'
+        },
+        {
+          'label': '登录账号',
+          'prop': 'username'
+        },
         // {
-        //   'label': '归属网点',
-        //   'prop': 'orgName',
-        //   'width': '150'
-        // },
-        // {
-        //   'label': '归属部门',
-        //   'prop': 'departmentName',
-        //   'width': '150'
-        // },
-        // {
-        //   'label': '职务',
-        //   'prop': 'position',
-        //   'width': '150'
-        // },
-        //  {
-        //   'label': '登录账号',
-        //   'prop': 'username',
-        //   'width': '150'
-        // },
-        //  {
         //   'label': '权限角色',
         //   'prop': 'rolesName',
-        //   'width': '150'
-        // }],
+        //   slot: (scope) => {
+        //     return (scope.row.rolesId !== '0') ? scope.row.rolesName: '未授权'
+        //   }
+        // },
+        {
+          'label': '性别',
+          'prop': 'sexFlag',
+          'width': '120',
+          slot: (scope) => {
+            return scope.row.sexFlag === '0' ? '男' : (scope.row.sexFlag === '1' ? '女' : '')
+          }
+        }],
         // 新建网点
         ruleForm: {
           name: '',
@@ -384,6 +410,11 @@
       }
     },
     methods: {
+      changeKey(obj) {
+        this.total = 0
+        this.searchQuery = obj
+        this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum, this.searchQuery.searchVo)
+      },
       dataTreeFn(arr) {
         return arr.filter((el, val) => {
           if (el.status !== 31) {
@@ -427,6 +458,7 @@
       fetchOrgId(id) {
         this.loading = true
         this.getOrgId = parseInt(id, 10)
+        this.searchQuery.orgid = this.getOrgId
         this.fetchAllUsers(id)
         if (this.orgInfoCache[id]) {
           this.handleOrgInfo(this.orgInfoCache[id])
@@ -446,9 +478,9 @@
           return res.data
         })
       },
-      fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1) {
+      fetchAllUsers(orgid, name = '', mobile = '', pageSize = 100, pageNum = 1, searchVo) {
         this.loading = true
-        getAllUser(orgid, name, mobile, pageSize, pageNum).then(res => {
+        getAllUser(orgid, name, mobile, pageSize, pageNum, this.searchQuery.searchVo).then(res => {
           this.usersArr = res.list
           this.total = res.total
           this.loading = false
@@ -549,7 +581,9 @@
         this.addDepMaintainisible = false
       },
       handlePageChange(obj) {
-        this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum)
+        this.searchQuery.pageSize = obj.pageSize
+        this.searchQuery.pageNum = obj.pageNum
+        this.fetchAllUsers(this.getOrgId, '', '', obj.pageSize, obj.pageNum, this.searchQuery.searchVo)
       },
       doLayout() {
         this.$refs.multipleTable.doLayout()

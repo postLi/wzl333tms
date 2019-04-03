@@ -171,7 +171,7 @@
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"
                       :maxlength="30"></el-input>
           </el-form-item>
-          <el-form-item label="网点代码" :label-width="formLabelWidth" prop="networkCode">
+          <el-form-item label="网点ID" :label-width="formLabelWidth" prop="networkCode">
             <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" :maxlength="10"
                       clearable></el-input>
           </el-form-item>

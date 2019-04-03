@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content accountsReceivable-summary" v-loading="loading">
+  <div class="tab-content accountsReceivable-summary miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />  
     <div class="tab_info">
       <div class="btns_box">
@@ -41,6 +41,10 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -50,6 +54,9 @@
               :label="column.label"
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                   <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
@@ -73,12 +80,14 @@ import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Addunusual from '../unusual/components/add'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Addunusual
+    Addunusual,
+    tableHeaderSearch
   },
   mounted() {
     // this.loading = false
@@ -122,7 +131,7 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
@@ -151,19 +160,24 @@ export default {
         width: '100',
         fixed: false
       }, {
-          'label': '发站',
-          'prop': 'shipFromCityName'
-        }, {
+        'label': '发站',
+        width: '100',
+        'prop': 'shipFromCityName'
+      }, {
         'label': '到站',
+        width: '100',
         'prop': 'shipToCityName'
       }, {
         'label': '核销状态',
+        width: '100',
         'prop': 'changeStateCn'
       }, {
         'label': '异动',
+        width: '100',
         'prop': 'changeFee'
       }, {
         'label': '未核销异动',
+        width: '130',
         'prop': 'notChangeFee',
         slot: (scope) => {
           const row = scope.row
@@ -171,6 +185,7 @@ export default {
         }
       }, {
         'label': '已核销异动',
+        width: '130',
         'prop': 'finishChangeFee',
         slot: (scope) => {
           const row = scope.row
@@ -182,9 +197,11 @@ export default {
         width: 180
       }, {
         'label': '发货方',
+        width: '100',
         'prop': 'senderCustomerUnit'
       }, {
         'label': '发货人',
+        width: '100',
         'prop': 'shipSenderName'
       }, {
         'label': '收货方',
@@ -240,6 +257,11 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     viewDetails(row) {
       row = row || []
       console.log('row:', row.map(el => { console.log('11') }).join(','))

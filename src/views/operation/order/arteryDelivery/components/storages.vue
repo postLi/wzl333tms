@@ -143,14 +143,16 @@
               </div>
               <div class="tab_info artDelivery_table">
                 <div class="_btns_box">
+                 
                   <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('sure')" v-if="!isAlFun" class="table_poptitle">{{popTitle}}
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain class="table_export">打印清单
+                   <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出
+                  <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('printer')" plain class="table_export">打印清单
                   </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置
+                  <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出
                   </el-button>
+                  
                 </div>
                 <div class="infos_tab">
                   <el-table ref="multipleTable" :data="detailList" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :row-class-name="classLineRed">
@@ -286,9 +288,9 @@
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
-                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
-                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
+                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方要负担其伙食费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
+                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
                     <span></span>
@@ -300,13 +302,13 @@
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
                       方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
+                      元，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
                       元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
-                      ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
+                      ，到付油卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
                       元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
@@ -314,7 +316,7 @@
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
+                      元 。乙方必须将货物安全 完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -513,41 +515,41 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
-        }, {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: true
-        }, {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '150',
-          fixed: true
-        }, {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFee',
-          width: '100',
-          fixed: false
-        },
+        label: '序号',
+        prop: 'number',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
+        }
+      }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: true
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '150',
+        fixed: true
+      }, {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFee',
+        width: '100',
+        fixed: false
+      },
         //   {
         //   label: '应到件数',
         //   prop: 'loadAmount',
@@ -565,49 +567,49 @@ export default {
         //   fixed: false
         // },
         // v-if="isAlFun"   入库前的
-        {
-          label: '实到件数',
-          prop: 'actualAmount',
-          width: '100',
-          isAlFun: true,
-          expand: true,
-          fixed: false,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
-          }
-        }, {
-          label: '实到重量(kg)',
-          prop: 'actualWeight',
-          width: '120',
-          expand: true,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
-          }
-        }, {
-          label: '实到体积(m³)',
-          prop: 'actualVolume',
-          width: '120',
-          expand: true,
-          checkfn: (row) => {
-            return row.warehouStatus === 1 || row.unloadSign === 1
-          },
-          fixed: false,
-
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
-          }
+      {
+        label: '实到件数',
+        prop: 'actualAmount',
+        width: '100',
+        isAlFun: true,
+        expand: true,
+        fixed: false,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
         },
+
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadAmount, row.actualAmount, null, row.actualAmount)
+        }
+      }, {
+        label: '实到重量(kg)',
+        prop: 'actualWeight',
+        width: '120',
+        expand: true,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
+        },
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadWeight, row.actualWeight, null, row.actualWeight)
+        }
+      }, {
+        label: '实到体积(m³)',
+        prop: 'actualVolume',
+        width: '120',
+        expand: true,
+        checkfn: (row) => {
+          return row.warehouStatus === 1 || row.unloadSign === 1
+        },
+        fixed: false,
+
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.loadVolume, row.actualVolume, null, row.actualVolume)
+        }
+      },
         // v-if="!isAlFun"  入库后的
         // {
         //   label: '实到件数',
@@ -635,67 +637,67 @@ export default {
         //   fixed: false
         // },
         //
-        {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '130',
-          fixed: false
-        }, {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '110',
-          fixed: false
-        }
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '130',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '110',
+        fixed: false
+      }
       ]
     }
   },
@@ -1079,7 +1081,7 @@ export default {
         obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
       }
       let appendTopStr = '<style>body{width: 100%;}</style>'
-      appendTopStr += '<body width="100%"><table width="100%" style="font-size: 14px;"><tr><td colspan="9" align="center" style="font-size: 26px;font-weight: 500;padding: 10px 0;">' +
+      appendTopStr += '<body width="100%" style="font-family: {content_font_family}"><table width="100%" style="font-size: {content_word_size}px;font-family: {content_font_family}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">' +
         this.otherinfo.companyName +
         '交接清单</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
         obj.orgName + '   →   ' + obj.endOrgName +
@@ -1110,7 +1112,8 @@ export default {
             data: this.selected.length ? this.selected : this.detailList,
             columns: this.tableColumn,
             name: '批次详情',
-            appendTop: appendTopStr
+            appendTop: appendTopStr,
+            type: 'load' // 配载单
           })
           break
           // 添加客户
@@ -1145,7 +1148,7 @@ export default {
           this.loading = false
         })
       } else {
-        let countActual = 0
+        const countActual = 0
         let countStatus = 0
         this.selected.forEach((value, index, array) => {
           if (value.actualAmount === 0 && value.actualWeight === 0 && value.actualVolume === 0) {
@@ -1224,13 +1227,13 @@ export default {
       }
     },
     getSelection(selection) {
-      let arr = []
+      const arr = []
       this.detailList.forEach((el, index) => {
         selection.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {
             if (em.unloadSign === 1) {
               this.$refs.multipleTable.toggleRowSelection(el, false)
-            }else {
+            } else {
               arr.push(em)
             }
           }
@@ -1291,13 +1294,9 @@ export default {
       .el-button.table_poptitle {
         position: absolute;
       }
-      .el-button.table_export {
-        position: absolute;
-        right: 200px;
-      }
+      .el-button.table_export,
       .el-button.table_import {
-        position: absolute;
-        right: 110px;
+        float: right;
       }
       .table_setup {
         float: right;

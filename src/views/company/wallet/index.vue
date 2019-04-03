@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-wrapper tab-wrapper-100 hyq-wallet-content">
+  <div class="tab-wrapper tab-wrapper-100 hyq-wallet-content miniHeaderSearch">
     <div class="tab-content" v-loading="loading">
       <div class="tab_info">
         <div class="btns_box">
@@ -7,7 +7,8 @@
             <div class="hyq-title">账户信息</div>
             <div class="hyq-wallet-money clearfix">
               账户余额：<span>{{ money }}</span>元
-              <el-button v-has:WALLET_PAY type="primary" size="mini"  @click="payoff" ><icon-svg icon-class="caiwu" ></icon-svg> 充值</el-button>
+              <el-button v-has:WALLET_PAY type="primary" size="mini" @click="payoff">
+                <icon-svg icon-class="caiwu"></icon-svg> 充值</el-button>
             </div>
           </div>
         </div>
@@ -15,23 +16,28 @@
           <div class="hyq-title">账户收支记录</div>
           <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" btnsize="mini"></SearchForm>
           <div class="hyq-table-list">
-          <el-table
-              ref="multipleTable"
-              :data="usersArr"
-              stripe
-              border
-              tooltip-effect="dark"
-              height="100%"
-              @row-click="clickDetails"
-              style="width: 100%;">
-              <el-table-column
-                fixed
-                prop="id"
-                width="60"
-                label="序号">
+            <el-table ref="multipleTable" :data="usersArr" stripe border tooltip-effect="dark" height="100%" @row-click="clickDetails" style="width: 100%;">
+              <el-table-column fixed prop="id" width="60" label="序号">
                 <template slot-scope="scope">{{ ((searchQuery.currentPage - 1)*searchQuery.pageSize) + scope.$index + 1 }}</template>
               </el-table-column>
-              <el-table-column
+              <template v-for="column in tableColumn">
+                <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                  <template slot="header" slot-scope="scope">
+                    <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+                  </template>
+                  <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+                </el-table-column>
+                <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''" :prop="column.prop">
+                  <template slot="header" slot-scope="scope">
+                    <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+                  </template>
+                  <template slot-scope="scope">
+                    <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                    <span v-else v-html="column.slot(scope)"></span>
+                  </template>
+                </el-table-column>
+              </template>
+              <!--  <el-table-column
                 fixed
                 prop="tradeTime"
                 width="180"
@@ -61,21 +67,20 @@
               <el-table-column
                 prop="expenditureChannelName"
                 label="支出渠道">
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
-            </div>
+          </div>
         </div>
       </div>
-      
-    <!-- 分页 -->
-    <div class="info_tab_footer">
-      共计:{{ total }}
-      <div class="show_pager">
-        <Pager :total="total" @change="handlePageChange" />
+      <!-- 分页 -->
+      <div class="info_tab_footer">
+        共计:{{ total }}
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange" />
+        </div>
       </div>
     </div>
-    </div>
-    <ReCharge :popVisible.sync="popVisible" @success="fetchAll" ></ReCharge>
+    <ReCharge :popVisible.sync="popVisible" @success="fetchAll"></ReCharge>
   </div>
 </template>
 <script>
@@ -84,12 +89,14 @@ import SearchForm from './components/search'
 import ReCharge from './components/recharge'
 import { objectMerge2, parseTime } from '@/utils/index'
 import * as walletApi from '@/api/company/wallet'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     Pager,
     SearchForm,
-    ReCharge
+    ReCharge,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -97,6 +104,34 @@ export default {
       total: 0,
       money: 0,
       usersArr: [],
+      tableColumn: [{
+        label: '交易时间',
+        prop: 'tradeTime'
+      },
+      {
+        label: '交易流水',
+        prop: 'flowNo'
+      },
+      {
+        label: '交易类型',
+        prop: 'tradeTypeName'
+      },
+      {
+        label: '交易金额',
+        prop: 'tradeFee',
+        slot: (scope) => {
+          return (scope.row.expenditureChannelName ? '-' : '+') + scope.row.tradeFee
+        }
+      },
+      {
+        label: '收入渠道',
+        prop: 'incomeChannelName'
+      },
+      {
+        label: '支出渠道',
+        prop: 'expenditureChannelName'
+      }
+      ],
       searchQuery: {
         'currentPage': 1,
         'pageSize': 100,
@@ -123,6 +158,11 @@ export default {
     this.getYue()
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      this.fetchData()
+    },
     fetchAll() {
       this.getYue()
       this.fetchData()
@@ -169,38 +209,38 @@ export default {
     }
   }
 }
+
 </script>
 <style lang="scss">
-.wallet-content{
+.wallet-content {}
 
-}
-.hyq-wallet-content{
+.hyq-wallet-content {
   background: #eee;
 
-  .tab-content .tab_info .btns_box{
-    height:100px;
+  .tab-content .tab_info .btns_box {
+    height: 100px;
     background: #fff;
-    .el-button{
+    .el-button {
       float: none;
       margin-left: 100px;
     }
   }
-  .tab-content .tab_info .info_tab{
+  .tab-content .tab_info .info_tab {
     height: calc(100% - 88px);
   }
-  .info_tab{
+  .info_tab {
     background: #fff;
   }
-  .staff_searchinfo{
+  .staff_searchinfo {
     border: none;
     margin: 0;
     padding: 4px 0 10px;
     padding-right: 136px;
   }
-  .hyq-wallet-info{
+  .hyq-wallet-info {
     font-size: 14px;
   }
-  .hyq-title{
+  .hyq-title {
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;
@@ -208,11 +248,12 @@ export default {
     color: #333;
     font-size: 14px;
   }
-  .hyq-wallet-money{
+  .hyq-wallet-money {
     padding: 10px;
   }
-  .hyq-table-list{
+  .hyq-table-list {
     height: calc(100% - 91px);
   }
 }
+
 </style>

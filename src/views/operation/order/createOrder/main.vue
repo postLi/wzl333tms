@@ -9,7 +9,7 @@
         <div class="createOrder-info clearfix">
           <div class="order-num required">运单号： <span class="order-num-info">
         <el-form-item  :error='shipFieldValueInfo.shipSn'>
-          <el-input ref="tmsOrderShipshipSn"  size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
+          <el-input ref="tmsOrderShipshipSn"  @keyup.native="validates('shipSn')"  size="mini" :maxlength="20" :disabled="!canChangeOrderNum" v-model="form.tmsOrderShip.shipSn" />
         </el-form-item>
         </span></div>
           <div class="create-num required">开单日期： <span class="create-num-info">
@@ -26,7 +26,7 @@
           </el-date-picker>
       </span></div>
         </div>
-        <div class="order-main model-order-list">
+        <div class="order-main model-order-list" v-if="orderModelShow">
           <!-- 网点信息 -->
           <el-row class="firstline-order model-order-item" :data-index="m_index.tmsOrderShipTop">
             <el-col :span="4" v-for="(mitem, mindex) in modelList" :key="mindex" v-if="mitem.templateType === 'tmsOrderShipTop' && mitem.hide">
@@ -145,7 +145,7 @@
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipSenderMobile'" class="order-form-label " :class="{'required': shipFieldValue.shipSenderMobile}">联系电话</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipSenderMobile'" :error='shipFieldValueInfo.shipSenderMobile'>
-                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdercustomerMobile" search="customerMobile" type="sender" valuekey="customerMobile" v-model="form.sender.customerMobile" @change="setSender" />
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipSenderAddress'" class="order-form-label" :class="{'required': shipFieldValue.shipSenderAddress}">发货地址</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipSenderAddress'" :error='shipFieldValueInfo.shipSenderAddress'>
@@ -192,7 +192,7 @@
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipReceiverMobile'" class="order-form-label" :class="{'required': shipFieldValue.shipReceiverMobile}">联系电话</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipReceiverMobile'" :error='shipFieldValueInfo.shipReceiverMobile'>
-                  <querySelect :remote="true" :key="customkey" :maxlength="20" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
+                  <querySelect :remote="true" :key="customkey" :maxlength="25" ref="tmsOrdershipReceiverMobile" search="customerMobile" type="receiver" valuekey="customerMobile" v-model="form.receiver.customerMobile" @change="setReceiver" />
                 </el-form-item>
                 <span v-if="eitem.fieldProperty==='shipReceiverAddress'" class="order-form-label" :class="{'required': shipFieldValue.shipReceiverAddress}">收货地址</span>
                 <el-form-item v-if="eitem.fieldProperty==='shipReceiverAddress'" :error='shipFieldValueInfo.shipReceiverAddress'>
@@ -278,7 +278,7 @@
             </el-table>
           </div>
           <!-- 其它项 -->
-          <div class="order-other-form model-order-item clearfix" :data-index="m_index.tmsOrderShip">
+          <div class="order-other-form model-order-item clearfix" :data-index="m_index.tmsOrderShip" >
             <el-row class="firstline-order-other">
               <el-col :span="(eitem.fieldProperty==='shipOther' ? 8: (eitem.fieldProperty==='shipRemarks' ? 24: 4))" v-for="(eitem, eindex) in modelList" :key="eindex" v-if="eitem.templateType === 'tmsOrderShip' && eitem.hide">
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipTotalFee'">
@@ -338,7 +338,7 @@
                 <div class="order-form-item" v-if="eitem.fieldProperty==='shipPrintLib'">
                   <span class="order-form-label">打印标签</span>
                   <el-form-item prop="tmsOrderShip.shipPrintLib">
-                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib">
+                    <el-input v-number-only size="mini" :maxlength="3" v-model="form.tmsOrderShip.shipPrintLib" @change="changePrintAmount">
                       <template slot="append">份</template>
                     </el-input>
                   </el-form-item>
@@ -719,8 +719,9 @@ export default {
   },
   data() {
     const _this = this
-
     return {
+      orderModelShow: true,
+      isPrintAmount: false,
       org_m_index: {
         tmsOrderShipTop: 1,
         customerInfo: 2,
@@ -995,9 +996,11 @@ export default {
           startProvince: '',
           startCity: '',
           startArea: '',
+          startTown: '',
           endProvince: '',
           endCity: '',
           endArea: '',
+          endTown: '',
 
           'shipFromOrgid': '',
           'shipGoodsSn': '',
@@ -1096,15 +1099,15 @@ export default {
         proposedPrice: 0 // 总价
       },
       RECEIPT_TYPE: {}, // 回单类型中文
-      dialogVisibleModel: false, // 
+      dialogVisibleModel: false, //
       modelList: [] // 模板设置列表
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -1155,7 +1158,7 @@ export default {
       this.form.tmsOrderShip.shipOther = newVal.join(',')
       console.log('this.form.tmsOrderShip.shipOther:', this.form.tmsOrderShip.shipOther)
     },
-    'form.tmsOrderShip.shipPrintLib': {
+    'form.tmsOrderShip.shipPrintLib': { // 打印标签数量
       handler(newVal) {
         if (newVal > 500) {
           this.form.tmsOrderShip.shipPrintLib = 500
@@ -1194,14 +1197,24 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
+      console.warn('开单页面的 route, to, from', to, from)
+      if (from.query.type && from.query.type === 'modify' && from.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 1 如果从改单页面进入
+        console.log('1 如果从改单页面进入', to, from)
+        this.initIndex()
+      }
+      if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
+        // 2 如果进入改单页面
+        this.initIndex()
+      }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -1219,7 +1232,6 @@ export default {
 
   },
   mounted() {
-
     // if (process.env.NODE_ENV !== 'production') {
     //   console.warn('模板设置字段：', this.form)
     //   console.warn('-----------开始分割线--------------')
@@ -1260,53 +1272,86 @@ export default {
       // 中转默认付款方式
       this.form.tmsOrderTransfer.paymentId = 16
     }
+    this.initPrintAmount()
   },
   methods: {
+    validates(key) {
+      this.$set(this.form.tmsOrderShip, key, this.form.tmsOrderShip[key].replace(/[^\d|a-zA-Z|\-]/g, ''))
+    },
+    initPrintAmount() {
+      this.isPrintAmount = false
+      if (this.otherinfo.systemSetup) {
+        const systemSetup = this.otherinfo.systemSetup
+        if (systemSetup.shipPageFunc) {
+           // systemSetup.shipPageFunc.printLabelIsAmount  0否1是，默认是1
+          this.isPrintAmount = systemSetup.shipPageFunc.printLabelIsAmount === '1'
+        }
+        console.log('系统设置 打印标签是否默认件数：', this.isPrintAmount, this.otherinfo.systemSetup, systemSetup.shipPageFunc)
+      }
+    },
+    changePrintAmount(val) {
+      // 修改打印标签数量
+      console.log('val changePrintAmount', val)
+      this.isPrintAmount = false
+    },
     setModel() {
+      // this.loading = true
+      // this.initIndex('isSaveAndNew')
+      // this.orderModelShow = false
+      // setTimeout(() => {
+      //   this.orderModelShow = true
+      //   this.$nextTick(() => {
+      //     this.init()
+      //   })
+      // }, 200)
       // 重新修改开单页面的模板
-      this.fetchModel()
+      this.fetchModel().then(() => {
+        this.setCargoNum()
+      })
     },
     fetchModel() { // 获取模板信息
       this.loading = true
       return orderManage.getOrderModel().then(data => {
-          if (data) {
-            this.modelList = data
-            this.modelList.forEach((el, index) => {
-              if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
-                this.m_index.customerInfo = el.typeOrder
-              } else {
-                this.m_index[el.templateType] = el.typeOrder
-              }
-            })
-            this.m_index.tmsOrderTransfer = 5
-            this.org_m_index = objectMerge2({}, this.m_index)
-            console.log('模板各个模块排序：', JSON.stringify(this.m_index))
-            console.warn('所有模板排序信息 modelList:', this.modelList)
-            this.sortModel() // 初始化开单页面各个模块排序
-          } else {
-            this.modelList = this.$const.MODELLIST
-          }
-          this.loading = false
-        })
+        if (data) {
+          this.modelList = data
+          this.modelList.forEach((el, index) => {
+            if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+              this.m_index.customerInfo = el.typeOrder
+            } else {
+              this.m_index[el.templateType] = el.typeOrder
+            }
+          })
+          this.m_index.tmsOrderTransfer = 5
+          this.org_m_index = objectMerge2({}, this.m_index)
+          // console.log('模板各个模块排序：', JSON.stringify(this.m_index))
+          // console.warn('所有模板排序信息 modelList:', this.modelList)
+          this.sortModel() // 初始化开单页面各个模块排序
+        } else {
+          this.modelList = this.$const.MODELLIST
+        }
+        this.loading = false
+      })
         .catch(err => {
           this.modelList = this.$const.MODELLIST
           this._handlerCatchMsg(err)
         })
     },
     sortModel() { // 按照模板修改开单页面各个模块上下排序
+    // 1/需要深拷贝DOM
+    // 2/清空容器的dom
+    // 3/排序每个模块
+    // 4/重新把dom设置进去被清空的容器里面，实现排序效果
       this.$nextTick(() => {
         if (this.modelList) {
-          this.loading = true
-          let list = document.querySelectorAll('.model-order-item')
-          let arr = Array.prototype.slice.call(list)
+          const root = document.querySelector('.model-order-list')
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-order-item'))
+          root.innerHTML = ''
+          const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          let modelDiv = document.querySelectorAll('.model-order-list')[0]
           for (let i = 0; i < arr.length; i++) {
-            modelDiv.appendChild(arr[i])
-            let name = arr[i].getAttribute('data-name')
-            let index = arr[i].getAttribute('data-index')
+            root.appendChild(arr[i])
           }
           this.loading = false
         }
@@ -1541,7 +1586,6 @@ export default {
           }
         }, 1000)
       }) // 查询开单页面模板
-
     },
     // 设置上一次的运单信息
     setLastOrderInfo() {
@@ -1558,8 +1602,8 @@ export default {
       let obj
       if (this.config.shipNo.manualInput !== '1') {
         obj = this.$refs['tmsOrderShipshipToCityName']
-        if (obj) {
-          console.warn('obj======', obj[0])
+        if (obj && obj.length) {
+          console.warn('obj======', obj[0], obj, obj.length)
           obj = obj[0].$refs['myautocomplete']
         }
         // 不允许修改系统生成的单号
@@ -1576,8 +1620,9 @@ export default {
           })
         }
       } else {
-        obj = this.$refs['tmsOrderShipshipSn'][0]
+        obj = this.$refs['tmsOrderShipshipSn']
       }
+      console.warn('obj22222', obj)
       if (obj && this.output.iscreate) {
         obj.focus()
       }
@@ -1654,6 +1699,7 @@ export default {
         this.form.tmsOrderShip.startProvince = item.province || ''
         this.form.tmsOrderShip.startCity = item.city || ''
         this.form.tmsOrderShip.startArea = item.area || ''
+        this.form.tmsOrderShip.startTown = item.town || ''
       }
       /*  else {
               this.form.tmsOrderShip.shipFromCityCode = city || ''
@@ -1670,6 +1716,7 @@ export default {
         this.form.tmsOrderShip.endProvince = item.province || ''
         this.form.tmsOrderShip.endCity = item.city || ''
         this.form.tmsOrderShip.endArea = item.area || ''
+        this.form.tmsOrderShip.endTown = item.town || ''
       }
       this.getLineInfo()
     },
@@ -1791,8 +1838,10 @@ export default {
         } else {
           param = this.$route.query
         }
-
-        if (param.orderid) {
+        if (whereAreYou === 'isSaveAndNew') {
+          this.output.iscreate = true
+          this.initCreate()
+        } else if (param.orderid) {
           this.output.orderid = param.orderid
           this.output.isOrder = true
           this.initOrder()
@@ -1814,8 +1863,6 @@ export default {
           this.output.iscreate = true
           this.initCreate()
         }
-
-
       }).catch(err => {
         console.log('base setting error:', err)
         this.$message.error('获取信息失败：' + err.text + ' 请尝试重新刷新页面。')
@@ -2304,6 +2351,11 @@ export default {
       this.form.cargoList[index][name] = event.target.value
       // }
       this.setCargoNum()
+      console.log('件数 change方法', index, name, event)
+      if (this.isPrintAmount) {
+        // ture 打印标签数量默认为第一个货品的件数
+        this.form.tmsOrderShip.shipPrintLib = event.target.value
+      }
     },
     // 修改货品列表
     changeFee(index, name, event) {
@@ -2831,10 +2883,11 @@ export default {
       if (msg && !m) {
         this.$message.error(msg)
         let obj = this.$refs['tmsOrder' + find.fieldProperty]
-          console.log('obj1111', obj)
+        console.log('obj1111', obj)
         obj = Array.isArray(obj) ? obj[1] : obj
-          console.log('obj2222', obj)
+        console.log('obj2222', obj)
         if (obj) {
+          this.loading = false
           obj.focus()
         }
       } else {
@@ -2988,8 +3041,9 @@ export default {
           resolve(!msg)
         } else {
           if (!this.form.tmsOrderShip.shipSn) {
-            this.$refs['tmsOrderShipshipSn'][0].focus()
+            this.$refs['tmsOrderShipshipSn'].focus()
             this.$message.error('请填写运单号~')
+            // this.loading = false
             resolve(false)
           } else {
             this.detectOrderNum().then(isDulip => {
@@ -3137,7 +3191,7 @@ export default {
                 //     }
                 //   }
                 // }
-                return b
+                // return b
               })
               data.tmsOrderShip.createTime = new Date((data.tmsOrderShip.createTime + '').trim()).getTime()
 
@@ -3236,9 +3290,7 @@ export default {
                       this.eventBus.$emit('replaceCurrentView', '/operation/order/orderDetail?orderid=' + 9 + '&tab=查看' + data.tmsOrderShip.shipSn)
                     }
                   }
-
                   return */
-                console.log('create order data', data)
                 orderManage.postNewOrder(data).then(res => {
                   this.resOrderId = res.data // 获取开单后返回的运单id
                   this.$message.success('成功创建运单！')
@@ -3300,7 +3352,7 @@ export default {
           this.isSavePrint = false // false-不保存并打印，只保存
           this.submitForm()
           break
-        case 'saveInsertKey':
+        case 'saveInsertKey': // 保存并新增
           this.isSaveAndNew = true
           this.submitForm().then(r => {
             this.initIndex('isSaveAndNew')
@@ -3353,24 +3405,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyLi().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.label
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-          CreatePrintPageEnable(printObj)
-          return data
-          this.setPrintData('lib') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyLi', data, printData)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-        })
+        CreatePrintPageEnable(printObj)
+        return data
+        this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyLi', data, printData)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3386,24 +3438,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyOrder().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-          CreatePrintPageEnable(printObj)
-          return
-          this.setPrintData('order') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyOrder', data)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
-            libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
-          }
-          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-        })
+        CreatePrintPageEnable(printObj)
+        return
+        this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyOrder', data)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
+          libData.forEach((e, index) => {
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
+        }
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

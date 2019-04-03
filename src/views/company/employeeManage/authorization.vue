@@ -74,18 +74,20 @@ export default {
   },
   watch: {
     popVisible(newVal) {
-      if (!this.inited) {
-        this.inited = true
-        this.initInfo()
+      if (newVal) {
+        if (!this.inited) {
+          this.inited = true
+          this.initInfo()
+        }
       }
     }
   },
-  mounted() {
-    if (!this.inited) {
-      this.inited = true
-      this.initInfo()
-    }
-  },
+  // mounted() {
+  //   if (!this.inited) {
+  //     this.inited = true
+  //     this.initInfo()
+  //   }
+  // },
   methods: {
     initInfo() {
       this.loading = true

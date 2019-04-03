@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" type="funds_giveout_status" title="发放" status="fundsGiveoutStatus" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -260,8 +260,16 @@
           <el-table ref="multipleTable" :data="dataset" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="50"></el-table-column>
             <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                 <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+                  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
                 <template slot-scope="scope">
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                   <span v-else v-html="column.slot(scope)"></span>
@@ -286,12 +294,14 @@ import TableSetup from '@/components/tableSetup'
 import AddPayment from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    AddPayment
+    AddPayment,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -335,7 +345,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '60',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -478,33 +488,31 @@ export default {
         fixed: false
       }, {
         label: '到达省',
-        prop: 'shipToCityName1',
+        prop: 'endProvince',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        },
         fixed: false
       }, {
         label: '到达市',
-        prop: 'shipToCityName2',
+        prop: 'endCity',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        },
         fixed: false
       }, {
-        label: '到达县',
-        prop: 'shipToCityName3',
+        label: '到达区县',
+        prop: 'endArea',
         width: '120',
-        slot: (scope) => {
-          return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        },
         fixed: false
       }]
 
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.featchAllpayment()
+      }
+    },
     featchAllpayment() {
       this.loading = true
       return postGoodsfundsList(this.searchQuery).then(data => {
@@ -553,18 +561,9 @@ export default {
          // 导出
         case 'export':
           const arr = objectMerge2([], this.dataset) // 所有的数据
-          arr.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
 
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
+
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,

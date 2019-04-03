@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :companyId="otherinfo.companyId" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>
     <div class="tab_info">
       <div class="btns_box">
@@ -26,9 +26,17 @@
           <el-table-column fixed sortable type="selection" width="50"></el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop"
-                             v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else
+                             v-if="!column.slot" :width="column.width">
+                              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+                             </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :prop="column.prop"
                              :width="column.width">
+                              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)"
                       @click.stop="column.click(scope)"></span>
@@ -58,12 +66,14 @@
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+  import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     components: {
       SearchForm,
       Pager,
-      TableSetup
+      TableSetup,
+      tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -104,7 +114,7 @@
         tableColumn: [
           {
             label: '序号',
-            prop: 'id',
+            prop: 'number',
             width: '120',
             fixed: true,
             slot: (scope) => {
@@ -152,6 +162,13 @@
       }
     },
     methods: {
+      changeKey(obj) {
+        this.total = 0
+        this.searchQuery = obj
+        if (!this.loading) {
+          this.fetchAllCustomer()
+        }
+      },
       fetchAllCustomer() {
         this.loading = true
         return postGroupList(this.searchQuery).then(data => {

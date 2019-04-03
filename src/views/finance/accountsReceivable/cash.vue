@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content accountsReceivable-summary" v-loading="loading">
+  <div class="tab-content accountsReceivable-summary miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isShow="true" />  
     <div class="tab_info">
       <div class="btns_box">
@@ -39,6 +39,14 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -48,6 +56,9 @@
               :label="column.label"
               v-else
               :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                   <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
@@ -68,12 +79,14 @@ import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   mounted() {
     // this.loading = false
@@ -111,42 +124,47 @@ export default {
       tablekey: '',
       tableColumn: [{
         'label': '序号',
-        'prop': '',
+        'prop': 'number',
         'fixed': true,
         'slot': function(scope) {
           return scope.$index + 1
         }
       }, {
         'label': '开单网点',
+        width: '100',
         'prop': 'shipFromOrgName',
         'fixed': true
       }, {
         'label': '运单号',
         'prop': 'shipSn',
-        width: 120
+        width: 100
       }, {
         'label': '货号',
         'prop': 'shipGoodsSn',
         'width': '150'
       }, {
         'label': '运单标识',
+        width: '160',
         'prop': 'shipIdentifying',
         slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-      },{
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        }, {
+      }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      }, {
         'label': '发站',
+        width: '100',
         'prop': 'shipFromCityName'
       }, {
         'label': '到站',
+        width: '100',
         'prop': 'shipToCityName'
       }, {
         'label': '核销状态',
+        width: '100',
         'prop': 'nowPayStateCn'
       }, {
         'label': '现付',
@@ -154,13 +172,15 @@ export default {
         'prop': 'nowPayFee'
       }, {
         'label': '已核销现付',
+        width: '130',
         'prop': 'finishNowPayFee',
-          slot: (scope) => {
+        slot: (scope) => {
           const row = scope.row
           return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
         }
       }, {
         'label': '未核销现付',
+        width: '130',
         'prop': 'notNowPayFee',
         slot: (scope) => {
           const row = scope.row
@@ -172,48 +192,62 @@ export default {
         width: 180
       }, {
         'label': '发货方',
+        width: '100',
         'prop': 'senderCustomerUnit'
       }, {
         'label': '发货人',
+        width: '100',
         'prop': 'shipSenderName'
       }, {
         'label': '收货方',
+        width: '100',
         'prop': 'receiverCustomerUnit'
       }, {
         'label': '收货人',
+        width: '100',
         'prop': 'shipReceiverName'
       }, {
         'label': '货品名',
+        width: '100',
         'prop': 'cargoName'
       }, {
         'label': '件数',
+        width: '100',
         'prop': 'cargoAmount'
       }, {
         'label': '重量(kg)',
+        width: '120',
         'prop': 'cargoWeight'
       }, {
         'label': '体积(方)',
+        width: '120',
         'prop': 'cargoVolume'
       }, {
         'label': '付款方式',
+        width: '120',
         'prop': 'shipPayWay'
       }, {
         'label': '制单人',
+        width: '100',
         'prop': 'userName'
       }, {
         'label': '发货人电话',
+        width: '120',
         'prop': 'senderMobile'
       }, {
         'label': '发货人地址',
+        width: '120',
         'prop': 'senderAddr'
       }, {
         'label': '收货人电话',
         'prop': 'receiverMoblie'
       }, {
         'label': '收货地址',
+        width: '120',
         'prop': 'receiverAddr'
       }, {
         'label': '交接方式',
+        width: '100',
         'prop': 'shipDeliveryMethod'
       }, {
         'label': '时效',
@@ -225,14 +259,19 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      this.fetchAllOrder()
+    },
     viewDetails() {
-      let list = []
+      const list = []
       this.selected.forEach((e, index) => {
         list.push(e.shipSn)
       })
-       const data = objectMerge2(this.searchQuery)
+      const data = objectMerge2(this.searchQuery)
       data.vo.ascriptionOrgId = data.vo.shipFromOrgid
-      
+
       console.log('传给核销页面的数据:::query', this.searchQuery, list)
       this.$router.push({
         path: '/finance/accountsLoadReceivable',

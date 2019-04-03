@@ -5,7 +5,8 @@
     <el-button v-if="keys.printShipKeyVisible === '1'" size="medium" @click="doAction('printShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单（{{keys.printShipKey}}）</el-button>
     <el-button v-if="keys.printLibShipKeyVisible === '1'" size="medium" @click="doAction('printLibShipKey')" icon="el-icon-tickets" type="primary" plain>打印运单和标签（{{keys.printLibShipKey}}）</el-button>
     <el-button v-if="keys.saveShipKeyVisible === '1'" size="medium" @click="doAction('saveShipKey')" icon="el-icon-document" type="primary" plain>保存（{{keys.saveShipKey}}）</el-button>
-    <el-button class="saveInsertKey" v-if="keys.saveInsertKeyVisible === '1'" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button>
+    <!-- <el-button class="saveInsertKey" v-if="keys.saveInsertKeyVisible === '1'" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button> -->
+    <el-button v-if="keys.saveInsertKeyVisible === '1'" size="medium" @click="doAction('saveInsertKey')" icon="el-icon-tickets" type="primary" plain>保存并新增（{{keys.saveInsertKey}}）</el-button>
     <el-button v-if="keys.savePrintKeyVisible === '1'" size="medium" @click="doAction('savePrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存并打印（{{keys.savePrintKey}}）</el-button>
     <el-button v-if="keys.saveInsertPrintKeyVisible === '1'" size="medium" @click="doAction('saveInsertPrintKey')" icon="el-icon-circle-check-outline" type="success" plain>保存新增并打印（{{keys.saveInsertPrintKey}}）</el-button>
     

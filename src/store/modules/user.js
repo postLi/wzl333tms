@@ -280,6 +280,7 @@ const user = {
     }) {
       return new Promise((resolve, reject) => {
         logout(state.token || getToken()).then(() => {
+          sessionStorage.setItem('TMS_experience_system', 'no')
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-content" v-loading="loading" @success="fetchAllreceipt">
+  <div class="tab-content miniHeaderSearch" v-loading="loading" @success="fetchAllreceipt">
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -478,8 +478,20 @@
         <el-table ref="multipleTable" @row-dblclick="getDbClick" :data="dataset" border @row-click="clickDetails" :summary-method="getSumLeft" show-summary @selection-change="getSelection" height="100%" tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
           <el-table-column fixed sortable type="selection" width="70"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -511,21 +523,23 @@ import Addbatch from './components/batch'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Addsign,
     Addbatch,
     TableSetup,
-    Pager
+    Pager,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters(['otherinfo']),
     orgid() {
       // console.log(this.selectInfo.orgid , this.searchQuery.vo.orgid , this.otherinfo.orgid)
-      return this.isModify ?
-        this.selectInfo.orgid :
-        this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify
+        ? this.selectInfo.orgid
+        : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -735,29 +749,20 @@ export default {
         prop: 'signRemark',
         width: '120',
         fixed: false
-      },  {
+      }, {
         label: '到达省',
         prop: 'endProvince',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[0] : ''
-        // },
         fixed: false
       }, {
         label: '到达市',
         prop: 'endCity',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[1] : ''
-        // },
         fixed: false
       }, {
         label: '到达县',
         prop: 'endArea',
         width: '120',
-        // slot: (scope) => {
-        //   return scope.row.shipToCityName ? scope.row.shipToCityName.split(',')[2] : ''
-        // },
         fixed: false
       }, {
         label: '付款方式',
@@ -908,6 +913,13 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -965,18 +977,7 @@ export default {
         // 导出
         case 'export':
           const arr = objectMerge2([], this.dataset) // 所有的数据
-          arr.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
-
           const arrSel = objectMerge2([], this.selected) // 选择打勾的数据
-          arrSel.forEach(e => {
-            this.$set(e, 'shipToCityName1', e.shipToCityName ? e.shipToCityName.split(',')[0] : '')
-            this.$set(e, 'shipToCityName2', e.shipToCityName ? e.shipToCityName.split(',')[1] : '')
-            this.$set(e, 'shipToCityName3', e.shipToCityName.split(',')[2] ? e.shipToCityName.split(',')[2] : '')
-          })
           SaveAsFile({
             data: arrSel.length ? arrSel : arr,
             columns: this.tableColumn,
@@ -1026,7 +1027,6 @@ export default {
             this.id = this.selected[0].signId
             console.log(this.id)
             this.openAddSign()
-
           } else {
             this.$message({
               message: '已签收状态才可以修改',

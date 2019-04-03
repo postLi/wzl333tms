@@ -11,7 +11,7 @@ import {
 
 export const operationPropertyCalc = ['_index|1|单', 'shipReceiptNum|份', 'agencyFund', 'shipNowpayFee', 'shipArrivepayFee', 'shipReceiptpayFee', 'shipMonthpayFee', 'brokerageFee', 'shipTotalFee', 'deliveryFee', 'commissionFee', 'productPrice', 'insuranceFee', 'handlingFee', 'packageFee', 'pickupFee', 'goupstairsFee', 'realityhandlingFee', 'forkliftFee', 'customsFee', 'otherfeeIn', 'otherfeeOut', 'stampTax', 'taxes', 'housingFee', 'cargoAmount|件', 'cargoWeight|kg', 'cargoVolume|方', 'repertoryAmount|件', 'repertoryWeight|kg', 'repertoryVolume|方', 'pickupAmount|件', 'pickupWeight|kg', 'realVolume|方', 'realWeight|kg', 'pickupVolume|方', 'differWeight|kg', 'differVolume|方', 'pickupFee', 'carriage', 'collectionFee', 'truckFee', 'handlingFeeAll', 'shortFee', 'loadAmountall|件', 'loadWeightall|kg', 'loadVolumeall|方', 'actualAmount|件', 'actualWeight|kg', 'actualVolume|方', 'amountall|件', 'weightall|kg', 'volumeall|方', 'nowpayCarriage', 'nowpayOilCard', 'arrivepayCarriage', 'arrivepayOilCard', 'backpayCarriage', 'backpayOilCard', 'shipFeeAmount', 'carloadInsuranceFee', 'leaveHandlingFee', 'leaveOtherFee', 'totalFee', 'arriveHandlingFee', 'arriveOtherFee', 'shipFee', 'shipAmount|件', 'shipWeightall|kg', 'shipVolumeall|方', 'truckLoad|kg', 'truckVolume|方', 'transferCharge', 'deliveryExpense', 'transferOtherFee', 'totalCost', 'codService', 'registerFee', 'abnormalAmount|件', 'nowPayFee', 'finishNowPayFee', 'notNowPayFee', 'arrivepayFee', 'finishArrivepayFee', 'notArrivepayFee', 'receiptpayFee', 'finishReceiptpayFee', 'notReceiptpayFee', 'monthpayFee', 'finishMonthpayFee', 'notMonthpayFee', 'changeFee', 'notChangeFee', 'finishChangeFee', 'inputChangeFee', 'inputMonthpayFee', 'inputNowPayFee', 'inputArrivepayFee', 'inputReceiptpayFee', 'loadAmount|件', 'loadWeight|kg', 'loadVolume|方',
   // 一些自定义的字段
-  'shipTotalProfit', 'fee', 'closeFee', 'unpaidFee', 'paidFee', 'grossMargin',
+  'shipTotalProfit', 'fee', 'closeFee', 'unpaidFee', 'paidFee', 'grossMargin', 'grossProfit',
   'paidNowpayCarriage', 'unpaidNowpayCarriage', 'paidNowpayOilCard', 'unpaidNowpayOilCard', 'paidBackpayCarriage', 'unpaidBackpayCarriage', 'paidBackpayOilCard', 'unpaidBackpayOilCard', 'paidCarloadInsuranceFee', 'unpaidCarloadInsuranceFee', 'paidLeaveHandlingFee', 'unpaidLeaveHandlingFee', 'paidLeaveOtherFee', 'unpaidLeaveOtherFee',
   'deliveryFee', 'deliveryPay', 'deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay', 'deliveryFeeToPay', 'deliveryFeeDiffer',
   'paidArrivepayCarriage', 'unpaidArrivepayCarriage', 'paidArrivepayOilCard', 'unpaidArrivepayOilCard', 'paidArriveHandlingFee', 'unpaidArriveHandlingFee', 'paidArriveOtherFee', 'unpaidArriveOtherFee', 'pandHandlingFeePay'
@@ -84,7 +84,7 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
       } else {
         // const values = data.map(item => Number(item[prop]))
         let isAllEmpty = true
-        let allCountIndex = {}
+        const allCountIndex = {}
         const values = data.map((item, mindex) => {
           if (item[prop] !== '') {
             isAllEmpty = false
@@ -94,7 +94,6 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
         if (isAllEmpty) {
           sums[index] = defaultNoneString
         } else {
-
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
@@ -391,7 +390,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof(options = arguments[i]) != null) {
+    if (typeof (options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number

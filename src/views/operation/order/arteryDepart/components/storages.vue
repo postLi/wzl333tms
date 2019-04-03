@@ -13,44 +13,44 @@
                 <!--<SelectTree v-model="otherinfo.orgid" />-->
                 <!--</el-form-item>-->
                 <el-form :inline="true" :size="btnsize" label-position="right" label-width="110px" class="st_searchinfo clearfix" :model="formModel">
-                  <el-form-item label="到达网点:">
+                  <el-form-item label="到达网点">
                     <el-input v-model="formModel.arriveOrgName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="车牌号码:">
+                  <el-form-item label="车牌号码">
                     <el-input v-model="formModel.truckIdNumber" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="司机姓名:">
+                  <el-form-item label="司机姓名">
                     <el-input v-model="formModel.dirverName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="司机电话:">
+                  <el-form-item label="司机电话">
                     <el-input v-model="formModel.dirverMobile" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="可载体积:">
+                  <el-form-item label="可载体积">
                     <el-input v-model="formModel.truckVolume" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="可载重量:">
+                  <el-form-item label="可载重量">
                     <el-input v-model="formModel.truckLoad" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="分摊方式:">
+                  <el-form-item label="分摊方式">
                     <el-input v-model="formModel.apportionTypeName" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="配载日期:">
+                  <el-form-item label="配载日期">
                     <el-input :value="formModel.loadTime " :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                  <el-form-item label="预计到达日期:" class="art_arriveTime">
+                  <el-form-item label="预计到达日期" class="art_arriveTime">
                     <!--<el-input :value="formModel.requireArrivedTime | parseTime('{y}/{m}/{d}')" :maxlength="15" clearable disabled>-->
                     <el-input :value="formModel.planArrivedTime " :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
-                   <el-form-item label="追货宝:">
+                   <el-form-item label="追货宝">
                     <el-input v-model="formModel.terminalNo" :maxlength="15" clearable disabled>
                     </el-input>
                   </el-form-item>
@@ -146,10 +146,6 @@
               </div>
               <div class="tab_info artDepart_table ">
                 <div class="btns_box_send">
-                  <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_print">打印清单
-                  </el-button>
-                  <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出清单
-                  </el-button>
                   <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
                     <p>表格宽度修改了，是否要保存？</p>
                     <div style="text-align: right; margin: 0">
@@ -158,6 +154,11 @@
                     </div>
                     <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
                   </el-popover>
+                  <el-button type="success" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain class="table_print">打印清单
+                  </el-button>
+                  <el-button type="success" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain class="table_import">导出清单
+                  </el-button>
+                  
                 </div>
                 <div class="infos_tab">
                   <el-table :class="hideFixTable" row-key="repertoryId" @header-dragend="setTableWidth" :key="tablekey" ref="multipleTable" :data="usersArr" border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" stripe>
@@ -323,9 +324,9 @@
                   <p class="p_salf">为确保本货物安全运输，根据互利原则，经双方共同协商，签订本运输合同：</p>
                   <div class="p_cont">
                     <p>一、乙方必须证件齐全、真实，车辆车况必须良好，且必须配备完整的防雨防盗设施，运输途中被水淋湿或被盗，乙方无条件地承担全部责任；</p>
-                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;要负担其伙食费；</p>
-                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
-                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方不得擅自做主叫车换货；</p>
+                    <p>二、乙方承运途中各项费用开支全由自己承担，途中若因意外交通事故及其他原因造成货物损失、变质、短缺等责任由乙方承担，若甲方有带路人员，乙方要负担其伙食费；</p>
+                    <p>三、车辆装货期间，甲乙双方必须当场清点核实数量，并负责将甲方有关票据带到个卸货点，运输途中不得把甲方货物转让给第三者承运，也不允许乙方途中私自增载非甲方的其他货物，否则甲方有权拒付车费；</p>
+                    <p>四、乙方在承运途中，若遇交通事故，交通堵塞或车辆故障应及时向甲方反映真实情况，并在甲方允许的时间内排除车辆故障，否则甲方另行排除换装，乙方不得擅自做主叫车换货；</p>
                   </div>
                   <div class="p_input">
                     <span></span>
@@ -337,13 +338,13 @@
                       <el-input size="mini" disabled v-model="formModel.loadVolumeall"></el-input>
                       方,全程车费
                       <el-input size="mini" disabled v-model="formModel.shipFeeAmount"></el-input>
-                      元，甲乙双方不得任意减价或涨 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价，乙方不得收取其他劳务费，本车现付车费
+                      元，甲乙双方不得任意减价或涨价，乙方不得收取其他劳务费，本车现付车费
                       <el-input size="mini" disabled v-model="formModel.nowpayCarriage"></el-input>
                       元，现付油卡
                       <el-input size="mini" disabled v-model="formModel.nowpayOilCard"></el-input>
                       元，到付车费
                       <el-input size="mini" disabled v-model="formModel.arrivepayCarriage"></el-input>
-                      ，到付油 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡
+                      ，到付油卡
                       <el-input size="mini" disabled v-model="formModel.arrivepayOilCard"></el-input>
                       元，回付车费
                       <el-input size="mini" disabled v-model="formModel.backpayCarriage"></el-input>
@@ -351,7 +352,7 @@
                       <el-input size="mini" disabled v-model="formModel.backpayOilCard"></el-input>
                       元，保险费
                       <el-input size="mini" disabled v-model="formModel.carloadInsuranceFee"></el-input>
-                      元 。乙方必须将货物安全 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
+                      元 。乙方必须将货物安全完整及时运到本公司货运仓库，经双方验收无误后，甲方应一次性付清下次车费；
                     </el-form-item>
                   </div>
                   <div class="p_input">
@@ -576,121 +577,121 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '100',
-          fixed: true,
-          slot: (scope) => {
-            return scope.$index + 1
-          }
-        }, {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        }, {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '180',
-          fixed: false
-        }, {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFee',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '120',
-          fixed: false
-        }, {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '120',
-          fixed: false
-        }, {
-          label: '运单件数',
-          prop: 'cargoAmount',
-          width: '100',
-          fixed: false
-        }, {
-          label: '运单重量(kg)',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        }, {
-          label: '运单体积(m³)',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '110',
-          fixed: false
-        }, {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '120',
-          fixed: false
-        }, {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '120',
-          fixed: false
-        }, {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100',
-          fixed: false
-        }, {
-          label: '回扣',
-          prop: 'brokerageFee',
-          width: '120',
-          fixed: false
-        }, {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '130',
-          fixed: false
-        }, {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+        label: '序号',
+        prop: 'number',
+        width: '100',
+        fixed: true,
+        slot: (scope) => {
+          return scope.$index + 1
         }
+      }, {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      }, {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '180',
+        fixed: false
+      }, {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFee',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单件数',
+        prop: 'cargoAmount',
+        width: '100',
+        fixed: false
+      }, {
+        label: '运单重量(kg)',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      }, {
+        label: '运单体积(m³)',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '110',
+        fixed: false
+      }, {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      }, {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      }, {
+        label: '回扣',
+        prop: 'brokerageFee',
+        width: '120',
+        fixed: false
+      }, {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '130',
+        fixed: false
+      }, {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ],
       rules: {
         contractName: [
@@ -792,7 +793,7 @@ export default {
   methods: {
     initSort() {
       this.$nextTick(() => {
-        let obj = {
+        const obj = {
           selector: '.infos_tab .el-table__body-wrapper > table > tbody',
           sortable: this.sortable
         }
@@ -804,7 +805,7 @@ export default {
     setSort(obj) { // 右边列表行拖拽
       const el = document.querySelectorAll(obj.selector)[0]
       obj.sortable = Sortable.create(el, {
-        animation: 150, //动画参数
+        animation: 150, // 动画参数
         ghostClass: 'sortables-ghost',
         setData: function(dataTransfer) {
           dataTransfer.setData('Text', '')
@@ -824,28 +825,28 @@ export default {
       })
     },
     putUpdateLoadSort() {
-      let arr = this.usersArr.map(el => {
+      const arr = this.usersArr.map(el => {
         if (el) {
           return el.id
         }
       })
-      let shipSn = []
+      const shipSn = []
       this.usersArr.forEach(el => {
         shipSn.push(el.shipSn)
       })
       console.log('列表shipSn', shipSn)
       updateLoadSort(arr).then(data => {
-          this.$message.success('排序保存成功！')
-          let selected = []
-          this.usersArr.forEach(el => {
-            this.selected.forEach(e => {
-              if (e.repertoryId === el.repertoryId) {
-                selected.push(e)
-              }
-            })
+        this.$message.success('排序保存成功！')
+        const selected = []
+        this.usersArr.forEach(el => {
+          this.selected.forEach(e => {
+            if (e.repertoryId === el.repertoryId) {
+              selected.push(e)
+            }
           })
-          this.selected = objectMerge2([], selected)
         })
+        this.selected = objectMerge2([], selected)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -936,10 +937,8 @@ export default {
           return el
         })
 
-
         this.loading = false
         this.toggleAllRows()
-
       })
     },
     getDetail() {
@@ -1040,7 +1039,7 @@ export default {
         obj[item] = (this.info[item] === null || this.info[item] === undefined) ? '' : this.info[item]
       }
       let appendTopStr = '<style>body{width: 100%;}</style>'
-      appendTopStr += '<body width="100%"><table width="100%" style="{font-size: {content_word_size}px;}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
+      appendTopStr += '<body width="100%" style="font-family: {content_font_family}"><table width="100%" style="font-size: {content_word_size}px;font-family: {content_font_family}"><tr><td colspan="9" align="center" style="font-size: {heading_word_size}px;font-weight: 500;padding: 10px 0;">{heading_content}</td></tr><tr><td align="right">运行区间: </td><td colspan="2" style="padding-left: 20px;">' +
         obj.orgName + '   →   ' + obj.arriveOrgName +
         '</td><td align="right">发车时间: </td><td colspan="2" style="padding-left: 20px;">' +
         (obj.actualSendtime || '无') +
@@ -1075,13 +1074,14 @@ export default {
           break
           // 打印
         case 'print':
-          let shipSns = []
+          const shipSns = []
           this.usersArr.forEach(el => { shipSns.push(el.shipSn) })
-          console.log('this.usersArr', shipSns, this.usersArr)
+          // console.log('this.usersArr', shipSns, this.usersArr)
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: columnArr,
-            appendTop: appendTopStr
+            appendTop: appendTopStr,
+            type: 'load' // 配载单
           })
           break
       }
@@ -1121,14 +1121,15 @@ export default {
       }
     },
     print() { // 打印合同
-      let str = '?'
+      const str = '?'
       this.formModel.checkBillName = this.sendContract.contractName
       const formModel = Object.assign({}, this.formModel)
       this.$set(formModel, 'carrier', this.sendContract.carrier)
       this.$set(formModel, 'orgName', this.sendContract.nomineeCompany)
       formModel.contractNo = this.sendContract.contractNo
       formModel.remark = this.sendContract.aboutLocal
-      console.log('formModel',formModel)
+      // formModel.content_font_family = this.otherinfo.systemSetup.printFontSetting ? this.otherinfo.systemSetup.printFontSetting.contract : ''
+      console.log('formModel', formModel)
       PrintContract(formModel)
     },
     setColumn(obj) { // 重绘表格列表
@@ -1205,15 +1206,17 @@ export default {
       position: relative;
 
       .el-button.table_print {
-        position: absolute;
-        right: 220px;
+        // position: absolute;
+        // right: 220px;
       }
       .el-button.table_import {
-        position: absolute;
-        right: 110px;
+        // position: absolute;
+        // right: 110px;
       }
       .el-button {
         margin-right: 0;
+        margin-left: 10px;
+        float: right;
       }
       .table_setup {
         float: right;

@@ -1,5 +1,5 @@
 <template>
-  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable">
+  <div class="customer-manager tab-wrapper tab-wrapper-100 receivableTable" v-loading="loading">
     <div class="accountsLoad_table">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -14,7 +14,7 @@
       <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
 
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed width="50" label="序号">
+          <el-table-column fixed width="60" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -50,7 +50,7 @@
       <!-- 右边表格区 -->
       <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed width="50" label="序号">
+          <el-table-column fixed width="60" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -122,7 +122,7 @@ export default {
       tablekey: '',
       truckMessage: '',
       formModel: {},
-      loading: false,
+      loading: true,
       popVisibleDialog: false,
       btnsize: 'mini',
       totalLeft: 0,
@@ -190,16 +190,16 @@ export default {
         'label': '已核销月结',
         'prop': 'finishMonthpayFee',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
+        }
       }, {
         'label': '未核销月结',
         'prop': 'notMonthpayFee',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
+        }
       },
       {
         label: '实际核销月付',
@@ -280,7 +280,7 @@ export default {
   },
   computed: {
     getRouteInfo() {
-      console.log('xxxxxxxxxxxxxxxxxx222:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
+      // console.log('xxxxxxxxxxxxxxxxxx222:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
       const obj = this.$route.query
       return JSON.parse(obj.searchQuery)
     },
@@ -292,7 +292,7 @@ export default {
     }
   },
   watch: {
-     '$route.query': {
+    '$route.query': {
       handler(cval, oval) {
         if (cval) {
           this.getList()
@@ -300,32 +300,35 @@ export default {
       },
       deep: true
     }
-   },
+  },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
   methods: {
-   handlePageChangeLeft(obj) {
+    handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
-       this.pageGetList()
+      // console.log(obj.pageSize, obj.pageNum, obj)
+      this.pageGetList()
     },
     pageGetList() {
-      let rightTable = objectMerge2([], this.rightTable)
+      const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-       accountApi.getReceivableList(this.searchQuery).then(data => {
-          if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-          }
-          this.orgLeftTable = Object.assign([], this.leftTable)
-          this.loading = false
-        })
+      accountApi.getReceivableList(this.searchQuery).then(data => {
+        if (data) {
+          this.leftTable = Object.assign([], data.list)
+          this.totalLeft = data.total
+          rightTable.forEach((el, index) => {
+            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
+          })
+        }
+        this.orgLeftTable = Object.assign([], this.leftTable)
+        this.loading = false
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -337,11 +340,18 @@ export default {
         this.isFresh = true // 是否手动刷新页面
       } else {
         this.searchQuery = Object.assign({}, this.getRouteInfo)
-        
+
         // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
         // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
         // this.$set(this.searchQuery.vo, 'status', '')
         this.isFresh = false
+      }
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        // console.log('111111111111111')
+      } else {
+        // console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
       }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
@@ -377,9 +387,10 @@ export default {
         accountApi.getReceivableList(this.searchQuery).then(data => {
           // NOSETTLEMENT,PARTSETTLEMENT
           // 过滤未完成核销的数据
-          this.leftTable = Object.assign([], data.list.filter(el => {
-            return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.monthpayState)
-          }))
+          // this.leftTable = Object.assign([], data.list.filter(el => {
+          //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.monthpayState)
+          // }))
+          this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           selectListShipSns.forEach(e => {
             this.leftTable.forEach(item => {
@@ -402,6 +413,7 @@ export default {
           })
           // 保留原有数据的引用
           this.orgLeftTable = objectMerge2([], this.leftTable)
+          this.loading = false
         }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -419,11 +431,11 @@ export default {
         this.textChangeDanger[index] = false
       }
       if (Number(newVal) < 0 || Number(newVal) > this.rightTable[index].notMonthpayFee) {
-         this.isGoReceipt = true
-         this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
-       } else {
-         this.isGoReceipt = false
-       }
+        this.isGoReceipt = true
+        this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
+      } else {
+        this.isGoReceipt = false
+      }
       return false
       /* this.rightTable[index][prop] = Number(newVal)
       const unpaidName = 'unpaidFee' // 未核销费用名
@@ -434,7 +446,7 @@ export default {
       } else {
         this.rightTable[index][prop] = Number(newVal)
       }
-      console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
+      // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -612,7 +624,7 @@ export default {
       }
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-       let arr = objectMerge2([], operationPropertyCalc)
+      const arr = objectMerge2([], operationPropertyCalc)
       arr.forEach((el, index) => {
         if (el === '_index|1|单') {
           arr[index] = '_index|2|单'
@@ -621,7 +633,7 @@ export default {
       return getSummaries(param, arr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-       let arr = objectMerge2([], operationPropertyCalc)
+      const arr = objectMerge2([], operationPropertyCalc)
       arr.forEach((el, index) => {
         if (el === '_index|1|单') {
           arr[index] = '_index|2|单'

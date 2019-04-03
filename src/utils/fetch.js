@@ -118,6 +118,16 @@ service.interceptors.response.use(
         duration: 1 * 1000
       }) */
       // return Promise.reject(res)
+      if (res.status === -2) {
+        // res.errorInfo.indexOf('SQL异常,请联系客服人员') !== -1
+        // 表格列字段模糊查询 -2返回的是没有的字段名 特殊处理
+        // 如果有爆出这个字段提示 需要后台添加相关的字段查询
+        console.warn('该字段不支持搜索~', res)
+        Message({
+          message: '该字段不支持搜索~',
+          type: 'warning'
+        })
+      }
       return res
     } else {
       return response.data

@@ -1,7 +1,6 @@
 <template>
   <!--
     USAGE【表格设置组件】-用法-父组件引入：
-
     //html
     <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
 

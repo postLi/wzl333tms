@@ -108,437 +108,441 @@ export const APPORTION_TYPE_DESCRIPT = {
   45: '(运单 - 回扣）/（总车费 - 总回扣）* 操作费'
 }
 /**
+ * 常用打印字体列表
+ */
+export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', 'Arial']
+/**
  * 默认开单页面模板JSON
  */
 export const MODELLIST = [{
-  "id": "1098059986338054144",
-  "fieldName": "开单网点",
-  "fieldProperty": "shipFromOrgid",
-  "hide": 1,
-  "fieldOrder": 1,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054144',
+  'fieldName': '开单网点',
+  'fieldProperty': 'shipFromOrgid',
+  'hide': 1,
+  'fieldOrder': 1,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054145",
-  "fieldName": "发站",
-  "fieldProperty": "shipFromCityName",
-  "hide": 1,
-  "fieldOrder": 2,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054145',
+  'fieldName': '发站',
+  'fieldProperty': 'shipFromCityName',
+  'hide': 1,
+  'fieldOrder': 2,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054146",
-  "fieldName": "到站",
-  "fieldProperty": "shipToCityName",
-  "hide": 1,
-  "fieldOrder": 3,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054146',
+  'fieldName': '到站',
+  'fieldProperty': 'shipToCityName',
+  'hide': 1,
+  'fieldOrder': 3,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054147",
-  "fieldName": "目的网点",
-  "fieldProperty": "shipToOrgid",
-  "hide": 1,
-  "fieldOrder": 4,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054147',
+  'fieldName': '目的网点',
+  'fieldProperty': 'shipToOrgid',
+  'hide': 1,
+  'fieldOrder': 4,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054148",
-  "fieldName": "交接方式",
-  "fieldProperty": "shipDeliveryMethod",
-  "hide": 1,
-  "fieldOrder": 5,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054148',
+  'fieldName': '交接方式',
+  'fieldProperty': 'shipDeliveryMethod',
+  'hide': 1,
+  'fieldOrder': 5,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054149",
-  "fieldName": "货号",
-  "fieldProperty": "shipGoodsSn",
-  "hide": 1,
-  "fieldOrder": 6,
-  "templateType": "tmsOrderShipTop",
-  "typeOrder": 1,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054149',
+  'fieldName': '货号',
+  'fieldProperty': 'shipGoodsSn',
+  'hide': 1,
+  'fieldOrder': 6,
+  'templateType': 'tmsOrderShipTop',
+  'typeOrder': 1,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054150",
-  "fieldName": "发货方",
-  "fieldProperty": "shipSenderUnit",
-  "hide": 1,
-  "fieldOrder": 7,
-  "templateType": "senderCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054150',
+  'fieldName': '发货方',
+  'fieldProperty': 'shipSenderUnit',
+  'hide': 1,
+  'fieldOrder': 7,
+  'templateType': 'senderCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054151",
-  "fieldName": "发货人",
-  "fieldProperty": "shipSenderName",
-  "hide": 1,
-  "fieldOrder": 8,
-  "templateType": "senderCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054151',
+  'fieldName': '发货人',
+  'fieldProperty': 'shipSenderName',
+  'hide': 1,
+  'fieldOrder': 8,
+  'templateType': 'senderCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054152",
-  "fieldName": "发货方电话",
-  "fieldProperty": "shipSenderMobile",
-  "hide": 1,
-  "fieldOrder": 9,
-  "templateType": "senderCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054152',
+  'fieldName': '发货方电话',
+  'fieldProperty': 'shipSenderMobile',
+  'hide': 1,
+  'fieldOrder': 9,
+  'templateType': 'senderCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054153",
-  "fieldName": "发货地址",
-  "fieldProperty": "shipSenderAddress",
-  "hide": 1,
-  "fieldOrder": 10,
-  "templateType": "senderCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054153',
+  'fieldName': '发货地址',
+  'fieldProperty': 'shipSenderAddress',
+  'hide': 1,
+  'fieldOrder': 10,
+  'templateType': 'senderCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054154",
-  "fieldName": "收货方",
-  "fieldProperty": "shipReceiverUnit",
-  "hide": 1,
-  "fieldOrder": 11,
-  "templateType": "receiverCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054154',
+  'fieldName': '收货方',
+  'fieldProperty': 'shipReceiverUnit',
+  'hide': 1,
+  'fieldOrder': 11,
+  'templateType': 'receiverCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054155",
-  "fieldName": "收货人",
-  "fieldProperty": "shipReceiverName",
-  "hide": 1,
-  "fieldOrder": 12,
-  "templateType": "receiverCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054155',
+  'fieldName': '收货人',
+  'fieldProperty': 'shipReceiverName',
+  'hide': 1,
+  'fieldOrder': 12,
+  'templateType': 'receiverCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054156",
-  "fieldName": "收货方电话",
-  "fieldProperty": "shipReceiverMobile",
-  "hide": 1,
-  "fieldOrder": 13,
-  "templateType": "receiverCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054156',
+  'fieldName': '收货方电话',
+  'fieldProperty': 'shipReceiverMobile',
+  'hide': 1,
+  'fieldOrder': 13,
+  'templateType': 'receiverCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054157",
-  "fieldName": "收货地址",
-  "fieldProperty": "shipReceiverAddress",
-  "hide": 1,
-  "fieldOrder": 14,
-  "templateType": "receiverCustomer",
-  "typeOrder": 2,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054157',
+  'fieldName': '收货地址',
+  'fieldProperty': 'shipReceiverAddress',
+  'hide': 1,
+  'fieldOrder': 14,
+  'templateType': 'receiverCustomer',
+  'typeOrder': 2,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054158",
-  "fieldName": "货品模块",
-  "fieldProperty": "tmsOrderCargoList",
-  "hide": 1,
-  "fieldOrder": 15,
-  "templateType": "tmsOrderCargoList",
-  "typeOrder": 3,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054158',
+  'fieldName': '货品模块',
+  'fieldProperty': 'tmsOrderCargoList',
+  'hide': 1,
+  'fieldOrder': 15,
+  'templateType': 'tmsOrderCargoList',
+  'typeOrder': 3,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054159",
-  "fieldName": "运费合计",
-  "fieldProperty": "shipTotalFee",
-  "hide": 1,
-  "fieldOrder": 16,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054159',
+  'fieldName': '运费合计',
+  'fieldProperty': 'shipTotalFee',
+  'hide': 1,
+  'fieldOrder': 16,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054160",
-  "fieldName": "付款方式",
-  "fieldProperty": "shipPayWay",
-  "hide": 1,
-  "fieldOrder": 17,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054160',
+  'fieldName': '付款方式',
+  'fieldProperty': 'shipPayWay',
+  'hide': 1,
+  'fieldOrder': 17,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054162",
-  "fieldName": "到付",
-  "fieldProperty": "shipArrivepayFee",
-  "hide": 1,
-  "fieldOrder": 18,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054162',
+  'fieldName': '到付',
+  'fieldProperty': 'shipArrivepayFee',
+  'hide': 1,
+  'fieldOrder': 18,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054161",
-  "fieldName": "现付",
-  "fieldProperty": "shipNowpayFee",
-  "hide": 1,
-  "fieldOrder": 19,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054161',
+  'fieldName': '现付',
+  'fieldProperty': 'shipNowpayFee',
+  'hide': 1,
+  'fieldOrder': 19,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054163",
-  "fieldName": "回单付",
-  "fieldProperty": "shipReceiptpayFee",
-  "hide": 1,
-  "fieldOrder": 20,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054163',
+  'fieldName': '回单付',
+  'fieldProperty': 'shipReceiptpayFee',
+  'hide': 1,
+  'fieldOrder': 20,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054164",
-  "fieldName": "月结",
-  "fieldProperty": "shipMonthpayFee",
-  "hide": 1,
-  "fieldOrder": 21,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054164',
+  'fieldName': '月结',
+  'fieldProperty': 'shipMonthpayFee',
+  'hide': 1,
+  'fieldOrder': 21,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054165",
-  "fieldName": "回单类型",
-  "fieldProperty": "shipReceiptRequire",
-  "hide": 1,
-  "fieldOrder": 22,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054165',
+  'fieldName': '回单类型',
+  'fieldProperty': 'shipReceiptRequire',
+  'hide': 1,
+  'fieldOrder': 22,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054166",
-  "fieldName": "回单号及份数",
-  "fieldProperty": "shipReceiptSn",
-  "hide": 1,
-  "fieldOrder": 23,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054166',
+  'fieldName': '回单号及份数',
+  'fieldProperty': 'shipReceiptSn',
+  'hide': 1,
+  'fieldOrder': 23,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054167",
-  "fieldName": "打印标签",
-  "fieldProperty": "shipPrintLib",
-  "hide": 1,
-  "fieldOrder": 24,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054167',
+  'fieldName': '打印标签',
+  'fieldProperty': 'shipPrintLib',
+  'hide': 1,
+  'fieldOrder': 24,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054168",
-  "fieldName": "客户单号",
-  "fieldProperty": "shipCustomerNumber",
-  "hide": 1,
-  "fieldOrder": 25,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054168',
+  'fieldName': '客户单号',
+  'fieldProperty': 'shipCustomerNumber',
+  'hide': 1,
+  'fieldOrder': 25,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054169",
-  "fieldName": "运输方式",
-  "fieldProperty": "shipShippingType",
-  "hide": 1,
-  "fieldOrder": 26,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054169',
+  'fieldName': '运输方式',
+  'fieldProperty': 'shipShippingType',
+  'hide': 1,
+  'fieldOrder': 26,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054170",
-  "fieldName": "业务类型",
-  "fieldProperty": "shipBusinessType",
-  "hide": 1,
-  "fieldOrder": 27,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054170',
+  'fieldName': '业务类型',
+  'fieldProperty': 'shipBusinessType',
+  'hide': 1,
+  'fieldOrder': 27,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054171",
-  "fieldName": "时效",
-  "fieldProperty": "shipEffective",
-  "hide": 1,
-  "fieldOrder": 28,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054171',
+  'fieldName': '时效',
+  'fieldProperty': 'shipEffective',
+  'hide': 1,
+  'fieldOrder': 28,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054172",
-  "fieldName": "提货批次",
-  "fieldProperty": "shipBatchId",
-  "hide": 1,
-  "fieldOrder": 29,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054172',
+  'fieldName': '提货批次',
+  'fieldProperty': 'shipBatchId',
+  'hide': 1,
+  'fieldOrder': 29,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054173",
-  "fieldName": "车牌号",
-  "fieldProperty": "shipTruckIdNumber",
-  "hide": 1,
-  "fieldOrder": 30,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054173',
+  'fieldName': '车牌号',
+  'fieldProperty': 'shipTruckIdNumber',
+  'hide': 1,
+  'fieldOrder': 30,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054174",
-  "fieldName": "业务员",
-  "fieldProperty": "shipUserid",
-  "hide": 1,
-  "fieldOrder": 31,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054174',
+  'fieldName': '业务员',
+  'fieldProperty': 'shipUserid',
+  'hide': 1,
+  'fieldOrder': 31,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054175",
-  "fieldName": "其他",
-  "fieldProperty": "shipOther",
-  "hide": 1,
-  "fieldOrder": 32,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054175',
+  'fieldName': '其他',
+  'fieldProperty': 'shipOther',
+  'hide': 1,
+  'fieldOrder': 32,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }, {
-  "id": "1098059986338054176",
-  "fieldName": "备注",
-  "fieldProperty": "shipRemarks",
-  "hide": 1,
-  "fieldOrder": 33,
-  "templateType": "tmsOrderShip",
-  "typeOrder": 4,
-  "userId": 0,
-  "orgId": 0,
-  "companyId": 1,
-  "createTime": "2019-02-20 11:21:16",
-  "updateTime": "2019-03-07 10:10:42"
+  'id': '1098059986338054176',
+  'fieldName': '备注',
+  'fieldProperty': 'shipRemarks',
+  'hide': 1,
+  'fieldOrder': 33,
+  'templateType': 'tmsOrderShip',
+  'typeOrder': 4,
+  'userId': 0,
+  'orgId': 0,
+  'companyId': '',
+  'createTime': '2019-02-20 11:21:16',
+  'updateTime': '2019-03-07 10:10:42'
 }]
 
 /**
@@ -549,86 +553,86 @@ export const MODELLIST = [{
 export const cursorPosition = {
   get: function(textarea) { // 获取 Textarea 元素当前的光标位置
     var rangeData = {
-      text: "",
+      text: '',
       start: 0,
       end: 0
-    };
+    }
 
     if (textarea.setSelectionRange) { // W3C
-      textarea.focus();
-      rangeData.start = textarea.selectionStart;
-      rangeData.end = textarea.selectionEnd;
-      rangeData.text = (rangeData.start != rangeData.end) ? textarea.value.substring(rangeData.start, rangeData.end) : "";
+      textarea.focus()
+      rangeData.start = textarea.selectionStart
+      rangeData.end = textarea.selectionEnd
+      rangeData.text = (rangeData.start != rangeData.end) ? textarea.value.substring(rangeData.start, rangeData.end) : ''
     } else if (document.selection) { // IE
-      textarea.focus();
+      textarea.focus()
       var i,
         oS = document.selection.createRange(),
         // Don't: oR = textarea.createTextRange()
-        oR = document.body.createTextRange();
-      oR.moveToElementText(textarea);
+        oR = document.body.createTextRange()
+      oR.moveToElementText(textarea)
 
-      rangeData.text = oS.text;
-      rangeData.bookmark = oS.getBookmark();
+      rangeData.text = oS.text
+      rangeData.bookmark = oS.getBookmark()
 
       // object.moveStart(sUnit [, iCount])
       // Return Value: Integer that returns the number of units moved.
-      for (i = 0; oR.compareEndPoints('StartToStart', oS) < 0 && oS.moveStart("character", -1) !== 0; i++) {
+      for (i = 0; oR.compareEndPoints('StartToStart', oS) < 0 && oS.moveStart('character', -1) !== 0; i++) {
         // Why? You can alert(textarea.value.length)
         if (textarea.value.charAt(i) == '\r') {
-          i++;
+          i++
         }
       }
-      rangeData.start = i;
-      rangeData.end = rangeData.text.length + rangeData.start;
+      rangeData.start = i
+      rangeData.end = rangeData.text.length + rangeData.start
     }
 
-    return rangeData;
+    return rangeData
   },
   set: function(textarea, rangeData) { // 设置回原先的 Textarea 元素的光标位置
-    var oR, start, end;
+    var oR, start, end
     if (!rangeData) {
-      alert("You must get cursor position first.")
+      alert('You must get cursor position first.')
     }
-    textarea.focus();
+    textarea.focus()
     if (textarea.setSelectionRange) { // W3C
-      textarea.setSelectionRange(rangeData.start, rangeData.end);
+      textarea.setSelectionRange(rangeData.start, rangeData.end)
     } else if (textarea.createTextRange) { // IE
-      oR = textarea.createTextRange();
+      oR = textarea.createTextRange()
 
       // Fixbug : ues moveToBookmark()
       // In IE, if cursor position at the end of textarea, the set function don't work
       if (textarea.value.length === rangeData.start) {
-        //alert('hello')
-        oR.collapse(false);
-        oR.select();
+        // alert('hello')
+        oR.collapse(false)
+        oR.select()
       } else {
-        oR.moveToBookmark(rangeData.bookmark);
-        oR.select();
+        oR.moveToBookmark(rangeData.bookmark)
+        oR.select()
       }
     }
   },
 
   add: function(textarea, rangeData, text) { // 在 Textarea 元素的光标位置插入文本
-    var oValue, nValue, oR, sR, nStart, nEnd, st;
-    this.set(textarea, rangeData);
+    var oValue, nValue, oR, sR, nStart, nEnd, st
+    this.set(textarea, rangeData)
 
     if (textarea.setSelectionRange) { // W3C
-      oValue = textarea.value;
-      nValue = oValue.substring(0, rangeData.start) + text + oValue.substring(rangeData.end);
-      nStart = nEnd = rangeData.start + text.length;
-      st = textarea.scrollTop;
-      textarea.value = nValue;
+      oValue = textarea.value
+      nValue = oValue.substring(0, rangeData.start) + text + oValue.substring(rangeData.end)
+      nStart = nEnd = rangeData.start + text.length
+      st = textarea.scrollTop
+      textarea.value = nValue
       // Fixbug:
       // After textarea.values = nValue, scrollTop value to 0
       if (textarea.scrollTop != st) {
-        textarea.scrollTop = st;
+        textarea.scrollTop = st
       }
-      textarea.setSelectionRange(nStart, nEnd);
+      textarea.setSelectionRange(nStart, nEnd)
     } else if (textarea.createTextRange) { // IE
-      sR = document.selection.createRange();
-      sR.text = text;
-      sR.setEndPoint('StartToEnd', sR);
-      sR.select();
+      sR = document.selection.createRange()
+      sR.text = text
+      sR.setEndPoint('StartToEnd', sR)
+      sR.select()
     }
   }
 }

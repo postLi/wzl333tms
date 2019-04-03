@@ -101,6 +101,9 @@ export default {
     console.log('transferId:', this.$route)
     this.init()
   },
+  activated() {
+    this.regetList()
+  },
   methods: {
     regetList() {
      // 刷新数据

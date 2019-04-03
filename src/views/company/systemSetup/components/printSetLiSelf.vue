@@ -68,6 +68,12 @@
             </li>
           </ul>
         </div>
+          <div class="prinit_aside_paper">
+          <label><i class="el-icon-edit"></i> 打印字体</label>
+          <el-select v-model="formPrint.printFontSetting.label" size="mini">
+            <el-option v-for="(item, index) in $const.PRINT_FONT" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </div>
         <div class="prinit_aside_paper">
           <span><i class="el-icon-document"></i> 纸张设置</span>
           <br>
@@ -241,7 +247,10 @@ export default {
       tagSize: 'mini',
       formPrint: {
         printSetting: {
-          ship: ''
+          label: ''
+        },
+        printFontSetting: { // 打印字体
+          label: ''
         }
       },
       printRotate: {
@@ -455,6 +464,7 @@ export default {
         printer: this.formPrint.printSetting.label, // 打印机
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
+        fontFamily: this.formPrint.printFontSetting.label, // 打印字体
         preview: type === 'preview', // 是否预览
         mock: true // 是否直接读取value字段
       })
@@ -1167,16 +1177,21 @@ export default {
       this.viewKey = new Date().getTime()
     },
     savePrinter() {
-      if (this.formInfo.printSetting.label !== this.formPrint.printSetting.label) {
-        this.$confirm('默认打印机已修改，是否需要保存?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$emit('success', {
-            label: this.formPrint.printSetting.label
-          })
-        }).catch(() => {})
+      if (this.formInfo.printSetting.label !== this.formPrint.printSetting.label || this.formInfo.printFontSetting.label !== this.formPrint.printFontSetting.label) {
+        this.$emit('success', {
+          label: this.formPrint.printSetting.label,
+          labelFont: this.formPrint.printFontSetting.label
+        })
+        // this.$confirm('默认打印机或字体已修改，是否需要保存?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   this.$emit('success', {
+        //     label: this.formPrint.printSetting.label,
+        //     labelFont: this.formPrint.printFontSetting.label
+        //   })
+        // }).catch(() => {})
       }
     },
     submitForm(formName) { // 保存修改

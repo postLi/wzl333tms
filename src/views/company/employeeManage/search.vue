@@ -76,10 +76,12 @@ export default {
     }
   },
   mounted() {
-    this.searchForm.orgid = this.orgid
+    this.searchForm.orgid = this.otherinfo.orgid
+    this.onSubmit()
   },
   methods: {
     onSubmit() {
+      // this.searchForm.orgid = this.orgid
       this.$emit('change', this.searchForm)
     },
     clearForm(formName) {

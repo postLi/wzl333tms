@@ -8,7 +8,7 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-        <el-table-column fixed width="50" type="index" label="序号">
+        <el-table-column fixed width="60" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -126,7 +126,7 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed width="50" type="index" label="序号">
+        <el-table-column fixed width="60" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -365,7 +365,7 @@ export default {
     activeName: {
       handler(cval, oval) {
         if (cval === 'second') {
-        console.log('activeName', cval)
+          console.log('activeName', cval)
           this.getList()
         }
       },
@@ -730,7 +730,7 @@ export default {
     position: absolute;
     z-index: 33;
     top: 10px;
-    left: 67px;
+    left: 77px;
     background-size: 18px;
     background-repeat: no-repeat;
   }

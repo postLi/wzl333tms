@@ -1,36 +1,97 @@
 <template>
   <!-- 资金流水明细 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="orgId" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('income')" plain v-has:FLOW_IN>新增</el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('edit')" plain v-has:FLOW_CANCEL>修改</el-button>
+        <el-button
+          type="primary"
+          :size="btnsize"
+          icon="el-icon-sort"
+          @click="doAction('income')"
+          plain
+          v-has:FLOW_IN
+        >新增</el-button>
+        <el-button
+          type="primary"
+          :size="btnsize"
+          icon="el-icon-sort"
+          @click="doAction('edit')"
+          plain
+          v-has:FLOW_CANCEL
+        >修改</el-button>
         <!-- <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button> -->
         <!--   <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>查看明细</el-button> -->
-        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('backCount')" plain v-has:FLOW_CANCEL>反核销
-        </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:FLOW_PRI>打印
-        </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:FLOW_EXP>导出
-        </el-button>
-        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>
-          表格设置
-        </el-button>
+        <el-button
+          type="warning"
+          :size="btnsize"
+          icon="el-icon-sort"
+          @click="doAction('backCount')"
+          plain
+          v-has:FLOW_CANCEL
+        >反核销</el-button>
+        <el-button
+          type="primary"
+          :size="btnsize"
+          icon="el-icon-printer"
+          @click="doAction('print')"
+          plain
+          v-has:FLOW_PRI
+        >打印</el-button>
+        <el-button
+          type="primary"
+          :size="btnsize"
+          icon="el-icon-download"
+          @click="doAction('export')"
+          plain
+          v-has:FLOW_EXP
+        >导出</el-button>
+        <el-button
+          type="primary"
+          :size="btnsize"
+          icon="el-icon-setting"
+          @click="setTable"
+          class="table_setup"
+          plain
+        >表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataListTop" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :cell-class-name="classLineRed">
-          <el-table-column fixed sortable type="selection" width="35">
-          </el-table-column>
+        <el-table
+          ref="multipleTable"
+          :key="tablekey"
+          :data="dataListTop"
+          stripe
+          border
+          @row-click="clickDetails"
+          @selection-change="getSelection"
+          height="100%"
+          tooltip-effect="dark"
+          style="width:100%;"
+          :default-sort="{prop: 'id', order: 'ascending'}"
+          :cell-class-name="classLineRed"
+        >
+          <el-table-column fixed sortable type="selection" width="35"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label"   v-if="!column.slot" :width="column.width">
+              <!-- <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template> -->
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+         <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+              <!-- <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template> -->
               <template slot-scope="scope">
-                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
+                <span
+                  class="clickitem"
+                  v-if="column.click"
+                  v-html="column.slot(scope)"
+                  @click.stop="column.click(scope)"
+                ></span>
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
@@ -42,13 +103,24 @@
     <div class="info_tab_footer">
       共计:{{ total }}
       <div class="show_pager">
-        <Pager :total="total" @change="handlePageChange" />
+        <Pager :total="total" @change="handlePageChange"/>
       </div>
     </div>
     <!-- 表格设置弹出框 -->
-    <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable" @success="setColumn"></TableSetup>
+    <TableSetup
+      :popVisible="setupTableVisible"
+      :columns="tableColumn"
+      @close="closeSetupTable"
+      @success="setColumn"
+    ></TableSetup>
     <!-- 新增 -->
-    <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
+    <Income
+      :popVisible="popVisibleIncome"
+      :info="currentInfo"
+      @close="closeDialogIncome"
+      @success="setAddSuccess"
+      :isModify="isModify"
+    ></Income>
   </div>
 </template>
 <script>
@@ -56,16 +128,24 @@ import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
 import TableSetup from '@/components/tableSetup'
-import { postBillRecordDetailList, cancelVerification, delBillRecordDetail, postBillRecordList, getBillRecordInfo } from '@/api/finance/financeDaily'
+import {
+  postBillRecordDetailList,
+  cancelVerification,
+  delBillRecordDetail,
+  postBillRecordList,
+  getBillRecordInfo
+} from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Income
+    Income,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -90,13 +170,18 @@ export default {
       dataListTop: [],
       loading: true,
       setupTableVisible: false,
-      tableColumn: [{
+      tableColumn: [
+        {
           label: '序号',
-          prop: 'id',
-          width: '50',
+          prop: 'number',
+          width: '70',
           fixed: true,
-          slot: (scope) => {
-            return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
+          slot: scope => {
+            return (
+              (this.searchQuery.currentPage - 1) * this.searchQuery.pageSize +
+              scope.$index +
+              1
+            )
           }
         },
         {
@@ -114,12 +199,12 @@ export default {
         {
           label: '类别',
           prop: 'verificationWay',
-          width: '110',
+          width: '110'
         },
         {
           label: '方向',
           prop: 'paymentsTypeZh',
-          width: '90',
+          width: '90'
         },
         {
           label: '金额',
@@ -148,7 +233,7 @@ export default {
         {
           label: '凭证日期',
           prop: 'certTime',
-          width: '160',
+          width: '180',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.certTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
@@ -157,7 +242,7 @@ export default {
         {
           label: '系统操作日期',
           prop: 'createTime',
-          width: '160',
+          width: '180',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
@@ -323,9 +408,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'otherinfo'
-    ]),
+    ...mapGetters(['otherinfo']),
     settlementId() {
       return this.$route.query.settlementId
     },
@@ -344,6 +427,11 @@ export default {
   //   this.setView()
   // },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      this.fetchList()
+    },
     classLineRed(row, index) {
       if (row.row.billRecordStatus === 0) {
         return 'lineRed'
@@ -378,39 +466,48 @@ export default {
         }
         this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
         console.log('searchQuery', this.searchQuery)
-        postBillRecordDetailList(this.searchQuery).then(data => {
-          this.tablekey = new Date().getTime()
-          this.dataListTop = data.list
-          this.total = data.total
-          this.loading = false
-          setTimeout(() => {
-            if (this.dataListTop.length === 0) {
-              this.$message.info('已更新更新财务日记账数据！')
-              this.eventBus.$emit('closeCurrentView')
-              this.$router.push({
-                path: './financeDaily'
-              })
-            }
-          }, 500)
-        }).catch((err) => {
-          this.loading = false
-          this._handlerCatchMsg(err)
-        })
+        postBillRecordDetailList(this.searchQuery)
+          .then(data => {
+            this.tablekey = new Date().getTime()
+            this.dataListTop = data.list
+            this.total = data.total
+            this.loading = false
+            setTimeout(() => {
+              if (this.dataListTop.length === 0) {
+                this.$message.info('已更新更新财务日记账数据！')
+                this.eventBus.$emit('closeCurrentView')
+                this.$router.push({
+                  path: './financeDaily'
+                })
+              }
+            }, 500)
+          })
+          .catch(err => {
+            this.loading = false
+            this._handlerCatchMsg(err)
+          })
         // this.setView() // 设置视图
       }
     },
     setTable() {},
     doAction(type) {
       let isShow = false
-      if (this.selectedList.length === 0 && type !== 'export' && type !== 'print' && type !== 'income' && type !== 'edit') {
+      if (
+        this.selectedList.length === 0 &&
+        type !== 'export' &&
+        type !== 'print' &&
+        type !== 'income' &&
+        type !== 'edit'
+      ) {
         isShow = false
         this.$message({ type: 'warning', message: '请选择一条数据' })
       } else {
         isShow = true
       }
-       let list = this.dataListTop.filter(e => { // 只能打印导出未反核销的数据
-          return e.billRecordStatus !== 0 // billRecordStatus : 0-已被反核销 1-未反核销
-        })
+      const list = this.dataListTop.filter(e => {
+        // 只能打印导出未反核销的数据
+        return e.billRecordStatus !== 0 // billRecordStatus : 0-已被反核销 1-未反核销
+      })
       switch (type) {
         case 'income': // 新增
           if (isShow) {
@@ -441,31 +538,35 @@ export default {
             name: '资金流水明细'
           })
           break
-          // case 'delCount': // 删除
-          //   if (isShow) {
-          //     this.delCount()
-          //   }
-          //   break
+        // case 'delCount': // 删除
+        //   if (isShow) {
+        //     this.delCount()
+        //   }
+        //   break
       }
     },
-    doEdit() { // 修改
+    doEdit() {
+      // 修改
       getBillRecordInfo({ id: this.recordId }).then(data => {
         this.currentInfo = data
         if (data.verifyStatusZh !== '已审核') {
           this.isModify = true
           this.popVisibleIncome = true
-        }else {
-          this.$message.warning('凭证【 ' + data.verifyStatusZh + ' 】不可修改')
+        } else {
+          this.$message.warning(
+            '凭证【 ' + data.verifyStatusZh + ' 】不可修改'
+          )
         }
         this.$refs.multipleTable.clearSelection()
       })
     },
-    backCount() { // 反核销 只有非手工录入并且未审核的可以反核销
+    backCount() {
+      // 反核销 只有非手工录入并且未审核的可以反核销
       console.log('selectedList', this.selectedList)
-      let selectedList = Object.assign([], this.selectedList).filter(e => {
-        return (e.verifyStatusZh === '未审核' && e.dataSrcZh === '核销产生')
+      const selectedList = Object.assign([], this.selectedList).filter(e => {
+        return e.verifyStatusZh === '未审核' && e.dataSrcZh === '核销产生'
       })
-      let count = selectedList.length
+      const count = selectedList.length
       if (this.selectedList.length !== count) {
         this.$message.warning('凭证【已审核】和【手工录入】不可反核销')
       }
@@ -473,11 +574,12 @@ export default {
         this.$refs.multipleTable.clearSelection()
       } else {
         this.$confirm('确定要反核销吗？', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            let feesList = []
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            const feesList = []
             selectedList.forEach(e => {
               feesList.push({
                 id: e.id,
@@ -485,17 +587,17 @@ export default {
               })
             })
             this.loading = true
-            let cancelQuery = {
+            const cancelQuery = {
               id: this.recordId,
               feesList: feesList
             }
-            cancelVerification(cancelQuery).then(data => {
+            cancelVerification(cancelQuery)
+              .then(data => {
                 this.loading = false
                 this.$message.success('反核销成功！')
                 this.fetchList()
                 this.$refs.multipleTable.clearSelection()
                 console.warn('dataListTop', this.dataListTop.length)
-
               })
               .catch(err => {
                 this.loading = false
@@ -545,7 +647,8 @@ export default {
     getSelection(list) {
       let count = 0
       this.selectedList = list.filter((e, index) => {
-        if (e.billRecordStatus === 0) { // 已经反核销的不可选中
+        if (e.billRecordStatus === 0) {
+          // 已经反核销的不可选中
           count++
           this.$refs.multipleTable.toggleRowSelection(e, false)
         }
@@ -559,7 +662,8 @@ export default {
         this.selectListShipSns.push(e.shipSn)
       })
     },
-    income() { // 新增
+    income() {
+      // 新增
       this.isModify = false
       this.popVisibleIncome = true
     },
@@ -577,13 +681,13 @@ export default {
     closeSetupTable() {
       this.setupTableVisible = false
     },
-    setColumn(obj) { // 重绘表格列表
+    setColumn(obj) {
+      // 重绘表格列表
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     }
   }
 }
-
 </script>
 <style lang="scss">
 .info_tab_row {
@@ -594,7 +698,7 @@ export default {
 .lineRed {
   position: relative;
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     display: block;
     right: 0;
@@ -606,5 +710,4 @@ export default {
     background-color: red !important;
   }
 }
-
 </style>

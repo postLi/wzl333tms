@@ -78,6 +78,12 @@
             </li>
           </ul>
         </div>
+         <div class="prinit_aside_paper">
+          <label><i class="el-icon-edit"></i> 打印字体</label>
+          <el-select v-model="formPrint.printFontSetting.ship" size="mini">
+            <el-option v-for="(item, index) in $const.PRINT_FONT" :key="index" :value="item" :label="item"></el-option>
+          </el-select>
+        </div>
         <div class="prinit_aside_paper">
           <span><i class="el-icon-document"></i> 纸张设置</span>
           <br>
@@ -106,6 +112,7 @@
             </el-input>
           </el-form-item>
         </div>
+       
         <el-collapse-transition>
           <div v-if="showDragDetail">
             <div class="prinit_aside_detail">
@@ -186,6 +193,7 @@
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
           fontStyle: 'Simsun',
+          fontFamily: formPrint.printFontSetting.ship,
           fontWeight: item.bold ? 700 : 400,
           textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">
@@ -250,7 +258,10 @@ export default {
         leftx: 0
       },
       formPrint: {
-        printSetting: {
+        printSetting: { // 打印机
+          ship: ''
+        },
+        printFontSetting: { // 打印字体
           ship: ''
         }
       },
@@ -362,7 +373,7 @@ export default {
             this.bgLabelObj.leftx = cval.x
             this.bgLabelObj.topy = cval.y
           }
-          console.log('bgprop', cval, cval.scale, cval.x, cval.y, this.printPreviewContent, this.bgLabelObj)
+          console.log('bgprop', cval, cval.scale, cval.x, cval.y, this.printPreviewContent, this.bgLabelObj, this.isShowBkimg)
         }
       },
       deep: true
@@ -405,7 +416,6 @@ export default {
       }
     },
     showCargoPlus() { // 添加显示货物信息
-      console.log('cargoNum', this.cargoNum)
       const fn = (num) => {
         this.cargoLabelList[num].forEach(e => {
           this.formModel.labelList.forEach((el, index) => {
@@ -443,9 +453,9 @@ export default {
       this.loading = true
       this.isShowBkimg = true
       this.getCommonSettingOrder()
+      console.log('formInfo init', this.formPrint)
     },
     print(type, bkimg = false) { // preview-打印预览 test-打印测试 previewBkimg-打印预览包含背景图 testBkimg-打印测试包含背景图
-      console.log('type bkimg', type, bkimg)
       const labelList = objectMerge2([], this.labelListView)
       let imgObj = {}
       labelList.push(objectMerge2({}, this.formModel.paper))
@@ -474,11 +484,11 @@ export default {
       if (this.imageUrl && bkimg) {
         labelList.push(imgObj)
       }
-      console.log('labelList', labelList)
       CreatePrintPageEnable({
         orderdata: labelList, // 运单数据
         number: 1, // 打印份数
         printer: this.formPrint.printSetting.ship, // 打印机
+        fontFamily: this.formPrint.printFontSetting.ship, // 打印字体
         printSetup: labelList, // 打印设置
         type: 'order', // 打印类型
         preview: type === 'preview', // 是否预览
@@ -605,7 +615,6 @@ export default {
       }
     },
     addItemDrag(row, index) { // 点击显示并且添加到预览区域
-      console.log('skdofkwoefkosd  row::::', row, index)
       const len = this.labelListView.filter(e => {
         return e.filedValue === row.filedValue
       }).length
@@ -688,9 +697,7 @@ export default {
     changeDragDetailInfo(newVal) { // 修改编辑显示项的数据
       if (newVal) {
         this.labelListView.forEach((e, index) => {
-          console.log('editDragItem111111111111', e, e._index, this.dragDetailInfo._index)
           if (e._index === this.dragDetailInfo._index) {
-            console.warn('editDragItem222222222222', e, e._index, this.dragDetailInfo._index, this.dragDetailInfo)
             this.$set(this.labelListView, index, this.dragDetailInfo)
           }
         })
@@ -985,6 +992,8 @@ export default {
       this.viewKey = new Date().getTime()
       let cargoShow2 = false
       let cargoShow3 = false
+      this.isShowBkimg = true
+      this.bgprop.scale = this.$options.data().bgprop.scale
       this.loading = true
       getSettingCompanyOrder().then(data => {
         const array = Object.assign([], data || [])
@@ -1002,7 +1011,7 @@ export default {
                 e.height = this.defaultLabelHeight
               }
               if (el.filedValue === 'setting') {
-                console.log('纸张设置', this.formModel.labelList[index], e)
+                // console.log('纸张设置', this.formModel.labelList[index], e)
                 this.$set(this.formModel.labelList, index, e)
                 this.formModel.labelList[index] = e
               }
@@ -1022,8 +1031,8 @@ export default {
             }
           })
         })
-        console.log('相同字段', commonArr.length, commonArr)
-        console.log('差异字段', labelList.length, labelList)
+        // console.log('相同字段', commonArr.length, commonArr)
+        // console.log('差异字段', labelList.length, labelList)
         this.formModel.labelList = objectMerge2([], commonArr.concat(labelList))
           // 匹配完所有字段 初始化显示
         this.formModel.labelList.forEach((e, index) => {
@@ -1057,15 +1066,18 @@ export default {
                   this.labelListView.push(em)
                 } else {
                   if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
+                    console.log('11111111111111111', em.isshow, em.filedName, this.imgNameStr)
                     this.imageUrl = em.filedName.split(',')[1]
+                    console.log('22222222222222', this.imageUrl)
                     this.bgLabelObj.width = em.width
                     this.bgLabelObj.height = em.height
                     this.bgLabelObj.topy = em.topy
                     this.bgLabelObj.leftx = em.leftx
-                    this.bgprop.scale = Math.round((em.width / this.formModel.paper.width))
+
+                    this.bgprop.scale = em.width ? Math.round((em.width / this.formModel.paper.width)) : 1
                     this.bgprop.x = em.leftx
                     this.bgprop.y = em.topy
-                    console.log('放大%', Math.round((em.width / this.formModel.paper.width)))
+                    console.log('放大%', em, this.bgprop.scale)
                   }
                 }
               }
@@ -1103,7 +1115,7 @@ export default {
           }
         })
         this.orgLabelList = objectMerge2([], this.formModel.labelList)
-        console.log('相同+差异', this.formModel.labelList)
+        // console.log('相同+差异', this.formModel.labelList)
           // }
         this.loading = false
       })
@@ -1153,7 +1165,7 @@ export default {
             this.labelListView = []
             this.showDragDetail = false
             this.currentSearch = ''
-            console.log('cargoNum', this.cargoNum)
+            // console.log('cargoNum', this.cargoNum)
           })
             .catch(err => {})
         }
@@ -1172,7 +1184,6 @@ export default {
           len = len + 1
         }
       })
-      console.log('len', len)
       if (len === 1) {
         this.formModel.labelList.forEach((e, index) => {
           if (e.filedValue === this.dragDetailInfo.filedValue) {
@@ -1189,16 +1200,11 @@ export default {
       this.viewKey = new Date().getTime()
     },
     savePrinter() {
-      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship) {
-        this.$confirm('默认打印机已修改，是否需要保存?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$emit('success', {
-            ship: this.formPrint.printSetting.ship
-          })
-        }).catch(() => {})
+      if (this.formInfo.printSetting.ship !== this.formPrint.printSetting.ship || this.formInfo.printFontSetting.ship !== this.formPrint.printFontSetting.ship) {
+        this.$emit('success', {
+          ship: this.formPrint.printSetting.ship,
+          shipFont: this.formPrint.printFontSetting.ship
+        })
       }
     },
     submitForm(formName) { // 保存修改

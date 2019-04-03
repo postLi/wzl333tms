@@ -1,6 +1,6 @@
 <template>
   <!-- 异常理赔 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isAbnormal="true"></SearchForm>
     <!-- 操作按钮 -->
@@ -14,12 +14,19 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail" :show-summary="true" :summary-method="getSummary">
-          <el-table-column fixed sortable type="selection" width="60">
+          <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+            <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -48,11 +55,13 @@ import TableSetup from '@/components/tableSetup'
 import { postFindAbnormalList } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -89,145 +98,145 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '140',
-          fixed: true
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '140',
+        fixed: true
+      },
+      {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'statusName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatusName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '运单标识',
+        prop: 'shipIdentifying',
+        width: '150',
+        fixed: false,
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '异常理赔',
+        prop: 'fee',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '已核销异常理赔',
+        prop: 'closeFee',
+        width: '110',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
+        }
+      },
+      {
+        label: '未核销异常理赔',
+        prop: 'unpaidFee',
+        width: '110',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
+      },
+      {
+        label: '开单日期',
+        prop: 'createTime',
+        width: '160',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
-        {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'statusName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatusName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '运单标识',
-          prop: 'shipIdentifying',
-          width: '150',
-          fixed: false,
-          slot: function(scope) {
-            return parseShipStatus(scope.row.shipIdentifying)
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '140',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '140',
-          fixed: false
-        },
-        {
-          label: '异常理赔',
-          prop: 'fee',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '已核销异常理赔',
-          prop: 'closeFee',
-          width: '110',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
-        },
-        {
-          label: '未核销异常理赔',
-          prop: 'unpaidFee',
-          width: '110',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
-        },
-        {
-          label: '开单日期',
-          prop: 'createTime',
-          width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
-          fixed: false
-        },
-        {
-          label: '发货方',
-          prop: 'senderUnit',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '收货方',
-          prop: 'receiverUnit',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverCustomerName',
-          width: '100',
-          fixed: false
-        },
+        fixed: false
+      },
+      {
+        label: '发货方',
+        prop: 'senderUnit',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '收货方',
+        prop: 'receiverUnit',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '100',
+        fixed: false
+      },
         // {
         //   label: '核销操作人',
         //   prop: 'settlementBy',
         //   width: '100',
         //   fixed: false
         // },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '重量(kg)',
-          prop: 'cargoWeight',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '体积(方)',
-          prop: 'cargoVolume',
-          width: '90',
-          fixed: false
-        },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '重量(kg)',
+        prop: 'cargoWeight',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '体积(方)',
+        prop: 'cargoVolume',
+        width: '90',
+        fixed: false
+      },
         // {
         //   label: '承运商',
         //   prop: 'shipIdentifying',
@@ -246,65 +255,72 @@ export default {
         //   width: '150',
         //   fixed: false
         // },
-        {
-          label: '付款方式',
-          prop: 'shipPayWayName',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '制单人',
-          prop: 'userName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人电话',
-          prop: 'senderCustomerMobile',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '发货人地址',
-          prop: 'senderDetailedAddress',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '收货人电话',
-          prop: 'receiverCustomerMobile',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '收货地址',
-          prop: 'receiverDetailedAddress',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '交接方式',
-          prop: 'shipDeliveryMethodName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '时效',
-          prop: 'shipEffectiveName',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '150',
-          fixed: false
-        }
+      {
+        label: '付款方式',
+        prop: 'shipPayWayName',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '制单人',
+        prop: 'userName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人电话',
+        prop: 'senderCustomerMobile',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '发货人地址',
+        prop: 'senderDetailedAddress',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '收货人电话',
+        prop: 'receiverCustomerMobile',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '收货地址',
+        prop: 'receiverDetailedAddress',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '交接方式',
+        prop: 'shipDeliveryMethodName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '时效',
+        prop: 'shipEffectiveName',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '150',
+        fixed: false
+      }
       ],
       selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchList()
+      }
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
@@ -385,7 +401,7 @@ export default {
       this.tableColumn = obj
       this.tablekey = Math.random() // 刷新表格视图
     },
-    getSummary (param) {
+    getSummary(param) {
       return getSummaries(param)
     }
   }

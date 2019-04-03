@@ -1,6 +1,6 @@
 <template>
   <!-- 终端送货费 -->
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :isTerminal="true" :btnsize="btnsize"></SearchForm>
     <!-- 操作按钮 -->
@@ -14,12 +14,19 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail" :show-summary="true" :summary-method="getSummaries">
-          <el-table-column fixed sortable type="selection" width="60">
+          <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+             <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -48,11 +55,13 @@ import TableSetup from '@/components/tableSetup'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup
+    TableSetup,
+    tableHeaderSearch
   },
   data() {
     return {
@@ -70,149 +79,156 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '60',
-          slot: (scope)=> {
-             return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
-          },
-          fixed: true
-        },{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
+        label: '序号',
+        prop: 'number',
+        width: '60',
+        slot: (scope) => {
+          return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
         },
-        {
-          label: '开单日期',
-          prop: 'createTime',
-          width: '160',
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          },
-          fixed: false
+        fixed: true
+      }, {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '开单日期',
+        prop: 'createTime',
+        width: '160',
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
         },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'statusName',
-          width: '90',
-          fixed: true
-        },
-        {
-          label: '终端送货费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '已核销终端送货费',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
-        },
-        {
-          label: '未核销终端送货费',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
-        },
-        {
-          label: '实收送货费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-         {
-          label: '实付送货费',
-          prop: 'deliveryFeeToPay',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '差额',
-          prop: 'deliveryFeeDiffer',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '140',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '140',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '重量(kg)',
-          prop: 'cargoWeight',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '体积(方)',
-          prop: 'cargoVolume',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '运单状态',
-          prop: 'shipStatusName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '送货车牌',
-          prop: 'truckIdNumber',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '送货时间',
-          prop: 'deliveryTime',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '送货司机',
-          prop: 'driverName',
-          width: '100',
-          fixed: false
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'statusName',
+        width: '90',
+        fixed: true
+      },
+      {
+        label: '终端送货费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '已核销终端送货费',
+        prop: 'closeFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
         }
+      },
+      {
+        label: '未核销终端送货费',
+        prop: 'unpaidFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
+      },
+      {
+        label: '实收送货费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '实付送货费',
+        prop: 'deliveryFeeToPay',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '差额',
+        prop: 'deliveryFeeDiffer',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '重量(kg)',
+        prop: 'cargoWeight',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '体积(方)',
+        prop: 'cargoVolume',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '运单状态',
+        prop: 'shipStatusName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '送货车牌',
+        prop: 'truckIdNumber',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '送货时间',
+        prop: 'deliveryTime',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '送货司机',
+        prop: 'driverName',
+        width: '100',
+        fixed: false
+      }
       ],
       selectedDataList: [] // 被勾选的数据行
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchList()
+      }
+    },
     getSearchParam(obj) {
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize

@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-content" v-loading="loading">
+    <div class="tab-content miniHeaderSearch" v-loading="loading">
       <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam"  :isAllOrg="true" :btnsize="btnsize" />
       <div class="tab_info">
         <div class="btns_box">
@@ -19,8 +19,20 @@
            tooltip-effect="dark" :key="tablekey" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" stripe>
             <el-table-column fixed sortable type="selection" width="70"></el-table-column>
             <template v-for="column in tableColumn">
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width"></el-table-column>
-              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width">
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+                <template slot="header" slot-scope="scope">
+                <tableHeaderSearch
+                  :scope="scope"
+                  :query="searchQuery"
+                  @change="changeKey"
+                />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+              </el-table-column>
+              <el-table-column :key="column.id" :fixed="column.fixed" sortable :prop="column.prop" :label="column.label" v-else :width="column.width">
+                 <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
                 <template slot-scope="scope">
                   <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                   <span v-else v-html="column.slot(scope)"></span>
@@ -45,12 +57,14 @@ import Pager from '@/components/Pagination/index'
 import Addabnormal from './components/add'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
     TableSetup,
-    Addabnormal
+    Addabnormal,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -222,6 +236,13 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllreceipt()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },
@@ -233,6 +254,7 @@ export default {
         this.loading = false
         // console.log(data)
       }).catch(err => {
+        this.loading = false
         this._handlerCatchMsg(err)
       })
     },

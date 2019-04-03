@@ -8,7 +8,7 @@
     <div style="height:100%;" slot="tableLeft" class="tableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
       <el-table ref="multipleTableRight" :data="leftTable"  v-if="showtable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-        <el-table-column fixed width="50" type="index" label="序号">
+        <el-table-column fixed width="60" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -162,7 +162,7 @@
     <div slot="tableRight" class="tableHeadItemBtn">
       <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
       <el-table ref="multipleTableLeft" :data="rightTable" @row-dblclick="dclickMinusItem" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tableRight"  v-if="showtable" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;">
-        <el-table-column fixed width="50" type="index" label="序号">
+        <el-table-column fixed width="60" type="index" label="序号">
           <template slot-scope="scope">
             {{scope.$index + 1}}
           </template>
@@ -748,13 +748,13 @@ export default {
       this.doAction('goRight')
     },
     getSumRight(param) { // 右边表格合计-自定义显示
-      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 
-      'deliveryPay','deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
+      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal',
+        'deliveryPay', 'deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
       return getSummaries(param, propsArr)
     },
     getSumLeft(param) { // 左边表格合计-自定义显示
-      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'cargoVolume', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 'kickBackPayActual', 'transferPayActual', 'unusualPayActual', 'exceptionPayActual', 'pickPuPayActual', 'othePayActual', 
-      'deliveryPay','deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
+      const propsArr = ['shipFeeTotal', 'kickBackPay', 'transferPay', 'unusualPay', 'exceptionPay', 'pickPuPay', 'othePay', 'cargoAmount|', 'cargoWeight|', 'cargoVolume|', 'shipFeeTotalActual', 'cargoVolume', 'noKickBackPay', 'hadKickBackPay', 'noTransferPay', 'hadTransferPay', 'noUnusualPay', 'hadUnusualPay', 'noExceptionPay', 'hadExceptionPay', 'noPickPuPay', 'hadPickPuPay', 'noOthePay', 'hadOthePay', 'noShipFeeTotal', 'hadShipFeeTotal', 'kickBackPayActual', 'transferPayActual', 'unusualPayActual', 'exceptionPayActual', 'pickPuPayActual', 'othePayActual',
+        'deliveryPay', 'deliveryPayActual', 'noDeliveryPay', 'hadDeliveryPay']
       return getSummaries(param, propsArr)
     }
   }
@@ -817,7 +817,7 @@ export default {
     position: absolute;
     z-index: 33;
     top: 10px;
-    left: 67px;
+    left: 77px;
     background-size: 18px;
     background-repeat: no-repeat;
   }

@@ -1,44 +1,39 @@
 <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch" v-loading="loading">
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-          <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:SENDER_ADD>新增</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:SENDER_UP>修改</el-button>
-          <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:SENDER_DEL>删除</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:SENDER_EXP>导出</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain v-has:SENDER_EOP>批量导入</el-button>
-          <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:SENDER_ADD>新增</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:SENDER_UP>修改</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-delete" @click="doAction('delete')" plain v-has:SENDER_DEL>删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:SENDER_EXP>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('import')" plain v-has:SENDER_EOP>批量导入</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
       </div>
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          :key="tablekey"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          :default-sort = "{prop: 'id', order: 'ascending'}"
-          style="width: 100%">
-          <el-table-column
-            fixed
-            sortable
-            type="selection"
-            width="50">
+        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
+          <el-table-column fixed sortable type="selection" width="50">
           </el-table-column>
           <template v-for="column in tableColumn">
-
             <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="column.ispic" :width="column.width">
+              <!--  <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery"  @change="changeKey"  />
+              </template> -->
               <template slot-scope="scope">
-                <el-button v-if="scope.row[column.prop]" v-showPicture size="mini" type="text" icon="el-icon-picture-outline"  :imgurl="scope.row[column.prop]">预览({{scope.row[column.prop].split(',').length}})</el-button>
+                <el-button v-if="scope.row[column.prop]" v-showPicture size="mini" type="text" icon="el-icon-picture-outline" 
+                :imgurl="scope.row[column.prop]">预览({{scope.row[column.prop].split(',').length}})</el-button>
               </template>
             </el-table-column>
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width"></el-table-column>
-            
-            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''">
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-else-if="!column.slot" :width="column.width">
+               <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
+              <template slot-scope="scope">{{scope.row[column.prop]}}</template>
+            </el-table-column>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width || ''" :prop="column.prop">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template>
               <template slot-scope="scope">
                 <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
@@ -47,10 +42,14 @@
           </template>
         </el-table>
       </div>
-      <div class="info_tab_footer">共计:{{ total }} <div class="show_pager"> <Pager :total="total" @change="handlePageChange" /></div> </div>
+      <div class="info_tab_footer">共计:{{ total }}
+        <div class="show_pager">
+          <Pager :total="total" @change="handlePageChange" />
+        </div>
+      </div>
     </div>
-    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData"  />
-    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn"  />
+    <AddCustomer :issender="true" :isModify="isModify" :info="selectInfo" :orgid="orgid" :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer" @success="fetchData" />
+    <TableSetup :issender="true" :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn" />
     <ImportDialog :popVisible="importDialogVisible" @close="importDialogVisible = false" @success="fetchData" :info="'sender'"></ImportDialog>
   </div>
 </template>
@@ -64,6 +63,7 @@ import Pager from '@/components/Pagination/index'
 import ImportDialog from '@/components/importDialog'
 import { objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
+import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
@@ -71,7 +71,8 @@ export default {
     Pager,
     TableSetup,
     AddCustomer,
-    ImportDialog
+    ImportDialog,
+    tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -116,7 +117,7 @@ export default {
       tableColumn: [{
         label: '序号',
         prop: 'id',
-        width: '60',
+        width: '70',
         fixed: true,
         slot: (scope) => {
           return ((this.searchQuery.currentPage - 1) * this.searchQuery.pageSize) + scope.$index + 1
@@ -190,6 +191,13 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchData()
+      }
+    },
     fetchAllCustomer() {
       this.loading = true
       return getAllCustomer(this.searchQuery).then(data => {
@@ -231,7 +239,7 @@ export default {
       console.log('this.selected:', this.selected)
 
       switch (type) {
-          // 添加客户
+        // 添加客户
         case 'add':
           this.isModify = false
           this.selectInfo = {}
@@ -252,7 +260,7 @@ export default {
           // 删除客户
         case 'delete':
           const deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].customerName
-                  // =>todo 删除多个
+          // =>todo 删除多个
           let ids = this.selected.map(item => {
             return item.customerId
           })
@@ -321,4 +329,5 @@ export default {
     }
   }
 }
+
 </script>

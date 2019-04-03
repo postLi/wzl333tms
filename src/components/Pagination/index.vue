@@ -54,7 +54,7 @@
 <script>
 export default {
   props: {
-    sizes: { // picker 
+    sizes: { // picker
       type: Array,
       default: () => [100, 200, 300, 400]
     },
@@ -81,24 +81,43 @@ export default {
     }
   },
   watch: {
+    // pageNum() {
+    //   this.inputval = this.pageNum
+    // },
+    // size() {
+    //   this.pageNum = 1
+    // }
+    total: {
+      handler(cval, oval) {
+        // 模糊搜索的时候 需要把当前页初始化为1
+        if (cval && !this.defaultValues) {
+          this.pageNum = 1
+        }
+      },
+      deep: true
+    },
     pageNum() {
       this.inputval = this.pageNum
+      console.log('pageNum', this.pageNum)
     },
-   defaultValues () {
-     this.pageNum = this.defaultValues.currentPage || this.$options.data().pageNum 
-     this.oldNum = this.pageNum
-   },
+    defaultValues() {
+      this.pageNum = this.defaultValues.currentPage || 1
+      this.oldNum = this.pageNum
+      console.log('this.pageNum1111', this.pageNum)
+    },
     size() {
-      this.pageNum = 1
+      this.pageNum = this.defaultValues ? this.defaultValues.currentPage : 1
+      console.log('this.pageNum2222', this.pageNum)
     }
   },
   mounted() {
-    this.size = this.defaultSize
+    this.size = this.defaultValues ? this.defaultValues.pageSize : this.defaultSize
   },
   data() {
     return {
       pageNum: 1,
       oldValue: 0,
+      oldTotal: 0,
       inputval: 1,
       oldNum: 1,
       size: 100
@@ -107,7 +126,6 @@ export default {
   methods: {
     handleFocus(event) {
       this.oldValue = event.target.value
-      console.log('__++_+_+_+_+event', event)
     },
     sizesChange() {
       this.pageNum = 1
@@ -157,7 +175,6 @@ export default {
       this.jumpTo(this.inputval)
     },
     handleKeyup({ keyCode, target }) {
-      console.log('page keydown:', keyCode, target)
       if (keyCode === 13 && this.oldValue && target.value !== this.oldValue) {
         this.handleChange(target.value)
         this.oldValue = ''
@@ -171,7 +188,6 @@ export default {
       } else {
         this.pageNum = num
       }
-      console.log('1111jumpTo', num, this.pageNum, this.oldNum)
       this.changeEvent()
     }
   }

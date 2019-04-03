@@ -93,7 +93,6 @@ export default {
       }
     },
     deleteItem(item) {
-
       deleteQueryLogListById(item.id).then(res => {
         this.fetchAllloadAll()
         // if (this.datalist === item.queryKey) {
@@ -148,6 +147,7 @@ export default {
 <style lang="scss">
 .searchAll_lyy{
   display: inline;
+  clear:both;
   .zdycx{
     .el-form-item__label{
     font-size: 13px;

@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <IndexDialog :issender="true" :isModify="isModify" :isDbclick="isDbclick" :dotInfo="selectInfo" :orgid="orgid"
+    <IndexDialog :issender="true" :isModify="isModify" :isDbclick="isDbclick" :dotInfo="selectInfo" :orgid="searchQuery.vo.orgid"
                  :id='trackId' :popVisible.sync="AddCustomerVisible" @close="closeAddCustomer"
                  @success="fetchData"></IndexDialog>
     <TableSetup :popVisible="setupTableVisible" :columns='tableColumn' @close="closeSetupTable"
@@ -55,15 +55,15 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {postCarrierdetailList} from '@/api/finance/fin_carrier'
-  import {deleteCarShort, postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { postCarrierdetailList } from '@/api/finance/fin_carrier'
+  import { deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
   import TableSetup from '@/components/tableSetup'
   import IndexDialog from './components/indexDialog'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     components: {
@@ -75,7 +75,7 @@
     computed: {
       ...mapGetters([
         'otherinfo'
-      ]),
+      ])
     },
     mounted() {
       this.searchQuery.vo.orgid = this.$route.query.orgid
@@ -277,8 +277,7 @@
         // 显示导入窗口
       },
       doAction(type) {
-
-        // 判断是否有选中项
+      // 判断是否有选中项
 
         if (!this.selected.length && type !== 'storage' && type !== 'print' && type !== 'export') {
           this.$message({
@@ -414,8 +413,8 @@
               columns: this.tableColumn,
               name: '承运商全部明细'
             })
-            break;
-          // 导出
+            break
+        // 导出
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,

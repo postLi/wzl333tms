@@ -186,6 +186,13 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
+                <el-form-item>
+                  开单打印标签是否默认件数
+                    <el-select v-model="form.shipPageFunc.printLabelIsAmount" placeholder="请选择">
+                      <el-option label="是" value="1"></el-option>
+                      <el-option label="否" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
               </div>
             </div>
             <!-- 运单权限 -->
@@ -274,12 +281,12 @@
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                   清单
                   <el-select v-model="form.printSetting.inventory">
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
               </div>
             </div>
             <div class="clearfix setup-table">
@@ -338,6 +345,16 @@
               </div>
             </div>
             <div class="clearfix setup-table">
+               <div class="setup-left">轨迹跟踪来源</div>
+              <div class="setup-right">
+                <el-form-item>
+                  <el-radio-group v-model="form.track.trackSign" size="mini">
+                    <el-radio v-for="(item, index) in trackSigns" :key="index" :label="item.value">{{item.label}}</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </div>
+            </div>
+            <div class="clearfix setup-table">
               <div class="setup-left">系统LOGO</div>
               <div class="setup-right">
                 <el-form-item>
@@ -354,8 +371,8 @@
     </div>
     <printSetOrder :popVisible="printSetOrderVisible" @close="closePrintSetOrder" :formInfo="form" @success="changeSystem"></printSetOrder>
     <printSetLi :popVisible="printSetLiVisible" @close="closePrintSetLi" :formInfo="form" @success="changeSystem"></printSetLi>
-    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false"></printLoadInfo>
-    <printContract :popVisible="printContractVisible" @close="printContractVisible = false"></printContract>
+    <printLoadInfo :popVisible="printLoadInfoVisible" @close="printLoadInfoVisible = false" :formInfo="form" @success="changeSystem"></printLoadInfo>
+    <printContract :popVisible="printContractVisible" @close="printContractVisible = false" :formInfo="form" @success="changeSystem"></printContract>
   </div>
 </template>
 <script>
@@ -555,6 +572,13 @@ export default {
           value: '1',
           label: '可以'
         }],
+      trackSigns: [{
+        value: '0',
+        label: '追货宝'
+      }, {
+        value: '1',
+        label: '中交兴路'
+      }],
       deliverContacts: [{
         value: 'driver',
         label: '司机名称'
@@ -563,6 +587,9 @@ export default {
         label: '车牌号'
       }],
       form: {
+        track: {
+          trackSign: '0' // 0-追货宝 1-中交兴路
+        },
         'switchUser': {
           'canSwitch': ''
         },
@@ -663,7 +690,8 @@ export default {
           'shipTimeRule': '',
           'shipFieldSign': '1',
           orderName: '收发货凭证', // 开单页面标题
-          decimalPlaces: '2' // 0,1,2
+          decimalPlaces: '2', // 0,1,2
+          printLabelIsAmount: '1' // 0否1是，默认是1
         },
         'loadSetting': {
           'carrier': 'driver'
@@ -841,6 +869,35 @@ export default {
       this.form.cargoNo.shipNoAndNumberOfUnits = '0'
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
     },
+    saveDatePrint() { // 为保存字体和打印机，简化调用接口不需要finance和base
+      this.loading = true
+      // 转译一下打印的\\字符
+      const formPrintSetting = Object.assign({}, this.form.printSetting)
+      for (const item in formPrintSetting) {
+        formPrintSetting[item] = formPrintSetting[item].replace(/\\/g, '%^')
+      }
+      const form = Object.assign({}, this.form)
+      form.printSetting = Object.assign({}, formPrintSetting)
+
+      console.warn('提交 form,base', form)
+      if (!form.shipPageFunc.insurancePremiumIsDeclaredValue || form.shipPageFunc.insurancePremiumIsDeclaredValue === 'null') {
+        form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
+      }
+      this.putSetting(form).then(() => {
+        let otherinfo = localStorage.getItem('TMS-userinfo')
+        if (otherinfo) {
+          otherinfo = JSON.parse(otherinfo)
+          if (otherinfo.systemSetup) {
+            otherinfo.systemSetup.printFontSetting = objectMerge2({}, form.printFontSetting)
+            otherinfo.systemSetup.printSetting = objectMerge2({}, form.printSetting)
+          }
+        }
+        localStorage.setItem('TMS-userinfo', JSON.stringify(otherinfo))
+
+        this.initOrder()
+        this.loading = false
+      })
+    },
     saveData() { // 保存
       this.loading = true
       // 转译一下打印的\\字符
@@ -870,6 +927,10 @@ export default {
       this.putSetting(form).then(() => {
         this.putSetting(finance).then(() => {
           this.putSetting(base).then(() => {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
             this.initOrder()
             this.loading = false
             // this.infoFinance()
@@ -880,11 +941,6 @@ export default {
     putSetting(query) {
       return putSetting(query).then(res => {
         this.otherinfo.systemSetup = this.form
-        console.log('other.systemSetup', this.otherinfo.systemSetup)
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
       }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
@@ -892,13 +948,20 @@ export default {
     },
     changeSystem(obj) {
       if (obj.ship) {
-        this.$set(this.form.printSetting, 'ship', obj.ship)
-        this.saveData()
+        this.$set(this.form.printSetting, 'ship', obj.ship) // 运单打印机
+        this.$set(this.form.printFontSetting, 'ship', obj.shipFont)// 运单字体
       }
       if (obj.label) {
-        this.$set(this.form.printSetting, 'label', obj.label)
-        this.saveData()
+        this.$set(this.form.printSetting, 'label', obj.label) // 标签打印机
+        this.$set(this.form.printFontSetting, 'label', obj.labelFont) // 标签字体
       }
+      if (obj.loadFont) {
+        this.$set(this.form.printFontSetting, 'load', obj.loadFont) // 配载单字体
+      }
+      if (obj.contractFont) {
+        this.$set(this.form.printFontSetting, 'contract', obj.contractFont) // 合同字体
+      }
+      this.saveDatePrint()
     },
     initField() {
       this.fieldSetup = []

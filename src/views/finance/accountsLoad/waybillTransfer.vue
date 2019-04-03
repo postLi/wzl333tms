@@ -14,7 +14,7 @@
       <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
         <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
-          <el-table-column fixed width="50" type="index" label="序号">
+          <el-table-column fixed width="60" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -51,7 +51,7 @@
       <div slot="tableRight" class="tableHeadItemBtn tableHeadItemBtnHeight">
         <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
         <el-table ref="multipleTableLeft" :data="rightTable" border @row-click="clickDetailsLeft" @selection-change="getSelectionLeft" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumLeft" :default-sort="{prop: 'id', order: 'ascending'}" :show-summary='true' style="height:100%;" @row-dblclick="dclickMinusItem">
-          <el-table-column fixed width="50" type="index" label="序号">
+          <el-table-column fixed width="60" type="index" label="序号">
             <template slot-scope="scope">
               {{scope.$index + 1}}
             </template>
@@ -145,272 +145,272 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'statusName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatusName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '中转费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '已核销中转费',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
-        },
-        {
-          label: '未核销中转费',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
-        },
-        {
-          label: '发货方',
-          prop: 'senderUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货方',
-          prop: 'receiverUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'statusName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatusName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '中转费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '已核销中转费',
+        prop: 'closeFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
         }
+      },
+      {
+        label: '未核销中转费',
+        prop: 'unpaidFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
+      },
+      {
+        label: '发货方',
+        prop: 'senderUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货方',
+        prop: 'receiverUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ],
       tableColumnRight: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: true
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'statusName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverCustomerName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '中转费',
-          prop: 'fee',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '已核销中转费',
-          prop: 'closeFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
-          }
-        },
-        {
-          label: '未核销中转费',
-          prop: 'unpaidFee',
-          width: '120',
-          fixed: false,
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
-          }
-        },
-        {
-          label: '实际核销中转费',
-          prop: 'inputTotalCost',
-          width: '120',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputTotalCost
-          }
-        },
-        {
-          label: '发货方',
-          prop: 'senderUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '收货方',
-          prop: 'receiverUnit',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '180',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'statusName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverCustomerName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '中转费',
+        prop: 'fee',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '已核销中转费',
+        prop: 'closeFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.closeFee)
         }
+      },
+      {
+        label: '未核销中转费',
+        prop: 'unpaidFee',
+        width: '120',
+        fixed: false,
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.fee, row.closeFee, row.unpaidFee, row.unpaidFee)
+        }
+      },
+      {
+        label: '实际核销中转费',
+        prop: 'inputTotalCost',
+        width: '120',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputTotalCost
+        }
+      },
+      {
+        label: '发货方',
+        prop: 'senderUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货方',
+        prop: 'receiverUnit',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '180',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
+        }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
@@ -428,28 +428,31 @@ export default {
       return this.rightTable.length
     }
   },
+  created() {
+    this.searchQuery = Object.assign({}, this.getRouteInfo)
+  },
   mounted() {
     this.getList()
   },
   methods: {
-    
+
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       console.log(obj.pageSize, obj.pageNum, obj)
-       this.pageGetList()
+      this.pageGetList()
     },
-     pageGetList () {
-      let rightTable = objectMerge2([], this.rightTable)
+    pageGetList() {
+      const rightTable = objectMerge2([], this.rightTable)
       this.loading = true
-       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       postFindListByFeeType(this.searchQuery).then(data => {
         if (data) {
           this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
-           rightTable.forEach((el, index) => {
+          rightTable.forEach((el, index) => {
             this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-           })
+          })
         }
         this.orgLeftTable = Object.assign([], this.leftTable)
         this.loading = false
@@ -460,6 +463,13 @@ export default {
     },
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
+      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
+        console.log('111111111111111')
+      } else {
+        console.log('22222222222222222')
+        this.searchQuery.currentPage = 1
+        // this.searchQuery.pageSize = 100
+      }
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
     },
@@ -520,7 +530,7 @@ export default {
       }
       if (paidVal < 0 || paidVal > unpaidVal) {
         this.$message({ type: 'warning', message: '实际核销费用不小于0，不大于未核销费用。' })
-       this.isGoReceipt = true
+        this.isGoReceipt = true
       } else {
         this.isGoReceipt = false
         this.$set(this.rightTable, index, Object.assign(this.rightTable[index], {
@@ -676,7 +686,7 @@ export default {
       this.infoTable = this.$options.data().infoTable
       // this.tableReceiptInfo = []
       if (!this.isGoReceipt) {
-          let amount = 0
+        let amount = 0
         this.rightTable.forEach((e, index) => {
           console.log('右边列表', index, e)
           if (e.inputTotalCost > 0 && e.inputTotalCost <= e.unpaidFee) { // 提交可核销项
@@ -696,8 +706,8 @@ export default {
             item = {}
           }
         })
-          this.infoTable.amount = amount
-          amount = 0
+        this.infoTable.amount = amount
+        amount = 0
         if (this.infoTable.orderList.length > 0) {
           this.openDialog()
         } else {
