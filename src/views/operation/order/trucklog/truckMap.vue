@@ -8,13 +8,13 @@
             <el-tab-pane label="运单查询" name="1">
               <el-form @submit.native.prevent ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
                 <el-form-item label="运单查询">
-                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn"  />
+                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn" />
                 </el-form-item>
                 <el-form-item class="staff_searchinfo--btn">
                   <el-button type="warning" @click="onSubmit('location', 'order')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
                 </el-form-item>
               </el-form>
-              <el-tabs class="secChild_tabs" >
+              <el-tabs class="secChild_tabs">
                 <el-tab-pane label="查询结果">
                   <el-card class="childOrderTruckTree">
                     <div class="truckTree-group">
@@ -23,7 +23,7 @@
                         <h3>
                         <el-tag 
                         :type="index===0? 'danger':(index === 1?'warning': (index===2?'success':'primary') )" 
-                        :size='btnsize'>{{index + 1}}</el-tag> 
+                        :size='btnsize'>{{index + 1}}</el-tag>
                         {{item.truckIdNumber}} <i>[{{item.speed}} km/h]</i>
                         <i>{{item.truckLength ?(item.truckLength+'米') : ''}}</i> <i>{{item.truckTypeName || ''}}</i>
                       </h3>
@@ -46,10 +46,15 @@
             <el-tab-pane label="车辆查询" name="2">
               <el-form ref="form" size="mini" :model="searchQuery" label-width="65px" v-if="showSearchCard && !isAllTable">
                 <el-form-item label="选择车辆">
-                  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
+                  <el-autocomplete popper-class="my-autocomplete" v-model="searchQuery.vo.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="请输入车牌号" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8" clearable>
+                    <template slot-scope="{ item }">
+                      <div class="name">{{ item.truckIdNumber }}</div>
+                    </template>
+                  </el-autocomplete>
+                  <!--  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
                     <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
                     </el-option>
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
                 <el-form-item class="staff_searchinfo--btn">
                   <el-button type="warning" @click="onSubmit('location', 'truck')" icon="el-icon-search" :loading="loadSearch">立即查询</el-button>
@@ -87,7 +92,8 @@
             <el-tab-pane label="运单查询" name="1">
               <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
                 <el-form-item label="运单查询">
-                  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchShipSn" search="shipSn" type="order" @change="getShipSn" />
+                   <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchQuery.vo.shipSn" search="shipSn" type="order" @change="getShipSn" />
+                 <!--  <querySelect :size='btnsize' placeholder="请输入运单号" v-model="searchShipSn" search="shipSn" type="order" @change="getShipSn" /> -->
                 </el-form-item>
                 <el-form-item label="开始时间">
                   <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
@@ -133,10 +139,15 @@
             <el-tab-pane label="车辆查询" name="2">
               <el-form ref="form" size="mini" :model="searchQuery" label-width="65px">
                 <el-form-item label="选择车辆">
-                  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
+                  <el-autocomplete popper-class="my-autocomplete" v-model="searchQuery.vo.truckIdNumber" :fetch-suggestions="querySearchTruck" placeholder="请输入车牌号" size="mini" @select="handleSelectTruck" auto-complete="off" :maxlength="8" clearable>
+                    <template slot-scope="{ item }">
+                      <div class="name">{{ item.truckIdNumber }}</div>
+                    </template>
+                  </el-autocomplete>
+                  <!--  <el-select v-model="searchQuery.vo.truckIdNumber" filterable placeholder="请输入车牌号" maxlength="8" clearable>
                     <el-option v-for="(item, index) in TruckList" :key="index" :label="item.truckIdNumber" :value="item.truckIdNumber">
                     </el-option>
-                  </el-select>
+                  </el-select> -->
                 </el-form-item>
                 <el-form-item label="开始时间">
                   <el-date-picker v-model="searchQuery.vo.startTime" type="datetime" align="right" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsSimple">
@@ -546,7 +557,23 @@ export default {
 
   },
   methods: {
-
+    createFilter(queryString, prop) {
+      return (data) => {
+        if (data[prop]) {
+          return (queryString.test(data[prop]))
+        }
+      }
+    },
+    querySearchTruck(queryString, cb) {
+      console.log('this.TruckList', this.TruckList)
+      const truckList = this.TruckList
+      const results = queryString ? truckList.filter(this.createFilter(new RegExp(queryString, 'gi'), 'truckIdNumber')) : truckList
+      // 调用 callback 返回车辆列表的数据
+      cb(results)
+    },
+    handleSelectTruck(item) {
+      this.searchQuery.vo.truckIdNumber = item.truckIdNumber
+    },
     selectGroupOrderLocat(row, index) {
       let map = this.map
       let lnglat = [Number(row.longitude), Number(row.latitude)]
@@ -622,7 +649,10 @@ export default {
       const AMap = window.AMap
       const AMapUI = window.AMapUI
       const map = this.map
-      map.clearInfoWindow()
+      console.log(window.AMap, window.AMapUI)
+      if (AMap || AMapUI) {
+        map.clearInfoWindow()
+      }
     },
     createInfoWindow(obj) {
       const AMap = window.AMap
@@ -833,14 +863,17 @@ export default {
     },
 
     getShipSn(item) {
-      console.log('运单选择item', item)
-      if (this.tabModel === '1') {
-        this.searchQuery.vo.shipSn = item.shipSn
-        this.searchShipSn = item.shipSn
-      } else {
-        this.searchQuery.vo.shipId = item.shipSn
-        this.searchShipSn = item.shipSn
-      }
+      this.$set(this.searchQuery.vo, 'shipSn', item.shipSn)
+      // this.searchQuery.vo.shipSn = item.shipSn
+      this.searchShipSn = item.shipSn
+      console.log('运单选择item', item, this.searchShipSn, this.searchQuery)
+      // if (this.tabModel === '1') {
+      //   this.searchQuery.vo.shipSn = item.shipSn
+      //   this.searchShipSn = item.shipSn
+      // } else {
+      //   this.searchQuery.vo.shipId = item.shipSn
+      //   this.searchShipSn = item.shipSn
+      // }
     },
     classLineRed(row) { // 行样式
       if (this.allPathData.length) {
@@ -913,7 +946,8 @@ export default {
     fetchTruck() { // 获取车辆列表
       getTruckIdNumbers().then(data => {
           if (data) {
-            this.TruckList = data
+            console.log('getTruckIdNumbers', data)
+            this.TruckList = data || []
           }
         })
         .catch(err => {
@@ -965,7 +999,8 @@ export default {
             flag = false
           }
           if (childtype === 'order') {
-            if (!this.searchQuery.vo.shipId) {
+            console.log('thisearch', this.searchQuery)
+            if (!this.searchQuery.vo.shipSn) {
               this.$message.warning('运单号不能为空~')
               flag = false
             }
@@ -1044,7 +1079,6 @@ export default {
         _this.loadSearch = false
         return false
       }
-      console.log('72384238478')
 
       // 查询定位及轨迹
       // 0、清空定时刷新， 清空巡航器
@@ -1135,7 +1169,7 @@ export default {
         delete params.shipId
       }
       if (type === 'line') {
-        delete params.shipSn
+        // delete params.shipSn
       }
       if (childtype === 'order') {
         delete params.truckIdNumber
@@ -1216,6 +1250,10 @@ export default {
     tomap() { // 转高德坐标
       const AMap = window.AMap
       const AMapUI = window.AMapUI
+      if (!AMap) {
+        this.$message('高德地图加载失败~')
+        return false
+      }
       const map = this.map
       const _this = this
       map.remove(this.markers)

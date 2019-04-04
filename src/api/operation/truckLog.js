@@ -110,6 +110,6 @@ export function getTerminalLocation(vehicleId) {
 // 获取车辆列表
 export function getTruckIdNumbers() {
 	return fetch.get('/api-order/order/load/v1/getTruckIdNumber/').then(res => {
-		return res.data ? res.data : {}
+		return res.data ? res.data : []
 	})
 }
