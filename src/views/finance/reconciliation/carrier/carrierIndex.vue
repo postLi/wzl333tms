@@ -261,7 +261,8 @@
           path: '/finance/reconciliation/carrier/detailTable',
           query: {
             tab: '承运商对账明细',
-            id: row.carrierId
+            id: row.carrierId,
+            orgid: this.$router.query.orgid || ''
           }
         })
       },

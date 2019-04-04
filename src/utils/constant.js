@@ -110,15 +110,7 @@ export const APPORTION_TYPE_DESCRIPT = {
 /**
  * 常用打印字体列表
  */
-export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', 'Arial']
-/**
- * 默认体验账号
- */
-export const EXPERIENCE_USERNAME = ['tiyangz1', 'tiyangz2', 'tiyangz3', 'tiyanwh1', 'tiyanwh2', 'tiyanwh3', 'tiyanch1', 'tiyanch2', 'tiyanch3']
-/**
- * 默认体验网点
- */
-export const EXPERIENCE_NETWORK = ['广州网点', '武汉网点', '成都网点']
+export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', '微软雅黑', 'Serif', 'Arial']
 /**
  * 默认开单页面模板JSON
  */

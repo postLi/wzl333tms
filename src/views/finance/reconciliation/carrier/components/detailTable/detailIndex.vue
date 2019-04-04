@@ -294,7 +294,8 @@
               path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
               query: {
                 tab: '承运商对账-创建对账',
-                id: this.$route.query.id
+                id: this.$route.query.id,
+                orgid: this.$route.query.orgid || ''
               }
             })
 
@@ -306,7 +307,8 @@
               query: {
                 tab: '承运商对账-修改查看',
                 id: this.selected[0].id,
-                urlId: this.$route.query.id
+                urlId: this.$route.query.id,
+                orgid: this.$route.query.orgid || ''
               }
             })
 
@@ -449,7 +451,8 @@
           query: {
             tab: '承运商对账-修改查看',
             id: row.id,
-            urlId: this.$route.query.id
+            urlId: this.$route.query.id,
+            orgid: this.$route.query.orgid
           }
         })
       },
