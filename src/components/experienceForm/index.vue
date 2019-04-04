@@ -1,7 +1,7 @@
 <template>
   <!--  -->
   <el-dialog :title="titlePop" :visible.sync="isShow" :close-on-click-modal="false" append-to-body :before-close="closeMe" class="tms_experience">
-    <el-form :inline="true" ref="formModel" :model="formModel" class="demo-form-inline" :rules="rules" :size="btnsize" label-width="120px">
+    <el-form :inline="true" ref="formModel" :model="formModel" class="demo-form-inline" :rules="rules" :size="btnsize" label-width="130px">
       <el-row>
         <el-col :span="8">
           <el-form-item label="公司名称" prop="orgName">
@@ -92,7 +92,8 @@ export default {
       rules: {
         orgName: [{ required: true, message: '不能为空', trigger: 'change' }],
         city: [{ required: true, message: '不能为空', trigger: 'change' }],
-        username: [{ required: true, message: '不能为空', trigger: 'change' }]
+        username: [{ required: true, message: '不能为空', trigger: 'change' }],
+        socialCreditCode: [{ required: true, message: '不能为空', trigger: 'change' }]
       },
       orgiInfo: {
         orgName: '', // 公司名称
@@ -152,6 +153,10 @@ export default {
           this.changeLogin(query)
         })
         .catch(err => {
+          if (sessionStorage.getItem('TMS_experience_system') === 'yes') {
+            sessionStorage.setItem('TMS_experience_system', 'no')
+          }
+          location.href = '/'
           this._handlerCatchMsg(err)
         })
     },
