@@ -151,7 +151,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -251,7 +251,7 @@ export function myBlankDesign() {
 }
 // 打印表格
 export function PrintInFullPage(obj) {
-    // 获取用户信息
+  // 获取用户信息
   const user = getUserInfo()
   let fontFamily = ''
   if (obj.type) {
@@ -915,7 +915,7 @@ export function formatOrderData(info, type) {
     } else if (Number(infoDetail.shipDeliveryMethod) === 69) {
       obj.sendGood = '√' // 送货（√）
     }
-     // //////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////
     // /控货和贵重物品 需要特殊处理为打勾
     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('168') !== -1) {
       obj.controlGoods = infoDetail.shipOther ? '√' : '' // 168-控货
@@ -988,7 +988,7 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
       let printSetup = []
       let copy = []
       const bkimg = info.bkimg || false
-      let fontFamily = '宋体'
+      let fontFamily = '微软雅黑'
       LODOP = getLodop()
       let print_type = '' // 当前打印的是order-运单还是lib-标签
 
@@ -1006,7 +1006,7 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
 
         if (!info.fontFamily) { // 判断是不是预览，如果为预览就使用当前选择的字体，否则就使用系统保存的字体
           // 打印字体
-          fontFamily = (info.type === 'lib') ? user.systemSetup.printFontSetting.label : info.type === 'order' ? user.systemSetup.printFontSetting.ship : '宋体'
+          fontFamily = (info.type === 'lib') ? user.systemSetup.printFontSetting.label : info.type === 'order' ? user.systemSetup.printFontSetting.ship : '微软雅黑'
         } else {
           fontFamily = info.fontFamily
         }
@@ -1062,7 +1062,7 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
           console.log('setting::', arr[item])
           // str += 'LODOP.PRINT_INITA(' + e.topy + ',' + e.leftx + ',' + e.width + ',' + e.height + ',' + title + ');'
           LODOP.PRINT_INITA(arr[item].topy, arr[item].leftx, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', title)
-          LODOP.SET_PRINT_STYLE('FontName', fontFamily)  // 设置打印字体
+          LODOP.SET_PRINT_STYLE('FontName', fontFamily) // 设置打印字体
           // str += 'LODOP.SET_PRINT_PAGESIZE(0, ' + arr[item].width + ',' + arr[item].height + ', "");'
           // LODOP.PRINT_INITA(10, 10, 762, 533, "移动公司发票全样")
           LODOP.SET_PRINT_PAGESIZE(0, arr[item].width * prxvalue + 'mm', arr[item].height * prxvalue + 'mm', '')
@@ -1089,7 +1089,7 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
         } else {
           title = '托运单打印'
         }
-         // 设置打印字体
+        // 设置打印字体
         // LODOP.SET_PRINT_STYLE('FontName', '锐字云字库综艺体1.0')
         LODOP.SET_PRINT_STYLE('FontName', fontFamily)
         if (e.filedValue !== 'setting' && Number(e.isshow) === 1) {

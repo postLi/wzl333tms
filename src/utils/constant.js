@@ -110,7 +110,7 @@ export const APPORTION_TYPE_DESCRIPT = {
 /**
  * 常用打印字体列表
  */
-export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', 'Arial']
+export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', '微软雅黑', 'Serif', 'Arial']
 /**
  * 默认开单页面模板JSON
  */
