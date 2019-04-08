@@ -125,12 +125,12 @@
 import { getSelectLoadDetailList } from '@/api/operation/load'
 import { postAddRepertory } from '@/api/operation/shortDepart'
 import { objectMerge2, parseTime } from '@/utils/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../../load/components/actualSendtimeDialog'
 export default {
   components: {
-    TableSetup,
+    // TableSetup,
     actualSendtime
   },
   props: {

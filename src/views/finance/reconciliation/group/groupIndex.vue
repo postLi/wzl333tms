@@ -62,7 +62,7 @@
   import { getExportExcel } from '@/api/company/customerManage'
   import { postGroupList } from '@/api/finance/fin_group'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -71,8 +71,8 @@
   export default {
     components: {
       SearchForm,
-      Pager,
-      TableSetup
+      Pager
+      // TableSetup
       // tableHeaderSearch
     },
     computed: {

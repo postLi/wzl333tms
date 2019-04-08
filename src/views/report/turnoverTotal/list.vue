@@ -59,11 +59,11 @@ import { objectMerge2, parseTime, pickerOptions2, getSummaries } from '@/utils/i
 import SearchForm from './components/search'
 import { reportTurnoverTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm,
-    TableSetup
+    SearchForm
+    // TableSetup
   },
   data() {
     return {

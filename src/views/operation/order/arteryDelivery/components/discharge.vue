@@ -80,7 +80,7 @@
 </template>
 <script>
 import popRight from '@/components/PopRight/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -98,8 +98,8 @@ export default {
   },
   components: {
     popRight,
-    SelectTree,
-    TableSetup,
+    SelectTree
+    // TableSetup,
   },
   data() {
     return {
@@ -121,99 +121,99 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '50',
-          fixed: true,
-          slot: (scope) => {
+        label: '序号',
+        prop: 'number',
+        width: '50',
+        fixed: true,
+        slot: (scope) => {
             return scope.$index + 1
           }
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '100'
-        },
-        {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '100'
-        },
-        {
-          label: '子运单号',
-          prop: 'childShipSn',
-          width: '100'
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          width: '100'
-        },
-        {
-          label: '操作费(元)',
-          prop: 'handlingFee',
-          width: '100'
-        },
-        {
-          label: '配载件数',
-          prop: 'loadAmount',
-          width: '100'
-        },
-        {
-          label: '配载重量(kg)',
-          prop: 'loadWeight',
-          width: '100'
-        },
-        {
-          label: '配载体积(m³)',
-          prop: 'loadVolume',
-          width: '100'
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '100'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '100'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '100'
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '100'
-        },
-        {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '100'
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '100'
-        },
-        {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '100'
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '100'
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '150'
-        }
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '100'
+      },
+      {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '100'
+      },
+      {
+        label: '子运单号',
+        prop: 'childShipSn',
+        width: '100'
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        width: '100'
+      },
+      {
+        label: '操作费(元)',
+        prop: 'handlingFee',
+        width: '100'
+      },
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '100'
+      },
+      {
+        label: '配载重量(kg)',
+        prop: 'loadWeight',
+        width: '100'
+      },
+      {
+        label: '配载体积(m³)',
+        prop: 'loadVolume',
+        width: '100'
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '100'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '100'
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '100'
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '100'
+      },
+      {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '100'
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '100'
+      },
+      {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '100'
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '100'
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '150'
+      }
       ]
     }
   },
@@ -276,7 +276,7 @@ export default {
         this.$message.warning('请选择需要卸货的运单')
         return false
       }
-      let selectList = []
+      const selectList = []
       this.selectList.forEach((el, index) => {
         if (el.warehouStatus !== 1 || el.unloadSign !== 1) {
           selectList.push(el.id)
@@ -289,11 +289,11 @@ export default {
       }).then(() => {
         this.loading = true
         unload(selectList).then(data => {
-            this.$message.success('卸货成功!')
-            this.$emit('success')
-            this.loading = false
-            this.closeMe()
-          })
+          this.$message.success('卸货成功!')
+          this.$emit('success')
+          this.loading = false
+          this.closeMe()
+        })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
@@ -304,21 +304,20 @@ export default {
           message: '已取消'
         })
       })
-
     },
     fetchData() { // 清单列表
-      let query = {
+      const query = {
         loadId: this.info.loadId,
         sortSign: 2 // sortSign 1干线发车/到车排序 2卸货排序
       }
-        this.loading = true
+      this.loading = true
       selectLoadDetailList(query).then(data => {
-          if (data) {
+        if (data) {
             this.dataList = data
             this.toggleAllRows()
           }
-          this.loading = false
-        })
+        this.loading = false
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -328,12 +327,12 @@ export default {
       this.loading = true
       this.searchQuery.vo.loadId = this.info.loadId
       selectLoadMainInfoList(this.searchQuery).then(data => {
-          if (data && data.list.length) {
+        if (data && data.list.length) {
             this.formModel = data.list[0]
             this.formModel.userOrgName = this.otherinfo.orgName
           }
-          this.loading = false
-        })
+        this.loading = false
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -352,7 +351,7 @@ export default {
       })
     },
     setTableWidth(newWidth, oldWidth, column, event) {
-      let find = this.tableColumn.filter(el => el.prop === column.property)
+      const find = this.tableColumn.filter(el => el.prop === column.property)
       if (find.length) {
         find[0].width = newWidth
         this.visible2 = true
@@ -377,7 +376,7 @@ export default {
       this.eventBus.$emit('tablesetup.change', this.thecode, this.tableColumn)
     },
     getSelection(list) {
-      let arr = []
+      const arr = []
       this.dataList.forEach((el, index) => {
         list.forEach((em, idx) => {
           if (el.repertoryId === em.repertoryId) {

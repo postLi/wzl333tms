@@ -466,7 +466,7 @@ import { postSelectLoadMainInfoList } from '@/api/operation/arteryDelivery'
 import { getExportExcel } from '@/api/company/customerManage'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { objectMerge2, parseTime, closest } from '@/utils/'
 import { PrintContract } from '@/utils/lodopFuncs'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
@@ -723,8 +723,8 @@ export default {
   components: {
     popRight,
     SelectTree,
-    selectType,
-    TableSetup
+    selectType
+    // TableSetup
 
   },
   computed: {
