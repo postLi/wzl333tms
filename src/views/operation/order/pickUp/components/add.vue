@@ -8,7 +8,7 @@
           <el-form-item label="提货批次" prop="customerUnit">
             <el-input v-model="pickupBatchNumber" auto-complete="off" disabled></el-input>
           </el-form-item>
-          <el-form-item label="发货人" prop="" class="senderName_lrl">
+          <el-form-item label="发货人" prop="tmsCustomer.customerName" class="senderName_lrl">
             <querySelect search="customerName" type="sender" valuekey="customerName"
                          v-model="form.tmsCustomer.customerName" @change="setSender" :disabled="isDbclick"/>
           </el-form-item>
@@ -216,9 +216,17 @@
           callback(new Error('请输入正确的手机号码~'))
         }
       }
+      var validcustomerName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('发货人不能为空'))
+        } else {
+          callback()
+        }
+      }
 
       return {
         rules: {
+          'tmsCustomer.customerName': [{ required: true, validator: validcustomerName }],
           'tmsOrderPickup.pickupName': [
             { required: true, validator: this.validateIsEmpty('货品名不能为空') }
           ],
