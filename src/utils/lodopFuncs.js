@@ -1591,7 +1591,7 @@ function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出�
     th.style.fontWeight = 600
     th.style.height = '25px'
     th.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[i].width + 'px;overflow:hidden;">' + (columns[i].label || '').replace(/\(.*$/, '') + '</div>'
-
+    th.style.border = '1px solid black'
     theadTr.appendChild(th)
     colgroup.appendChild(col)
 
@@ -1599,6 +1599,7 @@ function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出�
     console.warn(typeof summaries[i], summaries[i])
     tfoottd.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[i].width + 'px;overflow:hidden;">' + (Number(summaries[i]) === 0 ? '' : summaries[i]) + '</div>'
     // tfoottd.innerHTML = Number(summaries[i]) === 0 ? '' : summaries[i]
+    tfoottd.style.border = '1px solid black'
     tfootTr.appendChild(tfoottd)
   }
   table.appendChild(colgroup)
@@ -1607,7 +1608,7 @@ function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出�
 
   // 底部备注
   const theadTrRemark = document.createElement('tr')
-  theadTrRemark.innerHTML = '<td>备注</td><td colspan="' + (columns.length - 1) + '"></td>'
+  theadTrRemark.innerHTML = '<td style="border: 1px solid black;">备注</td><td style="border: 1px solid black;" colspan="' + (columns.length - 1) + '"></td>'
   tfootTr.appendChild(theadTrRemark)
 
   table.appendChild(tbody) // 对应列数据填充
@@ -1620,6 +1621,7 @@ function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出�
       // td.innerHTML = data[k][columns[j].prop] || ''
       td.innerHTML = '<div style="white-space:' + iswrap + 'width:' + columns[j].width + 'px;overflow:hidden;">' + (data[k][columns[j].prop] || '') + '</div>'
       td.style.width = columns[j].width
+      td.style.border = '1px solid black'
       //  td.style.whitSpace = iswrap
       // td.setAttribute('width', data[k][columns[j].width])
     }
@@ -1632,6 +1634,7 @@ function createTable(obj, noUnit, page, printObj, fontFamily) { // 打印导出�
 
   //  table.setAttribute('width', '100%')
   table.setAttribute('border', '1')
+  table.style.border = '1px solid black'
   table.style.borderCollapse = 'collapse'
   table.style.fontFamily = fontFamily || ''
   table.style.fontSize = (printObj.content_word_size || '16') + 'px'
