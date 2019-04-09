@@ -76,19 +76,19 @@
 <script>
 import * as accountApi from '@/api/finance/accountsReceivable'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, parseTime, objectMerge2 } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
-    Pager,
-    TableSetup,
-    tableHeaderSearch
+    Pager
+    // TableSetup,
+    // tableHeaderSearch
   },
   mounted() {
     // this.loading = false
@@ -177,23 +177,23 @@ export default {
         'label': '未核销到付',
         'prop': 'notArrivepayFee',
         slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-          }
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
       }, {
-          'label': '开单日期',
-          'prop': 'createTime',
-          width: 180
-        }, {
+        'label': '开单日期',
+        'prop': 'createTime',
+        width: 180
+      }, {
         'label': '发货方',
         'prop': 'senderCustomerUnit'
       }, {
         'label': '发货人',
         'prop': 'shipSenderName'
       }, {
-        'label': '收货方',
-        'prop': 'receiverCustomerUnit'
-      }, {
+          'label': '收货方',
+          'prop': 'receiverCustomerUnit'
+        }, {
         'label': '收货人',
         'prop': 'shipReceiverName'
       }, {

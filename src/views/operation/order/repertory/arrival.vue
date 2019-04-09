@@ -59,17 +59,17 @@ import SearchForm from './components/search'
 import Colorpicker from './components/colorpicker'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     Pager,
     SearchForm,
-    Colorpicker,
-    TableSetup,
-    tableHeaderSearch
+    Colorpicker
+    // TableSetup,
+    // tableHeaderSearch
   },
   data() {
     return {

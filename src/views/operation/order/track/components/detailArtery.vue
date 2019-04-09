@@ -120,11 +120,11 @@
 </template>
 <script>
 import { getSelectLoadDetailList } from '@/api/operation/load'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
-    TableSetup
+    // TableSetup
   },
   props: {
     info: {
@@ -146,132 +146,132 @@ export default {
       selected: [],
       query: {
         arriveOrgid: 0,
-        batchNo: "",
+        batchNo: '',
         batchTypeId: 0,
-        departureEndTime: "",
-        departureStartTime: "",
-        dirverName: "",
-        loadEndTime: "",
+        departureEndTime: '',
+        departureStartTime: '',
+        dirverName: '',
+        loadEndTime: '',
         loadId: 0,
-        loadStartTime: "",
+        loadStartTime: '',
         loadTypeId: 0,
         orgId: 0,
-        truckIdNumber: ""
+        truckIdNumber: ''
       },
       tableColumn: [{
-          label: "运单号",
-          prop: "shipSn",
-          width: "130",
-          fixed: true
-        },
-        {
-          label: "开单网点",
-          prop: "shipFromOrgName",
-          width: "130",
-          fixed: false
-        },
-        {
-          label: "配载件数",
-          prop: "loadAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载重量",
-          prop: "loadWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "配载体积",
-          prop: "loadVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "库存件数",
-          prop: "repertoryAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "库存重量",
-          prop: "repertoryWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "库存体积",
-          prop: "repertoryVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单件数",
-          prop: "cargoAmount",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单重量",
-          prop: "cargoWeight",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单体积",
-          prop: "cargoVolume",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "发站",
-          prop: "shipFromCityName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "到站",
-          prop: "shipToCityName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "发货人",
-          prop: "shipSenderName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "收货人",
-          prop: "shipReceiverName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "收货人电话",
-          prop: "shipReceiverMobile",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "货品名",
-          prop: "cargoName",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "货号",
-          prop: "shipGoodsSn",
-          width: "120",
-          fixed: false
-        },
-        {
-          label: "运单备注",
-          prop: "shipRemarks",
-          width: "120",
-          fixed: false
-        }
+        label: '运单号',
+        prop: 'shipSn',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '配载件数',
+        prop: 'loadAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载重量',
+        prop: 'loadWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '配载体积',
+        prop: 'loadVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '库存件数',
+        prop: 'repertoryAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
@@ -327,7 +327,7 @@ export default {
       getSelectLoadDetailList(this.loadId).then(data => {
         this.detailList = data.data
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

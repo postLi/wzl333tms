@@ -191,109 +191,109 @@
 <script>
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { parseShipStatus } from '@/utils/dict'
 export default {
   components: {
-    TableSetup
+    // TableSetup
   },
   data() {
     return {
       activeName2: 'first',
       repertoryArr: [{
-          shipSn: '234234234',
-          shipStatusName: '已发货',
-          shipIdentifying: '控',
-          repertoryCreateTime: '2018-09-11 19:55:02',
-          hashours: '6'
-        },
-        {
-          shipSn: '19082334',
-          shipStatusName: '已发货',
-          shipIdentifying: '控',
-          repertoryCreateTime: '2018-09-11 19:55:02',
-          hashours: '1'
-        }
+        shipSn: '234234234',
+        shipStatusName: '已发货',
+        shipIdentifying: '控',
+        repertoryCreateTime: '2018-09-11 19:55:02',
+        hashours: '6'
+      },
+      {
+        shipSn: '19082334',
+        shipStatusName: '已发货',
+        shipIdentifying: '控',
+        repertoryCreateTime: '2018-09-11 19:55:02',
+        hashours: '1'
+      }
       ],
       activeName: 1,
       setupTableVisible: false, // 默认弹出框关闭
       tablekey: 0, // 初始化表格视图key
       tableColumn: [{ // 后台接口获取到的列表数据,
-          label: '运单号',
-          prop: 'shipSn',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '运单状态',
-          prop: 'shipStatusName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '运单标识',
-          prop: 'shipIdentifying',
-          width: '150',
-          fixed: false,
-          slot: function(scope) {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '运单状态',
+        prop: 'shipStatusName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '运单标识',
+        prop: 'shipIdentifying',
+        width: '150',
+        fixed: false,
+        slot: function(scope) {
             return parseShipStatus(scope.row.shipIdentifying)
           }
-        },
-        {
-          label: '入库时间',
-          prop: 'repertoryCreateTime',
-          width: '180',
+      },
+      {
+        label: '入库时间',
+        prop: 'repertoryCreateTime',
+        width: '180',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.repertoryCreateTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
-          fixed: false
-        },
-        {
-          label: '库存时长',
-          prop: 'hashours',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'fromOrgName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '180',
+        fixed: false
+      },
+      {
+        label: '库存时长',
+        prop: 'hashours',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'fromOrgName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '180',
           // slot: (scope) => {
           //   return `${parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}')}`
           // },
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '库存件数',
-          prop: 'repertoryAmount',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '库存重量',
-          prop: 'repertoryWeight',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '库存体积',
-          prop: 'repertoryVolume',
-          width: '150',
-          fixed: false
-        }
-      ],
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '库存件数',
+        prop: 'repertoryAmount',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '库存重量',
+        prop: 'repertoryWeight',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '库存体积',
+        prop: 'repertoryVolume',
+        width: '150',
+        fixed: false
+      }
+      ]
     }
   },
   methods: {

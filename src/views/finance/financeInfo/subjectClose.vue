@@ -107,15 +107,15 @@
   </div>
 </template>
 <script>
-  import {getExportExcel} from '@/api/company/customerManage'
-  import {fetchPostlist, deletebatchDelete} from '@/api/operation/pickup'
-  import {postFinRsrelationList} from '@/api/finance/finanInfo'
+  import { getExportExcel } from '@/api/company/customerManage'
+  import { fetchPostlist, deletebatchDelete } from '@/api/operation/pickup'
+  import { postFinRsrelationList } from '@/api/finance/finanInfo'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
-  import {mapGetters} from 'vuex'
+  // import TableSetup from '@/components/tableSetup'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { objectMerge2 } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
   import SelectTree from '@/components/selectTree/index'
   import SubjectDialog from './components/subjectDialog'
 
@@ -123,7 +123,7 @@
     components: {
       SearchForm,
       Pager,
-      TableSetup,
+      // TableSetup,
       SubjectDialog,
 
       SelectTree
@@ -140,7 +140,7 @@
     data() {
       return {
         searchForm: {
-          companyId: '',
+          companyId: ''
         },
         mykey: '',
         btnsize: 'mini',
@@ -172,27 +172,27 @@
           width: '',
           fixed: true
         },
-          {
-            label: '一级科目',
-            prop: 'customerName',
-            width: '',
-            fixed: false
-          }, {
-            label: '三级科目',
-            prop: 'customerMobile',
-            width: '',
-            fixed: false
-          }, {
-            label: '四级科目',
-            prop: 'detailedAddress',
-            width: '',
-            fixed: false
-          }, {
+        {
+          label: '一级科目',
+          prop: 'customerName',
+          width: '',
+          fixed: false
+        }, {
+          label: '三级科目',
+          prop: 'customerMobile',
+          width: '',
+          fixed: false
+        }, {
+          label: '四级科目',
+          prop: 'detailedAddress',
+          width: '',
+          fixed: false
+        }, {
             label: '操作',
             prop: 'pickupName',
             width: '',
             fixed: false
-          },
+          }
         ]
       }
     },
@@ -251,7 +251,7 @@
           case 'doNext':
 
             this.$router.push({
-              path: '/finance/financeInfo/subjectDirection',
+              path: '/finance/financeInfo/subjectDirection'
             })
             this.loading = false
             break
@@ -333,7 +333,7 @@
       },
       openShowDialog() {
         this.showDialog = true
-      },
+      }
     }
   }
 </script>

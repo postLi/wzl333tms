@@ -45,8 +45,6 @@
             </el-table-column>
           </template>
         </el-table>
-
-
       </div>
       <div class="info_tab_footer">共计:{{ total }}
         <div class="show_pager">
@@ -62,18 +60,18 @@
   import { getExportExcel } from '@/api/company/customerManage'
   import { postCarrierCarrierList } from '@/api/finance/fin_carrier'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-  import tableHeaderSearch from '@/components/tableHeaderSearch'
+  // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     components: {
       SearchForm,
-      Pager,
-      TableSetup,
-      tableHeaderSearch
+      Pager
+      // TableSetup,
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -263,7 +261,8 @@
           path: '/finance/reconciliation/carrier/detailTable',
           query: {
             tab: '承运商对账明细',
-            id: row.carrierId
+            id: row.carrierId,
+            orgid: this.$router.query.orgid || ''
           }
         })
       },

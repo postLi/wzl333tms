@@ -67,19 +67,19 @@
   import { getExportExcel } from '@/api/company/customerManage'
   import { postFinCerList, postFinCerFicationcert } from '@/api/finance/finCertificationAudit'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
   import { objectMerge2 } from '@/utils/index'
   import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-  import tableHeaderSearch from '@/components/tableHeaderSearch'
+  // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
   export default {
     components: {
       SearchForm,
-      Pager,
-      TableSetup,
-      tableHeaderSearch
+      Pager
+      // TableSetup,
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([

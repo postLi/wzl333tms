@@ -49,7 +49,7 @@ import { getExportExcel } from '@/api/company/customerManage'
 import { postCFinancebillcheckList } from '@/api/finance/fin_customer'
 import { deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import IndexDialog from '../../../carrier/components/detailTable/components/indexDialog'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -59,7 +59,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     IndexDialog
   },
   computed: {

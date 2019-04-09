@@ -48,16 +48,16 @@
 </template>
 <script>
   import treeTable from '@/components/TreeTable'
-  import {getFinSubjectTree} from '@/api/finance/finanInfo'
-  import {getImportExcelInfo} from '@/api/common'
+  import { getFinSubjectTree } from '@/api/finance/finanInfo'
+  import { getImportExcelInfo } from '@/api/common'
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import SubjectDialog from './components/subjectDialog'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {objectMerge2} from '@/utils/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { objectMerge2 } from '@/utils/index'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
   import treeToArray from '@/utils/customEval'
   import ImportDialog from '@/components/importDialog'
 
@@ -65,7 +65,7 @@
     components: {
       SearchForm,
       Pager,
-      TableSetup,
+      // TableSetup,
       SelectTree,
       SubjectDialog,
       ImportDialog,
@@ -101,7 +101,7 @@
         setupTableVisible: false,
         selectInfo: {},
         searchForm: {
-          companyId: '',
+          companyId: ''
         },
         // 选中的行
         selected: [],
@@ -109,15 +109,15 @@
           'currentPage': 1,
           'pageSize': 100,
           'vo': {
-            'companyId': 1,
+            'companyId': 1
           }
         },
         columns: [
           {
             text: '科目名称',
             value: 'subjectName',
-            fixed: true,
-          },
+            fixed: true
+          }
         ],
         tableColumn: [{
           label: '序号',
@@ -137,33 +137,31 @@
           prop: 'pickupStatusName',
           width: '',
           fixed: true
-        },
+        }
         ]
       }
     },
     mounted() {
       this.searchQuery.vo.companyId = this.otherinfo.companyId
-      this.isParentId = this.otherinfo.orgid === this.otherinfo.companyId ? true : false
+      this.isParentId = this.otherinfo.orgid === this.otherinfo.companyId
       this.fetchData()
     },
     methods: {
       getExpanAll(msg) {
-
-        if (msg === 'true') {
-          this.expandAll = "isfalse"
+      if (msg === 'true') {
+          this.expandAll = 'isfalse'
           this.$nextTick(() => {
 
           })
           // console.log(typeof this.expandAll, this.expandAll, 'this.expandAll--true');
-        } else if (msg === 'false'){
-          this.expandAll = "isfalse"
+        } else if (msg === 'false') {
+          this.expandAll = 'isfalse'
           this.$nextTick(() => {
             this.expandAll = ''
           })
           // console.log(typeof this.expandAll, this.expandAll, 'this.expandAll--false');
         }
-
-      },
+    },
       searchOrgid(item) {
         this.searchQuery.vo.companyId = item
         this.fetchData()
@@ -216,8 +214,8 @@
                 this.$message({
                   type: 'success',
                   message: '覆盖成功!'
-                });
-                this.fetchData()
+                })
+              this.fetchData()
                 this.loading = false
               }).catch((err) => {
                 this._handlerCatchMsg(err)
@@ -227,10 +225,10 @@
               this.$message({
                 type: 'info',
                 message: '已取消覆盖'
-              });
-            });
+              })
+          })
 
-            break
+          break
           case 'doExport':
             // fetchData () { // 重新获取列表数据 }
             this.$confirm('确定覆盖原有模板?', '提示', {
@@ -244,9 +242,9 @@
               this.$message({
                 type: 'info',
                 message: '已取消覆盖'
-              });
-            });
-            break
+              })
+          })
+          break
           case 'doAddEnd':
             if (this.selected.length > 1) {
               this.$message({
@@ -280,24 +278,24 @@
           case 'doNext':
             this.$router.push({
               path: '/finance/financeInfo/subjectClose',
-              query:{
-                isSubjectClose:1
+              query: {
+                isSubjectClose: 1
               }
             })
-            break;
-          case 'doAll':
+            break
+        case 'doAll':
             // this.expandAll = "false2" 为第三者声明；
-            //第一次为引起变化，但是声明之后 子组件的判断条件为true 和false，之后则销毁
-            this.expandAll = "false2"
-            this.$nextTick(() => {//防止点击速度过快，使用$nextTick过渡缓冲
-              this.expandAll = "true"
+            // 第一次为引起变化，但是声明之后 子组件的判断条件为true 和false，之后则销毁
+            this.expandAll = 'false2'
+            this.$nextTick(() => { // 防止点击速度过快，使用$nextTick过渡缓冲
+              this.expandAll = 'true'
             })
 
             break
           case 'doUp':
-            this.expandAll = "false2"
+            this.expandAll = 'false2'
             this.$nextTick(() => {
-              this.expandAll = "false"
+              this.expandAll = 'false'
             })
             break
           case 'export':

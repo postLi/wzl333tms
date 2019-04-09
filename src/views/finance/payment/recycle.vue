@@ -288,19 +288,19 @@
 import SearchForm from './components/search'
 import { postGoodsfundsList, putUpdateCancelReceipt } from '@/api/finance/payment'
 import { mapGetters } from 'vuex'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import AddPayment from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddPayment,
-    tableHeaderSearch
+    // TableSetup,
+    AddPayment
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

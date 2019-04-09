@@ -57,20 +57,20 @@
   </div>
 </template>
 <script>
-  import {postGroupDetailList} from '@/api/finance/fin_group'
-  import {deleteCarShort, postUpdateBillCheckSelective} from '@/api/finance/fin_carfee'
+  import { postGroupDetailList } from '@/api/finance/fin_group'
+  import { deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import IndexDialog from './components/indexDialog'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
-  import {PrintInFullPage, SaveAsFile} from '@/utils/lodopFuncs'
+  import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 
   export default {
     components: {
       SearchForm,
       Pager,
-      TableSetup,
+      // TableSetup,
       IndexDialog
     },
     computed: {
@@ -199,7 +199,6 @@
           }
         ]
       }
-
     },
     methods: {
       fetchAllCustomer() {
@@ -231,8 +230,7 @@
         // 显示导入窗口
       },
       doAction(type) {
-
-        // 判断是否有选中项
+      // 判断是否有选中项
 
         if (!this.selected.length && type !== 'storage' && type !== 'print' && type !== 'export') {
           this.$message({
@@ -378,8 +376,8 @@
               columns: this.tableColumn,
               name: '网点对账全部明细'
             })
-            break;
-          // 导出
+            break
+        // 导出
           case 'export':
             SaveAsFile({
               data: this.selected.length ? this.selected : this.usersArr,

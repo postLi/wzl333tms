@@ -48,21 +48,21 @@
 </template>
 <script>
 import SearchForm from './components/searchDischarge'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Discharge from './components/discharge'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import { unloadList, cancelUnload } from '@/api/operation/discharge'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Discharge,
-    tableHeaderSearch
+    // TableSetup,
+    Discharge
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

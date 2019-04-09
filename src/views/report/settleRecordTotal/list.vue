@@ -154,13 +154,13 @@ import SearchForm from './components/search'
 import { getToken } from '@/utils/auth'
 import { reportSettleRecordTotal } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 export default {
   components: {
     SelectTree,
     querySelect,
-    SearchForm,
-    TableSetup
+    SearchForm
+    // TableSetup
   },
   data() {
     return {
@@ -187,74 +187,74 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '序号',
-          prop: 'number',
-          textAlign: 'center',
-          width: '50',
-          fixed: true
-        },
-        {
-          label: '费用项目',
-          prop: 'feeName',
-          textAlign: 'center',
+        label: '序号',
+        prop: 'number',
+        textAlign: 'center',
+        width: '50',
+        fixed: true
+      },
+      {
+        label: '费用项目',
+        prop: 'feeName',
+        textAlign: 'center'
           // width: '100'
-        },
-        {
-          label: '应收合计',
-          prop: 'totalreceivableFee',
-          textAlign: 'right',
+      },
+      {
+        label: '应收合计',
+        prop: 'totalreceivableFee',
+        textAlign: 'right',
           // width: '100',
-          type: 1
-        },
-        {
-          label: '已收',
-          prop: 'receivableFee',
-          textAlign: 'right',
+        type: 1
+      },
+      {
+        label: '已收',
+        prop: 'receivableFee',
+        textAlign: 'right',
           // width: '100',
-          type: 1
-        },
-        {
-          label: '未收',
-          prop: 'receivableUnpaidFee',
-          textAlign: 'right',
+        type: 1
+      },
+      {
+        label: '未收',
+        prop: 'receivableUnpaidFee',
+        textAlign: 'right',
           // width: '100',
-          type: 1
-        },
-        {
-          label: '数量',
-          prop: 'receivableCount',
-          textAlign: 'center',
+        type: 1
+      },
+      {
+        label: '数量',
+        prop: 'receivableCount',
+        textAlign: 'center',
           // width: '70',
-          type: 1
-        },
-        {
-          label: '应付合计',
-          prop: 'totalpayableFee',
-          textAlign: 'right',
+        type: 1
+      },
+      {
+        label: '应付合计',
+        prop: 'totalpayableFee',
+        textAlign: 'right',
           // width: '100',
-          type: 2
-        },
-        {
-          label: '已付',
-          prop: 'payableFee',
-          textAlign: 'right',
+        type: 2
+      },
+      {
+        label: '已付',
+        prop: 'payableFee',
+        textAlign: 'right',
           // width: '100',
-          type: 2
-        },
-        {
-          label: '未付',
-          prop: 'payableUnpaidFee',
-          textAlign: 'right',
+        type: 2
+      },
+      {
+        label: '未付',
+        prop: 'payableUnpaidFee',
+        textAlign: 'right',
           // width: '100',
-          type: 2
-        },
-        {
-          label: '数量',
-          prop: 'payableCount',
-          textAlign: 'center',
+        type: 2
+      },
+      {
+        label: '数量',
+        prop: 'payableCount',
+        textAlign: 'center',
           // width: '70',
-          type: 2
-        }
+        type: 2
+      }
       ],
       countCol: [ // 需要合计的-列
         'totalreceivableFee',
@@ -391,7 +391,7 @@ export default {
               elDataList = data
             }
           }
-          let tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
+          const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
           td.style.textAlign = this.columns[j].textAlign // 设置居中方式
@@ -523,7 +523,7 @@ export default {
       const sums = []
       sums[0] = '合计'
       columns.forEach((column, index) => {
-        for (let i in this.countColVal) {
+        for (const i in this.countColVal) {
           if (column.property === i) {
             sums[index] = this.countColVal[i] + ''
           }

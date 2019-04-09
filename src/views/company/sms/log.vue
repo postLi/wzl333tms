@@ -98,7 +98,7 @@
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import { postSmsSendLogList } from '@/api/company/sms'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   data() {
     return {
@@ -144,8 +144,8 @@ export default {
   },
   components: {
     Pager,
-    SearchForm,
-    tableHeaderSearch
+    SearchForm
+    // tableHeaderSearch
   },
   mounted() {
 

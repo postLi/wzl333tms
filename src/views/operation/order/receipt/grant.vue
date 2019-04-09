@@ -321,19 +321,19 @@
 import SearchForm from './components/search'
 import { postReceipt, putUpdateReceipt } from '@/api/operation/receipt'
 import { mapGetters } from 'vuex'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import AddMark from './components/add'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
-    TableSetup,
+    // TableSetup,
     Pager,
-    AddMark,
-    tableHeaderSearch
+    AddMark
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

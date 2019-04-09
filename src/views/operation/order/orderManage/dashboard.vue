@@ -82,22 +82,22 @@
 <script>
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search2'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddOrder,
-    tableHeaderSearch
+    // TableSetup,
+    AddOrder
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -232,10 +232,10 @@ export default {
         'prop': 'weightFee',
         'width': '150'
       }, {
-          'label': '体积单价',
-          'prop': 'volumeFee',
-          'width': '150'
-        }, {
+        'label': '体积单价',
+        'prop': 'volumeFee',
+        'width': '150'
+      }, {
         'label': '发站',
         'prop': 'shipFromCityName',
         'width': '150'
@@ -244,13 +244,13 @@ export default {
         'prop': 'shipToCityName',
         'width': '150'
       }, {
-        'label': '等通知放货',
-        'prop': 'status',
-        'width': '150',
-        'slot': function(scope) {
+          'label': '等通知放货',
+          'prop': 'status',
+          'width': '150',
+          'slot': function(scope) {
           return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
         }
-      }, {
+        }, {
         'label': '回单要求',
         'prop': 'shipReceiptRequireName',
         'width': '150'

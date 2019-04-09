@@ -1,6 +1,6 @@
 <template>
   <!-- 打印标签设置 -->
-  <el-dialog title="打印标签设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
+  <el-dialog title="打印标签设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading"  :close-on-press-escape="false">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>
@@ -191,6 +191,7 @@
           height:item.height/prxvalue+'px',
           fontSize: item.fontsize+'pt',
           whiteSpace: 'nowrap',
+           fontFamily: formPrint.printFontSetting.label,
           fontWeight: item.bold ? 800 : 400,
           textAlign: alignmentValue[item.alignment]}" :class="{'isActiveDrag':classItem[index]}" @click="editDragItem(item, index,$event)">
           <div class="dragTips" v-if="showDragTips[index]">

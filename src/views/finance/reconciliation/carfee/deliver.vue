@@ -50,19 +50,19 @@
 <script>
   import { postCarfShortDetailList, deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import IndexDialog from './components/indexDialog'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
     components: {
       SearchForm,
       Pager,
-      TableSetup,
-      IndexDialog,
-      tableHeaderSearch
+      // TableSetup,
+      IndexDialog
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([

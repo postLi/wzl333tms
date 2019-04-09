@@ -37,7 +37,6 @@
             label="金额">
             </el-table-column>
           </el-table>
-
         </div>
       </template>
       <div slot="footer" class="dialog-footer-frame" >
@@ -232,11 +231,11 @@
           })
           this.loading = false
           if (this.sendId) {
-            this.$router.push({ path: (rooturl + this.urlId) })
+            this.$router.push({ path: (rooturl + this.urlId +'&orgid=' + this.$route.query.orgid || '') })
             this.eventBus.$emit('closeCurrentView')
           // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.urlId )
           } else {
-            this.$router.push({ path: (rooturl + this.memberId) })
+            this.$router.push({ path: (rooturl + this.memberId +'&orgid=' + this.$route.query.orgid || '') })
             this.eventBus.$emit('closeCurrentView')
           // this.eventBus.$emit('replaceCurrentView', '/finance/reconciliation/carrier/detailTable?tab=承运商对账明细&id=' + this.memberId)
           }

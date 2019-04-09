@@ -74,20 +74,20 @@
 <script>
 import * as accountApi from '@/api/finance/accountsReceivable'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { getSummaries, objectMerge2, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Addunusual from '../unusual/components/add'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Addunusual,
-    tableHeaderSearch
+    // TableSetup,
+    Addunusual
+    // tableHeaderSearch
   },
   mounted() {
     // this.loading = false

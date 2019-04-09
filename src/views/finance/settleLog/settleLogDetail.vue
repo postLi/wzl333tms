@@ -46,7 +46,7 @@
 import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/searchDetail'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postDetailList, postDetailCancel, postCancelSettlement } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
@@ -55,7 +55,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     Receipt
   },
   data() {
@@ -482,7 +482,7 @@ export default {
         postDetailList(this.searchQuery).then(data => {
           this.dataListTop = data.list
           this.total = data.total
-        }).catch((err)=>{
+        }).catch((err) => {
           this.loading = false
           this._handlerCatchMsg(err)
         })

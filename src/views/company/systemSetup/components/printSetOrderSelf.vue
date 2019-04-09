@@ -1,6 +1,6 @@
 <template>
   <!-- 打印运单设置 -->
-  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading">
+  <el-dialog title="打印运单设置 (单位:毫米mm)" :visible.sync="dialogVisible" fullscreen :before-close="closeMe" class="tms_dialog_print_drag" v-loading="loading" :close-on-press-escape="false">
     <div class="print_aside" :key="viewKey">
       <div class="print_aside_head">
         <span><i class="el-icon-menu"></i> 字段列表 {{formModel.labelList.length}} </span>

@@ -72,13 +72,13 @@ import { postSmsTemplateLogList, sendSmsByTemplateLog, postSmsSign, udpateSmsTem
 import Pager from '@/components/Pagination/index'
 import addCustomized from './components/addCustomized'
 import popRight from './components/editContent'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     Pager,
     popRight,
-    addCustomized,
-    tableHeaderSearch
+    addCustomized
+    // tableHeaderSearch
   },
   data() {
     return {

@@ -517,21 +517,21 @@ import { postDeliveryList, postCancelSign } from '@/api/operation/sign'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from './components/tableSetup'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Addsign from './components/add'
 import Addbatch from './components/batch'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Addsign,
     Addbatch,
-    TableSetup,
-    Pager,
-    tableHeaderSearch
+    // TableSetup,
+    Pager
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters(['otherinfo']),

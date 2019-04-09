@@ -23,6 +23,8 @@
         </el-table-column>
         <el-table-column prop="shipFromOrgName" label="开单网点" width="80">
         </el-table-column>
+        <el-table-column prop="shipDeliveryMethodName" label="交接方式" width="80">
+        </el-table-column>
         <el-table-column prop="shipSn" width="130" label="运单号">
         </el-table-column>
         <el-table-column prop="shipArrivepayFee" sortable label="到付(元)" width="90">
@@ -84,6 +86,8 @@
         <el-table-column fixed prop="shipGoodsSn" sortable label="货号" width="140">
         </el-table-column>
         <el-table-column prop="shipFromOrgName" label="开单网点" width="80">
+        </el-table-column>
+        <el-table-column prop="shipDeliveryMethodName" label="交接方式" width="80">
         </el-table-column>
         <el-table-column prop="shipSn" label="运单号" width="130">
         </el-table-column>
