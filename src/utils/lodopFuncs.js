@@ -923,6 +923,9 @@ export function formatOrderData(info, type) {
     if (infoDetail.shipOther && infoDetail.shipOther.indexOf('169') !== -1) {
       obj.valuables = infoDetail.shipOther ? '√' : '' //  169-贵重物品
     }
+    // if (infoDetail.shipOther && infoDetail.shipOther.indexOf('171') !== -1) {
+    //   obj.kickbackReturn = infoDetail.shipOther ? '回扣已返' : '回扣未返' //  171-回扣已返
+    // }
     // //////////////////////////////////////////////////////////
     // /加急urgent和普通common 需要特殊处理为打勾
     if (infoDetail.shipEffective === 95) {
