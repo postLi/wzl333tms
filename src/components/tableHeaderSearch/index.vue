@@ -16,6 +16,8 @@
     <SelectType
       clearable
       placeholder="请选择"
+      :remote="false"
+      :initRemote="initRemoteSelect"
       v-model.lazy="queryString"
       v-else-if="isSelect && curSelect.type"
       :size="btnsize"
@@ -85,8 +87,146 @@ export default {
       default: () => {}
     }
   },
+  computed: {
+    specialTypeTitle() {
+      // 判断当前字段是否是特殊查询，
+      // 例如为空时前端写了中文字符显示，但是后台查询不到
+      // 这种情况默认传0
+      // 例如：线路管理列表的【最低价格(元)】
+      let msg = ''
+      const property = this.scope.column.property.toLowerCase()
+      const find = this.specialType.filter(
+        el => el.property.toLowerCase() === property
+      )
+      if (find && find.length) {
+        msg = find[0].title
+      }
+      return msg
+    },
+    unSearch() {
+      // 不需要搜索的字段 true-需要 false-不需要
+      // 不需要搜索的字段集合 property
+      const property = this.scope.column.property.toLowerCase()
+      let count = 0
+      let isSamProp = false
+      const find = this.unSearchList.filter(el => {
+        if (el.property.toLowerCase() === property) {
+          isSamProp = true
+          if (el.dispage && el.dispage.length) {
+            count = el.dispage.filter(em => em === this.$route.fullPath).length
+          }
+        }
+        if (el.dispage) {
+          if (isSamProp && count > 0) {
+            return true
+          }
+        } else {
+          return isSamProp
+        }
+      })
+      return !find.length
+    },
+    isTime() {
+      // 判断当前字段是否是时间格式
+      const reg = /(time)/
+      const property = this.scope.column.property.toLowerCase()
+      if (reg.test(property) && property !== 'timeliness') {
+        return reg.test(property)
+      } else {
+        // 其他时间格式的字段集合 property
+        const arr = [
+          'validityDate',
+          'validityStartdate',
+          'truckRegisterDate',
+          'truckScrapDate'
+        ]
+        const find = arr.filter(el => el.toLowerCase() === property)
+        return !!find.length
+      }
+    },
+    isSelect() {
+      // 1、判断当前字段是否下拉选择格式
+      // 2、判断当前字段在当前页面是否使用，排查以满足不同页面 同一个字段名称 需要使用不同值 的需求
+      // 3、判断当前有没有onlypage参数， 只在当前配置页面显示的下拉值，排查以满足不同页面相同字段名需要使用不同值的需求
+      const find = this.selectOptions.filter(
+        el => {
+          let isSamProp = false
+          let isSamPage = true
+          let isOnlyPage = false
+          let count = 0
+          if (el.property === this.scope.column.property) {
+            isSamProp = true
+            if (el.dispage && el.dispage.length) {
+              count = el.dispage.filter(em => em === this.$route.fullPath).length
+            }
+            // 判断当前有没有onlypage参数，配置路由是否当前页面
+            isOnlyPage = (el.onlypage && el.onlypage === this.$route.fullPath)
+          }
+           // 判断判断是否不需要在当前页面显示
+          isSamPage = !(count > 0)
+          if (el.onlypage) {
+            if (isSamProp && isSamPage && isOnlyPage) {
+              return true
+            }
+          } else {
+            if (isSamProp && isSamPage) {
+              return true
+            }
+          }
+        }
+      )
+      // 拿到第一条数据，赋值给副本显示
+      if (find.length) {
+        this.curSelect = Object.assign({}, find[0])
+      }
+      return find.length
+    }
+  },
+  methods: {
+    focusSelect(event) {
+      this.initRemoteSelect = true
+      console.log('focusSelect event:', event)
+    },
+    filterfn(el) {
+      if (this.curSelect.filter) {
+        // 过滤有指定的项
+        let count = 0
+        this.curSelect.filter.forEach(em => {
+          if (el.id.toString() === em) {
+            count += 1
+          }
+        })
+        return count === 0
+      } else {
+        // 过滤不显示的选择项
+        return el.id !== ''
+      }
+    },
+    changeEnter(column, index, event) {
+      this.changeKey(column, index, event.target.value)
+    },
+    changeKey(column, index, value, obj) {
+      this.$nextTick(() => {
+        const query = this.query
+        if (!query.searchVo) {
+          this.$set(query, 'searchVo', {})
+        }
+        this.isChange = true
+        if (this.isTime) {
+          // 处理时间格式
+          // value = parseTime(value, '{y}-{m}-{d} {h}:{i}:{s}')
+          value = parseTime(value, '{y}-{m}-{d}')
+        }
+        query.searchVo[column.property] = value
+        query.currentPage = 1 // 搜索时 默认为第一页
+        console.log('changeKey components::', query, column)
+        this.$emit('change', query)
+      })
+    }
+  },
   data() {
     return {
+      initRemoteSelect: false,
       btnsize: 'mini',
       queryString: '',
       curSelect: {
@@ -601,142 +741,6 @@ export default {
           dispage: ['/operation/service/controlgoods/noGoods', '/operation/service/controlgoods/haveGoods']
         }
       ]
-    }
-  },
-  computed: {
-    specialTypeTitle() {
-      // 判断当前字段是否是特殊查询，
-      // 例如为空时前端写了中文字符显示，但是后台查询不到
-      // 这种情况默认传0
-      // 例如：线路管理列表的【最低价格(元)】
-      let msg = ''
-      const property = this.scope.column.property.toLowerCase()
-      const find = this.specialType.filter(
-        el => el.property.toLowerCase() === property
-      )
-      if (find && find.length) {
-        msg = find[0].title
-      }
-      return msg
-    },
-    unSearch() {
-      // 不需要搜索的字段 true-需要 false-不需要
-      // 不需要搜索的字段集合 property
-      const property = this.scope.column.property.toLowerCase()
-      let count = 0
-      let isSamProp = false
-      const find = this.unSearchList.filter(el => {
-        if (el.property.toLowerCase() === property) {
-          isSamProp = true
-          if (el.dispage && el.dispage.length) {
-            count = el.dispage.filter(em => em === this.$route.fullPath).length
-          }
-        }
-        if (el.dispage) {
-          if (isSamProp && count > 0) {
-            return true
-          }
-        } else {
-          return isSamProp
-        }
-      })
-      return !find.length
-    },
-    isTime() {
-      // 判断当前字段是否是时间格式
-      const reg = /(time)/
-      const property = this.scope.column.property.toLowerCase()
-      if (reg.test(property) && property !== 'timeliness') {
-        return reg.test(property)
-      } else {
-        // 其他时间格式的字段集合 property
-        const arr = [
-          'validityDate',
-          'validityStartdate',
-          'truckRegisterDate',
-          'truckScrapDate'
-        ]
-        const find = arr.filter(el => el.toLowerCase() === property)
-        return !!find.length
-      }
-    },
-    isSelect() {
-      // 1、判断当前字段是否下拉选择格式
-      // 2、判断当前字段在当前页面是否使用，排查以满足不同页面 同一个字段名称 需要使用不同值 的需求
-      // 3、判断当前有没有onlypage参数， 只在当前配置页面显示的下拉值，排查以满足不同页面相同字段名需要使用不同值的需求
-      const find = this.selectOptions.filter(
-        el => {
-          let isSamProp = false
-          let isSamPage = true
-          let isOnlyPage = false
-          let count = 0
-          if (el.property === this.scope.column.property) {
-            isSamProp = true
-            if (el.dispage && el.dispage.length) {
-              count = el.dispage.filter(em => em === this.$route.fullPath).length
-            }
-            // 判断当前有没有onlypage参数，配置路由是否当前页面
-            isOnlyPage = (el.onlypage && el.onlypage === this.$route.fullPath)
-          }
-           // 判断判断是否不需要在当前页面显示
-          isSamPage = !(count > 0)
-          if (el.onlypage) {
-            if (isSamProp && isSamPage && isOnlyPage) {
-              return true
-            }
-          } else {
-            if (isSamProp && isSamPage) {
-              return true
-            }
-          }
-        }
-      )
-      // 拿到第一条数据，赋值给副本显示
-      if (find.length) {
-        this.curSelect = Object.assign({}, find[0])
-      }
-      return find.length
-    }
-  },
-  methods: {
-    focusSelect(event) {
-      // console.log('focusSelect event:', event)
-    },
-    filterfn(el) {
-      if (this.curSelect.filter) {
-        // 过滤有指定的项
-        let count = 0
-        this.curSelect.filter.forEach(em => {
-          if (el.id.toString() === em) {
-            count += 1
-          }
-        })
-        return count === 0
-      } else {
-        // 过滤不显示的选择项
-        return el.id !== ''
-      }
-    },
-    changeEnter(column, index, event) {
-      this.changeKey(column, index, event.target.value)
-    },
-    changeKey(column, index, value, obj) {
-      this.$nextTick(() => {
-        const query = this.query
-        if (!query.searchVo) {
-          this.$set(query, 'searchVo', {})
-        }
-        this.isChange = true
-        if (this.isTime) {
-          // 处理时间格式
-          // value = parseTime(value, '{y}-{m}-{d} {h}:{i}:{s}')
-          value = parseTime(value, '{y}-{m}-{d}')
-        }
-        query.searchVo[column.property] = value
-        query.currentPage = 1 // 搜索时 默认为第一页
-        console.log('changeKey components::', query, column)
-        this.$emit('change', query)
-      })
     }
   }
 }
