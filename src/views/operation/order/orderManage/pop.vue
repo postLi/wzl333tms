@@ -73,7 +73,7 @@
 <script>
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search3'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
@@ -88,8 +88,8 @@ export default {
   },
   components: {
     SearchForm,
-    Pager,
-    TableSetup
+    Pager
+    // TableSetup
   },
   computed: {
     ...mapGetters([
@@ -165,13 +165,13 @@ export default {
         'width': '120',
         'fixed': false
       }, {
-          'label': '运单标识',
-          'prop': 'shipIdentifying',
-          'width': '150',
-          slot: function(scope) {
+        'label': '运单标识',
+        'prop': 'shipIdentifying',
+        'width': '150',
+        slot: function(scope) {
           return parseShipStatus(scope.row.shipIdentifying)
         }
-        }, {
+      }, {
         'label': '开单网点',
         'prop': 'fromOrgName',
         'width': '150'
@@ -190,13 +190,13 @@ export default {
         prop: 'shipEffectiveName',
         label: '时效',
         slot: function(scope) {
-          return scope.row.shipEffectiveName === '加急' ? '<span class="red">加急</span>' : scope.row.shipEffectiveName
-        }
+            return scope.row.shipEffectiveName === '加急' ? '<span class="red">加急</span>' : scope.row.shipEffectiveName
+          }
       }, {
-        'label': '发货人',
-        'prop': 'shipSenderName',
-        'width': '150'
-      }, {
+          'label': '发货人',
+          'prop': 'shipSenderName',
+          'width': '150'
+        }, {
         'label': '发货人电话',
         'prop': 'shipSenderMobile',
         'width': '150'

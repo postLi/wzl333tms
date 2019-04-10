@@ -414,7 +414,7 @@ import { getLookContract } from '@/api/operation/arteryDepart'
 import { mapGetters } from 'vuex'
 import SelectTree from '@/components/selectTree/index'
 import { objectMerge2, parseTime, closest } from '@/utils/'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../../load/components/actualSendtimeDialog'
 
@@ -705,7 +705,7 @@ export default {
     popRight,
     SelectTree,
     selectType,
-    TableSetup,
+    // TableSetup,
     actualSendtime
 
   },

@@ -42,7 +42,7 @@ import { getExportExcel } from '@/api/company/customerManage'
 import { postArtList, postCancelLoad, postCancelPut } from '@/api/operation/arteryDelivery'
 import { postTmsFfinancialwayList, putStop } from '@/api/finance/financefinancialway'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
@@ -53,7 +53,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     AddCustomer
   },
   computed: {
@@ -213,7 +213,7 @@ export default {
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
-            name:'收支方式'
+            name: '收支方式'
 
           })
           this.$refs.multipleTable.clearSelection()
@@ -261,7 +261,7 @@ export default {
                   message: '保存成功~'
                 })
                 this.fetchData()
-              }).catch((err)=>{
+              }).catch((err) => {
                 this.loading = false
                 this._handlerCatchMsg(err)
               })

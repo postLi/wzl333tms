@@ -108,19 +108,19 @@
 import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postBillRecordList, cancelVerification, delBillRecord } from '@/api/finance/financeDaily'
 import { mapGetters } from 'vuex'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Income,
-    tableHeaderSearch
+    // TableSetup,
+    Income
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

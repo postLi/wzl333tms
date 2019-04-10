@@ -182,7 +182,7 @@ import { getExportExcel } from '@/api/company/customerManage'
 import { fetchPostlist, deletebatchDelete } from '@/api/operation/pickup'
 
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import PickupMain from './components/pickupMain'
 import PickupRelevance from './components/pickupRelevance'
@@ -195,17 +195,17 @@ import {
   parseTime
 } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     AddCustomer,
     PickupMain,
-    PickupRelevance,
-    tableHeaderSearch
+    PickupRelevance
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters(['otherinfo']),

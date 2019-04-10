@@ -109,7 +109,7 @@
   import {postFinFicationlList, deleteFinFicationl} from '@/api/finance/finanInfo'
   import SelectTree from '@/components/selectTree/index'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import SubDirectDialog from './components/subDirectDialog'
   // import SubjectDialog from './components/subjectDialog'
   import {mapGetters} from 'vuex'
@@ -121,7 +121,7 @@
     components: {
       SearchForm,
       Pager,
-      TableSetup,
+      // TableSetup,
       SelectTree,
       SubDirectDialog,
     },

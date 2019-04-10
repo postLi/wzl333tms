@@ -89,14 +89,14 @@ import SearchForm from './components/search'
 import ReCharge from './components/recharge'
 import { objectMerge2, parseTime } from '@/utils/index'
 import * as walletApi from '@/api/company/wallet'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     Pager,
     SearchForm,
-    ReCharge,
-    tableHeaderSearch
+    ReCharge
+    // tableHeaderSearch
   },
   data() {
     return {

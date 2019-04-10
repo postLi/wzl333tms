@@ -98,11 +98,11 @@
 import { getSelectLoadDetailList } from '@/api/operation/load'
 // import { postBatchSign } from '@/api/operation/deliverManage'
 import { objectMerge2 } from '@/utils/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 export default {
   components: {
-    TableSetup
+    // TableSetup
   },
   props: {
     info: {

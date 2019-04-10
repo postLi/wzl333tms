@@ -75,14 +75,14 @@ import {
   getLookContract
 } from '@/api/operation/arteryDepart'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/storages'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc, parseTime } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile, PrintContract } from '@/utils/lodopFuncs'
 import AddLntelligent from './components/addLntelligent '
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 // import AddLntelligent from './components/intelligentFreight'
 // import AddLntelligent from './components/intelligentHint'
 // import AddLntelligent from './components/intelligentPayHint'
@@ -92,11 +92,11 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     AddCustomer,
     AddLntelligent,
-    actualSendtime,
-    tableHeaderSearch
+    actualSendtime
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

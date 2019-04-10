@@ -54,20 +54,20 @@
 import { getExportExcel } from '@/api/company/customerManage'
 import { postNetworkList, putRefuse, deletebatchDelete, putCancel, putAccept } from '../../../../api/operation/manage'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddCustomer from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, getSummaries, operationPropertyCalc } from '@/utils/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddCustomer,
-    tableHeaderSearch
+    // TableSetup,
+    AddCustomer
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

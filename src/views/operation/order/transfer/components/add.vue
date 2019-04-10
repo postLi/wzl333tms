@@ -100,15 +100,15 @@ import * as transferManageApi from '@/api/operation/transfer'
 import { getSystemTime } from '@/api/common'
 import querySelect from '@/components/querySelect/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 
 export default {
   components: {
     popRight,
     Upload,
     SelectTree,
-    querySelect,
-    TableSetup
+    querySelect
+    // TableSetup
   },
   props: {
     popVisible: {

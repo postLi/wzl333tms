@@ -66,21 +66,21 @@ import { mapGetters } from 'vuex'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import editInfo from './components/editInfo'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import actualSendtime from '../load/components/actualSendtimeDialog'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     Pager,
     SearchForm,
     postAllshortDepartList,
-    TableSetup,
+    // TableSetup,
     editInfo,
-    actualSendtime,
-    tableHeaderSearch
+    actualSendtime
+    // tableHeaderSearch
   },
   data() {
     return {

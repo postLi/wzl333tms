@@ -50,7 +50,7 @@
 import { objectMerge2, parseTime } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postFindLowList, postCancelSettlement } from '@/api/finance/settleLog'
 import { mapGetters } from 'vuex'
 import Receipt from './components/receipt'
@@ -59,7 +59,7 @@ export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
+    // TableSetup,
     Receipt
   },
   computed: {
@@ -215,7 +215,7 @@ export default {
         this.dataList = data.list
         this.total = data.total
         this.loading = false
-      }).catch((err)=>{
+      }).catch((err) => {
         this.loading = false
         this._handlerCatchMsg(err)
       })

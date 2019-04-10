@@ -86,18 +86,18 @@
 <script>
 import * as handAccountApi from '@/api/company/line'
 import SearchForm from './components/search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
-    Pager,
-    TableSetup,
-    tableHeaderSearch
+    Pager
+    // TableSetup,
+    // tableHeaderSearch
   },
   mounted() {
 

@@ -87,12 +87,12 @@ import { objectMerge2, parseTime, pickerOptions2, getSummaries } from '@/utils/i
 import SearchForm from './components/search'
 import { reportTurnoverDaily } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 export default {
   components: {
     SearchForm,
-    TableSetup,
+    // TableSetup,
     Pager
   },
   data() {
@@ -127,99 +127,99 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '序号',
-          prop: 'number',
-          textAlign: 'center'
+        label: '序号',
+        prop: 'number',
+        textAlign: 'center'
           // width: '70'
-        },
-        { // 表头
-          label: '货号',
-          prop: 'shipGoodsSn',
-          textAlign: 'center',
-          width: '150'
+      },
+      { // 表头
+        label: '货号',
+        prop: 'shipGoodsSn',
+        textAlign: 'center',
+        width: '150'
           // fixed: true
-        },
-        {
-          label: '开单网点',
-          prop: 'orgidName',
-          textAlign: 'center'
+      },
+      {
+        label: '开单网点',
+        prop: 'orgidName',
+        textAlign: 'center'
           // width: '130'
-        },
-        {
-          label: '签收网点',
-          prop: 'signOrgidName',
-          textAlign: 'center'
+      },
+      {
+        label: '签收网点',
+        prop: 'signOrgidName',
+        textAlign: 'center'
           // width: '130'
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          textAlign: 'center'
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        textAlign: 'center'
           // width: '150'
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          textAlign: 'center'
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        textAlign: 'center'
           // width: '130'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          textAlign: 'center'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        textAlign: 'center'
           // width: '200'
-        },
-        {
-          label: '发货人',
-          prop: 'senderCustomerName',
-          textAlign: 'center'
+      },
+      {
+        label: '发货人',
+        prop: 'senderCustomerName',
+        textAlign: 'center'
           // width: '140'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          textAlign: 'center'
-        },
-        {
-          label: '现付(元)',
-          prop: 'shipNowpayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '到付(元)',
-          prop: 'shipArrivepayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '回单付(元)',
-          prop: 'shipReceiptpayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '月结(元)',
-          prop: 'shipMonthpayFee',
-          textAlign: 'right'
-        },
-        {
-          label: '运费合计(元)',
-          prop: 'totalFee',
-          textAlign: 'right'
-        },
-        {
-          label: '回扣(元)',
-          prop: 'brokerageFee',
-          textAlign: 'right'
-        },
-        {
-          label: '代收货款(元)',
-          prop: 'agencyFund',
-          textAlign: 'right'
-        },
-        {
-          label: '实收金额(元)',
-          prop: 'amountCollected',
-          textAlign: 'right'
-        }
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        textAlign: 'center'
+      },
+      {
+        label: '现付(元)',
+        prop: 'shipNowpayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '到付(元)',
+        prop: 'shipArrivepayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '回单付(元)',
+        prop: 'shipReceiptpayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '月结(元)',
+        prop: 'shipMonthpayFee',
+        textAlign: 'right'
+      },
+      {
+        label: '运费合计(元)',
+        prop: 'totalFee',
+        textAlign: 'right'
+      },
+      {
+        label: '回扣(元)',
+        prop: 'brokerageFee',
+        textAlign: 'right'
+      },
+      {
+        label: '代收货款(元)',
+        prop: 'agencyFund',
+        textAlign: 'right'
+      },
+      {
+        label: '实收金额(元)',
+        prop: 'amountCollected',
+        textAlign: 'right'
+      }
       ],
       countCol: [ // 需要合计的-列
         'shipNowpayFee',
@@ -263,7 +263,7 @@ export default {
       }
     },
     setTableTitle() {
-      let obj = {
+      const obj = {
         title: parseTime(this.query.createTimeStart, '{y}年{m}月{d}日') + '~' + parseTime(this.query.createTimeEnd, '{y}年{m}月{d}日') + '营业额汇总表',
         starttime: parseTime(this.query.createTimeStart, '{y}-{m}-{d}'),
         endtime: parseTime(this.query.createTimeEnd, '{y}-{m}-{d}'),
@@ -271,10 +271,10 @@ export default {
         shipToName: this.getOrgName.from
       }
 
-      let arr = objectMerge2([], this.dataList)
+      const arr = objectMerge2([], this.dataList)
       if (this.dataList.length) {
-        let area = this.dataList[0].shipFromCityName + '—' + this.dataList[0].shipToCityName
-        let flag = arr.every(item => (item.shipFromCityName + '—' + item.shipToCityName) === area)
+        const area = this.dataList[0].shipFromCityName + '—' + this.dataList[0].shipToCityName
+        const flag = arr.every(item => (item.shipFromCityName + '—' + item.shipToCityName) === area)
         if (flag) {
           obj.area = area
         } else {
@@ -291,7 +291,7 @@ export default {
       //   '<td style="padding：0 10px;' + (!obj.area ? 'display:none' : '') + '">区间：' + obj.area + '</td>' +
       //   '</tr></table>'
       // let title = '<table width="100%"><tr><td colspan="3" style="text-align:center;">' + obj.title + '</td></tr></table>'
-      let content = '<table width="100%"><tr style="text-align: left;padding: 20px 10px;">' +
+      const content = '<table width="100%"><tr style="text-align: left;padding: 20px 10px;">' +
         '<td style="padding:0 10px;">开单时间：' + obj.starttime + '至' + obj.endtime + '</td>' +
         '<td style="padding:0 10px;' + (!obj.shipToName ? 'display:none' : '') + '">     收货网点：' + obj.shipToName + '</td>' +
         '<td style="padding：0 10px;' + (!obj.area ? 'display:none' : '') + '">     区间：' + obj.area + '</td>' +
@@ -301,7 +301,6 @@ export default {
         title: obj.title,
         content: content
       }
-
     },
     handlePageChange(obj) {
       this.query.currentPage = obj.pageNum
@@ -363,7 +362,7 @@ export default {
       const theadTrTitle = document.createElement('tr')
       const thTitle = document.createElement('th')
       const fontTitle = document.createElement('font')
-      let thetitle = '营业额汇总表'
+      const thetitle = '营业额汇总表'
       thTitle.setAttribute('colspan', this.columns.length)
       fontTitle.innerHTML = titleDiv.title
 
@@ -374,15 +373,13 @@ export default {
       const theadTrTitle2 = document.createElement('tr')
       const thTitle2 = document.createElement('th')
       const fontTitle2 = document.createElement('font')
-      let thetitle2 = ''
+      const thetitle2 = ''
       thTitle2.setAttribute('colspan', this.columns.length)
       fontTitle2.innerHTML = titleDiv.content
 
       thTitle2.appendChild(fontTitle2)
       theadTrTitle2.appendChild(thTitle2)
       thead.appendChild(theadTrTitle2)
-
-
 
       table.appendChild(thead)
       table.appendChild(tbody)
@@ -416,8 +413,6 @@ export default {
       tableClone.className = 'tableCloneHead'
       div.appendChild(tableClone)
 
-
-
       for (let k = 0; k < data.length; k++) { // 填充内容数据
         const tbodyTr = tbody.insertRow()
         for (let j = 0; j < this.columns.length; j++) {
@@ -429,7 +424,7 @@ export default {
               elDataList = data
             }
           }
-          let propNo = (this.query.currentPage - 1) * this.query.pageSize + k + 1
+          const propNo = (this.query.currentPage - 1) * this.query.pageSize + k + 1
           const tdVal = (this.columns[j].prop === 'number' || this.columns[j].label === '序号') ? propNo : (typeof data[k][this.columns[j].prop] === 'undefined' || data[k][this.columns[j].prop] === 0 ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
@@ -495,7 +490,6 @@ export default {
         td.setAttribute('color', 'white')
         td.style.wordBreak = 'break-all'
       }
-
     },
     doAction(type) {
       this.report()

@@ -47,22 +47,22 @@
 import { newGetAllUser, deleteEmployeer } from '@/api/company/employeeManage'
 import { mapGetters } from 'vuex'
 import SearchForm from './search'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddEmployeer from './add'
 import SetAuth from './authorization'
 import Pager from '@/components/Pagination/index'
 import { objectMerge2, parseTime } from '@/utils/'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'employeeManage',
   components: {
     SearchForm,
-    TableSetup,
+    // TableSetup,
     AddEmployeer,
     SetAuth,
-    Pager,
-    tableHeaderSearch
+    Pager
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([
@@ -184,29 +184,18 @@ export default {
       }]
     }
   },
-  // mounted() {
-    // Promise.all([this.fetchAllUser(this.otherinfo.orgid)]).then(resArr => {
-    //   this.loading = false
-    //   this.usersArr = resArr[0].list
-    //   this.total = resArr[0].total
-    // }).catch((err) => {
-    //   this.loading = false
-    //   this._handlerCatchMsg(err)
-    // })
-  // },
   methods: {
     newGetAllUser() {
       this.loading = true
       return newGetAllUser(this.searchQuery).then(data => {
-        console.log('2342342342343423423')
         this.usersArr = data.list
         this.total = data.total
         this.loading = false
       })
-      .catch(err => {
-        this.loading = false
-        this._handlerCatchMsg(err)
-      })
+        .catch(err => {
+          this.loading = false
+          this._handlerCatchMsg(err)
+        })
     },
     changeKey(obj) {
       this.total = 0
@@ -286,7 +275,6 @@ export default {
           break
           // 修改员工信息
         case 'modify':
-          this.isModify = true
           if (this.selected.length > 1) {
             this.$message({
               message: '每次只能修改单条数据~',
@@ -294,10 +282,16 @@ export default {
             })
           }
           this.theUser = objectMerge2({}, this.selected[0])
-          this.openAddEmployeer()
+          if (this._checkExperience(this.theUser, 'username')) {
+            this.isModify = true
+            this.openAddEmployeer()
+          }
           break
           // 删除员工
         case 'delete':
+          if (!this._checkExperience(this.selected[0], 'username')) {
+            return false
+          }
           var deleteItem = this.selected.length > 1 ? this.selected.length + '名' : this.selected[0].name
           // =>todo 删除多个
           var ids = ''

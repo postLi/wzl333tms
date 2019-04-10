@@ -99,13 +99,13 @@
   import { mapGetters } from 'vuex'
   import AddRole from './addRole'
   import RelationPer from './relationPer'
-  import tableHeaderSearch from '@/components/tableHeaderSearch'
+  // import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
     name: 'permissionManage',
     components: {
       AddRole,
-      RelationPer,
-      tableHeaderSearch
+      RelationPer
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([

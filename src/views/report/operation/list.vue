@@ -45,11 +45,11 @@ import { objectMerge2, parseTime, pickerOptions2 } from '@/utils/index'
 import SearchForm from './components/search'
 import { reportOperation } from '@/api/report/report'
 import { PrintInSamplePage, SaveAsSampleFile } from '@/utils/lodopFuncs'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 export default {
   components: {
-    SearchForm,
-    TableSetup
+    SearchForm
+    // TableSetup
   },
   data() {
     return {
@@ -75,30 +75,30 @@ export default {
       btnsize: 'mini',
       isShow: true,
       columns: [{ // 表头
-          label: '时间',
-          prop: 'time',
-          textAlign: 'center'
-        },
-        {
-          label: '总运费(元)',
-          prop: 'shipFee',
-          textAlign: 'right'
-        },
-        {
-          label: '件数',
-          prop: 'shipAmount',
-          textAlign: 'right'
-        },
-        {
-          label: '重量(千克)',
-          prop: 'shipWeight',
-          textAlign: 'right'
-        },
-        {
-          label: '体积(方)',
-          prop: 'shipVolume',
-          textAlign: 'right'
-        }
+        label: '时间',
+        prop: 'time',
+        textAlign: 'center'
+      },
+      {
+        label: '总运费(元)',
+        prop: 'shipFee',
+        textAlign: 'right'
+      },
+      {
+        label: '件数',
+        prop: 'shipAmount',
+        textAlign: 'right'
+      },
+      {
+        label: '重量(千克)',
+        prop: 'shipWeight',
+        textAlign: 'right'
+      },
+      {
+        label: '体积(方)',
+        prop: 'shipVolume',
+        textAlign: 'right'
+      }
       ],
       countCol: [ // 需要合计的-列
 
@@ -116,10 +116,10 @@ export default {
   },
   methods: {
     getScrollWidth() {
-      var noScroll, scroll, oDiv = document.createElement("DIV")
-      oDiv.style.cssText = "position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;"
+      var noScroll, scroll, oDiv = document.createElement('DIV')
+      oDiv.style.cssText = 'position:absolute;top:-1000px;width:100px;height:100px; overflow:hidden;'
       noScroll = document.body.appendChild(oDiv).clientWidth
-      oDiv.style.overflowY = "scroll"
+      oDiv.style.overflowY = 'scroll'
       scroll = oDiv.clientWidth
       document.body.removeChild(oDiv)
       this.scrollwidth = noScroll - scroll
@@ -135,31 +135,31 @@ export default {
     },
     report() {
       this.loading = true
-      let data = this.res
+      const data = this.res
       let elDataList = data || []
       this.dataList = elDataList
-      let countColVal = []
+      const countColVal = []
       this.loading = false
       const div = document.getElementById('report_operation')
-      let table = document.getElementById('report_operation_table')
+      const table = document.getElementById('report_operation_table')
       if (!table) {
         return
       }
-      let theadLen = table.getElementsByTagName('thead')
-      let tbodyLen = table.getElementsByTagName('tbody')
+      const theadLen = table.getElementsByTagName('thead')
+      const tbodyLen = table.getElementsByTagName('tbody')
       if (theadLen.length > 0) {
         table.removeChild(theadLen[0])
         table.removeChild(tbodyLen[0])
       }
-      let thead = document.createElement('thead')
-      let tbody = document.createElement('tbody')
-      let theadTr = document.createElement('tr')
+      const thead = document.createElement('thead')
+      const tbody = document.createElement('tbody')
+      const theadTr = document.createElement('tr')
 
       table.appendChild(thead)
       table.appendChild(tbody)
       thead.appendChild(theadTr)
       table.style.borderCollapse = 'collapse'
-      table.style.border = '1px solid #d0d7e5';
+      table.style.border = '1px solid #d0d7e5'
       table.setAttribute('border', '1')
       table.setAttribute('font', '12px')
       // table.setAttribute('width', '780px')
@@ -168,8 +168,8 @@ export default {
       theadTr.setAttribute('width', '100%')
 
       for (let i = 0; i < this.columns.length; i++) { // 设置表头
-        let th = document.createElement('th')
-        let font = document.createElement('font')
+        const th = document.createElement('th')
+        const font = document.createElement('font')
         font.innerHTML = this.columns[i].label
         font.setAttribute('size', 2)
         font.setAttribute('color', 'white')
@@ -192,13 +192,13 @@ export default {
         for (let j = 0; j < this.columns.length; j++) {
           const td = tbodyTr.insertCell()
           // 处理当列没有值、宽度设置等信息时，做默认值处理
-          for (let t in this.countCol) { // 保留两位小数
+          for (const t in this.countCol) { // 保留两位小数
             if (this.columns[j].prop.indexOf(this.countCol[t]) !== -1) {
               data[k][this.columns[j].prop] = data[k][this.columns[j].prop] ? data[k][this.columns[j].prop] : '0.00'
               elDataList = data
             }
           }
-          let tdVal = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
+          const tdVal = (this.columns[j].prop === 'id' || this.columns[j].label === '序号') ? k + 1 : (typeof data[k][this.columns[j].prop] === 'undefined' ? '' : data[k][this.columns[j].prop])
           td.innerHTML = tdVal
           elDataList[k][this.columns[j].prop] = tdVal
           td.style.textAlign = this.columns[j].textAlign // 设置居中方式
@@ -209,7 +209,6 @@ export default {
         }
       }
       this.dataList = elDataList // 遍历完后才设置数据
-
     },
     doAction(type) {
       this.report()
@@ -238,12 +237,12 @@ export default {
       this.fetchData()
     },
     handleBottom(e) {
-      let el = e.target
-      let top = el.scrollTop
-      let width = el.offsetWidth
-      let orgwidth = el.scrollWidth
-      let hasscroll = orgwidth > width
-      let height = el.offsetHeight
+      const el = e.target
+      const top = el.scrollTop
+      const width = el.offsetWidth
+      const orgwidth = el.scrollWidth
+      const hasscroll = orgwidth > width
+      const height = el.offsetHeight
       if (!this.maxheight) {
         this.maxheight = el.scrollHeight
       }

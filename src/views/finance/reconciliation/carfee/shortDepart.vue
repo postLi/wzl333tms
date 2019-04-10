@@ -48,19 +48,19 @@
   import { getExportExcel } from '@/api/company/customerManage'
   import { postCarfShortDetailList, deleteCarShort, postUpdateBillCheckSelective } from '@/api/finance/fin_carfee'
   import SearchForm from './components/search'
-  import TableSetup from '@/components/tableSetup'
+  // import TableSetup from '@/components/tableSetup'
   import IndexDialog from './components/indexDialog'
   import { mapGetters } from 'vuex'
   import Pager from '@/components/Pagination/index'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
     components: {
       SearchForm,
       Pager,
-      TableSetup,
-      IndexDialog,
-      tableHeaderSearch
+      // TableSetup,
+      IndexDialog
+      // tableHeaderSearch
     },
     computed: {
       ...mapGetters([
@@ -188,11 +188,11 @@ import tableHeaderSearch from '@/components/tableHeaderSearch'
             width: '150',
             fixed: false
           }, {
-          label: '备注',
-          prop: 'remark',
-          width: '130',
-          fixed: false
-        }
+            label: '备注',
+            prop: 'remark',
+            width: '130',
+            fixed: false
+          }
         ]
       }
     },

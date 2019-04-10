@@ -53,19 +53,19 @@
 import { objectMerge2, parseTime, getSummaries } from '@/utils/index'
 import SearchForm from './components/search'
 import Pager from '@/components/Pagination/index'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { postFindChangeList } from '@/api/finance/accountsPayable'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Addunusual from '../../unusual/components/add'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Addunusual,
-    tableHeaderSearch
+    // TableSetup,
+    Addunusual
+    // tableHeaderSearch
   },
   data() {
     return {

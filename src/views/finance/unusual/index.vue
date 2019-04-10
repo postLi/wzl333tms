@@ -46,20 +46,20 @@
 import SearchForm from './components/search'
 import { postAbnormalUnusual, Delete } from '@/api/finance/unusual'
 import { mapGetters } from 'vuex'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import Pager from '@/components/Pagination/index'
 import Addunusual from './components/add'
 import { objectMerge2, parseTime } from '@/utils/index'
 import { SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
   name: 'financeunusual',
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    Addunusual,
-    tableHeaderSearch
+    // TableSetup,
+    Addunusual
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

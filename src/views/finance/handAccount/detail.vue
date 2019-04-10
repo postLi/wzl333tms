@@ -65,19 +65,19 @@
 <script>
 import * as handAccountApi from '@/api/finance/handAccount'
 import SearchForm from './components/search2'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import { getSummaries, parseTime } from '@/utils/'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Pager from '@/components/Pagination/index'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   name: 'handAccountDetail',
   components: {
     SearchForm,
-    TableSetup,
-    Pager,
-    tableHeaderSearch
+    // TableSetup,
+    Pager
+    // tableHeaderSearch
   },
   mounted() {
     // this.searchQuery.vo.userId = this.$route.query.id

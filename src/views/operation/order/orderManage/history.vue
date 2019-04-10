@@ -79,22 +79,22 @@
 <script>
 import orderManageApi from '@/api/operation/orderManage'
 import SearchForm from './components/search2'
-import TableSetup from '@/components/tableSetup'
+// import TableSetup from '@/components/tableSetup'
 import AddOrder from './components/add'
 import { mapGetters } from 'vuex'
 import Pager from '@/components/Pagination/index'
 import { parseTime } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
-import tableHeaderSearch from '@/components/tableHeaderSearch'
+// import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
   components: {
     SearchForm,
     Pager,
-    TableSetup,
-    AddOrder,
-    tableHeaderSearch
+    // TableSetup,
+    AddOrder
+    // tableHeaderSearch
   },
   computed: {
     ...mapGetters([

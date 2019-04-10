@@ -562,6 +562,7 @@
         this.form.tmsOrderPre.id = item.id
         this.form.tmsOrderPre.orderFromOrgid = item.orderFromOrgid
         this.form.tmsOrderPre.orderToOrgid = item.orderToOrgid
+        this.form.tmsOrderPre.orderPayWay = item.orderPayWay
         this.ke1yVal = Math.random()
       },
       validateIsEmpty(msg = '不能为空！') {
