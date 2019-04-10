@@ -18,55 +18,55 @@ export default {
     name: '财务管理',
     component: _import('finance/index'),
     meta: {
-        role: ['admin'],
-        title: '财务管理',
-        noCache: true
-      }
+      role: ['admin'],
+      title: '财务管理',
+      noCache: true
+    }
   }, {
-      path: '/finance/accountsReceivable',
-      icon: 'caiwugl1_yingshou',
-      name: 'accountsReceivable',
-      redirect: '/finance/accountsReceivable/all',
-      component: _import('finance/accountsReceivable/index'),
+    path: '/finance/accountsReceivable',
+    icon: 'caiwugl1_yingshou',
+    name: 'accountsReceivable',
+    redirect: '/finance/accountsReceivable/all',
+    component: _import('finance/accountsReceivable/index'),
+    meta: {
+      role: ['admin'],
+      title: '应收账款',
+      'code': 'FINANCE_REC',
+      stitle: '应收',
+      noCache: false
+    },
+    children: [{
+      path: '/finance/accountsReceivable/all',
+      icon: 'QQ',
+      name: '全部',
+      component: _import('finance/accountsReceivable/all'),
       meta: {
         role: ['admin'],
-        title: '应收账款',
-        'code': 'FINANCE_REC',
-        stitle: '应收',
-        noCache: false
-      },
-      children: [{
-        path: '/finance/accountsReceivable/all',
-        icon: 'QQ',
-        name: '全部',
-        component: _import('finance/accountsReceivable/all'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '全部',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST1'
-        }
-      }, {
-        path: '/finance/accountsReceivable/cash',
-        icon: 'QQ',
-        name: '现付',
-        component: _import('finance/accountsReceivable/cash'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '现付',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST2'
-        }
-      }, {
-        path: '/finance/accountsReceivable/arrive',
-        icon: 'QQ',
-        name: '到付',
-        component: _import('finance/accountsReceivable/arrive'),
-        meta: {
+        ptitle: '应收账款',
+        title: '全部',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST1'
+      }
+    }, {
+      path: '/finance/accountsReceivable/cash',
+      icon: 'QQ',
+      name: '现付',
+      component: _import('finance/accountsReceivable/cash'),
+      meta: {
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '现付',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST2'
+      }
+    }, {
+      path: '/finance/accountsReceivable/arrive',
+      icon: 'QQ',
+      name: '到付',
+      component: _import('finance/accountsReceivable/arrive'),
+      meta: {
           role: ['admin'],
           ptitle: '应收账款',
           title: '到付',
@@ -74,7 +74,7 @@ export default {
           istab: true,
           code: 'FINANCE_RECLIST3'
         }
-      }, {
+    }, {
         path: '/finance/accountsReceivable/receipt',
         icon: 'QQ',
         name: '回单付',
@@ -127,44 +127,44 @@ export default {
           'code': 'PAY_HANDLING_REC'
         }
       }]
-    }, {
-      path: '/finance/accountsPayable',
-      icon: 'caiwugl2_yingfu',
-      name: 'accountsPayable',
-      component: _import('finance/accountsPayable/index'),
-      redirect: '/finance/handAccount/waybill',
+  }, {
+    path: '/finance/accountsPayable',
+    icon: 'caiwugl2_yingfu',
+    name: 'accountsPayable',
+    component: _import('finance/accountsPayable/index'),
+    redirect: '/finance/handAccount/waybill',
+    meta: {
+      role: ['admin'],
+      title: '应付账款',
+      'code': 'FINANCE_PAY',
+      stitle: '应付',
+      istab: true,
+      noCache: false
+    },
+    children: [{
+      path: '/finance/accountsPayable/handleFee',
+      icon: 'QQ',
+      name: 'handleFee',
+      component: _import('finance/accountsPayable/handleFee/index'),
       meta: {
         role: ['admin'],
-        title: '应付账款',
-        'code': 'FINANCE_PAY',
-        stitle: '应付',
-        istab: true,
-        noCache: false
-      },
-      children: [{
-        path: '/finance/accountsPayable/handleFee',
-        icon: 'QQ',
-        name: 'handleFee',
-        component: _import('finance/accountsPayable/handleFee/index'),
-        meta: {
-          role: ['admin'],
-          title: '操作费核销',
-          noCache: false,
-          'code': 'PAY_HANDLING_PAY'
-        }
-      }, {
-        path: '/finance/accountsPayable/waybill',
-        redirect: '/finance/accountsPayable/waybill/kickback',
-        icon: 'QQ',
-        name: '运单核销',
-        component: _import('finance/accountsPayable/waybill/index'),
-        meta: {
+        title: '操作费核销',
+        noCache: false,
+        'code': 'PAY_HANDLING_PAY'
+      }
+    }, {
+      path: '/finance/accountsPayable/waybill',
+      redirect: '/finance/accountsPayable/waybill/kickback',
+      icon: 'QQ',
+      name: '运单核销',
+      component: _import('finance/accountsPayable/waybill/index'),
+      meta: {
           role: ['admin'],
           title: '运单核销',
           noCache: false,
           code: 'PAY_SHIP'
         },
-        children: [{
+      children: [{
           path: '/finance/accountsPayable/waybill/kickback',
           icon: 'QQ',
           name: '回扣',
@@ -256,7 +256,7 @@ export default {
             code: 'SHIP_PAYLIST7'
           }
         }]
-      }, {
+    }, {
         path: '/finance/accountsPayable/batch',
         redirect: '/finance/accountsPayable/batch/short',
         icon: 'QQ',
@@ -399,32 +399,32 @@ export default {
           istab: true
         }
       }]
-    }, {
-      path: '/finance/financeDaily',
-      icon: 'caiwugl5_zijinls',
-      name: 'settleLog',
-      component: _import('finance/financeDaily/index'),
-      meta: {
-        role: ['admin'],
-        title: '财务日记账',
-        'code': 'FINANCE_BILLRECORD',
-        stitle: '日记账',
-        noCache: false
-      }
-    }, {
-      path: '/finance/cashDetail',
-      icon: 'caiwugl5_zijinls',
-      name: 'settleLog',
-      hidden: true,
-      component: _import('finance/financeDaily/index'),
-      meta: {
+  }, {
+    path: '/finance/financeDaily',
+    icon: 'caiwugl5_zijinls',
+    name: 'settleLog',
+    component: _import('finance/financeDaily/index'),
+    meta: {
+      role: ['admin'],
+      title: '财务日记账',
+      'code': 'FINANCE_BILLRECORD',
+      stitle: '日记账',
+      noCache: false
+    }
+  }, {
+    path: '/finance/cashDetail',
+    icon: 'caiwugl5_zijinls',
+    name: 'settleLog',
+    hidden: true,
+    component: _import('finance/financeDaily/index'),
+    meta: {
         role: ['admin'],
         title: '财务日记账明细',
         'code': 'BILLRECORD_DETAIL',
         stitle: '日记账',
         noCache: false
       }
-    },
+  },
     // {
     //   path: '/finance/settleLog',
     //   icon: 'caiwugl5_zijinls',
@@ -447,59 +447,59 @@ export default {
     name: 'reconciliation',
     component: _import('finance/reconciliation/index'),
     meta: {
-        role: ['admin'],
-        title: '财务对账',
-        noCache: false,
-        stitle: '对账',
-        istab: true,
-        code: 'FINANCE_verification'
-      },
+      role: ['admin'],
+      title: '财务对账',
+      noCache: false,
+      stitle: '对账',
+      istab: true,
+      code: 'FINANCE_verification'
+    },
     children: [{
-        path: '/finance/reconciliation/carrier',
-        icon: 'QQ',
-        name: '承运商对账',
-        component: _import('finance/reconciliation/carrier/index'),
-        meta: {
-          role: ['admin'],
-          title: '承运商对账',
-          noCache: false,
-          code: 'FINANCE_CARRIER'
-        }
-      }, {
-        path: '/finance/reconciliation/group',
-        icon: 'QQ',
-        name: '网点对账',
-        component: _import('finance/reconciliation/group/index'),
-        meta: {
-          role: ['admin'],
-          title: '网点对账',
-          noCache: false,
-          code: 'FINANCE_ORGFEE'
-        }
-      }, {
-        path: '/finance/reconciliation/customer',
-        icon: 'QQ',
-        name: '客户对账',
-        component: _import('finance/reconciliation/customer/index'),
-        meta: {
-          role: ['admin'],
-          title: '客户对账',
-          noCache: false,
-          code: 'FINANCE_CUSTOMER'
-        }
-      }, {
-        path: '/finance/reconciliation/carfee',
-        redirect: '/finance/reconciliation/carfee/shortDepart',
-        icon: 'QQ',
-        name: '车费对账',
-        component: _import('finance/reconciliation/carfee/index'),
-        meta: {
+      path: '/finance/reconciliation/carrier',
+      icon: 'QQ',
+      name: '承运商对账',
+      component: _import('finance/reconciliation/carrier/index'),
+      meta: {
+        role: ['admin'],
+        title: '承运商对账',
+        noCache: false,
+        code: 'FINANCE_CARRIER'
+      }
+    }, {
+      path: '/finance/reconciliation/group',
+      icon: 'QQ',
+      name: '网点对账',
+      component: _import('finance/reconciliation/group/index'),
+      meta: {
+        role: ['admin'],
+        title: '网点对账',
+        noCache: false,
+        code: 'FINANCE_ORGFEE'
+      }
+    }, {
+      path: '/finance/reconciliation/customer',
+      icon: 'QQ',
+      name: '客户对账',
+      component: _import('finance/reconciliation/customer/index'),
+      meta: {
+        role: ['admin'],
+        title: '客户对账',
+        noCache: false,
+        code: 'FINANCE_CUSTOMER'
+      }
+    }, {
+      path: '/finance/reconciliation/carfee',
+      redirect: '/finance/reconciliation/carfee/shortDepart',
+      icon: 'QQ',
+      name: '车费对账',
+      component: _import('finance/reconciliation/carfee/index'),
+      meta: {
           role: ['admin'],
           title: '车费对账',
           noCache: false,
           code: 'FINANCE_CARFEE'
         },
-        children: [{
+      children: [{
           path: '/finance/reconciliation/carfee/shortDepart',
           icon: 'QQ',
           name: '短驳对账',
@@ -539,50 +539,50 @@ export default {
             code: 'FINANCE_CARFEE_SEND'
           }
         }]
-      }]
+    }]
   }, {
-      path: '/finance/unusual',
-      icon: 'cwgl_ydfy',
-      name: 'financeunusual',
-      component: _import('finance/unusual/index'),
+    path: '/finance/unusual',
+    icon: 'cwgl_ydfy',
+    name: 'financeunusual',
+    component: _import('finance/unusual/index'),
+    meta: {
+      role: ['admin'],
+      title: '异动费用',
+      'code': 'FINANCE_ABNORAML',
+      stitle: '异动',
+      noCache: false
+    }
+  }, {
+    path: '/finance/payment',
+    icon: 'cwgl_hkgl',
+    name: 'financepayment',
+    component: _import('finance/payment/index'),
+    meta: {
+      role: ['admin'],
+      title: '货款管理',
+      noCache: false,
+      stitle: '货款',
+      code: 'FINANCE_GOODSFUNDS'
+    },
+    children: [{
+      path: '/finance/payment/recycle',
+      icon: 'QQ',
+      name: '货款回收',
+      component: _import('finance/payment/recycle'),
       meta: {
         role: ['admin'],
-        title: '异动费用',
-        'code': 'FINANCE_ABNORAML',
-        stitle: '异动',
-        noCache: false
+        ptitle: '货款管理',
+        istab: true,
+        title: '货款回收',
+        noCache: false,
+        code: 'FINANCE_AGENCYFUND1'
       }
     }, {
-      path: '/finance/payment',
-      icon: 'cwgl_hkgl',
-      name: 'financepayment',
-      component: _import('finance/payment/index'),
+      path: '/finance/payment/send',
+      icon: 'QQ',
+      name: '货款汇款',
+      component: _import('finance/payment/send'),
       meta: {
-        role: ['admin'],
-        title: '货款管理',
-        noCache: false,
-        stitle: '货款',
-        code: 'FINANCE_GOODSFUNDS'
-      },
-      children: [{
-        path: '/finance/payment/recycle',
-        icon: 'QQ',
-        name: '货款回收',
-        component: _import('finance/payment/recycle'),
-        meta: {
-          role: ['admin'],
-          ptitle: '货款管理',
-          istab: true,
-          title: '货款回收',
-          noCache: false,
-          code: 'FINANCE_AGENCYFUND1'
-        }
-      }, {
-        path: '/finance/payment/send',
-        icon: 'QQ',
-        name: '货款汇款',
-        component: _import('finance/payment/send'),
-        meta: {
           role: ['admin'],
           ptitle: '货款管理',
           istab: true,
@@ -590,7 +590,7 @@ export default {
           noCache: false,
           code: 'FINANCE_AGENCYFUND2'
         }
-      }, {
+    }, {
         path: '/finance/payment/accept',
         icon: 'QQ',
         name: '货款到账',
@@ -617,31 +617,31 @@ export default {
           code: 'FINANCE_AGENCYFUND4'
         }
       }]
-    }, {
-      path: '/finance/handAccount',
-      icon: 'caiwugl4_yuangongjz',
-      name: 'handAccount',
-      component: _import('finance/handAccount/index'),
-      meta: {
-        role: ['admin'],
-        title: '员工交账',
-        'code': 'FINANCE_ACCOUNT',
-        stitle: '交账',
-        noCache: false
-      }
-    }, {
-      path: '/finance/handAccount/detail',
-      hidden: true,
-      icon: 'QQ',
-      name: 'handAccountDetail',
-      component: _import('finance/handAccount/detail'),
-      meta: {
+  }, {
+    path: '/finance/handAccount',
+    icon: 'caiwugl4_yuangongjz',
+    name: 'handAccount',
+    component: _import('finance/handAccount/index'),
+    meta: {
+      role: ['admin'],
+      title: '员工交账',
+      'code': 'FINANCE_ACCOUNT',
+      stitle: '交账',
+      noCache: false
+    }
+  }, {
+    path: '/finance/handAccount/detail',
+    hidden: true,
+    icon: 'QQ',
+    name: 'handAccountDetail',
+    component: _import('finance/handAccount/detail'),
+    meta: {
         role: ['admin'],
         title: '交账明细',
         noCache: false,
         code: 'FINANCE_ACCOUNT'
       }
-    }, {
+  }, {
       path: '/finance/accountsLoadReceivable',
       icon: 'QQ',
       hidden: true,
@@ -663,7 +663,7 @@ export default {
         role: ['admin'],
         title: '记收入',
         noCache: false,
-        code: 'FLOW_IN'
+        code: 'BILLRECORD_SMART_VERIFY'
       }
     }, {
       path: '/finance/financeDailyExpanditure',
@@ -675,7 +675,7 @@ export default {
         role: ['admin'],
         title: '记支出',
         noCache: false,
-        code: 'FLOW_OUT'
+        code: 'BILLRECORD_SMART_VERIFY'
       }
     },
     // {
@@ -723,59 +723,59 @@ export default {
     name: 'financeInfo',
     component: _import('finance/financeInfo/index'),
     meta: {
-        role: ['admin'],
-        title: '财务初始化',
-        stitle: '财务初始化',
-        'code': 'FINANCE_INIT',
-        noCache: false
-      },
+      role: ['admin'],
+      title: '财务初始化',
+      stitle: '财务初始化',
+      'code': 'FINANCE_INIT',
+      noCache: false
+    },
     children: [{
-        path: '/finance/financeInfo/subjectInfo',
-        icon: 'QQ',
-        name: '科目定义',
-        component: _import('finance/financeInfo/subjectInfo'),
-        meta: {
-          role: ['admin'],
-          title: '科目定义',
-          noCache: false,
-          code: 'INIT_SUBJECT_DEFINE'
-        }
-      }, {
-        path: '/finance/financeInfo/subjectClose',
-        icon: 'QQ',
-        name: '核销科目',
-        component: _import('finance/financeInfo/subjectClose'),
-        meta: {
-          role: ['admin'],
-          title: '核销科目',
-          noCache: false,
-          code: 'INIT_SUBJECT_VERIFY'
-        }
-      }, {
-        path: '/finance/financeInfo/subjectDirection',
-        icon: 'QQ',
-        name: '核销方向',
-        component: _import('finance/financeInfo/subjectDirection'),
-        meta: {
-          role: ['admin'],
-          title: '核销方向',
-          noCache: false,
-          code: 'INIT_VERIFY_DIRECTION'
-        }
-      }]
-  }, {
-      path: '/finance/certificationAudit',
-      icon: 'caiwugl3_shouzhifs',
-      name: 'certificationAudit',
-      component: _import('finance/certificationAudit/index'),
+      path: '/finance/financeInfo/subjectInfo',
+      icon: 'QQ',
+      name: '科目定义',
+      component: _import('finance/financeInfo/subjectInfo'),
       meta: {
         role: ['admin'],
-        title: '凭证审核',
-        stitle: '凭证审核',
-        'code': 'FINANCE_CERTVERFICATION',
-        noCache: false
+        title: '科目定义',
+        noCache: false,
+        code: 'INIT_SUBJECT_DEFINE'
       }
-    },
+    }, {
+      path: '/finance/financeInfo/subjectClose',
+      icon: 'QQ',
+      name: '核销科目',
+      component: _import('finance/financeInfo/subjectClose'),
+      meta: {
+        role: ['admin'],
+        title: '核销科目',
+        noCache: false,
+        code: 'INIT_SUBJECT_VERIFY'
+      }
+    }, {
+      path: '/finance/financeInfo/subjectDirection',
+      icon: 'QQ',
+      name: '核销方向',
+      component: _import('finance/financeInfo/subjectDirection'),
+      meta: {
+        role: ['admin'],
+        title: '核销方向',
+        noCache: false,
+        code: 'INIT_VERIFY_DIRECTION'
+      }
+    }]
+  }, {
+    path: '/finance/certificationAudit',
+    icon: 'caiwugl3_shouzhifs',
+    name: 'certificationAudit',
+    component: _import('finance/certificationAudit/index'),
+    meta: {
+      role: ['admin'],
+      title: '凭证审核',
+      stitle: '凭证审核',
+      'code': 'FINANCE_CERTVERFICATION',
+      noCache: false
+    }
+  },
 
   {
     path: '/finance/reconciliation/carrier/detailTable',
@@ -784,36 +784,36 @@ export default {
     name: '承运商对账明细',
     component: _import('finance/reconciliation/carrier/components/detailTable/index'),
     meta: {
-        role: ['admin'],
-        title: '承运商对账',
-        noCache: true,
-        code: 'FINANCE_CARRIERDETAIL'
-      }
+      role: ['admin'],
+      title: '承运商对账',
+      noCache: true,
+      code: 'FINANCE_CARRIERDETAIL'
+    }
   }, {
-      path: '/finance/reconciliation/group/detailTable',
-      icon: 'QQ',
-      hidden: true,
-      name: '网点对账明细',
-      component: _import('finance/reconciliation/group/components/detailTable/index'),
-      meta: {
-        role: ['admin'],
-        title: '网点对账',
-        noCache: true,
-        code: 'FINANCE_ORGFEE_DETAIL'
-      }
-    }, {
-      path: '/finance/reconciliation/customer/detailTable',
-      icon: 'QQ',
-      hidden: true,
-      name: '客户对账明细',
-      component: _import('finance/reconciliation/customer/components/detailTable/index'),
-      meta: {
-        role: ['admin'],
-        title: '客户对账',
-        noCache: true,
-        code: 'FINANCE_CUSTOMERDETAIL'
-      }
-    },
+    path: '/finance/reconciliation/group/detailTable',
+    icon: 'QQ',
+    hidden: true,
+    name: '网点对账明细',
+    component: _import('finance/reconciliation/group/components/detailTable/index'),
+    meta: {
+      role: ['admin'],
+      title: '网点对账',
+      noCache: true,
+      code: 'FINANCE_ORGFEE_DETAIL'
+    }
+  }, {
+    path: '/finance/reconciliation/customer/detailTable',
+    icon: 'QQ',
+    hidden: true,
+    name: '客户对账明细',
+    component: _import('finance/reconciliation/customer/components/detailTable/index'),
+    meta: {
+      role: ['admin'],
+      title: '客户对账',
+      noCache: true,
+      code: 'FINANCE_CUSTOMERDETAIL'
+    }
+  },
     // 承运商对账-创建对账
   {
     path: '/finance/reconciliation/carrier/detailTable/carrierRecon',
@@ -822,22 +822,22 @@ export default {
     name: '承运商创建对账单',
     component: _import('finance/reconciliation/carrier/components/detailTable/components/carrierRecon'),
     meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
   }, {
-      path: '/finance/reconciliation/group/detailTable/groupRecon',
-      icon: 'QQ',
-      hidden: true,
-      name: '创建对账单',
-      component: _import('finance/reconciliation/group/components/detailTable/components/groupRecon'),
-      meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
-    },
+    path: '/finance/reconciliation/group/detailTable/groupRecon',
+    icon: 'QQ',
+    hidden: true,
+    name: '创建对账单',
+    component: _import('finance/reconciliation/group/components/detailTable/components/groupRecon'),
+    meta: {
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
+  },
     // //客户对账-创建对账 customerRecon
   {
     path: '/finance/reconciliation/customer/detailTable/customerRecon',
@@ -846,10 +846,10 @@ export default {
     name: '创建对账明细',
     component: _import('finance/reconciliation/customer/components/detailTable/components/customerRecon'),
     meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
   },
     // 车辆-干线
   {
@@ -859,10 +859,10 @@ export default {
     name: '干线对账明细',
     component: _import('finance/reconciliation/carfee/components/arteryRecon'),
     meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
   },
     // 车辆-短驳
   {
@@ -872,10 +872,10 @@ export default {
     name: '短驳对账明细',
     component: _import('finance/reconciliation/carfee/components/shortRecon'),
     meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
   },
     // 车辆-送货
   {
@@ -885,10 +885,10 @@ export default {
     name: '送货对账明细',
     component: _import('finance/reconciliation/carfee/components/deliverRecon'),
     meta: {
-        role: ['admin'],
-        title: '创建对账单',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '创建对账单',
+      noCache: false
+    }
   }
   ]
 }
