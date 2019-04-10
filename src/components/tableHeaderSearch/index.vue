@@ -14,14 +14,15 @@
     ></el-date-picker>
     <!-- 下拉选择搜索-字典表 -->
     <SelectType
+      clearable
+      placeholder="请选择"
       v-model.lazy="queryString"
       v-else-if="isSelect && curSelect.type"
-      placeholder="请选择"
       :size="btnsize"
       :type="curSelect.type"
-      clearable
       :filterfn="filterfn"
       @click.stop.prevent.native
+      :focus="focusSelect"
       @keyup.enter.native="event => changeEnter(scope.column, scope.$index, event)"
       @changeItem="(val, obj) => changeKey(scope.column, scope.$index, (obj.dictName || ''))"
     ></SelectType>
@@ -698,6 +699,9 @@ export default {
     }
   },
   methods: {
+    focusSelect(event) {
+      // console.log('focusSelect event:', event)
+    },
     filterfn(el) {
       if (this.curSelect.filter) {
         // 过滤有指定的项
