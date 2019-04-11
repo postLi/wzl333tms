@@ -17,12 +17,12 @@ export default {
       _this.setSupcanChart(false)
     })
     // 拖拉表格头
-    document.addEventListener('mousemove', function(e) {
+    /* document.addEventListener('mousemove', function(e) {
       const target = e.target
       if (target.classList.contains('split-trigger')) {
         target.style.cursor = 'col-resize'
       }
-    })
+    }) */
   },
   methods: {
     setSupcanChart(ishide) {

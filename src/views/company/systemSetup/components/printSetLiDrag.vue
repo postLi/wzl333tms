@@ -159,26 +159,26 @@ export default {
       dragDetailInfo: {},
       dragCursor: 'move',
       alignmentOptions: [{
-          value: 0,
-          label: '文字靠右'
-        },
-        {
-          value: 1,
-          label: '文字靠左'
-        },
-        {
-          value: 2,
-          label: '文字居中'
-        }
+        value: 0,
+        label: '文字靠右'
+      },
+      {
+        value: 1,
+        label: '文字靠左'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      }
       ],
       fontWeightOptions: [{
-          value: 0,
-          label: '默认粗细'
-        },
-        {
-          value: 2,
-          label: '加粗'
-        }
+        value: 0,
+        label: '默认粗细'
+      },
+      {
+        value: 2,
+        label: '加粗'
+      }
       ]
     }
   },
@@ -224,6 +224,10 @@ export default {
     isActiveDrag: () => {
       return {}
     }
+  },
+  beforeDestroy() {
+    document.removeEventListener('mousemove', this.conrightMove, true)
+    document.removeEventListener('mouseup', this.conrightEnd, true)
   },
   mounted() {
     this.getSettingCompanyLi()
@@ -433,7 +437,7 @@ export default {
       getSettingCompanyLi().then(data => {
           // 针对瑞千鑫特殊处理
           // 特殊处理某些字段
-          data = data.map(e => {
+        data = data.map(e => {
             if (e.companyid === 233 || e.companyid === 234) {
               e.filedName = e.filedName.replace('业务员电话', '业务投诉电话')
             }
@@ -446,9 +450,9 @@ export default {
             return e
           })
 
-          this.formModel.labelList = data
-          this.orgLabelList = data
-          this.formModel.labelList.forEach(e => {
+        this.formModel.labelList = data
+        this.orgLabelList = data
+        this.formModel.labelList.forEach(e => {
             if (e.filedValue === 'setting') {
               e.width = Math.round((e.width ? e.width : 240) * this.prxvalue)
               e.height = Math.round((e.height ? e.height : 140) * this.prxvalue)
@@ -465,8 +469,8 @@ export default {
               e.alignment = e.alignment ? this.alignmentOptions[e.alignment].label : '文字靠左'
             }
           })
-          this.loading = false
-        })
+        this.loading = false
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -510,11 +514,11 @@ export default {
           })
 
           putSettingCompanyLi(labelList).then(data => {
-              this.$message({ type: 'success', message: '标签打印设置成功！' })
-              this.getSettingCompanyLi()
-              this.viewKey = new Date().getTime()
-              this.loading = false
-            })
+            this.$message({ type: 'success', message: '标签打印设置成功！' })
+            this.getSettingCompanyLi()
+            this.viewKey = new Date().getTime()
+            this.loading = false
+          })
             .catch(err => {
               this.loading = false
               this._handlerCatchMsg(err)
@@ -526,10 +530,10 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
               this.formModel.labelList.forEach(e => {
                 if (e.filedValue !== 'setting') {
                   e.topy = 0
