@@ -64,7 +64,6 @@ export default {
       return fetchList(params).then(data => {
           if (data) {
             this.dataList = objectMerge2([], data.list)
-            console.log('this.dataList', this.dataList)
           }
         })
         .catch(err => {
@@ -72,18 +71,20 @@ export default {
         })
     },
     querySearch(queryString, cb) {
-      this.fetchData(queryString).then(() => { // 远程搜索
-        let arr = objectMerge2([], this.dataList)
-        this.currentSearch = queryString
-        // if (queryString.shipSn === undefined || queryString.batchNo) {
-        //   if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
-        //     this.$emit('change', objectMerge2([], this.info))
-        //   }
-        // }
-        const leftTable = arr || this.info
-        const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
-        cb(results)
-      })
+      this.currentSearch = queryString
+     let fn = () => {
+         this.fetchData(queryString).then(() => { // 远程搜索
+          let arr = objectMerge2([], this.dataList)
+          const leftTable = arr || this.info
+          const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
+            cb(results)
+            arr = []
+        })
+      }
+       // 搜索输入延时请求
+      this._processSearch({
+        queryString: queryString
+      }, fn)
     },
     createFilter(queryString) {
       return (res) => {
@@ -100,7 +101,7 @@ export default {
       } else if (obj.batchNo) {
         this.currentSearch = obj.batchNo
       }
-
+      console.log('选中的：',obj)
       this.currentSearch = ''
       // this.$emit('change', obj, this.dataList.indexOf(obj))
       this.$emit('change', obj, 0)

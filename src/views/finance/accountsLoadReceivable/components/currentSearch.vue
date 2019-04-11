@@ -32,23 +32,23 @@ export default {
     }
   },
   methods: {
-     fetchData(queryString) {
+    fetchData(queryString) {
       let params = objectMerge2({}, this.getRouteInfo)
       params.vo.shipSn = queryString
       params.vo.status = 'NOSETTLEMENT,PARTSETTLEMENT'
+      params.pageSize = 50 // 查少点数据，请求快一点
 
       let fetchList
       let currentPage = this.$route.query.currentPage
       if (currentPage === 'handleFee') { // 操作费
-        fetchList = payListByHandlingFee 
-      }else {
-        fetchList =  accountApi.getReceivableList
+        fetchList = payListByHandlingFee
+      } else {
+        fetchList = accountApi.getReceivableList
       }
 
       return fetchList(params).then(data => {
           if (data) {
             this.dataList = objectMerge2([], data.list)
-            console.log('this.dataList', this.dataList)
           }
         })
         .catch(err => {
@@ -56,13 +56,22 @@ export default {
         })
     },
     querySearch(queryString, cb) {
-       this.fetchData(queryString).then(() => { // 远程搜索
-        let arr = objectMerge2([], this.dataList)
-        this.currentSearch = queryString
-        const leftTable = arr || this.info
-        const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
-        cb(results)
-      })
+      this.currentSearch = queryString
+      let fn = () => {
+         this.fetchData(queryString).then(() => { // 远程搜索
+          let arr = objectMerge2([], this.dataList)
+          let leftTable = arr || this.info
+          const results = queryString ? leftTable.filter(this.createFilter(queryString)) : leftTable
+          cb(results)
+          arr = []
+          leftTable = []
+        })
+      }
+      // 搜索输入延时请求
+      this._processSearch({
+        queryString: queryString,
+        nextTime: 800,
+      }, fn)
       // this.currentSearch = queryString
       // if (queryString.shipSn === undefined || queryString.batchNo) {
       //   if (!this.currentSearch) { // 如果搜索框为空则恢复右边列表
@@ -84,7 +93,6 @@ export default {
       }
     },
     handleSelect(obj) {
-      console.log('========', obj)
       if (obj.shipSn) {
         this.currentSearch = obj.shipSn
       } else if (obj.batchNo) {
@@ -93,6 +101,7 @@ export default {
       // const array = []
       // array.push(obj)
 
+      console.log('选中的：', obj)
       this.currentSearch = ''
       this.$emit('change', obj, 0)
       // this.$emit('change', obj, this.info.indexOf(obj))

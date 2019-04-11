@@ -138,218 +138,218 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '核销状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车类型',
-        prop: 'loadTypeName',
-        width: '90',
-        fixed: true
-      },
-      {
-        label: '到达网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车时间',
-        prop: 'departureTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '到达时间',
-        prop: 'receivingTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '操作费',
-        prop: 'fee',
-        width: '110',
-        slot: (scope) => {
-          return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '130',
+          fixed: true
         },
-        fixed: false
-      },
-      {
-        label: '已核销操作费',
-        prop: 'paidFee',
-        width: '110',
-        slot: (scope) => {
-          return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+        {
+          label: '核销状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
         },
-        fixed: false
-      },
-      {
-        label: '未核销操作费',
-        prop: 'unpaidFee',
-        width: '110',
-        slot: (scope) => {
-          return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+        {
+          label: '发车类型',
+          prop: 'loadTypeName',
+          width: '90',
+          fixed: true
         },
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '司机名称',
-        prop: 'dirverName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmountall',
-        fixed: false
-      },
-      {
-        label: '配载体积',
-        prop: 'loadVolumeall',
-        fixed: false
-      },
-      {
-        label: '配载重量',
-        prop: 'loadWeightall',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        fixed: false
-      }
+        {
+          label: '到达网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '操作费',
+          prop: 'fee',
+          width: '110',
+          slot: (scope) => {
+            return scope.row.loadTypeName === '干线' ? scope.row.gxHandlingFeePay : scope.row.dbHandlingFeePay
+          },
+          fixed: false
+        },
+        {
+          label: '已核销操作费',
+          prop: 'paidFee',
+          width: '110',
+          slot: (scope) => {
+            return scope.row.loadTypeName === '干线' ? scope.row.paidGxHandlingFeePay : scope.row.paidDbHandlingFeePay
+          },
+          fixed: false
+        },
+        {
+          label: '未核销操作费',
+          prop: 'unpaidFee',
+          width: '110',
+          slot: (scope) => {
+            return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+          },
+          fixed: false
+        },
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmountall',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolumeall',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeightall',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          fixed: false
+        }
       ],
       tableColumnRight: [{
-        label: '发车批次',
-        prop: 'batchNo',
-        width: '130',
-        fixed: true
-      },
-      {
-        label: '核销状态',
-        prop: 'statusName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车类型',
-        prop: 'loadTypeName',
-        width: '90',
-        fixed: true
-      },
-      {
-        label: '到达网点',
-        prop: 'arriveOrgName',
-        width: '120',
-        fixed: false
-      },
-      {
-        label: '发车时间',
-        prop: 'departureTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '到达时间',
-        prop: 'receivingTime',
-        width: '160',
-        fixed: false
-      },
-      {
-        label: '操作费',
-        prop: 'fee',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '已核销操作费',
-        prop: 'paidFee',
-        width: '110',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          label: '发车批次',
+          prop: 'batchNo',
+          width: '130',
+          fixed: true
         },
-        fixed: false
-      },
-      {
-        label: '未核销操作费',
-        prop: 'unpaidFee',
-        width: '110',
-        slot: (scope) => {
-          const row = scope.row
-          return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
+        {
+          label: '核销状态',
+          prop: 'statusName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车类型',
+          prop: 'loadTypeName',
+          width: '90',
+          fixed: true
+        },
+        {
+          label: '到达网点',
+          prop: 'arriveOrgName',
+          width: '120',
+          fixed: false
+        },
+        {
+          label: '发车时间',
+          prop: 'departureTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '到达时间',
+          prop: 'receivingTime',
+          width: '160',
+          fixed: false
+        },
+        {
+          label: '操作费',
+          prop: 'fee',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '已核销操作费',
+          prop: 'paidFee',
+          width: '110',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.paidFee)
+          },
+          fixed: false
+        },
+        {
+          label: '未核销操作费',
+          prop: 'unpaidFee',
+          width: '110',
+          slot: (scope) => {
+            const row = scope.row
+            return this._setTextColor(row.fee, row.paidFee, row.unpaidFee, row.unpaidFee)
             //   return scope.row.loadTypeName === '干线' ? scope.row.unpaidGxHandlingFeePay : scope.row.unpaidDbHandlingFeePay
+          },
+          fixed: false
         },
-        fixed: false
-      },
-      {
-        label: '实际核销操作费',
-        prop: 'amount',
-        width: '110',
-        expand: true,
-        slot: (scope) => {
-          return scope.row.amount
+        {
+          label: '实际核销操作费',
+          prop: 'amount',
+          width: '110',
+          expand: true,
+          slot: (scope) => {
+            return scope.row.amount
+          },
+          fixed: false
         },
-        fixed: false
-      },
-      {
-        label: '车牌号',
-        prop: 'truckIdNumber',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '司机名称',
-        prop: 'dirverName',
-        width: '100',
-        fixed: false
-      },
-      {
-        label: '司机电话',
-        prop: 'dirverMobile',
-        width: '110',
-        fixed: false
-      },
-      {
-        label: '配载件数',
-        prop: 'loadAmountall',
-        fixed: false
-      },
-      {
-        label: '配载体积',
-        prop: 'loadVolumeall',
-        fixed: false
-      },
-      {
-        label: '配载重量',
-        prop: 'loadWeightall',
-        fixed: false
-      },
-      {
-        label: '备注',
-        prop: 'remark',
-        fixed: false
-      }
+        {
+          label: '车牌号',
+          prop: 'truckIdNumber',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '司机名称',
+          prop: 'dirverName',
+          width: '100',
+          fixed: false
+        },
+        {
+          label: '司机电话',
+          prop: 'dirverMobile',
+          width: '110',
+          fixed: false
+        },
+        {
+          label: '配载件数',
+          prop: 'loadAmountall',
+          fixed: false
+        },
+        {
+          label: '配载体积',
+          prop: 'loadVolumeall',
+          fixed: false
+        },
+        {
+          label: '配载重量',
+          prop: 'loadWeightall',
+          fixed: false
+        },
+        {
+          label: '备注',
+          prop: 'remark',
+          fixed: false
+        }
       ]
     }
   },
@@ -384,23 +384,23 @@ export default {
       this.loading = true
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
       payListByHandlingFee(this.searchQuery).then(data => {
-        if (data) {
-          this.leftTable = Object.assign([], data.list)
-          this.totalLeft = data.total
-          rightTable.forEach((el, index) => {
-            this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
-          })
-          this.leftTable.forEach(e => {
-            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
-            e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
-            e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
-            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
-            this.$set(e, 'amount', e.unpaidFee)
-          })
-        }
-        this.orgLeftTable = Object.assign([], this.leftTable)
-        this.loading = false
-      })
+          if (data) {
+            this.leftTable = Object.assign([], data.list)
+            this.totalLeft = data.total
+            rightTable.forEach((el, index) => {
+              this.leftTable = this.leftTable.filter(em => em.batchNo !== el.batchNo)
+            })
+            this.leftTable.forEach(e => {
+              e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
+              e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
+              e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
+              e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
+              this.$set(e, 'amount', e.unpaidFee)
+            })
+          }
+          this.orgLeftTable = Object.assign([], this.leftTable)
+          this.loading = false
+        })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -415,6 +415,13 @@ export default {
         // this.searchQuery.pageSize = 100
       }
       this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
+    },
+    setRightValue(e) {
+      e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
+      e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
+      e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
+      e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
+      this.$set(e, 'amount', e.unpaidFee)
     },
     getList(handle) {
       const selectListBatchNos = objectMerge2([], JSON.parse(this.$route.query.selectListBatchNos))
@@ -436,11 +443,7 @@ export default {
           this.leftTable = Object.assign([], data.list)
           this.totalLeft = data.total
           this.leftTable.forEach(e => {
-            e.fee = e.fee ? e.fee : (e.loadTypeName === '干线' ? e.gxHandlingFeePay : e.dbHandlingFeePay)
-            e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
-            e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
-            e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
-            this.$set(e, 'amount', e.unpaidFee)
+            this.setRightValue(e)
           })
           selectListBatchNos.forEach(e => {
             this.leftTable.forEach(item => {
@@ -566,6 +569,7 @@ export default {
       }
     },
     selectCurrent(obj, index) {
+      this.setRightValue(obj)
       this.addItem(obj, index)
     },
     dclickAddItem(row, event) { // 双击添加单行

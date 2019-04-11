@@ -1179,6 +1179,7 @@ export default {
       console.log('params', params)
       if (type === 'location') { // 查定位
         if (params) {
+          console.log('onSubmit location')
           _this.getRealTimeLocate(childtype, params)
           _this.loadSearch = false
         } else {
@@ -1225,11 +1226,12 @@ export default {
       if (query) {
         // let params = isOrder ? { shipSn: flag } : { truckIdNumber: flag }
         fetch(query).then(data => {
+          console.log('定位接口返回的数据 data', data)
             if (data) {
               if (isOrder && data.length > 0) {
                 this.realTimeLocateList = data
                 this.realLocatOrderTrucks = data
-              } else if (data.truckIdNumber) {
+              } else if (data.truckIdNumber || data.latitude || data.longitude) {
                 this.realTimeLocateList = []
                 this.realTimeLocateList.push(data)
               }
