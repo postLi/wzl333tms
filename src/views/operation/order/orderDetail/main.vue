@@ -1115,17 +1115,27 @@ export default {
     sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
-          const list = document.querySelectorAll('.model-orderDetail-item')
+           const root = document.querySelector('.model-orderDetail-list')
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-orderDetail-item'))
+          root.innerHTML = ''
           const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          const modelDiv = document.querySelectorAll('.model-orderDetail-list')[0]
           for (let i = 0; i < arr.length; i++) {
-            modelDiv.appendChild(arr[i])
-            const name = arr[i].getAttribute('data-name')
-            const index = arr[i].getAttribute('data-index')
+            root.appendChild(arr[i])
           }
+          // const list = document.querySelectorAll('.model-orderDetail-item')
+          // const arr = Array.prototype.slice.call(list)
+          // arr.sort(function(a, b) {
+          //   return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
+          // })
+          // const modelDiv = document.querySelectorAll('.model-orderDetail-list')[0]
+          // for (let i = 0; i < arr.length; i++) {
+          //   modelDiv.appendChild(arr[i])
+          //   const name = arr[i].getAttribute('data-name')
+          //   const index = arr[i].getAttribute('data-index')
+          // }
         }
       })
     },

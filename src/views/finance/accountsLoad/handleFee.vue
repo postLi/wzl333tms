@@ -408,9 +408,7 @@ export default {
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       if (JSON.parse(this.$route.query.selectListBatchNos).length > 0) {
-        console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }
@@ -421,7 +419,7 @@ export default {
       e.paidFee = e.paidFee ? e.paidFee : (e.loadTypeName === '干线' ? e.paidGxHandlingFeePay : e.paidDbHandlingFeePay)
       e.unpaidFee = e.unpaidFee ? e.unpaidFee : (e.loadTypeName === '干线' ? e.unpaidGxHandlingFeePay : e.unpaidDbHandlingFeePay)
       e.statusName = e.statusName ? e.statusName : (e.loadTypeName === '干线' ? e.gxHandlingFeePayStatusZh : e.dbHandlingFeePayStatusZh)
-      this.$set(e, 'amount', e.unpaidFee)
+      e.amount = e.unpaidFee
     },
     getList(handle) {
       const selectListBatchNos = objectMerge2([], JSON.parse(this.$route.query.selectListBatchNos))

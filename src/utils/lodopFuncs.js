@@ -337,9 +337,19 @@ export function PrintInFullPage(obj) {
       LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true) // 设置以纸张边缘为基点
       // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
-      if (printObj.printer) {
-        LODOP.SET_PRINTER_INDEXA(printObj.printer)
+      // 如果有type就是配载单，否则就是清单
+      if (obj.type) {
+        if (printObj.printer) {
+          console.log('配载单打印机:', printObj.printer)
+          LODOP.SET_PRINTER_INDEXA(printObj.printer)
+        }
+      } else {
+        console.log('清单打印机:', user.systemSetup.printSetting.inventory)
+        if (user.systemSetup.printSetting.inventory) {
+          LODOP.SET_PRINTER_INDEXA(user.systemSetup.printSetting.inventory)
+        }
       }
+
 
       if (obj.appendTop) {
         obj.appendTop = obj.appendTop.replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_content}', printObj.heading_content).replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)

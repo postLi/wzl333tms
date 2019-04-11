@@ -281,12 +281,12 @@
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
                 </el-form-item>
-                <!-- <el-form-item>
+                <el-form-item>
                   清单
                   <el-select v-model="form.printSetting.inventory">
                     <el-option v-for="item in printers" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
-                </el-form-item> -->
+                </el-form-item>
               </div>
             </div>
             <div class="clearfix setup-table">
@@ -884,16 +884,15 @@ export default {
         form.shipPageFunc.insurancePremiumIsDeclaredValue = 3
       }
       this.putSetting(form).then(() => {
-        let otherinfo = localStorage.getItem('TMS-userinfo')
-        if (otherinfo) {
-          otherinfo = JSON.parse(otherinfo)
-          if (otherinfo.systemSetup) {
-            otherinfo.systemSetup.printFontSetting = objectMerge2({}, form.printFontSetting)
-            otherinfo.systemSetup.printSetting = objectMerge2({}, form.printSetting)
-          }
-        }
-        localStorage.setItem('TMS-userinfo', JSON.stringify(otherinfo))
-
+        // let otherinfo = localStorage.getItem('TMS-userinfo')
+        // if (otherinfo) {
+        //   otherinfo = JSON.parse(otherinfo)
+        //   if (otherinfo.systemSetup) {
+        //     otherinfo.systemSetup.printFontSetting = objectMerge2({}, form.printFontSetting)
+        //     otherinfo.systemSetup.printSetting = objectMerge2({}, form.printSetting)
+        //   }
+        // }
+        // localStorage.setItem('TMS-userinfo', JSON.stringify(otherinfo))
         this.initOrder()
         this.loading = false
       })

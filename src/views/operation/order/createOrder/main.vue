@@ -721,7 +721,6 @@ export default {
   data() {
     const _this = this
     return {
-      mainKey: 0,
       orderModelShow: true,
       isPrintAmount: false,
       org_m_index: {
@@ -1348,7 +1347,6 @@ export default {
           for (let i = 0; i < arr.length; i++) {
             root.appendChild(arr[i])
           }
-          this.mainKey = Math.random()
           this.loading = false
         }
       })

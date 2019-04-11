@@ -426,7 +426,6 @@ export default {
       'otherinfo'
     ]),
     getRouteInfo() {
-      console.log('xxxxxxxxxxxxxxxxxx:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
       return JSON.parse(this.$route.query.searchQuery)
     },
     // totalLeft() {
@@ -440,14 +439,12 @@ export default {
     this.searchQuery = Object.assign({}, this.getRouteInfo)
   },
   mounted() {
-    console.log('xxxxxxxxxxxxxxxxxx333:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
     this.getList()
   },
   methods: {
     handlePageChangeLeft(obj) {
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
-      console.log(obj.pageSize, obj.pageNum, obj)
       this.pageGetList()
     },
     pageGetList() {
@@ -472,9 +469,7 @@ export default {
     initLeftParams() {
       this.searchQuery = Object.assign({}, this.getRouteInfo)
       if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        console.log('111111111111111')
       } else {
-        console.log('22222222222222222')
         this.searchQuery.currentPage = 1
         // this.searchQuery.pageSize = 100
       }
@@ -641,8 +636,11 @@ export default {
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
             return em.shipSn !== e.shipSn
           })
-          this.leftTable.push(e)
-          this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          if (this.leftTable.length < this.searchQuery.pageSize) {
+            // 如果左边的列表长度比分页数少才可以添加到左边列表，否则就直接过滤掉不做处理
+             this.leftTable.push(e)
+             this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+          }
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
