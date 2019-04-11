@@ -26,6 +26,11 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
+  // let aliyunimgurl = "http://aflc.oss-cn-shenzhen.aliyuncs.com"
+  // if (config.url !== aliyunimgurl){
+  //   config.headers['requestSource'] = 'web'
+  // }
+    config.headers['request_source'] = 'web'
   if (store.getters.token) {
     // 让每个请求携带自定义token 请根据实际情况自行修改
     config.headers['access_token'] = getToken()

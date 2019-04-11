@@ -3,10 +3,12 @@
     <!-- 实际发车时间 -->
     <el-dialog :title="'请选择实际'+title+'时间'" :isShow="popVisible" append-to-body :visible.sync="popVisible" @close="closeMe" :before-close="closeMe" width="430px" :close-on-click-modal="false" center>
       <el-form :model="searchForm" ref="searchForm">
+        <!-- 到车 -->
         <el-form-item :label="'实际'+title+'时间'" :label-width="formLabelWidth" v-if="isArrival">
-          <el-date-picker v-model.trim="searchForm.actualArrivetime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择时间">
+          <el-date-picker v-model.trim="searchForm.actualArrivetime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickOption" placeholder="选择时间">
           </el-date-picker>
         </el-form-item>
+        <!-- 发车 -->
         <el-form-item :label="'实际'+title+'时间'" :label-width="formLabelWidth" v-else>
           <el-date-picker v-model.trim="searchForm.actualSendtime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间">
           </el-date-picker>
@@ -35,6 +37,10 @@ export default {
     title: {
       type: String,
       default: '发车'
+    },
+    disableTimer: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -50,15 +56,35 @@ export default {
       }
     }
   },
+  computed: {
+    pickOption() {
+      const _this = this
+      return {
+        firstDayOfWeek: 1,
+        disabledDate(time) {
+          if (_this.disableTimer) {
+            let start = _this.disableTimer
+            const outTime = new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate())
+            return outTime ? time.getTime() < outTime : false
+          } else {
+            return false
+          }
+        }
+      }
+    }
+  },
   watch: {
     popVisible: {
       handler(cval, oval) {
         if (cval) {
+          console.log('title', this.title, this.isArrival, this.disableTimer)
           this.inited = true
           this.loading = false
           this.currentTime = parseTime(+new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
           this.searchForm.actualArrivetime = this.currentTime
           this.searchForm.actualSendtime = this.currentTime
+          const _this = this
+
           getSystemTime().then(data => {
               if (data) {
                 this.systemTime = data.trim()

@@ -109,7 +109,6 @@ export default {
     refreshKey() {
       this.theRefreshKey = Math.random()
     }
-
   }
 }
 </script>

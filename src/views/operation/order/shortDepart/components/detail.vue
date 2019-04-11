@@ -412,6 +412,11 @@ export default {
     },
     info(newVal) {
       if (newVal) {
+         if (this.arrivalStatus === '已入库') {
+            this.isNeedArrival = false
+          } else {
+            this.isNeedArrival = true
+          }
         this.getLoadTrack()
         this.toggleAllRows()
         this.setTableColumn()

@@ -460,6 +460,9 @@ export default {
     this.remoteFn = this.queryFn
     // console.log('handkler2: ', this.value)
     this.handlevalue = this.value
+    if(this.type==='user'){
+      console.log('useruseruseruseruser')
+    }
 
     if (this.value && this.show !== 'input') {
       // this.initFindItem()

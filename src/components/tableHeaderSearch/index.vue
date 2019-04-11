@@ -185,7 +185,6 @@ export default {
   methods: {
     focusSelect(event) {
       this.initRemoteSelect = true
-      console.log('focusSelect event:', event)
     },
     filterfn(el) {
       if (this.curSelect.filter) {
