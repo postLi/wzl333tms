@@ -103,6 +103,10 @@ export default {
     this.eventBus.$on('hideCreateOrder', (orderid) => {
       this.showCreateVisible = false
     })
+    this.eventBus.$on('refreshKey', () => {
+      // tab页刷新事件
+      this.refreshKey()
+    })
     this._orderobj = objectMerge2({}, this.orderobj)
   },
   methods: {

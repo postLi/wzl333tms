@@ -1297,7 +1297,8 @@ export default {
     },
     setModel() {
       // 重新修改开单页面的模板
-      this.$parent.$parent.$parent.refreshKey()
+      this.eventBus.$emit('refreshKey')
+      // this.$parent.$parent.$parent.refreshKey()
       // this.fetchModel().then(() => {
       //   this.setCargoNum()
       // })
@@ -1560,7 +1561,6 @@ export default {
     init() {
       this.setOrderTransfer()
       const fn = () => {
-        console.log('444444444444444444')
         this.setRequired()
         this.setOrderNum()
         this.setCargoNum()
@@ -1583,14 +1583,11 @@ export default {
         }, 1000)
       }
       return new Promise((resolve, reject) => {
-        console.log('111111111111111111')
         if (this._renderModel) {
-          console.log('2222222222222222')
           fn()
           resolve()
         } else {
           this.fetchModel().then(() => {
-            console.log('33333333333333')
             this._renderModel = true
             fn()
             resolve()

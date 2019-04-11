@@ -169,7 +169,7 @@
               <el-form-item v-if="eitem.fieldProperty==='shipReceiverMobile'">
                 <el-input size="mini" disabled :value="form.receiver.customerMobile" />
               </el-form-item>
-              <span v-if="eitem.fieldProperty==='shipReceiverAddress'" class="order-form-label">详细地址</span>
+              <span v-if="eitem.fieldProperty==='shipReceiverAddress'" class="order-form-label">收货地址</span>
               <el-form-item v-if="eitem.fieldProperty==='shipReceiverAddress'">
                 <el-input size="mini" disabled :value="form.receiver.detailedAddress" />
               </el-form-item>
