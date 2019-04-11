@@ -2,7 +2,7 @@
   <pop-right :title="popTitle" :isShow="popVisible" @close="closeMe" class="storagesPopDelivery" v-loading="loading">
     <template class="addCPop-content" slot="content">
       <!-- 实际到车时间 弹出框 -->
-      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :title="'到车'" :isArrival="true"></actualSendtime>
+      <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime" :disableTimer="info.actualSendtime" :title="'到车'" :isArrival="true"></actualSendtime>
       <div class="batchTypeNo">
         批次：{{getBatchNo}}
       </div>

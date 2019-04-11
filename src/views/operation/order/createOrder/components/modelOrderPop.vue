@@ -203,7 +203,6 @@ export default {
           }
         })
         this.org_m_index = objectMerge2({}, this.m_index)
-        console.log('init m_index', JSON.stringify(this.m_index))
         this.sortModel()
       }
     },
@@ -239,8 +238,8 @@ export default {
           const modelDiv = document.querySelectorAll('.model-list')[0]
           for (let i = 0; i < arr.length; i++) {
             modelDiv.appendChild(arr[i])
-            const name = arr[i].getAttribute('data-name')
-            const index = arr[i].getAttribute('data-index')
+            // const name = arr[i].getAttribute('data-name')
+            // const index = arr[i].getAttribute('data-index')
           }
         }
       })
@@ -249,11 +248,9 @@ export default {
       dom = event.item
       const modelName = dom.getAttribute('data-name')
       const modelIndex = Number(dom.getAttribute('data-index'))
-      console.log('start', event, modelName, modelIndex)
     },
     endDragModel(event) {
       dom = Array.prototype.slice.call(event.target.children)
-      console.log('end', event, dom)
       dom.forEach((el, index) => {
         const modelName = el.getAttribute('data-name')
         this.m_index[modelName] = index + 1
@@ -266,7 +263,6 @@ export default {
             el.typeOrder = this.m_index[el.templateType]
           }
         })
-        console.log('end m_index', JSON.stringify(this.m_index))
       }
     },
     fetchData() {

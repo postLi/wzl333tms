@@ -96,6 +96,10 @@ export default {
       type: Boolean,
       default: false
     },
+    initRemote: { // 初始化组件的时候请求数据控制initRemote:(true-请求数据， false-不请求数据),默认是请求数据的true
+      type: Boolean,
+      default: true
+    },
     arterDelivery: {
       type: Boolean,
       default: false
@@ -132,22 +136,23 @@ export default {
         this.change(this.val)
       },
       immediate: true
+    },
+    initRemote: {
+      handler(newVal, oldVal) {
+        if (newVal === true) {
+          this.init()
+        }
+      },
+      immediate: true
     }
   },
   mounted() {
     // console.log('ths.type.moutend', this.type)
     // 因为字典的数据修改频率极其小，
     // 尝试缓存以减少网络请求
-    if (this.remote) {
-      this.fetchData()
-    } else {
-      const data = CACHE.get(this.type)
-      if (data === '') {
-        this.fetchData()
-      } else {
-        this.types = data
-        // this.listdata = data
-      }
+    // 初始化组件的时候请求数据控制initRemote:(true-请求数据， false-不请求数据),默认是请求数据的
+    if (this.initRemote) {
+      this.init()
     }
     if (typeof this.filterfn === 'function') {
       this.queryFn = this.filterfn
@@ -166,6 +171,19 @@ export default {
     }
   },
   methods: {
+    init() {
+      if (this.remote) {
+        this.fetchData()
+      } else {
+        const data = CACHE.get(this.type)
+        if (data === '') {
+          this.fetchData()
+        } else {
+          this.types = data
+        // this.listdata = data
+        }
+      }
+    },
     makefilter(query) {
       this.query = query
       const REG = new RegExp(query, 'i')

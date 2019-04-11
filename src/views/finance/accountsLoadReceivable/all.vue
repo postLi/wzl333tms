@@ -684,7 +684,6 @@ export default {
       obj.inputChangeFee = obj.notChangeFee
       // this.leftTable = Object.assign([], obj)
       this.addItem(obj, index)
-      console.log('this.right', JSON.stringify(this.rightTable))
     },
     addItem(row, index) { // 添加单行
       this.selectedRight = []

@@ -67,66 +67,66 @@ export default {
       name: '到付',
       component: _import('finance/accountsReceivable/arrive'),
       meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '到付',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST3'
-        }
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '到付',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST3'
+      }
     }, {
-        path: '/finance/accountsReceivable/receipt',
-        icon: 'QQ',
-        name: '回单付',
-        component: _import('finance/accountsReceivable/receipt'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '回单付',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST4'
-        }
-      }, {
-        path: '/finance/accountsReceivable/month',
-        icon: 'QQ',
-        name: '月结',
-        component: _import('finance/accountsReceivable/month'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '月结',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST5'
-        }
-      }, {
-        path: '/finance/accountsReceivable/abnormal',
-        icon: 'QQ',
-        name: '应收异动费用',
-        component: _import('finance/accountsReceivable/abnormal'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '异动费用',
-          noCache: true,
-          istab: true,
-          code: 'FINANCE_RECLIST6'
-        }
-      }, {
-        path: '/finance/accountsReceivable/handleFee',
-        icon: 'QQ',
-        name: '操作费核销',
-        component: _import('finance/accountsReceivable/handleFee'),
-        meta: {
-          role: ['admin'],
-          ptitle: '应收账款',
-          title: '操作费核销',
-          noCache: true,
-          istab: true,
-          'code': 'PAY_HANDLING_REC'
-        }
-      }]
+      path: '/finance/accountsReceivable/receipt',
+      icon: 'QQ',
+      name: '回单付',
+      component: _import('finance/accountsReceivable/receipt'),
+      meta: {
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '回单付',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST4'
+      }
+    }, {
+      path: '/finance/accountsReceivable/month',
+      icon: 'QQ',
+      name: '月结',
+      component: _import('finance/accountsReceivable/month'),
+      meta: {
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '月结',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST5'
+      }
+    }, {
+      path: '/finance/accountsReceivable/abnormal',
+      icon: 'QQ',
+      name: '应收异动费用',
+      component: _import('finance/accountsReceivable/abnormal'),
+      meta: {
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '异动费用',
+        noCache: true,
+        istab: true,
+        code: 'FINANCE_RECLIST6'
+      }
+    }, {
+      path: '/finance/accountsReceivable/handleFee',
+      icon: 'QQ',
+      name: '操作费核销',
+      component: _import('finance/accountsReceivable/handleFee'),
+      meta: {
+        role: ['admin'],
+        ptitle: '应收账款',
+        title: '操作费核销',
+        noCache: true,
+        istab: true,
+        'code': 'PAY_HANDLING_REC'
+      }
+    }]
   }, {
     path: '/finance/accountsPayable',
     icon: 'caiwugl2_yingfu',
@@ -159,246 +159,246 @@ export default {
       name: '运单核销',
       component: _import('finance/accountsPayable/waybill/index'),
       meta: {
-          role: ['admin'],
-          title: '运单核销',
-          noCache: false,
-          code: 'PAY_SHIP'
-        },
+        role: ['admin'],
+        title: '运单核销',
+        noCache: false,
+        code: 'PAY_SHIP'
+      },
       children: [{
-          path: '/finance/accountsPayable/waybill/kickback',
-          icon: 'QQ',
-          name: '回扣',
-          component: _import('finance/accountsPayable/waybill/kickback'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '回扣',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST1'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/transfer',
-          icon: 'QQ',
-          name: '中转费',
-          component: _import('finance/accountsPayable/waybill/transfer'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '中转费',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST2'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/ticket',
-          icon: 'QQ',
-          name: '实际提货费',
-          component: _import('finance/accountsPayable/waybill/ticket'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '实际提货费',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST3'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/unusual',
-          icon: 'QQ',
-          name: '异动费用',
-          component: _import('finance/accountsPayable/waybill/unusual'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '异动费用',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST4'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/abnormal',
-          icon: 'QQ',
-          name: '异常理赔',
-          component: _import('finance/accountsPayable/waybill/abnormal'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '异常理赔',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST5'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/other',
-          icon: 'QQ',
-          name: '其他费用支出',
-          component: _import('finance/accountsPayable/waybill/other'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '其他费用支出',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST6'
-          }
-        }, {
-          path: '/finance/accountsPayable/waybill/terminal',
-          icon: 'QQ',
-          name: '终端送货费',
-          component: _import('finance/accountsPayable/waybill/terminal'),
-          meta: {
-            role: ['admin'],
-            ptitle: '运单核销',
-            title: '终端送货费',
-            noCache: true,
-            istab: true,
-            code: 'SHIP_PAYLIST7'
-          }
-        }]
-    }, {
-        path: '/finance/accountsPayable/batch',
-        redirect: '/finance/accountsPayable/batch/short',
+        path: '/finance/accountsPayable/waybill/kickback',
         icon: 'QQ',
-        name: '车费核销',
-        component: _import('finance/accountsPayable/batch/index'),
+        name: '回扣',
+        component: _import('finance/accountsPayable/waybill/kickback'),
         meta: {
           role: ['admin'],
-          title: '车费核销',
-          noCache: false,
-          'code': 'PAY_LOAD'
-        },
-        children: [{
-          path: '/finance/accountsPayable/batch/short',
-          icon: 'QQ',
-          name: '短驳费',
-          component: _import('finance/accountsPayable/batch/short'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '短驳费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST1'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/deliver',
-          icon: 'QQ',
-          name: '送货费',
-          component: _import('finance/accountsPayable/batch/deliver'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '送货费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST2'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/truckAll',
-          icon: 'QQ',
-          name: '发车汇总',
-          component: _import('finance/accountsPayable/batch/truckAll'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '发车汇总',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST3'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/arrivalAll',
-          icon: 'QQ',
-          name: '到车汇总',
-          component: _import('finance/accountsPayable/batch/arrivalAll'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '到车汇总',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST4'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/insurance',
-          icon: 'QQ',
-          name: '整车保险费',
-          component: _import('finance/accountsPayable/batch/insurance'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '整车保险费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST5'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/stationLoad',
-          icon: 'QQ',
-          name: '发站装卸费',
-          component: _import('finance/accountsPayable/batch/stationLoad'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '发站装卸费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST6'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/stationOther',
-          icon: 'QQ',
-          name: '发站其他费',
-          component: _import('finance/accountsPayable/batch/stationOther'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '发站其他费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST7'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/arriveLoad',
-          icon: 'QQ',
-          name: '到站装卸费',
-          component: _import('finance/accountsPayable/batch/arriveLoad'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '到站装卸费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST8'
-          }
-        }, {
-          path: '/finance/accountsPayable/batch/arrivalOther',
-          icon: 'QQ',
-          name: '到站其他费',
-          component: _import('finance/accountsPayable/batch/arriveOther'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费核销',
-            title: '到站其他费',
-            noCache: true,
-            istab: true,
-            code: 'PAY_LOADLIST9'
-          }
-        }]
+          ptitle: '运单核销',
+          title: '回扣',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST1'
+        }
       }, {
-        path: '/finance/accountsLoad',
+        path: '/finance/accountsPayable/waybill/transfer',
         icon: 'QQ',
-        hidden: true,
-        name: 'accountsLoad',
-        component: _import('finance/accountsLoad/index'),
+        name: '中转费',
+        component: _import('finance/accountsPayable/waybill/transfer'),
         meta: {
           role: ['admin'],
-          title: '账款核销',
-          noCache: false,
-          istab: true
+          ptitle: '运单核销',
+          title: '中转费',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST2'
+        }
+      }, {
+        path: '/finance/accountsPayable/waybill/ticket',
+        icon: 'QQ',
+        name: '实际提货费',
+        component: _import('finance/accountsPayable/waybill/ticket'),
+        meta: {
+          role: ['admin'],
+          ptitle: '运单核销',
+          title: '实际提货费',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST3'
+        }
+      }, {
+        path: '/finance/accountsPayable/waybill/unusual',
+        icon: 'QQ',
+        name: '异动费用',
+        component: _import('finance/accountsPayable/waybill/unusual'),
+        meta: {
+          role: ['admin'],
+          ptitle: '运单核销',
+          title: '异动费用',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST4'
+        }
+      }, {
+        path: '/finance/accountsPayable/waybill/abnormal',
+        icon: 'QQ',
+        name: '异常理赔',
+        component: _import('finance/accountsPayable/waybill/abnormal'),
+        meta: {
+          role: ['admin'],
+          ptitle: '运单核销',
+          title: '异常理赔',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST5'
+        }
+      }, {
+        path: '/finance/accountsPayable/waybill/other',
+        icon: 'QQ',
+        name: '其他费用支出',
+        component: _import('finance/accountsPayable/waybill/other'),
+        meta: {
+          role: ['admin'],
+          ptitle: '运单核销',
+          title: '其他费用支出',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST6'
+        }
+      }, {
+        path: '/finance/accountsPayable/waybill/terminal',
+        icon: 'QQ',
+        name: '终端送货费',
+        component: _import('finance/accountsPayable/waybill/terminal'),
+        meta: {
+          role: ['admin'],
+          ptitle: '运单核销',
+          title: '终端送货费',
+          noCache: true,
+          istab: true,
+          code: 'SHIP_PAYLIST7'
         }
       }]
+    }, {
+      path: '/finance/accountsPayable/batch',
+      redirect: '/finance/accountsPayable/batch/short',
+      icon: 'QQ',
+      name: '车费核销',
+      component: _import('finance/accountsPayable/batch/index'),
+      meta: {
+        role: ['admin'],
+        title: '车费核销',
+        noCache: false,
+        'code': 'PAY_LOAD'
+      },
+      children: [{
+        path: '/finance/accountsPayable/batch/short',
+        icon: 'QQ',
+        name: '短驳费',
+        component: _import('finance/accountsPayable/batch/short'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '短驳费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST1'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/deliver',
+        icon: 'QQ',
+        name: '送货费',
+        component: _import('finance/accountsPayable/batch/deliver'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '送货费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST2'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/truckAll',
+        icon: 'QQ',
+        name: '发车汇总',
+        component: _import('finance/accountsPayable/batch/truckAll'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '发车汇总',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST3'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/arrivalAll',
+        icon: 'QQ',
+        name: '到车汇总',
+        component: _import('finance/accountsPayable/batch/arrivalAll'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '到车汇总',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST4'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/insurance',
+        icon: 'QQ',
+        name: '整车保险费',
+        component: _import('finance/accountsPayable/batch/insurance'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '整车保险费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST5'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/stationLoad',
+        icon: 'QQ',
+        name: '发站装卸费',
+        component: _import('finance/accountsPayable/batch/stationLoad'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '发站装卸费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST6'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/stationOther',
+        icon: 'QQ',
+        name: '发站其他费',
+        component: _import('finance/accountsPayable/batch/stationOther'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '发站其他费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST7'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/arriveLoad',
+        icon: 'QQ',
+        name: '到站装卸费',
+        component: _import('finance/accountsPayable/batch/arriveLoad'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '到站装卸费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST8'
+        }
+      }, {
+        path: '/finance/accountsPayable/batch/arrivalOther',
+        icon: 'QQ',
+        name: '到站其他费',
+        component: _import('finance/accountsPayable/batch/arriveOther'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费核销',
+          title: '到站其他费',
+          noCache: true,
+          istab: true,
+          code: 'PAY_LOADLIST9'
+        }
+      }]
+    }, {
+      path: '/finance/accountsLoad',
+      icon: 'QQ',
+      hidden: true,
+      name: 'accountsLoad',
+      component: _import('finance/accountsLoad/index'),
+      meta: {
+        role: ['admin'],
+        title: '账款核销',
+        noCache: false,
+        istab: true
+      }
+    }]
   }, {
     path: '/finance/financeDaily',
     icon: 'caiwugl5_zijinls',
@@ -418,12 +418,12 @@ export default {
     hidden: true,
     component: _import('finance/financeDaily/index'),
     meta: {
-        role: ['admin'],
-        title: '财务日记账明细',
-        'code': 'BILLRECORD_DETAIL',
-        stitle: '日记账',
-        noCache: false
-      }
+      role: ['admin'],
+      title: '财务日记账明细',
+      'code': 'BILLRECORD_DETAIL',
+      stitle: '日记账',
+      noCache: false
+    }
   },
     // {
     //   path: '/finance/settleLog',
@@ -494,51 +494,51 @@ export default {
       name: '车费对账',
       component: _import('finance/reconciliation/carfee/index'),
       meta: {
-          role: ['admin'],
-          title: '车费对账',
-          noCache: false,
-          code: 'FINANCE_CARFEE'
-        },
+        role: ['admin'],
+        title: '车费对账',
+        noCache: false,
+        code: 'FINANCE_CARFEE'
+      },
       children: [{
-          path: '/finance/reconciliation/carfee/shortDepart',
-          icon: 'QQ',
-          name: '短驳对账',
-          component: _import('finance/reconciliation/carfee/shortDepart'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费对账',
-            istab: true,
-            title: '短驳对账',
-            noCache: true,
-            code: 'FINANCE_CARFEE_SHORT'
-          }
-        }, {
-          path: '/finance/reconciliation/carfee/artery',
-          icon: 'QQ',
-          name: '干线对账',
-          component: _import('finance/reconciliation/carfee/artery'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费对账',
-            istab: true,
-            title: '干线对账',
-            noCache: true,
-            code: 'FINANCE_CARFEE_LINE'
-          }
-        }, {
-          path: '/finance/reconciliation/carfee/deliver',
-          icon: 'QQ',
-          name: '送货对账',
-          component: _import('finance/reconciliation/carfee/deliver'),
-          meta: {
-            role: ['admin'],
-            ptitle: '车费对账',
-            istab: true,
-            title: '送货对账',
-            noCache: true,
-            code: 'FINANCE_CARFEE_SEND'
-          }
-        }]
+        path: '/finance/reconciliation/carfee/shortDepart',
+        icon: 'QQ',
+        name: '短驳对账',
+        component: _import('finance/reconciliation/carfee/shortDepart'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费对账',
+          istab: true,
+          title: '短驳对账',
+          noCache: true,
+          code: 'FINANCE_CARFEE_SHORT'
+        }
+      }, {
+        path: '/finance/reconciliation/carfee/artery',
+        icon: 'QQ',
+        name: '干线对账',
+        component: _import('finance/reconciliation/carfee/artery'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费对账',
+          istab: true,
+          title: '干线对账',
+          noCache: true,
+          code: 'FINANCE_CARFEE_LINE'
+        }
+      }, {
+        path: '/finance/reconciliation/carfee/deliver',
+        icon: 'QQ',
+        name: '送货对账',
+        component: _import('finance/reconciliation/carfee/deliver'),
+        meta: {
+          role: ['admin'],
+          ptitle: '车费对账',
+          istab: true,
+          title: '送货对账',
+          noCache: true,
+          code: 'FINANCE_CARFEE_SEND'
+        }
+      }]
     }]
   }, {
     path: '/finance/unusual',
@@ -583,40 +583,40 @@ export default {
       name: '货款汇款',
       component: _import('finance/payment/send'),
       meta: {
-          role: ['admin'],
-          ptitle: '货款管理',
-          istab: true,
-          title: '货款汇款',
-          noCache: false,
-          code: 'FINANCE_AGENCYFUND2'
-        }
+        role: ['admin'],
+        ptitle: '货款管理',
+        istab: true,
+        title: '货款汇款',
+        noCache: false,
+        code: 'FINANCE_AGENCYFUND2'
+      }
     }, {
-        path: '/finance/payment/accept',
-        icon: 'QQ',
-        name: '货款到账',
-        component: _import('finance/payment/accept'),
-        meta: {
-          role: ['admin'],
-          ptitle: '货款管理',
-          istab: true,
-          title: '货款到账',
-          noCache: false,
-          code: 'FINANCE_AGENCYFUND3'
-        }
-      }, {
-        path: '/finance/payment/grant',
-        icon: 'QQ',
-        name: '货款发放',
-        component: _import('finance/payment/grant'),
-        meta: {
-          role: ['admin'],
-          ptitle: '货款管理',
-          istab: true,
-          title: '货款发放',
-          noCache: false,
-          code: 'FINANCE_AGENCYFUND4'
-        }
-      }]
+      path: '/finance/payment/accept',
+      icon: 'QQ',
+      name: '货款到账',
+      component: _import('finance/payment/accept'),
+      meta: {
+        role: ['admin'],
+        ptitle: '货款管理',
+        istab: true,
+        title: '货款到账',
+        noCache: false,
+        code: 'FINANCE_AGENCYFUND3'
+      }
+    }, {
+      path: '/finance/payment/grant',
+      icon: 'QQ',
+      name: '货款发放',
+      component: _import('finance/payment/grant'),
+      meta: {
+        role: ['admin'],
+        ptitle: '货款管理',
+        istab: true,
+        title: '货款发放',
+        noCache: false,
+        code: 'FINANCE_AGENCYFUND4'
+      }
+    }]
   }, {
     path: '/finance/handAccount',
     icon: 'caiwugl4_yuangongjz',
@@ -636,48 +636,48 @@ export default {
     name: 'handAccountDetail',
     component: _import('finance/handAccount/detail'),
     meta: {
-        role: ['admin'],
-        title: '交账明细',
-        noCache: false,
-        code: 'FINANCE_ACCOUNT'
-      }
+      role: ['admin'],
+      title: '交账明细',
+      noCache: false,
+      code: 'FINANCE_ACCOUNT'
+    }
   }, {
-      path: '/finance/accountsLoadReceivable',
-      icon: 'QQ',
-      hidden: true,
-      name: 'accountsLoadReceivable',
-      component: _import('finance/accountsLoadReceivable/index'),
-      meta: {
-        role: ['admin'],
-        title: '账款核销',
-        noCache: true,
-        code: 'FINANCE_REC'
-      }
-    }, {
-      path: '/finance/financeDailyIncome',
-      icon: 'caiwugl5_zijinls',
-      hidden: true,
-      name: 'financeDailyIncome',
-      component: _import('finance/financeDailyIncome/index'),
-      meta: {
-        role: ['admin'],
-        title: '记收入',
-        noCache: false,
-        code: 'BILLRECORD_SMART_VERIFY'
-      }
-    }, {
-      path: '/finance/financeDailyExpanditure',
-      icon: 'caiwugl5_zijinls',
-      hidden: true,
-      name: 'settleLogExpandtiure',
-      component: _import('finance/financeDailyExpanditure/index'),
-      meta: {
-        role: ['admin'],
-        title: '记支出',
-        noCache: false,
-        code: 'BILLRECORD_SMART_VERIFY'
-      }
-    },
+    path: '/finance/accountsLoadReceivable',
+    icon: 'QQ',
+    hidden: true,
+    name: 'accountsLoadReceivable',
+    component: _import('finance/accountsLoadReceivable/index'),
+    meta: {
+      role: ['admin'],
+      title: '账款核销',
+      noCache: true,
+      code: 'FINANCE_REC'
+    }
+  }, {
+    path: '/finance/financeDailyIncome',
+    icon: 'caiwugl5_zijinls',
+    hidden: true,
+    name: 'financeDailyIncome',
+    component: _import('finance/financeDailyIncome/index'),
+    meta: {
+      role: ['admin'],
+      title: '记收入',
+      noCache: false,
+      code: 'BILLRECORD_SMART_VERIFY'
+    }
+  }, {
+    path: '/finance/financeDailyExpanditure',
+    icon: 'caiwugl5_zijinls',
+    hidden: true,
+    name: 'settleLogExpandtiure',
+    component: _import('finance/financeDailyExpanditure/index'),
+    meta: {
+      role: ['admin'],
+      title: '记支出',
+      noCache: false,
+      code: 'BILLRECORD_SMART_VERIFY'
+    }
+  },
     // {
     //   path: '/finance/settleLogIncome',
     //   icon: 'caiwugl5_zijinls',
