@@ -1584,10 +1584,12 @@ export default {
       }
       return new Promise((resolve, reject) => {
         if (this._renderModel) {
+          console.log('2222222222222222222')
           fn()
           resolve()
         } else {
           this.fetchModel().then(() => {
+            console.log('333333333333333')
             this._renderModel = true
             fn()
             resolve()
@@ -1632,6 +1634,7 @@ export default {
         obj = this.$refs['tmsOrderShipshipSn']
       }
       if (obj && this.output.iscreate) {
+        console.log('11111111111111111111')
         obj.focus()
       }
     },
@@ -1848,7 +1851,9 @@ export default {
         }
         if (whereAreYou === 'isSaveAndNew') {
           this.output.iscreate = true
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder?tab=创建运单')
+          if (!this.ispop) {
+            this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder?tab=创建运单')
+          }
           this.initCreate()
         } else if (param.orderid) {
           this.output.orderid = param.orderid
