@@ -17,6 +17,10 @@ import {
   getPrintSetting
 } from '@/api/operation/print'
 
+import {
+  Message
+} from 'element-ui'
+
 // import ExportJsonExcel from 'js-export-excel'
 //  const ExportJsonExcel = require('js-export-excel')
 //  const ExportJsonExcel = require('./excel')
@@ -338,16 +342,23 @@ export function PrintInFullPage(obj) {
       // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
       // 如果有type就是配载单，否则就是清单
+      let inventoryPrinter = user.systemSetup.printSetting.inventory || ''
       if (obj.type) {
         if (printObj.printer) {
           console.log('配载单打印机:', printObj.printer)
           LODOP.SET_PRINTER_INDEXA(printObj.printer)
+        } else {
+          console.log('配载单打印机:（没有设置配载单打印机时）', inventoryPrinter)
+          // if (inventoryPrinter) {
+          // Message.warning('请到系统设置页面，设置配载单打印机，本次默认使用清单打印机')
+          LODOP.SET_PRINTER_INDEXA(inventoryPrinter)
+          // } else {
+          // Message.warning('请到系统设置页面，设置配载单默认打印机')
+          // }
         }
       } else {
-        console.log('清单打印机:', user.systemSetup.printSetting.inventory)
-        if (user.systemSetup.printSetting.inventory) {
-          LODOP.SET_PRINTER_INDEXA(user.systemSetup.printSetting.inventory)
-        }
+        console.log('清单打印机:', inventoryPrinter)
+        LODOP.SET_PRINTER_INDEXA(inventoryPrinter)
       }
 
 

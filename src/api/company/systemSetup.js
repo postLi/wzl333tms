@@ -32,6 +32,7 @@ export function getAllSetting(params) {
       CACHE.set('AllSetting' + params.module + '_update', false)
       CACHE.set('AllSetting' + params.module, res.data)
       let sysinfo = getUserInfo()
+      sysinfo.systemSetup = sysinfo.systemSetup || {}
       let data = res.data || {}
       if (params.module == 'order') {
         for (let i in data) {

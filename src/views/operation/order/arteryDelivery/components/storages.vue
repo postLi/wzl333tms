@@ -687,6 +687,11 @@ export default {
         prop: 'cargoName',
         width: '100',
         fixed: false
+      },{
+        label: '包装',
+        prop: 'cargoPack',
+        width: '120',
+        fixed: false
       }, {
         label: '货号',
         prop: 'shipGoodsSn',

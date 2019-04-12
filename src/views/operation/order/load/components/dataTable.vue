@@ -53,6 +53,8 @@
         </el-table-column>
         <el-table-column prop="cargoName" sortable label="货品名" width="140">
         </el-table-column>
+        <el-table-column prop="cargoPack" sortable label="包装" width="140">
+        </el-table-column>
         <el-table-column prop="repertoryAmount" sortable label="库存件数" width="120">
         </el-table-column>
         <el-table-column prop="repertoryWeight" sortable label="库存重量(千克)" width="140">
@@ -133,6 +135,8 @@
         <el-table-column prop="cargoWeight" sortable label="运单重量(千克)" width="120">
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="运单体积(方)" width="120">
+        </el-table-column>
+        <el-table-column prop="cargoPack" sortable label="包装" width="140">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">
