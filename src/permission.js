@@ -63,7 +63,10 @@ router.beforeEach((to, from, next) => {
             })
           })
         }).catch((err) => {
-          Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+          if (err.text || err.errInfo) {
+            Message.error('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
+            console.log('错误：', JSON.stringify(err))
+          }
           // console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           // 如果在登录页面时，因为跳转到的还是/login页，会导致右上角一直在转动加载条

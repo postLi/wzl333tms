@@ -1,130 +1,37 @@
 <template>
   <div class="tab-content miniHeaderSearch" v-loading="loading">
-    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"/>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-circle-plus"
-          plain
-          @click="doAction('add')"
-          v-has:ORDER_MADD
-        >创建运单</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-edit"
-          @click="doAction('modify')"
-          plain
-          v-has:ORDER_MEDIT5
-        >运单修改</el-button>
-        <el-button
-          type="info"
-          :size="btnsize"
-          icon="el-icon-delete"
-          @click="doAction('cancel')"
-          plain
-          v-has:ORDER_MDEL2
-        >运单作废</el-button>
-        <el-button
-          type="danger"
-          :size="btnsize"
-          icon="el-icon-edit-outline"
-          @click="doAction('delete')"
-          plain
-          v-has:ORDER_MDEL
-        >运单删除</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-edit-outline"
-          @click="doAction('export')"
-          plain
-          v-has:ORDER_MEXP
-        >导出</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-edit-outline"
-          @click="doAction('print')"
-          plain
-          v-has:ORDER_MPRI
-        >打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-circle-plus" plain @click="doAction('add')" v-has:ORDER_MADD>创建运单</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit" @click="doAction('modify')" plain v-has:ORDER_MEDIT5>运单修改</el-button>
+        <el-button type="info" :size="btnsize" icon="el-icon-delete" @click="doAction('cancel')" plain v-has:ORDER_MDEL2>运单作废</el-button>
+        <el-button type="danger" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('delete')" plain v-has:ORDER_MDEL>运单删除</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('export')" plain v-has:ORDER_MEXP>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-edit-outline" @click="doAction('print')" plain v-has:ORDER_MPRI>打印</el-button>
         <span class="viewtip">双击查看详情</span>
-        <el-popover
-          @mouseenter.native="showSaveBox"
-          @mouseout.native="hideSaveBox"
-          placement="top"
-          width="160"
-          trigger="manual"
-          v-model="visible2"
-        >
+        <el-popover @mouseenter.native="showSaveBox" @mouseout.native="hideSaveBox" placement="top" width="160" trigger="manual" v-model="visible2">
           <p>表格宽度修改了，是否要保存？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
             <el-button type="primary" size="mini" @click="saveToTableSetup">确定</el-button>
           </div>
-          <el-button
-            slot="reference"
-            type="primary"
-            :size="btnsize"
-            icon="el-icon-setting"
-            plain
-            @click="setTable"
-            class="table_setup"
-          >表格设置</el-button>
+          <el-button slot="reference" type="primary" :size="btnsize" icon="el-icon-setting" plain @click="setTable" class="table_setup">表格设置</el-button>
         </el-popover>
       </div>
       <div @mouseover="showtip = true" @mouseout="showtip = false" class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :data="usersArr"
-          :key="tablekey"
-          stripe
-          border
-          @row-click="clickDetails"
-          @row-dblclick="showDetail"
-          @selection-change="getSelection"
-          @header-dragend="setTableWidth"
-          height="100%"
-          :summary-method="getSumLeft"
-          show-summary
-          tooltip-effect="dark"
-          :default-sort="{prop: 'id', order: 'ascending'}"
-          style="width: 100%"
-        >
+        <el-table ref="multipleTable" :data="usersArr" :key="tablekey" stripe border @row-click="clickDetails" @row-dblclick="showDetail" @selection-change="getSelection" @header-dragend="setTableWidth" height="100%" :summary-method="getSumLeft" show-summary tooltip-effect="dark" :default-sort="{prop: 'id', order: 'ascending'}" style="width: 100%">
           <el-table-column fixed sortable type="selection" width="60"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width"
-            >
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
               <template slot="header" slot-scope="scope">
-                <tableHeaderSearch
-                  :scope="scope"
-                  :query="searchQuery"
-                  @change="changeKey"
-                />
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              :prop="column.prop"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width"
-            >
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
               <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">
                 <div class="td-slot" v-html="column.slot(scope)"></div>
@@ -157,100 +64,55 @@
           </div>
           <div class="footer_item">
             <el-tag size="mini">现付:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.shipNowpayFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipNowpayFeeAll + ' 元'" placement="top">
               <i>{{countSum.shipNowpayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">到付:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.shipArrivepayFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipArrivepayFeeAll + ' 元'" placement="top">
               <i>{{countSum.shipArrivepayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">回单付:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipReceiptpayFeeAll + ' 元'" placement="top">
               <i>{{countSum.shipReceiptpayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">月结:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipMonthpayFeeAll + ' 元'" placement="top">
               <i>{{countSum.shipMonthpayFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">运费合计:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.shipTotalFeeAll + ' 元'" placement="top">
               <i>{{countSum.shipTotalFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">回扣:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.brokerageFeeAll + ' 元'" placement="top">
               <i>{{countSum.brokerageFeeAll}}元</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">件数:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoAmountAll + ' 件'" placement="top">
               <i>{{countSum.cargoAmountAll}}件</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">重量:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoWeightAll + ' kg'" placement="top">
               <i>{{countSum.cargoWeightAll}}kg</i>
             </el-tooltip>
           </div>
           <div class="footer_item">
             <el-tag size="mini">体积:</el-tag>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'"
-              placement="top"
-            >
+            <el-tooltip class="item" effect="dark" :content="'(全部总计)：'+countSum.cargoVolumeAll + ' 方'" placement="top">
               <i>{{countSum.cargoVolumeAll}}方</i>
             </el-tooltip>
           </div>
@@ -260,13 +122,7 @@
         </div>
       </div>
     </div>
-    <TableSetup
-      :popVisible="setupTableVisible"
-      @close="closeSetupTable"
-      :columns="tableColumn"
-      @success="setColumn"
-      code="ORDER_ALL"
-    />
+    <TableSetup :popVisible="setupTableVisible" @close="closeSetupTable" :columns="tableColumn" @success="setColumn" code="ORDER_ALL" />
   </div>
 </template>
 <script>
@@ -290,9 +146,9 @@ export default {
   computed: {
     ...mapGetters(['otherinfo']),
     orgid() {
-      return this.isModify
-        ? this.selectInfo.orgid
-        : this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify ?
+        this.selectInfo.orgid :
+        this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -339,8 +195,7 @@ export default {
       tablekey: '',
       thecode: '', // 用来设置tablesetup的code值
       columnWidthData: {},
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '序号',
           prop: 'number',
           width: '70',
@@ -395,9 +250,9 @@ export default {
           prop: 'shipEffectiveName',
           label: '时效',
           slot: function(scope) {
-            return scope.row.shipEffectiveName === '加急'
-              ? '<span class="red">加急</span>'
-              : scope.row.shipEffectiveName
+            return scope.row.shipEffectiveName === '加急' ?
+              '<span class="red">加急</span>' :
+              scope.row.shipEffectiveName
           }
         },
         {
@@ -485,11 +340,11 @@ export default {
           prop: 'status',
           width: '150',
           slot: function(scope) {
-            return scope.row.status === 1
-              ? '未放货'
-              : scope.row.status === 2
-              ? '已放货'
-              : '未控货'
+            return scope.row.status === 1 ?
+              '未放货' :
+              scope.row.status === 2 ?
+              '已放货' :
+              '未控货'
           }
         },
         {
@@ -861,8 +716,7 @@ export default {
     },
     doAction(type) {
       // 判断是否有选中项
-      if (
-        !this.selected.length &&
+      if (!this.selected.length &&
         type !== 'add' &&
         type !== 'export' &&
         type !== 'print'
@@ -883,7 +737,7 @@ export default {
           this.selectInfo = {}
           this.$router.push({ path: '/operation/order/createOrder' })
           break
-        // 修改运单信息
+          // 修改运单信息
         case 'modify':
           this.isModify = true
           var thelist = this.selected.filter(el => {
@@ -926,7 +780,7 @@ export default {
           }
 
           break
-        // 删除运单
+          // 删除运单
         case 'delete':
           if (this.selected.length > 1) {
             this.$message({
@@ -956,14 +810,13 @@ export default {
             if (canDelete) {
               var id = deleteItem[0].id
               this.$confirm(
-                '确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？',
-                '提示',
-                {
-                  confirmButtonText: '删除',
-                  cancelButtonText: '取消',
-                  type: 'warning'
-                }
-              )
+                  '确定要删除 ' + deleteItem[0].shipSn + ' 运单吗？',
+                  '提示', {
+                    confirmButtonText: '删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }
+                )
                 .then(() => {
                   orderManageApi
                     .deleteOrderInfoById(id)
@@ -977,8 +830,7 @@ export default {
                     .catch(err => {
                       this.$message({
                         type: 'info',
-                        message:
-                          '删除失败，原因：' + (err.text ? err.text : err)
+                        message: '删除失败，原因：' + (err.text ? err.text : err)
                       })
                     })
                 })
@@ -993,7 +845,7 @@ export default {
             }
           }
           break
-        // 作废运单
+          // 作废运单
         case 'cancel':
           if (this.selected.length > 1) {
             this.$message({
@@ -1024,14 +876,13 @@ export default {
               var theid = cancelItem[0].id
 
               this.$confirm(
-                '确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？',
-                '提示',
-                {
-                  confirmButtonText: '作废',
-                  cancelButtonText: '取消',
-                  type: 'warning'
-                }
-              )
+                  '确定要作废 ' + cancelItem[0].shipSn + ' 运单吗？',
+                  '提示', {
+                    confirmButtonText: '作废',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                  }
+                )
                 .then(() => {
                   orderManageApi
                     .deleteCancleOrderById(theid)
@@ -1061,7 +912,7 @@ export default {
           }
 
           break
-        // 导出数据
+          // 导出数据
         case 'export':
           SaveAsFile({
             data: this.selected.length ? this.selected : this.usersArr,
@@ -1073,8 +924,8 @@ export default {
           const obj = Object.assign({}, this.searchQuery)
           let appendTopStr = '<style>body{width: 100%;}</style>'
           appendTopStr += '<body width="100%"><table width="100%"><tr style="text-align:center;"><td style="font-size: 16px;">' +
-          (obj.vo.startTime || ' ') + ' ~ ' + (obj.vo.endTime || ' ') + ' 的全部运单列表' +
-          '</td></tr></table></body>'
+            (obj.vo.startTime || ' ') + ' ~ ' + (obj.vo.endTime || ' ') + ' 的全部运单列表' +
+            '</td></tr></table></body>'
           PrintInFullPage({
             data: this.selected.length ? this.selected : this.usersArr,
             columns: this.tableColumn,
@@ -1148,4 +999,5 @@ export default {
     }
   }
 }
+
 </script>

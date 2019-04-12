@@ -669,7 +669,6 @@ export function formatOrderData(info, type) {
   console.warn(infoDetail)
   // 公用
   obj.shipSn = infoDetail.shipSn // 运单号
-  obj.createTime = infoDetail.createTime // 开单日期
   obj.senderUnit = infoDetail.shipSenderUnit // 发货单位
   obj.senderName = infoDetail.shipSenderName // 发货人
   obj.senderMobile = infoDetail.shipSenderMobile // 发货电话
@@ -686,6 +685,7 @@ export function formatOrderData(info, type) {
 
   if (type === 'lib') {
     console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
+    obj.createTime = parseTime(infoDetail.createTime, '{y}-{m}-{d}') // 开单日期
     obj.customerSn = infoDetail.shipCustomerNumber // 客户单号
     obj.companyName = infoDetail.companyName || user.companyName // 公司名称
     obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
@@ -806,6 +806,7 @@ export function formatOrderData(info, type) {
         }
       }
     })
+    obj.createTime = infoDetail.createTime // 开单日期
     obj.createrName = infoDetail.createUserName || user.name || user.username // 开单员
     obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
     obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
