@@ -1234,6 +1234,17 @@ export default {
       // 设置城市名称
       this.fromCityName = data.tmsOrderShipInfo.shipFromCityName || ''
       this.toCityName = data.tmsOrderShipInfo.shipToCityName || ''
+
+      if (this.form.tmsOrderShipInfo.shipToCityName){
+        let tocityArr = this.form.tmsOrderShipInfo.shipToCityName.split(',')
+        this.form.tmsOrderShipInfo.shipToCityName = tocityArr[2] || tocityArr[1] || tocityArr[0] || ''
+      }
+
+       if (this.form.tmsOrderShipInfo.shipFromCityName){
+        let tofromArr = this.form.tmsOrderShipInfo.shipFromCityName.split(',')
+        this.form.tmsOrderShipInfo.shipFromCityName = tofromArr[2] || tofromArr[1] || tofromArr[0] || ''
+      }
+
       // this.fromCityName = this.fromCityName.replace(/,$/,'')
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList
