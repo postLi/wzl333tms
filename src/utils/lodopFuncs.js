@@ -155,7 +155,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -342,7 +342,7 @@ export function PrintInFullPage(obj) {
       // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
       // 如果有type就是配载单，否则就是清单
-      let inventoryPrinter = user.systemSetup.printSetting.inventory || ''
+      const inventoryPrinter = user.systemSetup.printSetting.inventory || ''
       if (obj.type) {
         if (printObj.printer) {
           console.log('配载单打印机:', printObj.printer)
@@ -360,7 +360,6 @@ export function PrintInFullPage(obj) {
         console.log('清单打印机:', inventoryPrinter)
         LODOP.SET_PRINTER_INDEXA(inventoryPrinter)
       }
-
 
       if (obj.appendTop) {
         obj.appendTop = obj.appendTop.replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_content}', printObj.heading_content).replace('{content_font_family}', "'" + fontFamily + "'").replace('{heading_word_size}', printObj.heading_word_size).replace('{content_word_size}', printObj.content_word_size)
@@ -662,8 +661,8 @@ export function formatOrderData(info, type) {
   infoDetail.cargoAmountTotal = 0 // 货品件数合计
   // infoDetail.brokerageFeeTotal = 0 // 回扣合计
   cargoList.forEach(e => { // 计算代收货款合计
-    infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
-    infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+    infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund || 0)
+    infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount || 0)
     // infoDetail.brokerageFeeTotal = tmsMath._add(infoDetail.brokerageFeeTotal, e.brokerageFee)
   })
   console.warn(infoDetail)
@@ -836,7 +835,7 @@ export function formatOrderData(info, type) {
     let totalTransferFee = 0
     if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
       tmsOrderTransferList.forEach(e => {
-        totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+        totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost || 0)
       })
     }
     obj.transferFee = parseFloat(totalTransferFee) || '' // 中转费
@@ -1167,9 +1166,9 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
         reject()
       }
     } catch (err) {
-      reject('LODOP加载失败')
-      console.log(err)
+      console.log('LODOP加载失败', err)
       getLodop()
+      reject('LODOP加载失败')
     }
   })
 }
