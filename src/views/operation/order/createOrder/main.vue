@@ -26,7 +26,7 @@
           </el-date-picker>
       </span></div>
         </div>
-        <div class="order-main model-order-list" v-if="orderModelShow">
+        <div ref="orderMainPaper" class="order-main model-order-list" v-if="orderModelShow">
           <!-- 网点信息 -->
           <el-row class="firstline-order model-order-item" :data-index="m_index.tmsOrderShipTop">
             <el-col :span="4" v-for="(mitem, mindex) in modelList" :key="mindex" v-if="mitem.templateType === 'tmsOrderShipTop' && mitem.hide">
@@ -1202,10 +1202,8 @@ export default {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
-      console.warn('开单页面的 route, to, from', to, from)
       if (from.query.type && from.query.type === 'modify' && from.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
         // 1 如果从改单页面进入
-        console.log('1 如果从改单页面进入', to, from)
         this.initIndex()
       }
       if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
@@ -1296,6 +1294,7 @@ export default {
     },
     setModel() {
       // 重新修改开单页面的模板
+      
       this.eventBus.$emit('refreshKey')
       // this.$parent.$parent.$parent.refreshKey()
       // this.fetchModel().then(() => {
@@ -1411,6 +1410,7 @@ export default {
     // 其它基础部分
     // 查找当前表单所有存在的input元素
     goNextInput(e) {
+      console.log('e',e)
       const ele = e.srcElement
       const index = this.inputEles.indexOf(ele)
       const nextEle = this.findNextInput(39, index)
@@ -1423,7 +1423,10 @@ export default {
       }
     },
     findAllInput() {
-      const eles = Array.prototype.slice.call(document.querySelectorAll('.order-main input'))
+      // console.log('orderMainPaper', orderMainPaper, Array.prototype.slice.call(orderMainPaper.querySelectorAll('input')))
+      // const eles = Array.prototype.slice.call(document.querySelectorAll('.order-main input'))
+      const eles = Array.prototype.slice.call(this.$refs.orderMainPaper.querySelectorAll('input'))
+     
       // 过滤掉fixed表格中的选项（当且仅当fixed中没有展示的input框时显示正确）
       // 如果有input框是fixed显示，则其被显示的顺序会有问题
       this.inputEles = eles.filter(el => {
@@ -1455,17 +1458,21 @@ export default {
       this.isbindtab = true
       // closest(ele, '.order-main')
       const doc = document
-      const parentEle = doc.querySelector('.order-main')
-      this.findAllInput()
+      // const parentEle = doc.querySelector('.order-main')
+      const parentEle = this.$refs.orderMainPaper
+      // this.findAllInput()
       if (!parentEle) {
         console.log('errorr parentEle:', parentEle)
         return false
       }
+      this.findAllInput()
       parentEle.addEventListener('keydown', (e) => {
+        console.log('keydown', e)
         const ele = e.target || e.srcElement
         // 如果是左右按键，则屏蔽其默认事件以及禁止冒泡
         // 当前触发元素为input且非button时
         if (ele.nodeName === 'INPUT' && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 13)) {
+          this.findAllInput()
           const index = this.inputEles.indexOf(ele)
           const nextEle = this.findNextInput(e.keyCode, index)
           console.log('nextEle:', index, ele, nextEle, this.inputEles.length, this.inputEles)
@@ -1529,7 +1536,6 @@ export default {
         console.warn('config=========', this.config)
         // 获取费用设置
         this.feeConfig = dataArr[1] || []
-        console.warn('feeConfig===========', this.feeConfig)
         // 获取个人设置
         this.personConfig = dataArr[2] || {}
         // 获取后台时间
@@ -1538,6 +1544,7 @@ export default {
         this.orgInfo = dataArr[4] || {}
         // 获取上一次的开单信息
         this.lastOrderInfo = dataArr[5] ? dataArr[5].data : {}
+        // this.isbindtab = false
         console.log('get INIT Infomation::', dataArr)
       }).catch((err) => {
         this.loading = false
@@ -1579,15 +1586,14 @@ export default {
             _this.bindTabWithArrow()
           }
         }, 1000)
+        console.warn('_this.isbindtab', this.isbindtab)
       }
       return new Promise((resolve, reject) => {
         if (this._renderModel) {
-          console.log('2222222222222222222')
           fn()
           resolve()
         } else {
           this.fetchModel().then(() => {
-            console.log('333333333333333')
             this._renderModel = true
             fn()
             resolve()
@@ -1632,8 +1638,9 @@ export default {
         obj = this.$refs['tmsOrderShipshipSn']
       }
       if (obj && this.output.iscreate) {
-        console.log('11111111111111111111')
-        obj.focus()
+        setTimeout(()=>{
+          obj.focus()
+        }, 200)
       }
     },
     // 设置货号规则
@@ -2379,6 +2386,7 @@ export default {
     },
     // 修改货品列表
     changeFee(index, name, event) {
+      console.log('changeFee 修改货品列表',index, name)
       this.form.cargoList[index][name] = event.target.value
 
       if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
@@ -2386,7 +2394,8 @@ export default {
       }
       // 修改保险费与声明价值
       // 如果有设置
-      if (/(insuranceFee|productPrice)/.test(name)) {
+      // if (/(insuranceFee|productPrice)/.test(name)) {
+      if (/(productPrice)/.test(name)) {
         const cfg = this.config.shipPageFunc
         if (cfg.insurancePremiumIsDeclaredValue) {
           const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 1000)

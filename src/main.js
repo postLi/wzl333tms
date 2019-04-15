@@ -6,7 +6,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import '@/icons' // icon
-import './errorLog'// error
+import './errorLog' // error
 import '@/permission' // permission
 import * as $const from './utils/constant'
 // import * as $lodop from './utils/LodopFuncs'
@@ -49,12 +49,12 @@ import tableHeaderSearch from '@/components/tableHeaderSearch/index'
 Vue.use(tableHeaderSearch)
 
 Vue.prototype.$echarts = echarts
-
+console.log('ElementUI:', ElementUI)
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 
 if (process.env.NODE_ENV !== 'production') {
-  Vue.config.performance = true
+	Vue.config.performance = true
 }
 Vue.config.productionTip = false
 Vue.prototype.$const = $const
@@ -63,13 +63,15 @@ Vue.prototype.$md5 = md5
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
+	Vue.filter(key, filters[key])
 })
 
 new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: { App }
+	el: '#app',
+	router,
+	store,
+	template: '<App/>',
+	components: {
+		App
+	}
 })
