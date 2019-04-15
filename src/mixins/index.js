@@ -102,7 +102,22 @@ Vue.mixin({
     _handlerCatchMsg(err, premsg = '') {
       handleErrorMsg(err, premsg)
     },
-    _checkExperience(row, type) {
+    _processSearch(obj, callback) {
+      // queryString 输入框值
+      // nextTime 时间值
+      obj.nextTime = obj.nextTime || 300
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      if (obj.queryString) {
+        this.timer = setTimeout(() => {
+          callback()
+        }, obj.nextTime)
+      } else {
+        callback()
+      }
+    },
+    _checkExperience(row, type) { // 判断是否体验账号
       let isUser = type === 'username'
       // 判断当前环境是否体验环境
       let flag = false // true-体验环境 false-非体验环境， 默认非体验环境

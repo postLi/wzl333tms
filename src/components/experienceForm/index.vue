@@ -44,7 +44,9 @@
         </el-col>
       </el-row>
       <el-row :gutter="12" class="tms_experience_picture">
-        <el-col :span="24"><p class="upload-title">上传证件</p></el-col>
+        <el-col :span="24">
+          <p class="upload-title">上传证件</p>
+        </el-col>
         <el-col :span="16">
           <el-form-item>
             <upload twocode tip="（有年检章，jpg/png。小于5M）" v-model="formModel.checkChapterYear" class="checkChapterYear" />
@@ -153,12 +155,21 @@ export default {
           this.changeLogin(query)
         })
         .catch(err => {
-          if (sessionStorage.getItem('TMS_experience_system') === 'yes') {
-            sessionStorage.setItem('TMS_experience_system', 'no')
-          }
-          location.href = '/'
           this._handlerCatchMsg(err)
+          setTimeout(() => {
+            if (sessionStorage.getItem('TMS_experience_system') === 'yes') {
+              sessionStorage.setItem('TMS_experience_system', 'no')
+              this.logout()
+            }
+          }, 1000)
         })
+    },
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload() // 为了重新实例化vue-router对象 避免bug
+      }).catch((err) => {
+        location.reload()
+      })
     },
     changeLogin(query) {
       this.$store.dispatch('Login', query).then(() => {
@@ -205,7 +216,7 @@ export default {
     .el-dialog__footer {
       padding: 20px;
       background-color: #E6E6E6;
-      .el-button{
+      .el-button {
         width: 120px;
         height: 48px;
       }
@@ -215,7 +226,7 @@ export default {
     .el-form-item {
       display: flex;
       flex-direction: row;
-    .el-form-item__content {
+      .el-form-item__content {
         width: 100%;
         margin-left: 11px;
       }
@@ -227,7 +238,7 @@ export default {
       width: 100%;
     }
   }
-  .el-form-item{
+  .el-form-item {
     margin-bottom: 15px;
     width: 100%;
     .el-input.is-disabled .el-input__inner {
@@ -235,9 +246,9 @@ export default {
       color: #333333;
     }
   }
-  
+
   .tms_experience_picture {
-    .upload-title{
+    .upload-title {
       font-size: 18px;
       margin: 20px 0;
       padding: 0;

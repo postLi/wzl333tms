@@ -108,6 +108,14 @@ export const APPORTION_TYPE_DESCRIPT = {
   45: '(运单 - 回扣）/（总车费 - 总回扣）* 操作费'
 }
 /**
+ * 体验网点
+ */
+export const EXPERIENCE_USERNAME = ['tiyangz1', 'tiyangz2', 'tiyangz3', 'tiyanwh3', 'tiyanwh2', 'tiyanwh3', 'tiyancd1', 'tiyancd2', 'tiyancd3']
+/**
+ * 体验账号
+ */
+export const EXPERIENCE_NETWORK = ['广州网点', '武汉网点', '成都网点']
+/**
  * 常用打印字体列表
  */
 export const PRINT_FONT = ['宋体', '黑体', '幼圆', '方正姚体', '楷体', '隶书', '微软雅黑', 'Serif', 'Arial']

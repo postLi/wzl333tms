@@ -2,100 +2,32 @@
   <!-- 回扣 -->
   <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
-    <SearchForm
-      :orgid="otherinfo.orgid"
-      @change="getSearchParam"
-      :btnsize="btnsize"
-      :isReceivable="true"
-    ></SearchForm>
+    <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" :isReceivable="true"></SearchForm>
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-sort"
-          v-has:REC_SET1
-          @click="doAction('count')"
-          plain
-          v-has:HANDLING_PAY1
-        >核销</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-printer"
-          @click="doAction('print')"
-          plain
-          v-has:HANDLING_PRINT1
-        >打印</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-download"
-          @click="doAction('export')"
-          plain
-          v-has:HANDLING_EXPORT1
-        >导出</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-setting"
-          @click="setTable"
-          class="table_setup"
-          plain
-        >表格设置</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" v-has:REC_SET1 @click="doAction('count')" plain v-has:HANDLING_PAY1>核销</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:HANDLING_PRINT1>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:HANDLING_EXPORT1>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :key="tablekey"
-          :data="dataList"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          style="width:100%;"
-          :show-summary="true"
-          :summary-method="getSummaries"
-        >
+        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :show-summary="true" :summary-method="getSummaries">
           <el-table-column fixed sortable type="selection" width="80"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              :prop="column.prop"
-              v-if="!column.slot"
-              :width="column.width"
-            >
-             <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" :prop="column.prop" v-if="!column.slot" :width="column.width">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-            <el-table-column
-              :key="column.id"
-              :fixed="column.fixed"
-              sortable
-              :label="column.label"
-              v-else
-              :width="column.width"
-              :prop="column.prop"
-            >
-             <template slot="header" slot-scope="scope">
-                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
+            <el-table-column :key="column.id" :fixed="column.fixed" sortable :label="column.label" v-else :width="column.width" :prop="column.prop">
+              <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
               </template>
               <template slot-scope="scope">
-                <span
-                  class="clickitem"
-                  v-if="column.click"
-                  v-html="column.slot(scope)"
-                  @click.stop="column.click(scope)"
-                ></span>
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
@@ -107,16 +39,11 @@
     <div class="info_tab_footer">
       共计:{{ total }}
       <div class="show_pager">
-        <Pager :total="total" @change="handlePageChange"/>
+        <Pager :total="total" @change="handlePageChange" />
       </div>
     </div>
     <!-- 表格设置弹出框 -->
-    <TableSetup
-      :popVisible="setupTableVisible"
-      :columns="tableColumn"
-      @close="closeSetupTable"
-      @success="setColumn"
-    ></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
   </div>
 </template>
 <script>
@@ -151,8 +78,7 @@ export default {
       dataList: [],
       loading: true,
       setupTableVisible: false,
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '序号',
           prop: 'number',
           width: '70',
@@ -391,20 +317,18 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data:
-              this.selectedDataList.length > 0
-                ? this.selectedDataList
-                : this.dataList,
+            data: this.selectedDataList.length > 0 ?
+              this.selectedDataList :
+              this.dataList,
             columns: this.tableColumn,
             name: '操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data:
-              this.selectedDataList.length > 0
-                ? this.selectedDataList
-                : this.dataList,
+            data: this.selectedDataList.length > 0 ?
+              this.selectedDataList :
+              this.dataList,
             columns: this.tableColumn,
             name: '操作费核销'
           })
@@ -448,4 +372,5 @@ export default {
     }
   }
 }
+
 </script>

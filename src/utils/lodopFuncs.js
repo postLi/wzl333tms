@@ -17,6 +17,10 @@ import {
   getPrintSetting
 } from '@/api/operation/print'
 
+import {
+  Message
+} from 'element-ui'
+
 // import ExportJsonExcel from 'js-export-excel'
 //  const ExportJsonExcel = require('js-export-excel')
 //  const ExportJsonExcel = require('./excel')
@@ -151,7 +155,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -337,8 +341,24 @@ export function PrintInFullPage(obj) {
       LODOP.SET_PRINT_MODE('POS_BASEON_PAPER', true) // 设置以纸张边缘为基点
       // LODOP.ADD_PRINT_TEXT(50, 231, 260, 39, "打印页面部分内容");
 
-      if (printObj.printer) {
-        LODOP.SET_PRINTER_INDEXA(printObj.printer)
+      // 如果有type就是配载单，否则就是清单
+      const inventoryPrinter = user.systemSetup.printSetting.inventory || ''
+      if (obj.type) {
+        if (printObj.printer) {
+          console.log('配载单打印机:', printObj.printer)
+          LODOP.SET_PRINTER_INDEXA(printObj.printer)
+        } else {
+          console.log('配载单打印机:（没有设置配载单打印机时）', inventoryPrinter)
+          // if (inventoryPrinter) {
+          // Message.warning('请到系统设置页面，设置配载单打印机，本次默认使用清单打印机')
+          LODOP.SET_PRINTER_INDEXA(inventoryPrinter)
+          // } else {
+          // Message.warning('请到系统设置页面，设置配载单默认打印机')
+          // }
+        }
+      } else {
+        console.log('清单打印机:', inventoryPrinter)
+        LODOP.SET_PRINTER_INDEXA(inventoryPrinter)
       }
 
       if (obj.appendTop) {
@@ -641,14 +661,13 @@ export function formatOrderData(info, type) {
   infoDetail.cargoAmountTotal = 0 // 货品件数合计
   // infoDetail.brokerageFeeTotal = 0 // 回扣合计
   cargoList.forEach(e => { // 计算代收货款合计
-    infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund)
-    infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount)
+    infoDetail.agencyFundTotal = tmsMath._add(infoDetail.agencyFundTotal, e.agencyFund || 0)
+    infoDetail.cargoAmountTotal = tmsMath._add(infoDetail.cargoAmountTotal, e.cargoAmount || 0)
     // infoDetail.brokerageFeeTotal = tmsMath._add(infoDetail.brokerageFeeTotal, e.brokerageFee)
   })
   console.warn(infoDetail)
   // 公用
   obj.shipSn = infoDetail.shipSn // 运单号
-  obj.createTime = infoDetail.createTime // 开单日期
   obj.senderUnit = infoDetail.shipSenderUnit // 发货单位
   obj.senderName = infoDetail.shipSenderName // 发货人
   obj.senderMobile = infoDetail.shipSenderMobile // 发货电话
@@ -665,6 +684,7 @@ export function formatOrderData(info, type) {
 
   if (type === 'lib') {
     console.log('lib companyAddr', infoDetail.detailedAddr, user.city + user.companyInfo.detailedAddr)
+    obj.createTime = parseTime(infoDetail.createTime, '{y}-{m}-{d}') // 开单日期
     obj.customerSn = infoDetail.shipCustomerNumber // 客户单号
     obj.companyName = infoDetail.companyName || user.companyName // 公司名称
     obj.companyPhone = infoDetail.servicePhone || user.companyInfo.servicePhone // 公司电话
@@ -785,6 +805,7 @@ export function formatOrderData(info, type) {
         }
       }
     })
+    obj.createTime = infoDetail.createTime // 开单日期
     obj.createrName = infoDetail.createUserName || user.name || user.username // 开单员
     obj.userName = infoDetail.createUserName || user.name || user.username // 制单员
     obj.totalFee = parseFloat(infoDetail.shipTotalFee) || '' // 运费合计
@@ -814,7 +835,7 @@ export function formatOrderData(info, type) {
     let totalTransferFee = 0
     if (tmsOrderTransferList && tmsOrderTransferList.length > 0) {
       tmsOrderTransferList.forEach(e => {
-        totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost)
+        totalTransferFee = tmsMath._add(totalTransferFee, e.totalCost || 0)
       })
     }
     obj.transferFee = parseFloat(totalTransferFee) || '' // 中转费
@@ -1145,9 +1166,9 @@ export function CreatePrintPageEnable(info, printer, preview, number) {
         reject()
       }
     } catch (err) {
-      reject('LODOP加载失败')
-      console.log(err)
+      console.log('LODOP加载失败', err)
       getLodop()
+      reject('LODOP加载失败')
     }
   })
 }

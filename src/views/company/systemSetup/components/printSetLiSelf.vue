@@ -404,9 +404,11 @@ export default {
     // this.getSettingCompanyLi()
 
   },
-  // 销毁对象时，需清除绑定的事件
-  destroyed() {
+  beforeDestroy() {
+    // 销毁对象时，需清除绑定的事件
     this.unbindKey()
+  },
+  destroyed() {
     this.closeMe()
   },
   methods: {

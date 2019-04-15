@@ -12,6 +12,17 @@
         </div>
         <!-- 左边表格区 -->
         <div slot="tableLeft" class="tableHeadItemBtn tableHeadItemBtnHeight">
+        <!--   <table @click="">
+            <thead>
+              <tr >
+                  <th v-for="(item, index) in tableColumnLeft" :key="index">{{ item.label }}</th>
+              </tr>
+            </thead>
+            <tr v-for="(item, index) in leftTable" :key="index">
+              <td>{{index}}</td>
+              <td v-for="(i, a) in item" :key="a + index">{{ i }}</td>
+            </tr>
+          </table> -->
           <el-table ref="multipleTableRight" :data="leftTable" border @row-click="clickDetailsRight" @selection-change="getSelectionRight" tooltip-effect="dark" triped :key="tablekey" height="100%" :summary-method="getSumRight" :default-sort="{prop: 'id', order: 'ascending'}" :show-overflow-tooltip="true" :show-summary="true" @row-dblclick="dclickAddItem">
             <el-table-column fixed width="60" label="序号">
               <template slot-scope="scope">
@@ -491,6 +502,13 @@ export default {
 
       this.$set(this.rightTable, this.rightTable.length, item)
     },
+    setRightValue (el) {
+       el.inputNowPayFee = el.notNowPayFee
+            el.inputArrivepayFee = el.notArrivepayFee
+            el.inputReceiptpayFee = el.notReceiptpayFee
+            el.inputMonthpayFee = el.notMonthpayFee
+            el.inputChangeFee = el.notChangeFee
+    },
     getList(handle) {
       this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
@@ -517,11 +535,7 @@ export default {
           //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.totalStatus)
           // })).map(el => {
           this.leftTable = Object.assign([], data.list).map(el => {
-            el.inputNowPayFee = el.notNowPayFee
-            el.inputArrivepayFee = el.notArrivepayFee
-            el.inputReceiptpayFee = el.notReceiptpayFee
-            el.inputMonthpayFee = el.notMonthpayFee
-            el.inputChangeFee = el.notChangeFee
+           this.setRightValue(el)
             return el
           })
           selectListShipSns.forEach(e => {
@@ -619,21 +633,6 @@ export default {
           this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
-          // let item = -1
-          // this.leftTable.map((el, index) => {
-          //   if (el.shipSn === e.shipSn) {
-          //     item = index
-          //   }
-          // })
-          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-          //   this.leftTable.splice(item, 1)
-          //   this.orgLeftTable.splice(item, 1)
-          // }
-          // // const orgItem = this.orgLeftTable.indexOf(e)
-
-          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
-
-          // }
         })
         this.selectedRight = [] // 清空选择列表
       }
@@ -659,13 +658,6 @@ export default {
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.shipSn !== e.shipSn
           })
-          // this.leftTable.push(e)
-          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          // const item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 右边源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
         })
         this.selectedLeft = [] // 清空选择列表
       }
@@ -677,12 +669,12 @@ export default {
     },
     // 选中的行
     selectCurrent(obj, index) {
-      obj.inputNowPayFee = obj.notNowPayFee
-      obj.inputArrivepayFee = obj.notArrivepayFee
-      obj.inputReceiptpayFee = obj.notReceiptpayFee
-      obj.inputMonthpayFee = obj.notMonthpayFee
-      obj.inputChangeFee = obj.notChangeFee
-      // this.leftTable = Object.assign([], obj)
+      // 1 设置默认数据
+      // 2 检查左边列表有没有该数据
+      // 2-1 如果有，就直接筛选左边数据，并且左边数据列减去该条数据
+      // 2-2 如果没有，就直接添加到右边表格
+      this.setRightValue(obj)
+
       this.addItem(obj, index)
     },
     addItem(row, index) { // 添加单行

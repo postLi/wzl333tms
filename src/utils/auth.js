@@ -58,7 +58,7 @@ export function removeRefreshToken() {
 }
 
 export function getUserInfo() {
-  return JSON.parse(localStorage.getItem(UserinfoKey))
+  return JSON.parse(localStorage.getItem(UserinfoKey) || '{}')
 }
 
 export function setUserInfo(obj) {

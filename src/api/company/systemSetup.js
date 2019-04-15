@@ -2,6 +2,10 @@ import fetch, {
   checkStatus
 } from '@/utils/fetch'
 import CACHE from '@/utils/cache'
+import {
+  getUserInfo,
+  setUserInfo
+} from '@/utils/auth'
 
 /**
  * 根据条件获取系统设置列表
@@ -27,7 +31,23 @@ export function getAllSetting(params) {
     }).then(checkStatus).then(res => {
       CACHE.set('AllSetting' + params.module + '_update', false)
       CACHE.set('AllSetting' + params.module, res.data)
-      return res.data || {}
+      let sysinfo = getUserInfo()
+      sysinfo.systemSetup = sysinfo.systemSetup || {}
+      let data = res.data || {}
+      if (params.module == 'order') {
+        for (let i in data) {
+          sysinfo.systemSetup[i] = data[i]
+        }
+      }
+      if (params.module == 'finance') {
+        sysinfo.systemSetup.financeSetting = data.financeSetting
+      }
+      if (params.module == 'base') {
+        sysinfo.systemSetup.uploadLogo = data.uploadLogo
+        sysinfo.systemSetup.switchUser = data.switchUser
+      }
+      setUserInfo(sysinfo)
+      return data
     })
   }
 }

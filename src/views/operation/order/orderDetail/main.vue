@@ -1115,17 +1115,27 @@ export default {
     sortModel() { // 按照模板修改开单页面各个模块上下排序
       this.$nextTick(() => {
         if (this.modelList) {
-          const list = document.querySelectorAll('.model-orderDetail-item')
+           const root = document.querySelector('.model-orderDetail-list')
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-orderDetail-item'))
+          root.innerHTML = ''
           const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
-          const modelDiv = document.querySelectorAll('.model-orderDetail-list')[0]
           for (let i = 0; i < arr.length; i++) {
-            modelDiv.appendChild(arr[i])
-            const name = arr[i].getAttribute('data-name')
-            const index = arr[i].getAttribute('data-index')
+            root.appendChild(arr[i])
           }
+          // const list = document.querySelectorAll('.model-orderDetail-item')
+          // const arr = Array.prototype.slice.call(list)
+          // arr.sort(function(a, b) {
+          //   return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
+          // })
+          // const modelDiv = document.querySelectorAll('.model-orderDetail-list')[0]
+          // for (let i = 0; i < arr.length; i++) {
+          //   modelDiv.appendChild(arr[i])
+          //   const name = arr[i].getAttribute('data-name')
+          //   const index = arr[i].getAttribute('data-index')
+          // }
         }
       })
     },
@@ -1224,6 +1234,17 @@ export default {
       // 设置城市名称
       this.fromCityName = data.tmsOrderShipInfo.shipFromCityName || ''
       this.toCityName = data.tmsOrderShipInfo.shipToCityName || ''
+
+      if (this.form.tmsOrderShipInfo.shipToCityName){
+        let tocityArr = this.form.tmsOrderShipInfo.shipToCityName.split(',')
+        this.form.tmsOrderShipInfo.shipToCityName = tocityArr[2] || tocityArr[1] || tocityArr[0] || ''
+      }
+
+       if (this.form.tmsOrderShipInfo.shipFromCityName){
+        let tofromArr = this.form.tmsOrderShipInfo.shipFromCityName.split(',')
+        this.form.tmsOrderShipInfo.shipFromCityName = tofromArr[2] || tofromArr[1] || tofromArr[0] || ''
+      }
+
       // this.fromCityName = this.fromCityName.replace(/,$/,'')
       // 设置货物信息
       this.form.cargoList = data.tmsOrderCargoList

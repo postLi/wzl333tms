@@ -53,6 +53,9 @@ Vue.prototype.$echarts = echarts
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 
+if (process.env.NODE_ENV !== 'production') {
+  Vue.config.performance = true
+}
 Vue.config.productionTip = false
 Vue.prototype.$const = $const
 Vue.prototype.$md5 = md5
