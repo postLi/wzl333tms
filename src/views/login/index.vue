@@ -13,12 +13,12 @@
         <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px" class="card-box login-form">
           <h3 class="title">会员登录</h3>
           <el-form-item prop="username">
-            <el-input name="username" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.username" :maxlength="30" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
+            <el-input name="username" type="text" @keyup.enter.native="handleNext" v-model="loginForm.username" :maxlength="30" autoComplete="off" :placeholder="holder.username" @focus='username()' clearable :autofocus="true" @change="changeUsername">
               <template slot="prepend"><i class="icon_login " :class="[loginError? 'icon_login_user_error':'icon_login_user']"></i></template>
             </el-input>
           </el-form-item>
           <el-form-item prop="password" class="previewPwd">
-            <el-input name="password" :maxlength="20" :type="!isview? 'password' : 'text'" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
+            <el-input ref="passwordInput" name="password" :maxlength="20" :type="!isview? 'password' : 'text'" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off" :placeholder="holder.password" @focus='password()' clearable>
               <template slot="prepend">
                 <i class="icon_login" :class="[loginError? 'icon_login_password_error':'icon_login_password']"></i>
                 <!-- 两种写法都可以 -->
@@ -135,6 +135,9 @@ export default {
     this.initLocalStorage()
   },
   methods: {
+    handleNext () {
+      this.$refs.passwordInput.focus()
+    },
     setLocalStorage() {
       if (this.checked) {
         let form = {}

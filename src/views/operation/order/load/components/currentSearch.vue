@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     querySearch(type, queryString, cb) {
-      console.log(this.info)
+      // console.log(this.info)
       const leftTable = this.info
       this.searchForm[type] = queryString // 绑定数据视图
       this.selectVal = type // 当前选择输入的对象

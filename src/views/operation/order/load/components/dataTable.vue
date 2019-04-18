@@ -232,7 +232,6 @@ export default {
     setLoadTable: { // 深度监听数组变换
       handler(cval, oval) {
         if (cval) {
-          console.log('setLoadTable', cval)
           this.orgData = objectMerge2({}, cval)
           // if (!this.isRestorage) {
           this.getList()
@@ -250,7 +249,6 @@ export default {
           if (!cval.handlingFeeAll || this.rightTable.length === 0) {
             return
           }
-          console.log('列表组件的分摊费用信息::::::', cval.apportionTypeId, cval.handlingFeeAll)
           this.countHandingFee()
         }
       },
@@ -389,10 +387,12 @@ export default {
       this.leftTable = obj
     },
     getSearchEnter() {
+      // console.time('goLeft')
       if (this.leftTable.length) {
         this.addALLList()
       }
       this.leftTable = Object.assign([], this.orgLeftTable)
+      // console.timeEnd('goLeft')
     },
     clickDetailsRight(row) {
       this.$refs.multipleTableRight.toggleRowSelection(row)
@@ -489,6 +489,9 @@ export default {
       if (this.selectedRight.length === 0) {
         this.$message({ type: 'warning', message: '请在左边表格选择数据' })
       } else {
+        let rightTable = objectMerge2([], this.rightTable)
+        let leftTable = objectMerge2([], this.leftTable)
+        let orgLeftTable = objectMerge2([], this.orgLeftTable)
         this.selectedRight.forEach((e, index) => {
           // 默认设置配载重量,配载体积,配载数量,操作费用
           //
@@ -500,17 +503,23 @@ export default {
           e.loadAmount = e.repertoryAmount
           e.loadWeight = e.repertoryWeight
           e.loadVolume = e.repertoryVolume
-          this.rightTable = this.rightTable.filter(em => {
+          rightTable = rightTable.filter(em => {
             return em.repertoryId !== e.repertoryId
           })
-          this.rightTable.push(e)
-          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+          rightTable.push(e)
+          // this.leftTable = objectMerge2([], this.leftTable).filter(el => {
+          leftTable = leftTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+          // this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
+          orgLeftTable = orgLeftTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
         })
+        this.rightTable = rightTable
+        this.leftTable = leftTable
+        this.orgLeftTable = orgLeftTable
+
         this.selectedRight = [] // 清空选择列表
         // if (this.$route.query.loadTypeId !== 40) {
         this.countHandingFee()
@@ -525,20 +534,27 @@ export default {
       if (this.selectedLeft.length === 0) {
         this.$message({ type: 'warning', message: '请在右边表格选择数据' })
       } else {
-        this.selectedLeft.forEach((e, index) => {
-          this.leftTable = this.leftTable.filter(em => {
-            return em.repertoryId !== e.repertoryId
-          })
-          this.orgLeftTable = this.orgLeftTable.filter(em => {
-            return em.repertoryId !== e.repertoryId
-          })
-          this.leftTable.push(e)
-          this.orgLeftTable.push(e)
+        let rightTable = objectMerge2([], this.rightTable)
+        let leftTable = objectMerge2([], this.leftTable)
+        let orgLeftTable = objectMerge2([], this.orgLeftTable)
 
-          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
+        this.selectedLeft.forEach((e, index) => {
+          leftTable = leftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
+          orgLeftTable = orgLeftTable.filter(em => {
+            return em.repertoryId !== e.repertoryId
+          })
+          leftTable.push(e)
+          orgLeftTable.push(e)
+
+          rightTable = rightTable.filter(el => {
             return el.repertoryId !== e.repertoryId
           })
         })
+        this.rightTable = rightTable
+        this.leftTable = leftTable
+        this.orgLeftTable = orgLeftTable
         this.selectedLeft = [] // 清空选择列表
         console.log('rightTable', this.rightTable)
         // if (this.$route.query.loadTypeId !== 40) {
