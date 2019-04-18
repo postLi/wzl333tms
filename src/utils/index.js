@@ -119,6 +119,102 @@ export function getSummaries(param, propsArr, noUnit, defaultNoneString = ' - ',
   })
   return sums
 }
+// v-table 专用 因为参数名不一致
+export function getSummariesVtable(param, propsArr, noUnit, defaultNoneString = ' - ', allCount) {
+  const {
+    columns,
+    data
+  } = param
+  const sums = []
+
+  // 获取需要计算的属性值列表
+  propsArr = propsArr || operationPropertyCalc
+  if (noUnit) {
+    propsArr = propsArr.map(el => {
+      if (el.indexOf('_index') === -1) {
+        el = el.replace(/^([^\|]*)(.*)$/g, '$1|')
+      }
+      return el
+    })
+  }
+
+  // console.log(columns, data)
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '总计'
+      return
+    }
+    let prop = ''
+
+    let unit = '元'
+    const find = propsArr.filter(el => {
+      // 完全等于属性名
+      if (el === column.field || el === column.field) {
+        prop = el
+        return true
+      }
+      const propArr = el.split('|')
+      if (propArr.length > 1) {
+        // 前缀等于属性名
+        if (propArr[0] === column.field || propArr[0] === column.field) {
+          prop = column.field || column.field
+          unit = propArr[1] || ''
+          return true
+        }
+        // 索引位置相等
+        if (propArr[0] === '_index' && parseInt(propArr[1], 10) === index) {
+          prop = '_index'
+          unit = propArr[2] || ''
+          return true
+        }
+      } else {
+        // 没有匹配
+        return false
+      }
+    })
+
+    // if (!values.every(value => isNaN(value))) {
+    if (find.length) {
+      if (prop === '_index') {
+        sums[index] = data.length + unit
+      } else {
+        // const values = data.map(item => Number(item[prop]))
+        let isAllEmpty = true
+        const allCountIndex = {}
+        const values = data.map((item, mindex) => {
+          if (item[prop] !== '') {
+            isAllEmpty = false
+          }
+          return Number(item[prop])
+        })
+        if (isAllEmpty) {
+          sums[index] = defaultNoneString
+        } else {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              // return prev + curr
+              return tmsMath._add(prev, curr)
+            } else {
+              return prev
+            }
+          }, 0)
+          // if (allCount) {
+          //   for (let oi in allCount) {
+          //     if (oi === prop) {
+          //       sums[index] = allCount[oi]
+          //     }
+          //   }
+          // }
+          sums[index] += ' ' + unit
+        }
+      }
+    } else {
+      sums[index] = defaultNoneString
+    }
+  })
+  return sums
+}
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -390,7 +486,7 @@ export function objectMerge3() {
   for (; i < length; i++) {
     // 如果传入的源对象是null或undefined
     // 则循环下一个源对象
-    if (typeof (options = arguments[i]) != null) {
+    if (typeof(options = arguments[i]) != null) {
       // 遍历所有[[emuerable]] === true的源对象
       // 包括Object, Array, String
       // 如果遇到源对象的数据类型为Boolean, Number

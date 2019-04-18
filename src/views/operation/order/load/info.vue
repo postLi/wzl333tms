@@ -292,7 +292,7 @@ import { mapGetters } from 'vuex'
 import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
 import selectType from '@/components/selectType/index'
-import dataTable from './components/dataTable'
+import dataTable from './components/dataTable2'
 import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
@@ -1345,8 +1345,10 @@ export default {
       this.$set(this.formFee, type, val)
     },
     changeHandlingFeeAll(val, type) {
+      console.log('changeHandlingFeeAll info页面：', val, type)
       let fee = 0
       if (type) { // 送货-送货费
+        console.log('type', type)
         this.$set(this.formModel, type, Number(val))
         fee = tmsMath._add(this.formModel.deliveryDetailFee || 0, this.formModel.deliveryHandlingFee || 0)
         this.$set(this.handlingFeeInfo, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
@@ -1362,6 +1364,9 @@ export default {
       this.handlingFeeInfo.apportionTypeId = value
       this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
       this.handlingFeeInfo.reParams = this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'
+
+      console.log(' this.loadTypeId === 40????',  this.loadTypeId === 40,  this.handlingFeeInfo)
+      
     },
     getHandingFeeAll(info) {
       this.handlingFeeInfo = info

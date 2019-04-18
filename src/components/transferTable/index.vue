@@ -1,5 +1,5 @@
 <template>
-  <div class="transferTable">
+  <div class="transferTable" v-loading="loading">
     <!-- 穿梭框 -->
     <div class="transferTable_header">
       <div class="transferTable_searchs">
@@ -58,13 +58,13 @@
     <div class="transferTable_content">
       <div
         class="transferTable_content_table paddingRight"
-        :class="[isShowLeft ? 'showTableLeft' : (isShowRight? 'shortTableLeft':'')]"
+        :class="leftTableClass"
       >
         <slot name="tableLeft">左边表格区</slot>
       </div>
       <div
         class="transferTable_content_table"
-        :class="[isShowRight ? 'showTableRight' : '']"
+        :class="rightTableClass"
       >
         <slot name="tableRight">右边表格区</slot>
       </div>
@@ -75,14 +75,24 @@
 export default {
   data() {
     return {
+      loading: false,
       isShowLeft: false,
       isShowRight: false,
       isShowReback: false,
       searchForm: ''
     }
   },
+  computed: {
+    leftTableClass () {
+      return this.isShowLeft ? 'showTableLeft' : (this.isShowRight? 'shortTableLeft':'averageTable')
+    },
+    rightTableClass () {
+      return this.isShowRight ? 'showTableRight' : (this.isShowLeft? 'shortTableRight':'averageTable')
+    }
+  },
   methods: {
     doAction(type) {
+      this.loading = true
       switch (type) {
         case 'showAllLeft': // 展开左边表格
           this.showAllLeft()
@@ -94,6 +104,7 @@ export default {
           this.showReback()
           break
       }
+      this.$emit('resizeVTable')
     },
     showAllLeft() {
       this.isShowLeft = true
@@ -115,7 +126,8 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
+$transitionTime: 0.1s;
 .transferTable {
   width: 100%;
   height: calc(100% - 60px);
@@ -161,8 +173,15 @@ export default {
     .transferTable_content_table {
       width: 50%;
       height: 100%;
-      transition: 0.5s;
+      transition: $transitionTime;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      .v-table-views{
+        flex: 1;
+        width: 100% !important;
+        height: 100% !important;
+      }
       .el-table {
         table {
           width: 100%;
@@ -179,15 +198,19 @@ export default {
     }
     .showTableLeft {
       width: calc(100% - 90px);
-      transition: 0.5s;
+      transition: $transitionTime;
     }
     .shortTableLeft {
       width: 122px;
-      transition: 0.5s;
+      transition: $transitionTime;
     }
     .showTableRight {
       width: calc(100% - 122px);
-      transition: 0.5s;
+      transition: $transitionTime;
+    }
+    .shortTableRight {
+       width: 122px;
+      transition: $transitionTime;
     }
   }
 }

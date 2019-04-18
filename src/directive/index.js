@@ -1,10 +1,14 @@
 import Vue from 'vue'
-import { MessageBox } from 'element-ui'
+import {
+  MessageBox
+} from 'element-ui'
 import Clipboard from './clipboard'
 // import DragDialog from './el-dragDialog'
 // import Waves from './waves'
 // import vueSticky from './sticky'
-import { getUserInfo } from '@/utils/auth'
+import {
+  getUserInfo
+} from '@/utils/auth'
 
 Clipboard.install()
 // DragDialog.install()
@@ -33,8 +37,8 @@ const VueDirectiveObject = {
     // enter ctrl+c ctrl+v ctrl+a ctrl+x 应该仍然可以使用
     // 左右、删除、tab键
     if (!(event.keyCode === 46) && !(event.keyCode === 8) && !(event.keyCode === 37) && !(event.keyCode === 39) && !(event.keyCode === 9) && !(event.key === '.' && this.hasPoint) && !(event.keyCode === 13) &&
-    !((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 65 || event.keyCode === 88) && event.ctrlKey && !event.altKey && !event.shiftKey)
-  ) {
+      !((event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 65 || event.keyCode === 88) && event.ctrlKey && !event.altKey && !event.shiftKey)
+    ) {
       // 数字 小键盘数字
       if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))) {
         VueDirectiveObject.keepNumber.apply(this, event)
@@ -141,6 +145,8 @@ function bingAppClickImageShow() {
 }
 bingAppClickImageShow()
 
+
+
 Vue.directive('showPicture', {
   bind: function(el) {
     el.classList.add('toPreviewImage')
@@ -197,3 +203,28 @@ Vue.prototype.$_has_permission = function(value) {
   }
   return isExist
 }
+
+// 重新计算el的宽高
+// Vue.directive('resize', {
+//   bind(el, binding) {
+//     let width = '',
+//       height = '';
+
+//     function get() {
+//       const style = document.defaultView.getComputedStyle(el);
+//       if (width !== style.width || height !== style.height) {
+//         binding.value({
+//           width,
+//           height
+//         });
+//       }
+//       width = style.width;
+//       height = style.height;
+//     }
+
+//     el.__vueReize__ = setInterval(get, 200);
+//   },
+//   unbind(el) {
+//     clearInterval(el.__vueReize__);
+//   }
+// })

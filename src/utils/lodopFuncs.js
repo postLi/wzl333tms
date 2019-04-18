@@ -155,7 +155,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }
@@ -380,8 +380,8 @@ export function PrintInFullPage(obj) {
         LODOP.SET_PRINT_STYLEA(0, 'Offset2Left', '2%')
         LODOP.SET_PRINT_STYLE('FontName', fontFamily)
         if (printObj.print_page_num === '1') {
-          const le = objp.w - 20
-          const to = objp.h - 20
+          let le = objp.w - 20
+          let to = objp.h - 20
           // 如果是横向，翻转宽高位置
           if (printObj.printing_direction === '2') {
             const a = le

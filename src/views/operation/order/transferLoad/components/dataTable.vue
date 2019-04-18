@@ -249,7 +249,6 @@ export default {
       this.$set(_this.rightTable, index, Object.assign(_this.rightTable[index], {
         totalCost: current['totalCost']
       }))
-      console.log(_this.rightTable)
       // _this.rightTable[index].totalCost = current['totalCost']
       _this.$emit('loadTable', _this.rightTable)
     },

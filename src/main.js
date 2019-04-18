@@ -48,6 +48,21 @@ Vue.use(TableSetup)
 import tableHeaderSearch from '@/components/tableHeaderSearch/index'
 Vue.use(tableHeaderSearch)
 
+// import vue-easytable
+import vTable from '@/components/vTable/index'
+Vue.use(vTable)
+// import 'vue-easytable/libs/themes-base/index.css'
+// import {
+// 	VTable,
+// 	VPagination
+// } from 'vue-easytable'
+
+// Register to global
+// Vue.component(VTable.name, VTable)
+// Vue.component(VPagination.name, VPagination)
+
+
+
 Vue.prototype.$echarts = echarts
 console.log('ElementUI:', ElementUI)
 // Vue.use(ElementUI, { locale })
