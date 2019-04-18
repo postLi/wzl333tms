@@ -69,6 +69,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
+  name: 'cashDetail',
   components: {
     SearchForm,
     Pager,
@@ -335,6 +336,7 @@ export default {
       ]
     }
   },
+
   computed: {
     ...mapGetters(['otherinfo']),
     settlementId() {
@@ -378,6 +380,11 @@ export default {
     },
     fetchList() {
       if (this.$route.query) {
+        let searchQuery = {}
+        if (this.$route.query.searchQuery) {
+          searchQuery = JSON.parse(this.$route.query.searchQuery)
+          this.$set(searchQuery.vo, 'recordId', this.$route.query.recordId)
+        }
 
         this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
         postBillRecordDetailList(this.searchQuery)
@@ -388,11 +395,21 @@ export default {
             this.loading = false
             setTimeout(() => {
               if (this.dataListTop.length === 0) {
-                this.$message.info('已更新更新财务日记账数据！')
-                this.eventBus.$emit('closeCurrentView')
-                this.$router.push({
-                  path: './financeDaily'
-                })
+                // 判断查询条件是否和日记账页面一致
+                let count = 0
+                for(let i in searchQuery.vo) {
+                  if (this.searchQuery.vo[i].toString() !== searchQuery.vo[i].toString()) {
+                    count += 1
+                  }
+                }
+
+                if (!count) {
+                  this.$message.info('已更新更新财务日记账数据！')
+                  this.eventBus.$emit('closeCurrentView')
+                  this.$router.push({
+                    path: './financeDaily'
+                  })
+                }
               }
             }, 1000)
           })

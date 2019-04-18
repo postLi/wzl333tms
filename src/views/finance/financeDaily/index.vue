@@ -1,7 +1,7 @@
 <template>
   <!-- ciawu   -->
   <div class="tab-wrapper tab-wrapper-100">
-    <keep-alive>
+    <keep-alive include="cash">
       <component v-bind:is="component"></component>
     </keep-alive>
   </div>

@@ -115,6 +115,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
+  name: 'cash',
   components: {
     SearchForm,
     Pager,
