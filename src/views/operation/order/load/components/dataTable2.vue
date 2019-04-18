@@ -1,98 +1,22 @@
 <template>
-  <transferTable
-    v-loading="loading"
-    @resizeVTable="resizeVTable"
-  >
-    <el-button
-      icon="el-icon-refresh"
-      slot="tableRefresh"
-      size="mini"
-      type="primary"
-      plain
-      circle
-      @click="regetList"
-    ></el-button>
-    <div
-      slot="tableSearch"
-      class="tableHeadItemForm clearfix"
-    >
+  <transferTable v-loading="loading" @resizeVTable="resizeVTable">
+    <el-button icon="el-icon-refresh" slot="tableRefresh" size="mini" type="primary" plain circle @click="regetList"></el-button>
+    <div slot="tableSearch" class="tableHeadItemForm clearfix">
       <!-- 搜索左边表格 -->
-      <currentSearch
-        :info="orgLeftTable"
-        @change="getSearch"
-        @keyupEneter="getSearchEnter"
-      ></currentSearch>
+      <currentSearch :info="orgLeftTable" @change="getSearch" @keyupEneter="getSearchEnter"></currentSearch>
     </div>
     <!-- 左边表格区 -->
-    <div
-      slot="tableLeft"
-      class="vtableHeadItemBtn"
-    >
-      <el-button
-        class="tableAllBtn"
-        size="mini"
-        @click="addALLList"
-      ></el-button>
-      <v-table
-        ref="orgLeftTable"
-        v-show="isOrgLeftTable"
-        style="width:100%;"
-         column-width-drag
-        is-horizontal-resize
-        is-vertical-resize
-        row-hover-color="#eee"
-        :vertical-resize-offset='18'
-        :columns="columnsLeft"
-        :table-data="leftTable"
-        :footer="footerLeft"
-        :footer-row-height="30"
-        :row-dblclick="dclickAddItem"
-        @on-custom-comp="doActionExpandTable"
-      >
+    <div slot="tableLeft" class="vtableHeadItemBtn">
+      <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
+      <v-table ref="orgLeftTable" v-show="isOrgLeftTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize row-hover-color="#eee" :vertical-resize-offset='18' :columns="columnsLeft" :table-data="leftTable" :footer="footerLeft" :footer-row-height="30" :row-dblclick="dclickAddItem" @on-custom-comp="doActionExpandTable">
       </v-table>
-      <v-table
-        ref="leftTable"
-        v-show="!isOrgLeftTable"
-        style="width:100%;"
-         column-width-drag
-        is-horizontal-resize
-        is-vertical-resize
-        :vertical-resize-offset='18'
-        row-hover-color="#eee"
-        :columns="columnsLeft"
-        :table-data="leftTable"
-        :footer="footerLeft"
-        :footer-row-height="30"
-        :row-dblclick="dclickAddItem"
-        @on-custom-comp="doActionExpandTable"
-      >
+      <v-table ref="leftTable" v-show="!isOrgLeftTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize :vertical-resize-offset='18' row-hover-color="#eee" :columns="columnsLeft" :table-data="leftTable" :footer="footerLeft" :footer-row-height="30" :row-dblclick="dclickAddItem" @on-custom-comp="doActionExpandTable">
       </v-table>
     </div>
     <!-- 右边表格区 -->
-    <div
-      slot="tableRight"
-      class="vtableHeadItemBtn"
-    >
-      <el-button
-        class="tableAllBtnMinus"
-        size="mini"
-        @click="minusAllList"
-      ></el-button>
-      <v-table
-        ref="rightTable"
-        style="width:100%;"
-         column-width-drag
-        is-horizontal-resize
-        is-vertical-resize
-        row-hover-color="#eee"
-        :vertical-resize-offset='18'
-        :columns="columnsRight"
-        :table-data="rightTable"
-        :footer="footerRight"
-        :footer-row-height="30"
-        :row-dblclick="dclickMinusItem"
-        @on-custom-comp="doActionExpandTable"
-      >
+    <div slot="tableRight" class="vtableHeadItemBtn">
+      <el-button class="tableAllBtnMinus" size="mini" @click="minusAllList"></el-button>
+      <v-table ref="rightTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize row-hover-color="#eee" :vertical-resize-offset='18' :columns="columnsRight" :table-data="rightTable" :footer="footerRight" :footer-row-height="30" :row-dblclick="dclickMinusItem" @on-custom-comp="doActionExpandTable">
       </v-table>
     </div>
   </transferTable>
@@ -129,8 +53,7 @@ export default {
       },
       isOrgLeftTable: true,
       isCountFooter: true,
-      orgcolumnsLeft: [
-        {
+      orgcolumnsLeft: [{
           field: 'number',
           title: '序号',
           width: 60,
@@ -306,8 +229,7 @@ export default {
           columnAlign: 'center'
         }
       ],
-      orgcolumnsRight: [
-        {
+      orgcolumnsRight: [{
           field: 'number',
           title: '序号',
           width: 60,
@@ -528,8 +450,12 @@ export default {
           columnAlign: 'center'
         }
       ],
-      footerLeft: [[]],
-      footerRight: [[]]
+      footerLeft: [
+        []
+      ],
+      footerRight: [
+        []
+      ]
     }
   },
   props: {
@@ -637,8 +563,7 @@ export default {
       }, 900)
     },
     countHandingFee() {
-      if (
-        !this.handlingFeeInfo.apportionTypeId ||
+      if (!this.handlingFeeInfo.apportionTypeId ||
         !this.handlingFeeInfo.handlingFeeAll ||
         this.rightTable.length < 1
       ) {
@@ -646,9 +571,9 @@ export default {
       }
       const info = this.handlingFeeInfo
       info.params =
-        Number(this.$route.query.loadTypeId) === 40
-          ? 'deliveryFeeToPay'
-          : 'handlingFee';
+        Number(this.$route.query.loadTypeId) === 40 ?
+        'deliveryFeeToPay' :
+        'handlingFee';
 
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: // 按运单运费占运费比例分摊 (运单-回扣）/（总运费-总回扣）*运费[送货费]
@@ -809,9 +734,12 @@ export default {
     },
     getSearch(obj) {
       // 搜索
-      this.isOrgLeftTable = false
-      this.leftTable = obj
-      this.setBothFooterData()
+      if (this.leftTable.length !== this.orgLeftTable.length) {
+
+        this.isOrgLeftTable = false
+        this.leftTable = obj
+        this.setBothFooterData()
+      }
     },
     getSearchEnter() {
       this.isOrgLeftTable = true
@@ -869,8 +797,7 @@ export default {
       ) {
         this.$notify({
           title: '警告',
-          message:
-            '配载件数不能小于1,配载重量和体积不能小于0,都不能大于库存数量,默认为该库存数量',
+          message: '配载件数不能小于1,配载重量和体积不能小于0,都不能大于库存数量,默认为该库存数量',
           type: 'warning'
         })
         this.rightTable[newVal].loadAmount = currepertAmount
@@ -889,14 +816,12 @@ export default {
       ) {
         this.$notify({
           title: '提示',
-          message:
-            '配载重量与配载体积都等于该库存大小,即所有配载数量为库存数量',
+          message: '配载重量与配载体积都等于该库存大小,即所有配载数量为库存数量',
           type: 'warning'
         })
         this.rightTable[newVal].loadWeight = currepertWeight
         this.rightTable[newVal].loadVolume = currepertVolume
-      } else {
-      }
+      } else {}
       if (this.$route.query.loadTypeId !== 40) {
         this.countHandingFee()
       }
@@ -912,9 +837,9 @@ export default {
     changHandlingFee(index, newVal, type) {
       const info = objectMerge2({}, this.handlingFeeInfo)
       info.params =
-        Number(this.$route.query.loadTypeId) === 40
-          ? 'deliveryFeeToPay'
-          : 'handlingFee';
+        Number(this.$route.query.loadTypeId) === 40 ?
+        'deliveryFeeToPay' :
+        'handlingFee';
 
       this.$set(this.rightTable[index], type, Number(newVal) || '')
 
@@ -958,9 +883,9 @@ export default {
           //
           if (this.$route.query) {
             const params =
-              Number(this.$route.query.loadTypeId) === 40
-                ? 'deliveryFeeToPay'
-                : 'handlingFee';
+              Number(this.$route.query.loadTypeId) === 40 ?
+              'deliveryFeeToPay' :
+              'handlingFee';
             e[params] = 0
           }
           e.loadAmount = e.repertoryAmount
@@ -1125,27 +1050,29 @@ export default {
           ]
 
           if (this.leftTable.length) {
-            this.footerLeft = this.setFooterData(
-              {
+            this.footerLeft = this.setFooterData({
                 columns: this.columnsLeft,
                 data: objectMerge2([], this.leftTable)
               },
               propsArrLeft
             )
           } else {
-            this.footerLeft = [[]]
+            this.footerLeft = [
+              []
+            ]
           }
 
           if (this.rightTable.length) {
-            this.footerRight = this.setFooterData(
-              {
+            this.footerRight = this.setFooterData({
                 columns: this.columnsRight,
                 data: objectMerge2([], this.rightTable)
               },
               propsArrRight
             )
           } else {
-            this.footerRight = [[]]
+            this.footerRight = [
+              []
+            ]
           }
           this.isCountFooter = true
         }, 100)
@@ -1258,6 +1185,7 @@ Vue.component('expandInput', {
     }
   }
 })
+
 </script>
 <style lang="scss">
 .vtableHeadItemBtn {
@@ -1323,4 +1251,5 @@ Vue.component('expandInput', {
     width: calc(100% - 100px);
   }
 }
+
 </style>
