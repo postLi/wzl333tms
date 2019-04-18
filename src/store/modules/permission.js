@@ -94,8 +94,8 @@ const permission = {
               routerlists.push(el)
             }
           })
-          console.info('该角色下的所有路由信息：')
-          console.table(routerlists)
+          // console.info('该角色下的所有路由信息：')
+          // console.table(routerlists)
         }
         // 修正首页权限问题
         let homePage = accessedRouters.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
