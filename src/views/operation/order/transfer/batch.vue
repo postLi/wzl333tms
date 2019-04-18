@@ -259,7 +259,7 @@ export default {
       }
     },
     cancelBatch(transferBatchNos) {
-      this.$confirm('确定要取消 ' + transferBatchNos.length + ' 条运单吗？', '提示', {
+      this.$confirm('确定要取消 ' + transferBatchNos.length + ' 条批次吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -270,6 +270,7 @@ export default {
             type: 'success',
             message: '取消成功!'
           })
+          this.closeAddOrder()
           this.fetchData()
         }).catch(err => {
           this.$message({

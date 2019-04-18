@@ -6,92 +6,32 @@
     <!-- 操作按钮 -->
     <div class="tab_info">
       <div class="btns_box">
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-sort"
-          @click="doAction('income')"
-          plain
-          v-has:FLOW_IN
-        >新增</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-sort"
-          @click="doAction('edit')"
-          plain
-          v-has:FLOW_CANCEL
-        >修改</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('income')" plain v-has:BILLRECORD_ADD>新增</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-sort" @click="doAction('edit')" plain v-has:BILLRECORD_UPDATE>修改</el-button>
         <!-- <el-button type="danger" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>删除</el-button> -->
         <!--   <el-button type="success" :size="btnsize" icon="el-icon-sort" @click="doAction('delCount')" plain v-has:FLOW_CANCEL>查看明细</el-button> -->
-        <el-button
-          type="warning"
-          :size="btnsize"
-          icon="el-icon-sort"
-          @click="doAction('backCount')"
-          plain
-          v-has:FLOW_CANCEL
-        >反核销</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-printer"
-          @click="doAction('print')"
-          plain
-          v-has:FLOW_PRI
-        >打印</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-download"
-          @click="doAction('export')"
-          plain
-          v-has:FLOW_EXP
-        >导出</el-button>
-        <el-button
-          type="primary"
-          :size="btnsize"
-          icon="el-icon-setting"
-          @click="setTable"
-          class="table_setup"
-          plain
-        >表格设置</el-button>
+        <el-button type="warning" :size="btnsize" icon="el-icon-sort" @click="doAction('backCount')" plain v-has:BILLRECORD_CONTRARY_VERIFY>反核销</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-printer" @click="doAction('print')" plain v-has:BILLRECORD_PRINT>打印</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain v-has:BILLRECORD_EXPORT>导出</el-button>
+        <el-button type="primary" :size="btnsize" icon="el-icon-setting" @click="setTable" class="table_setup" plain>表格设置</el-button>
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table
-          ref="multipleTable"
-          :key="tablekey"
-          :data="dataListTop"
-          stripe
-          border
-          @row-click="clickDetails"
-          @selection-change="getSelection"
-          height="100%"
-          tooltip-effect="dark"
-          style="width:100%;"
-          :default-sort="{prop: 'id', order: 'ascending'}"
-          :cell-class-name="classLineRed"
-        >
+        <el-table ref="multipleTable" :key="tablekey" :data="dataListTop" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :default-sort="{prop: 'id', order: 'ascending'}" :cell-class-name="classLineRed">
           <el-table-column fixed sortable type="selection" width="35"></el-table-column>
           <template v-for="column in tableColumn">
-            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label"   v-if="!column.slot" :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-if="!column.slot" :width="column.width">
               <!-- <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
               </template> -->
               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
-         <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
+            <el-table-column :key="column.id" :fixed="column.fixed" :prop="column.prop" sortable :label="column.label" v-else :width="column.width">
               <!-- <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey"/>
               </template> -->
               <template slot-scope="scope">
-                <span
-                  class="clickitem"
-                  v-if="column.click"
-                  v-html="column.slot(scope)"
-                  @click.stop="column.click(scope)"
-                ></span>
+                <span class="clickitem" v-if="column.click" v-html="column.slot(scope)" @click.stop="column.click(scope)"></span>
                 <span v-else v-html="column.slot(scope)"></span>
               </template>
             </el-table-column>
@@ -103,24 +43,13 @@
     <div class="info_tab_footer">
       共计:{{ total }}
       <div class="show_pager">
-        <Pager :total="total" @change="handlePageChange"/>
+        <Pager :total="total" @change="handlePageChange" />
       </div>
     </div>
     <!-- 表格设置弹出框 -->
-    <TableSetup
-      :popVisible="setupTableVisible"
-      :columns="tableColumn"
-      @close="closeSetupTable"
-      @success="setColumn"
-    ></TableSetup>
+    <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 新增 -->
-    <Income
-      :popVisible="popVisibleIncome"
-      :info="currentInfo"
-      @close="closeDialogIncome"
-      @success="setAddSuccess"
-      :isModify="isModify"
-    ></Income>
+    <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
   </div>
 </template>
 <script>
@@ -170,8 +99,7 @@ export default {
       dataListTop: [],
       loading: true,
       setupTableVisible: false,
-      tableColumn: [
-        {
+      tableColumn: [{
           label: '序号',
           prop: 'number',
           width: '70',
@@ -423,9 +351,6 @@ export default {
       return JSON.parse(this.$route.query.searchQuery)
     }
   },
-  // created() {
-  //   this.setView()
-  // },
   methods: {
     changeKey(obj) {
       this.total = 0
@@ -440,6 +365,7 @@ export default {
       }
     },
     getSearchParam(obj) {
+
       this.searchQuery.currentPage = this.$options.data().searchQuery.currentPage
       this.searchQuery.pageSize = this.$options.data().searchQuery.pageSize
       this.searchQuery.vo = Object.assign({}, obj)
@@ -450,22 +376,10 @@ export default {
       this.searchQuery.pageSize = obj.pageSize
       this.fetchList()
     },
-    // setView() {
-    //   // 设置表格视图
-    //   // 【178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销】
-    //   if (this.$route.query.settlementId === 178) {
-    //     this.tableColumn = this.columnOrder // 运单视图
-    //   } else {
-    //     this.tableColumn = this.columnOrder // 没有数据上显示运单视图
-    //   }
-    // },
     fetchList() {
       if (this.$route.query) {
-        if (this.$route.query.searchQuery) {
-          this.searchQuery = JSON.parse(this.$route.query.searchQuery)
-        }
+
         this.$set(this.searchQuery.vo, 'recordId', this.$route.query.recordId)
-        console.log('searchQuery', this.searchQuery)
         postBillRecordDetailList(this.searchQuery)
           .then(data => {
             this.tablekey = new Date().getTime()
@@ -480,13 +394,12 @@ export default {
                   path: './financeDaily'
                 })
               }
-            }, 500)
+            }, 1000)
           })
           .catch(err => {
             this.loading = false
             this._handlerCatchMsg(err)
           })
-        // this.setView() // 设置视图
       }
     },
     setTable() {},
@@ -538,11 +451,6 @@ export default {
             name: '资金流水明细'
           })
           break
-        // case 'delCount': // 删除
-        //   if (isShow) {
-        //     this.delCount()
-        //   }
-        //   break
       }
     },
     doEdit() {
@@ -574,10 +482,10 @@ export default {
         this.$refs.multipleTable.clearSelection()
       } else {
         this.$confirm('确定要反核销吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
           .then(() => {
             const feesList = []
             selectedList.forEach(e => {
@@ -609,38 +517,6 @@ export default {
           .catch(() => {})
       }
     },
-    // delCount() { // 删除 只有手工录入并且未审核的可以删除
-    //   if (this.selectedList[0].verifyStatusZh !== '未审核' || this.selectedList[0].dataSrcZh !== '手工录入') {
-    //     if (this.selectedList[0].dataSrcZh !== '手工录入') {
-    //       this.$message.warning('凭证【 ' + this.selectedList[0].dataSrcZh + ' 】不可反核销')
-    //     } else {
-    //       this.$message.warning('凭证【 ' + this.selectedList[0].verifyStatusZh + ' 】不可反核销')
-    //     }
-    //     this.$refs.multipleTable.clearSelection()
-    //   } else {
-    //     this.$confirm('确定要删除【 ' + this.selectedList[0].certNo + ' 】吗？', '提示', {
-    //         confirmButtonText: '确定',
-    //         cancelButtonText: '取消',
-    //         type: 'warning'
-    //       }).then(() => {
-    //         this.loading = true
-    //         delBillRecordDetail({
-    //             id: this.selectedList[0].id,
-    //             recordId: this.selectedList[0].recordId,
-    //             amount: this.selectedList[0].amount
-    //           }).then(data => {
-    //             this.loading = false
-    //             this.$message.success('删除成功！')
-    //             this.fetchList()
-    //           })
-    //           .catch(err => {
-    //             this._handlerCatchMsg(err)
-    //             this.loading = false
-    //           })
-    //       })
-    //       .catch(() => {})
-    //   }
-    // },
     clickDetails(row) {
       this.$refs.multipleTable.toggleRowSelection(row)
     },
@@ -688,6 +564,7 @@ export default {
     }
   }
 }
+
 </script>
 <style lang="scss">
 .info_tab_row {
@@ -710,4 +587,5 @@ export default {
     background-color: red !important;
   }
 }
+
 </style>
