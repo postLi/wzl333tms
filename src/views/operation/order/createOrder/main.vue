@@ -669,6 +669,7 @@ import { eventBus } from '@/eventBus'
 // 工具函数
 import { REGEX } from '@/utils/validate'
 import { closest, getTotal, objectMerge2, parseTime, tmsMath } from '@/utils/'
+import CACHE from '@/utils/cache'
 import { CreatePrintPage, CreatePrintPageEnable } from '@/utils/lodopFuncs'
 // 请求接口
 import { getSystemTime } from '@/api/common'
@@ -1538,6 +1539,7 @@ export default {
         this.feeConfig = dataArr[1] || []
         // 获取个人设置
         this.personConfig = dataArr[2] || {}
+        console.warn('personConfig===========', this.personConfig)
         // 获取后台时间
         this.nowTime = dataArr[3] || new Date()
         // 获取网点信息
@@ -1782,22 +1784,34 @@ export default {
     },
     // 设置默认值
     setDefaultValue() {
+
+
+
+      // DICT[type]
+
       // 默认开单网点为本网点
       this.form.tmsOrderShip.shipFromOrgid = this.otherinfo.orgid
       // 默认制单人为当前用户
       this.form.tmsOrderShip.shipUserid = this.otherinfo.id
       // 付款方式
       this.form.tmsOrderShip.shipPayWay = this.form.tmsOrderShip.shipPayWay ? this.form.tmsOrderShip.shipPayWay : this.personConfig.shipSetKey.paymentMode
+
+      // this.selectShipMethod(this.form.tmsOrderShip.shipPayWay)
+      // this.form.tmsOrderShip.shipPayWayName =
       // 回单类型
       this.form.tmsOrderShip.shipReceiptRequire = this.personConfig.shipSetKey.receiptType
       // 回单份数
       this.form.tmsOrderShip.shipReceiptNum = this.personConfig.shipSetKey.receiptNum
+      // this.form.tmsOrderShip.shipReceiptRequireName =
       // 运输方式
       this.form.tmsOrderShip.shipShippingType = this.personConfig.shipSetKey.transportMode
+      // this.form.tmsOrderShip.shipShippingTypeName =
       // 业务类型
       this.form.tmsOrderShip.shipBusinessType = this.personConfig.shipSetKey.businessType
+      // this.form.tmsOrderShip.shipBusinessTypeName = 
       // 交接方式
       this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverMode
+      // this.form.tmsOrderShip.shipDeliveryMethodName = 
     },
     // 检查运单号是否唯一
     detectOrderNum() {
@@ -3535,6 +3549,7 @@ export default {
     selectShipMethod(val, item) {
       // console.log('交接方式： ', val, item)
       this.form.tmsOrderShip.shipDeliveryMethodName = item.dictName || ''
+      console.log('kkkkkkkkkkkkkkkk', val, item)
     },
     selectShipPayway(val, item) {
       // console.log('付款方式： ', val, item)
@@ -3806,6 +3821,7 @@ export default {
       this.changeFlag = Math.random()
       this.getPersonSetting(true).then(data => {
         this.personConfig = data
+
         this.setOrderTransfer()
         if (!this.output.isOrder) {
           this.setDefaultValue()

@@ -54,6 +54,10 @@
                   <el-radio label="3" v-model="cargoNo">网点代码+运单号后</el-radio>
                   <el-input :disabled="cargoNo !== '3'" v-model="form.cargoNo.orgIdAndShipNoAndNumberOfUnitsValue" placeholder=""></el-input>位+件数
                 </el-form-item>
+                 <el-form-item>
+                  <el-radio label="4" v-model="cargoNo">网点代码+日期+运单号后</el-radio>
+                  <el-input :disabled="cargoNo !== '4'" v-model="form.cargoNo.orgIdAndDateAndShipNoAndNumberOfUnitsValue" placeholder=""></el-input>位+件数
+                </el-form-item>
                 <el-form-item>
                   <el-checkbox true-label="1" false-label="0" v-model="form.cargoNo.systemNumberNotAllowUpdate">不允许修改系统生成的货号</el-checkbox>
                 </el-form-item>
@@ -634,7 +638,9 @@ export default {
           'manualInput': '0',
           'systemNumberNotAllowUpdate': '0',
           'orgIdAndShipNoAndNumberOfUnitsValue': '',
-          'shipNoAndNumberOfUnits': '1'
+          'shipNoAndNumberOfUnits': '1',
+          'orgIdAndDateAndShipNoAndNumberOfUnitsSign': '0',
+          'orgIdAndDateAndShipNoAndNumberOfUnitsValue': '3'
         },
         'shipFee': {
           'customsFee': '0',
@@ -857,6 +863,9 @@ export default {
       if (this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign === '1') {
         this.cargoNo = '3'
       }
+      if (this.form.cargoNo.orgIdAndDateAndShipNoAndNumberOfUnitsSign === '1') {
+        this.cargoNo = '4'
+      }
     },
     resetShipNo() {
       this.form.shipNo.manualInput = '0'
@@ -868,6 +877,7 @@ export default {
       this.form.cargoNo.manualInput = '0'
       this.form.cargoNo.shipNoAndNumberOfUnits = '0'
       this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '0'
+      this.form.cargoNo.orgIdAndDateAndShipNoAndNumberOfUnitsSign = '0'
     },
     saveDatePrint() { // 为保存字体和打印机，简化调用接口不需要finance和base
       this.loading = true
@@ -1017,6 +1027,9 @@ export default {
           break
         case '3':
           this.form.cargoNo.orgIdAndShipNoAndNumberOfUnitsSign = '1'
+          break
+        case '4':
+          this.form.cargoNo.orgIdAndDateAndShipNoAndNumberOfUnitsSign = '1'
           break
       }
     }

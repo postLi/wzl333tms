@@ -176,6 +176,7 @@ export default {
         this.fetchData()
       } else {
         const data = CACHE.get(this.type)
+
         if (data === '') {
           this.fetchData()
         } else {
@@ -215,6 +216,7 @@ export default {
         // this.listdata = data
         // debugger
         CACHE.set(this.type, data)
+        this.change(this.val)
       }
       if (DICT[this.type]) {
         cb(DICT[this.type])
