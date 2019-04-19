@@ -1224,7 +1224,7 @@ export default {
   activated() {
     // if (this.ispop) {
     this.loading = true
-    this.isDelivery = false
+
     this.initIndex('activated')
     // }
   },
@@ -1307,22 +1307,22 @@ export default {
       this.loading = true
       return orderManage.getOrderModel().then(data => {
         if (data) {
-            this.modelList = data
-            this.modelList.forEach((el, index) => {
+          this.modelList = data
+          this.modelList.forEach((el, index) => {
               if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
                 this.m_index.customerInfo = el.typeOrder
               } else {
                 this.m_index[el.templateType] = el.typeOrder
               }
             })
-            this.m_index.tmsOrderTransfer = 5
-            this.org_m_index = objectMerge2({}, this.m_index)
+          this.m_index.tmsOrderTransfer = 5
+          this.org_m_index = objectMerge2({}, this.m_index)
             // console.log('模板各个模块排序：', JSON.stringify(this.m_index))
             // console.warn('所有模板排序信息 modelList:', this.modelList)
-            this.sortModel() // 初始化开单页面各个模块排序
-          } else {
-            this.modelList = this.$const.MODELLIST
-          }
+          this.sortModel() // 初始化开单页面各个模块排序
+        } else {
+          this.modelList = this.$const.MODELLIST
+        }
         this.loading = false
       })
         .catch(err => {
@@ -1837,6 +1837,10 @@ export default {
      */
     initIndex(whereAreYou) {
       console.log('whereAreYou::', whereAreYou)
+      // 如果是重新切回来的页面或者为保存并新增的操作，要重置第一次判断
+      if (whereAreYou === 'isSaveAndNew' || whereAreYou === 'activated') {
+        this.isDelivery = false
+      }
       // 1.判断有无运单id
       // 1.1 判断是否为修改
       // 1.1.1 判断是否已核销，设置可修改部分
@@ -3448,12 +3452,12 @@ export default {
         console.log('getSettingCompanyLi', data, printData)
         const libData = Object.assign([], data)
         for (const item in printData) {
-            libData.forEach((e, index) => {
+          libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
-          }
+        }
         return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
       })
         .catch(err => {
@@ -3481,12 +3485,12 @@ export default {
         console.log('getSettingCompanyOrder', data)
         const libData = Object.assign([], data)
         for (const item in printData) {
-            libData.forEach((e, index) => {
+          libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
-          }
+        }
         return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
       })
         .catch(err => {
