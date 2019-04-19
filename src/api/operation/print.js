@@ -98,22 +98,21 @@ export function putPrintSetting(data) {
   return fetch.put('/api-system/system/tmssystemsettingprint/v1.4/updateSystemSettingPrints', data)
 }
 
-
-/***********************************************
+/** *********************************************
  *
  *
  *            标签多模板功能
- *                  
+ *
  *            ·获取标签模板接口
  *            ·获取pc端默认标签打印模板接口
  *            ·点击保存新增与修改模板及对应模板信息
  *            ·删除模板
  *
- * 
+ *
  ***********************************************/
 
 /**
- * 获取标签模板接口
+ * 获取标签模板列表接口
  */
 export function getLiModel() {
   return fetch.get('/api-order/order/tmscommonmodellib/v1/model').then(res => {

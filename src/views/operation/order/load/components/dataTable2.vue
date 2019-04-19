@@ -22,16 +22,16 @@
   </transferTable>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex'
 import {
   getSelectAddLoadRepertoryList,
   postLoadInfo
-} from '@/api/operation/load';
-import transferTable from '@/components/transferTable';
-import { objectMerge2 } from '@/utils/index';
-import currentSearch from './currentSearch';
-import { getSummaries, tmsMath, getSummariesVtable } from '@/utils/';
-import Vue from 'vue';
+} from '@/api/operation/load'
+import transferTable from '@/components/transferTable'
+import { objectMerge2 } from '@/utils/index'
+import currentSearch from './currentSearch'
+import { getSummaries, tmsMath, getSummariesVtable } from '@/utils/'
+import Vue from 'vue'
 export default {
   data() {
     return {
@@ -54,401 +54,401 @@ export default {
       isOrgLeftTable: true,
       isCountFooter: true,
       orgcolumnsLeft: [{
-          field: 'number',
-          title: '序号',
-          width: 60,
-          isFrozen: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          formatter: function(rowData, rowIndex, pagingIndex, field) {
-            return rowIndex + 1
-          }
-        },
-        {
-          field: 'customeAdv',
-          title: '',
-          width: 50,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          isFrozen: true,
-          componentName: 'addItemBtn'
-        },
-        {
-          field: 'shipGoodsSn',
-          title: '货号',
-          width: 120,
-          // isFrozen: true,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipFromOrgName',
-          title: '开单网点',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipDeliveryMethodName',
-          title: '交接方式',
-          width: 90,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSn',
-          title: '运单号',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipArrivepayFee',
-          title: '到付(元)',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipTotalFee',
-          title: '运费合计(元)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'brokerageFee',
-          title: '回扣(元)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipFromCityName',
-          title: '发站',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipToCityName',
-          title: '到站',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSenderName',
-          title: '发货人',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSenderMobile',
-          title: '发货人电话',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipReceiverName',
-          title: '收货人',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipReceiverMobile',
-          title: '收货人电话',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoName',
-          title: '货品名',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoPack',
-          title: '包装',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryAmount',
-          title: '库存件数',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryWeight',
-          title: '库存重量(千克)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryVolume',
-          title: '库存体积(方)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoAmount',
-          title: '运单件数',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoWeight',
-          title: '运单重量(千克)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoVolume',
-          title: '运单体积(方)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipRemarks',
-          title: '运单备注',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
+        field: 'number',
+        title: '序号',
+        width: 60,
+        isFrozen: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        formatter: function(rowData, rowIndex, pagingIndex, field) {
+          return rowIndex + 1
         }
+      },
+      {
+        field: 'customeAdv',
+        title: '',
+        width: 50,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        isFrozen: true,
+        componentName: 'addItemBtn'
+      },
+      {
+        field: 'shipGoodsSn',
+        title: '货号',
+        width: 120,
+          // isFrozen: true,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipFromOrgName',
+        title: '开单网点',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipDeliveryMethodName',
+        title: '交接方式',
+        width: 90,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSn',
+        title: '运单号',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipArrivepayFee',
+        title: '到付(元)',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipTotalFee',
+        title: '运费合计(元)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'brokerageFee',
+        title: '回扣(元)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipFromCityName',
+        title: '发站',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipToCityName',
+        title: '到站',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSenderName',
+        title: '发货人',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSenderMobile',
+        title: '发货人电话',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipReceiverName',
+        title: '收货人',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipReceiverMobile',
+        title: '收货人电话',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoName',
+        title: '货品名',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoPack',
+        title: '包装',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryAmount',
+        title: '库存件数',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryWeight',
+        title: '库存重量(千克)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryVolume',
+        title: '库存体积(方)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoAmount',
+        title: '运单件数',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoWeight',
+        title: '运单重量(千克)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoVolume',
+        title: '运单体积(方)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipRemarks',
+        title: '运单备注',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      }
       ],
       orgcolumnsRight: [{
-          field: 'number',
-          title: '序号',
-          width: 60,
-          isFrozen: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          formatter: function(rowData, rowIndex, pagingIndex, field) {
-            return rowIndex + 1
-          }
-        },
-        {
-          field: 'customeAdv',
-          title: '',
-          width: 50,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          isFrozen: true,
-          componentName: 'minusItemBtn'
-        },
-        {
-          field: 'shipGoodsSn',
-          title: '货号',
-          width: 120,
-          // isFrozen: true,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipFromOrgName',
-          title: '开单网点',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipDeliveryMethodName',
-          title: '交接方式',
-          width: 90,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSn',
-          title: '运单号',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipArrivepayFee',
-          title: '到付(元)',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'handlingFee',
-          title: '操作费(元)',
-          width: 140,
-          hide: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          componentName: 'expandInput'
-        },
-        {
-          field: 'deliveryFeeToPay',
-          title: '实付送货费(元)',
-          width: 140,
-          hide: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          componentName: 'expandInput'
-        },
-        {
-          field: 'loadAmount',
-          title: '配载件数',
-          width: 120,
-          hide: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          componentName: 'expandInput'
-        },
-        {
-          field: 'loadWeight',
-          title: '配载重量(千克)',
-          width: 120,
-          hide: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          componentName: 'expandInput'
-        },
-        {
-          field: 'loadVolume',
-          title: '配载体积(方)',
-          width: 120,
-          hide: true,
-          titleAlign: 'center',
-          columnAlign: 'center',
-          componentName: 'expandInput'
-        },
-        {
-          field: 'shipTotalFee',
-          title: '运费合计(元)',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'brokerageFee',
-          title: '回扣(元)',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryAmount',
-          title: '库存件数',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryWeight',
-          title: '库存重量(千克)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'repertoryVolume',
-          title: '库存体积(方)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoAmount',
-          title: '运单件数',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoWeight',
-          title: '运单重量(千克)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoVolume',
-          title: '运单体积(方)',
-          width: 140,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipRemarks',
-          title: '运单备注',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoPack',
-          title: '包装',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipFromCityName',
-          title: '发站',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipToCityName',
-          title: '到站',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSenderName',
-          title: '发货人',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipSenderMobile',
-          title: '发货人电话',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipReceiverName',
-          title: '收货人',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'shipReceiverMobile',
-          title: '收货人电话',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
-        },
-        {
-          field: 'cargoName',
-          title: '货品名',
-          width: 120,
-          titleAlign: 'center',
-          columnAlign: 'center'
+        field: 'number',
+        title: '序号',
+        width: 60,
+        isFrozen: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        formatter: function(rowData, rowIndex, pagingIndex, field) {
+          return rowIndex + 1
         }
+      },
+      {
+        field: 'customeAdv',
+        title: '',
+        width: 50,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        isFrozen: true,
+        componentName: 'minusItemBtn'
+      },
+      {
+        field: 'shipGoodsSn',
+        title: '货号',
+        width: 120,
+          // isFrozen: true,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipFromOrgName',
+        title: '开单网点',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipDeliveryMethodName',
+        title: '交接方式',
+        width: 90,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSn',
+        title: '运单号',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipArrivepayFee',
+        title: '到付(元)',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'handlingFee',
+        title: '操作费(元)',
+        width: 140,
+        hide: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        componentName: 'expandInput'
+      },
+      {
+        field: 'deliveryFeeToPay',
+        title: '实付送货费(元)',
+        width: 140,
+        hide: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        componentName: 'expandInput'
+      },
+      {
+        field: 'loadAmount',
+        title: '配载件数',
+        width: 120,
+        hide: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        componentName: 'expandInput'
+      },
+      {
+        field: 'loadWeight',
+        title: '配载重量(千克)',
+        width: 120,
+        hide: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        componentName: 'expandInput'
+      },
+      {
+        field: 'loadVolume',
+        title: '配载体积(方)',
+        width: 120,
+        hide: true,
+        titleAlign: 'center',
+        columnAlign: 'center',
+        componentName: 'expandInput'
+      },
+      {
+        field: 'shipTotalFee',
+        title: '运费合计(元)',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'brokerageFee',
+        title: '回扣(元)',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryAmount',
+        title: '库存件数',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryWeight',
+        title: '库存重量(千克)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'repertoryVolume',
+        title: '库存体积(方)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoAmount',
+        title: '运单件数',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoWeight',
+        title: '运单重量(千克)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoVolume',
+        title: '运单体积(方)',
+        width: 140,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipRemarks',
+        title: '运单备注',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoPack',
+        title: '包装',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipFromCityName',
+        title: '发站',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipToCityName',
+        title: '到站',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSenderName',
+        title: '发货人',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipSenderMobile',
+        title: '发货人电话',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipReceiverName',
+        title: '收货人',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipReceiverMobile',
+        title: '收货人电话',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'cargoName',
+        title: '货品名',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      }
       ],
       footerLeft: [
         []
@@ -571,9 +571,9 @@ export default {
       }
       const info = this.handlingFeeInfo
       info.params =
-        Number(this.$route.query.loadTypeId) === 40 ?
-        'deliveryFeeToPay' :
-        'handlingFee';
+        Number(this.$route.query.loadTypeId) === 40
+        ? 'deliveryFeeToPay'
+        : 'handlingFee'
 
       switch (this.handlingFeeInfo.apportionTypeId) {
         case 45: // 按运单运费占运费比例分摊 (运单-回扣）/（总运费-总回扣）*运费[送货费]
@@ -606,7 +606,7 @@ export default {
               )
             }
           })
-          break;
+          break
         case 44: // 按票数分摊 运费/票数
           this.rightTable.forEach((e, index) => {
             e[info.params] = this.calc(
@@ -616,7 +616,7 @@ export default {
               )
             )
           })
-          break;
+          break
         case 43: // 按运单所占重量比例分摊 该单重量/本车总重量*运费[送货费]
           let totalWeight = 0
           this.rightTable.map(e => {
@@ -630,7 +630,7 @@ export default {
               )
             )
           })
-          break;
+          break
         case 42: // 按运单体积所占比例分摊 该单体积/本车总体积*运费[送货费]
           let totalVolume = 0
           this.rightTable.map(e => {
@@ -644,7 +644,7 @@ export default {
               )
             )
           })
-          break;
+          break
         case 41: // 按运单所占件数比例分摊 该单件数/本车总件数*运费[送货费]
           let totalAmount = 0
           this.rightTable.map(e => {
@@ -658,7 +658,7 @@ export default {
               )
             )
           })
-          break;
+          break
       }
 
       let count = 0
@@ -734,12 +734,11 @@ export default {
     },
     getSearch(obj) {
       // 搜索
-      if (this.leftTable.length !== this.orgLeftTable.length) {
-
+      // if (this.leftTable.length !== this.orgLeftTable.length) {
         this.isOrgLeftTable = false
         this.leftTable = obj
         this.setBothFooterData()
-      }
+      // }
     },
     getSearchEnter() {
       this.isOrgLeftTable = true
@@ -773,16 +772,16 @@ export default {
       switch (type) {
         case 'goLeft': // 左边数据勾选到右边
           this.goLeft()
-          break;
+          break
         case 'goRight': // 右边数据勾选到左边
           this.goRight()
-          break;
+          break
       }
     },
     changLoadData(index, value, type) {
       console.log(index, value, type)
-       this.$set(this.rightTable[index], type, Number(value) || '')
-       console.log(this.rightTable[index][type])
+      this.$set(this.rightTable[index], type, Number(value) || '')
+      console.log(this.rightTable[index][type])
       // 修改右边表格是配载数量 index为rightTable的下标index
       const curAmount = this.rightTable[index].loadAmount // 配载件数
       const curWeight = this.rightTable[index].loadWeight // 配载重量
@@ -840,9 +839,9 @@ export default {
     changHandlingFee(index, newVal, type) {
       const info = objectMerge2({}, this.handlingFeeInfo)
       info.params =
-        Number(this.$route.query.loadTypeId) === 40 ?
-        'deliveryFeeToPay' :
-        'handlingFee';
+        Number(this.$route.query.loadTypeId) === 40
+        ? 'deliveryFeeToPay'
+        : 'handlingFee'
 
       this.$set(this.rightTable[index], type, Number(newVal) || '')
 
@@ -886,9 +885,9 @@ export default {
           //
           if (this.$route.query) {
             const params =
-              Number(this.$route.query.loadTypeId) === 40 ?
-              'deliveryFeeToPay' :
-              'handlingFee';
+              Number(this.$route.query.loadTypeId) === 40
+              ? 'deliveryFeeToPay'
+              : 'handlingFee'
             e[params] = 0
           }
           e.loadAmount = e.repertoryAmount
@@ -1054,9 +1053,9 @@ export default {
 
           if (this.leftTable.length) {
             this.footerLeft = this.setFooterData({
-                columns: this.columnsLeft,
-                data: objectMerge2([], this.leftTable)
-              },
+              columns: this.columnsLeft,
+              data: objectMerge2([], this.leftTable)
+            },
               propsArrLeft
             )
           } else {
@@ -1067,9 +1066,9 @@ export default {
 
           if (this.rightTable.length) {
             this.footerRight = this.setFooterData({
-                columns: this.columnsRight,
-                data: objectMerge2([], this.rightTable)
-              },
+              columns: this.columnsRight,
+              data: objectMerge2([], this.rightTable)
+            },
               propsArrRight
             )
           } else {
@@ -1083,7 +1082,7 @@ export default {
     },
     setFooterData(param, propsArr) {
       const footer = []
-      let arr = getSummariesVtable(param, propsArr)
+      const arr = getSummariesVtable(param, propsArr)
       footer.push(arr)
       return footer
     },
@@ -1091,10 +1090,10 @@ export default {
       switch (params.type) {
         case 'addItemBtn': // 单行添加
           this.addItem(params.row, params.index)
-          break;
+          break
         case 'minusItemBtn': // 单行减去
           this.minusItem(params.row, params.index)
-          break;
+          break
         case 'expandInput': // 输入框
           if (/(handlingFee|deliveryFeeToPay)/.test(params.field)) {
             this.changHandlingFee(params.index, params.value, params.field)

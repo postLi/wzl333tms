@@ -145,6 +145,10 @@
             <el-input :value="form.createTime | parseTime('{y}/{m}/{d}')"
                       :disabled="isModify || form.status===31"></el-input>
           </el-form-item>
+           <el-form-item label="园区名称" :label-width="formLabelWidth" prop="parkName">
+            <el-input v-model="form.parkName" auto-complete="off" :disabled="form.status===31"
+                      clearable ></el-input>
+          </el-form-item>
           <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
             <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"
                       clearable :maxlength="10"></el-input>
