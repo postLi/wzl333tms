@@ -1105,10 +1105,10 @@ export default {
     }
   },
   computed: {
-    'transferTotalFee' () {
+    'transferTotalFee'() {
       return tmsMath.add(this.form.tmsOrderTransfer.transferCharge, this.form.tmsOrderTransfer.deliveryExpense, this.form.tmsOrderTransfer.transferOtherFee).result()
     },
-    'theFeeConfig' () {
+    'theFeeConfig'() {
       let fees = objectMerge2([], this.feeConfig)
       // 处理返回的数据，将fixed的列排在前面，剔除没有被选中的列
       fees = fees.filter(el => {
@@ -1198,7 +1198,7 @@ export default {
       },
       immediate: true
     },
-    '$route' (to, from) {
+    '$route'(to, from) {
       if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
@@ -1213,7 +1213,7 @@ export default {
       }
     },
     // 弹窗时处理、如提货转运单，订单转运单
-    'ispop' (newVal) {
+    'ispop'(newVal) {
       if (newVal) {
         this.initIndex('ispop')
       }
@@ -1224,6 +1224,7 @@ export default {
   activated() {
     // if (this.ispop) {
     this.loading = true
+    this.isDelivery = false
     this.initIndex('activated')
     // }
   },
@@ -1295,7 +1296,7 @@ export default {
     },
     setModel() {
       // 重新修改开单页面的模板
-      
+
       this.eventBus.$emit('refreshKey')
       // this.$parent.$parent.$parent.refreshKey()
       // this.fetchModel().then(() => {
@@ -1305,7 +1306,7 @@ export default {
     fetchModel() { // 获取模板信息
       this.loading = true
       return orderManage.getOrderModel().then(data => {
-          if (data) {
+        if (data) {
             this.modelList = data
             this.modelList.forEach((el, index) => {
               if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
@@ -1322,8 +1323,8 @@ export default {
           } else {
             this.modelList = this.$const.MODELLIST
           }
-          this.loading = false
-        })
+        this.loading = false
+      })
         .catch(err => {
           this.modelList = this.$const.MODELLIST
           this._handlerCatchMsg(err)
@@ -1336,11 +1337,11 @@ export default {
       // 4/重新把dom设置进去被清空的容器里面，实现排序效果
       this.loading = true
       this.$nextTick(() => {
-        let root = document.querySelector('.model-order-list')
+        const root = document.querySelector('.model-order-list')
         if (this.modelList && root) {
-          let list = objectMerge2([], root.children || document.querySelectorAll('.model-order-item'))
+          const list = objectMerge2([], root.children || document.querySelectorAll('.model-order-item'))
           root.innerHTML = ''
-          let arr = Array.prototype.slice.call(list)
+          const arr = Array.prototype.slice.call(list)
           arr.sort(function(a, b) {
             return Number(a.getAttribute('data-index') - Number(b.getAttribute('data-index')))
           })
@@ -1411,7 +1412,7 @@ export default {
     // 其它基础部分
     // 查找当前表单所有存在的input元素
     goNextInput(e) {
-      console.log('e',e)
+      console.log('e', e)
       const ele = e.srcElement
       const index = this.inputEles.indexOf(ele)
       const nextEle = this.findNextInput(39, index)
@@ -1427,7 +1428,7 @@ export default {
       // console.log('orderMainPaper', orderMainPaper, Array.prototype.slice.call(orderMainPaper.querySelectorAll('input')))
       // const eles = Array.prototype.slice.call(document.querySelectorAll('.order-main input'))
       const eles = Array.prototype.slice.call(this.$refs.orderMainPaper.querySelectorAll('input'))
-     
+
       // 过滤掉fixed表格中的选项（当且仅当fixed中没有展示的input框时显示正确）
       // 如果有input框是fixed显示，则其被显示的顺序会有问题
       this.inputEles = eles.filter(el => {
@@ -1640,7 +1641,7 @@ export default {
         obj = this.$refs['tmsOrderShipshipSn']
       }
       if (obj && this.output.iscreate) {
-        setTimeout(()=>{
+        setTimeout(() => {
           obj.focus()
         }, 200)
       }
@@ -1784,9 +1785,6 @@ export default {
     },
     // 设置默认值
     setDefaultValue() {
-
-
-
       // DICT[type]
 
       // 默认开单网点为本网点
@@ -1808,10 +1806,10 @@ export default {
       // this.form.tmsOrderShip.shipShippingTypeName =
       // 业务类型
       this.form.tmsOrderShip.shipBusinessType = this.personConfig.shipSetKey.businessType
-      // this.form.tmsOrderShip.shipBusinessTypeName = 
+      // this.form.tmsOrderShip.shipBusinessTypeName =
       // 交接方式
       this.form.tmsOrderShip.shipDeliveryMethod = this.personConfig.shipSetKey.handoverMode
-      // this.form.tmsOrderShip.shipDeliveryMethodName = 
+      // this.form.tmsOrderShip.shipDeliveryMethodName =
     },
     // 检查运单号是否唯一
     detectOrderNum() {
@@ -2400,7 +2398,7 @@ export default {
     },
     // 修改货品列表
     changeFee(index, name, event) {
-      console.log('changeFee 修改货品列表',index, name)
+      console.log('changeFee 修改货品列表', index, name)
       this.form.cargoList[index][name] = event.target.value
 
       if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
@@ -3304,7 +3302,6 @@ export default {
                   }
                   this.loading = false
                   console.log('成功' + (isdashed ? '创建' : '修改') + '运单！')
-
                 }).catch(err => {
                   this.loading = false
                   this.$message.error((isdashed ? '创建' : '修改') + '失败，原因：' + err.text)
@@ -3441,24 +3438,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyLi().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.label
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.label
 
-          CreatePrintPageEnable(printObj)
-          return data
-          this.setPrintData('lib') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyLi', data, printData)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
+        CreatePrintPageEnable(printObj)
+        return data
+        this.setPrintData('lib') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyLi', data, printData)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
-        })
+        return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -3474,24 +3471,24 @@ export default {
         preview: !this.isPrintWithNoPreview
       }
       return getSettingCompanyOrder().then(data => {
-          printObj.printSetup = data
-          printObj.printer = this.otherinfo.systemSetup.printSetting.ship
+        printObj.printSetup = data
+        printObj.printer = this.otherinfo.systemSetup.printSetting.ship
 
-          CreatePrintPageEnable(printObj)
-          return
-          this.setPrintData('order') // 设置数据
-          const printData = objectMerge2({}, this.printDataObject)
-          console.log('getSettingCompanyOrder', data)
-          const libData = Object.assign([], data)
-          for (const item in printData) {
+        CreatePrintPageEnable(printObj)
+        return
+        this.setPrintData('order') // 设置数据
+        const printData = objectMerge2({}, this.printDataObject)
+        console.log('getSettingCompanyOrder', data)
+        const libData = Object.assign([], data)
+        for (const item in printData) {
             libData.forEach((e, index) => {
               if (e.filedValue === item) {
                 e['value'] = printData[item] // 把页面数据存储到打印数组中
               }
             })
           }
-          return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
-        })
+        return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })

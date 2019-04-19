@@ -188,11 +188,11 @@
           width: '',
           fixed: false
         }, {
-            label: '操作',
-            prop: 'pickupName',
-            width: '',
-            fixed: false
-          }
+          label: '操作',
+          prop: 'pickupName',
+          width: '',
+          fixed: false
+        }
         ]
       }
     },
@@ -278,7 +278,7 @@
             break
           // 删除客户
           case 'delete':
-            const ids = this.selected.filter(el => {
+            let ids = this.selected.filter(el => {
               return el.pickupStatusName === '提货中'
             }).map(el => {
               return el.id
