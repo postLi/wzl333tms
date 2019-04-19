@@ -1213,7 +1213,7 @@ export default {
           this.savePrinter()
           this.loading = true
           this.showDragDetail = false
-          const arr = objectMerge2([], this.labelListView)
+          let arr = objectMerge2([], this.labelListView)
           let bgImg = {}
           let modelName = {}
           arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息

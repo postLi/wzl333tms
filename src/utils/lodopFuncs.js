@@ -155,7 +155,7 @@ export function getLodop(oOBJECT, oEMBED) {
         CreatedOKLodop7766 = LODOP
       } else LODOP = CreatedOKLodop7766
       // =====Lodop插件未安装时提示下载地址:==========
-      if ((LODOP == null) || (typeof(LODOP.VERSION) === 'undefined')) {
+      if ((LODOP == null) || (typeof (LODOP.VERSION) === 'undefined')) {
         if (navigator.userAgent.indexOf('Chrome') >= 0) {
           document.body.innerHTML = strHtmChrome + document.body.innerHTML
         }

@@ -586,7 +586,7 @@ export default {
           break
         // 删除客户
         case 'delete':
-          const ids = this.selected
+          let ids = this.selected
             .filter(el => {
               return el.pickupStatusName === '提货中'
             })
