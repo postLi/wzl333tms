@@ -779,14 +779,17 @@ export default {
           break;
       }
     },
-    changLoadData(newVal, value, type) {
-      // 修改右边表格是配载数量 newVal为rightTable的下标index
-      const curAmount = this.rightTable[newVal].loadAmount // 配载件数
-      const curWeight = this.rightTable[newVal].loadWeight // 配载重量
-      const curVolume = this.rightTable[newVal].loadVolume // 配载体积
-      const currepertAmount = this.rightTable[newVal].repertoryAmount // 库存件数
-      const currepertWeight = this.rightTable[newVal].repertoryWeight // 库存重量
-      const currepertVolume = this.rightTable[newVal].repertoryVolume // 库存体积
+    changLoadData(index, value, type) {
+      console.log(index, value, type)
+       this.$set(this.rightTable[index], type, Number(value) || '')
+       console.log(this.rightTable[index][type])
+      // 修改右边表格是配载数量 index为rightTable的下标index
+      const curAmount = this.rightTable[index].loadAmount // 配载件数
+      const curWeight = this.rightTable[index].loadWeight // 配载重量
+      const curVolume = this.rightTable[index].loadVolume // 配载体积
+      const currepertAmount = this.rightTable[index].repertoryAmount // 库存件数
+      const currepertWeight = this.rightTable[index].repertoryWeight // 库存重量
+      const currepertVolume = this.rightTable[index].repertoryVolume // 库存体积
       if (
         curAmount > currepertAmount ||
         curAmount < 1 ||
@@ -800,16 +803,16 @@ export default {
           message: '配载件数不能小于1,配载重量和体积不能小于0,都不能大于库存数量,默认为该库存数量',
           type: 'warning'
         })
-        this.rightTable[newVal].loadAmount = currepertAmount
-        this.rightTable[newVal].loadWeight = currepertWeight
-        this.rightTable[newVal].loadVolume = currepertVolume
+        this.rightTable[index].loadAmount = currepertAmount
+        this.rightTable[index].loadWeight = currepertWeight
+        this.rightTable[index].loadVolume = currepertVolume
       } else if (curAmount === currepertAmount) {
         this.$notify({
           title: '提示',
           message: '配载件数等于该库存大小,即所有配载数量为库存数量',
           type: 'warning'
         })
-        this.rightTable[newVal].loadAmount = currepertAmount
+        this.rightTable[index].loadAmount = currepertAmount
       } else if (
         curVolume === currepertVolume &&
         curWeight === currepertWeight
@@ -819,8 +822,8 @@ export default {
           message: '配载重量与配载体积都等于该库存大小,即所有配载数量为库存数量',
           type: 'warning'
         })
-        this.rightTable[newVal].loadWeight = currepertWeight
-        this.rightTable[newVal].loadVolume = currepertVolume
+        this.rightTable[index].loadWeight = currepertWeight
+        this.rightTable[index].loadVolume = currepertVolume
       } else {}
       if (this.$route.query.loadTypeId !== 40) {
         this.countHandingFee()
@@ -829,9 +832,9 @@ export default {
       this.$emit('repertoryList', this.orgLeftTable)
       this.setBothFooterData()
       return (
-        this.rightTable[newVal].loadAmount &&
-        this.rightTable[newVal].loadWeight &&
-        this.rightTable[newVal].loadVolume
+        this.rightTable[index].loadAmount &&
+        this.rightTable[index].loadWeight &&
+        this.rightTable[index].loadVolume
       )
     },
     changHandlingFee(index, newVal, type) {

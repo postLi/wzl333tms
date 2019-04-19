@@ -167,10 +167,10 @@
             <el-input v-model="form.servicePhone" auto-complete="off" :disabled="form.status===31"
                       :maxlength="30"></el-input>
           </el-form-item>
-          <el-form-item label="详细地址" :label-width="formLabelWidth">
+        <!--   <el-form-item label="详细地址" :label-width="formLabelWidth">
             <el-input v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"
                       :maxlength="30"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="网点ID" :label-width="formLabelWidth" prop="networkCode">
             <el-input v-model="form.networkCode" auto-complete="off " :disabled="form.status===31" :maxlength="10"
                       clearable></el-input>
@@ -193,7 +193,8 @@
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
                       :disabled="form.status===31"> <template slot="append">元</template></el-input>
           </el-form-item>
-          <div class="ad-add-dot" v-if="!isModify">
+            <div class="ad-add-dot-admin">
+            <div class="ad-add-dot" v-if="!isModify">
             <el-checkbox checked v-model="form.accountStatus">开通管理员账号</el-checkbox>
             <p> 密码：123456</p>
           </div>
@@ -206,8 +207,14 @@
             </el-tooltip>
             <!--<el-input placeholder="管理员账号" v-model="form.accountName" auto-complete="off" :maxlength="20" ></el-input>-->
           </el-form-item>
+          </div>
 
           <div class="rem-add-dot">
+              <el-form-item label="详细地址" :label-width="formLabelWidth">
+            <el-input   type="textarea"
+                :rows="2" v-model="form.detailedAddr" auto-complete="off" :disabled="form.status===31"
+                      :maxlength="30" placeholder="不可超30字"></el-input>
+          </el-form-item>
             <el-form-item label="备注" :label-width="formLabelWidth" prop="">
               <el-input
                 type="textarea"
@@ -217,6 +224,7 @@
                 auto-complete="off" :maxlength="300"></el-input>
             </el-form-item>
           </div>
+        
         </el-form>
         <!-- <div class="spanDiv" v-if="companyId !== form.id">
           <span>元</span>
