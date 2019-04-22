@@ -68,6 +68,7 @@ import { SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
+  name: 'ordermanage',
   components: {
     SearchForm,
     Pager,
@@ -78,9 +79,9 @@ export default {
   computed: {
     ...mapGetters(['otherinfo']),
     orgid() {
-      return this.isModify ?
-        this.selectInfo.orgid :
-        this.searchForms.vo.orgid || this.otherinfo.orgid
+      return this.isModify
+        ? this.selectInfo.orgid
+        : this.searchForms.vo.orgid || this.otherinfo.orgid
     }
   },
   data() {
@@ -112,186 +113,186 @@ export default {
         }
       },
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: false,
-          slot: scope => {
-            return (
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: false,
+        slot: scope => {
+          return (
               (this.searchForms.currentPage - 1) * this.searchForms.pageSize +
               scope.$index +
               1
-            )
-          }
-        },
-        {
-          label: '订单号',
-          prop: 'orderSn',
-          width: '130',
-          fixed: true
-        },
-        {
-          label: '订单状态',
-          prop: 'orerStatusName',
-          width: '110',
-          fixed: true
-        },
-        {
-          label: '关联运单号',
-          prop: 'shipSn',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '订单类型',
-          prop: 'orderTypeName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '紧急度',
-          prop: 'orderEffectiveName',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '提货方式',
-          prop: 'orderPickupMethodName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '包装',
-          prop: 'cargoPack',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '品种规格',
-          prop: 'description',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '运费',
-          prop: 'shipFee',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '付款方式',
-          prop: 'orderPayWayName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '创建时间',
-          prop: 'createTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'senderName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '发货人电话',
-          prop: 'senderMobile',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'receiverName',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '收货人电话',
-          prop: 'receiverMobile',
-          width: '130',
-          fixed: false
-        },
-        {
-          label: '拒绝原因',
-          prop: 'refuseReason',
-          width: '150',
-          fixed: false
-        },
-        {
-          label: '备注',
-          prop: 'orderRemarks',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发站',
-          prop: 'orderFromCityName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'orderToCityName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'orderFromOrgName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '目的网点',
-          prop: 'orderToOrgName',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '声明价值',
-          prop: 'productPrice',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '代收款',
-          prop: 'agencyFund',
-          width: '90',
-          fixed: false
-        },
-        {
-          label: '代收款手续费',
-          prop: 'commissionFee',
-          width: '130',
-          fixed: false
+          )
         }
+      },
+      {
+        label: '订单号',
+        prop: 'orderSn',
+        width: '130',
+        fixed: true
+      },
+      {
+        label: '订单状态',
+        prop: 'orerStatusName',
+        width: '110',
+        fixed: true
+      },
+      {
+        label: '关联运单号',
+        prop: 'shipSn',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '订单类型',
+        prop: 'orderTypeName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '紧急度',
+        prop: 'orderEffectiveName',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '提货方式',
+        prop: 'orderPickupMethodName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '包装',
+        prop: 'cargoPack',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '品种规格',
+        prop: 'description',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '运费',
+        prop: 'shipFee',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '付款方式',
+        prop: 'orderPayWayName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '创建时间',
+        prop: 'createTime',
+        width: '160',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'senderName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '发货人电话',
+        prop: 'senderMobile',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'receiverName',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '收货人电话',
+        prop: 'receiverMobile',
+        width: '130',
+        fixed: false
+      },
+      {
+        label: '拒绝原因',
+        prop: 'refuseReason',
+        width: '150',
+        fixed: false
+      },
+      {
+        label: '备注',
+        prop: 'orderRemarks',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发站',
+        prop: 'orderFromCityName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'orderToCityName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'orderFromOrgName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '目的网点',
+        prop: 'orderToOrgName',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '声明价值',
+        prop: 'productPrice',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '代收款',
+        prop: 'agencyFund',
+        width: '90',
+        fixed: false
+      },
+      {
+        label: '代收款手续费',
+        prop: 'commissionFee',
+        width: '130',
+        fixed: false
+      }
         // {
         //   label: '件数单价',
         //   prop: 'cargoAmount',
@@ -477,18 +478,18 @@ export default {
           this.closeAddCustomer()
           if (this.selected[0].orderStatus == 213) {
             const _deleteIt =
-              this.selected.length > 1 ?
-              this.selected.length + '条' :
-              this.selected[0].orderSn
+              this.selected.length > 1
+              ? this.selected.length + '条'
+              : this.selected[0].orderSn
             let _ids = this.selected.map(item => {
               return item.id
             })
             _ids = _ids.length > 1 ? _ids.join(',') : _ids
             this.$confirm('确定要操作 ' + _deleteIt + ' 订单号吗？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
               .then(() => {
                 putCancel(_ids)
                   .then(res => {
@@ -532,10 +533,10 @@ export default {
             })
             ids = ids.splice(',')
             this.$prompt('拒绝原因', '拒绝订单', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
               .then(value => {
                 const refuseReason = value.value
                 const data = {
@@ -589,18 +590,18 @@ export default {
             this.selected[0].orderStatus === 216
           ) {
             const deleteIt =
-              this.selected.length > 1 ?
-              this.selected.length + '条' :
-              this.selected[0].orderSn
+              this.selected.length > 1
+              ? this.selected.length + '条'
+              : this.selected[0].orderSn
             let ids = this.selected.map(item => {
               return item.id
             })
             ids = ids.length > 1 ? ids.join(',') : ids
             this.$confirm('确定要删除 ' + deleteIt + ' 订单号吗？', '提示', {
-                confirmButtonText: '删除',
-                cancelButtonText: '取消',
-                type: 'warning'
-              })
+              confirmButtonText: '删除',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
               .then(() => {
                 deletebatchDelete(ids)
                   .then(res => {

@@ -1199,7 +1199,7 @@ export default {
       immediate: true
     },
     '$route'(to, from) {
-      if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
+     /*  if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
@@ -1210,7 +1210,7 @@ export default {
       if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
         // 2 如果进入改单页面
         this.initIndex()
-      }
+      } */
     },
     // 弹窗时处理、如提货转运单，订单转运单
     'ispop'(newVal) {
@@ -1223,9 +1223,9 @@ export default {
   // 当创建/修改切换时，不会触发，此时需要判断router变化来初始化数据
   activated() {
     // if (this.ispop) {
-    this.loading = true
+    // this.loading = true
 
-    this.initIndex('activated')
+    // this.initIndex('activated')
     // }
   },
   deactivated() {
@@ -1264,14 +1264,12 @@ export default {
     // this.getReceiptType()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
-    if (this.ispop) {
-      this.loading = true
-
-      this.initIndex('mounted')
-
-      // 中转默认付款方式
-      this.form.tmsOrderTransfer.paymentId = 16
-    }
+    // if (this.ispop) {
+    //   // 中转默认付款方式
+    //   this.form.tmsOrderTransfer.paymentId = 16
+    // }
+    this.loading = true
+    this.initIndex('mounted')
     this.initPrintAmount()
   },
   methods: {
@@ -1309,12 +1307,12 @@ export default {
         if (data) {
           this.modelList = data
           this.modelList.forEach((el, index) => {
-              if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
-                this.m_index.customerInfo = el.typeOrder
-              } else {
-                this.m_index[el.templateType] = el.typeOrder
-              }
-            })
+            if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+              this.m_index.customerInfo = el.typeOrder
+            } else {
+              this.m_index[el.templateType] = el.typeOrder
+            }
+          })
           this.m_index.tmsOrderTransfer = 5
           this.org_m_index = objectMerge2({}, this.m_index)
             // console.log('模板各个模块排序：', JSON.stringify(this.m_index))
@@ -3453,10 +3451,10 @@ export default {
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
         }
         return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
       })
@@ -3486,10 +3484,10 @@ export default {
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
         }
         return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
       })

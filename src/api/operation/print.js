@@ -130,7 +130,7 @@ export function getLiSetting() {
 /**
  * 点击保存新增与修改模板及对应模板信息
  */
-export function postLiUpdate() {
+export function postLiUpdate(data) {
   return fetch.post('/api-order/order/tmscommonmodellib/v1/', data).then(res => {
     return res.data
   })
@@ -140,6 +140,14 @@ export function postLiUpdate() {
  */
 export function deleteLiModel(id) {
   return fetch.delete('/api-order/order/tmscommonmodellib/v1/' + id).then(res => {
+    return res.data
+  })
+}
+/**
+ * 查看百强模板
+ */
+export function viewLiModel(modelId) {
+  return fetch.get('/api-order/order/printlib/v1/setting/' + modelId).then(res => {
     return res.data
   })
 }

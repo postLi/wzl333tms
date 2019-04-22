@@ -518,37 +518,37 @@ export default {
     this.disOrgList = [this.otherinfo.orgid] // 禁止选择的网点列表
   },
   mounted() {
-    // this.getSelectType()
-    // this.init()
-    // this.getSystemTime()
+    this.getSelectType()
+    this.init()
+    this.getSystemTime()
   },
   activated() {
     this.getSystemTime()
   },
   watch: {
-    '$route': {
-      handler(to, from) {
-        const bothBool = false
-        console.log('$route', to, from)
-        if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-          // 1
-          // 3
-          if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-            this.switchUrl(from.fullPath, true)
-          }
-          this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
-        } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-          // 2
-          // 4
-          this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
-        } else {
-          // this.getSelectType()
-          // this.init()
-          // this.getSystemTime()
-        }
-      },
-      immediate: true
-    },
+    // '$route': {
+    //   handler(to, from) {
+    //     const bothBool = false
+    //     console.log('$route', to, from)
+    //     if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //       // 1
+    //       // 3
+    //       if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //         this.switchUrl(from.fullPath, true)
+    //       }
+    //       this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
+    //     } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //       // 2
+    //       // 4
+    //       this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
+    //     } else {
+    //       // this.getSelectType()
+    //       // this.init()
+    //       // this.getSystemTime()
+    //     }
+    //   },
+    //   immediate: true
+    // },
     networkList: {
       handler(cval, oval) {
         const arr = [this.otherinfo.orgid]
@@ -943,8 +943,10 @@ export default {
       this.eventBus.$emit('closeCurrentView')
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() }})
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
+          this.$store.commit('UPDATE_LIST_STATE', 'shortDepartDeliver')
+
+          this.$router.push({ path: '/operation/order/shortDepart/deliver' })
+          // this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
           this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() }})
@@ -970,7 +972,7 @@ export default {
             putLoadInfo(this.loadInfo).then(data => {
               this.loading = false
               this.$message({ type: 'success', message: '修改配载信息成功' })
-              this.resetFieldsForm()
+              // this.resetFieldsForm()
               this.$nextTick(() => {
                 this.gotoPage() // 操作成功后跳转到配载列表页面
               })
@@ -985,7 +987,7 @@ export default {
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.loading = false
               this.$message({ type: 'success', message: '插入配载信息成功' })
-              this.resetFieldsForm()
+              // this.resetFieldsForm()
               this.$nextTick(() => {
                 this.gotoPage()
               })
@@ -1014,7 +1016,7 @@ export default {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.loading = false
             this.$message({ type: 'success', message: '保存成功' })
-            this.resetFieldsForm()
+            // this.resetFieldsForm()
             this.$nextTick(() => {
               this.gotoPage() // 操作成功后跳转到配载列表页面
             })
@@ -1044,7 +1046,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
+        // this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
       } else {}
       this.init()
     },
@@ -1365,8 +1367,7 @@ export default {
       this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
       this.handlingFeeInfo.reParams = this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'
 
-      console.log(' this.loadTypeId === 40????',  this.loadTypeId === 40,  this.handlingFeeInfo)
-      
+      console.log(' this.loadTypeId === 40????', this.loadTypeId === 40, this.handlingFeeInfo)
     },
     getHandingFeeAll(info) {
       this.handlingFeeInfo = info

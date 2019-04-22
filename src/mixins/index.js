@@ -20,6 +20,14 @@ import {
 } from '@/api/company/employeeManage'
 
 Vue.mixin({
+  activated() {
+    // console.log('this.$options.name:', this.$options.name)
+    const a = this.$store.state.app.listUpdateState[this.$options.name]
+    if (a) {
+      this.fetchData && this.fetchData()
+      this.$store.commit('DISABLED_LIST_STATE', this.$options.name)
+    }
+  },
   data() {
     return {
       access_token: getToken()
@@ -118,7 +126,7 @@ Vue.mixin({
       }
     },
     _checkExperience(row, type) { // 判断是否体验账号
-      let isUser = type === 'username'
+      const isUser = type === 'username'
       // 判断当前环境是否体验环境
       let flag = false // true-体验环境 false-非体验环境， 默认非体验环境
       if (sessionStorage.getItem('TMS_experience_system')) {
@@ -126,10 +134,10 @@ Vue.mixin({
       }
       // type: 'username'-判断登录账号，'network'-判断网点名
       if (flag) {
-        let defaults = objectMerge2([], isUser ? this.$const.EXPERIENCE_USERNAME : this.$const.EXPERIENCE_NETWORK)
-        let reg = defaults.filter(el => el === (isUser ? row.username : row.orgName))
+        const defaults = objectMerge2([], isUser ? this.$const.EXPERIENCE_USERNAME : this.$const.EXPERIENCE_NETWORK)
+        const reg = defaults.filter(el => el === (isUser ? row.username : row.orgName))
         if (reg.length) {
-          let msg = isUser ? '员工' : '网点'
+          const msg = isUser ? '员工' : '网点'
           this.$message.info('默认' + msg + '不可修改及删除~')
           return false
         } else {

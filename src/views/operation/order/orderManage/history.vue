@@ -89,6 +89,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
+  name: 'orderManage',
   components: {
     SearchForm,
     Pager,

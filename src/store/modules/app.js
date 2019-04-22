@@ -7,7 +7,8 @@ const app = {
     },
     lockScreen: {
       opened: !!+Cookies.get('lockScreenStatus')
-    }
+    },
+    listUpdateState: {}
 
   },
   mutations: {
@@ -22,6 +23,12 @@ const app = {
     TOGGLE_LOCKSCREEN: (state, status) => {
       Cookies.set('lockScreenStatus', status)
       state.lockScreen.opened = !state.lockScreen.opened
+    },
+    UPDATE_LIST_STATE: (state, listname) => {
+      state.listUpdateState[listname] = true
+    },
+    DISABLED_LIST_STATE: (state, listname) => {
+      state.listUpdateState[listname] = false
     }
   },
   actions: {

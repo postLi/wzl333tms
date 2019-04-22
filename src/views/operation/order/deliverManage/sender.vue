@@ -429,7 +429,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' }})
+      this.$router.push({ path: '././load/delivery', query: { loadTypeId: 40, tab: '新增送货' }})
     },
     edit() {
       if (this.selected.length !== 1) {

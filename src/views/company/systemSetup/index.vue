@@ -387,8 +387,8 @@ import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrderSelf'
-import printSetLi from './components/printSetLiSelf'
-// import printSetLi from './components/printSetLiModel'
+// import printSetLi from './components/printSetLiSelf'
+import printSetLi from './components/printSetLiModel'
 import printLoadInfo from './components/printLoadInfo'
 import printContract from './components/printContract'
 import Upload from '@/components/Upload/singleImage'
@@ -1034,6 +1034,9 @@ export default {
           break
       }
     }
+  },
+  beforeDestroy() {
+    console.log('system beforeDestory')
   }
 }
 

@@ -23,13 +23,20 @@ const tagsView = {
         // 如果已存在相同的父级，则更新其链接，不新增tab
         state.visitedViews.forEach(ele => {
           if (ele.title === view.meta.ptitle) {
+            /* // 1.清理cache里的name
+            const i = state.cachedViews.indexOf(ele.name)
+            state.cachedViews.splice(i, 1)
+
+            // 2.更新父级view的name值，以便清除
+            ele.name = view.name */
+
             ele.path = view.path
             ele.fullPath = view.fullPath
           }
         })
       } else {
         state.visitedViews.push({
-          name: view.query.tab || view.name,
+          name: view.name || view.query.tab,
           path: view.path,
           fullPath: view.fullPath,
           tab: view.query.tab || '',
@@ -40,7 +47,9 @@ const tagsView = {
       }
 
       if (!view.meta.noCache) {
-        state.cachedViews.push(view.name)
+        if (state.cachedViews.indexOf(view.name) === -1) {
+          state.cachedViews.push(view.name)
+        }
         // state.cachedViews.push(view.fullPath)
         console.log('state.cachedViews:', state.cachedViews)
       }
@@ -54,6 +63,7 @@ const tagsView = {
       }
       for (const i of state.cachedViews) {
         if (i === view.name) {
+          console.log('delete i name', i)
           const index = state.cachedViews.indexOf(i)
           state.cachedViews.splice(index, 1)
           break

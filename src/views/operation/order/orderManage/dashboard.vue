@@ -92,6 +92,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
+  name: 'orderManage',
   components: {
     SearchForm,
     Pager,
@@ -244,13 +245,13 @@ export default {
         'prop': 'shipToCityName',
         'width': '150'
       }, {
-          'label': '等通知放货',
-          'prop': 'status',
-          'width': '150',
-          'slot': function(scope) {
+        'label': '等通知放货',
+        'prop': 'status',
+        'width': '150',
+        'slot': function(scope) {
           return scope.row.status === 1 ? '未放货' : scope.row.status === 2 ? '已放货' : '未控货'
         }
-        }, {
+      }, {
         'label': '回单要求',
         'prop': 'shipReceiptRequireName',
         'width': '150'
@@ -259,10 +260,10 @@ export default {
         'prop': 'shipReceiptNum',
         'width': '150'
       }, {
-        'label': '代收款',
-        'prop': 'agencyFund',
-        'width': '150'
-      }, {
+          'label': '代收款',
+          'prop': 'agencyFund',
+          'width': '150'
+        }, {
         'label': '付款方式',
         'prop': 'shipPayWayName',
         'width': '150'

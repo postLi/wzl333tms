@@ -63,6 +63,7 @@ export default {
       handler(newpath, oldpath) {
         // 如果新的路径是三级路径以上，则不进行加入
         // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
+        console.log('newpath:', newpath, ' oldpath:', oldpath)
         this.addViewTags()
         this.moveToCurrentTag()
         // }
@@ -137,7 +138,7 @@ export default {
       }
       this.$store.dispatch('addVisitedViews', route).then(r => {
         // 打开原来绑定的url
-        if (this.searchBoxUrl && route.fullPath == this.searchBoxUrl) {
+        if (this.searchBoxUrl && route.fullPath === this.searchBoxUrl) {
           this.searchBoxUrl = ''
           this.eventBus.$emit('openSearchBox')
         }
@@ -152,7 +153,6 @@ export default {
       }
       // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
       const tags = this.$refs.tag ? Array.isArray(this.$refs.tag) ? this.$refs.tag : [this.$refs.tag] : []
-
       this.$nextTick(() => {
         for (const tag of tags) {
           // console.log('tag.fullPath === this.$route.fullPath', tag, tag.to, this.$route.path)
@@ -164,9 +164,11 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log('view', view)
       this.$store.dispatch('delVisitedViews', view).then((views) => {
         // 如果关闭的是当前标签，则需要特殊处理下， 将显示相邻的tab
         if (this.isActive(view)) {
+          console.warn(11111111111)
           const latestView = views.slice(-1)[0]
           if (latestView) {
             this.$router.push(latestView.fullPath)

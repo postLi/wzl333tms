@@ -10,3 +10,8 @@
     </keep-alive>
   </div>
 </template>
+<script>
+export default {
+  name: 'orderManage'
+}
+</script>
