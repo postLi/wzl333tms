@@ -172,17 +172,17 @@
             <el-table-column property="address" label="默认使用">
               <el-table-column property="app" width="100" label="App移动端">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.app">选择</el-checkbox>
+                  <el-checkbox v-model="scope.row.app" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'app')">选择</el-checkbox>
                 </template>
               </el-table-column>
               <el-table-column property="web" width="100" label="Web网页版">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.web">选择</el-checkbox>
+                  <el-checkbox v-model="scope.row.web" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'web')">选择</el-checkbox>
                 </template>
               </el-table-column>
               <el-table-column property="pickUp" width="100" label="提货">
                 <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.pickUp">选择</el-checkbox>
+                  <el-checkbox v-model="scope.row.pickUp" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'pickUp')">选择</el-checkbox>
                 </template>
               </el-table-column>
             </el-table-column>
@@ -463,6 +463,21 @@ export default {
       })
       this.loading = false
     },
+    handleSelectModel (value,row, index, type) {
+      // 设置默认模板
+      console.log(value, row, index, type)
+      let flag = this.modelData.filter(el => el[type] === true)
+      if (flag.length){
+        this.modelData.forEach(el => {
+          el[type] = false
+        })
+        row[type] = true
+      }else {
+      row[type] = !row[type]
+        this.$message.warning('必须要选择一个模板作为'+type+'的默认模板！')
+      }
+      console.log(flag)
+    },
     changeModelName(val, item, index) {
       console.log(val, item, index)
       this.currentModel.modelName = val
@@ -503,7 +518,7 @@ export default {
         this.submitForm().then(() => {
           this.getModel().then(() => {
 
-this.preoldData = []
+            this.preoldData = []
             let obj = {
               app: 0,
               companyId: this.otherinfo.companyId,
@@ -554,7 +569,12 @@ this.preoldData = []
               })
           } else {
             deleteLiModel(row.id).then(() => {
-                this.getModel()
+                let currentModel = objectMerge2({}, this.currentModel)
+                this.getModel().then(() => {
+                  this.modelData.push(currentModel)
+                  this.currentModel = currentModel
+                })
+
                 this.$message.success('模板删除成功~')
               })
               .catch(err => {
@@ -577,7 +597,7 @@ this.preoldData = []
         if (row.id === this.currentModel.id) {
           return false
         }
-      }else {
+      } else {
         if (!row.id) {
           return false
         }
@@ -1533,7 +1553,7 @@ this.preoldData = []
                 this.loading = false
                 reslove()
               })
-            
+
             } else {
               savefn()
             }
