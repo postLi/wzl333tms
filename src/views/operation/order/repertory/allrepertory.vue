@@ -73,7 +73,7 @@ import SearchForm from './components/search'
 import Colorpicker from './components/colorpicker'
 import Pager from '@/components/Pagination/index'
 // import TableSetup from '@/components/tableSetup'
-import { objectMerge2, parseTime, getSummaries, operationPropertyCalc } from '@/utils/index'
+import { objectMerge2, parseTime, getSummaries, operationPropertyCalc, tmsMath } from '@/utils/index'
 import { parseShipStatus } from '@/utils/dict'
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
@@ -618,7 +618,7 @@ export default {
       this.loading = true
       postAllOrderRepertory(this.searchQuery).then(data => {
         data.list.forEach(el => {
-          el.grossProfit = el.shipTotalFee - el.brokerageFee
+          el.grossProfit = tmsMath._sub(el.shipTotalFee, el.brokerageFee)
         })
         this.repertoryArr = data.list
         this.total = data.total

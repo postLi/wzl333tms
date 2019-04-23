@@ -30,7 +30,57 @@
           <label>模板名称</label>
           <ul class="print_aside_content">
             <li v-for="(item, index) in formModel.labelList" :key="index" v-if="item.type===6" :data-fileName='item.filedValue' class="print_aside_content_self" style="width: 100%;">
-              <el-input size="mini" placeholder="请输入模板名称(最多128个字符)" v-model="modelNameSelf" clearable @keyup.enter.native="addItemDrag(item, index)" @change="(val) => changeModelName(val, item, index)" :maxlength="128" style="width: 100%;"></el-input>
+              <el-input size="mini" placeholder="请输入模板名称(最多128个字符)" v-model="modelNameSelf" clearable @keyup.enter.native="addItemDrag(item, index)" @change="(val) => changeModelName(val, item, index)" :maxlength="128" style="width: 70%;"></el-input>
+               <el-popover placement="bottom" width="800" trigger="click" popper-class="printModelPop">
+          <el-button :size="btnsize" type="success" icon="el-icon-plus" @click="addModel">添加模板</el-button>
+         
+          <el-table :data="modelData" border class="printModelTable" :key="modelTableKey">
+            <el-table-column width="60" property="date" label="序号" type="index"></el-table-column>
+            <el-table-column property="modelName" label="模板名称"></el-table-column>
+            <el-table-column property="address" label="使用类型">
+              <el-table-column property="app" width="100" label="App移动端">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="scope.row.app" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'app')">选择</el-checkbox>
+                </template>
+              </el-table-column>
+              <el-table-column property="web" width="100" label="Web网页版">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="scope.row.web" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'web')">选择</el-checkbox>
+                </template>
+              </el-table-column>
+              <el-table-column property="pickUp" width="100" label="提货">
+                <template slot-scope="scope">
+                  <el-checkbox v-model="scope.row.pickUp" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'pickUp')">选择</el-checkbox>
+                </template>
+              </el-table-column>
+            </el-table-column>
+            <el-table-column width="150" property="address" label="其他操作">
+              <template slot-scope="scope">
+                <el-button type="text" style="color: #F56C6C;" :size="btnsize" @click="deleteModel(scope.row, scope.$index)" icon="el-icon-delete">删除</el-button>
+                <el-button type="text" :size="btnsize" @click="viewModel(scope.row, scope.$index)" icon="el-icon-edit">编辑</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+           <div class="printModelPopTips">
+            <p><i class="el-icon-question"></i> <span>操作指南：</span></p>
+            <p>温馨提示：修改完当前模板，请注意保存哦~</p>
+            <ol>
+              <li>1、每次本页面打开默认显示“Web网页版”的默认模板，若要查看其他模板请点击“<el-button type="text" :size="btnsize" icon="el-icon-edit">编辑</el-button>”后查看；</li>
+              <li>2、只能为一个类型选择一份默认使用模板，同一个模板可以设置为多个类型的默认模板，新增未保存的模板不可以设置为默认模板；</li>
+              <li>3、当前页面只能编辑一份模板，若要编辑其他模板，请选择该模板点击“<el-button type="text" :size="btnsize" icon="el-icon-edit">编辑</el-button>”；</li>
+              <li>4、点击“<el-button type="text" style="color: #F56C6C;" :size="btnsize" icon="el-icon-delete">删除</el-button>”删除模板数据后不能恢复，一次只能删除一份模板，请谨慎操作；</li>
+              <li>5、模板列表当前最多可以添加{{maxModelSize}}份模板。</li>
+            </ol>
+            
+          </div>
+          <el-button slot="reference" :size="btnsize" type="primary" icon="el-icon-date">模板列表</el-button>
+        </el-popover>
+              <br>
+              <i>默认模板设置：</i>
+              <el-tag type="success" :size="btnsize" v-if="currentModel.web">web网页版</el-tag>
+              <el-tag type="success" :size="btnsize" v-if="currentModel.app">App移动端</el-tag>
+              <el-tag type="success" :size="btnsize" v-if="currentModel.pickUp">提货</el-tag>
+              <i v-if="!currentModel.web&&!currentModel.app&&!currentModel.pickUp">无</i>
             </li>
           </ul>
           <label>发货人信息</label>
@@ -164,37 +214,7 @@
     </div>
     <div class="print_main" @click="clickPanel">
       <div class="print_main_head">
-        <el-popover placement="bottom" width="800" trigger="click" class="printModelPop">
-          <el-button :size="btnsize" type="primary" icon="el-icon-plus" @click="addModel">添加模板</el-button>
-          <el-table :data="modelData" border class="printModelTable">
-            <el-table-column width="60" property="date" label="序号" type="index"></el-table-column>
-            <el-table-column property="modelName" label="模板名称"></el-table-column>
-            <el-table-column property="address" label="默认使用">
-              <el-table-column property="app" width="100" label="App移动端">
-                <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.app" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'app')">选择</el-checkbox>
-                </template>
-              </el-table-column>
-              <el-table-column property="web" width="100" label="Web网页版">
-                <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.web" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'web')">选择</el-checkbox>
-                </template>
-              </el-table-column>
-              <el-table-column property="pickUp" width="100" label="提货">
-                <template slot-scope="scope">
-                  <el-checkbox v-model="scope.row.pickUp" @change="(val) => handleSelectModel(val,scope.row, scope.$index, 'pickUp')">选择</el-checkbox>
-                </template>
-              </el-table-column>
-            </el-table-column>
-            <el-table-column width="150" property="address" label="其他操作">
-              <template slot-scope="scope">
-                <el-button type="text" :size="btnsize" @click="deleteModel(scope.row, scope.$index)" icon="el-icon-delete">删除</el-button>
-                <el-button type="text" :size="btnsize" @click="viewModel(scope.row, scope.$index)" icon="el-icon-edit">编辑</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-button slot="reference" :size="btnsize" type="primary" icon="el-icon-date">模板列表</el-button>
-        </el-popover>
+       
         <b>预览展示:</b>
         <span> 纸张(宽×高)：{{this.formModel.paper.width+'(mm) × '+this.formModel.paper.height + '(mm)'}}</span>
         <div class="print_main_head_btns">
@@ -258,7 +278,8 @@ import {
   getLiSetting,
   postLiUpdate,
   deleteLiModel,
-  viewLiModel
+  viewLiModel,
+  getUpdateModel
 } from '@/api/operation/print'
 export default {
   components: {
@@ -277,6 +298,7 @@ export default {
   },
   data() {
     return {
+      modelTableKey: 0,
       currentModel: {},
       maxModelSize: 5,
       isSaveNewModel: true,
@@ -463,20 +485,68 @@ export default {
       })
       this.loading = false
     },
-    handleSelectModel (value,row, index, type) {
+    handleSelectModel(value, row, index, type) {
       // 设置默认模板
-      console.log(value, row, index, type)
-      let flag = this.modelData.filter(el => el[type] === true)
-      if (flag.length){
-        this.modelData.forEach(el => {
-          el[type] = false
-        })
-        row[type] = true
-      }else {
-      row[type] = !row[type]
-        this.$message.warning('必须要选择一个模板作为'+type+'的默认模板！')
+let _row = objectMerge2({}, row)
+ let _value = value
+      let clearSelect = () => {
+        // 设置默认模板前清空所有的打勾项
+      this.modelData.forEach((el, eindex) => {
+            el[type] = false
+          })
       }
-      console.log(flag)
+      let fn = () => {
+
+        let flag = this.modelData.filter(el => el[type] === true)
+        if (flag.length) {
+          // 选择其他的模板
+        clearSelect()
+          // 设置当前选择的模板为true
+          row[type] = true
+          let params = {
+            id: _row.id,
+            type: type,
+            companyId: this.otherinfo.companyId
+          }
+          return getUpdateModel(params).then(data => {
+              this.$message.success('设置模板模板成功！')
+              this.modelData[index][type] = true
+            })
+            .catch(err => {
+              this._handlerCatchMsg(err)
+            })
+        } else {
+          // 不能取消唯一的一个打勾项 
+          row[type] = !row[type]
+          let msg = type === 'web' ? 'Web网页版' : (type === 'app' ? 'App移动端' : '提货')
+          this.$message.warning('必须要选择一个模板作为' + msg + '的默认模板！')
+        }
+      }
+      if (row.id) {
+        // 修改已有的模板
+        fn()
+      } else {
+        // 修改新增的模板，需要先保存，不能直接修改没有模板id的模板
+        
+       
+         row[type] = !row[type]
+        this.$confirm('设置新增的模板为默认模板需要先保存，是否保存?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '放弃',
+          type: 'warning'
+        }).then(() => {
+          this.submitForm('formModel', 'allsave').then(() => {
+              clearSelect()
+            this.modelData[index][type] = true
+            console.log('updatemodel::::',_row, index,type, this.modelData[index])
+            _row.id = this.modelData[index].id
+            fn()
+          })
+        }).catch(() => {
+          // 放弃就
+             _row[type] = !_row[type]
+        })
+      }
     },
     changeModelName(val, item, index) {
       console.log(val, item, index)
@@ -491,6 +561,7 @@ export default {
             el.web = el.web === 1
             el.pickUp = el.pickUp === 1
           })
+          this.modelTableKey = new Date().getTime()
           this.modelData = data || []
           this.currentModel = this.modelData.filter(el => el.web === true)[0]
         })
@@ -517,7 +588,6 @@ export default {
         this.isSaveNewModel = false
         this.submitForm().then(() => {
           this.getModel().then(() => {
-
             this.preoldData = []
             let obj = {
               app: 0,
@@ -537,7 +607,7 @@ export default {
       }
     },
     deleteModel(row, index) {
-      console.log(row, index, this.currentModel)
+      console.log('deleteModel', row, index, this.currentModel)
       // 删除模板
       // 1 判断删除的模板有没有id
       //  1.1 有 判断是否删除当前模板
@@ -556,25 +626,28 @@ export default {
         cancelButtonText: '放弃',
         type: 'warning'
       }).then(() => {
+
         if (row.id) {
           if (this.currentModel.id === row.id) {
             deleteLiModel(row.id).then(() => {
-                this.getModel()
-                this.currentModel = this.modelData.filter(el => el.web === true)[0]
-                this.viewModel(this.currentModel.id, 0, 'nosave')
-                this.$message.success('模板删除成功~')
+                this.getModel().then(() => {
+                  this.currentModel = this.modelData.filter(el => el.web === true)[0]
+                  this.viewModel(this.currentModel, 0, 'nosave')
+                  this.$message.success('模板删除成功~')
+                })
               })
               .catch(err => {
                 this._handlerCatchMsg(err)
               })
           } else {
+            let currentModel = objectMerge2({}, this.currentModel)
             deleteLiModel(row.id).then(() => {
-                let currentModel = objectMerge2({}, this.currentModel)
                 this.getModel().then(() => {
-                  this.modelData.push(currentModel)
+                  if (!this.currentModel.id) {
+                    this.modelData.push(currentModel)
+                  }
                   this.currentModel = currentModel
                 })
-
                 this.$message.success('模板删除成功~')
               })
               .catch(err => {
@@ -585,7 +658,7 @@ export default {
           this.modelData.splice(-1, 1)
           this.isSaveNewModel = true
           this.currentModel = this.modelData.filter(el => el.web === true)[0]
-          this.viewModel(this.currentModel.id, 0, 'nosave')
+          this.viewModel(this.currentModel, 0, 'nosave')
           this.$message.success('新增的模板删除成功~')
         }
       }).catch(() => {
@@ -593,9 +666,12 @@ export default {
       })
     },
     viewModel(row, index, type) {
+      console.log('viewModel', row, index, type)
       if (this.currentModel.id) {
         if (row.id === this.currentModel.id) {
-          return false
+          if (type !== 'nosave') {
+            return false
+          }
         }
       } else {
         if (!row.id) {
@@ -1417,7 +1493,7 @@ export default {
       this.$nextTick(() => {
         this.orgLabelList = objectMerge2([], this.formModel.labelList)
         // 存储初始化的数据，用于判断数据是否修改
-        this.preoldData = objectMerge2([], this.labelListView.concat([this.formModel.paper], [this.printRotate]))
+        this.preoldData = objectMerge2([], this.labelListView.concat([this.formModel.paper], [this.printRotate], [this.modelNameSelf]))
 
         this.loading = false
       })
@@ -1426,20 +1502,41 @@ export default {
       // 对比新旧数据
       let arr = objectMerge2([], this.labelListView)
       arr.push(objectMerge2({}, this.formModel.paper)) // 添加纸张设置信息
-      this.prenewData = objectMerge2([], arr.concat([this.printRotate]))
+      this.prenewData = objectMerge2([], arr.concat([this.printRotate], [this.modelNameSelf]))
       if (JSON.stringify(this.preoldData) !== JSON.stringify(this.prenewData)) {
         return false
       } else {
         return true
       }
     },
+    setData () {
+      // 设置保存数据
+    },
+    validate () {
+      console.log('this.modelNameSelf', this.modelNameSelf)
+        if (this.modelNameSelf === '') {
+          // 必填模板名称
+          this.$message.warning('请填写模板名称')
+          return false
+        }else {
+          return true
+        }
+    },
     submitForm(formName = 'formModel', type) { // 保存修改
       return new Promise((reslove, reject) => {
         this.$refs[formName].validate(valid => {
           if (valid) {
+            if (!this.validate()) {
+              console.log(11111111)
+              return false
+            }
             this.savePrinter()
             this.loading = true
             this.showDragDetail = false
+            
+
+            let currentModel = objectMerge2({}, this.currentModel)
+
             let arr = objectMerge2([], this.labelListView)
             console.log('arr', arr)
             let bgImg = {}
@@ -1457,10 +1554,12 @@ export default {
                   }
                 }
                 if (e.type === 6) { // 模板名称保存
+               
                   modelNameSelf = objectMerge2({}, e)
                   modelNameSelf.filedName = this.modelNameSelf + ''
                   modelNameSelf.isshow = false
                   arr.push(modelNameSelf)
+                  
                 }
                 if (e.filedValue === 'settingRotate') { // 打印方向
                   const rotate = objectMerge2({}, e)
@@ -1517,14 +1616,30 @@ export default {
                   if (this.isSaveNewModel) {
                     // 如果是新增 就不重新请求数据
                     this.getCommonSettingLib()
-                    this.getModel()
-                  }
-                  modelData = []
+                    this.getModel().then(() => {
+                      if (type === 'allsave') {
+                        if (!currentModel.id) {
+                          currentModel = this.modelData[this.modelData.length - 1]
+                        }
+                        this.viewModel(currentModel, '0', 'nosave')
+                      }
+                      modelData = []
                   this.prenewData = []
                   this.isSaveNewModel = true
                   this.loading = false
                   this.viewKey = new Date().getTime()
-                  reslove()
+                      reslove()
+                    })
+                  } else {
+                    modelData = []
+                  this.prenewData = []
+                  this.isSaveNewModel = true
+                  this.loading = false
+                  this.viewKey = new Date().getTime()
+                    reslove()
+                  }
+                  
+                  
                 })
                 .catch(err => {
                   this.loading = false
@@ -1543,6 +1658,7 @@ export default {
                 type: 'warning'
               }).then(() => {
                 savefn()
+
               }).catch(() => {
                 // 放弃保存
                 if (!this.currentModel.id) {
@@ -1557,11 +1673,8 @@ export default {
             } else {
               savefn()
             }
-
-
           }
         })
-
       })
     }
   }

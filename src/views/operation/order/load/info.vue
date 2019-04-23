@@ -1,7 +1,9 @@
 <template>
   <div class="load-steup">
+   
     <!-- 新增配载 loadTypeId：38-短驳 39-干线 40-送货 -->
     <div class="load-steup-form" v-loading="loading">
+      
       <el-collapse v-model="loadTruck">
         <el-collapse-item name="loadTruckOne">
           <template slot="title">
@@ -281,25 +283,26 @@
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
       <!-- 实际发车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
+     
     </div>
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
-import { REGEX } from '@/utils/validate'
-import { getSelectType } from '@/api/common'
-import { mapGetters } from 'vuex'
-import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
-import { getAllDriver } from '@/api/company/driverManage'
 import selectType from '@/components/selectType/index'
 import dataTable from './components/dataTable2'
 import SelectTree from '@/components/selectTree/index'
 import addTruckInfo from '@/views/company/trunkManage/components/add'
 import addDriverInfo from '@/views/company/driverManage/components/add'
 import loadChart from './components/loadChart'
+import actualSendtime from './components/actualSendtimeDialog'
+import { REGEX } from '@/utils/validate'
+import { getSelectType } from '@/api/common'
+import { mapGetters } from 'vuex'
+import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
+import { getAllDriver } from '@/api/company/driverManage'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
-import actualSendtime from './components/actualSendtimeDialog'
 import { postAllshortDepartList } from '@/api/operation/shortDepart'
 import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
 import { postSelectLoadMainInfoListDeliver } from '@/api/operation/deliverManage'
@@ -563,6 +566,7 @@ export default {
     }
   },
   methods: {
+
     addNetWork() { // 添加途径网点
       if (this.networkList.length < 5) {
         this.networkList.push({
@@ -983,6 +987,7 @@ export default {
               })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
+            // this.eventBus.$emit('showAsynCode')
             this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.loading = false

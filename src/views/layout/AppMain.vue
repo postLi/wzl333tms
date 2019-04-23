@@ -16,6 +16,7 @@
 <script>
 import { getInitializationCheck } from '@/api/common'
 import { checkPrompt, updatePrompt } from '@/api/login'
+
 export default {
   name: 'AppMain',
   data() {

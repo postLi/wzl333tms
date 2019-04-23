@@ -144,10 +144,18 @@ export function deleteLiModel(id) {
   })
 }
 /**
- * 查看百强模板
+ * 查看模板
  */
 export function viewLiModel(modelId) {
   return fetch.get('/api-order/order/printlib/v1/setting/' + modelId).then(res => {
+    return res.data
+  })
+}
+/**
+ * 修改模板列表
+ */
+export function getUpdateModel(data) {
+  return fetch.get('/api-order/order/tmscommonmodellib/v1/update?id='+data.id+'&type='+data.type+ '&companyId='+data.companyId).then(res => {
     return res.data
   })
 }
