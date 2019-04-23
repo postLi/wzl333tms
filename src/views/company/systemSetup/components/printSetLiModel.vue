@@ -318,17 +318,17 @@ export default {
         filedName: '打印方向'
       }, // 打印方向 用width来存储
       printRotateRule: [{
-          value: 0,
-          label: '还原'
-        },
+        value: 0,
+        label: '还原'
+      },
         // {
         //   value: 90,
         //   label: '逆时针90°'
         // },
-        {
-          value: 180,
-          label: '旋转180°'
-        }
+      {
+        value: 180,
+        label: '旋转180°'
+      }
       ],
       cargoLabelList: [
         [],
@@ -386,23 +386,23 @@ export default {
       dragCursor: 'move',
       alignmentValue: ['', 'left', 'center', 'right'],
       alignmentOptions: [{
-          value: 1,
-          label: '文字靠左'
-        },
-        {
-          value: 2,
-          label: '文字居中'
-        },
-        {
-          value: 3,
-          label: '文字靠右'
-        }
+        value: 1,
+        label: '文字靠左'
+      },
+      {
+        value: 2,
+        label: '文字居中'
+      },
+      {
+        value: 3,
+        label: '文字靠右'
+      }
       ],
       dialogVisible: false,
       commonLabelList: [],
       cargoKey: 0,
       modelNameSelf: '',
-      preoldData: [], //存储最初进入界面的数据，用于区分用户是否修改了数据
+      preoldData: [], // 存储最初进入界面的数据，用于区分用户是否修改了数据
       prenewData: [] // 存储时的新数据
     }
   },
@@ -496,7 +496,6 @@ export default {
         })
       }
       let fn = () => {
-
         let flag = this.modelData.filter(el => el[type] === true)
         if (flag.length) {
           // 选择其他的模板
@@ -509,14 +508,14 @@ export default {
             companyId: this.otherinfo.companyId
           }
           return getUpdateModel(params).then(data => {
-              this.$message.success('设置模板模板成功！')
-              this.modelData[index][type] = true
-            })
+            this.$message.success('设置模板模板成功！')
+            this.modelData[index][type] = true
+          })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
         } else {
-          // 不能取消唯一的一个打勾项 
+          // 不能取消唯一的一个打勾项
           row[type] = !row[type]
           let msg = type === 'web' ? 'Web网页版' : (type === 'app' ? 'App移动端' : '提货')
           this.$message.warning('必须要选择一个模板作为' + msg + '的默认模板！')
@@ -527,7 +526,6 @@ export default {
         fn()
       } else {
         // 修改新增的模板，需要先保存，不能直接修改没有模板id的模板
-
 
         row[type] = !row[type]
         this.$confirm('设置新增的模板为默认模板需要先保存，是否保存?', '提示', {
@@ -556,15 +554,15 @@ export default {
       // 获取模板列表
       return getLiModel().then(data => {
           // 处理数据格式
-          data.forEach(el => {
-            el.app = el.app === 1
-            el.web = el.web === 1
-            el.pickUp = el.pickUp === 1
-          })
-          this.modelTableKey = new Date().getTime()
-          this.modelData = data || []
-          this.currentModel = this.modelData.filter(el => el.web === true)[0]
+        data.forEach(el => {
+          el.app = el.app === 1
+          el.web = el.web === 1
+          el.pickUp = el.pickUp === 1
         })
+        this.modelTableKey = new Date().getTime()
+        this.modelData = data || []
+        this.currentModel = this.modelData.filter(el => el.web === true)[0]
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -603,7 +601,6 @@ export default {
             console.log('isSaveNewModel add ', this.isSaveNewModel)
           })
         })
-
       }
     },
     deleteModel(row, index) {
@@ -615,7 +612,7 @@ export default {
       //    1.1.2 否 直接删除列表中的该数据，不对模板内容做处理
       //  1.2 没有 判断是否删除当前模板
       //    1.2.1 同上
-      // 2 
+      // 2
       if (row.app || row.web || row.pickUp) {
         this.$message.warning('不能删除默认模板~')
         return false
@@ -626,30 +623,29 @@ export default {
         cancelButtonText: '放弃',
         type: 'warning'
       }).then(() => {
-
         if (row.id) {
           if (this.currentModel.id === row.id) {
             deleteLiModel(row.id).then(() => {
-                this.getModel().then(() => {
-                  this.currentModel = this.modelData.filter(el => el.web === true)[0]
-                  this.viewModel(this.currentModel, 0, 'nosave')
-                  this.$message.success('模板删除成功~')
-                })
+              this.getModel().then(() => {
+                this.currentModel = this.modelData.filter(el => el.web === true)[0]
+                this.viewModel(this.currentModel, 0, 'nosave')
+                this.$message.success('模板删除成功~')
               })
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
               })
           } else {
             let currentModel = objectMerge2({}, this.currentModel)
             deleteLiModel(row.id).then(() => {
-                this.getModel().then(() => {
-                  if (!this.currentModel.id) {
-                    this.modelData.push(currentModel)
-                  }
-                  this.currentModel = currentModel
-                })
-                this.$message.success('模板删除成功~')
+              this.getModel().then(() => {
+                if (!currentModel.id) {
+                  this.modelData.push(currentModel)
+                }
+                this.currentModel = currentModel
               })
+              this.$message.success('模板删除成功~')
+            })
               .catch(err => {
                 this._handlerCatchMsg(err)
               })
@@ -683,12 +679,12 @@ export default {
         if (row.id) {
           // 查看模板
           return viewLiModel(row.id).then(data => {
-              if (data) {
-                this.currentModel = row
-                this.$message.success('模板切换成功~')
-                this.formatData(data)
-              }
-            })
+            if (data) {
+              this.currentModel = row
+              this.$message.success('模板切换成功~')
+              this.formatData(data)
+            }
+          })
             .catch(err => {
               this._handlerCatchMsg(err)
             })
@@ -705,7 +701,6 @@ export default {
       } else {
         fn()
       }
-
     },
     changePrintRotate(val) {
       this.printRotate.width = val
@@ -902,7 +897,7 @@ export default {
         console.log('row::::', row)
         const currentRow = objectMerge2({}, row)
         currentRow._index = this.labelIndex++
-          currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
+        currentRow.width = Math.round(this.defaultLabelWidth * this.prxvalue)
         currentRow.height = Math.round(this.defaultLabelHeight * this.prxvalue)
         currentRow.fontsize = this.defaultLabelFontSize
         currentRow.bold = 0
@@ -978,6 +973,7 @@ export default {
       }
     },
     review() { // 刷新
+      let currentModel = objectMerge2({}, this.currentModel)
       this.showDragDetail = false
       this.viewKey = new Date().getTime()
       this.formModel.labelList = []
@@ -988,7 +984,12 @@ export default {
       this.currentSearch = ''
       this.initPrinter()
       this.getModel().then(() => {
-        this.getCommonSettingLib()
+        if (currentModel.id) {
+          this.viewModel(currentModel, 0, 'nosave')
+        } else {
+          this.resetForm()
+        }
+        // this.getCommonSettingLib()
       })
       this.dragDetailInfo = {}
       this.isDrag = null
@@ -1213,37 +1214,37 @@ export default {
       this.loading = true
       this.commonLabelList = []
       getCommonSettingLib().then(data => {
-          if (data) {
-            objectMerge2([], data).forEach((el, index) => {
-              const obj = {
-                id: el.id,
-                filedValue: el.fieldValue,
-                filedName: el.fieldName,
-                topy: 0,
-                leftx: 0,
-                width: 0,
-                height: 0,
-                companyid: this.otherinfo.companyId,
-                modelId: '',
-                isshow: 0,
-                fontsize: 10,
-                alignment: 1,
-                bold: 0,
-                type: el.type
-              }
+        if (data) {
+          objectMerge2([], data).forEach((el, index) => {
+            const obj = {
+              id: el.id,
+              filedValue: el.fieldValue,
+              filedName: el.fieldName,
+              topy: 0,
+              leftx: 0,
+              width: 0,
+              height: 0,
+              companyid: this.otherinfo.companyId,
+              modelId: '',
+              isshow: 0,
+              fontsize: 10,
+              alignment: 1,
+              bold: 0,
+              type: el.type
+            }
               // type
               // 字段类型 0-纸张设置 1-发货人信息 2-收货人信息 3-运单主要信息 4-货物主要信息 5-自定义信息 6-公司模板名称
-              if (obj.filedValue === 'horizontalLine' || obj.filedValue === 'verticalLine') { // 排除横线竖线
-              } else {
-                this.commonLabelList.push(obj)
-              }
-            })
-            this.sortLabel(this.commonLabelList, 'filedName')
-            this.$nextTick(() => {
-              this.getSettingCompanyLi()
-            })
-          }
-        })
+            if (obj.filedValue === 'horizontalLine' || obj.filedValue === 'verticalLine') { // 排除横线竖线
+            } else {
+              this.commonLabelList.push(obj)
+            }
+          })
+          this.sortLabel(this.commonLabelList, 'filedName')
+          this.$nextTick(() => {
+            this.getSettingCompanyLi()
+          })
+        }
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -1259,7 +1260,7 @@ export default {
       let cargoShow2 = false
       let cargoShow3 = false
       getSettingCompanyLi().then(data => {
-          this.formatData(data)
+        this.formatData(data)
 
           // this.$nextTick(() => {
           //   this.orgLabelList = objectMerge2([], this.formModel.labelList)
@@ -1268,7 +1269,7 @@ export default {
 
           //   this.loading = false
           // })
-        })
+      })
         .catch(err => {
           this.loading = false
           this._handlerCatchMsg(err)
@@ -1321,12 +1322,12 @@ export default {
           }
           if (type === 'allclear') {
             this.$confirm('此操作将所有设置重置为0,是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-              }).then(() => {
-                fn()
-              })
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              fn()
+            })
               .catch(err => {})
           } else {
             fn()
@@ -1448,9 +1449,9 @@ export default {
                 em.alignment = em.alignment || 1 // 1--左靠齐 2--居中 3--右靠齐，缺省值是1
                 // ///////////////////////////这里要对拿到的数据做处理 多次显示同一个字段
                 em._index = this.labelIndex++
-                  if (em.filedValue !== 'setting') {
-                    this.labelListView.push(em)
-                  }
+                if (em.filedValue !== 'setting') {
+                  this.labelListView.push(em)
+                }
               } else {
                 if (em.filedName.indexOf(this.imgNameStr) !== -1) { // 预览图片
                   this.imageUrl = em.filedName.split(',')[1]
@@ -1534,7 +1535,6 @@ export default {
             this.loading = true
             this.showDragDetail = false
 
-
             let currentModel = objectMerge2({}, this.currentModel)
 
             let arr = objectMerge2([], this.labelListView)
@@ -1554,12 +1554,10 @@ export default {
                   }
                 }
                 if (e.type === 6) { // 模板名称保存
-
                   modelNameSelf = objectMerge2({}, e)
                   modelNameSelf.filedName = this.modelNameSelf + ''
                   modelNameSelf.isshow = false
                   arr.push(modelNameSelf)
-
                 }
                 if (e.filedValue === 'settingRotate') { // 打印方向
                   const rotate = objectMerge2({}, e)
@@ -1612,35 +1610,33 @@ export default {
                 tmsSettingLibList: arr
               }
               return postLiUpdate(params).then(data => {
-                  this.$message({ type: 'success', message: '标签打印设置成功！' })
-                  if (this.isSaveNewModel) {
+                this.$message({ type: 'success', message: '标签打印设置成功！' })
+                if (this.isSaveNewModel) {
                     // 如果是新增 就不重新请求数据
-                    this.getCommonSettingLib()
-                    this.getModel().then(() => {
-                      if (type === 'allsave') {
-                        if (!currentModel.id) {
-                          currentModel = this.modelData[this.modelData.length - 1]
-                        }
-                        this.viewModel(currentModel, '0', 'nosave')
+                  this.getCommonSettingLib()
+                  this.getModel().then(() => {
+                    if (type === 'allsave') {
+                      if (!currentModel.id) {
+                        currentModel = this.modelData[this.modelData.length - 1]
                       }
-                      modelData = []
-                      this.prenewData = []
-                      this.isSaveNewModel = true
-                      this.loading = false
-                      this.viewKey = new Date().getTime()
-                      reslove()
-                    })
-                  } else {
+                      this.viewModel(currentModel, '0', 'nosave')
+                    }
                     modelData = []
                     this.prenewData = []
                     this.isSaveNewModel = true
                     this.loading = false
                     this.viewKey = new Date().getTime()
                     reslove()
-                  }
-
-
-                })
+                  })
+                } else {
+                  modelData = []
+                  this.prenewData = []
+                  this.isSaveNewModel = true
+                  this.loading = false
+                  this.viewKey = new Date().getTime()
+                  reslove()
+                }
+              })
                 .catch(err => {
                   this.loading = false
                   this._handlerCatchMsg(err)
@@ -1648,17 +1644,15 @@ export default {
                 })
             }
 
-
             if (!this.checkOldData() && type !== 'allsave') {
               // 如果改变了模板列表并且改变了数据 就提示
-              // 
+              //
               this.$confirm('当前模板未保存，是否保存?', '提示', {
                 confirmButtonText: '保存',
                 cancelButtonText: '放弃',
                 type: 'warning'
               }).then(() => {
                 savefn()
-
               }).catch(() => {
                 // 放弃保存
                 if (!this.currentModel.id) {
@@ -1669,7 +1663,6 @@ export default {
                 this.loading = false
                 reslove()
               })
-
             } else {
               savefn()
             }
