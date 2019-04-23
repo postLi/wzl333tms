@@ -15,7 +15,7 @@
     </div>
     <div class="tags-view-more">
       <i class="el-icon-arrow-down el-icon--right"></i>
-      <div class="contextmenu-box" v-show="visible">
+      <div class="contextmenu-box" >
         <ul class='contextmenu'>
           <li v-if="!hideCloseCurrentMenu" @click="closeSelectedTag(selectedTag)">关闭</li>
           <li @click="closeOthersTags">关闭其他</li>
@@ -41,7 +41,6 @@ export default {
   data() {
     return {
       searchBoxUrl: '',
-      visible: true,
       top: 0,
       left: 0,
       selectedTag: {},
@@ -63,24 +62,17 @@ export default {
       handler(newpath, oldpath) {
         // 如果新的路径是三级路径以上，则不进行加入
         // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
-        console.log('newpath:', newpath, ' oldpath:', oldpath)
+        // console.log('newpath:', newpath, ' oldpath:', oldpath)
         this.addViewTags()
         this.moveToCurrentTag()
         // }
       },
 
       immediate: false
-    },
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
     }
   },
   mounted() {
-    this.addViewTags()
+    // this.addViewTags()
     // 用来替换当前路由
     // 调用方式类似：
     // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
@@ -198,14 +190,6 @@ export default {
       this.$router.push('/')
       // 关闭时清空原来绑定的url
       this.searchBoxUrl = ''
-    },
-    openMenu(tag, e, hideClose) {
-      this.visible = true
-      this.selectedTag = tag
-      this.hideCloseCurrentMenu = !!hideClose
-    },
-    closeMenu() {
-      this.visible = false
     },
     handleScroll(e) {
       const eventDelta = e.wheelDelta || -e.deltaY * 3

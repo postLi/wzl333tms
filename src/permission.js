@@ -25,7 +25,7 @@ function setExperience(to) {
 }
 
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach::', to, from)
+  // console.log('beforeEach::', to, from)
   const _hmt = window._hmt || []
   // _hmt.push(['_trackPageview', '/virtual/login']);
   /* must call `next` */
