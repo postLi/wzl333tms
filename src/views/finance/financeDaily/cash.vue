@@ -1,5 +1,6 @@
 <template>
   <!-- 回扣 -->
+  <div class="tab-wrapper tab-wrapper-100">
   <div class="tab-content finance-tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -103,6 +104,7 @@
     <!-- 新增 -->
     <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
   </div>
+  </div>
 </template>
 <script>
 import { objectMerge2, parseTime } from '@/utils/index'
@@ -115,7 +117,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
-  name: 'cash',
+  name: 'financeDaily',
   components: {
     SearchForm,
     Pager,

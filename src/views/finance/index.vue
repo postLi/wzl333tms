@@ -233,6 +233,7 @@
 </template>
 <script>
 export default {
+  name: 'financeIndex',
   data() {
     return {}
   },

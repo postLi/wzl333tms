@@ -15,12 +15,12 @@ export default {
       path: '/finance/index',
       icon: 'QQ',
       hidden: true,
-      name: '财务管理',
+      name: 'financeIndex',
       component: _import('finance/index'),
       meta: {
         role: ['admin'],
         title: '财务管理',
-        noCache: true
+        noCache: false
       }
     }, {
       path: '/finance/accountsReceivable',
@@ -403,7 +403,7 @@ export default {
       path: '/finance/financeDaily',
       icon: 'caiwugl5_zijinls',
       name: 'financeDaily',
-      component: _import('finance/financeDaily/index'),
+      component: _import('finance/financeDaily/cash'),
       meta: {
         role: ['admin'],
         title: '财务日记账',
@@ -416,13 +416,13 @@ export default {
       icon: 'caiwugl5_zijinls',
       name: 'cashDetail',
       hidden: true,
-      component: _import('finance/financeDaily/index'),
+      component: _import('finance/financeDaily/cashDetail'),
       meta: {
         role: ['admin'],
         title: '财务日记账明细',
         'code': 'BILLRECORD_DETAIL',
         stitle: '日记账',
-        noCache: false
+        noCache: true
       }
     },
     // {

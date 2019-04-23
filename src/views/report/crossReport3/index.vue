@@ -1,21 +1,15 @@
 <template>
   <!-- 网点业务类型 -->
   <div class="tab-wrapper tab-wrapper-100">
-    <keep-alive>
-      <component v-bind:is="component"></component>
-    </keep-alive>
+      <list />
   </div>
 </template>
 <script>
-import sender from './sender'
+import list from './sender'
 export default {
+  name: 'crossReport3',
   components: {
-    sender
-  },
-  data() {
-    return {
-      component: 'sender'
-    }
+    list
   }
 }
 
