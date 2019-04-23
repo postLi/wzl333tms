@@ -17,6 +17,10 @@ const tagsView = {
         sessionStorage.setItem(encodeURIComponent(view.fullPath), '')
       }
 
+      // 判断是否需要缓存
+      let shouldCache = !view.meta.noCache
+      let cacheName = view.name
+
       // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面
       if (view.meta.istab && state.visitedViews.some(v => v.title === view.meta.ptitle)) {
@@ -35,8 +39,19 @@ const tagsView = {
           }
         })
       } else {
+        // 针对tab页面进行特殊处理，取其父级的设置值
+        if(view.meta.istab && view.matched){
+          // matched 将会是一个包含从上到下的所有对象，所以取最后一个值即为当前路由？
+          let len = view.matched.length
+          let current = view.matched[len-1]
+          if(current && current.parent){
+            cacheName = current.parent.name || cacheName
+            shouldCache = !current.parent.meta.noCache
+          }
+        }
+
         state.visitedViews.push({
-          name: view.name || view.query.tab,
+          name: cacheName || view.query.tab,
           path: view.path,
           fullPath: view.fullPath,
           tab: view.query.tab || '',
@@ -44,15 +59,19 @@ const tagsView = {
           title: view.query.tab || view.meta.ptitle || view.meta.title || '未命名',
           istab: view.meta.istab
         })
+
+        
       }
 
-      if (!view.meta.noCache) {
-        if (state.cachedViews.indexOf(view.name) === -1) {
-          state.cachedViews.push(view.name)
+      // 如果需要缓存页面
+      if (shouldCache) {
+        if (state.cachedViews.indexOf(cacheName) === -1) {
+          state.cachedViews.push(cacheName)
         }
         // state.cachedViews.push(view.fullPath)
-        console.log('state.cachedViews:', state.cachedViews)
+        
       }
+      console.log('state.cachedViews:', state.cachedViews)
     },
     DEL_VISITED_VIEWS: (state, view) => {
       for (const [i, v] of state.visitedViews.entries()) {
@@ -63,10 +82,10 @@ const tagsView = {
       }
       for (const i of state.cachedViews) {
         if (i === view.name) {
-          console.log('delete i name', i)
           const index = state.cachedViews.indexOf(i)
           state.cachedViews.splice(index, 1)
-          break
+          // 全部遍历删除，如果有相同name值也可以正确处理好...y
+          // break
         }
       }
     },
@@ -84,8 +103,10 @@ const tagsView = {
       for (const i of state.cachedViews) {
         if (i === view.name) {
           const index = state.cachedViews.indexOf(i)
-          state.cachedViews = state.cachedViews.slice(index, i + 1)
-          break
+          // i为字符串而非索引位置信息，所以这一段删除有问题...
+          // state.cachedViews = state.cachedViews.slice(index, i + 1)
+        
+          state.cachedViews = state.cachedViews.slice(index, index + 1)
         }
       }
     },

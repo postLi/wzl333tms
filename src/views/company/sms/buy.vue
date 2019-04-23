@@ -37,6 +37,7 @@ import buyTips from './components/buyTips'
 import { getSmspackages, getSearchSmsSurplus, postBuy } from '@/api/company/sms'
 import { objectMerge2 } from '@/utils/index'
 export default {
+  name: 'smsManageBuy',
   data() {
     return {
       isShowData: true,

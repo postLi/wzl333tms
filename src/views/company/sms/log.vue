@@ -100,6 +100,7 @@ import Pager from '@/components/Pagination/index'
 import { postSmsSendLogList } from '@/api/company/sms'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
+  name: 'smsManageLog',
   data() {
     return {
       btnsize: 'mini',

@@ -74,6 +74,7 @@ import addCustomized from './components/addCustomized'
 import popRight from './components/editContent'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
+  name: 'smsManageCustomized',
   components: {
     Pager,
     popRight,

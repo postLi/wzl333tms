@@ -80,26 +80,26 @@ export default {
     children: [{
       path: '/company/customerManage/sender',
       icon: 'QQ',
-      name: 'customerManage',
+      name: 'customerManageSender',
       component: _import('company/customerManage/sender'),
       meta: {
         role: ['admin'],
         ptitle: '客户管理',
         title: '发货人',
-        noCache: false,
+        noCache: true,
         istab: true,
         code: 'CUSTOMELIST_SENDER'
       }
     }, {
       path: '/company/customerManage/receiver',
       icon: 'QQ',
-      name: 'customerManage',
+      name: 'customerManageReceiver',
       component: _import('company/customerManage/receiver'),
       meta: {
         role: ['admin'],
         ptitle: '客户管理',
         title: '收货人',
-        noCache: false,
+        noCache: true,
         istab: true,
         code: 'CUSTOMELIST_REVER'
       }
@@ -218,7 +218,7 @@ export default {
     children: [{
       path: '/company/smsManage/customized',
       icon: 'QQ',
-      name: 'smsManage',
+      name: 'smsManageCustomized',
       component: _import('company/sms/customized'),
       meta: {
         role: ['admin'],
@@ -231,7 +231,7 @@ export default {
     }, {
       path: '/company/smsManage/buy',
       icon: 'QQ',
-      name: 'smsManage',
+      name: 'smsManageBuy',
       component: _import('company/sms/buy'),
       meta: {
         role: ['admin'],
@@ -244,7 +244,7 @@ export default {
     }, {
       path: '/company/smsManage/log',
       icon: 'QQ',
-      name: 'smsManage',
+      name: 'smsManageLog',
       component: _import('company/sms/log'),
       meta: {
         role: ['admin'],
