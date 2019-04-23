@@ -125,6 +125,11 @@ Vue.mixin({
         callback()
       }
     },
+    _rowStyleAccounts ({row, index}, prop='totalStatusCn',bgcolr="#c0ffc0", status='已核销' ) {
+      return {
+        'background-color': row[prop] === status ? bgcolr : ''
+      }
+    },
     _checkExperience(row, type) { // 判断是否体验账号
       const isUser = type === 'username'
       // 判断当前环境是否体验环境

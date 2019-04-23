@@ -47,6 +47,7 @@
           ref="multipleTable"
           :data="usersArr"
           :key="tablekey"
+          :row-style="({row, index}) => _rowStyleAccounts({row, index} )"
           stripe
           border
           @row-click="clickDetails"
@@ -462,6 +463,7 @@ export default {
     }
   },
   methods: {
+    
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj

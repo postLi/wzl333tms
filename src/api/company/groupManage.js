@@ -125,3 +125,12 @@ export function getManageTypeInfo(orgId) {
 export function getNetworkStatusInfo(orgId) {
   return getSelectType('network_status', orgId)
 }
+
+/**
+ * 物流园区列表
+ */
+export function postParkLists (data) {
+  return fetch.post('/28-web/logisticsPark/tms/list', data).then(res => {
+    return res.data || []
+  })
+}

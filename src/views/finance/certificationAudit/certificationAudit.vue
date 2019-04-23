@@ -3,12 +3,13 @@
     <SearchForm :orgid="otherinfo.orgid" :issender="true" @change="getSearchParam" :btnsize="btnsize"/>
     <div class="tab_info">
       <div class="btns_box">
+         <el-button type="primary" :size="btnsize" icon="el-icon-tickets" @click="doAction('audit')" plain
+                   v-has:CERTVERFICATION_VERIFY>审核
+        </el-button>
         <el-button type="success" :size="btnsize" icon="el-icon-document" @click="doAction('theAudit')" plain
                    v-has:CERTVERFICATION_CONTRARY_VERIFY>反审核
         </el-button>
-        <el-button type="info" :size="btnsize" icon="el-icon-tickets" @click="doAction('audit')" plain
-                   v-has:CERTVERFICATION_VERIFY>审核
-        </el-button>
+       
         <el-button type="primary" :size="btnsize" icon="el-icon-download" @click="doAction('export')" plain
                    v-has:CERTVERFICATION_EXPORT>导出
         </el-button>
@@ -371,7 +372,7 @@
           path: '/finance/cashDetail',
           query: {
             recordId: row.billRecordId,
-            // orgId: row.orgId,
+            orgId: row.orgId,
             searchQuery: searchQuery
           }
         })

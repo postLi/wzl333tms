@@ -49,6 +49,9 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
+              <!-- <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template> -->
             </el-table-column>
             <el-table-column
               :key="column.id"
@@ -57,6 +60,9 @@
               :label="column.label"
               v-else
               :width="column.width">
+              <!-- <template slot="header" slot-scope="scope">
+                <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
+              </template> -->
               <template slot-scope="scope">
                   <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
@@ -489,6 +495,13 @@ export default {
     }
   },
   methods: {
+    changeKey(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        this.fetchAllOrder()
+      }
+    },
     getSumLeft(param, type) {
       return getSummaries(param, operationPropertyCalc)
     },

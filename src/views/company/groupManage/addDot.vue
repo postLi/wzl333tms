@@ -145,10 +145,14 @@
             <el-input :value="form.createTime | parseTime('{y}/{m}/{d}')"
                       :disabled="isModify || form.status===31"></el-input>
           </el-form-item>
-           <el-form-item label="园区名称" :label-width="formLabelWidth" prop="parkName">
-            <el-input v-model="form.parkName" auto-complete="off" :disabled="form.status===31"
-                      clearable ></el-input>
+           <el-form-item label="园区名称" :label-width="formLabelWidth" prop="parkId">
+               <el-select v-model="form.parkId" :disabled="form.status===31" @change="changePark">
+              <el-option v-for="(item, index) in parkList" :label="item.parkName" :value="item.id" :key="index"></el-option>
+            </el-select>
+            <!-- <el-input v-model="form.parkName" auto-complete="off" :disabled="form.status===31"
+                      clearable ></el-input> -->
           </el-form-item>
+          
           <el-form-item label="负责人" :label-width="formLabelWidth" prop="responsibleName">
             <el-input v-model="form.responsibleName" auto-complete="off" :disabled="form.status===31"
                       clearable :maxlength="10"></el-input>
@@ -158,8 +162,6 @@
                       :disabled="form.status===31"></el-input>
           </el-form-item>
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
-
-
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr"
                          :disabled="form.status===31" type="city" v-model="form.city" :remote="true" clearable/>
           </el-form-item>
@@ -196,6 +198,10 @@
           <el-form-item label="锁机额度" :label-width="formLabelWidth" prop="">
             <el-input v-model="form.lockMachineQuota" auto-complete="off" v-number-only :maxlength="9"
                       :disabled="form.status===31"> <template slot="append">元</template></el-input>
+          </el-form-item>
+           <el-form-item label="统一社会信用代码" :label-width="formLabelWidth" prop="socialCreditCode">
+            <el-input v-model="form.socialCreditCode" auto-complete="off" :disabled="form.status===31"
+                      clearable ></el-input>
           </el-form-item>
             <div class="ad-add-dot-admin">
             <div class="ad-add-dot" v-if="!isModify">
@@ -252,7 +258,8 @@
     putOrgData,
     getNetWorkTypeInfo,
     getManageTypeInfo,
-    getNetworkStatusInfo
+    getNetworkStatusInfo,
+    postParkLists
   } from '../../../api/company/groupManage'
   import popRight from '@/components/PopRight/index'
   import SelectTree from '@/components/selectTree/index'
@@ -262,6 +269,7 @@
   import { objectMerge2 } from '@/utils/index'
   import { mapGetters } from 'vuex'
   import SelectType from '@/components/selectType/index'
+
   // import {Obj}
   export default {
     components: {
@@ -314,6 +322,10 @@
         if (val) {
           this.formKey = Math.random()
           this.fetchData()
+          if (!this.initFetchPark) {
+            this.fetchParks()
+            this.initFetchPark = true
+          }
           // console.log(JSON.stringify(this.doInfo))
         }
         this.watchDate(this.doInfo)
@@ -342,6 +354,7 @@
         callback()
       }
       return {
+        parkList: [],
         tooltip: false,
         formKey: '',
         popTitle: '新增网点',
@@ -357,6 +370,8 @@
         isChecked: false,
         isCheckedShow: false,
         form: {
+          parkId: '',
+          parkName: '',
           orgName: '',
           orgType: 1,
           status: 32,
@@ -381,8 +396,7 @@
           parentId: 0,
           createTime: '',
           id: '',
-          accountName: ''  // 管理员账号
-
+          accountName: '',  // 管理员账号
         },
         rules: {
           orgName: [
@@ -426,6 +440,24 @@
 
     },
     methods: {
+      changePark (val) {
+        console.log('park', val, this.parkList.filter(el => el.id === val)[0])
+        this.form.parkName = this.parkList.filter(el => el.id === val)[0].parkName
+      },
+      fetchParks () {
+        let params = {
+            pageSize: 500,
+             currentPage: 1,
+        }
+        return postParkLists(params).then(data => {
+          if (data) {
+            this.parkList = data.list || []
+          }
+        })
+        .catch(err => {
+         this._handlerCatchMsg(err)
+        })
+      },
       fetchData() {
         this.loading = true
         this.form.parentId = this.orgid || this.companyId

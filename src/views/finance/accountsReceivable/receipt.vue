@@ -16,6 +16,7 @@
           :key="tablekey"
           stripe
           border
+            :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'receiptpayStateCn' )"
           @row-click="clickDetails"
           @row-dblclick="showDetail"
           @selection-change="getSelection"

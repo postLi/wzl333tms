@@ -363,6 +363,7 @@
               <div class="setup-right">
                 <el-form-item>
                   <upload :title="'本地上传'" v-model="form.uploadLogo.logoUrl" />
+                  <p>建议尺寸（宽*高）：100px*40px</p>
                 </el-form-item>
               </div>
             </div>
