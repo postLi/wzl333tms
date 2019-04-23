@@ -10,6 +10,7 @@
 import Sender from './groupIndex'
 
 export default {
+  name: 'reconciliationGroup',
   components: {
     Sender
   },
