@@ -431,6 +431,11 @@ for (var a in _api) {
   }
 }
 
+// 覆写过滤函数，允许在输入框里响应事件
+hotkeys.filter = function(event) {
+  return true
+}
+
 if (typeof window !== 'undefined') {
   var _hotkeys = window.hotkeys
   hotkeys.noConflict = function(deep) {
