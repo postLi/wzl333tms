@@ -10,7 +10,15 @@ const tagsView = {
       if (view.query.tab) {
         if (state.visitedViews.some(v => v.fullPath === view.fullPath)) return
       } else {
-        if (state.visitedViews.some(v => v.path === view.path)) return
+        if (state.visitedViews.some(v => v.path === view.path)) {
+          // 更新fullpath值
+          state.visitedViews.forEach(v => {
+            if (v.path === view.path) {
+              v.fullPath = view.fullPath
+            }
+          })
+          return
+        }
       }
       // 列表里没有该记录，查找本地存储，如果有记录需要先清除
       if (sessionStorage.getItem(encodeURIComponent(view.fullPath))) {
@@ -40,11 +48,14 @@ const tagsView = {
         })
       } else {
         // 针对tab页面进行特殊处理，取其父级的设置值
-        if(view.meta.istab && view.matched){
+        if (view.meta.pname) {
+          cacheName = view.meta.pname
+          shouldCache = true
+        } else if (view.meta.istab && view.matched) {
           // matched 将会是一个包含从上到下的所有对象，所以取最后一个值即为当前路由？
           let len = view.matched.length
-          let current = view.matched[len-1]
-          if(current && current.parent){
+          let current = view.matched[len - 1]
+          if (current && current.parent) {
             cacheName = current.parent.name || cacheName
             shouldCache = !current.parent.meta.noCache
           }
@@ -59,8 +70,6 @@ const tagsView = {
           title: view.query.tab || view.meta.ptitle || view.meta.title || '未命名',
           istab: view.meta.istab
         })
-
-        
       }
 
       // 如果需要缓存页面
@@ -69,7 +78,6 @@ const tagsView = {
           state.cachedViews.push(cacheName)
         }
         // state.cachedViews.push(view.fullPath)
-        
       }
       console.log('state.cachedViews:', state.cachedViews)
     },
@@ -105,7 +113,7 @@ const tagsView = {
           const index = state.cachedViews.indexOf(i)
           // i为字符串而非索引位置信息，所以这一段删除有问题...
           // state.cachedViews = state.cachedViews.slice(index, i + 1)
-        
+
           state.cachedViews = state.cachedViews.slice(index, index + 1)
         }
       }

@@ -136,7 +136,7 @@ export const asyncRouterMap = [
       component: _import('dashboard/index'),
       meta: {
         title: '流程图',
-        noCache: true,
+        noCache: false,
           // 'code': 'HOME_PAGE_3',
         'proute': 'dashboard'
       }

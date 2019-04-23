@@ -462,6 +462,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '承运商对账',
+        pname: 'reconciliation',
         noCache: false,
         code: 'FINANCE_CARRIER'
       }
@@ -473,6 +474,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '网点对账',
+        pname: 'reconciliation',
         noCache: false,
         code: 'FINANCE_ORGFEE'
       }
@@ -484,6 +486,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '客户对账',
+        pname: 'reconciliation',
         noCache: false,
         code: 'FINANCE_CUSTOMER'
       }
@@ -496,6 +499,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '车费对账',
+        pname: 'reconciliation',
         noCache: false,
         code: 'FINANCE_CARFEE'
       },
@@ -507,6 +511,7 @@ export default {
         meta: {
           role: ['admin'],
           ptitle: '车费对账',
+          pname: 'reconciliation',
           istab: true,
           title: '短驳对账',
           noCache: true,
@@ -520,6 +525,7 @@ export default {
         meta: {
           role: ['admin'],
           ptitle: '车费对账',
+          pname: 'reconciliation',
           istab: true,
           title: '干线对账',
           noCache: true,
@@ -533,6 +539,7 @@ export default {
         meta: {
           role: ['admin'],
           ptitle: '车费对账',
+          pname: 'reconciliation',
           istab: true,
           title: '送货对账',
           noCache: true,
@@ -737,6 +744,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '科目定义',
+        pname: 'financeInfo',
         noCache: false,
         code: 'INIT_SUBJECT_DEFINE'
       }
@@ -748,6 +756,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '核销科目',
+        pname: 'financeInfo',
         noCache: false,
         code: 'INIT_SUBJECT_VERIFY'
       }
@@ -759,6 +768,7 @@ export default {
       meta: {
         role: ['admin'],
         title: '核销方向',
+        pname: 'financeInfo',
         noCache: false,
         code: 'INIT_VERIFY_DIRECTION'
       }

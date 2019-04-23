@@ -317,7 +317,7 @@ export default {
   watch: {
     $route(newVal) {
       if (newVal) {
-        this.fetchList()
+        // this.fetchList()
       }
     }
   },
@@ -591,7 +591,7 @@ export default {
         this.previews = Object.assign([], row[prop].split(','))
         this.isShowPre = true
       }
-      console.log('previewPicture', index, row, )
+      console.log('previewPicture', index, row,)
     }
   }
 }
