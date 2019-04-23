@@ -1,5 +1,5 @@
  <template>
-  <div class="tab-content" v-loading="loading">
+  <div class="tab-content miniHeaderSearch " v-loading="loading">
     <SearchForm :query="query" :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize" />
     <div class="tab_info">
       <div class="btns_box">
@@ -39,9 +39,9 @@
           show-summary
           tooltip-effect="dark"
           style="width: 100%">
-
-          <template v-for="column in tableColumn">
-            <el-table-column
+         
+         <template v-for="column in tableColumn">
+             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
@@ -49,20 +49,22 @@
               :prop="column.prop"
               v-if="!column.slot"
               :width="column.width">
-              <!-- <template slot="header" slot-scope="scope">
+              <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
-              </template> -->
+              </template>
+               <template slot-scope="scope">{{scope.row[column.prop]}}</template>
             </el-table-column>
             <el-table-column
               :key="column.id"
               :fixed="column.fixed"
               sortable
               :label="column.label"
+               :prop="column.prop"
               v-else
               :width="column.width">
-              <!-- <template slot="header" slot-scope="scope">
+              <template slot="header" slot-scope="scope">
                 <tableHeaderSearch :scope="scope" :query="searchQuery" @change="changeKey" />
-              </template> -->
+              </template>
               <template slot-scope="scope">
                   <div class="td-slot" v-html="column.slot(scope)"></div>
               </template>
