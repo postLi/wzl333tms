@@ -511,7 +511,7 @@
       </div>
     </el-form>
     <!-- 中转信息 -->
-    <div class="order-transfer-form">
+    <div class="order-transfer-form" v-if="form.tmsOrderTransferList.length ">
       <div class="show-form-title">中转信息</div>
       <div class="order-transfer-table">
         <table>
@@ -571,7 +571,7 @@
       </div>
     </div>
     <!-- 短驳配载信息 -->
-    <div class="order-transfer-form">
+    <div class="order-transfer-form" v-if="form.tmsDbLoadsList.length">
       <div class="show-form-title">短驳配载信息</div>
       <div class="order-transfer-table">
         <table>
@@ -627,7 +627,7 @@
       </div>
     </div>
     <!-- 干线配载信息 -->
-    <div class="order-transfer-form">
+    <div class="order-transfer-form" v-if="form.tmsGxLoadsList.length">
       <div class="show-form-title">干线配载信息</div>
       <div class="order-transfer-table">
         <table>
@@ -683,7 +683,7 @@
       </div>
     </div>
     <!-- 送货配载信息 -->
-    <div class="order-transfer-form">
+    <div class="order-transfer-form" v-if="form.tmsShLoadsList.length">
       <div class="show-form-title">送货配载信息</div>
       <div class="order-transfer-table">
         <table>
@@ -723,7 +723,7 @@
       </div>
     </div>
     <!-- 签收信息 -->
-    <div class="order-transfer-form">
+    <div class="order-transfer-form" v-if="form.tmsOrderShipSignList.length">
       <div class="show-form-title">签收信息</div>
       <div class="order-transfer-table">
         <table>
@@ -943,6 +943,7 @@ export default {
         tmsShLoadsList: [],
         tmsGxLoadsList: [],
         tmsDbLoadsList: [],
+        tmsOrderShipSignList: [],
         shipFeeStatusDto: {
           agencyFundStatus: false,
           brokerageFeeStatus: false,
@@ -1065,6 +1066,9 @@ export default {
         }
       }
     }
+  },
+  beforeDestroy(){
+    this.eventBus.$off('startPrint')
   },
   activated() {
 
@@ -1281,9 +1285,9 @@ export default {
       // 设置运单信息
       this.form.tmsOrderShipSign = data.tmsOrderShipSign || {}
       this.form.tmsOrderShipSignList = data.tmsOrderShipSignList || []
-      this.form.tmsShLoadsList = data.tmsShLoadsList || [{}]
-      this.form.tmsGxLoadsList = data.tmsGxLoadsList || [{}]
-      this.form.tmsDbLoadsList = data.tmsDbLoadsList || [{}]
+      this.form.tmsShLoadsList = data.tmsShLoadsList || []
+      this.form.tmsGxLoadsList = data.tmsGxLoadsList || []
+      this.form.tmsDbLoadsList = data.tmsDbLoadsList || []
       console.log('setOrderInfo3:', data, this.form)
     },
     getCarrier(item) {
@@ -1298,7 +1302,7 @@ export default {
       return obj
     },
     reset() {
-      this.$refs['ruleForm'].resetFields()
+      this.$refs['ruleForm'] && this.$refs['ruleForm'].resetFields()
       this.form.cargoList = [{}, {}]
       this.form.sender = this.resetObj(this.form.sender)
       this.form.receiver = this.resetObj(this.form.receiver)
@@ -1311,10 +1315,10 @@ export default {
 
       this.form.tmsOrderShipSign = {}
       this.form.tmsOrderShipSignList = []
-      this.form.tmsShLoadsList = [{}]
-      this.form.tmsGxLoadsList = [{}]
-      this.form.tmsDbLoadsList = [{}]
-      this.form.tmsOrderTransferList = [{}]
+      this.form.tmsShLoadsList = []
+      this.form.tmsGxLoadsList = []
+      this.form.tmsDbLoadsList = []
+      this.form.tmsOrderTransferList = []
       // this.setOrderDate()
     },
     // doAction(type) {
@@ -1633,6 +1637,8 @@ export default {
 <style lang="scss">
 $bordercolor: #d4d4d4;
 $backgroundcolor: #cbe1f7;
+$contentColor: #3e9ff1;
+$contentFontSize: 16px;
 
 .orderinfo-manager .el-tabs .ordermaininfo {
   height: auto;
@@ -1660,6 +1666,8 @@ $backgroundcolor: #cbe1f7;
   .el-form-item--mini.el-form-item {
     margin: 0;
   }
+
+  
 
   .createOrder-title {
     font-size: 24px;
@@ -1689,6 +1697,7 @@ $backgroundcolor: #cbe1f7;
       width: 120px;
       color: #f00;
       font-weight: bold;
+      font-size: $contentFontSize;
     }
   }
   .create-num {
@@ -1699,6 +1708,7 @@ $backgroundcolor: #cbe1f7;
     span {
       color: #333;
       font-weight: bold;
+      font-size: $contentFontSize;
     }
   }
   .order-main {
@@ -1781,7 +1791,8 @@ $backgroundcolor: #cbe1f7;
     }
   }
   .el-input.is-disabled .el-input__inner {
-    color: #3e9ff1;
+    color: $contentColor;
+    font-size: $contentFontSize;
   }
 
   .firstline-order {
@@ -1854,6 +1865,7 @@ $backgroundcolor: #cbe1f7;
     td {
       border: 1px solid $bordercolor;
       text-align: center;
+      
     }
     td,
     th {
@@ -1868,6 +1880,9 @@ $backgroundcolor: #cbe1f7;
       vertical-align: middle;
       border-left: 1px solid #88bef3;
       text-align: center;
+    }
+    td{
+      font-size: $contentFontSize;
     }
     .addButtonTh {
       min-width: 50px;
@@ -1951,6 +1966,10 @@ $backgroundcolor: #cbe1f7;
     .el-checkbox__label {
       vertical-align: middle;
     }
+    .el-checkbox__input.is-checked+span.el-checkbox__label{
+      color: $contentColor; 
+    }
+
 
     .other-form-shipReceiptNum {
       padding: 0;
@@ -2009,11 +2028,12 @@ $backgroundcolor: #cbe1f7;
     }
     td {
       text-align: center;
-      color: #3e9ff1;
+      color: $contentColor;
       white-space: nowrap;
       padding: 0 5px;
       min-width: 100px;
       height: 30px;
+      font-size: $contentFontSize;
     }
     table {
       width: 100%;
@@ -2055,7 +2075,7 @@ $backgroundcolor: #cbe1f7;
   .order-status-info {
     position: absolute;
     top: 0;
-    left: 140px;
+    left: 170px;
     color: #ef0000;
     font-size: 16px;
     text-align: center;

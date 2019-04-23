@@ -1,21 +1,15 @@
 <template>
   <!-- 网点业务费用对比 -->
   <div class="tab-wrapper tab-wrapper-100">
-    <keep-alive>
-      <component v-bind:is="component"></component>
-    </keep-alive>
+      <list />
   </div>
 </template>
 <script>
-import sender from './sender'
+import list from './sender'
 export default {
+  name: 'crossReport',
   components: {
-    sender
-  },
-  data() {
-    return {
-      component: 'sender'
-    }
+    list
   }
 }
 

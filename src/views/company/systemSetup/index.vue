@@ -171,7 +171,7 @@
                 </el-form-item>
                 <el-form-item>
                   保险费与声明价值比例
-                  <el-input :maxlength="3" v-number-only v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
+                  <el-input :maxlength="5" v-number-only:point v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
                     <template slot="append">‰</template>
                   </el-input>
                   <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">

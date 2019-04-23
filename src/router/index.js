@@ -76,7 +76,7 @@ export const asyncRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/flows',
     noDropdown: true,
     icon: 'shouye',
       // name: '首页',

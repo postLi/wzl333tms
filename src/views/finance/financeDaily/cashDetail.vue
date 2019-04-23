@@ -1,5 +1,6 @@
 <template>
   <!-- 资金流水明细 -->
+  <div class="tab-wrapper tab-wrapper-100">
   <div class="tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="orgId" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -50,6 +51,7 @@
     <TableSetup :popVisible="setupTableVisible" :columns="tableColumn" @close="closeSetupTable" @success="setColumn"></TableSetup>
     <!-- 新增 -->
     <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
+  </div>
   </div>
 </template>
 <script>

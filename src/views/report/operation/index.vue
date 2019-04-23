@@ -1,23 +1,16 @@
 <template>
   <!-- 运营统计分析 -->
   <div class="tab-wrapper tab-wrapper-100">
-    <keep-alive>
-      <component v-bind:is="component"></component>
-    </keep-alive>
+      <list />
   </div>
 </template>
 <script>
-import sender from './sender'
+// import list from './sender'
 import list from './list'
 export default {
+  name: 'findOperationReport',
   components: {
-    sender,
     list
-  },
-  data() {
-    return {
-      component: 'list'
-    }
   }
 }
 

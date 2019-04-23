@@ -2401,15 +2401,15 @@ export default {
     // 修改货品列表
     changeFee(index, name, event) {
       console.log('changeFee 修改货品列表', index, name)
-      this.form.cargoList[index][name] = event.target.value
+      let val = event.target.value
+      this.form.cargoList[index][name] = val
 
       if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
         this.getLineInfo()
       }
       // 修改保险费与声明价值
-      // 如果有设置
-      // if (/(insuranceFee|productPrice)/.test(name)) {
-      if (/(productPrice)/.test(name)) {
+      // 当设置任意一个项时，如果另一个项没有值则帮助其自动计算
+      if (/(insuranceFee|productPrice)/.test(name)) {
         const cfg = this.config.shipPageFunc
         if (cfg.insurancePremiumIsDeclaredValue) {
           const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 1000)
@@ -2417,9 +2417,14 @@ export default {
           // 如果存在保险费
           if (inx && per) {
             if (name === 'insuranceFee') {
-              this.form.cargoList[index]['productPrice'] = (tmsMath._div(this.form.cargoList[index][name], per) || 0).toFixed(2)
+              if(this.form.cargoList[index]['productPrice']===''){
+              this.form.cargoList[index]['productPrice'] = (tmsMath._div(val, per) || 0).toFixed(2)
+              }
             } else {
-              this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
+              if(this.form.cargoList[index]['insuranceFee']===''){
+                this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(val, per) || 0).toFixed(2)
+              }
+              
             }
           }
         }
