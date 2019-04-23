@@ -128,7 +128,7 @@ export default {
       return !find.length
     },
     isTime() {
-      console.log('this.scope', this.scope.column.property, this.scope)
+      // console.log('this.scope', this.scope.column.property, this.scope)
       // 判断当前字段是否是时间格式
       const reg = /(time)/
       const property = this.scope.column.property.toLowerCase()
