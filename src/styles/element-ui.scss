@@ -278,7 +278,7 @@
  .el-form-item.is-success .el-input__inner:focus,
  .el-form-item.is-success .el-textarea__inner,
  .el-form-item.is-success .el-textarea__inner:focus {
-   border-color: #dcdfe6;
+   border-color: #f8f676;
  } //anfa-tms\src\styles\login-index.css
  .el-input-group__prepend {
    padding: 0;
@@ -319,3 +319,18 @@
  */
 
 
+ .el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
+  background: rgb(3, 102, 201);
+  // background: #000;
+  color: #fff;
+  font-size: 1.2em;
+  /* transform: scale(1.2);
+    transform-origin: left top; */
+ }
+
+ .el-autocomplete-suggestion li.highlighted, .el-autocomplete-suggestion li:hover{
+  background: rgb(3, 102, 201);
+  // background: #000;
+  color: #fff;
+    font-size: 1.2em;
+ }

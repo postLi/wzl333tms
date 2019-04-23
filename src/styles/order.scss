@@ -1,6 +1,7 @@
 $bordercolor: #d4d4d4;
 $backgroundcolor: #cbe1f7;
 $mainFontSize: 12px;
+$focusBackgroundColor: #f8f7ae;
 
 .createOrder-main {
   margin: 12px auto;
@@ -257,7 +258,7 @@ $mainFontSize: 12px;
       border-radius: 0;
 
       &:focus {
-        background: rgba(0, 0, 0, 0.04);
+        background: $focusBackgroundColor;
       }
     }
   }
@@ -300,7 +301,7 @@ $mainFontSize: 12px;
       border-radius: 0;
 
       &:focus {
-        background: rgba(0, 0, 0, 0.04);
+        background: $focusBackgroundColor;
       }
     }
   }
@@ -365,11 +366,14 @@ $mainFontSize: 12px;
       border-radius: 0;
 
       &:focus {
-        background: rgba(0, 0, 0, 0.04);
+        background: $focusBackgroundColor;
       }
     }
     .el-form-item__content>input {
       font-size: 12px;
+      &:focus{
+        background: $focusBackgroundColor;
+      }
     }
     .el-form-item.is-error .el-input__inner {
       border-color: #f56c6c;
@@ -425,7 +429,7 @@ $mainFontSize: 12px;
       border-radius: 0;
 
       &:focus {
-        background: rgba(0, 0, 0, 0.04);
+        background: $focusBackgroundColor;
       }
     }
 
@@ -469,7 +473,7 @@ $mainFontSize: 12px;
       border-radius: 0;
 
       &:focus {
-        background: rgba(0, 0, 0, 0.04);
+        background: $focusBackgroundColor;
       }
     }
 
