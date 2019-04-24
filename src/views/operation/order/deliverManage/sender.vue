@@ -522,7 +522,7 @@ export default {
     },
     isSuccess(obj) {
       if (obj) {
-        this.getAllList()
+        this.fetchData()
       }
     },
     sendInfo(obj) { // 孙子-打开签收弹出框
@@ -536,6 +536,8 @@ export default {
     signMessage(obj) { // 孙子-获取签收弹出框信息
       this.tablekey = Math.random()
       this.closeMe()
+      // 需要重新获取列表数据
+      this.fetchData()
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj

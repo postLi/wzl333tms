@@ -89,7 +89,7 @@ export default {
         shipIds: [],
         childShipIds: [],
         orgIds: [],
-        signTime: new Date(),
+        signTime: +new Date(),
         signName: '',
         signCocumentTypeId: 0,
         documentNum: '',
@@ -109,7 +109,7 @@ export default {
       if (newVal) {
         this.form = newVal
         // this.setSystemTime()
-        this.form.signTime = new Date()
+        this.form.signTime = +new Date()
         this.form.signName = newVal.signName
         this.form.signTypeId = 99
         this.form.signCocumentTypeId = 96
