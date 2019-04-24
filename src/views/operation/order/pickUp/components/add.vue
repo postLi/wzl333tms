@@ -640,7 +640,7 @@
             truckFee: '', // 车费
             pickupStatus: 236, // 提货状态
             collectionFee: '', // 代收费用
-            outTime: new Date(), // 出车时间
+            outTime: +new Date(), // 出车时间
             arriveTime: ''//
           }
         }
