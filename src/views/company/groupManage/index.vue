@@ -13,7 +13,7 @@
         <el-collapse accordion change="doLayout">
           <el-collapse-item title="公司信息:" v-if="form.parentId === 0">
             <div class="side_right_top" :class="{currActive:form.status ===31}">
-              <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini">
+              <el-form :model="form" class="demo-ruleForm" :inline="true" label-position="right" size="mini" >
                 <el-form-item label="公司名称" :label-width="formLabelWidth">
                   <el-input v-model="form.orgName" auto-complete="off" disabled></el-input>
                 </el-form-item>
@@ -41,6 +41,12 @@
                 </el-form-item>
                 <el-form-item label="所在城市" :label-width="formLabelWidth">
                   <el-input v-model="form.city" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="园区" :label-width="formLabelWidth">
+                  <el-input v-model="form.parkName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="统一社会信用代码" :label-width="formLabelWidth">
+                  <el-input v-model="form.socialCreditCode" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="详情地址" :label-width="formLabelWidth">
                   <el-input v-model="form.detailedAddr" auto-complete="off" disabled></el-input>
@@ -95,6 +101,12 @@
                 </el-form-item>
                 <el-form-item label="预警额度" :label-width="formLabelWidth">
                   <el-input v-model="form.warningQuota" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                  <el-form-item label="园区" :label-width="formLabelWidth">
+                  <el-input v-model="form.parkName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="统一社会信用代码" :label-width="formLabelWidth">
+                  <el-input v-model="form.socialCreditCode" auto-complete="off" disabled></el-input>
                 </el-form-item>
               </el-form>
             </div>

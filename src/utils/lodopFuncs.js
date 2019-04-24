@@ -794,6 +794,14 @@ export function formatOrderData(info, type) {
     }, { // 印花税
       cargo: 'stampTax',
       info: 'stampTax'
+    },
+    { // 预算送货费
+      cargo: 'budgetDeliveryFee',
+      info: 'budgetDeliveryFee'
+    },
+    { // 预算中转费
+      cargo: 'budgetTransferFee',
+      info: 'budgetTransferFee'
     }]
     objCargo.forEach((item, index) => {
       for (let i = 0; i < cargoLen; i++) {

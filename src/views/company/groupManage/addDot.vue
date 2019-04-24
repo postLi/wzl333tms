@@ -50,6 +50,15 @@
           <el-form-item label="所在城市" :label-width="formLabelWidth" prop="city">
             <querySelect filterable show="select" @change="getCity" search="longAddr" valuekey="longAddr" :disabled="companyId === form.id || form.status===31" type="city" v-model="form.city" :remote="true" clearable/>
           </el-form-item>
+            <el-form-item label="园区名称" :label-width="formLabelWidth" prop="parkName">
+              <el-input v-model="form.parkName"  
+              :disabled="form.status===31" 
+              @focus="doctionPark" 
+              placeholder="选择所在园区"></el-input>
+          </el-form-item>
+          <el-form-item label="统一社会信用代码" :label-width="formLabelWidth" prop="socialCreditCode">
+            <el-input v-model="form.socialCreditCode" auto-complete="off" :disabled="form.status===31" clearable></el-input>
+          </el-form-item>
           <div class="rem-add-dot">
             <el-form-item label="详细地址" :label-width="formLabelWidth" prop="">
               <el-input type="textarea" :rows="2" :disabled="form.status===31" :maxlength="50" placeholder="不可超300字" v-model="form.detailedAddr" auto-complete="off"></el-input>
@@ -166,10 +175,6 @@
               :disabled="form.status===31" 
               @focus="doctionPark" 
               placeholder="选择所在园区"></el-input>
-      
-            <!--  <el-select v-model="form.parkId" :disabled="form.status===31" @change="changePark">
-              <el-option v-for="(item, index) in parkList" :label="item.parkName" :value="item.id" :key="index"></el-option>
-            </el-select> -->
           </el-form-item>
           <el-form-item label="统一社会信用代码" :label-width="formLabelWidth" prop="socialCreditCode">
             <el-input v-model="form.socialCreditCode" auto-complete="off" :disabled="form.status===31" clearable></el-input>
@@ -289,15 +294,16 @@ export default {
         // }
         // console.log(JSON.stringify(this.doInfo))
       }
-      this.watchDate(this.doInfo)
+      console.log('dotinfo', this.dotInfo)
+      this.watchDate(this.dotInfo)
     },
     getCheckedKeyId(val) {
       this.watchDate()
     },
-    doInfo: {
-      handler() {
+    dotInfo: {
+      handler(cval, oval) {
         this.checkShowMessage = false
-        this.watchDate(this.doInfo)
+        this.watchDate(this.dotInfo)
       },
       immediate: true,
       deep: true
@@ -359,7 +365,7 @@ export default {
         parentId: 0,
         createTime: '',
         id: '',
-        accountName: '', // 管理员账号
+        accountName: '' // 管理员账号
       },
       rules: {
         orgName: [
@@ -408,7 +414,7 @@ export default {
       this.centerDialogVisible = true
       this.isMatreg = true
     },
-     closeAddReg() {
+    closeAddReg() {
       this.centerDialogVisible = false
       this.isMatreg = false
     },
@@ -420,18 +426,17 @@ export default {
     changePark(val) {
       console.log('park', val, this.parkList.filter(el => el.id === val)[0])
       this.form.parkName = this.parkList.filter(el => el.id === val)[0].parkName
-
     },
     fetchParks() {
       let params = {
         pageSize: 500,
-        currentPage: 1,
+        currentPage: 1
       }
       return postParkLists(params).then(data => {
-          if (data) {
-            this.parkList = data.list || []
-          }
-        })
+        if (data) {
+          this.parkList = data.list || []
+        }
+      })
         .catch(err => {
           this._handlerCatchMsg(err)
         })
@@ -459,8 +464,10 @@ export default {
       for (const i in this.form) {
         this.form[i] = ''
       }
+
       if (this.isModify) {
         this.popTitle = '修改网点'
+        this.form = Object.assign({}, this.dotInfo)
         this.changeDate(this.dotInfo)
         this.form.id = this.dotInfo.id
         this.form.parentId = this.dotInfo.parentId || this.companyId
