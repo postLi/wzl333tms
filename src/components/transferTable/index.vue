@@ -15,6 +15,7 @@
           placement="top-end"
         >
           <el-button
+          class="btn-leftright"
             icon="el-icon-arrow-right"
             type="primary"
             circle
@@ -30,6 +31,7 @@
           placement="top-start"
         >
           <el-button
+           class="btn-leftright"
             icon="el-icon-arrow-left"
             type="primary"
             circle
@@ -41,6 +43,7 @@
         </el-tooltip>
         <transition name="el-zoom-in-bottom">
           <el-button
+           class="btn-leftright"
             icon="el-icon-refresh"
             type="primary"
             v-if="isShowReback"
@@ -83,11 +86,11 @@ export default {
     }
   },
   computed: {
-    leftTableClass () {
-      return this.isShowLeft ? 'showTableLeft' : (this.isShowRight? 'shortTableLeft':'averageTable')
+    leftTableClass() {
+      return this.isShowLeft ? 'showTableLeft' : (this.isShowRight ? 'shortTableLeft' : 'averageTable')
     },
-    rightTableClass () {
-      return this.isShowRight ? 'showTableRight' : (this.isShowLeft? 'shortTableRight':'averageTable')
+    rightTableClass() {
+      return this.isShowRight ? 'showTableRight' : (this.isShowLeft ? 'shortTableRight' : 'averageTable')
     }
   },
   methods: {
@@ -147,11 +150,17 @@ $transitionTime: 0.1s;
       left: 0px; // background-color:gray;
       display: flex;
       flex-direction: row;
+      width: 100%;
     }
 
     .transferTable_header_btn_direction {
       text-align: center;
       margin-left: -7px;
+      .btn-leftright{
+
+        position: relative;
+      z-index: 1;
+      }
     }
     .transferTable_fresh {
       padding-top: 6px;

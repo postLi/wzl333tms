@@ -10,7 +10,7 @@
       @select="handleSelect">
       </el-autocomplete>
     </el-form-item>
-<!--      <el-form-item label="目的网点">
+     <el-form-item label="目的网点">
       <el-autocomplete 
       v-model="searchForm.shipToOrgName" 
       :size="btnsize" 
@@ -19,7 +19,7 @@
       placeholder="到站搜索" 
       @select="handleSelect">
       </el-autocomplete>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item label="运单号" class="curSearchShipSn">
       <el-autocomplete 
       v-model="searchForm.shipSn" 
@@ -115,8 +115,9 @@ export default {
 <style lang="scss">
 .tableHeadItemForm {
   margin-left: 5px;
+  width: 100%;
+  position: relative;
   display: flex;
-  flex-direction: row;
   .el-input {
     width: 120px;
     .el-input__inner {
@@ -124,7 +125,9 @@ export default {
     }
   }
   .curSearchShipSn{
-   
+   position:absolute;
+   left: 50%;
+   margin-left: 20px;
   }
   .clearfix:after {
     content: "";
