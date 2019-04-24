@@ -125,9 +125,9 @@ Vue.mixin({
         callback()
       }
     },
-    _rowStyleAccounts ({row, index}, prop='totalStatusCn',bgcolr="#c0ffc0", status='已核销' ) {
+    _rowStyleAccounts({ row, index }, prop = 'totalStatusCn', bgcolr = '#c0ffc0', status = '已核销') {
       return {
-        'background-color': row[prop] === status ? bgcolr : ''
+        'background': row[prop] === status ? bgcolr : ''
       }
     },
     _checkExperience(row, type) { // 判断是否体验账号

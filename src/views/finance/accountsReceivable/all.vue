@@ -48,7 +48,6 @@
           :data="usersArr"
           :key="tablekey"
           :row-style="({row, index}) => _rowStyleAccounts({row, index} )"
-          stripe
           border
           @row-click="clickDetails"
           @row-dblclick="showDetail"

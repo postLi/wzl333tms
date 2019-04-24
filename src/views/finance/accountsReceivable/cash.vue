@@ -13,7 +13,6 @@
           ref="multipleTable"
           :data="usersArr"
           :key="tablekey"
-          stripe
           border
           :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'nowPayStateCn' )"
           @row-click="clickDetails"

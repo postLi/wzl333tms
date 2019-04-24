@@ -59,6 +59,10 @@
         </el-table-column>
         <el-table-column prop="cargoVolume" sortable label="运单体积" width="100">
         </el-table-column>
+        <el-table-column prop="budgetDeliveryFee" sortable label="预计送货费" width="100">
+        </el-table-column>
+        <el-table-column prop="budgetTransferFee" sortable label="预计中转费" width="100">
+        </el-table-column>
         <el-table-column prop="shipRemarks" sortable label="运单备注" width="120">
         </el-table-column>
       </el-table>
@@ -118,6 +122,10 @@
         <el-table-column prop="repertoryWeight" sortable label="中转重量" width="100">
         </el-table-column>
         <el-table-column prop="repertoryVolume" sortable label="中转体积" width="100">
+        </el-table-column>
+        <el-table-column prop="budgetDeliveryFee" sortable label="预计送货费" width="100">
+        </el-table-column>
+        <el-table-column prop="budgetTransferFee" sortable label="预计中转费" width="100">
         </el-table-column>
         <el-table-column prop="shipFromCityName" sortable label="发站" width="120">
           <template slot-scope="scope">

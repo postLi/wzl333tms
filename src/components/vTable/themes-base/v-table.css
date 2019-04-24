@@ -276,3 +276,9 @@
 
 .v-table-footer-class
 */
+
+/* 表头输入框 */
+.v-slot-header {
+    margin: 5px 0;
+    display: inline-block;
+}

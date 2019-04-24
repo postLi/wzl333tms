@@ -14,7 +14,7 @@
       <!-- 数据表格 -->
       <div class="info_tab">
         <el-table
-        :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'statusName' )" ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :show-summary="true" :summary-method="getSummary">
+        :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'statusName' )" ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail"  border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :show-summary="true" :summary-method="getSummary">
           <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">

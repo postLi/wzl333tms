@@ -8,9 +8,23 @@
     <!-- 左边表格区 -->
     <div slot="tableLeft" class="vtableHeadItemBtn">
       <el-button class="tableAllBtn" size="mini" @click="addALLList"></el-button>
-      <v-table ref="orgLeftTable" v-show="isOrgLeftTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize row-hover-color="#eee" :vertical-resize-offset='18' :columns="columnsLeft" :table-data="leftTable" :footer="footerLeft" :footer-row-height="30" :row-dblclick="dclickAddItem" @on-custom-comp="doActionExpandTable">
+      <v-table :noTitle="true" ref="orgLeftTable" v-show="isOrgLeftTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize row-hover-color="#eee" :vertical-resize-offset='30' :columns="columnsLeft" :table-data="leftTable" :footer="footerLeft" :footer-row-height="30" :row-dblclick="dclickAddItem" @on-custom-comp="doActionExpandTable">
+      <template slot="header"  slot-scope="scope">
+          <tableHeaderSearch
+          :scope="scope.row"
+          :query="searchQuery"
+          @change="changeKeyLeft"
+        />
+      </template>
       </v-table>
       <v-table ref="leftTable" v-show="!isOrgLeftTable" style="width:100%;" column-width-drag is-horizontal-resize is-vertical-resize :vertical-resize-offset='18' row-hover-color="#eee" :columns="columnsLeft" :table-data="leftTable" :footer="footerLeft" :footer-row-height="30" :row-dblclick="dclickAddItem" @on-custom-comp="doActionExpandTable">
+       <!-- <template slot="header"  slot-scope="scope">
+          <tableHeaderSearch
+          :scope="scope.row"
+          :query="searchQuery"
+          @change="changeKeyRight"
+        />
+      </template> -->
       </v-table>
     </div>
     <!-- 右边表格区 -->
@@ -35,6 +49,7 @@ import Vue from 'vue'
 export default {
   data() {
     return {
+      searchQuery: {},
       loading: false,
       tablekey: '',
       loadTruck: '',
@@ -550,6 +565,13 @@ export default {
     this.getList()
   },
   methods: {
+    changeKeyLeft(obj) {
+      this.total = 0
+      this.searchQuery = obj
+      if (!this.loading) {
+        // this.getAllList()
+      }
+    },
     resizeVTable() {
       this.loading = true
       setTimeout(() => {
@@ -1227,7 +1249,7 @@ Vue.component('expandInput', {
     height: 18px;
     position: absolute;
     z-index: 33;
-    top: 10px;
+    top: 17px;
     left: 77px;
     background-size: 18px;
     background-repeat: no-repeat;
