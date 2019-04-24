@@ -105,6 +105,7 @@ export default {
           break
       }
       this.$emit('resizeVTable')
+      this.loading = false
     },
     showAllLeft() {
       this.isShowLeft = true
