@@ -27,7 +27,7 @@ const tagsView = {
 
       // 判断是否需要缓存
       let shouldCache = !view.meta.noCache
-      let cacheName = view.name
+      let cacheName = view.meta.pname || view.name
 
       // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面

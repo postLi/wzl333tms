@@ -13,15 +13,6 @@
 
 <script>
 export default {
-  name: 'arteryDepart',
-  methods: {
-    visitedViews() {
-      console.log('visitedViews : ', this.$store.state.tagsView.visitedViews)
-      return this.$store.state.tagsView.visitedViews
-    }
-  },
-  activated() {
-    this.visitedViews()
-  }
+  name: 'arteryDepart'
 }
 </script>

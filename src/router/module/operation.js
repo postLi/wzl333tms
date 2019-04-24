@@ -17,12 +17,12 @@ export default {
     path: '/operation/index',
     icon: 'information',
     hidden: true,
-    name: '运营管理',
+    name: 'operationIndex',
     component: _import('operation/index'),
     meta: {
       title: '运营管理',
       stitle: '运营',
-      noCache: true
+      noCache: false
     }
   }, {
     path: '/operation/order/manage',
@@ -86,17 +86,6 @@ export default {
       title: '提货管理',
       noCache: false,
       'code': 'ORDER_PICK'
-    }
-  }, {
-    path: '/operation/index',
-    icon: 'QQ',
-    hidden: true,
-    name: '运营管理',
-    component: _import('operation/index'),
-    meta: {
-      role: ['admin'],
-      title: '运营管理',
-      noCache: false
     }
   }, {
     path: '/operation/order/createOrder',
@@ -339,7 +328,7 @@ export default {
     meta: {
       role: ['admin'],
       title: '库存管理',
-      noCache: true,
+      noCache: false,
       'code': 'ORDER_REPER'
     },
     children: [{
@@ -532,7 +521,7 @@ export default {
       title: '新增短驳',
       noCache: false
     }
-  },{
+  }, {
     path: '/operation/order/load/modify',
     icon: 'QQ',
     hidden: true,
@@ -588,7 +577,7 @@ export default {
     path: '/operation/order/loadIntelligent/load',
     icon: 'QQ',
     hidden: true,
-    name: 'Load',
+    name: 'loadIntelligent',
     component: _import('operation/order/loadIntelligent/load'),
     meta: {
       role: ['admin'],
@@ -733,6 +722,17 @@ export default {
       noCache: false
     }
   }, {
+    path: '/operation/order/transferLoad/modify',
+    icon: 'QQ',
+    hidden: true,
+    name: 'ordertransferLoadModify',
+    component: _import('operation/order/transferLoad/modify'),
+    meta: {
+      role: ['admin'],
+      title: '修改中转外发',
+      noCache: false
+    }
+  }, /* {
     path: '/operation/order/pickClip',
     hidden: true,
     icon: 'QQ',
@@ -743,7 +743,7 @@ export default {
       title: '挑单夹',
       noCache: false
     }
-  }, {
+  }, */ {
     path: '/operation/order/orderDetail',
     hidden: true,
     icon: 'QQ',
@@ -789,6 +789,7 @@ export default {
           ptitle: '异常管理',
           istab: true,
           title: '异常登记',
+          pname: 'serviceabnormal',
           noCache: false,
           code: 'ORDER_ABNO1'
         }
@@ -802,6 +803,7 @@ export default {
           ptitle: '异常管理',
           istab: true,
           title: '异常处理',
+          pname: 'serviceabnormal',
           noCache: false,
           code: 'ORDER_ABNO2'
         }
@@ -828,6 +830,7 @@ export default {
           ptitle: '控货管理',
           istab: true,
           title: '全部',
+          pname: 'serviceabnormal',
           noCache: false,
           code: 'CONTRO_All'
         }
@@ -841,6 +844,7 @@ export default {
           ptitle: '控货管理',
           istab: true,
           title: '未放货',
+          pname: 'serviceabnormal',
           noCache: false,
           code: 'CONTRO_NO'
         }
@@ -854,6 +858,7 @@ export default {
           ptitle: '控货管理',
           istab: true,
           title: '已放货',
+          pname: 'serviceabnormal',
           noCache: false,
           code: 'CONTRO_YES'
         }

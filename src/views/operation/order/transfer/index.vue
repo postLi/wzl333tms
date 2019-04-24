@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  // name: 'ordertransfer'
+  name: 'ordertransfer'
 }
 </script>
 

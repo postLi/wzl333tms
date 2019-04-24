@@ -315,7 +315,7 @@ export default {
             })
           }
           this.selectInfo = this.selected[0]
-          this.$router.push({ path: '/operation/order/transferLoad', query: {
+          this.$router.push({ path: '/operation/order/transferLoad/modify', query: {
             id: this.selectInfo.transferBatchNo
           }})
           break

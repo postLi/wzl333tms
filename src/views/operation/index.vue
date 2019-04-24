@@ -142,19 +142,17 @@
 </template>
 <script>
 export default {
-  data() {
-    return {}
-  },
+  name: 'operationIndex',
   methods: {
-    gotoPage (path, code) {
+    gotoPage(path, code) {
       if (code) {
-       if (!this.$_has_permission(code) ){
-        this.$message.warning('您没有权限，请联系管理员！')
-        this.$router.push({path: '/'})
-        return false
-       }
+        if (!this.$_has_permission(code)) {
+          this.$message.warning('您没有权限，请联系管理员！')
+          this.$router.push({ path: '/' })
+          return false
+        }
       }
-      this.$router.push({path: path})
+      this.$router.push({ path: path })
     }
   }
 }
