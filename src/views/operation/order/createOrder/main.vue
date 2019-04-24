@@ -1871,7 +1871,7 @@ export default {
         if (whereAreYou === 'isSaveAndNew') {
           this.output.iscreate = true
           if (!this.ispop) {
-            this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder?tab=创建运单')
+            this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder')
           }
           this.initCreate()
         } else if (param.orderid) {

@@ -602,12 +602,12 @@ export default {
             }
             if (canModify) {
               this.$router.push({
-                path: '/operation/order/createOrder',
+                path: '/operation/order/modifyOrder',
                 query: {
                   orderid: this.selectInfo.id,
                   type: 'modify',
                       // tab: '修改' + this.selectInfo.shipSn
-                  tab: '改单'
+                  // tab: '改单'
                 }
               })
             } else {

@@ -772,7 +772,7 @@ export default {
                   orderid: this.selectInfo.id,
                   type: 'modify',
                   // tab: '修改' + this.selectInfo.shipSn
-                  tab: '改单'
+                  // tab: '改单'
                 }
               })
             } else {

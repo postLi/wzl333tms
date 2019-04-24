@@ -520,7 +520,7 @@ export default {
               type: 'modify',
               isdash: '1',
                   // tab: '修改' + this.selectInfo.shipSn
-              tab: '从' + netdata.shipSn + '建单'
+              // tab: '从' + netdata.shipSn + '建单'
             }
           })
           break
