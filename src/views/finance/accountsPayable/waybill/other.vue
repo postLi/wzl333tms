@@ -337,9 +337,8 @@ export default {
     count() {
       console.log('searchQuery', this.searchQuery)
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillOther',
         query: {
-          tab: '其他费用支出核销',
           currentPage: 'waybillOther', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

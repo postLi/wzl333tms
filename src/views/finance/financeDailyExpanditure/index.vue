@@ -12,7 +12,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTable @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" @feeName="getFeeName" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch" :fiOrderType="fiOrderType"></dataTable>
+              <dataTable @loadTable="getLoadTable" :componentKey="tableKey" :orgId="lastorgid" :activeName="activeName" :setLoadTable="setLoadTableList" @setSettlementId="setSettlementId" :isModify="isEdit" @change="getTableChange" :getSettlementId="settlementId" @feeName="getFeeName" :countSuccessList="countSuccessListBatch" :countNum="countNumBatch" :fiOrderType="fiOrderType"></dataTable>
             </div>
           </el-tab-pane>
           <el-tab-pane label="运单支出" name="second">
@@ -22,7 +22,7 @@
                 <el-button :size="btnsize" plain type="primary" @click="doAction('save')" icon="el-icon-document">保存</el-button>
                 <el-button :size="btnsize" plain type="primary" @click="doAction('cancel')" icon="el-icon-circle-close-outline">取消</el-button>
               </div>
-              <dataTableOrder @loadTable="getLoadTable" :componentKey="tableKey" :orgId="getRouteInfo" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"  :fiOrderType="0"></dataTableOrder>
+              <dataTableOrder @loadTable="getLoadTable" :componentKey="tableKey" :orgId="lastorgid" :activeName="activeName" :setLoadTable="setLoadTableList" :isModify="isEdit" @change="getTableChange" @feeName="getFeeName" :countSuccessList="countSuccessListShip" :countNum="countNumShip"  :fiOrderType="0"></dataTableOrder>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -30,7 +30,7 @@
       <!-- 智能核销弹出框 -->
       <Count :popVisible="countVisible" @close="countVisible = false" :title="countTitle" :setSettlementId="settlementId" @success="countSuccess" @change="changeFeeIdBatch" :fiOrderType="fiOrderType"></Count>
       <!-- 核销凭证 -->
-      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
+      <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="lastorgid" @success="submitVoucher" :btnLoading="btnLoading"></Voucher>
     </div>
   </div>
 </template>
@@ -83,6 +83,7 @@ export default {
         orderList: []
       },
       btnLoading: false,
+      lastorgid: '',
       fiOrderType: 1  // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
     }
   },
@@ -92,6 +93,28 @@ export default {
     ]),
     getRouteInfo() {
       return this.$route.query.orgId ? this.$route.query.orgId : this.otherinfo.orgid
+    }
+  },
+  mounted() {
+    console.log('financeDailyIncome:::')
+    this.lastorgid = this.getRouteInfo
+  },
+  activated() {
+    // 当存在上一个时表示页面已经进入了
+    if (this.lastorgid) {
+      if (parseInt(this.lastorgid) !== parseInt(this.getRouteInfo)) {
+        this.$confirm('是否放弃之前的操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.lastorgid = this.getRouteInfo
+        }).catch(() => {
+
+        })
+      }
+    } else {
+      this.lastorgid = this.getRouteInfo
     }
   },
   watch: {
@@ -132,40 +155,39 @@ export default {
       this.loading = true
       this.btnLoading = true
       postAddIncome(obj).then(data => {
-          this.popVisibleDialog = false
-          this.$message.success('记支出成功！')
-          this.tableKey = new Date().getTime()
-          this.loading = false
-          this.btnLoading = false
-          this.eventBus.$emit('closeCurrentView')
-          this.$router.push({ path: './financeDaily', query: { pageKey: new Date().getTime() } })
-        })
+        this.popVisibleDialog = false
+        this.$message.success('记支出成功！')
+        this.tableKey = new Date().getTime()
+        this.loading = false
+        this.btnLoading = false
+        this.eventBus.$emit('closeCurrentView')
+        this.$router.push({ path: './financeDaily', query: { pageKey: new Date().getTime() }})
+      })
         .catch(err => {
           this.loading = false
           this.btnLoading = false
           this._handlerCatchMsg(err)
         })
     },
-    setSettlementId(val) { 
+    setSettlementId(val) {
     //             178-运单核销 179-干线批次核销 180-短驳核销 181-送货核销
     // 财务订单类型 0-运单；1-干线；2-短驳；3-送货
       this.settlementId = val
       console.log('setSettlementId::::::', val)
-      switch(val) {
+      switch (val) {
         case 178:
           this.fiOrderType = 0
-        break
+          break
         case 179:
           this.fiOrderType = 1
-        break
+          break
         case 180:
           this.fiOrderType = 2
-        break
+          break
         case 181:
           this.fiOrderType = 3
-        break
+          break
       }
-      
     },
     cancel() {
       this.$confirm('确定要取消记收入操作吗？', '提示', {
@@ -185,23 +207,23 @@ export default {
     handleClick() {
       if (this.activeName === 'second') {
         this.settlementId = 178
-      }else {
+      } else {
         this.settlementId = 179
       }
       console.log('handleClick settlementId', this.settlementId)
-      switch(this.settlementId) {
+      switch (this.settlementId) {
         case 178:
           this.fiOrderType = 0
-        break
+          break
         case 179:
           this.fiOrderType = 1
-        break
+          break
         case 180:
           this.fiOrderType = 2
-        break
+          break
         case 181:
           this.fiOrderType = 3
-        break
+          break
       }
     },
     getLoadTable(obj) {

@@ -276,9 +276,8 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/batchArrivalOther',
         query: {
-          tab: '到站其他费核销',
           currentPage: 'batchArrivalOther', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo

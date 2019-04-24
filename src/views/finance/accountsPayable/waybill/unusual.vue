@@ -390,9 +390,8 @@ export default {
     count() {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillUnusual',
         query: {
-          tab: '异动费用核销',
           currentPage: 'waybillUnusual', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

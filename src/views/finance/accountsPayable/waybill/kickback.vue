@@ -356,9 +356,8 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillKickback',
         query: {
-          tab: '回扣核销',
           currentPage: 'waybillKickback', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

@@ -79,118 +79,118 @@ export default {
       loading: true,
       setupTableVisible: false,
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: scope => {
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: scope => {
             return (
               (this.searchQuery.currentPage - 1) * this.searchQuery.pageSize +
               scope.$index +
               1
             )
           }
-        },
-        {
-          label: '发车批次',
-          prop: 'batchNo',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '发车类型',
-          prop: 'loadTypeName',
-          width: '100',
-          fixed: true
-        },
-        {
-          label: '发车网点',
-          prop: 'orgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到达网点',
-          prop: 'arriveOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '发车时间',
-          prop: 'departureTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '到达时间',
-          prop: 'receivingTime',
-          width: '160',
-          fixed: false
-        },
-        {
-          label: '干线操作费',
-          prop: 'gxHandlingFeeRec',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '已核销干线操作费',
-          prop: 'paidGxHandlingFeeRec',
-          width: '140',
-          slot: scope => {
+      },
+      {
+        label: '发车批次',
+        prop: 'batchNo',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '发车类型',
+        prop: 'loadTypeName',
+        width: '100',
+        fixed: true
+      },
+      {
+        label: '发车网点',
+        prop: 'orgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到达网点',
+        prop: 'arriveOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '发车时间',
+        prop: 'departureTime',
+        width: '160',
+        fixed: false
+      },
+      {
+        label: '到达时间',
+        prop: 'receivingTime',
+        width: '160',
+        fixed: false
+      },
+      {
+        label: '干线操作费',
+        prop: 'gxHandlingFeeRec',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '已核销干线操作费',
+        prop: 'paidGxHandlingFeeRec',
+        width: '140',
+        slot: scope => {
             const row = scope.row
             return this._setTextColor(row.gxHandlingFeeRec, row.paidGxHandlingFeeRec, row.unpaidGxHandlingFeeRec, row.paidGxHandlingFeeRec)
           },
-          fixed: false
-        },
-        {
-          label: '未核销干线操作费',
-          prop: 'unpaidGxHandlingFeeRec',
-          width: '140',
-          slot: scope => {
+        fixed: false
+      },
+      {
+        label: '未核销干线操作费',
+        prop: 'unpaidGxHandlingFeeRec',
+        width: '140',
+        slot: scope => {
             const row = scope.row
             return this._setTextColor(row.gxHandlingFeeRec, row.paidGxHandlingFeeRec, row.unpaidGxHandlingFeeRec, row.unpaidGxHandlingFeeRec)
           },
-          fixed: false
-        },
-        {
-          label: '干线已付（应付）',
-          prop: 'paidGxHandlingFeePay',
-          width: '140',
-          fixed: false
-        },
-        {
-          label: '短驳操作费',
-          prop: 'dbHandlingFeeRec',
-          width: '110',
-          fixed: false
-        },
-        {
-          label: '已核销短驳操作费',
-          prop: 'paidDbHandlingFeeRec',
-          width: '140',
-          slot: scope => {
+        fixed: false
+      },
+      {
+        label: '干线已付（应付）',
+        prop: 'paidGxHandlingFeePay',
+        width: '140',
+        fixed: false
+      },
+      {
+        label: '短驳操作费',
+        prop: 'dbHandlingFeeRec',
+        width: '110',
+        fixed: false
+      },
+      {
+        label: '已核销短驳操作费',
+        prop: 'paidDbHandlingFeeRec',
+        width: '140',
+        slot: scope => {
             const row = scope.row
             return this._setTextColor(row.dbHandlingFeeRec, row.paidDbHandlingFeeRec, row.unpaidDbHandlingFeeRec, row.paidDbHandlingFeeRec)
           },
-          fixed: false
-        },
-        {
-          label: '未核销短驳操作费',
-          prop: 'unpaidDbHandlingFeeRec',
-          width: '140',
-          slot: scope => {
+        fixed: false
+      },
+      {
+        label: '未核销短驳操作费',
+        prop: 'unpaidDbHandlingFeeRec',
+        width: '140',
+        slot: scope => {
             const row = scope.row
             return this._setTextColor(row.dbHandlingFeeRec, row.paidDbHandlingFeeRec, row.unpaidDbHandlingFeeRec, row.unpaidDbHandlingFeeRec)
           },
-          fixed: false
-        },
-        {
-          label: '短驳已付（应付）',
-          prop: 'paidDbHandlingFeePay',
-          width: '140',
-          fixed: false
-        },
+        fixed: false
+      },
+      {
+        label: '短驳已付（应付）',
+        prop: 'paidDbHandlingFeePay',
+        width: '140',
+        fixed: false
+      },
         // {
         //   label: '操作费',
         //   prop: 'fee',
@@ -247,11 +247,11 @@ export default {
         //   width: '140',
         //   fixed: false
         // },
-        {
-          label: '备注',
-          prop: 'remark',
-          fixed: false
-        }
+      {
+        label: '备注',
+        prop: 'remark',
+        fixed: false
+      }
       ],
       selectedDataList: []
     }
@@ -317,18 +317,18 @@ export default {
           break
         case 'export':
           SaveAsFile({
-            data: this.selectedDataList.length > 0 ?
-              this.selectedDataList :
-              this.dataList,
+            data: this.selectedDataList.length > 0
+              ? this.selectedDataList
+              : this.dataList,
             columns: this.tableColumn,
             name: '操作费核销' + parseTime(new Date(), '{y}{m}{d}{h}{i}{s}')
           })
           break
         case 'print':
           PrintInFullPage({
-            data: this.selectedDataList.length > 0 ?
-              this.selectedDataList :
-              this.dataList,
+            data: this.selectedDataList.length > 0
+              ? this.selectedDataList
+              : this.dataList,
             columns: this.tableColumn,
             name: '操作费核销'
           })
@@ -337,7 +337,7 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/handleFee',
         query: {
           tab: '操作费核销',
           currentPage: 'handleFee', // 本页面标识符

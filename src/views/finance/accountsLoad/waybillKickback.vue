@@ -1,5 +1,6 @@
 <template>
   <!-- 回扣核销页面 -->
+  <div class="customer-manager tab-wrapper tab-wrapper-100">
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -89,6 +90,7 @@
     <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.shipFromOrgid" :btnLoading="btnLoading"></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -101,8 +103,10 @@ import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries, uniqueArray } from '@/utils/'
 import Voucher from '@/components/voucher/waybill'
+import mix from './mixin'
 export default {
-  name: 'waybillKickback',
+  mixins: [mix],
+  name: 'waybillKickbackAccountsLoad',
   components: {
     transferTable,
     querySelect,
@@ -425,9 +429,7 @@ export default {
     ...mapGetters([
       'otherinfo'
     ]),
-    getRouteInfo() {
-      return JSON.parse(this.$route.query.searchQuery)
-    },
+
     // totalLeft() {
     //   return this.leftTable.length
     // },
@@ -435,9 +437,7 @@ export default {
       return this.rightTable.length
     }
   },
-  created() {
-    this.searchQuery = Object.assign({}, this.getRouteInfo)
-  },
+
   mounted() {
     this.getList()
   },
@@ -638,8 +638,8 @@ export default {
           })
           if (this.leftTable.length < this.searchQuery.pageSize) {
             // 如果左边的列表长度比分页数少才可以添加到左边列表，否则就直接过滤掉不做处理
-             this.leftTable.push(e)
-             this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
+            this.leftTable.push(e)
+            this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
           }
           this.rightTable = objectMerge2([], this.rightTable).filter(el => {
             return el.shipSn !== e.shipSn

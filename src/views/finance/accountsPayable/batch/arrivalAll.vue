@@ -355,9 +355,8 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/batchArrivalAll',
         query: {
-          tab: '到车汇总核销',
           currentPage: 'batchArrivalAll', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo

@@ -230,15 +230,36 @@ export default {
         console.log('fiOrderType', cval, oval)
       },
       deep: true
+    },
+    orgId() {
+      this.getPayName()
+      this.getList()
     }
   },
   // mounted() {
   //   this.getPayName()
   // },
-  activated() {
-    this.getPayName()
-    this.getList()
-  },
+  /* activated() {
+    // 当存在上一个时表示页面已经进入了
+    if (this.lastorgid) {
+      if (parseInt(this.lastorgid) !== parseInt(this.orgId)) {
+        console.log('this.lastorgid !== this.orgId', this.lastorgid, this.orgId)
+        this.$confirm('是否放弃之前的操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.lastorgid = this.orgId
+          this.getPayName()
+          this.getList()
+        }).catch(() => {
+
+        })
+      }
+    } else {
+      this.lastorgid = this.orgId
+    }
+  }, */
   methods: {
     getPayName() {
       if (this.rightTable.length !== 0) {

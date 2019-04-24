@@ -285,9 +285,8 @@ export default {
         this.$set(this.searchQuery.vo, 'ascriptionOrgid', this.selectedList[0].ascriptionOrgid)
       }
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/batchDeliver',
         query: {
-          tab: '送货费核销',
           currentPage: 'batchDeliver', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo

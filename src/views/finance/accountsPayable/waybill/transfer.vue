@@ -378,9 +378,8 @@ export default {
       console.log('searchQuery', this.searchQuery)
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillTransfer',
         query: {
-          tab: '中转费核销',
           currentPage: 'waybillTransfer', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

@@ -1,5 +1,6 @@
 <template>
   <!-- 异动费用核销页面 -->
+  <div class="customer-manager tab-wrapper tab-wrapper-100">
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -88,6 +89,7 @@
     <!-- 核销凭证 -->
     <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.shipFromOrgid" :btnLoading="btnLoading"></Voucher>
   </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -99,7 +101,10 @@ import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries } from '@/utils/'
 import Voucher from '@/components/voucher/waybill'
+import mix from './mixin'
 export default {
+  mixins: [mix],
+  name: 'waybillUnusualAccountsLoad',
   components: {
     transferTable,
     querySelect,
@@ -420,10 +425,7 @@ export default {
     ...mapGetters([
       'otherinfo'
     ]),
-    getRouteInfo() {
-      console.log('getRouteInfo', this.$route.query)
-      return JSON.parse(this.$route.query.searchQuery)
-    },
+
     // totalLeft() {
     //   return this.leftTable.length
     // },
@@ -431,9 +433,7 @@ export default {
       return this.rightTable.length
     }
   },
-  created() {
-    this.searchQuery = Object.assign({}, this.getRouteInfo)
-  },
+
   mounted() {
     this.getList()
   },

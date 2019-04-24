@@ -1,5 +1,6 @@
 <template>
   <!-- 终端送货费核销页面 -->
+  <div class="customer-manager tab-wrapper tab-wrapper-100">
   <div class="accountsLoad_table" v-loading="loading">
     <!-- 搜索框 -->
     <div class="transferTable_search clearfix">
@@ -89,6 +90,7 @@
     <Voucher :popVisible="popVisibleDialog" :info="infoTable" @close="closeDialog" :orgId="getRouteInfo.vo.shipFromOrgid" :btnLoading="btnLoading"></Voucher>
     <!-- <Receipt :popVisible="popVisibleDialog" :info="tableReceiptInfo" @close="closeDialog"></Receipt> -->
   </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -101,8 +103,10 @@ import Pager from '@/components/Pagination/index'
 import currentSearch from './components/currentSearch'
 import { getSummaries, uniqueArray } from '@/utils/'
 import Voucher from '@/components/voucher/waybill'
+import mix from './mixin'
 export default {
-  name: 'waybillKickback',
+  mixins: [mix],
+  name: 'waybillTerminalAccountsLoad',
   components: {
     transferTable,
     querySelect,
@@ -401,10 +405,7 @@ export default {
     ...mapGetters([
       'otherinfo'
     ]),
-    getRouteInfo() {
-      console.log('xxxxxxxxxxxxxxxxxx:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
-      return JSON.parse(this.$route.query.searchQuery)
-    },
+
     // totalLeft() {
     //   return this.leftTable.length
     // },
@@ -412,9 +413,7 @@ export default {
       return this.rightTable.length
     }
   },
-  created() {
-    this.searchQuery = Object.assign({}, this.getRouteInfo)
-  },
+
   mounted() {
     console.log('xxxxxxxxxxxxxxxxxx333:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
     this.getList()

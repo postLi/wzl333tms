@@ -192,12 +192,12 @@ export default {
         'label': '发货人',
         'prop': 'shipSenderName'
       }, {
-          'label': '收货方',
-          'prop': 'receiverCustomerUnit'
-        }, {
-        'label': '收货人',
-        'prop': 'shipReceiverName'
+        'label': '收货方',
+        'prop': 'receiverCustomerUnit'
       }, {
+          'label': '收货人',
+          'prop': 'shipReceiverName'
+        }, {
         'label': '货品名',
         'prop': 'cargoName'
       }, {
@@ -252,7 +252,7 @@ export default {
       // data.vo.ascriptionOrgId = data.vo.shipFromOrgid
 
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/arrive',
         query: {
           tab: '到付核销',
           searchQuery: JSON.stringify(data),

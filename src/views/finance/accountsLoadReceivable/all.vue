@@ -106,22 +106,13 @@
 import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
-import transferTable from '@/components/transferTable'
+
 import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
-import querySelect from '@/components/querySelect/'
-// import Receipt from './components/receipt'
-import Pager from '@/components/Pagination/index'
-import currentSearch from './components/currentSearch'
-import Voucher from '@/components/voucher/receivable'
+import mix from './mixin'
+
 export default {
-  components: {
-    transferTable,
-    querySelect,
-    // Receipt,
-    Pager,
-    currentSearch,
-    Voucher
-  },
+  name: 'allAccountsLoadReceivable',
+  mixins: [mix],
   data() {
     return {
       btnLoading: false,
@@ -158,339 +149,266 @@ export default {
         vo: {}
       },
       tableColumnLeft: [{
-          label: '运单号',
-          prop: 'shipSn',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '开单网点',
-          prop: 'shipFromOrgName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '核销状态',
-          prop: 'totalStatusCn',
-          width: '100'
-        }, {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '80',
-          fixed: false
-        },
-        {
-          label: '签收状态',
-          prop: 'signStatus',
-          width: '100',
-          fixed: false
-        },
-        {
-          'label': '现付',
-          'prop': 'nowPayFee'
-        }, {
-          'label': '现付核销状态',
-          width: '120',
-          'prop': 'nowPayStateCn'
-        }, {
-          'label': '已核销现付',
-          'prop': 'finishNowPayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
-          }
-        }, {
-          'label': '未核销现付',
-          'prop': 'notNowPayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
-          }
-        }, {
-          label: '实际核销现付',
-          prop: 'inputNowPayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputNowPayFee
-          }
-        }, {
-          'label': '到付',
-          'prop': 'arrivepayFee'
-        }, {
-          'label': '到付核销状态',
-          width: '120',
-          'prop': 'arrivepayStateCn'
-        }, {
-          'label': '已核销到付',
-          'prop': 'finishArrivepayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
-          }
-        }, {
-          'label': '未核销到付',
-          'prop': 'notArrivepayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
-          }
-        }, {
-          label: '实际核销到付',
-          prop: 'inputArrivepayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputArrivepayFee
-          }
-        }, {
-          'label': '回单付',
-          'prop': 'receiptpayFee'
-        }, {
-          'label': '回单付核销状态',
-          'prop': 'receiptpayStateCn'
-        }, {
-          'label': '已核销回单付',
-          width: '100',
-          'prop': 'finishReceiptpayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
-          }
-        }, {
-          'label': '未核销回单付',
-          width: '100',
-          'prop': 'notReceiptpayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
-          }
-        },
-        {
-          label: '实际核销回单付',
-          prop: 'inputReceiptpayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputReceiptpayFee
-          }
-        },
-        {
-          'label': '月结',
-          'prop': 'monthpayFee'
-        }, {
-          'label': '月结核销状态',
-          width: '110',
-          'prop': 'monthpayStateCn'
-        }, {
-          'label': '已核销月结',
-          'prop': 'finishMonthpayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
-          }
-        }, {
-          'label': '未核销月结',
-          'prop': 'notMonthpayFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
-          }
-        },
-        {
-          label: '实际核销月付',
-          prop: 'inputMonthpayFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputMonthpayFee
-          }
-        },
-
-        {
-          'label': '异动',
-          'prop': 'changeFee'
-        }, {
-          'label': '异动核销状态',
-          width: '100',
-          'prop': 'changeStateCn'
-        }, {
-          'label': '已核销异动',
-          'prop': 'finishChangeFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
-          }
-        }, {
-          'label': '未核销异动',
-          'prop': 'notChangeFee',
-          slot: (scope) => {
-            const row = scope.row
-            return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
-          }
-        }, {
-          label: '实际核销异动付',
-          prop: 'inputChangeFee',
-          fixed: false,
-          expand: true,
-          slot: (scope) => {
-            return scope.row.inputChangeFee
-          }
-        }, {
-          'label': '发货方',
-          'prop': 'senderCustomerUnit'
-        }, {
-          'label': '收货方',
-          'prop': 'receiverCustomerUnit'
-        },
-
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '120',
-          fixed: false
-        },
-
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '150',
-          fixed: false,
-          slot: (scope) => {
-            return `${parseTime(scope.row.createTime)}`
-          }
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单备注',
-          prop: 'shipRemarks',
-          width: '120',
-          fixed: false
+        label: '运单号',
+        prop: 'shipSn',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '开单网点',
+        prop: 'shipFromOrgName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '核销状态',
+        prop: 'totalStatusCn',
+        width: '100'
+      }, {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '80',
+        fixed: false
+      },
+      {
+        label: '签收状态',
+        prop: 'signStatus',
+        width: '100',
+        fixed: false
+      },
+      {
+        'label': '现付',
+        'prop': 'nowPayFee'
+      }, {
+        'label': '现付核销状态',
+        width: '120',
+        'prop': 'nowPayStateCn'
+      }, {
+        'label': '已核销现付',
+        'prop': 'finishNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.finishNowPayFee)
         }
+      }, {
+        'label': '未核销现付',
+        'prop': 'notNowPayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.nowPayFee, row.finishNowPayFee, row.notNowPayFee, row.notNowPayFee)
+        }
+      }, {
+        label: '实际核销现付',
+        prop: 'inputNowPayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputNowPayFee
+        }
+      }, {
+        'label': '到付',
+        'prop': 'arrivepayFee'
+      }, {
+        'label': '到付核销状态',
+        width: '120',
+        'prop': 'arrivepayStateCn'
+      }, {
+        'label': '已核销到付',
+        'prop': 'finishArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.finishArrivepayFee)
+        }
+      }, {
+        'label': '未核销到付',
+        'prop': 'notArrivepayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.arrivepayFee, row.finishArrivepayFee, row.notArrivepayFee, row.notArrivepayFee)
+        }
+      }, {
+        label: '实际核销到付',
+        prop: 'inputArrivepayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputArrivepayFee
+        }
+      }, {
+        'label': '回单付',
+        'prop': 'receiptpayFee'
+      }, {
+        'label': '回单付核销状态',
+        'prop': 'receiptpayStateCn'
+      }, {
+        'label': '已核销回单付',
+        width: '100',
+        'prop': 'finishReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.finishReceiptpayFee)
+        }
+      }, {
+        'label': '未核销回单付',
+        width: '100',
+        'prop': 'notReceiptpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.receiptpayFee, row.finishReceiptpayFee, row.notReceiptpayFee, row.notReceiptpayFee)
+        }
+      },
+      {
+        label: '实际核销回单付',
+        prop: 'inputReceiptpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputReceiptpayFee
+        }
+      },
+      {
+        'label': '月结',
+        'prop': 'monthpayFee'
+      }, {
+        'label': '月结核销状态',
+        width: '110',
+        'prop': 'monthpayStateCn'
+      }, {
+        'label': '已核销月结',
+        'prop': 'finishMonthpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.finishMonthpayFee)
+        }
+      }, {
+        'label': '未核销月结',
+        'prop': 'notMonthpayFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.monthpayFee, row.finishMonthpayFee, row.notMonthpayFee, row.notMonthpayFee)
+        }
+      },
+      {
+        label: '实际核销月付',
+        prop: 'inputMonthpayFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputMonthpayFee
+        }
+      },
+
+      {
+        'label': '异动',
+        'prop': 'changeFee'
+      }, {
+        'label': '异动核销状态',
+        width: '100',
+        'prop': 'changeStateCn'
+      }, {
+        'label': '已核销异动',
+        'prop': 'finishChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.finishChangeFee)
+        }
+      }, {
+        'label': '未核销异动',
+        'prop': 'notChangeFee',
+        slot: (scope) => {
+          const row = scope.row
+          return this._setTextColor(row.changeFee, row.finishChangeFee, row.notChangeFee, row.notChangeFee)
+        }
+      }, {
+        label: '实际核销异动付',
+        prop: 'inputChangeFee',
+        fixed: false,
+        expand: true,
+        slot: (scope) => {
+          return scope.row.inputChangeFee
+        }
+      }, {
+        'label': '发货方',
+        'prop': 'senderCustomerUnit'
+      }, {
+        'label': '收货方',
+        'prop': 'receiverCustomerUnit'
+      },
+
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '120',
+        fixed: false
+      },
+
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '150',
+        fixed: false,
+        slot: (scope) => {
+          return `${parseTime(scope.row.createTime)}`
+        }
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单备注',
+        prop: 'shipRemarks',
+        width: '120',
+        fixed: false
+      }
       ]
     }
   },
-  computed: {
-    getRouteInfo() {
-      if (this.$route.query.searchQuery) {
-        return JSON.parse(this.$route.query.searchQuery)
-      } else {
-
-      }
-    },
-    // totalLeft() {
-    //   return this.leftTable.length
-    // },
-    totalRight() {
-      return this.rightTable.length
-    }
-  },
-  watch: {
-    '$route.query': {
-      handler(cval, oval) {
-        if (cval) {
-          this.getList()
-        }
-      },
-      deep: true
-    }
-  },
-  created() {
-    this.searchQuery = Object.assign({}, this.getRouteInfo)
-  },
-  mounted() {
-    this.getList()
-  },
   methods: {
-    handlePageChangeLeft(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
-      this.pageGetList()
-    },
-    pageGetList() {
-      const rightTable = objectMerge2([], this.rightTable)
-      this.loading = true
-      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      accountApi.getReceivableList(this.searchQuery).then(data => {
-          if (data) {
-            this.leftTable = Object.assign([], data.list)
-            this.totalLeft = data.total
-            rightTable.forEach((el, index) => {
-              this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-            })
-          }
-          this.orgLeftTable = Object.assign([], this.leftTable)
-          this.loading = false
-        })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
-    initLeftParams() {
-      if (!this.$route.query) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        // this.$router.push({ path: './accountsPayable/waybill' })
-        this.isFresh = true // 是否手动刷新页面
-      } else {
-        this.searchQuery = Object.assign({}, this.getRouteInfo)
-        // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
-        // this.$set(this.searchQuery.vo, 'status', this.getRouteInfo.vo.status)
-        this.isFresh = false
-      }
-      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {} else {
-        this.searchQuery.currentPage = 1
-        // this.searchQuery.pageSize = 100
-      }
-      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-    },
     setRight(item) {
       /* item.inputNowPayFee = 1
       item.inputArrivepayFee = 1
@@ -502,12 +420,12 @@ export default {
 
       this.$set(this.rightTable, this.rightTable.length, item)
     },
-    setRightValue (el) {
-       el.inputNowPayFee = el.notNowPayFee
-            el.inputArrivepayFee = el.notArrivepayFee
-            el.inputReceiptpayFee = el.notReceiptpayFee
-            el.inputMonthpayFee = el.notMonthpayFee
-            el.inputChangeFee = el.notChangeFee
+    setRightValue(el) {
+      el.inputNowPayFee = el.notNowPayFee
+      el.inputArrivepayFee = el.notArrivepayFee
+      el.inputReceiptpayFee = el.notReceiptpayFee
+      el.inputMonthpayFee = el.notMonthpayFee
+      el.inputChangeFee = el.notChangeFee
     },
     getList(handle) {
       this.loading = true
@@ -535,7 +453,7 @@ export default {
           //   return /(NOSETTLEMENT|PARTSETTLEMENT)/.test(el.totalStatus)
           // })).map(el => {
           this.leftTable = Object.assign([], data.list).map(el => {
-           this.setRightValue(el)
+            this.setRightValue(el)
             return el
           })
           selectListShipSns.forEach(e => {
@@ -590,83 +508,6 @@ export default {
       }
       console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
-    clickDetailsRight(row) {
-      this.$refs.multipleTableRight.toggleRowSelection(row)
-    },
-    clickDetailsLeft(row) {
-      this.$refs.multipleTableLeft.toggleRowSelection(row)
-    },
-    getSelectionRight(list) { // 获取右边表格打勾的数据列表
-      this.selectedRight = list
-    },
-    getSelectionLeft(list) { // 获取左边表格打勾的数据列表
-      this.selectedLeft = list
-    },
-    changeTableKey() { // 刷新表格
-      this.tablekey = new Date().getTime()
-    },
-    doAction(type) {
-      switch (type) {
-        case 'goLeft': // 右边数据勾选到左边
-          this.goLeft()
-          break
-        case 'goRight': // 左边数据勾选到右边
-          this.goRight()
-          break
-      }
-    },
-    goLeft() { // 数据从左边穿梭到右边
-      if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
-      } else {
-        this.selectedRight.forEach((e, index) => {
-          // 默认设置实际核销数量
-          e.inputBrokerageFee = e.unpaidFee
-          this.setRight(e)
-          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.rightTable.push(e)
-          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-        })
-        this.selectedRight = [] // 清空选择列表
-      }
-      if (this.rightTable.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-    },
-    goRight() { // 数据从右边穿梭到左边
-      if (this.selectedLeft.length === 0) {
-        this.$message({ type: 'warning', message: '请在右边表格选择数据' })
-      } else {
-        this.selectedLeft.forEach((e, index) => {
-          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.leftTable.push(e)
-          this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-        })
-        this.selectedLeft = [] // 清空选择列表
-      }
-      if (this.rightTable.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-    },
     // 选中的行
     selectCurrent(obj, index) {
       // 1 设置默认数据
@@ -677,40 +518,7 @@ export default {
 
       this.addItem(obj, index)
     },
-    addItem(row, index) { // 添加单行
-      this.selectedRight = []
-      this.selectedRight[index] = row
-      this.doAction('goLeft')
-    },
-    minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
-    },
-    addALLList() { // 添加全部
-      this.selectedRight = Object.assign([], this.leftTable)
-      this.doAction('goLeft')
-    },
-    minusAllList() { // 减去全部
-      this.selectedLeft = Object.assign([], this.rightTable)
-      this.doAction('goRight')
-    },
-    dclickAddItem(row, event) { // 双击添加单行
-      this.selectedRight = []
-      this.selectedRight.push(row)
-      this.doAction('goLeft')
-    },
-    dclickMinusItem(row, event) { // 双击减去单行
-      this.selectedLeft = []
-      this.selectedLeft.push(row)
-      this.doAction('goRight')
-    },
-    closeDialog() {
-      this.popVisibleDialog = false
-    },
-    openDialog() {
-      this.popVisibleDialog = true
-    },
+
     // 核销前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
@@ -884,54 +692,6 @@ export default {
         //   this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         // }
       }
-    },
-    getSumRight(param) { // 右边表格合计-自定义显示
-      const arr = objectMerge2([], operationPropertyCalc)
-      arr.forEach((el, index) => {
-        if (el === '_index|1|单') {
-          arr[index] = '_index|2|单'
-        }
-      })
-      return getSummaries(param, arr)
-    },
-    getSumLeft(param) { // 左边表格合计-自定义显示
-      const arr = objectMerge2([], operationPropertyCalc)
-      arr.forEach((el, index) => {
-        if (el === '_index|1|单') {
-          arr[index] = '_index|2|单'
-        }
-      })
-      return getSummaries(param, arr)
-    },
-    setHeader(h, { column }) {
-      return h('el-button', {
-        props: {
-          // icon: 'el-icon-plus',
-          size: 'mini'
-        },
-        'class': {
-          'tableAllBtn': true,
-          'setTableHeader': true
-        },
-        on: {
-          click: this.addALLList
-        }
-      })
-    },
-    setHeader2(h, { column }) {
-      return h('el-button', {
-        props: {
-          // icon: 'el-icon-minus',
-          size: 'mini'
-        },
-        'class': {
-          'tableAllBtnMinus': true,
-          'setTableHeader': true
-        },
-        on: {
-          click: this.minusAllList
-        }
-      })
     }
   }
 }

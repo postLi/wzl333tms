@@ -441,14 +441,18 @@ export default {
         console.log('fiOrderType', cval, oval)
       },
       deep: true
+    },
+    orgId() {
+      this.getPayName()
+      this.getList()
     }
   },
   // mounted() {
   //   this.getPayName()
   // },
   activated() {
-    this.getPayName()
-    this.getList()
+    // this.getPayName()
+    // this.getList()
   },
   methods: {
     getPayName() {

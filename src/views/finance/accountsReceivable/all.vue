@@ -463,7 +463,7 @@ export default {
     }
   },
   methods: {
-    
+
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
@@ -472,7 +472,7 @@ export default {
     viewDetails(row) {
       row = row || []
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/all',
         query: {
           tab: '全部核销',
           searchQuery: JSON.stringify(this.searchQuery),

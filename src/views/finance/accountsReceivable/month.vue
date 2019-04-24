@@ -325,7 +325,7 @@ export default {
       const data = objectMerge2(this.searchQuery)
       data.vo.ascriptionOrgId = data.vo.shipFromOrgid
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/month',
         query: {
           tab: '月结核销',
           searchQuery: JSON.stringify(data),

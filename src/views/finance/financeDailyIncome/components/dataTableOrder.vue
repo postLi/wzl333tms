@@ -376,11 +376,15 @@ export default {
 
       },
       deep: true
+    },
+    orgId() {
+      this.getPayName()
+      this.getList()
     }
   },
   activated() {
-    this.getPayName()
-    this.getList()
+    // this.getPayName()
+    // this.getList()
   },
   methods: {
     getPayName() {

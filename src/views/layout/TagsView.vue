@@ -51,6 +51,9 @@ export default {
   computed: {
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
+    },
+    cacheViews() {
+      return this.$store.state.tagsView.cachedViews
     }
   },
   created() {
@@ -69,6 +72,9 @@ export default {
       },
 
       immediate: false
+    },
+    cacheViews(nval) {
+      console.log('cacheViews: ', nval)
     }
   },
   mounted() {
