@@ -521,12 +521,18 @@ export default {
     this.disOrgList = [this.otherinfo.orgid] // 禁止选择的网点列表
   },
   mounted() {
+    this.queryData = JSON.stringify(this.$route.query)
     this.getSelectType()
     this.init()
     this.getSystemTime()
   },
   activated() {
     this.getSystemTime()
+    if(this.queryData !== JSON.stringify(this.$route.query)){
+      this.queryData = JSON.stringify(this.$route.query)
+      this.getSelectType()
+      this.init()
+    }
   },
   watch: {
     // '$route': {

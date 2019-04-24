@@ -506,8 +506,7 @@ export default {
     meta: {
       role: ['admin'],
       title: '新增配载',
-      noCache: false,
-      istab: true
+      noCache: false
     }
   },
   {
@@ -519,8 +518,7 @@ export default {
     meta: {
       role: ['admin'],
       title: '新增送货',
-      noCache: false,
-      istab: true
+      noCache: false
     }
   },
   {
@@ -532,8 +530,42 @@ export default {
     meta: {
       role: ['admin'],
       title: '新增短驳',
-      noCache: false,
-      istab: true
+      noCache: false
+    }
+  },{
+    path: '/operation/order/load/modify',
+    icon: 'QQ',
+    hidden: true,
+    name: 'orderloadModify',
+    component: _import('operation/order/load/modify'),
+    meta: {
+      role: ['admin'],
+      title: '修改配载',
+      noCache: false
+    }
+  },
+  {
+    path: '/operation/order/load/modifyDelivery',
+    icon: 'QQ',
+    hidden: true,
+    name: 'orderloaddeliveryModify',
+    component: _import('operation/order/load/modifyDelivery'),
+    meta: {
+      role: ['admin'],
+      title: '修改送货',
+      noCache: false
+    }
+  },
+  {
+    path: '/operation/order/load/modifyShort',
+    icon: 'QQ',
+    hidden: true,
+    name: 'orderloadshortModify',
+    component: _import('operation/order/load/modifyShort'),
+    meta: {
+      role: ['admin'],
+      title: '修改短驳',
+      noCache: false
     }
   },
     // {
