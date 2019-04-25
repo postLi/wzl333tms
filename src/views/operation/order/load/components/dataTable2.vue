@@ -88,6 +88,13 @@ export default {
         titleAlign: 'center',
         columnAlign: 'center'
       },
+       {
+        field: 'shipToOrgName',
+        title: '目的网点',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
       {
         field: 'shipDeliveryMethodName',
         title: '交接方式',
@@ -137,6 +144,7 @@ export default {
         titleAlign: 'center',
         columnAlign: 'center'
       },
+     
       {
         field: 'shipSenderName',
         title: '发货人',
@@ -410,6 +418,13 @@ export default {
       {
         field: 'shipToCityName',
         title: '到站',
+        width: 120,
+        titleAlign: 'center',
+        columnAlign: 'center'
+      },
+      {
+        field: 'shipToOrgName',
+        title: '目的网点',
         width: 120,
         titleAlign: 'center',
         columnAlign: 'center'
