@@ -166,7 +166,7 @@ export default {
         this.loading = false
         this.btnLoading = false
         this.eventBus.$emit('closeCurrentView')
-        this.$router.push({ path: './financeDaily', query: { pageKey: new Date().getTime() }})
+        this.$router.push({ path: '/finance/financeDaily', query: { pageKey: new Date().getTime() }})
       })
         .catch(err => {
           this.loading = false
@@ -202,7 +202,7 @@ export default {
       }).then(() => {
         this.eventBus.$emit('closeCurrentView')
         this.$router.push({
-          path: './financeDaily',
+          path: '/finance/financeDaily',
           query: {
             pageKey: new Date().getTime()
           }

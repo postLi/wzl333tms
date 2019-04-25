@@ -334,7 +334,7 @@ export default {
       switch (command) {
         case 'income': // 收入
           this.$router.push({
-            path: './financeDailyIncome',
+            path: '/finance/financeDailyIncome',
             query: {
               orgId: this.searchQuery.vo.orgId
             }
@@ -342,7 +342,7 @@ export default {
           break
         case 'expand': // 支出
           this.$router.push({
-            path: './financeDailyExpanditure',
+            path: '/finance/financeDailyExpanditure',
             query: {
               orgId: this.searchQuery.vo.orgId
             }
@@ -516,7 +516,7 @@ export default {
     },
     expandtiure() {
       this.$router.push({
-        path: './settleLogExpandtiure',
+        path: '/finance/settleLogExpandtiure',
         query: {
           orgId: this.searchQuery.vo.orgId
         }
@@ -551,7 +551,7 @@ export default {
     showDetail() {
       if (this.selectedList.length > 0) {
         this.$router.push({
-          path: './cashDetail',
+          path: '/finance/cashDetail',
           query: {
             recordId: this.selectedList[0].id,
             orgId: this.searchQuery.vo.orgId,

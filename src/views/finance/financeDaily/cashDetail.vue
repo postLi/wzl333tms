@@ -409,7 +409,7 @@ export default {
                   this.$message.info('已更新更新财务日记账数据！')
                   this.eventBus.$emit('closeCurrentView')
                   this.$router.push({
-                    path: './financeDaily'
+                    path: '/finance/financeDaily'
                   })
                 }
               }

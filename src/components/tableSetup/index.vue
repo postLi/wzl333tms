@@ -156,6 +156,9 @@ export default {
   components: {
     draggable
   },
+  beforeDestroy(){
+    // console.log('table setup beforeDestroy:')
+  },
   computed: {
     isShow: {
       get() {

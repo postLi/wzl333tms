@@ -415,7 +415,7 @@ export default {
             this.closeMe()
               // this.$router.push({ path: './accountsPayable/waybill', query:{name: this.currentPage} })
             const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-            this.$router.push({ path: './accountsPayable/waybill/' + currentPage })
+            this.$router.push({ path: '/finance/accountsPayable/waybill/' + currentPage })
           })
             .catch(err => {
               this._handlerCatchMsg(err)
