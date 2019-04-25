@@ -81,6 +81,8 @@ export default {
   },
   mounted() {
     // this.searchQuery.vo.userId = this.$route.query.id
+    // this.searchQuery.vo.orgid = this.$route.query.orgid
+    // this.fetchData()
   },
   activated() {
     // this.searchQuery.vo.userId = this.$route.query.id
@@ -88,10 +90,12 @@ export default {
   },
   watch: {
     $route: {
-      handler() {
-        this.searchQuery.vo.userId = this.$route.query.id
-        this.searchQuery.vo.orgid = this.$route.query.orgid
-        this.fetchData()
+      handler(newVal) {
+        if (newVal.path.indexOf('finance/handAccount/detail') !== -1) {
+          this.searchQuery.vo.userId = this.$route.query.id
+          this.searchQuery.vo.orgid = this.$route.query.orgid
+          this.fetchData()
+        }
       },
       immediate: true
     }
@@ -219,6 +223,8 @@ export default {
     },
     setColumn() {},
     handlePageChange(obj) {
+      this.searchQuery.vo.userId = this.$route.query.id
+      this.searchQuery.vo.orgid = this.$route.query.orgid
       this.searchQuery.currentPage = obj.pageNum
       this.searchQuery.pageSize = obj.pageSize
       this.fetchData()

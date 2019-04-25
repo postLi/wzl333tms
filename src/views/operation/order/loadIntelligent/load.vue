@@ -94,7 +94,7 @@ import { getIntnteInit, selectSchemeGroupDetail, getIntnteCarInfo } from '@/api/
 import AddLntelligent from './components/intelligentParameterSet'
 
 export default {
-  name: "Load",
+  name: 'loadIntelligent',
   components: {
     transferTable,
     loadChart,
@@ -217,7 +217,7 @@ export default {
     this.infoData()
     window.intelligentUrl = this.$route.fullPath
   },
-  activated () {
+  activated() {
     let visitedViewsArr = this.visitedViews()
     let viewCount = 0
     visitedViewsArr.forEach((e, index) => {
@@ -229,17 +229,17 @@ export default {
     }
   },
   methods: {
-     visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
+    visitedViews() {
+       return this.$store.state.tagsView.visitedViews
+     },
     infoData() {
       if (this.$route.query && this.$route.query.schemeGroup) { // 查看修改配载
         this.modify = true
         this.loading = true
         return selectSchemeGroupDetail(this.$route.query).then(data => {
-            let arr = objectMerge2([], data) // 这里不能用Object.assign 需要深拷贝
-            console.log('修改', data)
-            arr.forEach((e, index) => {
+          let arr = objectMerge2([], data) // 这里不能用Object.assign 需要深拷贝
+          console.log('修改', data)
+          arr.forEach((e, index) => {
               e.tmsLoadSchemeDetailDtoList.forEach((el, elindex) => { // 将数据改成新增配载时原始方案的数据结构
                 this.$set(el, 'carLoadDetail', el.tmsOrderLoadDetailsList)
                 this.$set(el, '_index', elindex)
@@ -272,15 +272,15 @@ export default {
                 // console.log('==============el', el)
               })
             })
-            this.transpList = objectMerge2([], arr)
-            this.orgFirstScheme = objectMerge2([], arr)
-            this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息 
-            this.setLoadTableList.left = data[0].repertoryList // 第一个方案的库存列表
-            this.intelligentData.forEach((e, index) => {
+          this.transpList = objectMerge2([], arr)
+          this.orgFirstScheme = objectMerge2([], arr)
+          this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息
+          this.setLoadTableList.left = data[0].repertoryList // 第一个方案的库存列表
+          this.intelligentData.forEach((e, index) => {
               this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
               this.loading = false
             })
-          })
+        })
           .catch(err => {
             this._handlerCatchMsg(err)
             this.loading = false
@@ -310,7 +310,7 @@ export default {
                 for (let item in el) {
                   this.$set(obj, item, el[item])
                 }
-                this.$set(el, 'handlingFeeAll','')
+                this.$set(el, 'handlingFeeAll', '')
                 this.$set(el, 'tmsOrderLoad', obj)
                 this.$set(el, 'tmsOrderLoadDetailsList', el.carLoadDetail)
                 this.$set(el, 'tmsOrderLoadFee', { nowpayCarriage: el.price })
@@ -319,7 +319,7 @@ export default {
             this.transpList = objectMerge2([], arr)
             this.orgFirstScheme = objectMerge2([], arr)
             console.log('transpList=========', this.transpList)
-            this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息 
+            this.intelligentData = this.transpList[0].tmsLoadSchemeDetailDtoList // 第一个方案的车型及配载信息
             this.setLoadTableList.left = this.transpList[0].repertoryList // 第一个方案的库存列表
             this.intelligentData.forEach((e, index) => {
               this.$set(this.setLoadTableList.right, index, e.carLoadDetail)
@@ -339,7 +339,6 @@ export default {
           this.eventBus.$emit('closeCurrentView')
           this.loading = false
         })
-
       }
     },
     getTruckIndex(obj) {
@@ -457,7 +456,7 @@ export default {
         }
       })
     },
-    getHandlingFeeInfo (obj) { // 获取操作费
+    getHandlingFeeInfo(obj) { // 获取操作费
       console.log('-----获取操作费 obj 1------', obj)
       this.handlingFeeInfo = obj
     },
@@ -473,7 +472,7 @@ export default {
     closelntelligent() {
       this.lntelligentVisible = false
     },
-    setPageLoading (boolean) {
+    setPageLoading(boolean) {
       this.loading = boolean
     }
   }

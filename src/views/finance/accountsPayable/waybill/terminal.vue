@@ -13,7 +13,8 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList" stripe border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail" :show-summary="true" :summary-method="getSummaries">
+        <el-table
+        :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'statusName' )" ref="multipleTable" :key="tablekey" :data="dataList"  border @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" @cell-dblclick="showDetail" :show-summary="true" :summary-method="getSummaries">
           <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -279,9 +280,8 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillTerminal',
         query: {
-          tab: '终端送货费核销',
           currentPage: 'waybillTerminal', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

@@ -1,7 +1,9 @@
 <template>
   <div class="load-steup">
+   
     <!-- 新增配载 loadTypeId：38-短驳 39-干线 40-送货 -->
     <div class="load-steup-form" v-loading="loading">
+      
       <el-collapse v-model="loadTruck">
         <el-collapse-item name="loadTruckOne">
           <template slot="title">
@@ -281,25 +283,26 @@
       <addDriverInfo :licenseTypes="licenseTypes" :issender="true" :isModifyDriver="isModifyDriver" :infoDriver="selectInfoDriver" :orgid="otherinfo.orgid" :popVisible.sync="addDriverVisible" @close="closeAddDriver" @success="fetchData"></addDriverInfo>
       <!-- 实际发车时间 弹出框 -->
       <actualSendtime :popVisible.sync="timeInfoVisible" @time="getActualTime"></actualSendtime>
+     
     </div>
   </div>
 </template>
 <script>
 import draggable from 'vuedraggable'
+import selectType from '@/components/selectType/index'
+import dataTable from './components/dataTable2'
+import SelectTree from '@/components/selectTree/index'
+import addTruckInfo from '@/views/company/trunkManage/components/add'
+import addDriverInfo from '@/views/company/driverManage/components/add'
+import loadChart from './components/loadChart'
+import actualSendtime from './components/actualSendtimeDialog'
 import { REGEX } from '@/utils/validate'
 import { getSelectType } from '@/api/common'
 import { mapGetters } from 'vuex'
 import { getBatchNo, getSelectAddLoadRepertoryList, postLoadInfo, getUpdateRepertoryLeft, getUpdateRepertoryRight, putLoadInfo, getTrucK, getDrivers, getOrdertrailterminal } from '@/api/operation/load'
 import { getAllDriver } from '@/api/company/driverManage'
-import selectType from '@/components/selectType/index'
-import dataTable from './components/dataTable'
-import SelectTree from '@/components/selectTree/index'
-import addTruckInfo from '@/views/company/trunkManage/components/add'
-import addDriverInfo from '@/views/company/driverManage/components/add'
-import loadChart from './components/loadChart'
 import { objectMerge2, parseTime, tmsMath } from '@/utils/index'
 import { getSystemTime } from '@/api/common'
-import actualSendtime from './components/actualSendtimeDialog'
 import { postAllshortDepartList } from '@/api/operation/shortDepart'
 import { postSelectLoadMainInfoList } from '@/api/operation/arteryDepart'
 import { postSelectLoadMainInfoListDeliver } from '@/api/operation/deliverManage'
@@ -518,37 +521,43 @@ export default {
     this.disOrgList = [this.otherinfo.orgid] // 禁止选择的网点列表
   },
   mounted() {
-    // this.getSelectType()
-    // this.init()
-    // this.getSystemTime()
+    this.queryData = JSON.stringify(this.$route.query)
+    this.getSelectType()
+    this.init()
+    this.getSystemTime()
   },
   activated() {
     this.getSystemTime()
+    if(this.queryData !== JSON.stringify(this.$route.query)){
+      this.queryData = JSON.stringify(this.$route.query)
+      this.getSelectType()
+      this.init()
+    }
   },
   watch: {
-    '$route': {
-      handler(to, from) {
-        const bothBool = false
-        console.log('$route', to, from)
-        if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-          // 1
-          // 3
-          if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-            this.switchUrl(from.fullPath, true)
-          }
-          this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
-        } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
-          // 2
-          // 4
-          this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
-        } else {
-          // this.getSelectType()
-          // this.init()
-          // this.getSystemTime()
-        }
-      },
-      immediate: true
-    },
+    // '$route': {
+    //   handler(to, from) {
+    //     const bothBool = false
+    //     console.log('$route', to, from)
+    //     if (to && to.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //       // 1
+    //       // 3
+    //       if (from && from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //         this.switchUrl(from.fullPath, true)
+    //       }
+    //       this.switchUrl(to.fullPath, false) // 从其他页面跳转进配载页面
+    //     } else if (from.path.indexOf('/operation/order/load') !== -1 && to.path.indexOf('/operation/order/loadIntelligent') < 0) {
+    //       // 2
+    //       // 4
+    //       this.switchUrl(from.fullPath, true) //  从配载页面跳转进其他页面
+    //     } else {
+    //       // this.getSelectType()
+    //       // this.init()
+    //       // this.getSystemTime()
+    //     }
+    //   },
+    //   immediate: true
+    // },
     networkList: {
       handler(cval, oval) {
         const arr = [this.otherinfo.orgid]
@@ -563,6 +572,7 @@ export default {
     }
   },
   methods: {
+
     addNetWork() { // 添加途径网点
       if (this.networkList.length < 5) {
         this.networkList.push({
@@ -943,8 +953,10 @@ export default {
       this.eventBus.$emit('closeCurrentView')
       switch (this.loadTypeId) {
         case 38: // 短驳
-          this.$router.push({ path: '././shortDepart/deliver', query: { pageKey: new Date().getTime() }})
-          this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
+          this.$store.commit('UPDATE_LIST_STATE', 'shortDepartDeliver')
+
+          this.$router.push({ path: '/operation/order/shortDepart/deliver' })
+          // this.eventBus.$emit('replaceCurrentView', '/operation/order/shortDepart/deliver')
           break
         case 39: // 干线
           this.$router.push({ path: '././arteryDepart', query: { pageKey: new Date().getTime() }})
@@ -970,7 +982,7 @@ export default {
             putLoadInfo(this.loadInfo).then(data => {
               this.loading = false
               this.$message({ type: 'success', message: '修改配载信息成功' })
-              this.resetFieldsForm()
+              // this.resetFieldsForm()
               this.$nextTick(() => {
                 this.gotoPage() // 操作成功后跳转到配载列表页面
               })
@@ -981,11 +993,12 @@ export default {
               })
           } else {
             console.log('这里是添加完成配载', this.loadInfo)
+            // this.eventBus.$emit('showAsynCode')
             this.loading = true
             postLoadInfo(this.loadInfo).then(data => { // 插入配载信息
               this.loading = false
               this.$message({ type: 'success', message: '插入配载信息成功' })
-              this.resetFieldsForm()
+              // this.resetFieldsForm()
               this.$nextTick(() => {
                 this.gotoPage()
               })
@@ -1014,7 +1027,7 @@ export default {
           postLoadInfo(this.loadInfo).then(data => { // 完成并发车
             this.loading = false
             this.$message({ type: 'success', message: '保存成功' })
-            this.resetFieldsForm()
+            // this.resetFieldsForm()
             this.$nextTick(() => {
               this.gotoPage() // 操作成功后跳转到配载列表页面
             })
@@ -1044,7 +1057,7 @@ export default {
         }
       })
       if (loadtypeid) {
-        this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
+        // this.$router.push({ path: '././load', query: { loadTypeId: loadtypeid }})
       } else {}
       this.init()
     },
@@ -1345,8 +1358,10 @@ export default {
       this.$set(this.formFee, type, val)
     },
     changeHandlingFeeAll(val, type) {
+      console.log('changeHandlingFeeAll info页面：', val, type)
       let fee = 0
       if (type) { // 送货-送货费
+        console.log('type', type)
         this.$set(this.formModel, type, Number(val))
         fee = tmsMath._add(this.formModel.deliveryDetailFee || 0, this.formModel.deliveryHandlingFee || 0)
         this.$set(this.handlingFeeInfo, 'deliveryHandlingFee', this.formModel.deliveryHandlingFee)
@@ -1362,6 +1377,8 @@ export default {
       this.handlingFeeInfo.apportionTypeId = value
       this.handlingFeeInfo.params = this.loadTypeId === 40 ? 'deliveryFeeToPay' : 'handlingFee'
       this.handlingFeeInfo.reParams = this.loadTypeId === 40 ? 'deliveryDetailFee' : 'handlingFeeAll'
+
+      console.log(' this.loadTypeId === 40????', this.loadTypeId === 40, this.handlingFeeInfo)
     },
     getHandingFeeAll(info) {
       this.handlingFeeInfo = info

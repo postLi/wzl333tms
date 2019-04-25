@@ -98,11 +98,12 @@ const permission = {
           // console.table(routerlists)
         }
         // 修正首页权限问题
-        let homePage = accessedRouters.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
+        /* let homePage = accessedRouters.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
         if (homePage.length) {
           // 如果找到，将redirect指向第一个元素
           const el = homePage[0]
-          el.redirect = el.children[0] ? el.children[0].path : ''
+          // el.redirect = el.children[0] ? el.children[0].path : ''
+          el.redirect = '/flows'
         } else {
           // 如果找不到
           homePage = asyncRouterMap.filter(el => el.meta && el.meta.code === 'HOME_PAGE')
@@ -110,7 +111,7 @@ const permission = {
           el.redirect = '/flows'
           el.children = el.children.filter(el => !el.meta.code)
           accessedRouters.unshift(el)
-        }
+        } */
 
         accessedRouters.map(el => {
           if (el.meta && el.meta.code === 'FINANCE') {

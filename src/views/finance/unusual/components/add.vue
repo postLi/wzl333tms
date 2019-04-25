@@ -346,7 +346,7 @@ export default {
         // this.fetchShipInfo(this.info)
         this.form.incomePayType = this.incomePayType
         this.form.shipSn = ''
-        this.form.createTime = new Date()
+        this.form.createTime = +new Date()
         // this.dengji()
       }
     },

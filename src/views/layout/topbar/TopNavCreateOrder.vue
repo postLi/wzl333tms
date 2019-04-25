@@ -25,13 +25,13 @@ export default {
           }
         })
         if (edits > 0 && creates < 1) { // 如果有改单页面并没有开单页面，就添加“创建运单”tab
-          this.$router.push({ path: '/operation/order/createOrder', query: { tab: '创建运单' }})
+          this.$router.push({ path: '/operation/order/createOrder', query: {  }})
           console.log('222222222')
         } else if (creates > 0) { // 如果有创建运单页面，就直接跳转到创建运单tab
-          this.$router.push('/operation/order/createOrder?tab=创建运单')
+          this.$router.push('/operation/order/createOrder')
           console.log('33333333333')
         } else {
-          this.$router.push('/operation/order/createOrder?tab=创建运单')
+          this.$router.push('/operation/order/createOrder')
           console.log('444444444')
         }
       }

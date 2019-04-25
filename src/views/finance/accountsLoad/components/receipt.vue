@@ -398,7 +398,7 @@ export default {
             this.$message({ type: 'success', message: '保存成功' })
             this.closeMe()
             const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-            this.$router.push({ path: './accountsPayable/batch/' + currentPage })
+            this.$router.push({ path: '/finance/accountsPayable/batch/' + currentPage })
           })
             .catch(err => {
               this._handlerCatchMsg(err)

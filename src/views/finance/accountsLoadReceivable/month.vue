@@ -94,22 +94,13 @@
 import * as accountApi from '@/api/finance/accountsReceivable'
 import { parseDict, parseShipStatus } from '@/utils/dict'
 import { postFindListByFeeType } from '@/api/finance/accountsPayable'
-import transferTable from '@/components/transferTable'
 import { objectMerge2, parseTime, getSummaries, tmsMath, operationPropertyCalc } from '@/utils/index'
-import querySelect from '@/components/querySelect/'
-// import Receipt from './components/receipt'
-import Pager from '@/components/Pagination/index'
-import currentSearch from './components/currentSearch'
-import Voucher from '@/components/voucher/receivable'
+
+import mix from './mixin'
+
 export default {
-  components: {
-    transferTable,
-    querySelect,
-    // Receipt,
-    Pager,
-    currentSearch,
-    Voucher
-  },
+  name: 'monthAccountsLoadReceivable',
+  mixins: [mix],
   data() {
     return {
       btnLoading: false,
@@ -278,94 +269,7 @@ export default {
       ]
     }
   },
-  computed: {
-    getRouteInfo() {
-      // console.log('xxxxxxxxxxxxxxxxxx222:', this.$route.query, JSON.parse(this.$route.query.searchQuery))
-      const obj = this.$route.query
-      return JSON.parse(obj.searchQuery)
-    },
-    // totalLeft() {
-    //   return this.leftTable.length
-    // },
-    totalRight() {
-      return this.rightTable.length
-    }
-  },
-  watch: {
-    '$route.query': {
-      handler(cval, oval) {
-        if (cval) {
-          this.getList()
-        }
-      },
-      deep: true
-    }
-  },
-  created() {
-    this.searchQuery = Object.assign({}, this.getRouteInfo)
-  },
-  mounted() {
-    this.getList()
-  },
   methods: {
-    handlePageChangeLeft(obj) {
-      this.searchQuery.currentPage = obj.pageNum
-      this.searchQuery.pageSize = obj.pageSize
-      // console.log(obj.pageSize, obj.pageNum, obj)
-      this.pageGetList()
-    },
-    pageGetList() {
-      const rightTable = objectMerge2([], this.rightTable)
-      this.loading = true
-      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-      accountApi.getReceivableList(this.searchQuery).then(data => {
-        if (data) {
-          this.leftTable = Object.assign([], data.list)
-          this.totalLeft = data.total
-          rightTable.forEach((el, index) => {
-            this.leftTable = this.leftTable.filter(em => em.shipSn !== el.shipSn)
-          })
-        }
-        this.orgLeftTable = Object.assign([], this.leftTable)
-        this.loading = false
-      })
-        .catch(err => {
-          this._handlerCatchMsg(err)
-        })
-    },
-    initLeftParams() {
-      if (!this.$route.query) {
-        this.eventBus.$emit('replaceCurrentView', '/finance/accountsReceivable')
-        // this.$router.push({ path: './accountsPayable/waybill' })
-        this.isFresh = true // 是否手动刷新页面
-      } else {
-        this.searchQuery = Object.assign({}, this.getRouteInfo)
-
-        // this.$set(this.searchQuery.vo, 'feeType', this.getRouteInfo.vo.feeType)
-        // this.searchQuery.vo.ascriptionOrgId = this.getRouteInfo.vo.ascriptionOrgId
-        // this.$set(this.searchQuery.vo, 'status', '')
-        this.isFresh = false
-      }
-      if (JSON.parse(this.$route.query.selectListShipSns).length > 0) {
-        // console.log('111111111111111')
-      } else {
-        // console.log('22222222222222222')
-        this.searchQuery.currentPage = 1
-        // this.searchQuery.pageSize = 100
-      }
-      this.$set(this.searchQuery.vo, 'status', 'NOSETTLEMENT,PARTSETTLEMENT')
-    },
-    setRight(item) {
-      item.inputNowPayFee = item.notNowPayFee
-      item.inputArrivepayFee = item.notArrivepayFee
-      item.inputReceiptpayFee = item.notReceiptpayFee
-      item.inputMonthpayFee = item.notMonthpayFee
-      item.inputChangeFee = item.notChangeFee
-
-      // this.rightTable.push(item)
-
-      this.$set(this.rightTable, this.rightTable.length, item)
-    },
     getList(handle) {
       this.loading = true
       const selectListShipSns = objectMerge2([], JSON.parse(this.$route.query.selectListShipSns))
@@ -448,144 +352,7 @@ export default {
       }
       // console.log(this.rightTable[index][prop], paidVal, unpaidName, this.rightTable[index][unpaidName], this.rightTable[index]) */
     },
-    clickDetailsRight(row) {
-      this.$refs.multipleTableRight.toggleRowSelection(row)
-    },
-    clickDetailsLeft(row) {
-      this.$refs.multipleTableLeft.toggleRowSelection(row)
-    },
-    getSelectionRight(list) { // 获取右边表格打勾的数据列表
-      this.selectedRight = list
-    },
-    getSelectionLeft(list) { // 获取左边表格打勾的数据列表
-      this.selectedLeft = list
-    },
-    changeTableKey() { // 刷新表格
-      this.tablekey = new Date().getTime()
-    },
-    doAction(type) {
-      switch (type) {
-        case 'goLeft': // 右边数据勾选到左边
-          this.goLeft()
-          break
-        case 'goRight': // 左边数据勾选到右边
-          this.goRight()
-          break
-      }
-    },
-    goLeft() { // 数据从左边穿梭到右边
-      if (this.selectedRight.length === 0) {
-        this.$message({ type: 'warning', message: '请在左边表格选择数据' })
-      } else {
-        this.selectedRight.forEach((e, index) => {
-          // 默认设置实际核销数量
-          e.inputBrokerageFee = e.unpaidFee
-          this.setRight(e)
-          this.rightTable = objectMerge2([], this.rightTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.rightTable.push(e)
-          this.leftTable = objectMerge2([], this.leftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          // let item = -1
-          // this.leftTable.map((el, index) => {
-          //   if (el.shipSn === e.shipSn) {
-          //     item = index
-          //   }
-          // })
-          // if (item !== -1) { // 左边表格源数据减去被穿梭的数据
-          //   this.leftTable.splice(item, 1)
-          //   this.orgLeftTable.splice(item, 1)
-          // }
-          // // const orgItem = this.orgLeftTable.indexOf(e)
 
-          // if (item !== -1) { // 搜索源数据同样减去被穿梭数据
-
-          // }
-        })
-        this.selectedRight = [] // 清空选择列表
-      }
-      if (this.rightTable.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-    },
-    goRight() { // 数据从右边穿梭到左边
-      if (this.selectedLeft.length === 0) {
-        this.$message({ type: 'warning', message: '请在右边表格选择数据' })
-      } else {
-        this.selectedLeft.forEach((e, index) => {
-          this.leftTable = objectMerge2([], this.leftTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.orgLeftTable = objectMerge2([], this.orgLeftTable).filter(em => {
-            return em.shipSn !== e.shipSn
-          })
-          this.leftTable.push(e)
-          this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          this.rightTable = objectMerge2([], this.rightTable).filter(el => {
-            return el.shipSn !== e.shipSn
-          })
-          // this.leftTable.push(e)
-          // this.orgLeftTable.push(e) // 搜索源数据更新添加的数据
-          // const item = this.rightTable.indexOf(e)
-          // if (item !== -1) {
-          //   // 右边源数据减去被穿梭的数据
-          //   this.rightTable.splice(item, 1)
-          // }
-        })
-        this.selectedLeft = [] // 清空选择列表
-      }
-      if (this.rightTable.length < 1) {
-        this.isGoReceipt = true
-      } else {
-        this.isGoReceipt = false
-      }
-    },
-    // 选中的行
-    selectCurrent(obj, index) {
-      // this.leftTable = Object.assign([], obj)
-      this.addItem(obj, index)
-    },
-    addItem(row, index) { // 添加单行
-      this.selectedRight = []
-      this.selectedRight[index] = row
-      this.doAction('goLeft')
-    },
-    minusItem(row, index) { // 减去单行
-      this.selectedLeft = []
-      this.selectedLeft[index] = row
-      this.doAction('goRight')
-    },
-    addALLList() { // 添加全部
-      this.selectedRight = Object.assign([], this.leftTable)
-      this.doAction('goLeft')
-    },
-    minusAllList() { // 减去全部
-      this.selectedLeft = Object.assign([], this.rightTable)
-      this.doAction('goRight')
-    },
-    dclickAddItem(row, event) { // 双击添加单行
-      this.selectedRight = []
-      this.selectedRight.push(row)
-      this.doAction('goLeft')
-    },
-    dclickMinusItem(row, event) { // 双击减去单行
-      this.selectedLeft = []
-      this.selectedLeft.push(row)
-      this.doAction('goRight')
-    },
-    closeDialog() {
-      this.popVisibleDialog = false
-    },
-    openDialog() {
-      this.popVisibleDialog = true
-    },
     // 核销前整理数据
     goReceipt() {
       this.infoTable = this.$options.data().infoTable
@@ -622,54 +389,6 @@ export default {
           this.$message({ type: 'warning', message: '暂无可核销项！实际核销费用不小于0，不大于未核销费用。' })
         }
       }
-    },
-    getSumRight(param) { // 右边表格合计-自定义显示
-      const arr = objectMerge2([], operationPropertyCalc)
-      arr.forEach((el, index) => {
-        if (el === '_index|1|单') {
-          arr[index] = '_index|2|单'
-        }
-      })
-      return getSummaries(param, arr)
-    },
-    getSumLeft(param) { // 左边表格合计-自定义显示
-      const arr = objectMerge2([], operationPropertyCalc)
-      arr.forEach((el, index) => {
-        if (el === '_index|1|单') {
-          arr[index] = '_index|2|单'
-        }
-      })
-      return getSummaries(param, arr)
-    },
-    setHeader(h, { column }) {
-      return h('el-button', {
-        props: {
-          // icon: 'el-icon-plus',
-          size: 'mini'
-        },
-        'class': {
-          'tableAllBtn': true,
-          'setTableHeader': true
-        },
-        on: {
-          click: this.addALLList
-        }
-      })
-    },
-    setHeader2(h, { column }) {
-      return h('el-button', {
-        props: {
-          // icon: 'el-icon-minus',
-          size: 'mini'
-        },
-        'class': {
-          'tableAllBtnMinus': true,
-          'setTableHeader': true
-        },
-        on: {
-          click: this.minusAllList
-        }
-      })
     }
   }
 }

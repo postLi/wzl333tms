@@ -57,6 +57,7 @@
 import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
   export default {
+    name: 'reconciliationCarfeeArtery',
     components: {
       SearchForm,
       Pager,

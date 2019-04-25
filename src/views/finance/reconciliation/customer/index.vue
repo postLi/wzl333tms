@@ -10,6 +10,7 @@
 import Sender from './customerIndex'
 
 export default {
+  name: 'reconciliationCutomer',
   components: {
     Sender
   },

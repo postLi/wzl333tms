@@ -95,12 +95,12 @@ export default {
     orgid(newVal) {
       this.searchForm.orgid = newVal
     },
-    $route(newVal) {
-      if (this.$route.path.indexOf('operation/order/orderManage/All') !== -1) {
-        this.setSearch()
-        this.onSubmit()
-      }
-    },
+    // $route(newVal) {
+    //   if (this.$route.path.indexOf('operation/order/orderManage/All') !== -1) {
+    //     this.setSearch()
+    //     this.onSubmit()
+    //   }
+    // },
       // 传到子组件
     searchForm: {
       handler(cval, oval) {

@@ -13,8 +13,8 @@
           ref="multipleTable"
           :data="usersArr"
           :key="tablekey"
-          stripe
           border
+          :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'nowPayStateCn' )"
           @row-click="clickDetails"
           @row-dblclick="showDetail"
           @selection-change="getSelection"
@@ -274,7 +274,7 @@ export default {
 
       console.log('传给核销页面的数据:::query', this.searchQuery, list)
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/cash',
         query: {
           tab: '现付核销',
           currentPage: 'cash',

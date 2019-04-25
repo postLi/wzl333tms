@@ -259,7 +259,7 @@ export default {
       }
     },
     cancelBatch(transferBatchNos) {
-      this.$confirm('确定要取消 ' + transferBatchNos.length + ' 条运单吗？', '提示', {
+      this.$confirm('确定要取消 ' + transferBatchNos.length + ' 条批次吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -270,6 +270,7 @@ export default {
             type: 'success',
             message: '取消成功!'
           })
+          this.closeAddOrder()
           this.fetchData()
         }).catch(err => {
           this.$message({
@@ -314,7 +315,7 @@ export default {
             })
           }
           this.selectInfo = this.selected[0]
-          this.$router.push({ path: '/operation/order/transferLoad', query: {
+          this.$router.push({ path: '/operation/order/transferLoad/modify', query: {
             id: this.selectInfo.transferBatchNo
           }})
           break

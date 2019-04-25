@@ -113,7 +113,7 @@ export default {
 
     return {
       // searchCreatTime: [+new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
-      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, new Date()],
+      searchCreatTime: [new Date() - 60 * 24 * 60 * 60 * 1000, +new Date()],
       pickOption: {
         firstDayOfWeek: 1,
         disabledDate(time) {

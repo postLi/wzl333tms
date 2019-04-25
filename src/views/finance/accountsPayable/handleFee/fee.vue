@@ -305,9 +305,8 @@ export default {
     },
     count() {
       this.$router.push({
-        path: '/finance/accountsLoad',
+        path: '/finance/accountsLoad/handleFee',
         query: {
-          tab: '操作费核销',
           currentPage: 'handleFee', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListBatchNos: JSON.stringify(this.selectListBatchNos) // 列表选择项的批次号batchNo

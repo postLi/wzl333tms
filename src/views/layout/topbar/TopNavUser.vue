@@ -4,6 +4,7 @@
       <el-row>
         <el-col :span="8" class="popoveruser-avatar">
           <img class="user-avatar" :src="avatar">
+           <Personalization />
         </el-col>
         <el-col :span="16">
           <div class="popoveruser_info_lyy">
@@ -42,6 +43,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import UsersTree from '@/components/usersTree'
+import Personalization from './../personalization'
 import ExperienceForm from '@/components/experienceForm'
 export default {
   computed: {
@@ -56,7 +58,8 @@ export default {
   },
   components: {
     UsersTree,
-    ExperienceForm
+    ExperienceForm,
+    Personalization
   },
   mounted() {
     var agnt = navigator.userAgent.toLowerCase()

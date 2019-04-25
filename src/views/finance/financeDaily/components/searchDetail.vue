@@ -12,13 +12,13 @@
       <el-form-item label="方向" prop="paymentsType">
         <el-select v-model="searchForm.paymentsType" placeholder="方向" :size="btnsize">
           <el-option value="" label="全部"></el-option>
-       <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
+          <el-option v-for="(value, key) in $const.SETTLEMENT_ID" :value="key" :key="key" :label="value"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="来源" prop="dataSrc">
-       <el-select v-model="searchForm.dataSrc" placeholder="来源" :size="btnsize">
-       <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
-      </el-select>
+        <el-select v-model="searchForm.dataSrc" placeholder="来源" :size="btnsize">
+          <el-option v-for="(value, key) in $const.VERIFICATION_SOURCE" :value="key" :key="key" :label="value"></el-option>
+        </el-select>
       </el-form-item>
       <searchAll v-model="searchAll" :searchObj="searchObjs" @dataObj="getDataObj"></searchAll>
     </div>
@@ -103,6 +103,10 @@ export default {
     }
   },
   mounted() {
+    if (this.$route.query.searchQuery) {
+      console.log('2323423',this.$route.query.searchQuery)
+          this.searchForm = JSON.parse(this.$route.query.searchQuery).vo
+        }
     this.searchForm.orgId = this.orgid
     this.onSubmit()
   },
@@ -116,14 +120,17 @@ export default {
       console.log(obj)
     },
     onSubmit() {
+
       const searchObj = Object.assign({}, this.searchForm)
       if (this.searchTime) {
         this.$set(searchObj, 'startTime', parseTime(this.searchTime[0], '{y}-{m}-{d} ') + '00:00:00')
         this.$set(searchObj, 'endTime', parseTime(this.searchTime[1], '{y}-{m}-{d} ') + '23:59:59')
       }
+      console.log('searchObj', searchObj)
       this.$emit('change', searchObj)
     },
     changeVal(obj) {
+
       this.onSubmit()
     },
     clearForm(formName) {

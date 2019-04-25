@@ -10,6 +10,7 @@
 import Sender from './carrierIndex'
 
 export default {
+  name: 'reconciliationCarrier',
   components: {
     Sender
   },

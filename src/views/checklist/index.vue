@@ -425,7 +425,7 @@ export default {
           // this.$router.push({ path: '../../operation/order/orderManage' })
           // this.eventBus.$emit('showCreateOrder', {
           // })
-          this.$router.push({ path: '../../operation/order/createOrder' })
+          this.$router.push({ path: '/operation/order/createOrder' })
           break
         case 'orgCount':
           if (!this.addDriverShow) {

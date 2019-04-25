@@ -1,21 +1,16 @@
 <template>
   <!-- 营业额汇总表 -->
   <div class="tab-wrapper tab-wrapper-100">
-    <keep-alive v-bind:is="component"></keep-alive>
+      <list />
   </div>
 </template>
 <script>
-import sender from './sender'
+// import list from './sender'
 import list from './list'
 export default {
+  name: 'turnoverTotal',
   components: {
-    sender,
     list
-  },
-  data() {
-    return {
-      component: 'list'
-    }
   }
 }
 

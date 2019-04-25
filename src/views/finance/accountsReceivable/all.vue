@@ -47,7 +47,7 @@
           ref="multipleTable"
           :data="usersArr"
           :key="tablekey"
-          stripe
+          :row-style="({row, index}) => _rowStyleAccounts({row, index} )"
           border
           @row-click="clickDetails"
           @row-dblclick="showDetail"
@@ -462,6 +462,7 @@ export default {
     }
   },
   methods: {
+
     changeKey(obj) {
       this.total = 0
       this.searchQuery = obj
@@ -470,7 +471,7 @@ export default {
     viewDetails(row) {
       row = row || []
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/all',
         query: {
           tab: '全部核销',
           searchQuery: JSON.stringify(this.searchQuery),

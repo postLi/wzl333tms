@@ -1,5 +1,6 @@
 <template>
   <!-- 回扣 -->
+  <div class="tab-wrapper tab-wrapper-100">
   <div class="tab-content finance-tab-content miniHeaderSearch" v-loading="loading">
     <!-- 搜索 -->
     <SearchForm :orgid="otherinfo.orgid" @change="getSearchParam" :btnsize="btnsize"></SearchForm>
@@ -103,6 +104,7 @@
     <!-- 新增 -->
     <Income :popVisible="popVisibleIncome" :info="currentInfo" @close="closeDialogIncome" @success="setAddSuccess" :isModify="isModify"></Income>
   </div>
+  </div>
 </template>
 <script>
 import { objectMerge2, parseTime } from '@/utils/index'
@@ -115,6 +117,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 import Income from './components/income'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 export default {
+  name: 'financeDaily',
   components: {
     SearchForm,
     Pager,
@@ -314,7 +317,7 @@ export default {
   watch: {
     $route(newVal) {
       if (newVal) {
-        this.fetchList()
+        // this.fetchList()
       }
     }
   },
@@ -331,7 +334,7 @@ export default {
       switch (command) {
         case 'income': // 收入
           this.$router.push({
-            path: './financeDailyIncome',
+            path: '/finance/financeDailyIncome',
             query: {
               orgId: this.searchQuery.vo.orgId
             }
@@ -339,7 +342,7 @@ export default {
           break
         case 'expand': // 支出
           this.$router.push({
-            path: './financeDailyExpanditure',
+            path: '/finance/financeDailyExpanditure',
             query: {
               orgId: this.searchQuery.vo.orgId
             }
@@ -513,7 +516,7 @@ export default {
     },
     expandtiure() {
       this.$router.push({
-        path: './settleLogExpandtiure',
+        path: '/finance/settleLogExpandtiure',
         query: {
           orgId: this.searchQuery.vo.orgId
         }
@@ -548,7 +551,7 @@ export default {
     showDetail() {
       if (this.selectedList.length > 0) {
         this.$router.push({
-          path: './cashDetail',
+          path: '/finance/cashDetail',
           query: {
             recordId: this.selectedList[0].id,
             orgId: this.searchQuery.vo.orgId,
@@ -588,7 +591,7 @@ export default {
         this.previews = Object.assign([], row[prop].split(','))
         this.isShowPre = true
       }
-      console.log('previewPicture', index, row, )
+      console.log('previewPicture', index, row,)
     }
   }
 }

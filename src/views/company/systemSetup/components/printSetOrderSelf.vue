@@ -18,7 +18,7 @@
           <i class="el-icon-warning" slot="reference"></i>
         </el-popover>
         <el-button type="success" @click="submitForm('formModel')" icon="el-icon-document" :size="btnsize" style="float: right;margin-top:10px;">保存</el-button>
-        <el-button @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">刷新</el-button>
+        <el-button @click="review" icon="el-icon-refresh" :size="btnsize" style="float: right;margin-top:10px;margin-right: 10px;">复原</el-button>
       </div>
       <div class="print_aside_search">
         <el-autocomplete v-model="currentSearch" :fetch-suggestions="querySearch" placeholder="查找非自定义字段" @select="handleSelect" popper-class="popperHide" size="mini" clearable>
@@ -166,7 +166,7 @@
           </div> -->
         </div>
         <div class="prinit_aside_info">
-          <el-button type="warning" @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize">全部重置为默认值</el-button>
+          <el-button type="warning" @click="resetForm('formModel')" icon="el-icon-document" :size="btnsize">清空模板</el-button>
         </div>
       </el-form>
     </div>

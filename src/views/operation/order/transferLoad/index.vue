@@ -99,10 +99,14 @@ export default {
   },
   mounted() {
     console.log('transferId:', this.$route)
+    this.lastQuery = JSON.stringify(this.$route.query)
     this.init()
   },
   activated() {
-    this.regetList()
+    if (this.lastQuery !== JSON.stringify(this.$route.query)) {
+      this.init()
+      this.lastQuery = JSON.stringify(this.$route.query)
+    }
   },
   methods: {
     regetList() {

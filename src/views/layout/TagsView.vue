@@ -15,7 +15,7 @@
     </div>
     <div class="tags-view-more">
       <i class="el-icon-arrow-down el-icon--right"></i>
-      <div class="contextmenu-box" v-show="visible">
+      <div class="contextmenu-box" >
         <ul class='contextmenu'>
           <li v-if="!hideCloseCurrentMenu" @click="closeSelectedTag(selectedTag)">关闭</li>
           <li @click="closeOthersTags">关闭其他</li>
@@ -41,7 +41,6 @@ export default {
   data() {
     return {
       searchBoxUrl: '',
-      visible: true,
       top: 0,
       left: 0,
       selectedTag: {},
@@ -52,6 +51,9 @@ export default {
   computed: {
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
+    },
+    cacheViews() {
+      return this.$store.state.tagsView.cachedViews
     }
   },
   created() {
@@ -63,6 +65,7 @@ export default {
       handler(newpath, oldpath) {
         // 如果新的路径是三级路径以上，则不进行加入
         // if(/^(\/[^/]*){1,3}$/.test(newpath.fullPath)){
+        // console.log('newpath:', newpath, ' oldpath:', oldpath)
         this.addViewTags()
         this.moveToCurrentTag()
         // }
@@ -70,16 +73,12 @@ export default {
 
       immediate: false
     },
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
+    cacheViews(nval) {
+      console.log('cacheViews: ', nval)
     }
   },
   mounted() {
-    this.addViewTags()
+    // this.addViewTags()
     // 用来替换当前路由
     // 调用方式类似：
     // this.eventBus.$emit('replaceCurrentView', '/operation/order/transfer')
@@ -137,7 +136,7 @@ export default {
       }
       this.$store.dispatch('addVisitedViews', route).then(r => {
         // 打开原来绑定的url
-        if (this.searchBoxUrl && route.fullPath == this.searchBoxUrl) {
+        if (this.searchBoxUrl && route.fullPath === this.searchBoxUrl) {
           this.searchBoxUrl = ''
           this.eventBus.$emit('openSearchBox')
         }
@@ -152,7 +151,6 @@ export default {
       }
       // 因为首页为固定标签，所以初始页面时，this.$refs.tag还未传入任何值，为undefined，需要给个默认的值 []
       const tags = this.$refs.tag ? Array.isArray(this.$refs.tag) ? this.$refs.tag : [this.$refs.tag] : []
-
       this.$nextTick(() => {
         for (const tag of tags) {
           // console.log('tag.fullPath === this.$route.fullPath', tag, tag.to, this.$route.path)
@@ -164,9 +162,11 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log('view', view)
       this.$store.dispatch('delVisitedViews', view).then((views) => {
         // 如果关闭的是当前标签，则需要特殊处理下， 将显示相邻的tab
         if (this.isActive(view)) {
+          console.warn(11111111111)
           const latestView = views.slice(-1)[0]
           if (latestView) {
             this.$router.push(latestView.fullPath)
@@ -196,14 +196,6 @@ export default {
       this.$router.push('/')
       // 关闭时清空原来绑定的url
       this.searchBoxUrl = ''
-    },
-    openMenu(tag, e, hideClose) {
-      this.visible = true
-      this.selectedTag = tag
-      this.hideCloseCurrentMenu = !!hideClose
-    },
-    closeMenu() {
-      this.visible = false
     },
     handleScroll(e) {
       const eventDelta = e.wheelDelta || -e.deltaY * 3

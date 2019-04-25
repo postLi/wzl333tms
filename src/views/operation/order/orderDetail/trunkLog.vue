@@ -298,6 +298,13 @@ export default {
     this.unbindKey()
     clearInterval(this.timerOption)
   },
+  activated(){
+    this.bindKey()
+  },
+  deactivated(){
+    this.unbindKey()
+    clearInterval(this.timerOption)
+  },
   methods: {
     classLineRed(row) { // 行样式
       if (this.allPathData.length) {

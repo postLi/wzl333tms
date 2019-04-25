@@ -1,6 +1,6 @@
 <template>
-  <div class="table-header-wrapper">
-    <p class="table-header-label" :title="scope.column.label">{{scope.column.label}}</p>
+  <div class="searchTable-header-wrapper" style="display: inline-block;margin-top: 5px;">
+    <p class="table-header-label" v-if="!noTitle" :title="scope.column.label">{{scope.column.label}}</p>
     <!-- 时间搜索 -->
     <el-date-picker
       v-model.lazy.trim="queryString"
@@ -78,6 +78,10 @@ export default {
     SelectType
   },
   props: {
+    noTitle: {
+      type: Boolean,
+      default: false
+    },
     scope: {
       type: Object,
       default: () => {}
@@ -738,6 +742,10 @@ export default {
           property: 'status', // 控货管理-未放货及已放货页面的‘控货状态’
           label: '控货状态',
           dispage: ['/operation/service/controlgoods/noGoods', '/operation/service/controlgoods/haveGoods']
+        },
+        {
+          property: 'customeAdv', // 按钮栏
+          label: ''
         }
       ]
     }
@@ -759,12 +767,13 @@ export default {
       background-color: #dae0ef;
     }
   }
-  .table-header-wrapper {
-    display: block;
+  .searchTable-header-wrapper {
+    display: inline-block;
     width: 100%;
     float: left;
     margin: 0 !important;
     padding: 0 !important;
+    margin-top: 5px;
     position: relative;
     clear: both;
     .table-header-label {

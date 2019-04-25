@@ -11,7 +11,7 @@
 // import Sender from './subjectInfo'
 
 export default {
-  name: 'orderpickUp',
+  name: 'financeInfo',
   components: {
 
   },

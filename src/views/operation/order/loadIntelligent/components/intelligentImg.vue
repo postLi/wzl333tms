@@ -98,7 +98,7 @@ export default {
       this.eventBus.$emit('replaceCurrentView', {
         path: '/operation/order/loadIntelligent/load',
         query: {
-          tab: '智能配载',
+          // tab: '智能配载',
           orgId: this.$route.query.orgId,
           sendDate: this.$route.query.sendData,
           timer: new Date().getTime()

@@ -44,7 +44,7 @@ export default {
     path: '/company/permissionManage',
     icon: 'quanxianguanli',
     hidden: false,
-    name: '角色管理',
+    name: 'permissionManage',
     component: _import('company/permissionManage/index'),
     meta: {
       title: '角色管理',
@@ -80,7 +80,7 @@ export default {
     children: [{
       path: '/company/customerManage/sender',
       icon: 'QQ',
-      name: '发货人',
+      name: 'customerManageSender',
       component: _import('company/customerManage/sender'),
       meta: {
         role: ['admin'],
@@ -93,7 +93,7 @@ export default {
     }, {
       path: '/company/customerManage/receiver',
       icon: 'QQ',
-      name: '收货人',
+      name: 'customerManageReceiver',
       component: _import('company/customerManage/receiver'),
       meta: {
         role: ['admin'],
@@ -218,39 +218,39 @@ export default {
     children: [{
       path: '/company/smsManage/customized',
       icon: 'QQ',
-      name: '定制短信',
+      name: 'smsManageCustomized',
       component: _import('company/sms/customized'),
       meta: {
         role: ['admin'],
         ptitle: '短信服务',
         title: '定制短信',
-        noCache: true,
+        noCache: false,
         istab: true,
         code: 'SMS_CUSTOMIZATION'
       }
     }, {
       path: '/company/smsManage/buy',
       icon: 'QQ',
-      name: '短信购买',
+      name: 'smsManageBuy',
       component: _import('company/sms/buy'),
       meta: {
         role: ['admin'],
         ptitle: '短信服务',
         title: '短信购买',
-        noCache: true,
+        noCache: false,
         istab: true,
         code: 'SMS_BUY'
       }
     }, {
       path: '/company/smsManage/log',
       icon: 'QQ',
-      name: '短信记录',
+      name: 'smsManageLog',
       component: _import('company/sms/log'),
       meta: {
         role: ['admin'],
         ptitle: '短信服务',
         title: '短信记录',
-        noCache: true,
+        noCache: false,
         istab: true,
         code: 'SMS_RECORD'
       }

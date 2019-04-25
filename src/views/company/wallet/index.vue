@@ -92,6 +92,7 @@ import * as walletApi from '@/api/company/wallet'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
+  name: 'walletManage',
   components: {
     Pager,
     SearchForm,

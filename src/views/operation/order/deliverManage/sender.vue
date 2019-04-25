@@ -429,7 +429,7 @@ export default {
       data = {}
     },
     add() {
-      this.$router.push({ path: '././load', query: { loadTypeId: 40, tab: '新增送货' }})
+      this.$router.push({ path: '././load/delivery', query: { loadTypeId: 40 }})
     },
     edit() {
       if (this.selected.length !== 1) {
@@ -442,7 +442,7 @@ export default {
         this.$message({ type: 'warning', message: '送货中状态才可以编辑' })
       } else if (this.selected.length === 1) {
         this.selectInfo = this.selected[0]
-        this.$router.push({ path: '././load', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), tab: '修改送货', flag: this.selectInfo.batchNo }})
+        this.$router.push({ path: '/operation/order/load/modifyDelivery', query: { loadTypeId: 40, info: this.selectInfo, tablekey: Math.random(), flag: this.selectInfo.batchNo }})
       }
     },
     getActualTime(obj) { // 送货完成
@@ -522,7 +522,7 @@ export default {
     },
     isSuccess(obj) {
       if (obj) {
-        this.getAllList()
+        this.fetchData()
       }
     },
     sendInfo(obj) { // 孙子-打开签收弹出框
@@ -536,6 +536,8 @@ export default {
     signMessage(obj) { // 孙子-获取签收弹出框信息
       this.tablekey = Math.random()
       this.closeMe()
+      // 需要重新获取列表数据
+      this.fetchData()
     },
     setColumn(obj) { // 重绘表格列表
       this.tableColumn = obj

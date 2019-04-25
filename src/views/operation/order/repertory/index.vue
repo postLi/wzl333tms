@@ -14,7 +14,7 @@
 <script>
 export default {
   // 没有新增/修改弹窗的列表页不需要缓存，保证每次访问都请求拿最新的数据
-  // name: 'orderrepertory'
+  name: 'orderrepertory'
 }
 
 </script>

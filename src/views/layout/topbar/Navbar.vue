@@ -71,16 +71,20 @@ export default {
       height: auto;
       float: left;
       height: $topNavHeight;
-      
-
+      min-width: 182px;
+      min-height: 33px;
+      text-align: center;
       a{
         line-height: $topNavHeight;
         display: block;
+        
       }
       
       img{
-        height: 33px;
-        width: 97px;
+        // height:100%;
+        // width: 100%;
+        max-width: 100px;
+        max-height: 40px;
         vertical-align: middle;
       }
     }

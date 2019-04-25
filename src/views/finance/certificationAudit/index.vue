@@ -10,7 +10,7 @@
 import Sender from './certificationAudit'
 
 export default {
-  name: 'orderpickUp',
+  name: 'certificationAudit',
   components: {
     Sender
   },

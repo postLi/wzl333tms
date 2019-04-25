@@ -67,7 +67,7 @@
     </el-form>
     <span slot="footer">
           <el-button type="primary" @click="submitForm('formModel')" plain icon="el-icon-document" :loading="btnLoading">保存</el-button>
-          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'">设置财务科目</el-button>
+          <el-button type="warning" @click="setting" plain icon="el-icon-setting" v-if="formModel.isNeededVoucher === '1'" v-has:INIT_SUBJECT_DEFINE>设置财务科目</el-button>
           <el-button type="danger" @click="closeMe" plain icon="el-icon-circle-close">取消</el-button>
         </span>
   </el-dialog>
@@ -360,7 +360,7 @@ export default {
               this.btnLoading = false
               this.popVisibleDialog = false
               const currentPage = this.currentPage.substring(0, 1).toLowerCase() + this.currentPage.substring(1)
-              this.$router.push({ path: './accountsPayable/waybill/' + currentPage })
+              this.$router.push({ path: '/finance/accountsPayable/waybill/' + currentPage })
             })
             .catch(err => {
               this._handlerCatchMsg(err)

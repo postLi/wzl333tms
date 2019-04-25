@@ -25,6 +25,7 @@ function setExperience(to) {
 }
 
 router.beforeEach((to, from, next) => {
+  // console.log('beforeEach::', to, from)
   const _hmt = window._hmt || []
   // _hmt.push(['_trackPageview', '/virtual/login']);
   /* must call `next` */
@@ -43,7 +44,6 @@ router.beforeEach((to, from, next) => {
       })
       console.log('load Token:', getToken(), to.fullPath.replace(/([&|?])(access_token=[^&]*&?)/, '$1').replace(/\?$/, ''))
     })
-
   } else if (getToken()) {
     if (to.path === '/login') {
       next({
@@ -70,7 +70,7 @@ router.beforeEach((to, from, next) => {
           // console.log('错误：' + (err.text || err.errInfo || err.data || JSON.stringify(err)))
           removeToken()
           // 如果在登录页面时，因为跳转到的还是/login页，会导致右上角一直在转动加载条
-          // 
+          //
 
           next({
             path: '/login',

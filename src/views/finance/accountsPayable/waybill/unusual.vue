@@ -13,7 +13,8 @@
       </div>
       <!-- 数据表格 -->
       <div class="info_tab">
-        <el-table ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail" stripe border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :show-summary="true" :summary-method="getSummary">
+        <el-table
+        :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'statusName' )" ref="multipleTable" :key="tablekey" :data="dataList"  @row-dblclick="showDetail"  border  @row-click="clickDetails" @selection-change="getSelection" height="100%" tooltip-effect="dark" style="width:100%;" :show-summary="true" :summary-method="getSummary">
           <el-table-column fixed sortable type="selection" width="80">
           </el-table-column>
           <template v-for="column in tableColumn">
@@ -389,9 +390,8 @@ export default {
     count() {
       this.$set(this.searchQuery.vo, 'feeType', this.feeType)
       this.$router.push({
-        path: '../../accountsLoad',
+        path: '/finance/accountsLoad/waybillUnusual',
         query: {
-          tab: '异动费用核销',
           currentPage: 'waybillUnusual', // 本页面标识符
           searchQuery: JSON.stringify(this.searchQuery), // 搜索项
           selectListShipSns: JSON.stringify(this.selectListShipSns) // 列表选择项的批次号batchNo

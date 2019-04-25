@@ -46,7 +46,7 @@
           </el-table-column>
           <el-table-column fixed prop="price" width="120" label="车费">
             <template slot-scope="scope">
-               <input type="text"  :size="btnsize" class="nativeinput" v-numberOnly:pointer :value="scope.row.price" @change="(e)=>changeFright(scope.$index, 'price', e.target.value)" ref="price" :maxlength="10" 
+               <input type="text"  :size="btnsize" class="nativeinput" v-numberOnly:point :value="scope.row.price" @change="(e)=>changeFright(scope.$index, 'price', e.target.value)" ref="price" :maxlength="10" 
                @click.stop :disabled="scope.row['selectdCheck']" />
               <!-- <el-input v-model.number="scope.row.price" :size="btnsize" v-number-only:point @change="(val)=>changeFright(scope.$index, scope.prop, val)" :disabled="scope.row['selectdCheck']" :maxlength="10" @click.stop.prevent.native></el-input> -->
             </template>
@@ -226,7 +226,7 @@ export default {
     },
     reset() {
       this.usersArr = []
-      this.formInline.orgId = ""
+      this.formInline.orgId = ''
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -245,11 +245,11 @@ export default {
             this.isShowFeeTips = false
           }
 
-          //跳到动画
-          let data = this.usersArr.filter(el => {
+          // 跳到动画
+          const data = this.usersArr.filter(el => {
             return el.selectdCheck === false
           })
-          console.log('===========data',data)
+          console.log('===========data', data)
           this.$router.push({
             path: '/operation/order/loadIntelligent/components/intelligentImg',
             query: {
@@ -257,7 +257,7 @@ export default {
               orgId: this.formInline.orgId,
               sendData: JSON.stringify(data)
             }
-          }, )
+          },)
           this.closeMe()
         } else {
           return false
@@ -278,7 +278,6 @@ export default {
         this.selected = selection
         this.selected.forEach(el => {
           el.selectdCheck = false
-
         })
       } else {
         // 3.剩下的为不可编辑状态

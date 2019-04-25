@@ -10,12 +10,24 @@ const tagsView = {
       if (view.query.tab) {
         if (state.visitedViews.some(v => v.fullPath === view.fullPath)) return
       } else {
-        if (state.visitedViews.some(v => v.path === view.path)) return
+        if (state.visitedViews.some(v => v.path === view.path)) {
+          // 更新fullpath值
+          state.visitedViews.forEach(v => {
+            if (v.path === view.path) {
+              v.fullPath = view.fullPath
+            }
+          })
+          return
+        }
       }
       // 列表里没有该记录，查找本地存储，如果有记录需要先清除
       if (sessionStorage.getItem(encodeURIComponent(view.fullPath))) {
         sessionStorage.setItem(encodeURIComponent(view.fullPath), '')
       }
+
+      // 判断是否需要缓存
+      let shouldCache = !view.meta.noCache
+      let cacheName = view.meta.pname || view.name
 
       // console.log('add view:', view.query.tab, view.name)
       // 针对tab子页面
@@ -23,13 +35,34 @@ const tagsView = {
         // 如果已存在相同的父级，则更新其链接，不新增tab
         state.visitedViews.forEach(ele => {
           if (ele.title === view.meta.ptitle) {
+            /* // 1.清理cache里的name
+            const i = state.cachedViews.indexOf(ele.name)
+            state.cachedViews.splice(i, 1)
+
+            // 2.更新父级view的name值，以便清除
+            ele.name = view.name */
+
             ele.path = view.path
             ele.fullPath = view.fullPath
           }
         })
       } else {
+        // 针对tab页面进行特殊处理，取其父级的设置值
+        if (view.meta.pname) {
+          cacheName = view.meta.pname
+          shouldCache = true
+        } else if (view.meta.istab && view.matched) {
+          // matched 将会是一个包含从上到下的所有对象，所以取最后一个值即为当前路由？
+          let len = view.matched.length
+          let current = view.matched[len - 1]
+          if (current && current.parent) {
+            cacheName = current.parent.name || cacheName
+            shouldCache = !current.parent.meta.noCache
+          }
+        }
+
         state.visitedViews.push({
-          name: view.query.tab || view.name,
+          name: cacheName || view.query.tab,
           path: view.path,
           fullPath: view.fullPath,
           tab: view.query.tab || '',
@@ -39,11 +72,14 @@ const tagsView = {
         })
       }
 
-      if (!view.meta.noCache) {
-        state.cachedViews.push(view.name)
+      // 如果需要缓存页面
+      if (shouldCache) {
+        if (state.cachedViews.indexOf(cacheName) === -1) {
+          state.cachedViews.push(cacheName)
+        }
         // state.cachedViews.push(view.fullPath)
-        console.log('state.cachedViews:', state.cachedViews)
       }
+      console.log('state.cachedViews:', state.cachedViews)
     },
     DEL_VISITED_VIEWS: (state, view) => {
       for (const [i, v] of state.visitedViews.entries()) {
@@ -56,7 +92,8 @@ const tagsView = {
         if (i === view.name) {
           const index = state.cachedViews.indexOf(i)
           state.cachedViews.splice(index, 1)
-          break
+          // 全部遍历删除，如果有相同name值也可以正确处理好...y
+          // break
         }
       }
     },
@@ -74,8 +111,10 @@ const tagsView = {
       for (const i of state.cachedViews) {
         if (i === view.name) {
           const index = state.cachedViews.indexOf(i)
-          state.cachedViews = state.cachedViews.slice(index, i + 1)
-          break
+          // i为字符串而非索引位置信息，所以这一段删除有问题...
+          // state.cachedViews = state.cachedViews.slice(index, i + 1)
+
+          state.cachedViews = state.cachedViews.slice(index, index + 1)
         }
       }
     },

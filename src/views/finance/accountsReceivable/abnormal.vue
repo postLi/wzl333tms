@@ -14,8 +14,8 @@
           ref="multipleTable"
           :data="usersArr"
           :key="tablekey"
-          stripe
           border
+          :row-style="({row, index}) => _rowStyleAccounts({row, index}, 'changeStateCn' )"
           @row-click="clickDetails"
           @row-dblclick="showDetail"
           @selection-change="getSelection"
@@ -268,9 +268,8 @@ export default {
       const data = objectMerge2(this.searchQuery)
       data.vo.ascriptionOrgId = data.vo.shipFromOrgid
       this.$router.push({
-        path: '/finance/accountsLoadReceivable',
+        path: '/finance/accountsLoadReceivable/abnormal',
         query: {
-          tab: '异动费用核销',
           searchQuery: JSON.stringify(data),
           currentPage: 'abnormal',
          // id: row.map(el => el.shipId).join(','),

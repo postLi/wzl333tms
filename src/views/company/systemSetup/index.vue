@@ -171,7 +171,7 @@
                 </el-form-item>
                 <el-form-item>
                   保险费与声明价值比例
-                  <el-input :maxlength="3" v-number-only v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
+                  <el-input :maxlength="5" v-number-only:point v-model="form.shipPageFunc.insurancePremiumIsDeclaredValue" style="width: 120px;">
                     <template slot="append">‰</template>
                   </el-input>
                   <el-popover placement="right" trigger="hover" style="float: right;margin-top:0px;margin-left: 10px">
@@ -363,6 +363,7 @@
               <div class="setup-right">
                 <el-form-item>
                   <upload :title="'本地上传'" v-model="form.uploadLogo.logoUrl" />
+                  <p>建议尺寸（宽*高）：100px*40px</p>
                 </el-form-item>
               </div>
             </div>
@@ -387,7 +388,8 @@ import { mapGetters } from 'vuex'
 import { CreatePrinterList } from '@/utils/lodopFuncs'
 import { downloadFile } from '@/api/common'
 import printSetOrder from './components/printSetOrderSelf'
-import printSetLi from './components/printSetLiSelf'
+// import printSetLi from './components/printSetLiSelf'
+import printSetLi from './components/printSetLiModel'
 import printLoadInfo from './components/printLoadInfo'
 import printContract from './components/printContract'
 import Upload from '@/components/Upload/singleImage'
@@ -1033,6 +1035,9 @@ export default {
           break
       }
     }
+  },
+  beforeDestroy() {
+    console.log('system beforeDestory')
   }
 }
 

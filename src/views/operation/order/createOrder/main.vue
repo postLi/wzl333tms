@@ -1199,7 +1199,7 @@ export default {
       immediate: true
     },
     '$route'(to, from) {
-      if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
+     /*  if (to.path.indexOf('/operation/order/modifyOrder') !== -1 && !this.ispop) {
         // this.initIndex()
         // 这里处理缓存的数据等
       }
@@ -1210,7 +1210,7 @@ export default {
       if (to.query.type && to.query.type === 'modify' && to.fullPath.indexOf('/operation/order/createOrder?orderid=') !== -1) {
         // 2 如果进入改单页面
         this.initIndex()
-      }
+      } */
     },
     // 弹窗时处理、如提货转运单，订单转运单
     'ispop'(newVal) {
@@ -1223,9 +1223,9 @@ export default {
   // 当创建/修改切换时，不会触发，此时需要判断router变化来初始化数据
   activated() {
     // if (this.ispop) {
-    this.loading = true
+    // this.loading = true
 
-    this.initIndex('activated')
+    // this.initIndex('activated')
     // }
   },
   deactivated() {
@@ -1264,14 +1264,12 @@ export default {
     // this.getReceiptType()
     // 中转默认付款方式
     this.form.tmsOrderTransfer.paymentId = 16
-    if (this.ispop) {
-      this.loading = true
-
-      this.initIndex('mounted')
-
-      // 中转默认付款方式
-      this.form.tmsOrderTransfer.paymentId = 16
-    }
+    // if (this.ispop) {
+    //   // 中转默认付款方式
+    //   this.form.tmsOrderTransfer.paymentId = 16
+    // }
+    this.loading = true
+    this.initIndex('mounted')
     this.initPrintAmount()
   },
   methods: {
@@ -1309,12 +1307,12 @@ export default {
         if (data) {
           this.modelList = data
           this.modelList.forEach((el, index) => {
-              if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
-                this.m_index.customerInfo = el.typeOrder
-              } else {
-                this.m_index[el.templateType] = el.typeOrder
-              }
-            })
+            if (/(senderCustomer|receiverCustomer)/.test(el.templateType)) { // 发货人或收货人
+              this.m_index.customerInfo = el.typeOrder
+            } else {
+              this.m_index[el.templateType] = el.typeOrder
+            }
+          })
           this.m_index.tmsOrderTransfer = 5
           this.org_m_index = objectMerge2({}, this.m_index)
             // console.log('模板各个模块排序：', JSON.stringify(this.m_index))
@@ -1873,7 +1871,7 @@ export default {
         if (whereAreYou === 'isSaveAndNew') {
           this.output.iscreate = true
           if (!this.ispop) {
-            this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder?tab=创建运单')
+            this.eventBus.$emit('replaceCurrentView', '/operation/order/createOrder')
           }
           this.initCreate()
         } else if (param.orderid) {
@@ -2403,15 +2401,15 @@ export default {
     // 修改货品列表
     changeFee(index, name, event) {
       console.log('changeFee 修改货品列表', index, name)
-      this.form.cargoList[index][name] = event.target.value
+      let val = event.target.value
+      this.form.cargoList[index][name] = val
 
       if (/(cargoWeight|cargoVolume|shipFee)/.test(name)) {
         this.getLineInfo()
       }
       // 修改保险费与声明价值
-      // 如果有设置
-      // if (/(insuranceFee|productPrice)/.test(name)) {
-      if (/(productPrice)/.test(name)) {
+      // 当设置任意一个项时，如果另一个项没有值则帮助其自动计算
+      if (/(insuranceFee|productPrice)/.test(name)) {
         const cfg = this.config.shipPageFunc
         if (cfg.insurancePremiumIsDeclaredValue) {
           const per = tmsMath._div(Number(cfg.insurancePremiumIsDeclaredValue), 1000)
@@ -2419,9 +2417,14 @@ export default {
           // 如果存在保险费
           if (inx && per) {
             if (name === 'insuranceFee') {
-              this.form.cargoList[index]['productPrice'] = (tmsMath._div(this.form.cargoList[index][name], per) || 0).toFixed(2)
+              if(this.form.cargoList[index]['productPrice']===''){
+              this.form.cargoList[index]['productPrice'] = (tmsMath._div(val, per) || 0).toFixed(2)
+              }
             } else {
-              this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(this.form.cargoList[index][name], per) || 0).toFixed(2)
+              if(this.form.cargoList[index]['insuranceFee']===''){
+                this.form.cargoList[index]['insuranceFee'] = (tmsMath._mul(val, per) || 0).toFixed(2)
+              }
+              
             }
           }
         }
@@ -3453,10 +3456,10 @@ export default {
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
         }
         return CreatePrintPageEnable(libData, this.otherinfo.systemSetup.printSetting.label, this.isPrintWithNoPreview, parseInt(printData.shipPrintLib, 10) || 1) // 调打印接口
       })
@@ -3486,10 +3489,10 @@ export default {
         const libData = Object.assign([], data)
         for (const item in printData) {
           libData.forEach((e, index) => {
-              if (e.filedValue === item) {
-                e['value'] = printData[item] // 把页面数据存储到打印数组中
-              }
-            })
+            if (e.filedValue === item) {
+              e['value'] = printData[item] // 把页面数据存储到打印数组中
+            }
+          })
         }
         return CreatePrintPageEnable(data, this.otherinfo.systemSetup.printSetting.ship, this.isPrintWithNoPreview)
       })

@@ -662,7 +662,12 @@ export default {
     color: #f00;
   }
   &.el-autocomplete-suggestion li.highlighted, &.el-autocomplete-suggestion li:hover{
-    background: rgb(203,225,247);
+
+
+    .query-input-city-name{
+      color: #fff;
+      font-size: 14px;
+    }
   }
 }
 .query-input-customer, .query-input-city{

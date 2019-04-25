@@ -137,6 +137,7 @@ import { PrintInFullPage, SaveAsFile } from '@/utils/lodopFuncs'
 // import tableHeaderSearch from '@/components/tableHeaderSearch'
 
 export default {
+  name: 'orderManage',
   components: {
     SearchForm,
     Pager
@@ -146,9 +147,9 @@ export default {
   computed: {
     ...mapGetters(['otherinfo']),
     orgid() {
-      return this.isModify ?
-        this.selectInfo.orgid :
-        this.searchQuery.vo.orgid || this.otherinfo.orgid
+      return this.isModify
+        ? this.selectInfo.orgid
+        : this.searchQuery.vo.orgid || this.otherinfo.orgid
     }
   },
   mounted() {
@@ -196,423 +197,423 @@ export default {
       thecode: '', // 用来设置tablesetup的code值
       columnWidthData: {},
       tableColumn: [{
-          label: '序号',
-          prop: 'number',
-          width: '70',
-          fixed: true,
-          slot: scope => {
-            return (
+        label: '序号',
+        prop: 'number',
+        width: '70',
+        fixed: true,
+        slot: scope => {
+          return (
               (this.searchQuery.currentPage - 1) * this.searchQuery.pageSize +
               scope.$index +
               1
-            )
-          }
-        },
-        {
-          label: '运单号',
-          prop: 'shipSn',
-          width: '150',
-          fixed: true
-        },
-        {
-          label: '运单状态',
-          prop: 'shipStatusName',
-          width: '120',
-          fixed: false
-        },
-        {
-          label: '运单标识',
-          prop: 'shipIdentifying',
-          width: '150',
-          slot: function(scope) {
-            return parseShipStatus(scope.row.shipIdentifying)
-          }
-        },
-        {
-          label: '开单网点',
-          prop: 'fromOrgName',
-          width: '150'
-        },
-        {
-          label: '目的网点',
-          prop: 'toOrgName',
-          width: '150'
-        },
-        {
-          label: '开单时间',
-          prop: 'createTime',
-          width: '180',
-          slot: function(scope) {
-            return `${parseTime(scope.row.createTime)}`
-          }
-        },
-        {
-          prop: 'shipEffectiveName',
-          label: '时效',
-          slot: function(scope) {
-            return scope.row.shipEffectiveName === '加急' ?
-              '<span class="red">加急</span>' :
-              scope.row.shipEffectiveName
-          }
-        },
-        {
-          label: '发货人',
-          prop: 'shipSenderName',
-          width: '150'
-        },
-        {
-          label: '发货人电话',
-          prop: 'shipSenderMobile',
-          width: '150'
-        },
-        {
-          label: '收货人',
-          prop: 'shipReceiverName',
-          width: '150'
-        },
-        {
-          label: '收货人电话',
-          prop: 'shipReceiverMobile',
-          width: '150'
-        },
-        {
-          label: '交接方式',
-          prop: 'shipDeliveryMethodName',
-          width: '150'
-        },
-        {
-          label: '货号',
-          prop: 'shipGoodsSn',
-          width: '150'
-        },
-        {
-          label: '货品名',
-          prop: 'cargoName',
-          width: '150'
-        },
-        {
-          label: '品种规格',
-          prop: 'description',
-          width: '150'
-        },
-        {
-          label: '件数',
-          prop: 'cargoAmount',
-          width: '150'
-        },
-        {
-          label: '重量',
-          prop: 'cargoWeight',
-          width: '150'
-        },
-        {
-          label: '体积',
-          prop: 'cargoVolume',
-          width: '150'
-        },
-        {
-          label: '件数单价',
-          prop: 'amountFee',
-          width: '150'
-        },
-        {
-          label: '重量单价',
-          prop: 'weightFee',
-          width: '150'
-        },
-        {
-          label: '体积单价',
-          prop: 'volumeFee',
-          width: '150'
-        },
-        {
-          label: '发站',
-          prop: 'shipFromCityName',
-          width: '150'
-        },
-        {
-          label: '到站',
-          prop: 'shipToCityName',
-          width: '150'
-        },
-        {
-          label: '等通知放货',
-          prop: 'status',
-          width: '150',
-          slot: function(scope) {
-            return scope.row.status === 1 ?
-              '未放货' :
-              scope.row.status === 2 ?
-              '已放货' :
-              '未控货'
-          }
-        },
-        {
-          label: '回单要求',
-          prop: 'shipReceiptRequireName',
-          width: '150'
-        },
-        {
-          label: '回单份数',
-          prop: 'shipReceiptNum',
-          width: '150'
-        },
-        {
-          label: '代收款',
-          prop: 'agencyFund',
-          width: '150'
-        },
-        {
-          label: '付款方式',
-          prop: 'shipPayWayName',
-          width: '150'
-        },
-        {
-          label: '现付',
-          prop: 'shipNowpayFee',
-          width: '150'
-        },
-        {
-          label: '到付',
-          prop: 'shipArrivepayFee',
-          width: '150'
-        },
-        {
-          label: '回单付',
-          prop: 'shipReceiptpayFee',
-          width: '150'
-        },
-        {
-          label: '月结',
-          prop: 'shipMonthpayFee',
-          width: '150'
-        },
-        {
-          label: '运费合计',
-          prop: 'shipTotalFee',
-          width: '150'
-        },
-        {
-          label: '备注',
-          prop: 'shipRemarks',
-          width: '150'
-        },
-        {
-          label: '到达省',
-          prop: 'endProvince',
-          width: '150',
-          hidden: true
-        },
-        {
-          label: '到达市',
-          prop: 'endCity',
-          width: '150',
-          hidden: true
-        },
-        {
-          label: '到达县区',
-          prop: 'endArea',
-          width: '150',
-          hidden: true
-        },
-        {
-          label: '业务员',
-          prop: 'userName',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '发货方',
-          prop: 'shipSenderUnit',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '收货方',
-          prop: 'shipReceiverUnit',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '发货人地址',
-          prop: 'shipSenderAddress',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '收货人地址',
-          prop: 'shipReceiverAddress',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '回单号',
-          prop: 'shipReceiptSn',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '回扣',
-          prop: 'brokerageFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '客户单号',
-          prop: 'shipCustomerNumber',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '运输方式',
-          prop: 'shipShippingTypeName',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '业务类型',
-          prop: 'shipBusinessTypeName',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '标准时效',
-          prop: 'shipEffectiveName',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '线路时效',
-          prop: 'transportAging',
-          hidden: false,
-          width: '150'
-        },
-        {
-          label: '运单实际用时',
-          prop: 'actualTime',
-          hidden: false,
-          width: '150'
-        },
-        {
-          label: '提货批次',
-          prop: 'pickupBatchNumber',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '提货司机名',
-          prop: 'driverName',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '提货车牌',
-          prop: 'truckIdNumber',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '送货费',
-          prop: 'deliveryFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '代收款手续费',
-          prop: 'commissionFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '声明价值',
-          prop: 'productPrice',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '保险费',
-          prop: 'insuranceFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '装卸费',
-          prop: 'handlingFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '包装费',
-          prop: 'packageFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '提货费',
-          prop: 'pickupFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '上楼费',
-          prop: 'goupstairsFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '实际提货费',
-          prop: 'realityhandlingFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '叉车费',
-          prop: 'forkliftFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '报关费',
-          prop: 'customsFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '其他费收入',
-          prop: 'otherfeeIn',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '其他费支出',
-          prop: 'otherfeeOut',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '税率',
-          prop: 'taxRate',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '税金',
-          prop: 'taxes',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '入仓费',
-          prop: 'housingFee',
-          hidden: true,
-          width: '150'
-        },
-        {
-          label: '印花税',
-          prop: 'stampTax',
-          hidden: true,
-          width: '150'
+          )
         }
+      },
+      {
+        label: '运单号',
+        prop: 'shipSn',
+        width: '150',
+        fixed: true
+      },
+      {
+        label: '运单状态',
+        prop: 'shipStatusName',
+        width: '120',
+        fixed: false
+      },
+      {
+        label: '运单标识',
+        prop: 'shipIdentifying',
+        width: '150',
+        slot: function(scope) {
+          return parseShipStatus(scope.row.shipIdentifying)
+        }
+      },
+      {
+        label: '开单网点',
+        prop: 'fromOrgName',
+        width: '150'
+      },
+      {
+        label: '目的网点',
+        prop: 'toOrgName',
+        width: '150'
+      },
+      {
+        label: '开单时间',
+        prop: 'createTime',
+        width: '180',
+        slot: function(scope) {
+          return `${parseTime(scope.row.createTime)}`
+        }
+      },
+      {
+        prop: 'shipEffectiveName',
+        label: '时效',
+        slot: function(scope) {
+          return scope.row.shipEffectiveName === '加急'
+              ? '<span class="red">加急</span>'
+              : scope.row.shipEffectiveName
+        }
+      },
+      {
+        label: '发货人',
+        prop: 'shipSenderName',
+        width: '150'
+      },
+      {
+        label: '发货人电话',
+        prop: 'shipSenderMobile',
+        width: '150'
+      },
+      {
+        label: '收货人',
+        prop: 'shipReceiverName',
+        width: '150'
+      },
+      {
+        label: '收货人电话',
+        prop: 'shipReceiverMobile',
+        width: '150'
+      },
+      {
+        label: '交接方式',
+        prop: 'shipDeliveryMethodName',
+        width: '150'
+      },
+      {
+        label: '货号',
+        prop: 'shipGoodsSn',
+        width: '150'
+      },
+      {
+        label: '货品名',
+        prop: 'cargoName',
+        width: '150'
+      },
+      {
+        label: '品种规格',
+        prop: 'description',
+        width: '150'
+      },
+      {
+        label: '件数',
+        prop: 'cargoAmount',
+        width: '150'
+      },
+      {
+        label: '重量',
+        prop: 'cargoWeight',
+        width: '150'
+      },
+      {
+        label: '体积',
+        prop: 'cargoVolume',
+        width: '150'
+      },
+      {
+        label: '件数单价',
+        prop: 'amountFee',
+        width: '150'
+      },
+      {
+        label: '重量单价',
+        prop: 'weightFee',
+        width: '150'
+      },
+      {
+        label: '体积单价',
+        prop: 'volumeFee',
+        width: '150'
+      },
+      {
+        label: '发站',
+        prop: 'shipFromCityName',
+        width: '150'
+      },
+      {
+        label: '到站',
+        prop: 'shipToCityName',
+        width: '150'
+      },
+      {
+        label: '等通知放货',
+        prop: 'status',
+        width: '150',
+        slot: function(scope) {
+          return scope.row.status === 1
+              ? '未放货'
+              : scope.row.status === 2
+              ? '已放货'
+              : '未控货'
+        }
+      },
+      {
+        label: '回单要求',
+        prop: 'shipReceiptRequireName',
+        width: '150'
+      },
+      {
+        label: '回单份数',
+        prop: 'shipReceiptNum',
+        width: '150'
+      },
+      {
+        label: '代收款',
+        prop: 'agencyFund',
+        width: '150'
+      },
+      {
+        label: '付款方式',
+        prop: 'shipPayWayName',
+        width: '150'
+      },
+      {
+        label: '现付',
+        prop: 'shipNowpayFee',
+        width: '150'
+      },
+      {
+        label: '到付',
+        prop: 'shipArrivepayFee',
+        width: '150'
+      },
+      {
+        label: '回单付',
+        prop: 'shipReceiptpayFee',
+        width: '150'
+      },
+      {
+        label: '月结',
+        prop: 'shipMonthpayFee',
+        width: '150'
+      },
+      {
+        label: '运费合计',
+        prop: 'shipTotalFee',
+        width: '150'
+      },
+      {
+        label: '备注',
+        prop: 'shipRemarks',
+        width: '150'
+      },
+      {
+        label: '到达省',
+        prop: 'endProvince',
+        width: '150',
+        hidden: true
+      },
+      {
+        label: '到达市',
+        prop: 'endCity',
+        width: '150',
+        hidden: true
+      },
+      {
+        label: '到达县区',
+        prop: 'endArea',
+        width: '150',
+        hidden: true
+      },
+      {
+        label: '业务员',
+        prop: 'userName',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '发货方',
+        prop: 'shipSenderUnit',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '收货方',
+        prop: 'shipReceiverUnit',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '发货人地址',
+        prop: 'shipSenderAddress',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '收货人地址',
+        prop: 'shipReceiverAddress',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '回单号',
+        prop: 'shipReceiptSn',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '回扣',
+        prop: 'brokerageFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '客户单号',
+        prop: 'shipCustomerNumber',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '运输方式',
+        prop: 'shipShippingTypeName',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '业务类型',
+        prop: 'shipBusinessTypeName',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '标准时效',
+        prop: 'shipEffectiveName',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '线路时效',
+        prop: 'transportAging',
+        hidden: false,
+        width: '150'
+      },
+      {
+        label: '运单实际用时',
+        prop: 'actualTime',
+        hidden: false,
+        width: '150'
+      },
+      {
+        label: '提货批次',
+        prop: 'pickupBatchNumber',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '提货司机名',
+        prop: 'driverName',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '提货车牌',
+        prop: 'truckIdNumber',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '送货费',
+        prop: 'deliveryFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '代收款手续费',
+        prop: 'commissionFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '声明价值',
+        prop: 'productPrice',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '保险费',
+        prop: 'insuranceFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '装卸费',
+        prop: 'handlingFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '包装费',
+        prop: 'packageFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '提货费',
+        prop: 'pickupFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '上楼费',
+        prop: 'goupstairsFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '实际提货费',
+        prop: 'realityhandlingFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '叉车费',
+        prop: 'forkliftFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '报关费',
+        prop: 'customsFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '其他费收入',
+        prop: 'otherfeeIn',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '其他费支出',
+        prop: 'otherfeeOut',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '税率',
+        prop: 'taxRate',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '税金',
+        prop: 'taxes',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '入仓费',
+        prop: 'housingFee',
+        hidden: true,
+        width: '150'
+      },
+      {
+        label: '印花税',
+        prop: 'stampTax',
+        hidden: true,
+        width: '150'
+      }
       ],
       showtip: false,
       visible2: false,
@@ -766,12 +767,12 @@ export default {
             }
             if (canModify) {
               this.$router.push({
-                path: '/operation/order/createOrder',
+                path: '/operation/order/modifyOrder',
                 query: {
                   orderid: this.selectInfo.id,
                   type: 'modify',
                   // tab: '修改' + this.selectInfo.shipSn
-                  tab: '改单'
+                  // tab: '改单'
                 }
               })
             } else {
