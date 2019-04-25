@@ -28,6 +28,7 @@
         :fetch-suggestions="(queryString, cb) => querySearch( 'shipToCityName',queryString, cb)"
         placeholder="到站搜索"
         @select="handleSelect"
+        @keyup.enter.native="handleSelectAll"
       >
       </el-autocomplete>
     </el-form-item>
