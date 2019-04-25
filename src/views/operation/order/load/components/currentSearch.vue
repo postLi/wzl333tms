@@ -132,7 +132,7 @@ export default {
       })
       this.resultList = Object.assign([], array)
       this.$emit('change', array)
-      if (array.length === 1) {
+      if (array.length === 1 && type === 'shipSn') {
         this.handleSelectAll()
       }
     },
